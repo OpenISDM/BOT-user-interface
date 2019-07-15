@@ -37,6 +37,7 @@ class EditObjectForm extends React.Component {
                 status: '', 
                 access_control_number: '',
                 transferredLocation: null,
+                mac_address: null
             }
         };
         this.handleShow = this.handleShow.bind(this);
@@ -54,23 +55,40 @@ class EditObjectForm extends React.Component {
      */
 
     componentDidUpdate(prevProps) {
-        const { name, type, status, transferred_location, access_control_number } = this.props.selectedObjectData;
-        if (prevProps != this.props) {
-            this.setState({
-                show: this.props.show,
-                isShowForm: true,
-                formOption: {
-                    name: name,
-                    type: type,
-                    status: status,
-                    access_control_number: access_control_number,
-                    transferredLocation: transferred_location ? {
-                        'value': transferred_location, 
-                        'label': transferred_location
-                    } : null,
-                }
-            })
+        if(this.props.selectedObjectData){
+            const { name, type, status, transferred_location, access_control_number } = this.props.selectedObjectData;
+            if (prevProps != this.props) {
+                this.setState({
+                    show: this.props.show,
+                    isShowForm: true,
+                    formOption: {
+                        name: name,
+                        type: type,
+                        status: status,
+                        access_control_number: access_control_number,
+                        transferredLocation: transferred_location ? {
+                            'value': transferred_location, 
+                            'label': transferred_location
+                        } : null,
+                    }
+                })
+            }
+        }else{
+            if (prevProps != this.props) {
+                this.setState({
+                    show: this.props.show,
+                    isShowForm: true,
+                    formOption: {
+                        name: [],
+                        type: [],
+                        status: null,
+                        access_control_number: [],
+                        transferredLocation: null,
+                    }
+                })
+            }
         }
+        
     }
   
     handleClose() {
@@ -87,25 +105,47 @@ class EditObjectForm extends React.Component {
     }
 
     handleSubmit(e) {
+
         const buttonStyle = e.target.style
+        // console.log(buttonStyle)
         const { selectedObjectData } = this.props;
         const { formOption } = this.state;
+        var postOption = {};
+        var path;
+        console.log(formOption.status) 
+        if(selectedObjectData === null){
+            postOption = {
+                name: formOption.name,
+                type: formOption.type,
+                access_control_number: formOption.access_control_number,
+                status: formOption.status != null ? formOption.status:"Normal",
+                transferredLocation: formOption.transferredLocation ? formOption.transferredLocation: null ,
+                mac_address: formOption.mac_address,
+            }
 
-        let transferredLocation = '';
-        if (formOption.status === 'Transferred') {
-            transferredLocation = formOption.transferredLocation || selectedObjectData.transferredLocation;
+
+
+            path = dataSrc.addObject;
+        }else{
+            
+            let transferredLocation = '';
+            if (formOption.status === 'Transferred') {
+                transferredLocation = formOption.transferredLocation || selectedObjectData.transferredLocation;
+            }
+            postOption = {
+                name: formOption.name || selectedObjectData.name,
+                type: formOption.type || selectedObjectData.type,
+                access_control_number: formOption.access_control_number || selectedObjectData.access_control_number,
+                status: formOption.status || selectedObjectData.status,
+                transferredLocation: transferredLocation,
+                mac_address: selectedObjectData.mac_address,
+            }
+
+            path = dataSrc.editObject
         }
         
-        const postOption = {
-            name: formOption.name || selectedObjectData.name,
-            type: formOption.type || selectedObjectData.type,
-            access_control_number: formOption.access_control_number || selectedObjectData.access_control_number,
-            status: formOption.status || selectedObjectData.status,
-            transferredLocation: transferredLocation,
-            mac_address: selectedObjectData.mac_address,
-        }
-
-        axios.post(dataSrc.editObject, {
+        console.log(postOption)
+        axios.post(path, {
             formOption: postOption
         }).then(res => {
             buttonStyle.opacity = 0.4
@@ -288,9 +328,10 @@ class EditObjectForm extends React.Component {
                             <Col sm={9}>
                                 <Form.Control 
                                     type="text" 
-                                    placeholder={selectedObjectData ? selectedObjectData.mac_address : ''}
-                                    disabled 
-                                    readOnly
+                                    placeholder={selectedObjectData ? selectedObjectData.mac_address : 'c1:xx:xx:xx:xx:xx'}
+                                    disabled = {selectedObjectData ? true  : false}    
+                                    onChange={this.handleChange}
+                                    name="mac_address"
                                 />
                             </Col>
                         </Form.Group>

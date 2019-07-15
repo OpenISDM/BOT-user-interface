@@ -90,12 +90,28 @@ const getGeofenceData = (request, response) => {
 }
 
 const editObject = (request, response) => {
+
     const formOption = request.body.formOption
+    console.log(formOption)
     pool.query(queryType.query_editObject(formOption), (error, results) => {
         if (error) {
             console.log("Edit Object Fails: " + error)
         } else {
             console.log("Edit Object Success");
+        }
+        
+        response.status(200).json(results)
+
+    })
+}
+
+const addObject = (request, response) => {
+    const formOption = request.body.formOption
+    pool.query(queryType.query_addObject(formOption), (error, results) => {
+        if (error) {
+            console.log("Add Object Fails: " + error)
+        } else {
+            console.log("Add Object Success");
         }
         
         response.status(200).json(results)
@@ -231,6 +247,7 @@ module.exports = {
     getGatewayTable,
     getGeofenceData,
     editObject,
+    addObject,
     editObjectPackage,
     signin,
     signup,

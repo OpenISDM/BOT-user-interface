@@ -1,11 +1,27 @@
+// npm packages
 import React from 'react';
-import Searchbar from '../presentational/Searchbar';
 import { Col, Row, Nav, ListGroup} from 'react-bootstrap'
-
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
-import SearchableObjectType from '../presentational/SeachableObjectType';
+// self-defined component
+import Searchbar from '../presentational/Searchbar';
 import FrequentSearch from './FrequentSearch';
+
+import SearchableObjectType from '../presentational/SeachableObjectType';
+import SearchResult from '../presentational/SearchResult';
+
+
+
+
+/*
+    In the SearchContainer, there are three components
+        1. SearchBar
+        2. FrequentSearch
+        3. SearchableObjectType
+*/
+
+
+
 
 class SearchContainer extends React.Component {
 
@@ -13,282 +29,249 @@ class SearchContainer extends React.Component {
         super()
         this.state = {
             sectionIndexList:['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
-            isShowSectionTitle: false,
-            hasSearchKey: false,
-            isShowSearchOption: false,
-            searchKey:'',
-            sectionTitleList: [],
-            sectionIndex:'',
-            searchResult: [],
-            hasSearchableObjectData: false,
-            notFoundList: [],
+            sectionTitleList:{},
+            sectionTitleData:[],
+            hasIndexItem:{},
+
+            searchableObjectData:{},
+            searchResult:{},
+
+            IsShowSection:false,
+            IsShowResult:false,
+            IsFirstUpdate:false,
+
         }
-    
-        this.handleTouchStart = this.handleTouchStart.bind(this);
-        this.handleTouchMove = this.handleTouchMove.bind(this);
-        this.handleMouseOver = this.handleMouseOver.bind(this);
-        
-        this.getObjectType = this.getObjectType.bind(this);
+
+        this.SearchIndexMouseOver = this.SearchIndexMouseOver.bind(this);
+        this.SearchIndexMouseLeave = this.SearchIndexMouseLeave.bind(this);
+
+
+
         this.getResultData = this.getResultData.bind(this);
+      
+        this.closeSearchResult = this.closeSearchResult.bind(this);
+
     }
 
     
 
-    componentDidMount() {
-        const targetElement = document.body;
-        // document.body.style.position = "fixed";
-
-        // disableBodyScroll(targetElement);
+    componentDidMount(){
+        
     }
+    // this function when the this.props change or you call this.setState() function
+    // In this function, if the searchableObjectData is changed, the layout will immediately change
+    componentDidUpdate(prepProps, prevState){
 
-    componentDidUpdate(prepProps) {
-        if (prepProps.clearSearchResult !== this.props.clearSearchResult) {
-            this.setState({
-                searchKey: '',
-            })
-        }
-        if (this.props.searchableObjectData != null && this.state.hasSearchableObjectData === false) {
-            this.getObjectType();
-            this.setState({
-                hasSearchableObjectData: true,
-            })
-        }
-        if (prepProps.hasSearchKey !== this.props.hasSearchKey) {
-            this.setState({
-                hasSearchKey: this.props.hasSearchKey,
-            })
-        }
+        if(this.props.searchableObjectData !=null && !this.state.AlreadyUpdate && this.props.searchableObjectData.length != prepProps.searchableObjectData.length){
 
-    }
-
-    // shouldComponentUpdate(nextProps, nextState){
-    //     console.log(this.props.searchableObjectData)
-    //     return this.state !== nextState;
-    // }
-
-    // componentWillUnmount() {
-    //     clearAllBodyScrollLocks();
-    // }
-
-
-    /**
-     * Get the searchable object type. 
-     * The data is retrieving from Surveillance -> MainContain -> SearchContainer
-     */
-    getObjectType() {
-        const titleElementStyle = {
-            background: 'rgba(227, 222, 222, 0.619)',
-            fontWeight: 'bold',
-            fontSize: 10,
-            padding: 5,
-        }
-
-        const itemElementStyle = {
-            padding: 5
-        }
-        
-
-        /** Creat a set that stands for the unique object in this searching area */
-        const { searchableObjectData } = this.props;
-        
-        let objectTypeSet = new Set();
-        let objectTypeMap = new Map();
-        
-        for (let object in searchableObjectData) {
-            objectTypeSet.add(searchableObjectData[object].type)
-        }
-
-        /** Creat the titleList by inserting the item in the objectTypeSet
-         *  Also, create the character title element
-         */
-        let sectionTitleList = [];
-        let groupLetter = '';
-        let elementIndex = 0;
-
-        Array.from(objectTypeSet).map( item => {
-            // let currentLetter = item.toUpperCase().slice(0,1);
-            let currentLetter = item ? item.toUpperCase().charAt(0) : item;
-            if(!(groupLetter === currentLetter)) {
-                groupLetter = currentLetter;
-                let titleElement = <a id={groupLetter} key={elementIndex} className='titleElementStyle'><ListGroup.Item style={titleElementStyle}>{groupLetter}</ListGroup.Item></a>;
-                sectionTitleList.push(titleElement)
-                elementIndex++;
+            var sectionTitleList = {},
+            hasIndexItem = [];
+            for(var i in this.state.sectionIndexList){
+                sectionTitleList[this.state.sectionIndexList[i]] = new Set();
+                hasIndexItem[this.state.sectionIndexList[i]] = false;
             }
-            let itemElement = <a onClick={this.getResultData} key={elementIndex}><ListGroup.Item action style={itemElementStyle} >{item}</ListGroup.Item></a>;
-            sectionTitleList.push(itemElement);
-            elementIndex++;
-        })
-        this.setState({
-            sectionTitleList: sectionTitleList,
-        })
-    }
+            const searchableObjectData = this.props.searchableObjectData;
+            // classify based on first alphabet
+            for(var i in searchableObjectData){
 
- 
+                let Type = searchableObjectData[i].type[0].toUpperCase();
 
-    /**
-     * Handle the cursor hover events in device that can use mouse.
-     */
-    handleMouseOver(e) {
-        // document.getElementById('sectionTitle').display = null;
-        // document.getElementById(e.target.innerText).scrollIntoView({behavior: "instant", block: "start", inline: "nearest"})
-        location.href = '#' + e.target.innerText;
-        this.setState({
-            isShowSectionTitle: true,
-            sectionIndex: e.target.innerText,
-        })
-    }
+                sectionTitleList[Type].add(searchableObjectData[i].type)
+                hasIndexItem[Type]= true
+            }
+            console.log(searchableObjectData)
 
-    /**
-     * Handle the touch start events in mobile device
-     */
-    handleTouchStart(e) { 
-        if (e.target.classList.contains("sectionIndexItem")) {
-            location.href = '#' + sectionIndex;
-        }
-        this.setState({
-            isShowSectionTitle: true,
-            sectionIndex: e.target.innerText,
-        })
-    }
-
-    /**
-     * Handle the touch move events in mobile device
-     */
-    handleTouchMove(e) { 
-        
-        const pageX = e.changedTouches[0].pageX;
-        const pageY = e.changedTouches[0].pageY;
-        const element = document.elementFromPoint(pageX, pageY);
-
-        if (element.classList.contains("sectionIndexItem")) {
-            // document.getElementById('sectionTitle').display = null;
-            // document.getElementById(element.innerText).scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-            location.href = '#' + element.innerText;
+            
+            // update the state of the component
             this.setState({
-                isShowSectionTitle: true,
-                sectionIndex: element.innerText,
+                hasIndexItem : hasIndexItem,
+                sectionTitleList : sectionTitleList,
+            })
+
+            this.state.AlreadyUpdate = true;
+            this.state.searchableObjectData = searchableObjectData;
+
+        }
+
+        if(this.props.callbackSearchResultClear){
+            this.props.CallbackSearchResult()
+
+            this.setState({
+                IsShowResult: false,
             })
         }
     }
+    // when the mouse hover the section Index List (Alphabet List), the section Title List will appear
+    SearchIndexMouseOver(e){
 
-    /**
-     * Fired once the user click the item in object type list or in frequent seaerch
-     * Also, popout the searchResult component.
-     */
+        let text = e.target.name;
+
+
+        location.href = '#' + text;
+
+        this.setState({
+            sectionTitleData: this.state.sectionTitleList,
+            IsFirstUpdate:true,
+            IsShowSection: true,
+        })
+    }
+
+    SearchIndexMouseLeave(e){
+
+        this.setState({
+            IsShowSection:false,
+        })
+    }
+
+
+    
     getResultData(e) {
-        let isMydevice = false;
-        var searchType = '';
-        if (e === 'all devices') {
-            let searchResult = Object.values(this.props.searchableObjectData)
-            this.setState({
-                hasSearchKey: true,
-                searchKey: e,
-                searchResult: searchResult,
-            })
 
-            this.props.transferSearchResult(searchResult, null, e)
-            return 
-        } else if (typeof e === 'string') {
-            if(e === '') {
-                return;
-            } 
-            var searchKey = e
-        } else if (e.target) {
-            var searchKey = e.target.innerText;
-        } else {
-            isMydevice = true;
-            var searchKey = e;
-
-            /** The variable is to check the unfound object */
-            var duplicatedSearchKey = new Set(searchKey)
-        }
-
-        /** this.props.searchableObjectData data path: Surveillance -> SurveillanceContainer -> MainContainer -> SearchContainer  */
-        const searchableObjectData = this.props.searchableObjectData;
-
-        let searchResult = [];
-        let notFoundList = [];
-        for (let object in searchableObjectData) {
-
-            /* Search by 'my device' */
-            if (isMydevice) {
-                if (searchKey.has(searchableObjectData[object].access_control_number)) {
-                    // if (searchableObjectData[object].status.toLowerCase() !== 'normal') {
-                    //     notFoundList.push(searchableObjectData[object])
-                    // } else {
-                        searchResult.push(searchableObjectData[object])
-                        // duplicatedSearchKey.delete(searchableObjectData[object].access_control_number)
-                    // }
+        var searchResult = [];
+        var SearchKey = '';
+        if(typeof e === 'string'){
+            // for frequent search
+            SearchKey = e;
+            for( var  i in this.state.searchableObjectData){
+                if(this.state.searchableObjectData[i].type.toUpperCase() === SearchKey.toUpperCase()){
+                    searchResult.push(this.state.searchableObjectData[i])
                 }
+            }
+        }else if(e.target){
+            //  for section List Search
+            SearchKey = e.target.innerHTML;
+            for( var  i in this.state.searchableObjectData){
+                if(this.state.searchableObjectData[i].type.toUpperCase() === SearchKey.toUpperCase()){
+                    searchResult.push(this.state.searchableObjectData[i])
+                }
+            }
 
-            /* Search by object type */
-            } else if (searchableObjectData[object].type == searchKey) {
-                searchResult.push(searchableObjectData[object])
-
-            /* Search by search bar. The search key covers type, name, access_control_number */
-            } else if (searchableObjectData[object].type.toLowerCase().indexOf(searchKey.toLowerCase()) >= 0
-                        || searchableObjectData[object].access_control_number.slice(10,14).indexOf(searchKey) >= 0
-                        || searchableObjectData[object].name.toLowerCase().indexOf(searchKey.toLowerCase()) >= 0) {
-                searchResult.push(searchableObjectData[object])
-            } 
+        }else{
+            //  for my device (SSID)
+            SearchKey = e
+            
+            for( var  i in this.state.searchableObjectData){
+                if(SearchKey.has(this.state.searchableObjectData[i].access_control_number)){
+                    searchResult.push(this.state.searchableObjectData[i])
+                }
+            }
         }
+
+
+
         this.setState({
-            hasSearchKey: true,
-            searchKey: searchKey,
+            IsShowSection:false,
             searchResult: searchResult,
-            notFoundList: notFoundList
+            IsShowResult: true,
         })
 
-        /** Transfer the searched object data from SearchContainer to MainContainer */
-        this.props.transferSearchResult(searchResult, null, searchKey)
+        this.props.transferSearchResult(searchResult, null, SearchKey)
+        
     }
 
+
+    closeSearchResult(e){
+        this.setState({
+            IsShowResult: false,
+            IsShowSection: false,
+        })
+    }
     render() {
         /** Customized CSS of searchResult */
-        const searchOptionStyle = {
-            display: this.state.hasSearchKey ? 'none' : null,
-        }
 
-        // const { searchResult, searchKey, sectionIndexList, sectionIndex, isShowSectionTitle } = this.state;
-        const { trackingData, searchableObjectData, transferSearchResult } = this.props
+
+        let {searchableObjectData} = this.state;
+        let transferSearchResult = this.props.transferSearchResult
+
+        const style = {
+            SearchList:{
+                height: '60vh',
+            },
+            SearchableObjectType:{
+                height: '60vh',
+
+                zIndex: (this.state.IsShowSection)?3:0,
+
+                background:'#FFFFFF',
+
+                float: 'right', 
+
+                position:'absolute',
+
+
+                
+            },
+            FrequentSearch:{
+                height: '60vh',
+
+                zIndex: 1,
+
+                background:'#FFFFFF',
+                
+                float: 'left', 
+
+                position:'absolute',
+            }, 
+            SearchResult:{
+                height: '60vh',
+
+                display: (this.state.IsShowResult)?'block':'none',
+
+                zIndex: (this.state.IsShowResult)?2:0,
+
+                background:'#FFFFFF',
+                
+                float: 'left', 
+
+                position:'absolute',
+            }
+        }
         
         return (
-            <div id='searchContainer' className="" onTouchMove={this.handleTouchMove}>
-                <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2'>
-                    <Searchbar 
-                        placeholder={this.state.searchKey}
-                        getResultData={this.getResultData}
-                        clearSearchResult={this.props.clearSearchResult}    
-                    />
-                    
-                </div>
-
-                <div id='searchOption' className='pt-2'>
-                    <FrequentSearch 
-                        searchableObjectData={searchableObjectData}
-                        getResultData={this.getResultData}  
-                        transferSearchResult={transferSearchResult}  
-                        getResultData={this.getResultData}
-                        clearSearchResult={this.props.clearSearchResult}    
-                    />
-                    {/* <Col id='searchableObjectType' md={6} sm={6} xs={6} className='px-0'>
-                        <h6 className="font-weight-bold">{}</h6>
-                        <SearchableObjectType 
-                            sectionTitleList={this.state.sectionTitleList} 
-                            sectionIndexList={this.state.sectionIndexList} 
-                            sectionIndex={this.state.sectionIndex} 
-                            handleMouseOver={this.handleMouseOver} 
-                            handleTouchStart={this.handleTouchStart} 
-                            handleTouchMove={this.handleTouchMove} 
-                            isShowSectionTitle={this.state.isShowSectionTitle}
-                            clientHeight={this.state.clientHeight}
+            <Row>
+                <div style ={{height:'10vh'}} className='col-md-12'>
+                    <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2'>
+                        <Searchbar 
+                            placeholder={this.state.SearchKey}
+                            getResultData={this.getResultData}    
                         />
-                    </Col> */}
-                
+                        
+                    </div>
                 </div>
+                <div id="searchList" className='pt-2' className="col-md-12 col-sm-12" style={style.SearchList}>
+                    <Col id='FrequentSearch' md={10} sm={10} xs={10} className='mx-1 px-1' style = {style.FrequentSearch} >
+                        <FrequentSearch 
+                            searchableObjectData={searchableObjectData}
+                            getResultData={this.getResultData}  
+                            transferSearchResult={transferSearchResult}  
+                            getResultData={this.getResultData}    
+                        />
+                    </Col>
+                    <Col id='searchableObjectType' md={12} sm={12} xs={12} className='mx-0 px-0' style = {style.SearchableObjectType}>
+                        <SearchableObjectType
+                            sectionIndexList = {this.state.sectionIndexList}
+                            sectionTitleData = {this.state.sectionTitleData}
+                            IsShowSection = {this.state.IsShowSection}
+                            hasIndexItem = {this.state.hasIndexItem}
+                            handleMouseLeave = {this.SearchIndexMouseLeave}
+                            handleMouseOver = {this.SearchIndexMouseOver}
+                            getResultData = {this.getResultData}
+                        />
+                    </Col> 
+                    <div id="searchResult" style={style.SearchResult} className='col-sm-10 col-md-10' onMouseLeave={this.SearchResultMouseLeave}>
+                        <SearchResult 
+                            closeSearchResult = {this.closeSearchResult}
+                            searchResult={this.state.searchResult}
+                        
+                        />
+                    </div>
+                </div>
+                
+            </Row>
 
-            </div>
-        );
+        )
+            
+        
     }
 }
 

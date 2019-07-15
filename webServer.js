@@ -50,6 +50,8 @@ app.get('/data/geofenceData', db.getGeofenceData);
 
 app.post('/data/trackingData', db.getTrackingData);
 
+app.post('/data/addObject', db.addObject);
+
 app.post('/data/editObject', db.editObject);
 
 app.post('/data/editObjectPackage', db.editObjectPackage)

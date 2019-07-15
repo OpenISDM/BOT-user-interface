@@ -6,7 +6,10 @@ const lbeaconTable = 'http://' + IP + '/data/lbeaconTable';
 const gatewayTable = 'http://' + IP + '/data/gatewayTable';
 const searchResult = 'http://' + IP + '/data/searchResult';
 const geofenceData = 'http://' + IP + '/data/geofenceData';
+
 const editObject = 'http://' + IP + '/data/editObject';
+const addObject = 'http://' + IP + '/data/addObject';
+
 const editObjectPackage = 'http://' + IP +'/data/editObjectPackage';
 const signin = 'http://' + IP + '/user/signin';
 const signup = 'http://' + IP + '/user/signup';
@@ -23,6 +26,7 @@ module.exports = {
     searchResult,
     geofenceData,
     editObject,
+    addObject,
     editObjectPackage,
     signin,
     signup,

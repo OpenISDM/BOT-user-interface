@@ -20,6 +20,7 @@ export default class ContentContainer extends React.Component{
     constructor(props){
         super(props)
         this.state = {
+            callbackSearchResultClear: false,
             hasSearchKey: false,
             searchKey: '',
             searchableObjectData: [],
@@ -28,12 +29,15 @@ export default class ContentContainer extends React.Component{
             colorPanel: null,
             clearColorPanel: false,
             searchResultObjectTypeMap: {},
-            clearSearchResult: false,
         }
 
         this.transferSearchableObjectData = this.transferSearchableObjectData.bind(this)
         this.transferSearchResult = this.transferSearchResult.bind(this);
-        this.handleClearButton = this.handleClearButton.bind(this)
+        this.handleClearButton = this.handleClearButton.bind(this);
+
+
+        // call back function
+        this.CallbackSearchResult = this.CallbackSearchResult.bind(this);
     }
 
 
@@ -44,7 +48,7 @@ export default class ContentContainer extends React.Component{
         })
     }
 
-    /** Transfer the search result, not found list and color panel from SearchContainer, GridButton to MainContainer 
+    /**  the search result, not found list and color panel from SearchContainer, GridButton to MainContainer 
      *  The three variable will then pass into SurveillanceContainer
     */
     transferSearchResult(searchResult, colorPanel, searchKey) {
@@ -63,7 +67,6 @@ export default class ContentContainer extends React.Component{
                 colorPanel: colorPanel,
                 clearColorPanel: false,
                 searchResultObjectTypeMap: searchResultObjectTypeMap, 
-                clearSearchResult: false,
             })
         } else {
             this.clearGridButtonBGColor();
@@ -74,7 +77,6 @@ export default class ContentContainer extends React.Component{
                 colorPanel: null,
                 clearColorPanel: true,
                 searchResultObjectTypeMap: searchResultObjectTypeMap, 
-                clearSearchResult: false
             })
         }
     }
@@ -95,7 +97,15 @@ export default class ContentContainer extends React.Component{
             colorPanel: null,
             clearColorPanel: true,
             searchResultObjectTypeMap: {},
-            clearSearchResult: this.state.hasSearchKey ? true : false,
+            callbackSearchResultClear: true,
+        })
+    }
+
+    CallbackSearchResult(){
+        this.setState({
+            callbackSearchResultClear:false,
+
+            
         })
     }
     
@@ -105,24 +115,14 @@ export default class ContentContainer extends React.Component{
 
         const style = {
             container: {
-
-                /** The height: 100vh will cause the page can only have 100vh height.
-                 * In other word, if the seaerch result is too long and have to scroll down, the page cannot scroll down
-                 */
-                // height: '100vh'
+                height: '80vh'
             },
-            searchResultDiv: {
+            searchResult: {
                 display: this.state.hasSearchKey ? null : 'none',
                 paddingTop: 30,
             },
             alertText: {
-                fontSize: '1.2rem',
                 fontWeight: '700'
-            },
-            alertTextTitle: {
-                fontSize: '1.2rem',
-                fontWeight: 1000,
-                color: 'rgba(101, 111, 121, 0.78)'
             }
 
         }
@@ -131,76 +131,31 @@ export default class ContentContainer extends React.Component{
             /** "page-wrap" the default id named by react-burget-menu */
             <div id="page-wrap" className='' >
                 <Row id="mainContainer" className='d-flex w-100 justify-content-around mx-0 overflow-hidden' style={style.container}>
-                    <Col sm={7} md={9} lg={9} xl={9} id='searchMap' className="pl-2 pr-1" >
-                            <br/>
-                            <div>
-                                {this.state.searchResult.length === 0
-                                    ? this.state.hasSearchKey 
-                                        ?
-                                            <Alert variant='secondary' className='d-flex justify-content-start'>
-                                                <div style={style.alertTextTitle}>{'Found '}</div>
-                                                &nbsp;
-                                                &nbsp;
+                    <Hidden xs>
+                        <Col sm={8} md={8} lg={8} xl={8} >
+                                <br/>
+                                
+                                <SurveillanceContainer 
+                                    hasSearchKey={hasSearchKey} 
+                                    searchResult={searchResult}
+                                    transferSearchableObjectData={this.transferSearchableObjectData}
+                                    searchType={searchType}
+                                    colorPanel={colorPanel}
+                                    handleClearButton={this.handleClearButton}
+                                    transferSearchResult={this.transferSearchResult}
+                                    clearColorPanel={clearColorPanel}
 
-                                                <div style={style.alertText}>{this.state.searchResult.length}</div>
-                                                &nbsp;
-                                                <div style={style.alertText}>{this.state.searchKey}</div>
-                                                &nbsp;
-                                            </Alert>
-                                        :    
-                                            <Alert variant='secondary' className='d-flex justify-content-start'>
-                                                <div style={style.alertTextTitle}>{'Found '}</div>
-                                                &nbsp;
-                                                &nbsp;
-
-                                                <div style={style.alertText}>{Object.keys(this.state.searchableObjectData).length}</div>
-                                                &nbsp;
-                                                <div style={style.alertText}>{'devices'}</div>
-                                            </Alert>
-                                    : 
-                                        <Alert variant='secondary' className='d-flex justify-content-start'>
-                                            <div style={style.alertTextTitle}>{'Found '}</div>
-
-                                            {Object.keys(this.state.searchResultObjectTypeMap).map((item) => {
-                                                return  <>
-                                                            &nbsp;
-                                                            &nbsp;
-
-                                                            <div style={style.alertText}>
-                                                                {this.state.searchResultObjectTypeMap[item]}
-                                                            </div>
-                                                            &nbsp;
-                                                            <div style={style.alertText}>
-                                                                {item}
-                                                            </div>
-                                                            &nbsp;
-                                                            &nbsp;
-                                                            &nbsp;
-                                                            &nbsp;
-                                                        </>
-                                                })}
-                                        </Alert> 
-                                    
-                                } 
-                            </div>
-                            <SurveillanceContainer 
-                                hasSearchKey={hasSearchKey} 
-                                searchResult={searchResult}
-                                transferSearchableObjectData={this.transferSearchableObjectData}
-                                searchType={searchType}
-                                colorPanel={colorPanel}
-                                handleClearButton={this.handleClearButton}
-                                transferSearchResult={this.transferSearchResult}
-                                clearColorPanel={clearColorPanel}
-
-                            />
-                    </Col>
-                    <Col xs={12} sm={5} md={3} lg={3} xl={3} className="w-100 px-2">
+                                />
+                        </Col>
+                    </Hidden>
+                    <Col id="seachSection" xs={12} sm={4} md={4} lg={4} xl={4} className="w-100 px-0">
+                        
                         <SearchContainer 
                             searchableObjectData={this.state.searchableObjectData} 
                             transferSearchResult={this.transferSearchResult}
                             hasSearchKey={this.state.hasSearchKey}
-                            clearSearchResult={this.state.clearSearchResult}
+                            CallbackSearchResult = {this.CallbackSearchResult}
+                            callbackSearchResultClear = {this.state.callbackSearchResultClear}
                         />
                         
                         {/* <GridButton
@@ -208,14 +163,16 @@ export default class ContentContainer extends React.Component{
                             transferSearchResult={this.transferSearchResult}
                             clearColorPanel={clearColorPanel}
                         /> */}
-                        <div style={style.searchResultDiv} className='py-3'>
-                            <SearchResult 
-                                searchResult={this.state.searchResult} 
-                                searchKey={this.state.searchKey}
-                                transferSearchResult={this.transferSearchResult}
-                                colorPanel={this.state.colorPanel}
-                            />
-                        </div>
+                        {/*
+                            <div style={style.searchResult} className='py-3'>
+                                <SearchResult 
+                                    searchResult={searchResult} 
+                                    searchKey={this.state.searchKey}
+                                    transferSearchResult={this.transferSearchResult}
+                                    colorPanel={this.state.colorPanel}
+                                />
+                            </div>
+                        */}
                     </Col>
                 </Row>
             </div>
@@ -223,3 +180,50 @@ export default class ContentContainer extends React.Component{
         )
     }
 }
+
+
+
+
+// <div>
+                                //     {this.state.searchResult.length === 0
+                                //         ? this.state.hasSearchKey 
+                                //             ?
+                                //                 <Alert variant='secondary' className='d-flex justify-content-center'>
+                                //                     <div style={style.alertText}>{this.state.searchResult.length}</div>
+                                //                     &nbsp;
+                                //                     <div style={style.alertText}>{this.state.searchKey}</div>
+                                //                     &nbsp;
+                                //                     <div>{'found'}</div>
+                                //                 </Alert>
+                                //             :    
+                                //                 <Alert variant='secondary' className='d-flex justify-content-center'>
+                                //                     <div style={style.alertText}>{Object.keys(this.state.searchableObjectData).length}</div>
+                                //                     &nbsp;
+                                //                     <div>{'devices found'}</div>
+                                //                 </Alert>
+                                //         : 
+                                //             <Alert variant='secondary' className='d-flex justify-content-center'>
+                                //                 {Object.keys(this.state.searchResultObjectTypeMap).map((item) => {
+                                //                     return  <div>
+                                //                                 <div style={style.alertText}>
+                                //                                     {this.state.searchResultObjectTypeMap[item]}
+                                //                                 </div>
+                                //                                 &nbsp;
+                                //                                 <div style={style.alertText}>
+                                //                                     {item}
+                                //                                 </div>
+                                //                                 &nbsp;
+                                //                                 <div>{'found'}</div>
+                                //                                 &nbsp;
+                                //                                 &nbsp;
+                                //                                 &nbsp;
+                                //                             </div>
+                                //                     })}
+                                //             </Alert> 
+                                        
+                                //     } 
+                                // </div>
+
+
+
+                                

@@ -1,3 +1,6 @@
+var moment = require('moment')
+
+
 function query_getTrackingData (accuracyValue = 1) {
 
 
@@ -127,7 +130,7 @@ function query_getTrackingData (accuracyValue = 1) {
 const query_getObjectTable = 
 	`
     SELECT id, name, type, access_control_number, status, transferred_location, mac_address
-	FROM object_table ORDER BY name ASC
+	FROM object_table ORDER BY id ASC
 	`;
 
 const query_getLbeaconTable = 
@@ -150,9 +153,7 @@ const query_getGeofenceData =
 	// order by receive_time DESC 
 	// `;
 	`
-	SELECT * FROM geo_fence_alert 
-	ORDER BY receive_time DESC 
-	LIMIT 50
+	SELECT * FROM object_table
 	`;
 	
 
@@ -169,6 +170,23 @@ function query_editObject (formOption) {
 		`;
 		
 	const values = [formOption.mac_address, formOption.type, formOption.status, formOption.transferredLocation.value, formOption.access_control_number, formOption.name];
+
+	const query = {
+		text,
+		values
+	};
+
+	return query;
+}
+
+function query_addObject (formOption) {
+	const text = 
+		`
+		INSERT INTO object_table  (type, status, transferred_location, access_control_number, name, mac_address, available_status, registered_timestamp)
+		VALUES($1, $2, $3, $4, $5, $6, 1, $7)
+		`;
+		
+	const values = [formOption.type, formOption.status, formOption.transferredLocation?formOption.transferredLocation.value:null, formOption.access_control_number, formOption.name, formOption.mac_address, moment()];
 
 	const query = {
 		text,
@@ -318,6 +336,7 @@ module.exports = {
 	query_getGatewayTable,
 	query_getGeofenceData,
 	query_editObject,
+	query_addObject,
 	query_editObjectPackage,
 	query_signin,
 	query_signup,

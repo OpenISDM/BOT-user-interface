@@ -69,6 +69,12 @@ class FrequentSearch extends React.Component {
             titleText: {
                 color: 'rgb(80, 80, 80, 1)'
             }, 
+            button:{
+                fontSize: '25px',
+                borderRadius: '20px',
+                margin: '10px',
+                background: '#EEEEEE'
+            }
         }
 
         const locale = this.context;
@@ -76,7 +82,7 @@ class FrequentSearch extends React.Component {
         return (
             <>
                 <Row className='d-flex justify-content-center' style={style.titleText}>
-                    <h4>Frequent Search</h4>
+                    <h3>Frequent Search</h3>
                 </Row>
                 <div className='d-inline-flex flex-column mb-3' id='frequentSearch' >
                     {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
@@ -89,6 +95,8 @@ class FrequentSearch extends React.Component {
                                 onClick={this.handleClick} 
                                 active={this.state.searchkey === item.name.toLowerCase()} 
                                 key={index}
+                                style = {style.button}
+                                className="shadow"
                             >
                                 {item.name}
                             </Button>
@@ -100,6 +108,8 @@ class FrequentSearch extends React.Component {
                             variant="outline-custom"
                             onClick={this.handleClick} 
                             active={this.state.searchkey === 'my devices'}
+                            style = {style.button}
+                            className="shadow"
                         >
                             My Devices
                         </Button>
@@ -108,6 +118,8 @@ class FrequentSearch extends React.Component {
                             variant="outline-custom"
                             onClick={this.handleClick} 
                             active={this.state.searchkey === 'all devices'}
+                            style = {style.button}
+                            className="shadow"
                         >
                             All Devices
                         </Button>

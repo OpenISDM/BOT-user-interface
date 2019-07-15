@@ -20,9 +20,11 @@ export default class ObjectManagement extends React.Component{
             data:[],
             column:[],
             filterData:[],
-            isShowModal: false,
+            isShowEdit: false,
+            isShowAdd: false,
             selectedRowData: {},
         }
+        this.AddObjectForm = this.AddObjectForm.bind(this);
         this.handleModalForm = this.handleModalForm.bind(this);
         this.getObjectData = this.getObjectData.bind(this);
         this.handleSubmitForm = this.handleSubmitForm.bind(this);
@@ -61,36 +63,54 @@ export default class ObjectManagement extends React.Component{
 
     handleModalForm() {
         this.setState({
-            isShowModal: true,
+            isShowEdit: true,
         })
     }
 
     handleSubmitForm() {
         setTimeout(this.getObjectData,500) 
         this.setState({
-            isShowModal: false
+            isShowEdit: false, 
+            isShowAdd : false,
         })
     }
-
+    AddObjectForm(){
+        this.setState({
+            isShowAdd: true
+        })        
+    }
     render(){
-        const { isShowModal, selectedRowData } = this.state
+        const { isShowEdit, isShowAdd, selectedRowData } = this.state
+
+        const style = {
+            addObject:{
+                width : '80px',
+                height: '80px',
+                borderRadius: '40px',
+                fontSize: '40px', 
+                
+
+            }
+        }
+
+
 
         return (
-            <Container fluid className='py-2'>
-                <Row className='d-flex w-100 justify-content-around'>
+            <Container fluid className='py-2' >
+                <Row className='d-flex w-100 justify-content-around' >
                     <Col className='py-2'>
                         <ReactTable 
                             data = {this.state.filterData} 
                             columns = {this.state.column} 
-                            showPagination = {false}
                             noDataText="No Data Available"
                             className="-highlight"
+                            style={{height:'80vh'}}
                             getTrProps={(state, rowInfo, column, instance) => {
                                 return {
                                     onClick: (e, handleOriginal) => {
                                         this.setState({
                                             selectedRowData: rowInfo.original,
-                                            isShowModal: true,
+                                            isShowEdit: true,
                                         })
                                 
                                         // IMPORTANT! React-Table uses onClick internally to trigger
@@ -107,8 +127,17 @@ export default class ObjectManagement extends React.Component{
                         />
                     </Col>
                 </Row>
+                <Col md={{ span: 1, offset: 11 }}>
+                    <button id="addObject" className= "btn btn-primary" style = {style.addObject} onClick={(e) =>{
+                        this.setState({
+                                selectedRowData: null,
+                                isShowEdit: true,
+                            })
+                    }}><strong>+</strong></button>
+                </Col>
+                
                 <EditObjectForm 
-                    show = {isShowModal} 
+                    show = {isShowEdit} 
                     title='Edit Object' 
                     selectedObjectData={selectedRowData} 
                     handleSubmitForm={this.handleSubmitForm}
@@ -118,3 +147,9 @@ export default class ObjectManagement extends React.Component{
         )
     }
 }
+
+// <AddObjectForm
+//                     show = {isShowAdd} 
+//                     title='Add new Object' 
+//                     handleSubmitForm={this.handleSubmitForm}
+//                 />
