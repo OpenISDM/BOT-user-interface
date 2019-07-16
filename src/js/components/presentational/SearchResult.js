@@ -43,20 +43,30 @@ class SearchResult extends React.Component {
         this.handleToggleNotFound = this.handleToggleNotFound.bind(this);
     }
     
+    componentDidMount() {
+
+        let foundlist = [];
+
+
+        for(var searchresult in this.props.searchResult){
+            foundlist.push(this.props.searchResult[searchresult])
+        }
+        this.setState({
+            foundResult: foundlist ? foundlist : [],
+        })
+    }
     componentDidUpdate(prepProps) {
+        console.log(prepProps.searchResult)
         if(!(_.isEqual(prepProps.searchResult, this.props.searchResult))) {
             let notFoundResult = [];
-            let foundResult = [];
-            // console.log(this.props.searchResult)
-            this.props.searchResult.map(item => {
-                if (item.status.toLowerCase() !== 'normal') {
-                    notFoundResult.push(item)
-                }
-            })
-            foundResult = this.props.searchResult.filter(item => item.status.toLowerCase() === 'normal')
+            let foundlist = [];
+            console.log(this.props.searchResult)
+
+            for(var searchresult in this.props.searchResult){
+                foundlist.push(this.props.searchResult[searchresult])
+            }
             this.setState({
-                foundResult: foundResult,
-                notFoundResult: notFoundResult,
+                foundResult: foundlist ? foundlist : [],
             })
         }        
     }
@@ -208,7 +218,7 @@ class SearchResult extends React.Component {
 
         return(
             <div style = {style.searchResult} className="hideScrollBar">
-                
+            {console.log(searchResult)}
                 <div style={style.titleText}>
                     <Col md={11} xs={11} className="mx-1 d-flex justify-content-center">
                         <h4>Search Result</h4>
@@ -218,19 +228,20 @@ class SearchResult extends React.Component {
                    
                 </div>
                 <Row className='d-flex justify-content-center mt-3' style={style.titleText}>
-                    <h5> {searchResult.length - this.state.notFoundResult.length} Devices Found </h5>
+                    <h5> {searchResult.length} Devices Found </h5>
                 </Row>
 
                 <Row className='' >
-                    
-                    {this.state.foundResult.length === 0 
+                    {console.log(this.state.foundResult.length)}
+                    {this.state.foundResult.length === 0
                     ?   <Col className='text-left' style={style.noResultDiv}>
                             <em>no searchResult</em>
                         </Col> 
                     
                     :   <Col className='hideScrollBar'>
                             <ListGroup onSelect={this.handleChangeObjectStatusForm}>
-                                {searchResult.filter(item => item.status.toLowerCase() === 'normal').map((item,index) => {
+                                {this.state.foundResult.map((item,index) => {
+                                    console.log('hello')
                                     let element = 
                                         <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'found:' + index} key={index}>
                                             <Row className="d-flex justify-content-around">
@@ -244,40 +255,13 @@ class SearchResult extends React.Component {
                                 })}
                             </ListGroup>
                         </Col> 
+                       
                     }
                 </Row>
-                {this.state.notFoundResult.length !== 0 
-                ? 
-                    <div>
-                        <Row className='d-flex justify-content-center mt-3 ' style={style.titleText}>
-                            <h5> {this.state.notFoundResult.length} Devices Not Found </h5>
-                        </Row>
-                        {/* <Row className='text-left mt-3' style={style.titleText}>
-                            <h5>Devices not found</h5>
-                        </Row> */}
-                        <Row style={style.notFoundResultDiv}>
-                            <Col className=''>
-                                <ListGroup onSelect={this.handleChangeObjectStatusForm} className='overflow-auto hideScrollBar'>
-                                    {this.state.notFoundResult.map((item,index) => {
-                                        let element = 
-                                            <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'notfound:' + index} key={index}>
-                                                <Row className="d-flex justify-content-around">
-                                                    <Col lg={1} className="font-weight-bold d-flex align-self-center" style={style.firstText}>{index + 1}</Col>
-                                                    <Col lg={3} className="d-flex align-self-center justify-content-center" style={style.middleText}>{item.type}</Col>
-                                                    <Col lg={4} className="d-flex align-self-center text-muted" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
-                                                    <Col lg={3} className="d-flex align-self-center text-muted justify-content-center" style={style.lastText}>near {item.location_description}</Col>
-                                                </Row>
-                                            </ListGroup.Item>
-                                        return element
-                                    })}
-                                </ListGroup>
-                            </Col> 
-                        </Row>
-                    </div>
-                : null}
+                
             
 
-                {console.log(this.state.selectedObjectData)}
+
                 <ChangeStatusForm 
                     show={this.state.showEditObjectForm} 
                     title='Report device status' 
@@ -307,3 +291,32 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(null, mapDispatchToProps)(SearchResult);
 
+// {this.state.notFoundResult.length !== 0 
+//                 ? 
+//                     <div>
+//                         <Row className='d-flex justify-content-center mt-3 ' style={style.titleText}>
+//                             <h5> {this.state.notFoundResult.length} Devices Not Found </h5>
+//                         </Row>
+//                         {/* <Row className='text-left mt-3' style={style.titleText}>
+//                             <h5>Devices not found</h5>
+//                         </Row> */}
+//                         <Row style={style.notFoundResultDiv}>
+//                             <Col className=''>
+//                                 <ListGroup onSelect={this.handleChangeObjectStatusForm} className='overflow-auto hideScrollBar'>
+//                                     {this.state.notFoundResult.map((item,index) => {
+//                                         let element = 
+//                                             <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'notfound:' + index} key={index}>
+//                                                 <Row className="d-flex justify-content-around">
+//                                                     <Col lg={1} className="font-weight-bold d-flex align-self-center" style={style.firstText}>{index + 1}</Col>
+//                                                     <Col lg={3} className="d-flex align-self-center justify-content-center" style={style.middleText}>{item.type}</Col>
+//                                                     <Col lg={4} className="d-flex align-self-center text-muted" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
+//                                                     <Col lg={3} className="d-flex align-self-center text-muted justify-content-center" style={style.lastText}>near {item.location_description}</Col>
+//                                                 </Row>
+//                                             </ListGroup.Item>
+//                                         return element
+//                                     })}
+//                                 </ListGroup>
+//                             </Col> 
+//                         </Row>
+//                     </div>
+//                 : null}

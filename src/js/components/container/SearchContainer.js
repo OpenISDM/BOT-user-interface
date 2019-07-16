@@ -79,7 +79,6 @@ class SearchContainer extends React.Component {
                 sectionTitleList[Type].add(searchableObjectData[i].type)
                 hasIndexItem[Type]= true
             }
-            console.log(searchableObjectData)
 
             
             // update the state of the component

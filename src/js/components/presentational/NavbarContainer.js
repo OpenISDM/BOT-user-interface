@@ -6,6 +6,8 @@ import { Navbar, Nav, NavDropdown, Image, Dropdown  } from 'react-bootstrap'
 import LocaleContext from '../../context/LocaleContext';
 import SigninPage from '../container/SigninPage';
 import SignupPage from '../container/SignupPage';
+import ShiftChange from '../container/ShiftChange';
+
 import Cookies from 'js-cookie'
 
 import config from '../../config';
@@ -14,18 +16,26 @@ class NavbarContainer extends React.Component {
     constructor() {
         super();
         this.state = {
+            isShowShiftChange: false,
             isSignin: false,
             isShowSigninForm: false,
             isShowSignupForm: false,
             user: Cookies.get('user') || null,
         }
         this.handleLangSelect = this.handleLangSelect.bind(this);
+
         this.handleSigninFormShowUp = this.handleSigninFormShowUp.bind(this);
         this.handleSigninFormSubmit = this.handleSigninFormSubmit.bind(this);
         this.handleSignout = this.handleSignout.bind(this);
+
         this.handleSignupFormShowUp = this.handleSignupFormShowUp.bind(this);
         this.handleSignupFormSubmit = this.handleSignupFormSubmit.bind(this);
-        this.handleSignFormClose = this.handleSignFormClose.bind(this)
+        this.handleSignFormClose = this.handleSignFormClose.bind(this);
+
+        this.handleShiftChangeRecordShowUp = this.handleShiftChangeRecordShowUp.bind(this);
+        this.handleShiftChangeRecordSubmit = this.handleShiftChangeRecordSubmit.bind(this);
+        this.handleShiftChangeRecordClose = this.handleShiftChangeRecordClose.bind(this);
+        // console.log(this.props)
 
     }
 
@@ -37,6 +47,7 @@ class NavbarContainer extends React.Component {
         this.setState({
             isShowSigninForm: true,
             isShowSignupForm: false,
+            isShowShiftChange: false
         })
     }
 
@@ -52,6 +63,13 @@ class NavbarContainer extends React.Component {
             }.bind(this),
             300
         )
+    }
+
+    handleShiftChangeRecordShowUp(){
+
+        this.setState({
+            isShowShiftChange: true
+        })
     }
 
     handleSigninFormSubmit(username) {
@@ -82,6 +100,20 @@ class NavbarContainer extends React.Component {
         })
     }
 
+
+    handleShiftChangeRecordSubmit(){
+        
+    }
+
+
+    handleShiftChangeRecordClose(){
+        this.setState({
+            isShowShiftChange: false
+        })
+    }
+
+    
+
     render() {
         const style = {
             navbar: {
@@ -93,7 +125,7 @@ class NavbarContainer extends React.Component {
             }
         }
         const locale = this.context;
-        const { isSignin, isShowSigninForm, isShowSignupForm } = this.state;
+        const { isSignin, isShowSigninForm, isShowSignupForm, isShowShiftChange } = this.state;
 
         return (
             <Navbar id='navbar' bg="white" className="navbar sticky-top navbar-light" expand='md' style={style.navbar}>
@@ -114,11 +146,11 @@ class NavbarContainer extends React.Component {
                     <Nav className="mr-auto" >
                         <Nav.Item><Link to="/" className="nav-link nav-route" >Home</Link></Nav.Item>
                         {!Cookies.get('user') &&
-                            <>
+                            <div>
                                 <Nav.Item><Link to="/page/healthReport" className="nav-link nav-route" >{locale.health_report}</Link></Nav.Item>
                                 <Nav.Item><Link to="/page/geofence" className="nav-link nav-route" >Geofence</Link></Nav.Item>
                                 <Nav.Item><Link to="/page/objectManagement" className="nav-link nav-route" >Object Management</Link></Nav.Item>
-                            </>
+                            </div>
                         }
                     </Nav>
                     <Nav>
@@ -131,7 +163,10 @@ class NavbarContainer extends React.Component {
                             ? <NavDropdown title={<i className="fas fa-user-alt"></i> }id="collasible-nav-dropdown" alignRight>
                                 <NavDropdown.Item className="lang-select" disabled>{Cookies.get('user')}</NavDropdown.Item>
                                 <Dropdown.Divider />
+                                <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>Shift Change Record</NavDropdown.Item>
+                                <Dropdown.Divider />
                                 <NavDropdown.Item className="lang-select" onClick={this.handleSignout}>Sign out</NavDropdown.Item>
+
                             </NavDropdown> 
                                 
                             : <Nav.Item className="nav-link" onClick={this.handleSigninFormShowUp}>Sign In</Nav.Item>
@@ -150,7 +185,16 @@ class NavbarContainer extends React.Component {
                     handleSignupFormSubmit={this.handleSignupFormSubmit}
                     handleSignFormClose={this.handleSignFormClose}
                 />
+
+                <ShiftChange 
+                    show = {isShowShiftChange}
+
+                    handleShiftChangeRecordSubmit = {this.handleShiftChangeRecordSubmit}
+                    handleShiftChangeRecordClose={this.handleShiftChangeRecordClose}
+                />
             </Navbar>
+            
+            
         );
     }
 }

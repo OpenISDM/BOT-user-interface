@@ -3,7 +3,8 @@ import {
     SELECT_OBJECT_LIST,
     RETRIEVE_TRACKING_DATA,
     SHOULD_UPDATE_TRACKING_DATA,
-    CHANGE_LOCATION_ACCURACY
+    CHANGE_LOCATION_ACCURACY,
+    RETRIEVE_OBJECT_TABLE
 } from './actionType';
 
 /** Action Creator for Sidebar */
@@ -40,5 +41,12 @@ export const changeLocationAccuracy = (value) => {
     return {
         type: CHANGE_LOCATION_ACCURACY,
         value: value
+    }
+}
+
+export const retrieveObjectTable = (objectArray) => {
+    return {
+        type: RETRIEVE_OBJECT_TABLE,
+        value: objectArray 
     }
 }
