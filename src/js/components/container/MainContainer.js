@@ -20,7 +20,7 @@ export default class ContentContainer extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-            callbackSearchResultClear: false,
+            
             hasSearchKey: false,
             searchKey: '',
             searchableObjectData: [],
@@ -29,6 +29,7 @@ export default class ContentContainer extends React.Component{
             colorPanel: null,
             clearColorPanel: false,
             searchResultObjectTypeMap: {},
+            closeSearchResult: false,
         }
 
         this.transferSearchableObjectData = this.transferSearchableObjectData.bind(this)
@@ -36,8 +37,6 @@ export default class ContentContainer extends React.Component{
         this.handleClearButton = this.handleClearButton.bind(this);
 
 
-        // call back function
-        this.CallbackSearchResult = this.CallbackSearchResult.bind(this);
     }
 
 
@@ -89,25 +88,31 @@ export default class ContentContainer extends React.Component{
     }
 
 
-    handleClearButton() {
+    handleClearButton(e) {
         this.clearGridButtonBGColor();
+        console.log(this.state.closeSearchResult)
+        if (e != 'not switch'){
+            this.state.closeSearchResult = !this.state.closeSearchResult
+        }
+        
         this.setState({
             hasSearchKey: false,
             searchResult: [],
             colorPanel: null,
             clearColorPanel: true,
             searchResultObjectTypeMap: {},
-            callbackSearchResultClear: true,
-        })
-    }
+            
 
-    CallbackSearchResult(){
-        this.setState({
-            callbackSearchResultClear:false,
 
             
         })
     }
+    handleCloseSearchResult(){
+        this.handleClearButton('not switch')
+    }
+
+    
+
     
     render(){
 
@@ -130,7 +135,7 @@ export default class ContentContainer extends React.Component{
 
             /** "page-wrap" the default id named by react-burget-menu */
             <div id="page-wrap" className='' >
-                <Row id="mainContainer" className='d-flex w-100 justify-content-around mx-0 overflow-hidden' style={style.container}>
+                <Row id="mainContainer" className='d-flex w-100 justify-content-around mx-0 px-0 overflow-hidden' style={style.container}>
                     <Hidden xs>
                         <Col sm={8} md={8} lg={8} xl={8} >
                                 <br/>
@@ -148,31 +153,17 @@ export default class ContentContainer extends React.Component{
                                 />
                         </Col>
                     </Hidden>
-                    <Col id="seachSection" xs={12} sm={4} md={4} lg={4} xl={4} className="w-100 px-0">
+                    <Col id="seachSection" xs={12} sm={4} md={4} lg={4} xl={4} className="w-100 px-0 mx-0">
                         
                         <SearchContainer 
                             searchableObjectData={this.state.searchableObjectData} 
                             transferSearchResult={this.transferSearchResult}
                             hasSearchKey={this.state.hasSearchKey}
-                            CallbackSearchResult = {this.CallbackSearchResult}
-                            callbackSearchResultClear = {this.state.callbackSearchResultClear}
+                            closeSearchResult = {this.state.closeSearchResult}
+
+                            handleCloseSearchResult={this.handleClearButton}
                         />
-                        
-                        {/* <GridButton
-                            searchableObjectData={this.state.searchableObjectData} 
-                            transferSearchResult={this.transferSearchResult}
-                            clearColorPanel={clearColorPanel}
-                        /> */}
-                        {/*
-                            <div style={style.searchResult} className='py-3'>
-                                <SearchResult 
-                                    searchResult={searchResult} 
-                                    searchKey={this.state.searchKey}
-                                    transferSearchResult={this.transferSearchResult}
-                                    colorPanel={this.state.colorPanel}
-                                />
-                            </div>
-                        */}
+
                     </Col>
                 </Row>
             </div>
@@ -180,49 +171,6 @@ export default class ContentContainer extends React.Component{
         )
     }
 }
-
-
-
-
-// <div>
-                                //     {this.state.searchResult.length === 0
-                                //         ? this.state.hasSearchKey 
-                                //             ?
-                                //                 <Alert variant='secondary' className='d-flex justify-content-center'>
-                                //                     <div style={style.alertText}>{this.state.searchResult.length}</div>
-                                //                     &nbsp;
-                                //                     <div style={style.alertText}>{this.state.searchKey}</div>
-                                //                     &nbsp;
-                                //                     <div>{'found'}</div>
-                                //                 </Alert>
-                                //             :    
-                                //                 <Alert variant='secondary' className='d-flex justify-content-center'>
-                                //                     <div style={style.alertText}>{Object.keys(this.state.searchableObjectData).length}</div>
-                                //                     &nbsp;
-                                //                     <div>{'devices found'}</div>
-                                //                 </Alert>
-                                //         : 
-                                //             <Alert variant='secondary' className='d-flex justify-content-center'>
-                                //                 {Object.keys(this.state.searchResultObjectTypeMap).map((item) => {
-                                //                     return  <div>
-                                //                                 <div style={style.alertText}>
-                                //                                     {this.state.searchResultObjectTypeMap[item]}
-                                //                                 </div>
-                                //                                 &nbsp;
-                                //                                 <div style={style.alertText}>
-                                //                                     {item}
-                                //                                 </div>
-                                //                                 &nbsp;
-                                //                                 <div>{'found'}</div>
-                                //                                 &nbsp;
-                                //                                 &nbsp;
-                                //                                 &nbsp;
-                                //                             </div>
-                                //                     })}
-                                //             </Alert> 
-                                        
-                                //     } 
-                                // </div>
 
 
 

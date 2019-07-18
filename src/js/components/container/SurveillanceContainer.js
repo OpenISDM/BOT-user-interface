@@ -3,7 +3,19 @@ import React from 'react';
 import Surveillance from '../presentational/Surveillance';
 import ToggleSwitch from './ToggleSwitch';
 import { Nav, Row, ButtonToolbar, Button, ToggleButton}  from 'react-bootstrap';
+
+// import jsPDF from 'jspdf';
+// import 'jspdf-autotable';
+
+// import html2canvas from 'html2canvas';
+
+// import printJS from 'print-js'
+
+
+
 import ChangeStatusForm from './ChangeStatusForm';
+import PdfDownloadForm from '../presentational/PdfDownloadForm'
+
 import config from '../../config';
 import LocaleContext from '../../context/LocaleContext';
 import ConfirmForm from './ConfirmForm'
@@ -17,6 +29,10 @@ import {
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import GridButton from '../container/GridButton';
 
+var QRCode = require('qrcode.react');
+
+
+
 
 class SurveillanceContainer extends React.Component {
     constructor(props){
@@ -25,6 +41,7 @@ class SurveillanceContainer extends React.Component {
             rssi: 1,
             showEditObjectForm: false,
             showConfirmForm: false,
+            showPdfDownloadForm: false,
             selectedObjectData: [],
             formOption: [],
             showDevice: false,
@@ -38,6 +55,9 @@ class SurveillanceContainer extends React.Component {
         this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this);
         this.handleClickButton = this.handleClickButton.bind(this)
         this.transferSearchableObjectData = this.transferSearchableObjectData.bind(this)
+
+        this.pdfDownload = this.pdfDownload.bind(this)
+        this.handleClosePdfForm = this.handleClosePdfForm.bind(this)
     }
 
 
@@ -151,12 +171,31 @@ class SurveillanceContainer extends React.Component {
         return string.charAt(0).toUpperCase() + string.substring(1)
     }
     
+
+    pdfDownload(){
+        this.setState({
+            showPdfDownloadForm: true,
+        })
+        
+
+
+    }
+    handleClosePdfForm(){
+        this.setState({
+            showPdfDownloadForm: false
+        })
+    }
+    // printSearchResult(){
+
+    //     printJS('searchResultTable', 'html', {css:true})
+    // }
     render(){
         const { rssi, 
                 showEditObjectForm, 
                 showConfirmForm, 
                 selectedObjectData, 
                 formOption, 
+                showPdfDownloadForm
             } = this.state;
         const { hasSearchKey, 
                 searchResult,
@@ -189,6 +228,7 @@ class SurveillanceContainer extends React.Component {
 
         return(
             <div id="surveillanceContainer" style={style.surveillanceContainer} className='overflow-hidden'>
+                
                 <div style={style.mapBlock}>
                     <Surveillance 
                         rssi={rssi} 
@@ -205,37 +245,25 @@ class SurveillanceContainer extends React.Component {
                 <div style={style.navBlock}>
 
                     <Nav className='d-flex align-items-start'>
-                        <Nav.Item className='d-flex align-self-start'>
-                            <div style={style.title} className='text-wrap'>Location Accuracy</div>
+                        <Nav.Item className='d-flex align-self-center'>
+                            <div style={style.title} className='text-wrap'>{locale.LOCATION_ACCURACY}</div>
                         </Nav.Item>
                         <Nav.Item className='pt-2 mr-2'>
                             <ToggleSwitch 
                                 adjustRssi={this.adjustRssi} 
-                                leftLabel={this.capitalFirstLetter(locale.low)} 
-                                defaultLabel={this.capitalFirstLetter(locale.med)} 
-                                rightLabel={this.capitalFirstLetter(locale.high)} 
+                                leftLabel={this.capitalFirstLetter(locale.LOW)} 
+                                defaultLabel={this.capitalFirstLetter(locale.MED)} 
+                                rightLabel={this.capitalFirstLetter(locale.HIGH)} 
                             />
                         </Nav.Item>
                         <Nav.Item className='mt-2'>
-                            <Button variant="outline-primary" className='mr-1 ml-2' onClick={this.handleClickButton}>Clear</Button>
+                            <Button variant="outline-primary" className='mr-1 ml-2' onClick={this.handleClickButton}>{locale.CLEAR}</Button>
                         </Nav.Item>
                         <Nav.Item className='mt-2'>
-                            <Button variant="outline-primary" className='mr-1 mr-4' onClick={this.handleClickButton}>Save</Button>
+                            <Button variant="outline-primary" className='mr-1 mr-4' onClick={this.pdfDownload}>{locale.SAVE}</Button>
 
                         </Nav.Item>
-                        <Nav.Item className='mt-2'>
-                            <Button variant="outline-primary" className='mr-1' onClick={this.handleClickButton} active={this.state.showDevice}>
-                                {this.state.showDevice ? 'Hide devices' : 'Show devices' }
-                            </Button>
-                        </Nav.Item >
-                        <div style={style.gridButton} className='mt-2'>
-                            <GridButton
-                                searchableObjectData={this.state.searchableObjectData} 
-                                transferSearchResult={this.props.transferSearchResult}
-                                clearColorPanel={this.props.clearColorPanel}
-                                isClear={this.state.isClear}
-                            />
-                        </div>
+                        
                     </Nav>
 
                 </div>
@@ -252,10 +280,18 @@ class SurveillanceContainer extends React.Component {
                     show={showConfirmForm}  
                     title='Thank you for reporting' 
                     selectedObjectData={formOption} 
-                    handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose} 
+                    // handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose} 
                     handleConfirmFormSubmit={this.handleConfirmFormSubmit}
                     searchableObjectData={this.state.searchableObjectData}
                 />
+
+                <PdfDownloadForm 
+                    show={showPdfDownloadForm}
+                    data={searchResult}
+                    handleClose = {this.handleClosePdfForm}
+                />
+                
+
             </div>
         )
     }

@@ -1,11 +1,14 @@
 import React from 'react';
 import { Col, ListGroup, Row, Button } from 'react-bootstrap';
+
 import LocaleContext from '../../context/LocaleContext';
+
 import axios from 'axios';
 import dataSrc from '../../dataSrc';
 import { connect } from 'react-redux';
 import { shouldUpdateTrackingData } from '../../action/action';
 import Cookies from 'js-cookie'
+import config from '../../config';
 
 class FrequentSearch extends React.Component {
 
@@ -14,9 +17,36 @@ class FrequentSearch extends React.Component {
         this.state = {
             hasGetUserInfo: false,
             searchkey: '',
+            cookie: document.cookie,
         }
 
         this.handleClick = this.handleClick.bind(this);
+        this.cookieListener = this.cookieListener.bind(this);
+    }
+
+
+    componentWillUnmount() {
+       // use intervalId from the state to clear the interval
+       clearInterval(this.state.intervalId);
+    }
+
+
+
+    componentDidMount(){
+        
+        var intervalId = setInterval(this.cookieListener, 300);
+       // store intervalId in the state so it can be accessed later:
+        this.setState({intervalId: intervalId});
+
+    }
+
+    cookieListener(){
+        if(this.state.cookie !== document.cookie){
+
+            this.setState({
+                cookie : document.cookie
+            })
+        }
     }
     componentDidUpdate(prepProps) {
         if (prepProps.clearSearchResult !== this.props.clearSearchResult && !prepProps.clearSearchResult) {
@@ -70,10 +100,10 @@ class FrequentSearch extends React.Component {
                 color: 'rgb(80, 80, 80, 1)'
             }, 
             button:{
-                fontSize: '25px',
                 borderRadius: '20px',
                 margin: '10px',
-                background: '#EEEEEE'
+                background: '#EEEEEE',
+                float:'left'
             }
         }
 
@@ -81,8 +111,9 @@ class FrequentSearch extends React.Component {
 
         return (
             <>
+            {}
                 <Row className='d-flex justify-content-center' style={style.titleText}>
-                    <h3>Frequent Search</h3>
+                    <h3>{locale.FREQUENT_SEARCH}</h3>
                 </Row>
                 <div className='d-inline-flex flex-column mb-3' id='frequentSearch' >
                     {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
@@ -90,28 +121,34 @@ class FrequentSearch extends React.Component {
                     }).map( (item, index) => {
                         
                         return (
-                            <Button
-                                variant="outline-custom"
-                                onClick={this.handleClick} 
-                                active={this.state.searchkey === item.name.toLowerCase()} 
-                                key={index}
-                                style = {style.button}
-                                className="shadow"
-                            >
-                                {item.name}
-                            </Button>
+                            <div key={index}>
+                                
+                                <Button
+                                    variant="outline-custom"
+                                    onClick={this.handleClick} 
+                                    active={this.state.searchkey === item.name.toLowerCase()} 
+                                    key={index}
+                                    style = {style.button}
+                                    className="shadow col-md-8 col-12"
+                                >
+
+                                    {item.name}
+                                </Button>
+                                <img src={config.objectImage[item.name]} alt="Girl in a jacket" className="objectImage"/>
+                            </div>
                         )
                     })}
                     &nbsp;
+
                     {Cookies.get('user') && 
                         <Button
                             variant="outline-custom"
                             onClick={this.handleClick} 
                             active={this.state.searchkey === 'my devices'}
                             style = {style.button}
-                            className="shadow"
+                            className="shadow col-md-8 col-12"
                         >
-                            My Devices
+                            {locale.MY_DEVICE}
                         </Button>
                     }
                         <Button 
@@ -119,9 +156,9 @@ class FrequentSearch extends React.Component {
                             onClick={this.handleClick} 
                             active={this.state.searchkey === 'all devices'}
                             style = {style.button}
-                            className="shadow"
+                            className="shadow col-md-8 col-12"
                         >
-                            All Devices
+                            {locale.ALL_DEVICE}
                         </Button>
                 </div>
             </>

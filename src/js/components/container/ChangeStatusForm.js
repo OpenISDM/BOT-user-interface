@@ -49,6 +49,7 @@ class ChangeStatusForm extends React.Component {
     }
   
     handleClose(e) {
+        console.log('Submit')
         if(this.props.handleChangeObjectStatusFormClose) {
             this.props.handleChangeObjectStatusFormClose();
         }
@@ -58,18 +59,19 @@ class ChangeStatusForm extends React.Component {
     }
   
     handleShow() {
+
         this.setState({ 
             show: true 
         });
     }
 
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         const { selectedObjectData } = this.props
-        // console.log(this.props)
-        // console.log(prevProps)
-        if (prevProps != this.props && selectedObjectData) {
 
+
+
+        if (prevProps != this.props  &&  selectedObjectData) {
             let selectedObjectData = this.props.selectedObjectData.length !== 0 ? this.props.selectedObjectData : []
             this.setState({
                 show: this.props.show,
@@ -88,7 +90,7 @@ class ChangeStatusForm extends React.Component {
     }
 
     handleSubmit(e) {
-        
+        console.log('Submit')
         const button = e.target;
         let selectedObjectData = this.props.selectedObjectData.length !== 0 ? this.props.selectedObjectData : []
         const { mac_address, name, type, access_control_number } = selectedObjectData;
@@ -107,6 +109,7 @@ class ChangeStatusForm extends React.Component {
     }
 
     handleCheck(e) {
+        console.log('Submit')
         this.setState({
             formOption: {
                 ...this.state.formOption,
@@ -116,6 +119,7 @@ class ChangeStatusForm extends React.Component {
     }
 
     handleSelect(selectedOption) {
+        console.log('Submit')
         this.setState({
             formOption: {
                 ...this.state.formOption,

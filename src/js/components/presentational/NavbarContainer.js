@@ -35,7 +35,7 @@ class NavbarContainer extends React.Component {
         this.handleShiftChangeRecordShowUp = this.handleShiftChangeRecordShowUp.bind(this);
         this.handleShiftChangeRecordSubmit = this.handleShiftChangeRecordSubmit.bind(this);
         this.handleShiftChangeRecordClose = this.handleShiftChangeRecordClose.bind(this);
-        // console.log(this.props)
+
 
     }
 
@@ -91,6 +91,7 @@ class NavbarContainer extends React.Component {
         this.setState({
             user: null
         })
+        // window.location.reload()
     }
 
     handleSignFormClose() {
@@ -107,6 +108,7 @@ class NavbarContainer extends React.Component {
 
 
     handleShiftChangeRecordClose(){
+
         this.setState({
             isShowShiftChange: false
         })
@@ -143,14 +145,14 @@ class NavbarContainer extends React.Component {
                 
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">  
-                    <Nav className="mr-auto" >
-                        <Nav.Item><Link to="/" className="nav-link nav-route" >Home</Link></Nav.Item>
-                        {!Cookies.get('user') &&
-                            <div>
-                                <Nav.Item><Link to="/page/healthReport" className="nav-link nav-route" >{locale.health_report}</Link></Nav.Item>
-                                <Nav.Item><Link to="/page/geofence" className="nav-link nav-route" >Geofence</Link></Nav.Item>
-                                <Nav.Item><Link to="/page/objectManagement" className="nav-link nav-route" >Object Management</Link></Nav.Item>
-                            </div>
+                    <Nav className="mr-auto col-md-8" >
+                        <Nav.Item><Link to="/" className="nav-link nav-route" >{locale.HOME}</Link></Nav.Item>
+                        {Cookies.get('user') &&
+                            <>
+                                <Nav.Item><Link to="/page/healthReport" className="nav-link nav-route" >{locale.HEALTH_REPORT}</Link></Nav.Item>
+                                <Nav.Item><Link to="/page/geofence" className="nav-link nav-route" >{locale.GEOFENCE}</Link></Nav.Item>
+                                <Nav.Item><Link to="/page/objectManagement" className="nav-link nav-route" >{locale.OBJECT_MANAGEMENT}</Link></Nav.Item>
+                            </>
                         }
                     </Nav>
                     <Nav>
@@ -163,13 +165,13 @@ class NavbarContainer extends React.Component {
                             ? <NavDropdown title={<i className="fas fa-user-alt"></i> }id="collasible-nav-dropdown" alignRight>
                                 <NavDropdown.Item className="lang-select" disabled>{Cookies.get('user')}</NavDropdown.Item>
                                 <Dropdown.Divider />
-                                <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>Shift Change Record</NavDropdown.Item>
+                                <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>{locale.SHIFT_CHANGE_RECORD}</NavDropdown.Item>
                                 <Dropdown.Divider />
-                                <NavDropdown.Item className="lang-select" onClick={this.handleSignout}>Sign out</NavDropdown.Item>
+                                <NavDropdown.Item className="lang-select" onClick={this.handleSignout}>{locale.SIGN_OUT}</NavDropdown.Item>
 
                             </NavDropdown> 
                                 
-                            : <Nav.Item className="nav-link" onClick={this.handleSigninFormShowUp}>Sign In</Nav.Item>
+                            : <Nav.Item className="nav-link" onClick={this.handleSigninFormShowUp}>{locale.SIGN_IN}</Nav.Item>
                         }
                     </Nav>
                 </Navbar.Collapse>
@@ -185,7 +187,6 @@ class NavbarContainer extends React.Component {
                     handleSignupFormSubmit={this.handleSignupFormSubmit}
                     handleSignFormClose={this.handleSignFormClose}
                 />
-
                 <ShiftChange 
                     show = {isShowShiftChange}
 

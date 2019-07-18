@@ -17,7 +17,7 @@ class ShiftChange extends React.Component {
             show: false,
             searchResult: [],
         }
-        // console.log(this.props)
+
         this.handleClose = this.handleClose.bind(this)
         this.getObjectData = this.getObjectData.bind(this)
         this.closeObjectTable = this.closeObjectTable.bind(this);
@@ -34,8 +34,6 @@ class ShiftChange extends React.Component {
     componentDidUpdate(preProps) {
 
         if (preProps != this.props){
-
-            
                 this.setState({
                 show: this.props.show,
             })
@@ -57,15 +55,14 @@ class ShiftChange extends React.Component {
     }
 
     handleClose() {
+        this.props.handleShiftChangeRecordClose()
         this.setState({
             show: false
         })
     }
 
     closeObjectTable(){
-        this.setState({
-            show: false
-        })
+        this.handleClose()
     }
 
 

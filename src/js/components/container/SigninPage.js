@@ -97,6 +97,7 @@ class SigninPage extends React.Component {
                                     Cookies.set('user', username)
                                     this.getSearchHistory()
                                     handleSigninFormSubmit(username)
+                                    // window.location.reload()
                                 }
                             }).catch(error => {
                                 console.log(error)

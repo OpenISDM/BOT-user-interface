@@ -36,8 +36,8 @@ class EditObjectForm extends React.Component {
                 type: '',
                 status: '', 
                 access_control_number: '',
-                transferredLocation: null,
-                mac_address: null
+                transferredLocation: '',
+                mac_address: ''
             }
         };
         this.handleShow = this.handleShow.bind(this);
@@ -67,8 +67,8 @@ class EditObjectForm extends React.Component {
                         status: status,
                         access_control_number: access_control_number,
                         transferredLocation: transferred_location ? {
-                            'value': transferred_location, 
-                            'label': transferred_location
+                            'value': '', 
+                            'label': ''
                         } : null,
                     }
                 })
@@ -94,7 +94,13 @@ class EditObjectForm extends React.Component {
     handleClose() {
         this.setState({ 
             show: false,
-            formOption: {}
+            formOption: {
+                name: [],
+                type: [],
+                status: null,
+                access_control_number: [],
+                transferredLocation: null,
+            }
         });
     }
   

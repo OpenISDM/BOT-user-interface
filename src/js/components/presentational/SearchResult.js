@@ -17,6 +17,7 @@ import { deepEqual } from 'assert';
 
 
 import '../../../css/hideScrollBar.css'
+import config from '../../config';
 
 
 
@@ -35,7 +36,7 @@ class SearchResult extends React.Component {
             showNotResult: false,
 
         }
-        // console.log(this.props.SearchResult)
+
         this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
         this.handleChangeObjectStatusFormSubmit = this.handleChangeObjectStatusFormSubmit.bind(this)
         this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this)
@@ -54,13 +55,15 @@ class SearchResult extends React.Component {
         this.setState({
             foundResult: foundlist ? foundlist : [],
         })
+        
     }
     componentDidUpdate(prepProps) {
-        console.log(prepProps.searchResult)
+        // console.log('Submit')
+
         if(!(_.isEqual(prepProps.searchResult, this.props.searchResult))) {
             let notFoundResult = [];
             let foundlist = [];
-            console.log(this.props.searchResult)
+
 
             for(var searchresult in this.props.searchResult){
                 foundlist.push(this.props.searchResult[searchresult])
@@ -72,7 +75,7 @@ class SearchResult extends React.Component {
     }
 
     handleChangeObjectStatusForm(eventKey) {
-        // console.log(eventKey)
+        console.log('this.props')
         const eventItem = eventKey.split(':');
         const isFound = eventItem[0]
         const number = eventItem[1]
@@ -86,6 +89,7 @@ class SearchResult extends React.Component {
     }
 
     handleChangeObjectStatusFormClose() {
+        console.log('handleChangeObjectStatusFormClose')
         this.setState({
             showEditObjectForm: false,
             showConfirmForm: false,
@@ -137,6 +141,7 @@ class SearchResult extends React.Component {
                         showConfirmForm: false,
                         formOption: [],
                     })
+
                     this.props.transferSearchResult(changedStatusSearchResult, colorPanel )
                     this.props.shouldUpdateTrackingData(true)
                 }
@@ -218,7 +223,7 @@ class SearchResult extends React.Component {
 
         return(
             <div style = {style.searchResult} className="hideScrollBar">
-            {console.log(searchResult)}
+
                 <div style={style.titleText}>
                     <Col md={11} xs={11} className="mx-1 d-flex justify-content-center">
                         <h4>Search Result</h4>
@@ -231,8 +236,8 @@ class SearchResult extends React.Component {
                     <h5> {searchResult.length} Devices Found </h5>
                 </Row>
 
-                <Row className='' >
-                    {console.log(this.state.foundResult.length)}
+                <Row className='' id = "searchResultTable" >
+
                     {this.state.foundResult.length === 0
                     ?   <Col className='text-left' style={style.noResultDiv}>
                             <em>no searchResult</em>
@@ -241,14 +246,15 @@ class SearchResult extends React.Component {
                     :   <Col className='hideScrollBar'>
                             <ListGroup onSelect={this.handleChangeObjectStatusForm}>
                                 {this.state.foundResult.map((item,index) => {
-                                    console.log('hello')
+
                                     let element = 
                                         <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'found:' + index} key={index}>
-                                            <Row className="d-flex justify-content-around">
+                                            <Row className="d-flex align-self-center justify-content-center">
                                                 <Col lg={1} className="font-weight-bold d-flex align-self-center" style={style.firstText}>{index + 1}</Col>
                                                 <Col lg={3} className="d-flex align-self-center justify-content-center" style={style.middleText}>{item.type}</Col>
-                                                <Col lg={4} className="d-flex align-self-center text-muted" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
-                                                <Col lg={3} className="d-flex align-self-center text-muted justify-content-center" style={style.lastText}>near {item.location_description}</Col>
+                                                <Col lg={4} className="d-flex align-self-center justify-content-center" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
+                                                <Col lg={3}  className="d-flex align-self-center justify-content-center" style={style.lastText}><img src={config.objectImage[item.type]} alt="image" width="50" height="50"/></Col>
+
                                             </Row>
                                         </ListGroup.Item>
                                     return element

@@ -3,6 +3,8 @@ import React from 'react';
 import { Col, Row, Nav, ListGroup} from 'react-bootstrap'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
+import LocaleContext from '../../context/LocaleContext';
+
 // self-defined component
 import Searchbar from '../presentational/Searchbar';
 import FrequentSearch from './FrequentSearch';
@@ -10,7 +12,7 @@ import FrequentSearch from './FrequentSearch';
 import SearchableObjectType from '../presentational/SeachableObjectType';
 import SearchResult from '../presentational/SearchResult';
 
-
+import Cookies from 'js-cookie'
 
 
 /*
@@ -40,6 +42,7 @@ class SearchContainer extends React.Component {
             IsShowResult:false,
             IsFirstUpdate:false,
 
+
         }
 
         this.SearchIndexMouseOver = this.SearchIndexMouseOver.bind(this);
@@ -61,7 +64,9 @@ class SearchContainer extends React.Component {
     // this function when the this.props change or you call this.setState() function
     // In this function, if the searchableObjectData is changed, the layout will immediately change
     componentDidUpdate(prepProps, prevState){
-
+       
+        
+        
         if(this.props.searchableObjectData !=null && !this.state.AlreadyUpdate && this.props.searchableObjectData.length != prepProps.searchableObjectData.length){
 
             var sectionTitleList = {},
@@ -92,13 +97,14 @@ class SearchContainer extends React.Component {
 
         }
 
-        if(this.props.callbackSearchResultClear){
-            this.props.CallbackSearchResult()
-
+        if(this.props.closeSearchResult != prepProps.closeSearchResult){
             this.setState({
                 IsShowResult: false,
+                IsShowSection: false,
             })
         }
+
+
     }
     // when the mouse hover the section Index List (Alphabet List), the section Title List will appear
     SearchIndexMouseOver(e){
@@ -130,12 +136,23 @@ class SearchContainer extends React.Component {
         var SearchKey = '';
         if(typeof e === 'string'){
             // for frequent search
+
             SearchKey = e;
-            for( var  i in this.state.searchableObjectData){
-                if(this.state.searchableObjectData[i].type.toUpperCase() === SearchKey.toUpperCase()){
+
+            if(SearchKey === 'all devices'){
+                // print(SearchKey)
+                for( var  i in this.state.searchableObjectData){  
                     searchResult.push(this.state.searchableObjectData[i])
                 }
+            }else{
+                for( var  i in this.state.searchableObjectData){
+                    if(this.state.searchableObjectData[i].type.toUpperCase() === SearchKey.toUpperCase()){
+                        searchResult.push(this.state.searchableObjectData[i])
+                    }
+                }
+            
             }
+            
         }else if(e.target){
             //  for section List Search
             SearchKey = e.target.innerHTML;
@@ -170,15 +187,17 @@ class SearchContainer extends React.Component {
 
 
     closeSearchResult(e){
+
+        this.props.handleCloseSearchResult()
         this.setState({
             IsShowResult: false,
             IsShowSection: false,
         })
+
     }
     render() {
         /** Customized CSS of searchResult */
-
-
+        const locale = this.context;
         let {searchableObjectData} = this.state;
         let transferSearchResult = this.props.transferSearchResult
 
@@ -228,7 +247,7 @@ class SearchContainer extends React.Component {
         
         return (
             <Row>
-                <div style ={{height:'10vh'}} className='col-md-12'>
+                <div style ={{height:'10vh'}} className='col-12'>
                     <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2'>
                         <Searchbar 
                             placeholder={this.state.SearchKey}
@@ -237,9 +256,10 @@ class SearchContainer extends React.Component {
                         
                     </div>
                 </div>
-                <div id="searchList" className='pt-2' className="col-md-12 col-sm-12" style={style.SearchList}>
-                    <Col id='FrequentSearch' md={10} sm={10} xs={10} className='mx-1 px-1' style = {style.FrequentSearch} >
+                <div id="searchList"  className="col-md-12 col-sm-12 px-0" style={style.SearchList}>
+                    <Col id='FrequentSearch' md={9} sm={9} xs={12} className=' mx-0 px-0' style = {style.FrequentSearch} >
                         <FrequentSearch 
+                            SingIn = {this.state.SignIn}
                             searchableObjectData={searchableObjectData}
                             getResultData={this.getResultData}  
                             transferSearchResult={transferSearchResult}  
@@ -259,6 +279,7 @@ class SearchContainer extends React.Component {
                     </Col> 
                     <div id="searchResult" style={style.SearchResult} className='col-sm-10 col-md-10' onMouseLeave={this.SearchResultMouseLeave}>
                         <SearchResult 
+                            transferSearchResult = {this.props.transferSearchResult}
                             closeSearchResult = {this.closeSearchResult}
                             searchResult={this.state.searchResult}
                         
@@ -274,5 +295,5 @@ class SearchContainer extends React.Component {
     }
 }
 
-
+SearchContainer.contextType = LocaleContext;
 export default SearchContainer;

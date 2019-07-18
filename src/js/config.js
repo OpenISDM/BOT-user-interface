@@ -9,6 +9,11 @@ import white_pin from '../img/white_pin.svg';
 import BOT_LOGO from '../img/BOT_LOGO_RED_MOD.png';
 import HealthReport from './components/container/HealthReport';
 
+import BladderScanner from '../img/objectImage/Bladder Scanner.jpg'
+import Bed from '../img/objectImage/Bed.jpg'
+import Ultrasound from '../img/objectImage/Sononite Ultrasound.jpg'
+import InfusionPump from '../img/objectImage/Infusion Pump.jpg'
+
 
 const config = {
 
@@ -109,6 +114,19 @@ const config = {
     healthReport: {
         pollLbeaconTabelIntevalTime: 60000,
         pollGatewayTableIntevalTime: 60000,
+    }, 
+    objectImage: {
+        'Bladder scanner' : BladderScanner, 
+        'Bed' : Bed,
+        'SONOSITE Ultrasound': Ultrasound,
+        'Infusion pump': InfusionPump
+
+    },
+    objectImageTable:{
+        BladderScanner : 'Bladder scanner', 
+        Bed : 'Bed',
+        SonositeUltrasound: 'SONOSITE Ultrasound',
+        InfusionPump: 'Infusion pump'
     }
 
 

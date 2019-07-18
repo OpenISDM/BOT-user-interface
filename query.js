@@ -3,6 +3,9 @@ const moment = require('moment-timezone');
 const queryType = require ('./queryType');
 const bcrypt = require('bcrypt');
 const pg = require('pg');
+
+var pdf = require('html-pdf');
+
 const config = {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -239,7 +242,46 @@ const editLbeacon = (request, response) => {
         response.status(200).json(results)
     })
 }
+
+const  QRCode = (request, response) => {
+    var table = "<table border='1' style='width:100%;word-break:break-word;'>";
+
+    table += "<tr>";
+    table += "<th >Mac Address</th>";
+    table += "<th >Type</th>";
+    table += "<th >ACN-number</th>";
+    table += "</tr>";
+
+    for (var i of request.body){
+        table += "<tr>";
+        table += "<td>"+i.mac_address+"</td>";
+        table += "<td>"+i.type+"</td>";
+        table += "<td>"+i.access_control_number+"</td>";
+        table += "</tr>";
+    }
+    table += "</table>"
     
+    var options = {
+        "format": "A4",
+        "orientation": "landscape",
+        "border": {
+            "top": "0.1in",
+        },
+        "timeout": "120000"
+    };
+    var filePath = 'save_file_path/test.pdf'
+    pdf.create(table, options).toFile(filePath, function(err, result) {
+        if (err) return console.log(err);
+        console.log("pdf create");
+    });
+
+    response.status(200).json(filePath)
+    // var array = []
+    // for (var i of request.body){
+    //     console.log(i)
+    // }
+}
+
 module.exports = {
     getTrackingData,
     getObjectTable,
@@ -254,6 +296,7 @@ module.exports = {
     userInfo,
     userSearchHistory,
     addUserSearchHistory,
-    editLbeacon
+    editLbeacon,
+    QRCode
     
 }

@@ -42,6 +42,11 @@
     #mapid {
         height: 40vh;
     } 
+
+    .objectImage{
+        display: none
+    }
+
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -58,6 +63,9 @@
         height: 45vh;
     } 
 
+    .objectImage{
+        display: none;
+    }
  }
 
 /* Medium devices (tablets, 768px and up) */
@@ -85,6 +93,10 @@
         min-width: 200;
     }
 
+    .objectImage{
+        display: none;
+    }
+
   }
 
 /* Large devices (desktops, 992px and up) */
@@ -105,6 +117,10 @@
         font-size: 8px;
     }
 
+    .objectImage{
+        width: 45px;
+        height: 45px;
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
@@ -116,5 +132,10 @@
     #mapid {
         height: 65vh;
     } 
+
+    .objectImage{
+        width: 50px;
+        height: 50px;
+    }
 
 }

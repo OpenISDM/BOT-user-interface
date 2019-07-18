@@ -1,7 +1,8 @@
 import React from 'react';
+import { Col, Row, ListGroup, Nav, Button } from 'react-bootstrap';
 
 
-import { Col, Row, ListGroup, Nav } from 'react-bootstrap';
+import LocaleContext from '../../context/LocaleContext';
 
 
 import '../../../css/hideScrollBar.css'
@@ -22,6 +23,8 @@ const SearchableObjectType = (props) => {
             4.sectionIndexList : this shows the alphabet letters (i.e. 'A'~'Z')
     */
     var {sectionTitleData, IsShowSection, hasIndexItem, sectionIndexList} = props;
+
+
     // console.log(sectionTitleList)
     const style={
         IndexLinkletter:{
@@ -30,15 +33,20 @@ const SearchableObjectType = (props) => {
             padding:'0px 0px 0px 0px',
         },
         SectionIndex: {
+            position:'absolute',
+            right: '8%',
+            width: '8%',
             height:'60vh',
-
-            float:'right',
-
-            margin:'0px auto',
-
-            overflowY: 'scroll',
+            float:'left',
+            margin:'0px',
+            padding: '0px',
+            overflowY: 'hidden',
         }, 
         SectionList:{
+            position:'absolute',
+            right: '16%',
+            width: '200px',
+
             height:'60vh',
 
             float:'left',
@@ -47,10 +55,10 @@ const SearchableObjectType = (props) => {
 
             overflowY: 'scroll',
 
-            display: (props.IsShowSection)?'block':'none',
+            visibility: (props.IsShowSection)?'visible':'hidden',
 
             boxShadow:'3px 3px 12px gray',
-            padding:'20px',
+            padding:'0px',
         },
         titleListLetter:{
             background: '#E0E0E0',
@@ -69,7 +77,7 @@ const SearchableObjectType = (props) => {
                     key={i} 
                     active={false} 
                     href={'#' + sectionIndexList[i]} 
-                    className={ ' sectionIndexItem' + ' px-3'}  
+                    className={ ' sectionIndexItem' + ' px-0'}  
                     style={style.IndexLinkletter}
                     name={sectionIndexList[i]}
                     onMouseOver={props.handleMouseOver} 
@@ -100,11 +108,14 @@ const SearchableObjectType = (props) => {
                 for (let i of sectionTitleData[titleData]){
 
                     Data.push(
-                        <a onClick={props.getResultData} key={i}>
-                            <ListGroup.Item >
-                                <h5>{i}</h5>
-                            </ListGroup.Item>
-                        </a>
+                        <ListGroup.Item key={i}>
+                        <Button onClick={props.getResultData}  className="my-0 py-0 w-100 btn shadow" style={{background: '#EEEEEE'}}>
+                            
+                                <h5 style={{color: 'black'}}>{i}</h5>
+                            
+
+                        </Button>
+                        </ListGroup.Item>
                     )
             }
         }
@@ -120,20 +131,20 @@ const SearchableObjectType = (props) => {
             {
                 // this section shows the layout of sectionTitleList (the search results when you hover the section Index List)
             }
-            <Col id = "SectionList" sm={10} md={10} xs={10} className="hideScrollBar" style={style.SectionList}>
+            <div id = "SectionList" className="hideScrollBar" style={style.SectionList}>
                 {
                     sectionTitleListHTML()
                 }
-            </Col>
+            </div>
 
             {
                 // this section shows the layout of sectionIndexList (Alphabet List)
             }
-            <Col id = "SectionIndex" sm={2} md={2} xs={2} style={style.SectionIndex} className = "col-sm-collapse">
+            <div id = "SectionIndex" style={style.SectionIndex} className = "">
                 {
                     sectionIndexHTML()
                 }  
-            </Col>
+            </div>
 
         </div>
     )
@@ -144,22 +155,7 @@ const SearchableObjectType = (props) => {
 
 }
 
-export default SearchableObjectType
 
-// <div>
-//          <Col id = "SectionList" sm={8} md={8}>
-//              {sectionTitleList}
-//          </Col>
-//          <Col id = "SectionIndex" sm={8} md={8}>
-//                  <Nav.Link 
-//                     active={false} 
-//                     href={'#' + 'letter'} 
-//                     onMouseOver={props.handleMouseOver} 
-                    
-                    
-//                 >
-//              a
-//                 </Nav.Link>
-                    
-//          </Col>
-//      </div>
+
+
+export default SearchableObjectType

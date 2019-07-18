@@ -11,6 +11,21 @@ const fs = require('fs');
 const http = require('http');
 const https = require('https');
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.use(bodyParser.json())
 
 app.use(
@@ -39,6 +54,10 @@ app.get(/^\/page\/(.*)/, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist','index.html'));
 })
 
+app.get('/save_file_path/:file', (req, res) =>{
+	console.log(res)
+	res.sendFile(path.join(__dirname, 'save_file_path',req.params['file']));
+})
 
 app.get('/data/objectTable', db.getObjectTable);
 
@@ -67,6 +86,10 @@ app.post('/user/searchHistory', db.userSearchHistory)
 app.post('/user/addUserSearchHistory', db.addUserSearchHistory)
 
 app.post('/data/editLbeacon', db.editLbeacon)
+
+app.post('/data/QRCode',db.QRCode)
+
+
 
 
 const httpsServer = https.createServer(credentials, app);

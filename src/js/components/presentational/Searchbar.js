@@ -52,7 +52,7 @@ class Searchbar extends React.Component {
         const locale = this.context;
 
         return (            
-            <Form className="d-flex" style={style.form}>
+            <Form className="d-flex justify-content-center" style={style.form}>
                 {/* <div className="form-group mx-3">
                     <label htmlFor="inputPassword2" className="sr-only">{locale.search.toUpperCase()}</label>
                     <input type="text" className="form-control-sm border-0" value={value} onChange={this.handleChange}/>
