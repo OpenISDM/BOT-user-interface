@@ -10,6 +10,9 @@ import { shouldUpdateTrackingData } from '../../action/action';
 import Cookies from 'js-cookie'
 import config from '../../config';
 
+
+import '../../../css/FrequentSearch.css'
+
 class FrequentSearch extends React.Component {
 
     constructor(){
@@ -112,8 +115,8 @@ class FrequentSearch extends React.Component {
         return (
             <>
             {}
-                <Row className='d-flex justify-content-center' style={style.titleText}>
-                    <h3>{locale.FREQUENT_SEARCH}</h3>
+                <Row className='d-flex justify-content-center FrequentSearch' style={style.titleText}>
+                    <h3 className = "FrequentSearchTitle">{locale.FREQUENT_SEARCH}</h3>
                 </Row>
                 <div className='d-inline-flex flex-column mb-3' id='frequentSearch' >
                     {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
@@ -129,12 +132,12 @@ class FrequentSearch extends React.Component {
                                     active={this.state.searchkey === item.name.toLowerCase()} 
                                     key={index}
                                     style = {style.button}
-                                    className="shadow col-md-8 col-12"
+                                    className="shadow col-lg-8 col-10 FrequentSearchButton"
                                 >
 
                                     {item.name}
                                 </Button>
-                                <img src={config.objectImage[item.name]} alt="Girl in a jacket" className="objectImage"/>
+                                <img src={config.objectImage[item.name]} alt="" className="objectImage"/>
                             </div>
                         )
                     })}
@@ -146,7 +149,7 @@ class FrequentSearch extends React.Component {
                             onClick={this.handleClick} 
                             active={this.state.searchkey === 'my devices'}
                             style = {style.button}
-                            className="shadow col-md-8 col-12"
+                            className="shadow col-10 FrequentSearchButton"
                         >
                             {locale.MY_DEVICE}
                         </Button>
@@ -156,7 +159,7 @@ class FrequentSearch extends React.Component {
                             onClick={this.handleClick} 
                             active={this.state.searchkey === 'all devices'}
                             style = {style.button}
-                            className="shadow col-md-8 col-12"
+                            className="shadow col-10 FrequentSearchButton"
                         >
                             {locale.ALL_DEVICE}
                         </Button>

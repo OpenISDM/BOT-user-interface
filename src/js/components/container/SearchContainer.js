@@ -247,7 +247,7 @@ class SearchContainer extends React.Component {
         
         return (
             <Row>
-                <div style ={{height:'10vh'}} className='col-12'>
+                <div style ={{height:'13vh'}} className='col-12'>
                     <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2'>
                         <Searchbar 
                             placeholder={this.state.SearchKey}
@@ -257,7 +257,7 @@ class SearchContainer extends React.Component {
                     </div>
                 </div>
                 <div id="searchList"  className="col-md-12 col-sm-12 px-0" style={style.SearchList}>
-                    <Col id='FrequentSearch' md={9} sm={9} xs={12} className=' mx-0 px-0' style = {style.FrequentSearch} >
+                    <Col id='FrequentSearch' md={10} sm={10} xs={10} className=' mx-0 px-0' style = {style.FrequentSearch} >
                         <FrequentSearch 
                             SingIn = {this.state.SignIn}
                             searchableObjectData={searchableObjectData}

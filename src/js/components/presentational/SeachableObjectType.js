@@ -7,6 +7,7 @@ import LocaleContext from '../../context/LocaleContext';
 
 import '../../../css/hideScrollBar.css'
 import '../../../css/shadow.css'
+import '../../../css/SearchableObjectType.css'
 /*
     this class contain three two components
         1. sectionIndexList : this is the alphabet list for user to search their objects by the first letter of their type
@@ -28,37 +29,29 @@ const SearchableObjectType = (props) => {
     // console.log(sectionTitleList)
     const style={
         IndexLinkletter:{
-            fontSize:'15px',
+
 
             padding:'0px 0px 0px 0px',
         },
         SectionIndex: {
-            position:'absolute',
-            right: '8%',
-            width: '8%',
-            height:'60vh',
-            float:'left',
-            margin:'0px',
-            padding: '0px',
-            overflowY: 'hidden',
+
+ 
+
+            float:'right',
+ 
+            overflowY: 'hidden'
         }, 
         SectionList:{
-            position:'absolute',
-            right: '16%',
-            width: '200px',
-
             height:'60vh',
 
             float:'left',
-
-            margin:'0px auto',
 
             overflowY: 'scroll',
 
             visibility: (props.IsShowSection)?'visible':'hidden',
 
             boxShadow:'3px 3px 12px gray',
-            padding:'0px',
+
         },
         titleListLetter:{
             background: '#E0E0E0',
@@ -131,7 +124,7 @@ const SearchableObjectType = (props) => {
             {
                 // this section shows the layout of sectionTitleList (the search results when you hover the section Index List)
             }
-            <div id = "SectionList" className="hideScrollBar" style={style.SectionList}>
+            <div  id = "SectionList" className="hideScrollBar" style={style.SectionList}>
                 {
                     sectionTitleListHTML()
                 }
@@ -140,11 +133,11 @@ const SearchableObjectType = (props) => {
             {
                 // this section shows the layout of sectionIndexList (Alphabet List)
             }
-            <div id = "SectionIndex" style={style.SectionIndex} className = "">
+            <Col  md={4} id = "SectionIndex" style={style.SectionIndex} className = "">
                 {
                     sectionIndexHTML()
                 }  
-            </div>
+            </Col>
 
         </div>
     )

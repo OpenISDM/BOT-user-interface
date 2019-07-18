@@ -120,7 +120,7 @@ export default class ContentContainer extends React.Component{
 
         const style = {
             container: {
-                height: '80vh'
+                height: '85vh'
             },
             searchResult: {
                 display: this.state.hasSearchKey ? null : 'none',
