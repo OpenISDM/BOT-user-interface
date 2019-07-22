@@ -7,6 +7,7 @@ import SearchContainer from './SearchContainer';
 /** Import Presentational Component */
 
 import 'react-table/react-table.css';
+import '../../../css/MainContainer.css';
 import SearchResult from '../presentational/SearchResult'
 
 
@@ -120,7 +121,7 @@ export default class ContentContainer extends React.Component{
 
         const style = {
             container: {
-                height: '85vh'
+                height: '92vh'
             },
             searchResult: {
                 display: this.state.hasSearchKey ? null : 'none',
@@ -136,8 +137,8 @@ export default class ContentContainer extends React.Component{
             /** "page-wrap" the default id named by react-burget-menu */
             <div id="page-wrap" className='' >
                 <Row id="mainContainer" className='d-flex w-100 justify-content-around mx-0 px-0 overflow-hidden' style={style.container}>
-                    <Hidden xs>
-                        <Col sm={8} md={8} lg={8} xl={8} >
+                    
+                        <Col id="SurveillanceSection"sm={8} md={8} lg={8} xl={8}>
                                 <br/>
                                 
                                 <SurveillanceContainer 
@@ -152,8 +153,8 @@ export default class ContentContainer extends React.Component{
 
                                 />
                         </Col>
-                    </Hidden>
-                    <Col id="seachSection" xs={12} sm={4} md={4} lg={4} xl={4} className="w-100 px-0 mx-0">
+                    
+                    <Col id="seachSection" xs={12} sm={12} md={12} lg={4} xl={4} className="w-100 px-0 mx-0">
                         
                         <SearchContainer 
                             searchableObjectData={this.state.searchableObjectData} 

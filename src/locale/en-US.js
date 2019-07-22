@@ -36,7 +36,10 @@ const en =  {
     SIGN_IN: 'Sign In',
     SIGN_UP: 'Sign Up',
     SIGN_OUT: 'Sign Out',
-    SHIFT_CHANGE_RECORD: 'Shift Change Record'
+    SHIFT_CHANGE_RECORD: 'Shift Change Record',
+
+    DEVICE_FOUND: 'Devices found',
+    SEARCH_RESULT: 'Search Results',
 }
 
 export default en;

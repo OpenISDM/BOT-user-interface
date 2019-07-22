@@ -35,22 +35,26 @@ const SearchableObjectType = (props) => {
         },
         SectionIndex: {
 
- 
+            
 
             float:'right',
  
             overflowY: 'hidden'
         }, 
         SectionList:{
-            height:'60vh',
+            background: '#FFFFFF',
+            
+            height:'70vh',
 
-            float:'left',
+            float:'right',
 
             overflowY: 'scroll',
 
             visibility: (props.IsShowSection)?'visible':'hidden',
 
             boxShadow:'3px 3px 12px gray',
+
+            margin: '0px 0px 0px 0px',
 
         },
         titleListLetter:{
@@ -102,9 +106,10 @@ const SearchableObjectType = (props) => {
 
                     Data.push(
                         <ListGroup.Item key={i}>
-                        <Button onClick={props.getResultData}  className="my-0 py-0 w-100 btn shadow" style={{background: '#EEEEEE'}}>
+
+                        <Button onClick={props.getResultData}  className="my-0 py-0 w-100 btn shadow" style={{background: '#EEEEEE', padding: '0px'}}>
                             
-                                <h5 style={{color: 'black'}}>{i}</h5>
+                                <h5 style={{color: 'black', margin: '0px'}}>{i}</h5>
                             
 
                         </Button>
@@ -121,14 +126,8 @@ const SearchableObjectType = (props) => {
     
     return (
         <div onMouseLeave={props.handleMouseLeave} >
-            {
-                // this section shows the layout of sectionTitleList (the search results when you hover the section Index List)
-            }
-            <div  id = "SectionList" className="hideScrollBar" style={style.SectionList}>
-                {
-                    sectionTitleListHTML()
-                }
-            </div>
+            
+            
 
             {
                 // this section shows the layout of sectionIndexList (Alphabet List)
@@ -138,6 +137,15 @@ const SearchableObjectType = (props) => {
                     sectionIndexHTML()
                 }  
             </Col>
+
+            {
+                // this section shows the layout of sectionTitleList (the search results when you hover the section Index List)
+            }
+            <div  id = "SectionList" className="hideScrollBar" style={style.SectionList}>
+                {
+                    sectionTitleListHTML()
+                }
+            </div>
 
         </div>
     )

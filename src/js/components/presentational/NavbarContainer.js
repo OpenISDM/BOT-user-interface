@@ -121,6 +121,7 @@ class NavbarContainer extends React.Component {
             navbar: {
                 boxShadow: "0 1px 6px 0 rgba(32,33,36,0.28)",
                 fontWeight: '450',
+
             },
             navbarBrand: {
                 color: 'black'
@@ -130,7 +131,7 @@ class NavbarContainer extends React.Component {
         const { isSignin, isShowSigninForm, isShowSignupForm, isShowShiftChange } = this.state;
 
         return (
-            <Navbar id='navbar' bg="white" className="navbar sticky-top navbar-light" expand='md' style={style.navbar}>
+            <Navbar id='navbar' bg="white" className="navbar sticky-top navbar-light" expand='xl' style={style.navbar}>
                 <Navbar.Brand className='px-0 mx-0'>  
                     <Link to="/" className="nav-link nav-brand d-flex align-items-center px-0" style={style.navbarBrand}>
                         <Image
@@ -145,13 +146,13 @@ class NavbarContainer extends React.Component {
                 
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">  
-                    <Nav className="mr-auto col-md-8" >
-                        <Nav.Item><Link to="/" className="nav-link nav-route" >{locale.HOME}</Link></Nav.Item>
-                        {Cookies.get('user') &&
+                    <Nav className="mr-auto" >
+                        <Nav.Item><Link to="/" className="nav-link nav-route" >Home</Link></Nav.Item>
+                        {!Cookies.get('user') &&
                             <>
                                 <Nav.Item><Link to="/page/healthReport" className="nav-link nav-route" >{locale.HEALTH_REPORT}</Link></Nav.Item>
-                                <Nav.Item><Link to="/page/geofence" className="nav-link nav-route" >{locale.GEOFENCE}</Link></Nav.Item>
-                                <Nav.Item><Link to="/page/objectManagement" className="nav-link nav-route" >{locale.OBJECT_MANAGEMENT}</Link></Nav.Item>
+                                <Nav.Item><Link to="/page/geofence" className="nav-link nav-route" >Geofence</Link></Nav.Item>
+                                <Nav.Item><Link to="/page/objectManagement" className="nav-link nav-route" >Object Management</Link></Nav.Item>
                             </>
                         }
                     </Nav>

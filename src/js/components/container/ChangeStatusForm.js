@@ -90,7 +90,6 @@ class ChangeStatusForm extends React.Component {
     }
 
     handleSubmit(e) {
-        console.log('Submit')
         const button = e.target;
         let selectedObjectData = this.props.selectedObjectData.length !== 0 ? this.props.selectedObjectData : []
         const { mac_address, name, type, access_control_number } = selectedObjectData;
@@ -109,7 +108,7 @@ class ChangeStatusForm extends React.Component {
     }
 
     handleCheck(e) {
-        console.log('Submit')
+
         this.setState({
             formOption: {
                 ...this.state.formOption,
@@ -119,7 +118,7 @@ class ChangeStatusForm extends React.Component {
     }
 
     handleSelect(selectedOption) {
-        console.log('Submit')
+
         this.setState({
             formOption: {
                 ...this.state.formOption,
@@ -155,9 +154,11 @@ class ChangeStatusForm extends React.Component {
         const { name, type, status, transferredLocation } = this.state.formOption;
 
         return (
-            <>  
+            <>
                 <Modal show={this.state.show} onHide={this.handleClose} size="md">
-                    <Modal.Header closeButton className='font-weight-bold'>{title}</Modal.Header >
+                    <Modal.Header closeButton className='font-weight-bold'>
+                        {title}
+                    </Modal.Header>
                     <Modal.Body>
                         <Form >
                             <Row>

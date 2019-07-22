@@ -17,6 +17,7 @@ import { deepEqual } from 'assert';
 
 
 import '../../../css/hideScrollBar.css'
+import '../../../css/SearchResult.css'
 import config from '../../config';
 
 
@@ -168,10 +169,12 @@ class SearchResult extends React.Component {
 
         const style = {
             searchResult:{
-                height:'60vh',
-                overflowY:'scroll',
+                height: '70vh',
+                overflowY: 'hidden',
                 boxShadow:'3px 3px 12px gray',
                 padding:'0px',
+                width: '100%',
+
                 
             },
             listItem: {
@@ -185,7 +188,7 @@ class SearchResult extends React.Component {
             firstText: {
                 paddingLeft: 15,
                 paddingRight: 0,
-                width: '3%'
+                float: 'left',
                 // background: 'rgb(227, 222, 222)',
                 // height: 30,
                 // width: 30,
@@ -194,11 +197,14 @@ class SearchResult extends React.Component {
 
                 paddingLeft: 2,
                 paddingRight: 2,
+                float: 'left',
+                textAlign: 'center',
 
             },
             lastText: {
                 // textAlign: 'right'
-                width: '10%'
+
+                float: 'left',
             },
             titleText: {
 
@@ -222,38 +228,39 @@ class SearchResult extends React.Component {
         }
 
         return(
-            <div style = {style.searchResult} className="hideScrollBar">
+            <div style = {style.searchResult} className='mx-0' >
 
                 <div style={style.titleText}>
                     <Col md={11} xs={11} className="mx-1 d-flex justify-content-center">
-                        <h4>Search Result</h4>
+                        <h4>{locale.SEARCH_RESULT}</h4>
                     </Col>
                     
                         <button className="btn btn-lg btn-light" onClick={this.props.closeSearchResult} style={{background:'#DDDDDD', padding:'0px', width:'40px', height:'40px'}}>x</button>
                    
                 </div>
                 <Row className='d-flex justify-content-center mt-3' style={style.titleText}>
-                    <h5> {searchResult.length} Devices Found </h5>
+                    <h5> {searchResult.length} {locale.DEVICE_FOUND}</h5>
                 </Row>
 
-                <Row className='' id = "searchResultTable" >
+                <Row  id = "searchResultTable" className="hideScrollBar" style={{overflowY: 'scroll',height: '55vh'
+                }}>
 
                     {this.state.foundResult.length === 0
-                    ?   <Col className='text-left' style={style.noResultDiv}>
+                    ?   <Col className='text-left' style={style.noResultDiv} >
                             <em>no searchResult</em>
                         </Col> 
                     
                     :   <Col className='hideScrollBar'>
-                            <ListGroup onSelect={this.handleChangeObjectStatusForm}>
+                            <ListGroup onSelect={this.handleChangeObjectStatusForm} >
                                 {this.state.foundResult.map((item,index) => {
 
                                     let element = 
                                         <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'found:' + index} key={index}>
-                                            <Row className="d-flex align-self-center justify-content-center">
-                                                <Col lg={1} className="font-weight-bold d-flex align-self-center" style={style.firstText}>{index + 1}</Col>
-                                                <Col lg={3} className="d-flex align-self-center justify-content-center" style={style.middleText}>{item.type}</Col>
-                                                <Col lg={4} className="d-flex align-self-center justify-content-center" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
-                                                <Col lg={3}  className="d-flex align-self-center justify-content-center" style={style.lastText}><img src={config.objectImage[item.type]} alt="image" width="50" height="50"/></Col>
+                                            <Row className="d-flex align-self-center justify-content-center ">
+                                                <Col xl={1} lg={2} md={2} xs={2} className="font-weight-bold d-flex align-self-center resultText" style={style.firstText}>{index + 1}</Col>
+                                                <Col xl={3} lg={3} md={3} xs={4} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>{item.type}</Col>
+                                                <Col xl={4} lg={7} md={7} xs={6} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
+                                                <Col xl={3} lg={0} md={0} xs={0} className="d-flex align-self-center justify-content-center resultText" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
 
                                             </Row>
                                         </ListGroup.Item>

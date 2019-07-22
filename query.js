@@ -245,7 +245,7 @@ const editLbeacon = (request, response) => {
 
 const  QRCode = (request, response) => {
     var table = "<table border='1' style='width:100%;word-break:break-word;'>";
-
+    console.log(request.body)
     table += "<tr>";
     table += "<th >Mac Address</th>";
     table += "<th >Type</th>";
@@ -273,13 +273,8 @@ const  QRCode = (request, response) => {
     pdf.create(table, options).toFile(filePath, function(err, result) {
         if (err) return console.log(err);
         console.log("pdf create");
+        response.status(200).json(filePath)
     });
-
-    response.status(200).json(filePath)
-    // var array = []
-    // for (var i of request.body){
-    //     console.log(i)
-    // }
 }
 
 module.exports = {

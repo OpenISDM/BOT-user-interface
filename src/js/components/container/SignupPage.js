@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import config from '../../config';
 import axios from 'axios';
 import dataSrc from '../../dataSrc';
-
+import LocaleContext from '../../context/LocaleContext';
 class SignupPage extends React.Component {
     constructor(props) {
         super(props);
@@ -46,7 +46,7 @@ class SignupPage extends React.Component {
                 padding: 10
             }
         }
-
+        const locale = this.context;
         const { show } = this.state;
         const { handleSignupFormSubmit } = this.props;
         return (
@@ -56,7 +56,7 @@ class SignupPage extends React.Component {
                         <Image src={config.image.logo} rounded width={72} height={72} ></Image>
                     </Row>
                     <Row className='d-flex justify-content-center'>
-                        <h5>Sign Up</h5>
+                        <h5>{locale.SIGN_UP}</h5>
                     </Row>
                     <Formik
                         initialValues = {{
@@ -101,7 +101,7 @@ class SignupPage extends React.Component {
                                 </div>
                                 <br/>
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-primary btn-block"  disabled={isSubmitting}>Sign up</button>
+                                    <button type="submit" className="btn btn-primary btn-block"  disabled={isSubmitting}>{locale.SIGN_UP}</button>
                                     {isSubmitting &&
                                         <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
                                     }
@@ -119,5 +119,5 @@ class SignupPage extends React.Component {
 
 
 }
-
+SignupPage.contextType = LocaleContext;
 export default SignupPage

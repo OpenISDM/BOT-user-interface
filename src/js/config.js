@@ -11,8 +11,11 @@ import HealthReport from './components/container/HealthReport';
 
 import BladderScanner from '../img/objectImage/Bladder Scanner.jpg'
 import Bed from '../img/objectImage/Bed.jpg'
-import Ultrasound from '../img/objectImage/Sononite Ultrasound.jpg'
+import SonositeUltrasound from '../img/objectImage/Sononite Ultrasound.jpg'
 import InfusionPump from '../img/objectImage/Infusion Pump.jpg'
+import EKG from '../img/objectImage/EKG.jpg'
+import Ultrasound from '../img/objectImage/Ultrasound.jpg'
+import CPM from '../img/objectImage/CPM.png'
 
 
 const config = {
@@ -38,7 +41,7 @@ const config = {
         },
 
         iconOptions: {
-            iconSize: 50,
+            iconSize: 30,
             stationaryIconUrl: black_pin,
             movinfIconUrl: darkGrey_pin,
             sosIconUrl: sos,
@@ -119,14 +122,20 @@ const config = {
         'Bladder scanner' : BladderScanner, 
         'Bed' : Bed,
         'SONOSITE Ultrasound': Ultrasound,
-        'Infusion pump': InfusionPump
+        'Infusion pump': InfusionPump,
+        'Ultrasound': Ultrasound ,
+        'EKG Machine': EKG,
+        'CPM': CPM ,
 
     },
     objectImageTable:{
         BladderScanner : 'Bladder scanner', 
         Bed : 'Bed',
         SonositeUltrasound: 'SONOSITE Ultrasound',
-        InfusionPump: 'Infusion pump'
+        InfusionPump: 'Infusion pump',
+        Ultrasound: 'Ultrasound',
+        EKG: 'EKG Machine',
+        CPM: 'CPM',
     }
 
 

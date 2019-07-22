@@ -10,7 +10,7 @@ import { shouldUpdateTrackingData } from '../../action/action';
 import Cookies from 'js-cookie'
 import config from '../../config';
 
-
+import '../../../css/hideScrollBar.css'
 import '../../../css/FrequentSearch.css'
 
 class FrequentSearch extends React.Component {
@@ -61,7 +61,8 @@ class FrequentSearch extends React.Component {
 
 
     handleClick(e) {
-        const itemName = e.target.innerText.toLowerCase();
+        // console.log(e.target)
+        const itemName = e.target.name.toLowerCase();
         switch(itemName) {
             case 'my devices':
                 if (!this.state.hasGetUserInfo && Cookies.get('user')) {
@@ -106,7 +107,8 @@ class FrequentSearch extends React.Component {
                 borderRadius: '20px',
                 margin: '10px',
                 background: '#EEEEEE',
-                float:'left'
+                float:'left',
+
             }
         }
 
@@ -115,54 +117,65 @@ class FrequentSearch extends React.Component {
         return (
             <>
             {}
-                <Row className='d-flex justify-content-center FrequentSearch' style={style.titleText}>
+                <Row className='d-flex justify-content-center FrequentSearch hideScrollBar' style={style.titleText}>
                     <h3 className = "FrequentSearchTitle">{locale.FREQUENT_SEARCH}</h3>
                 </Row>
-                <div className='d-inline-flex flex-column mb-3' id='frequentSearch' >
+                <div className='FrequentSearchList m-2 row d-flex '  id='frequentSearch'>
                     {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
                         return item.name !== 'All'
                     }).map( (item, index) => {
                         
                         return (
-                            <div key={index}>
+                            <div key={index} className="col col-6 p-1 ml-0 d-flex justify-content-center" style={{float:'right'}}  >
                                 
-                                <Button
-                                    variant="outline-custom"
-                                    onClick={this.handleClick} 
-                                    active={this.state.searchkey === item.name.toLowerCase()} 
-                                    key={index}
-                                    style = {style.button}
-                                    className="shadow col-lg-8 col-10 FrequentSearchButton"
-                                >
-
-                                    {item.name}
-                                </Button>
-                                <img src={config.objectImage[item.name]} alt="" className="objectImage"/>
+                                <Row className="w-100 d-flex justify-content-center ">
+                                    <Row className="w-100 d-flex justify-content-center ">
+                                        <img src={config.objectImage[item.name]} alt="" className="FrequentSearchobjectImage" onClick={this.handleClick} name={item.name}/>
+                                    
+                                    
+                                    </Row>
+                                    <Button 
+                                        style={{background: '#DDDDDD', color: '#000000'}}
+                                        className="FrequentSearchButton w-100 d-flex justify-content-center m-2"
+                                        onClick={this.handleClick} 
+                                        active={this.state.searchkey === item.name.toLowerCase()} 
+                                        key={index}
+                                        name={item.name}
+                                    >
+                                        {item.name}
+                                    </Button>
+                                </Row>
+                                
                             </div>
                         )
                     })}
-                    &nbsp;
 
-                    {Cookies.get('user') && 
-                        <Button
-                            variant="outline-custom"
-                            onClick={this.handleClick} 
-                            active={this.state.searchkey === 'my devices'}
-                            style = {style.button}
-                            className="shadow col-10 FrequentSearchButton"
-                        >
-                            {locale.MY_DEVICE}
-                        </Button>
-                    }
-                        <Button 
-                            variant="outline-custom"
-                            onClick={this.handleClick} 
-                            active={this.state.searchkey === 'all devices'}
-                            style = {style.button}
-                            className="shadow col-10 FrequentSearchButton"
-                        >
-                            {locale.ALL_DEVICE}
-                        </Button>
+                        <div className="btn-group btn-group-justified row w-100 d-flex justify-content-center mx-2 mt-4">
+                        {Cookies.get('user') && 
+                            <Button
+
+                                className="FrequentSearchButton mx-2 btn-success"
+                                onClick={this.handleClick} 
+                                style={{ color: '#000000', height: '50px', verticalAlign: 'sub'}}
+                                active={this.state.searchkey === 'my devices'}
+                                name={locale.MY_DEVICE}
+                            >
+                                {locale.MY_DEVICE}
+                            </Button>
+                        }
+                            <Button 
+
+
+                                className="FrequentSearchButton mx-2 btn-danger"
+                                onClick={this.handleClick} 
+                                style={{ color: '#FFFFFF', height: '50px'}}
+                                active={this.state.searchkey === 'all devices'}
+                                name={locale.ALL_DEVICE}
+                            >
+                                {locale.ALL_DEVICE}
+                            </Button>
+                        </div>
+                    
                 </div>
             </>
         )

@@ -1,48 +1,106 @@
+.FrequentSearchobjectImage:onclick{
+    -webkit-box-shadow: 15px 17px 5px -6px rgba(0,0,0,0.75);
+    -moz-box-shadow: 15px 17px 5px -6px rgba(0,0,0,0.75);
+    box-shadow: 15px 17px 5px -6px rgba(0,0,0,0.75);
+}
+
+
 @media (max-width: 575.98px) {
     .FrequentSearchButton{
+        font-size: 10px;
+    }
+   
+    .FrequentSearchobjectImage{
+        width:50px;
+        height: 50px;
+    }
+    
+    .FrequentSearchTitle{
         font-size: 18px;
     }
-    .FrequentSearchTitle{
-        font-size: 30px;
+
+    .FrequentSearchList{
+        height: 60vh;
     }
 }
+
+
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) and (max-width: 767.98px) { 
     .FrequentSearchButton{
+        font-size: 10px;
+    }
+   
+    .FrequentSearchobjectImage{
+        width:50px;
+        height: 50px;
+    }
+    
+    .FrequentSearchTitle{
         font-size: 18px;
     }
-    .FrequentSearchTitle{
-        font-size: 32px;
+
+    .FrequentSearchList{
+        height: 60vh;
     }
 }
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) and (max-width: 991.98px) {
     .FrequentSearchButton{
-        font-size: 15px;
+        font-size: 14px;
     }
+   
+    .FrequentSearchobjectImage{
+        width:100px;
+        height: 100px;
+    }
+    
     .FrequentSearchTitle{
-        font-size: 36px;
+        font-size: 20px;
+    }
+
+    .FrequentSearchList{
+        height: 60vh;
     }
   }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) and (max-width: 1199.98px) {
     .FrequentSearchButton{
-        font-size: 20px;
+        font-size: 12px;
     }
+   
+    .FrequentSearchobjectImage{
+        width:50px;
+        height: 50px;
+    }
+    
     .FrequentSearchTitle{
-        font-size: 40px;
+        font-size: 22px;
+    }
+
+    .FrequentSearchList{
+        height: 70vh;
     }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     .FrequentSearchButton{
-        font-size: 20px;
+        font-size: 18px;
+    }
+   
+    .FrequentSearchobjectImage{
+        width:80px;
+        height: 80px;
     }
     .FrequentSearchTitle{
-        font-size: 44px;
+        font-size: 32px;
+    }
+
+    .FrequentSearchList{
+        height: 70vh;
     }
 
 }

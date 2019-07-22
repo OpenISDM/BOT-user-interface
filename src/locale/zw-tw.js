@@ -33,7 +33,10 @@ const tw = {
     SIGN_IN: '登入',
     SIGN_UP: '註冊',
     SIGN_OUT: '登出',
-    SHIFT_CHANGE_RECORD: '交接記錄'
+    SHIFT_CHANGE_RECORD: '交接記錄',
+
+    DEVICE_FOUND: '個儀器',
+    SEARCH_RESULT: '搜尋結果',
 
 }
 

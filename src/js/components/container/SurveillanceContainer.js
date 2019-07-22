@@ -29,6 +29,9 @@ import {
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import GridButton from '../container/GridButton';
 
+
+import '../../../css/SurveillanceContainer.css'
+
 var QRCode = require('qrcode.react');
 
 
@@ -46,6 +49,7 @@ class SurveillanceContainer extends React.Component {
             formOption: [],
             showDevice: false,
             searchableObjectData: [],
+            isSaving: false,
         }
 
         this.adjustRssi = this.adjustRssi.bind(this);
@@ -175,6 +179,7 @@ class SurveillanceContainer extends React.Component {
     pdfDownload(){
         this.setState({
             showPdfDownloadForm: true,
+            isSaving: true,
         })
         
 
@@ -182,7 +187,8 @@ class SurveillanceContainer extends React.Component {
     }
     handleClosePdfForm(){
         this.setState({
-            showPdfDownloadForm: false
+            showPdfDownloadForm: false,
+            isSaving: false,
         })
     }
     // printSearchResult(){
@@ -195,7 +201,8 @@ class SurveillanceContainer extends React.Component {
                 showConfirmForm, 
                 selectedObjectData, 
                 formOption, 
-                showPdfDownloadForm
+                showPdfDownloadForm,
+                isSaving
             } = this.state;
         const { hasSearchKey, 
                 searchResult,
@@ -260,7 +267,7 @@ class SurveillanceContainer extends React.Component {
                             <Button variant="outline-primary" className='mr-1 ml-2' onClick={this.handleClickButton}>{locale.CLEAR}</Button>
                         </Nav.Item>
                         <Nav.Item className='mt-2'>
-                            <Button variant="outline-primary" className='mr-1 mr-4' onClick={this.pdfDownload}>{locale.SAVE}</Button>
+                            <Button variant="outline-primary" className='mr-1 mr-4' onClick={this.pdfDownload} disabled = {this.state.isSaving}>{locale.SAVE}</Button>
 
                         </Nav.Item>
                         
@@ -289,6 +296,7 @@ class SurveillanceContainer extends React.Component {
                     show={showPdfDownloadForm}
                     data={searchResult}
                     handleClose = {this.handleClosePdfForm}
+                    isSaving={isSaving}
                 />
                 
 

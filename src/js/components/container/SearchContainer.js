@@ -131,7 +131,6 @@ class SearchContainer extends React.Component {
 
     
     getResultData(e) {
-
         var searchResult = [];
         var SearchKey = '';
         if(typeof e === 'string'){
@@ -203,14 +202,14 @@ class SearchContainer extends React.Component {
 
         const style = {
             SearchList:{
-                height: '60vh',
+                height: '70vh',
             },
             SearchableObjectType:{
-                height: '60vh',
+                height: '70vh',
 
-                zIndex: (this.state.IsShowSection)?3:0,
+                zIndex: (this.state.IsShowSection)?1003:0,
 
-                background:'#FFFFFF',
+
 
                 float: 'right', 
 
@@ -220,7 +219,7 @@ class SearchContainer extends React.Component {
                 
             },
             FrequentSearch:{
-                height: '60vh',
+                height: '70vh',
 
                 zIndex: 1,
 
@@ -231,15 +230,17 @@ class SearchContainer extends React.Component {
                 position:'absolute',
             }, 
             SearchResult:{
-                height: '60vh',
+                height: '70vh',
 
                 display: (this.state.IsShowResult)?'block':'none',
 
-                zIndex: (this.state.IsShowResult)?2:0,
+                zIndex: (this.state.IsShowResult)?1002:0,
 
                 background:'#FFFFFF',
                 
-                float: 'left', 
+                float: 'right', 
+
+                
 
                 position:'absolute',
             }
@@ -247,17 +248,19 @@ class SearchContainer extends React.Component {
         
         return (
             <Row>
-                <div style ={{height:'13vh'}} className='col-12'>
-                    <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2'>
-                        <Searchbar 
-                            placeholder={this.state.SearchKey}
-                            getResultData={this.getResultData}    
-                        />
-                        
+                <Row className='col-12 mx-2 d-flex justify-content-center'>
+                    <div  className='col-xs-12 col-md-9 mx-2 d-flex justify-content-center'>
+                        <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'>
+                            <Searchbar 
+                                placeholder={this.state.SearchKey}
+                                getResultData={this.getResultData}    
+                            />
+                            
+                        </div>
                     </div>
-                </div>
+                </Row>
                 <div id="searchList"  className="col-md-12 col-sm-12 px-0" style={style.SearchList}>
-                    <Col id='FrequentSearch' md={10} sm={10} xs={10} className=' mx-0 px-0' style = {style.FrequentSearch} >
+                    <Col id='FrequentSearch' xl={10} lg={10} md={11} sm={10} xs={10} className=' mx-1 px-0' style = {style.FrequentSearch} >
                         <FrequentSearch 
                             SingIn = {this.state.SignIn}
                             searchableObjectData={searchableObjectData}
@@ -277,7 +280,7 @@ class SearchContainer extends React.Component {
                             getResultData = {this.getResultData}
                         />
                     </Col> 
-                    <div id="searchResult" style={style.SearchResult} className='col-sm-10 col-md-10' onMouseLeave={this.SearchResultMouseLeave}>
+                    <div id="searchResult" md={12} sm={12} xs={12} className='m-2 px-0' style={style.SearchResult} onMouseLeave={this.SearchResultMouseLeave}>
                         <SearchResult 
                             transferSearchResult = {this.props.transferSearchResult}
                             closeSearchResult = {this.closeSearchResult}

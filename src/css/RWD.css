@@ -1,5 +1,4 @@
 
-
  /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {
     html, body {
@@ -42,11 +41,9 @@
     #mapid {
         height: 40vh;
     } 
-
-    .objectImage{
-        display: none
+    #mainContainer{
+        display: none;
     }
-
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -63,9 +60,6 @@
         height: 45vh;
     } 
 
-    .objectImage{
-        display: none;
-    }
  }
 
 /* Medium devices (tablets, 768px and up) */
@@ -75,8 +69,8 @@
     }
 
     #navbar {
-        height: 50px;
-        font-size: 14px;
+/*        height: 50px;
+*/        font-size: 14px;
     }
 
     .navbar-brand {
@@ -93,10 +87,6 @@
         min-width: 200;
     }
 
-    .objectImage{
-        display: none;
-    }
-
   }
 
 /* Large devices (desktops, 992px and up) */
@@ -105,8 +95,8 @@
         font-size: 16px;
     }
     #navbar {
-        height: 55px;
-        font-size: 14px;
+/*        height: 55px;
+*/        font-size: 14px;
     }
 
     #mapid {
@@ -117,25 +107,17 @@
         font-size: 8px;
     }
 
-    .objectImage{
-        width: 45px;
-        height: 45px;
-    }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
 
     #navbar {
-        height: 65px;
-    }
+/*        height: 65px;
+*/    }
     #mapid {
         height: 65vh;
     } 
 
-    .objectImage{
-        width: 50px;
-        height: 50px;
-    }
-
 }
+
