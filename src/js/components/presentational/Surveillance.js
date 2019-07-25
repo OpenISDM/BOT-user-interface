@@ -40,7 +40,7 @@ class Surveillance extends React.Component {
         this.popupContent = this.popupContent.bind(this);
 
         this.handlemenu = this.handlemenu.bind(this);
-        this.handleTrackingData = this.handleTrackingData.bind(this);
+        // this.handleTrackingData = this.handleTrackingData.bind(this);
         this.handleObjectMarkers = this.handleObjectMarkers.bind(this);
         this.createLbeaconMarkers = this.createLbeaconMarkers.bind(this);
         this.handleMarkerClick = this.handleMarkerClick.bind(this);
@@ -57,12 +57,21 @@ class Surveillance extends React.Component {
     }
 
     componentDidUpdate(prepProps){
+        
         if(this.props.shouldTrackingDataUpdate) {
 
             /** Check whether there is the new tracking data retrieving from store */
             if (this.props.objectInfo !== prepProps.objectInfo) {
-                this.handleTrackingData(); 
+                var objectInfo = this.props.objectInfo.slice(2,10)
+                var objects = {}
+                for(var i of objectInfo){
+                    objects[i.mac_address] = i
+                }
+                this.setState({
+                    objectInfo: objects,
+                })
             }
+
             this.handleObjectMarkers();
             this.createLbeaconMarkers();
         }
@@ -182,153 +191,6 @@ class Surveillance extends React.Component {
         this.props.selectObjectListProp(objectList);
     }
 
-    /**
-     * Retrieve tracking data from redux store, and do the processing.
-     */
-    handleTrackingData() {
-        let objectRows = this.props.objectInfo === undefined ? [] : this.props.objectInfo
-        let lbsPosition = new Set(),
-            objectInfoHash = {}
-        let counter = 0;
-        objectRows.map(items =>{
-            /**
-             * Every lbeacons coordinate sended by response will store in lbsPosition
-             * Update(3/14): use Set instead.
-             */
-            const lbeaconCoordinate = this.createLbeaconCoordinate(items.lbeacon_uuid);
-            lbsPosition.add(lbeaconCoordinate.toString());
-            
-            let object = {
-                lbeaconCoordinate: lbeaconCoordinate,
-                location_description: items.location_description,
-                rssi: items.avg,
-            }
-            /**
-             * If the object has not scanned by one lbeacon yet, 
-             *  then the object is going to be append in objectInfoHash
-             * Else, the object is already in objectInfoHash, 
-             *  we will check if the object is stationary or moving first,
-             *  then check if the current RSSI is the largest.
-             */
-            if (!(items.object_mac_address in objectInfoHash)) {
-                objectInfoHash[items.object_mac_address] = {};
-                objectInfoHash[items.object_mac_address].type = items.type
-                objectInfoHash[items.object_mac_address].lbeaconDetectedNum = 1
-                objectInfoHash[items.object_mac_address].maxRSSI = items.avg
-                objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate
-                objectInfoHash[items.object_mac_address].location_description = items.location_description
-                objectInfoHash[items.object_mac_address].access_control_number = items.access_control_number
-                objectInfoHash[items.object_mac_address].coverLbeaconInfo = {}
-                objectInfoHash[items.object_mac_address].name = items.name
-                objectInfoHash[items.object_mac_address].mac_address = items.object_mac_address
-                objectInfoHash[items.object_mac_address].panic_button = items.panic_button;
-                objectInfoHash[items.object_mac_address].geofence_type = items.geofence_type;
-                objectInfoHash[items.object_mac_address].coverLbeaconInfo[lbeaconCoordinate] = object;
-                objectInfoHash[items.object_mac_address].status = items.status;
-                objectInfoHash[items.object_mac_address].transferred_location = items.transferred_location;
-                objectInfoHash[items.object_mac_address].moving_status = items.avg_stable !== null ? 'stationary' : 'stationary';
-
-            } else {
-                let maxRSSI = objectInfoHash[items.object_mac_address].maxRSSI;
-                let moving_status = objectInfoHash[items.object_mac_address].moving_status;
-                let geofence_type = objectInfoHash[items.object_mac_address].geofence_type;
-                let panic_button = objectInfoHash[items.object_mac_address].panic_button;
-                
-                if(items.geofence_type === 'Fence'){
-                    if(geofence_type === null || geofence_type === 'Perimeter' || 
-                        (geofence_type === 'Fence' &&  parseFloat(items.avg) > parseFloat(maxRSSI))) {
-                            
-                        objectInfoHash[items.object_mac_address].maxRSSI = items.avg;
-                        objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate;
-                        objectInfoHash[items.object_mac_address].location_description = items.location_description
-                        objectInfoHash[items.object_mac_address].geofence_type = items.geofence_type;
-                    }
-                }else if(items.geofence_type === 'Perimeter'){
-                    if(geofence_type === null || 
-                        (geofence_type === 'Perimeter' && parseFloat(items.avg) > parseFloat(maxRSSI))) {
-                            
-                        objectInfoHash[items.object_mac_address].maxRSSI = items.avg;
-                        objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate;
-                        objectInfoHash[items.object_mac_address].location_description = items.location_description
-                        objectInfoHash[items.object_mac_address].geofence_type = items.geofence_type;
-                    }
-                }else{
-                    if(geofence_type !== null){
-                        
-                    }else{
-                        if(items.panic_button){
-                            objectInfoHash[items.object_mac_address].panic_button = items.panic_button;
-                        }
-                        
-                        if(parseFloat(items.avg) > parseFloat(maxRSSI)){
-                                    
-                            objectInfoHash[items.object_mac_address].maxRSSI = items.avg;
-                            objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate;
-                            objectInfoHash[items.object_mac_address].location_description = items.location_description
-
-                        } 
-                    }
-                }
-            /*
-                if(items.panic_button){
-                    objectInfoHash[items.object_mac_address].panic_button = 1;
-                }
-                
-                if( parseFloat(items.avg) > parseFloat(maxRSSI)) {
-                    objectInfoHash[items.object_mac_address].maxRSSI = items.avg;
-                    objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate;
-                    
-                    objectInfoHash[items.object_mac_address].geofence_type = items.geofence_type;
-                }
-                
-                if (items.avg_stable !== null) {
-                */    /** 
-                        * If the RSSI of one object scanned by the the other lbeacon is larger than the previous one, then
-                        * current position = new lbeacon location
-                        * max rssi = new lbeacon rssi
-                        */
-                        /*
-                    if ((moving_status === 'stationary' && parseFloat(items.avg) > parseFloat(maxRSSI))|| moving_status === 'moving' ){
-                        objectInfoHash[items.object_mac_address].maxRSSI = items.avg;
-                        objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate;
-                        objectInfoHash[items.object_mac_address].moving_status = 'stationary'
-                    } 
-                    */
-                /*    
-                } else {
-                    */
-/*
-                    if(moving_status === 'moving' && parseFloat(items.avg) > parseFloat(maxRSSI)) {
-                        objectInfoHash[items.object_mac_address].maxRSSI = items.avg;
-                        objectInfoHash[items.object_mac_address].currentPosition = lbeaconCoordinate;
-                    }
-*/						
-/*
-                }
-                */
-/*
-                objectInfoHash[items.object_mac_address].coverLbeaconInfo[lbeaconCoordinate] = object;
-*/
-            }
-
-            objectInfoHash[items.object_mac_address].lbeaconDetectedNum = Object.keys(objectInfoHash[items.object_mac_address].coverLbeaconInfo).length;
-            // markerClusters.addLayer(L.marker(lbeaconCoordinate));
-        })
-        // console.log(objectInfoHash['c1:0f:00:0f:60:58'])
-        if (this.isShownTrackingData === true ) (console.log(objectInfoHash)); 
-        // this.map.addLayer(markerClusters);
-        // markerClusters.on('clusterclick', this.handlemenu)
-
-        /** Return Tracking data (searchableObjectData) to Search Container */
-        this.props.transferSearchableObjectData(objectInfoHash)
-
-        this.setState({
-            data: this.props.objectInfo,
-            lbeaconsPosition: lbsPosition,
-            objectInfo: objectInfoHash,
-            hasErrorCircle: false,
-        })
-    }
 
     /**
      * When handleTrackingData() is executed, handleObjectMarkes() will be called. That is, 
@@ -342,6 +204,7 @@ class Surveillance extends React.Component {
     handleObjectMarkers(){
         const { hasSearchKey, searchResult, searchType } = this.props;
         const objects = this.state.objectInfo;
+
 
         /** Process the search object data */
         var searchedObjectDataMap= new Map();
@@ -380,10 +243,10 @@ class Surveillance extends React.Component {
         //     iconUrl: config.surveillanceMap.iconOptions.stationaryIconUrl,
         // });
 
-        // const movingIconOptions = L.icon({
-        //     iconSize: iconSize,
-        //     iconUrl: config.surveillanceMap.iconOptions.movinfIconUrl,
-        // });
+        const movingIconOptions = L.icon({
+            iconSize: iconSize,
+            iconUrl: config.surveillanceMap.iconOptions.movinfIconUrl,
+        });
 
         // const sosIconOptions = L.icon({
         //     iconSize: iconSize,
@@ -450,21 +313,22 @@ class Surveillance extends React.Component {
         }
         
         let counter = 0;
-        // console.log('been processed and hasSearchKey = ' + this.props.hasSearchKey  )
         for (var key in objects){
 
             /** Tag the searched object with searched and pinColor*/
-
+            // console.log(searchedObjectDataMap)
             if(searchedObjectDataMap.has(key)) {
                 objects[key] = searchedObjectDataMap.get(key)
                 objects[key].searched = true;
             } else {
                 objects[key].searched = false;
             }
+            
 
 
 
             let detectedNum = objects[key].lbeaconDetectedNum;
+
             let position = this.macAddressToCoordinate(key.toString(), objects[key].currentPosition);
 
             /** 
@@ -479,6 +343,7 @@ class Surveillance extends React.Component {
              */
             let iconOption = {}
             if (objects[key].status === 'Broken' || objects[key].status === 'Transferred') {
+                // console.log('broken')
                 iconOption = unNormalIconOptions;
             } else if (objects[key].geofence_type === 'Fence'){
                 iconOption = geofenceFAweIconOptions;
@@ -504,17 +369,17 @@ class Surveillance extends React.Component {
                     markerColor: objects[key].pinColor,
                 }
             } else if (objects[key].searched) {
+                // console.log('searched')
                 config.surveillanceMap.iconOptions.showNumber 
                 ? 
                     iconOption = {
                         ...searchedObjectAweIconOptions,
                         number: ++counter, 
                     } 
-                : iconOption = searchedObjectAweIconOptions    
-            } else if (objects[key].moving_status === 'stationary') {
+                : iconOption = searchedObjectAweIconOptions 
+            }else {
+
                 iconOption = stationaryAweIconOptions;
-            } else {
-                iconOption = movingIconOptions;
             }
 
             /** Insert the object's mac_address to be the data when clicking the object's marker */
@@ -526,7 +391,6 @@ class Surveillance extends React.Component {
 
             const option = new L.AwesomeNumberMarkers (iconOption)
             let marker =  L.marker(position, {icon: option}).bindPopup(popupContent, popupOptions).addTo(this.markersLayer)
-            
             /** 
              * Set the z-index offset of the searhed object so that
              * the searched object icon will be on top of all others 
@@ -559,10 +423,10 @@ class Surveillance extends React.Component {
     }
 
     handleMarkerClick(e) {
+
         const currentPosition =  e.target.options.icon.options.currentPosition
         let objectList = this.collectObjectsByLatLng(currentPosition)
-        console.log(objectList)
-        this.props.handleMarkerClick(objectList)
+        this.props.transferSearchResult(objectList, null, 'region')
     }
 
     collectObjectsByLatLng(currentPositionArray) {
@@ -578,13 +442,7 @@ class Surveillance extends React.Component {
      * Retrieve the lbeacon's location coordinate from lbeacon_uuid.
      * @param   lbeacon_uuid The uuid of lbeacon retrieved from DB.
      */
-    createLbeaconCoordinate(lbeacon_uuid){
-        /** Example of lbeacon_uuid: 00000018-0000-0000-7310-000000004610 */
-        const zz = lbeacon_uuid.slice(6,8);
-        const xx = parseInt(lbeacon_uuid.slice(14,18) + lbeacon_uuid.slice(19,23));
-        const yy = parseInt(lbeacon_uuid.slice(-8));
-        return [yy, xx];
-    }
+    
 
     /**
      * Retrieve the object's offset from object's mac_address.
@@ -603,7 +461,6 @@ class Surveillance extends React.Component {
 
         // const xxx = lbeacon_coordinate[1] + xSign * parseInt(xx, 16) * 12;
         // const yyy = lbeacon_coordinate[0] + ySign * parseInt(yy, 16) * 12;
-
         const xx = mac_address.slice(12,14);
         const yy = mac_address.slice(15,17);
 

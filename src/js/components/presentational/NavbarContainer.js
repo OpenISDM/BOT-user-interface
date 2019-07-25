@@ -188,11 +188,13 @@ class NavbarContainer extends React.Component {
                     handleSignupFormSubmit={this.handleSignupFormSubmit}
                     handleSignFormClose={this.handleSignFormClose}
                 />
+
                 <ShiftChange 
                     show = {isShowShiftChange}
 
                     handleShiftChangeRecordSubmit = {this.handleShiftChangeRecordSubmit}
                     handleShiftChangeRecordClose={this.handleShiftChangeRecordClose}
+                    searchableObjectData = {this.props.searchableObjectData}
                 />
             </Navbar>
             

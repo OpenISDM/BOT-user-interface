@@ -67,7 +67,7 @@ app.get('/data/gatewayTable', db.getGatewayTable);
 
 app.get('/data/geofenceData', db.getGeofenceData);
 
-app.post('/data/trackingData', db.getTrackingData);
+app.get('/data/trackingData', db.getTrackingData);
 
 app.post('/data/addObject', db.addObject);
 
@@ -95,9 +95,9 @@ app.post('/data/QRCode',db.QRCode)
 const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
 
-httpServer.listen(httpPort, () =>{
-    console.log(`HTTP Server running on port ${httpPort}`)
-})
+// httpServer.listen(httpPort, () =>{
+//     console.log(`HTTP Server running on port ${httpPort}`)
+// })
 httpsServer.listen(httpsPort, () => {
     console.log(`HTTPS Server running on PORT ${httpsPort}`)
 })

@@ -10,6 +10,8 @@ import Cookies from 'js-cookie'
 
 import SearchResult from '../presentational/SearchResult'
 
+import GetResultData from '../../functions/GetResultData'
+
 class ShiftChange extends React.Component {
     constructor(props) {
         super(props);
@@ -19,6 +21,7 @@ class ShiftChange extends React.Component {
         }
 
         this.handleClose = this.handleClose.bind(this)
+        this.getObjectData = this.getObjectData.bind(this)
         this.getObjectData = this.getObjectData.bind(this)
     }
 
@@ -31,26 +34,21 @@ class ShiftChange extends React.Component {
     }
 
     componentDidUpdate(preProps) {
-
         if (preProps != this.props){
-                this.setState({
+            this.getObjectData()
+            this.setState({
                 show: this.props.show,
             })
         }
-        this.getObjectData()
-
-        
     }
 
     getObjectData(){
-        var data;
-
-        axios.get(dataSrc.objectTable).then(res => {
-            this.state.searchResult = res.data.rows;
-        }).catch(function (error) {
-            console.log(error);
-        })
-        
+        GetResultData('my devices', this.props.searchableObjectData).then(result=>{
+                this.setState({
+                    searchResult: result
+                })
+            }
+        ) 
     }
 
     handleClose() {

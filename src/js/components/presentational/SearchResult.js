@@ -72,11 +72,13 @@ class SearchResult extends React.Component {
             this.setState({
                 foundResult: foundlist ? foundlist : [],
             })
-        }        
+        }   
+        if(!this.props.hasSearchKey && prepProps.hasSearchKey){
+            
+        }     
     }
 
     handleChangeObjectStatusForm(eventKey) {
-        console.log('this.props')
         const eventItem = eventKey.split(':');
         const isFound = eventItem[0]
         const number = eventItem[1]
@@ -90,7 +92,6 @@ class SearchResult extends React.Component {
     }
 
     handleChangeObjectStatusFormClose() {
-        console.log('handleChangeObjectStatusFormClose')
         this.setState({
             showEditObjectForm: false,
             showConfirmForm: false,
@@ -251,15 +252,16 @@ class SearchResult extends React.Component {
                         </Col> 
                     
                     :   <Col className='hideScrollBar'>
+
                             <ListGroup onSelect={this.handleChangeObjectStatusForm} >
                                 {this.state.foundResult.map((item,index) => {
-
                                     let element = 
                                         <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'found:' + index} key={index}>
                                             <Row className="d-flex align-self-center justify-content-center ">
                                                 <Col xl={1} lg={2} md={2} xs={2} className="font-weight-bold d-flex align-self-center resultText" style={style.firstText}>{index + 1}</Col>
                                                 <Col xl={3} lg={3} md={3} xs={4} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>{item.type}</Col>
-                                                <Col xl={4} lg={7} md={7} xs={6} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
+
+                                                <Col xl={4} lg={7} md={7} xs={6} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
                                                 <Col xl={3} lg={0} md={0} xs={0} className="d-flex align-self-center justify-content-center resultText" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
 
                                             </Row>
@@ -283,6 +285,7 @@ class SearchResult extends React.Component {
                     handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose}
                     handleChangeObjectStatusFormSubmit={this.handleChangeObjectStatusFormSubmit}
                 />
+
                 <ConfirmForm 
                     show={this.state.showConfirmForm}  
                     title='Thank you for reporting' 

@@ -18,14 +18,13 @@ const pool = new pg.Pool(config)
 
 
 const getTrackingData = (request, response) => {
-    const { locationAccuracyMapToDefault, locationAccuracyMapToDB, accuracyValue } = request.body
-    pool.query(queryType.query_getTrackingData(accuracyValue, locationAccuracyMapToDefault, locationAccuracyMapToDB), (error, results) => {        
+
+    pool.query(queryType.query_getTrackingData(), (error, results) => {        
         if (error) {
             console.log("Get trackingData fails : " + error)
         } else {
             console.log('Get tracking data!')
         }
-
         response.status(200).json(results)
     })
 }
@@ -95,7 +94,7 @@ const getGeofenceData = (request, response) => {
 const editObject = (request, response) => {
 
     const formOption = request.body.formOption
-    console.log(formOption)
+    console.log('hi')
     pool.query(queryType.query_editObject(formOption), (error, results) => {
         if (error) {
             console.log("Edit Object Fails: " + error)

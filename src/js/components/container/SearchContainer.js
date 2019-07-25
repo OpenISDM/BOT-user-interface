@@ -10,11 +10,11 @@ import Searchbar from '../presentational/Searchbar';
 import FrequentSearch from './FrequentSearch';
 
 import SearchableObjectType from '../presentational/SeachableObjectType';
-import SearchResult from '../presentational/SearchResult';
+import SearchResult from '../presentational/SearchResultList';
 
 import Cookies from 'js-cookie'
 
-
+import GetResultData from '../../functions/GetResultData'
 /*
     In the SearchContainer, there are three components
         1. SearchBar
@@ -30,17 +30,18 @@ class SearchContainer extends React.Component {
     constructor(){
         super()
         this.state = {
-            sectionIndexList:['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
-            sectionTitleList:{},
-            sectionTitleData:[],
-            hasIndexItem:{},
+
+            hasSearchKey: false,
+            objectTypeList: [],
 
             searchableObjectData:{},
             searchResult:{},
 
             IsShowSection:false,
             IsShowResult:false,
-            IsFirstUpdate:false,
+            ShouldUpdate:true,
+
+            loginStatus: null,
 
 
         }
@@ -49,10 +50,11 @@ class SearchContainer extends React.Component {
         this.SearchIndexMouseLeave = this.SearchIndexMouseLeave.bind(this);
 
 
-
-        this.getResultData = this.getResultData.bind(this);
+        this.getShowSectionState = this.getShowSectionState.bind(this)
+        // this.getResultData = this.getResultData.bind(this);
       
         this.closeSearchResult = this.closeSearchResult.bind(this);
+        this.clickButtonHandler = this.clickButtonHandler.bind(this);
 
     }
 
@@ -61,49 +63,42 @@ class SearchContainer extends React.Component {
     componentDidMount(){
         
     }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.loginStatus !== this.state.loginStatus){
+            return true
+        }
+        
+        if(this.props.objectTypeList !== this.state.objectTypeList){
+
+            return true
+        }
+        if(nextProps.hasSearchKey !== this.state.IsShowResult){
+            return true
+        }
+        if(this.state.changeState !== nextState.changeState){
+            return true
+        }
+        if(nextProps.searchResult !== this.state.searchResult){
+            return true
+        }
+        if(nextProps.searchableObjectData.length !== this.state.searchableObjectData.length){
+            return true
+        }
+        return false
+    }
     // this function when the this.props change or you call this.setState() function
     // In this function, if the searchableObjectData is changed, the layout will immediately change
     componentDidUpdate(prepProps, prevState){
-       
-        
-        
-        if(this.props.searchableObjectData !=null && !this.state.AlreadyUpdate && this.props.searchableObjectData.length != prepProps.searchableObjectData.length){
 
-            var sectionTitleList = {},
-            hasIndexItem = [];
-            for(var i in this.state.sectionIndexList){
-                sectionTitleList[this.state.sectionIndexList[i]] = new Set();
-                hasIndexItem[this.state.sectionIndexList[i]] = false;
-            }
-            const searchableObjectData = this.props.searchableObjectData;
-            // classify based on first alphabet
-            for(var i in searchableObjectData){
 
-                let Type = searchableObjectData[i].type[0].toUpperCase();
-
-                sectionTitleList[Type].add(searchableObjectData[i].type)
-                hasIndexItem[Type]= true
-            }
-
-            
-            // update the state of the component
-            this.setState({
-                hasIndexItem : hasIndexItem,
-                sectionTitleList : sectionTitleList,
-            })
-
-            this.state.AlreadyUpdate = true;
-            this.state.searchableObjectData = searchableObjectData;
-
-        }
-
-        if(this.props.closeSearchResult != prepProps.closeSearchResult){
-            this.setState({
-                IsShowResult: false,
-                IsShowSection: false,
-            })
-        }
-
+        this.setState({
+            loginStatus: this.props.loginStatus,
+            objectTypeList: this.props.objectTypeList,
+            searchResult: this.props.searchResult,
+            searchableObjectData: this.props.searchableObjectData,
+            IsShowResult: this.props.hasSearchKey
+        })
 
     }
     // when the mouse hover the section Index List (Alphabet List), the section Title List will appear
@@ -118,6 +113,7 @@ class SearchContainer extends React.Component {
             sectionTitleData: this.state.sectionTitleList,
             IsFirstUpdate:true,
             IsShowSection: true,
+            changeState: !this.state.changeState
         })
     }
 
@@ -125,64 +121,28 @@ class SearchContainer extends React.Component {
 
         this.setState({
             IsShowSection:false,
+            changeState: !this.state.changeState
         })
     }
 
 
     
-    getResultData(e) {
-        var searchResult = [];
-        var SearchKey = '';
-        if(typeof e === 'string'){
-            // for frequent search
+    // async getResultData(e) {
+    //     var searchResult = [];
+    //     var SearchKey = '';
+    //     console.log('searchResult')
+    //     searchResult = await GetResultData(e, this.state.searchableObjectData)
+    //     console.log('searchResult')
+    //     this.setState({
+    //         IsShowSection:false,
+    //         searchResult: searchResult,
+    //         IsShowResult: true,
+    //         changeState: !this.state.changeState
+    //     })
+    //     console.log(searchResult)
+    //     this.props.transferSearchResult(searchResult, null, SearchKey)
 
-            SearchKey = e;
-
-            if(SearchKey === 'all devices'){
-                // print(SearchKey)
-                for( var  i in this.state.searchableObjectData){  
-                    searchResult.push(this.state.searchableObjectData[i])
-                }
-            }else{
-                for( var  i in this.state.searchableObjectData){
-                    if(this.state.searchableObjectData[i].type.toUpperCase() === SearchKey.toUpperCase()){
-                        searchResult.push(this.state.searchableObjectData[i])
-                    }
-                }
-            
-            }
-            
-        }else if(e.target){
-            //  for section List Search
-            SearchKey = e.target.innerHTML;
-            for( var  i in this.state.searchableObjectData){
-                if(this.state.searchableObjectData[i].type.toUpperCase() === SearchKey.toUpperCase()){
-                    searchResult.push(this.state.searchableObjectData[i])
-                }
-            }
-
-        }else{
-            //  for my device (SSID)
-            SearchKey = e
-            
-            for( var  i in this.state.searchableObjectData){
-                if(SearchKey.has(this.state.searchableObjectData[i].access_control_number)){
-                    searchResult.push(this.state.searchableObjectData[i])
-                }
-            }
-        }
-
-
-
-        this.setState({
-            IsShowSection:false,
-            searchResult: searchResult,
-            IsShowResult: true,
-        })
-
-        this.props.transferSearchResult(searchResult, null, SearchKey)
-        
-    }
+    // }
 
 
     closeSearchResult(e){
@@ -191,8 +151,26 @@ class SearchContainer extends React.Component {
         this.setState({
             IsShowResult: false,
             IsShowSection: false,
+            changeState: !this.state.changeState,
         })
 
+    }
+    clickButtonHandler(){
+        this.setState({
+            IsShowResult: true,
+            IsShowSection: false,
+            changeState: !this.state.changeState,
+        })
+    }
+    getShowSectionState(state){
+
+
+
+        this.setState({
+            IsShowSection: state,
+            changeState: !this.state.changeState,
+        })
+        
     }
     render() {
         /** Customized CSS of searchResult */
@@ -202,24 +180,11 @@ class SearchContainer extends React.Component {
 
         const style = {
             SearchList:{
-                height: '70vh',
+                height: '80vh',
             },
-            SearchableObjectType:{
-                height: '70vh',
-
-                zIndex: (this.state.IsShowSection)?1003:0,
-
-
-
-                float: 'right', 
-
-                position:'absolute',
-
-
-                
-            },
+            
             FrequentSearch:{
-                height: '70vh',
+                height: '80vh',
 
                 zIndex: 1,
 
@@ -228,9 +193,11 @@ class SearchContainer extends React.Component {
                 float: 'left', 
 
                 position:'absolute',
+
+                left: '3%'
             }, 
             SearchResult:{
-                height: '70vh',
+                height: '80vh',
 
                 display: (this.state.IsShowResult)?'block':'none',
 
@@ -248,48 +215,47 @@ class SearchContainer extends React.Component {
         
         return (
             <Row>
+
+
                 <Row className='col-12 mx-2 d-flex justify-content-center'>
                     <div  className='col-xs-12 col-md-9 mx-2 d-flex justify-content-center'>
                         <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'>
                             <Searchbar 
                                 placeholder={this.state.SearchKey}
-                                getResultData={this.getResultData}    
+                                getResultData={this.props.getSearchResult}  
+                                clickButtonHandler = {this.clickButtonHandler}  
                             />
                             
                         </div>
                     </div>
                 </Row>
                 <div id="searchList"  className="col-md-12 col-sm-12 px-0" style={style.SearchList}>
-                    <Col id='FrequentSearch' xl={10} lg={10} md={11} sm={10} xs={10} className=' mx-1 px-0' style = {style.FrequentSearch} >
+                    <Col id='FrequentSearch' sm={10} xs={10} className=' mx-1 px-0 float-left' style = {style.FrequentSearch} >
                         <FrequentSearch 
-                            SingIn = {this.state.SignIn}
-                            searchableObjectData={searchableObjectData}
-                            getResultData={this.getResultData}  
-                            transferSearchResult={transferSearchResult}  
-                            getResultData={this.getResultData}    
+                            getResultData={this.props.getSearchResult}
+                            clickButtonHandler = {this.clickButtonHandler}
                         />
                     </Col>
-                    <Col id='searchableObjectType' md={12} sm={12} xs={12} className='mx-0 px-0' style = {style.SearchableObjectType}>
+                    <Col id='searchableObjectType' md={12} sm={12} xs={12} className='mx-0 px-0 float-right' style={{zIndex: (this.state.IsShowSection)?1003:0}}>
+
                         <SearchableObjectType
-                            sectionIndexList = {this.state.sectionIndexList}
-                            sectionTitleData = {this.state.sectionTitleData}
-                            IsShowSection = {this.state.IsShowSection}
-                            hasIndexItem = {this.state.hasIndexItem}
-                            handleMouseLeave = {this.SearchIndexMouseLeave}
-                            handleMouseOver = {this.SearchIndexMouseOver}
-                            getResultData = {this.getResultData}
+                            handleMouseLeave = {this.state.handleMouseLeave}
+                            sectionTitleData = {this.state.objectTypeList}
+                            getShowSectionState = {this.getShowSectionState}
+                            getResultData = {this.props.getSearchResult}
+                            clickButtonHandler = {this.clickButtonHandler}
                         />
                     </Col> 
+
                     <div id="searchResult" md={12} sm={12} xs={12} className='m-2 px-0' style={style.SearchResult} onMouseLeave={this.SearchResultMouseLeave}>
                         <SearchResult 
+                            hasSearchKey = {this.state.hasSearchKey}
                             transferSearchResult = {this.props.transferSearchResult}
                             closeSearchResult = {this.closeSearchResult}
                             searchResult={this.state.searchResult}
-                        
                         />
                     </div>
                 </div>
-                
             </Row>
 
         )

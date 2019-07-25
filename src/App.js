@@ -13,16 +13,27 @@ import dataSrc from './js/dataSrc';
 import { retrieveTrackingData } from './js/action/action';
 import { connect } from 'react-redux';
 
+import  UuidToLocation from './js/functions/UuidToLocation'
+
+import Cookies from 'js-cookie'
 class App extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = { 
             locale: locale.changeLocale(config.locale.defaultLocale),
-            shouldTrackingDataUpdate: props.shouldTrackingDataUpdate
+            shouldTrackingDataUpdate: props.shouldTrackingDataUpdate,
+            loginStatus: Cookies.get('user')?Cookies.get('user'):null,
+            searchableObjectData: []
         }
         this.handleChangeLocale = this.handleChangeLocale.bind(this);
         this.getTrackingData = this.getTrackingData.bind(this);
+    }
+
+    loginStatusHandler(){
+        this.setState({
+            loginStatus: Cookies.get('user')?Cookies.get('user'):null
+        })
     }
 
     handleChangeLocale(changedLocale){
@@ -47,28 +58,38 @@ class App extends React.Component {
     }
     
     getTrackingData() {
-
-        const locationAccuracyMapToDefault = config.surveillanceMap.locationAccuracyMapToDefault;
-        const locationAccuracyMapToDB =  config.surveillanceMap.locationAccuracyMapToDB;
-
-        axios.post(dataSrc.trackingData, {
-            accuracyValue: this.props.locationAccuracy,
-            locationAccuracyMapToDefault,
-            locationAccuracyMapToDB,
-        }).then(res => {
+        axios.get(dataSrc.trackingData).then(res => {
+            var data = res.data.rows.map((item) =>{
+                item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
+            })
             this.props.retrieveTrackingData(res.data)
+            this.setState({
+                searchableObjectData: res.data.rows,
+            })
         })
         .catch(error => {
             console.log(error)
         })
     }
 
+
+
+
     render() { 
         const { locale } = this.state;
+        for( var i in routes){
+            routes[i]['loginStatus'] = this.state.loginStatus
+            routes[i]['searchableObjectData'] = this.state.searchableObjectData
+        }
         return (
             <LocaleContext.Provider value={locale}>
                 <Router>         
-                    <NavbarContainer changeLocale={this.handleChangeLocale} locale={locale} trackingData={this.retrievingTrackingData}/>
+                    <NavbarContainer 
+                        changeLocale={this.handleChangeLocale} 
+                        locale={locale} 
+                        trackingData={this.retrievingTrackingData}
+                        searchableObjectData={this.state.searchableObjectData}
+                    />
                     <Switch>
                         {renderRoutes(routes)}
                     </Switch>

@@ -49,6 +49,7 @@ class SurveillanceContainer extends React.Component {
             formOption: [],
             showDevice: false,
             searchableObjectData: [],
+            searchResult:[],
             isSaving: false,
         }
 
@@ -64,7 +65,20 @@ class SurveillanceContainer extends React.Component {
         this.handleClosePdfForm = this.handleClosePdfForm.bind(this)
     }
 
+    componentDidUpdate(){
 
+        if(this.state.searchableObjectData.length !== this.props.searchableObjectData.length){
+            this.setState({
+                searchableObjectData: this.props.searchableObjectData,
+            })
+        }
+        if(this.state.searchResult.length !== this.props.searchResult.length){
+            this.setState({
+                searchResult: this.props.searchResult,
+            })
+        }
+        
+    }
     adjustRssi(accuracyValue) {
         this.props.changeLocationAccuracy(accuracyValue)
         this.setState({
@@ -74,6 +88,7 @@ class SurveillanceContainer extends React.Component {
 
 
     handleMarkerClick(objectList) {
+        console.log(objectList)
         this.setState({
             showEditObjectForm: true,
             selectedObjectData: objectList,
@@ -191,10 +206,6 @@ class SurveillanceContainer extends React.Component {
             isSaving: false,
         })
     }
-    // printSearchResult(){
-
-    //     printJS('searchResultTable', 'html', {css:true})
-    // }
     render(){
         const { rssi, 
                 showEditObjectForm, 
@@ -239,6 +250,7 @@ class SurveillanceContainer extends React.Component {
                 <div style={style.mapBlock}>
                     <Surveillance 
                         rssi={rssi} 
+                        transferSearchResult={this.props.transferSearchResult}
                         hasSearchKey={hasSearchKey}
                         searchResult={searchResult}
                         searchType={searchType}

@@ -13,6 +13,10 @@ import config from '../../config';
 import '../../../css/hideScrollBar.css'
 import '../../../css/FrequentSearch.css'
 
+
+import GetResultData from '../../functions/GetResultData'
+
+
 class FrequentSearch extends React.Component {
 
     constructor(){
@@ -61,38 +65,9 @@ class FrequentSearch extends React.Component {
 
 
     handleClick(e) {
-        // console.log(e.target)
         const itemName = e.target.name.toLowerCase();
-        switch(itemName) {
-            case 'my devices':
-                if (!this.state.hasGetUserInfo && Cookies.get('user')) {
-                    axios.post(dataSrc.userInfo, {
-                        username: Cookies.get('user')
-                    }).then( res => {
-                        var mydevice = new Set(res.data.rows[0].mydevice);
-                        this.props.getResultData(mydevice)
-                        this.setState({
-                            hasGetUserInfo: true,
-                            mydevice: mydevice,
-                        })
-                    }).catch(error => {
-                        console.log(error)
-                    })
-                } else if (!Cookies.get('user')) {
-                    return
-                } else {
-                    this.props.getResultData(this.state.mydevice)
-                };
-
-                break;
-            case 'all devices':
-                // this.props.shouldUpdateTrackingData(true)
-                this.props.getResultData(itemName)
-                break;
-            default:
-                this.props.getResultData(itemName)
-                break;
-        }
+        this.props.getResultData(itemName)
+        this.props.clickButtonHandler(itemName)
         this.setState({
             searchkey: itemName
         })
@@ -116,27 +91,30 @@ class FrequentSearch extends React.Component {
 
         return (
             <>
-            {}
-                <Row className='d-flex justify-content-center FrequentSearch hideScrollBar' style={style.titleText}>
-                    <h3 className = "FrequentSearchTitle">{locale.FREQUENT_SEARCH}</h3>
+                <Row className='d-flex justify-content-center'>
+                    <h3>{locale.FREQUENT_SEARCH}</h3>
                 </Row>
-                <div className='FrequentSearchList m-2 row d-flex '  id='frequentSearch'>
+                <Row className='m-2 '  id='frequentSearch'>
                     {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
                         return item.name !== 'All'
                     }).map( (item, index) => {
                         
                         return (
-                            <div key={index} className="col col-6 p-1 ml-0 d-flex justify-content-center" style={{float:'right'}}  >
+                            <div key={index} className="col col-6 " style={{float:'right'}}  >
                                 
-                                <Row className="w-100 d-flex justify-content-center ">
-                                    <Row className="w-100 d-flex justify-content-center ">
-                                        <img src={config.objectImage[item.name]} alt="" className="FrequentSearchobjectImage" onClick={this.handleClick} name={item.name}/>
+                                <Row className="w-100">
+                                {config.frequentSearch.showImage 
+                                    ?
+                                        <Row className="w-100 d-flex justify-content-center ">
+                                            <img src={config.objectImage[item.name]} alt="" className="FrequentSearchobjectImage" onClick={this.handleClick} name={item.name}/>
+                                        </Row>
+                                    :
+                                        null
+                                }
                                     
-                                    
-                                    </Row>
                                     <Button 
-                                        style={{background: '#DDDDDD', color: '#000000'}}
-                                        className="FrequentSearchButton w-100 d-flex justify-content-center m-2"
+                                        className="FrequentSearchButton btn-light w-100 m-1"
+                                        style={{height: '50px', fontSize: '0.75rem'}}
                                         onClick={this.handleClick} 
                                         active={this.state.searchkey === item.name.toLowerCase()} 
                                         key={index}
@@ -145,18 +123,16 @@ class FrequentSearch extends React.Component {
                                         {item.name}
                                     </Button>
                                 </Row>
-                                
                             </div>
                         )
                     })}
-
                         <div className="btn-group btn-group-justified row w-100 d-flex justify-content-center mx-2 mt-4">
                         {Cookies.get('user') && 
                             <Button
 
-                                className="FrequentSearchButton mx-2 btn-success"
+                                className="FrequentSearchButton mx-2 btn-dark"
                                 onClick={this.handleClick} 
-                                style={{ color: '#000000', height: '50px', verticalAlign: 'sub'}}
+                                style={{height: '50px', fontSize: '0.75rem'}}
                                 active={this.state.searchkey === 'my devices'}
                                 name={locale.MY_DEVICE}
                             >
@@ -164,11 +140,9 @@ class FrequentSearch extends React.Component {
                             </Button>
                         }
                             <Button 
-
-
-                                className="FrequentSearchButton mx-2 btn-danger"
+                                className="FrequentSearchButton mx-2 btn-dark"
                                 onClick={this.handleClick} 
-                                style={{ color: '#FFFFFF', height: '50px'}}
+                                style={{height: '50px', fontSize: '0.75rem'}}
                                 active={this.state.searchkey === 'all devices'}
                                 name={locale.ALL_DEVICE}
                             >
@@ -176,7 +150,7 @@ class FrequentSearch extends React.Component {
                             </Button>
                         </div>
                     
-                </div>
+                </Row>
             </>
         )
     }

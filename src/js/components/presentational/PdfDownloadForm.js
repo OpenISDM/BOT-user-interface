@@ -47,9 +47,9 @@ class PdfDownloadForm extends React.Component {
         }
     }
     componentDidUpdate (preProps){
-        console.log(this.state.show)
+        // console.log(this.state.show)
         if(this.props.show && !this.state.show){
-            axios.post('http://localhost:3000/data/QRCOde',this.props.data).then(res => {
+            axios.post('https://140.109.22.249/data/QRCOde',this.props.data).then(res => {
                 this.setState({
                     savePath : res.data,
                     data: this.props.data,
@@ -96,7 +96,7 @@ class PdfDownloadForm extends React.Component {
 
                                     {hasData 
                                         ?<QRCode
-                                            value={'http://140.109.22.249:3000/' +savePath} 
+                                            value={dataSrc.pdfUrl(savePath)} 
                                             size={256}
                                         />
                                         : hasData 

@@ -1,22 +1,27 @@
-const IP = 'localhost:3000';//'bot.iis.sinica.edu.tw'
+const IP = '140.109.22.249:443';//'bot.iis.sinica.edu.tw'
 
-const trackingData = 'http://' + IP + '/data/trackingData';
-const objectTable = 'http://' + IP + '/data/objectTable';
-const lbeaconTable = 'http://' + IP + '/data/lbeaconTable';
-const gatewayTable = 'http://' + IP + '/data/gatewayTable';
-const searchResult = 'http://' + IP + '/data/searchResult';
-const geofenceData = 'http://' + IP + '/data/geofenceData';
+const trackingData = 'https://' + IP + '/data/trackingData';
+const objectTable = 'https://' + IP + '/data/objectTable';
+const lbeaconTable = 'https://' + IP + '/data/lbeaconTable';
+const gatewayTable = 'https://' + IP + '/data/gatewayTable';
+const searchResult = 'https://' + IP + '/data/searchResult';
+const geofenceData = 'https://' + IP + '/data/geofenceData';
 
-const editObject = 'http://' + IP + '/data/editObject';
-const addObject = 'http://' + IP + '/data/addObject';
+const editObject = 'https://' + IP + '/data/editObject';
+const addObject = 'https://' + IP + '/data/addObject';
 
-const editObjectPackage = 'http://' + IP +'/data/editObjectPackage';
-const signin = 'http://' + IP + '/user/signin';
-const signup = 'http://' + IP + '/user/signup';
-const userInfo = 'http://' + IP + '/user/info';
-const userSearchHistory = 'http://' + IP + '/user/searchHistory'
-const addUserSearchHistory = 'http://' + IP + '/user/addUserSearchHistory'
-const editLbeacon = 'http://' + IP + '/data/editLbeacon'
+const editObjectPackage = 'https://' + IP +'/data/editObjectPackage';
+const signin = 'https://' + IP + '/user/signin';
+const signup = 'https://' + IP + '/user/signup';
+const userInfo = 'https://' + IP + '/user/info';
+const userSearchHistory = 'https://' + IP + '/user/searchHistory'
+const addUserSearchHistory = 'https://' + IP + '/user/addUserSearchHistory'
+const editLbeacon = 'https://' + IP + '/data/editLbeacon'
+
+
+const pdfUrl = function(path){
+    return 'https:' + IP + path
+}
 
 module.exports = {
     trackingData,
@@ -33,5 +38,6 @@ module.exports = {
     userInfo,
     userSearchHistory,
     addUserSearchHistory,
-    editLbeacon
+    editLbeacon,
+    pdfUrl
 };

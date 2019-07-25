@@ -2,127 +2,33 @@ var moment = require('moment')
 
 
 function query_getTrackingData (accuracyValue = 1) {
+        const query = `
+                SELECT
+                        object_table.mac_address,
+                        object_summary_table.uuid as lbeacon_uuid,
+                        object_summary_table.rssi,
+                        object_summary_table.first_seen_timestamp,
+                        object_summary_table.last_seen_timestamp,
+                        object_table.name,
+                        object_table.type,
+                        object_table.status,
+                        object_table.transferred_location,
+                        object_table.access_control_number,
+                        split_part(object_table.access_control_number, '-', 3) as 
+last_four_acn,
+                        lbeacon_table.description as location_description
 
+                FROM object_summary_table
 
-	const locationAccuracyMapToDefault = {
-		0: -100,
-		1: -65,
-		2: -50,
-	}
+                LEFT JOIN object_table
+                ON object_table.mac_address = object_summary_table.mac_address
 
-	const locationAccuracyMapToDB = {
-		0: 'low_rssi',
-		1: 'med_rssi',
-		2: 'high_rssi',
-	}
-	const lowest_rssi = locationAccuracyMapToDefault[0];
-	const default_rssi = locationAccuracyMapToDefault[accuracyValue];
-	const field_name = locationAccuracyMapToDB[accuracyValue];
+                LEFT JOIN lbeacon_table
+                ON lbeacon_table.uuid = object_summary_table.uuid
 
-	const text = `
-	SELECT table_location.object_mac_address, 
-		   table_device.name, 
-		   table_device.type,
-		   table_device.access_control_number,
-		   table_device.status,
-		   table_device.transferred_location,
-		   table_location.lbeacon_uuid, 
-		   table_location.avg as avg, 
-		   table_location.panic_button as panic_button, 
-		   table_location.geofence_type as geofence_type ,
-		   lbeacon_table.description as location_description
-	FROM
-	
-	    (
-	    SELECT table_track_data_by_thresholds.object_mac_address, 
-		       table_track_data_by_thresholds.lbeacon_uuid, 
-		       table_track_data_by_thresholds.avg as avg, 
-			   table_panic.panic_button as panic_button, 
-			   NULL as geofence_type 
-	    FROM
-		
-			(
-	        SELECT table_track_data.object_mac_address,
-			       table_track_data.lbeacon_uuid,
-			       table_track_data.avg as avg
-			FROM
-			    
-				(
-			    SELECT object_mac_address, 
-			           lbeacon_uuid, 
-			           round(avg(rssi),2) as avg
-				FROM tracking_table		  
-			        WHERE final_timestamp >= NOW() - INTERVAL '15 seconds'  
-		            AND final_timestamp >= NOW() - (server_time_offset||' seconds')::INTERVAL - INTERVAL '10 seconds'
-                    GROUP BY object_mac_address, lbeacon_uuid
-			        HAVING avg(rssi) > ${lowest_rssi}
-			    ) as table_track_data	    
-				
-			    INNER JOIN 
-			    (
-			    SELECT uuid,
-			     	   high_rssi,
-			     	   med_rssi,
-			    	   low_rssi
-			    FROM lbeacon_table
-			    ) as table_beacons
-				ON table_track_data.lbeacon_uuid = table_beacons.uuid
-					
-				WHERE (table_beacons.${field_name} is NULL AND 
-					table_track_data.avg >= ${default_rssi}) 
-					OR
-					(table_beacons.${field_name} is NOT NULL AND 
-					table_track_data.avg > table_beacons.${field_name}) 
-			
-		    )as table_track_data_by_thresholds
-			
-		    LEFT JOIN
-		
-		    (
-			SELECT object_mac_address, 
-			       lbeacon_uuid, 
-				   max(panic_button) as panic_button 
-		    FROM tracking_table
-                WHERE final_timestamp >= NOW() - INTERVAL '190 seconds'
-                AND final_timestamp >= NOW() - (server_time_offset||' seconds')::INTERVAL - INTERVAL '180 seconds'
-                GROUP BY object_mac_address, lbeacon_uuid			
-		        HAVING max(panic_button) > 0
-		    ) as table_panic	
-		
-		    ON table_track_data_by_thresholds.object_mac_address = table_panic.object_mac_address 
-		    AND table_track_data_by_thresholds.lbeacon_uuid = table_panic.lbeacon_uuid
-	
-	    UNION
-	
-	    SELECT mac_address as object_mac_address, 
-		       uuid as lbeacon_uuid, 
-			   MAX(rssi) as avg, 
-			   NULL panic_button, 
-			   type as geofence_type 
-	    FROM geo_fence_alert 
-	        WHERE receive_time >= NOW() - INTERVAL '5 seconds'
-		    GROUP BY mac_address, uuid, type
-    
-	        ORDER BY object_mac_address ASC, lbeacon_uuid ASC
-     
-	    ) as table_location
-	
-	    INNER JOIN 
-	
-	    (
-		SELECT mac_address, name, type, access_control_number, status, transferred_location
-	    FROM object_table
-	    ) as table_device
-	
-		ON table_location.object_mac_address = table_device.mac_address
-		
-		LEFT JOIN lbeacon_table
-		ON lbeacon_table.uuid=table_location.lbeacon_uuid
-		ORDER BY table_device.type ASC, object_mac_address ASC;
-    
-	`;
-
-	 return text;
+                ORDER BY object_table.type ASC, last_four_acn ASC;
+        `
+        return query;
 }
 
 

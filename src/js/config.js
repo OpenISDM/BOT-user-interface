@@ -41,14 +41,14 @@ const config = {
         },
 
         iconOptions: {
-            iconSize: 30,
+            iconSize: 50,
             stationaryIconUrl: black_pin,
             movinfIconUrl: darkGrey_pin,
             sosIconUrl: sos,
 			geofenceIconFence: geofence_fence,
             geofenceIconPerimeter: geofence_perimeter,
             searchedObjectIconUrl: white_pin,
-            showNumber: false,
+            showNumber: true,
         },
 
         iconColor: {
@@ -136,6 +136,10 @@ const config = {
         Ultrasound: 'Ultrasound',
         EKG: 'EKG Machine',
         CPM: 'CPM',
+    },
+
+    frequentSearch:{
+        showImage: true,
     }
 
 
