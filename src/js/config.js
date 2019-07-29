@@ -139,7 +139,11 @@ const config = {
     },
 
     frequentSearch:{
-        showImage: true,
+        showImage: false,
+    },
+
+    searchResult:{
+        showImage: false,
     }
 
 

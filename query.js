@@ -93,18 +93,23 @@ const getGeofenceData = (request, response) => {
 
 const editObject = (request, response) => {
 
-    const formOption = request.body.formOption
-    console.log('hi')
-    pool.query(queryType.query_editObject(formOption), (error, results) => {
-        if (error) {
-            console.log("Edit Object Fails: " + error)
-        } else {
-            console.log("Edit Object Success");
-        }
-        
-        response.status(200).json(results)
+    const formOptions = request.body.formOption
+    console.log(formOptions)
+    for(var i in formOptions){
+        let formOption = formOptions[i]
+        console.log(formOption)
+        pool.query(queryType.query_editObject(formOption), (error, results) => {
+            if (error) {
+                console.log("Edit Object Fails: " + error)
+            } else {
+                console.log("Edit Object Success");
+            }
+            
+            response.status(200).json(results)
 
-    })
+        })
+    }
+    
 }
 
 const addObject = (request, response) => {
@@ -123,6 +128,7 @@ const addObject = (request, response) => {
 
 const editObjectPackage = (request, response) => {
     const formOption = request.body.formOption
+    console.log(request.body)
     pool.query(queryType.query_editObjectPackage(formOption), (error, results) => {
         if (error) {
             console.log(error)

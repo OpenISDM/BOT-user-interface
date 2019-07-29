@@ -29,20 +29,38 @@ class SearchResult extends React.Component {
         this.state = {
             showEditObjectForm: false,
             showConfirmForm: false,
-            selectedObjectData: [],
+            selectedObjectData: {},
             formOption: [],
             thisComponentShouldUpdate: true,
             foundResult: [],
             notFoundResult: [],
             showNotResult: false,
+            addTransferDevices: false,
+            newStatus: '',
+            changeState: false,
+            searchResult: [],
+            selectedSingleChangeObjectIndex: -1,
+
+            ShouldUpdateChangeStatusForm    : false,
+            ShouldUpdateConfirmForm         : false,
 
         }
 
-        this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
-        this.handleChangeObjectStatusFormSubmit = this.handleChangeObjectStatusFormSubmit.bind(this)
-        this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this)
+
+        this.handleChangeObjectStatusFormShow = this.handleChangeObjectStatusFormShow.bind(this)
+
+
         this.handleChangeObjectStatusFormClose = this.handleChangeObjectStatusFormClose.bind(this);
         this.handleToggleNotFound = this.handleToggleNotFound.bind(this);
+        this.closeSearchResult = this.closeSearchResult.bind(this)
+
+        this.addDeviceSelection = this.addDeviceSelection.bind(this)
+        this.handleConfirmForm = this.handleConfirmForm.bind(this)
+
+
+
+
+        this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
     }
     
     componentDidMount() {
@@ -51,15 +69,17 @@ class SearchResult extends React.Component {
 
 
         for(var searchresult in this.props.searchResult){
+            this.props.searchResult[searchresult].checked = false;
             foundlist.push(this.props.searchResult[searchresult])
+            this.state.searchResult.push[this.props.searchResult[searchresult]]
         }
         this.setState({
             foundResult: foundlist ? foundlist : [],
         })
         
     }
-    componentDidUpdate(prepProps) {
-        // console.log('Submit')
+    componentDidUpdate(prepProps, prevState) {
+
 
         if(!(_.isEqual(prepProps.searchResult, this.props.searchResult))) {
             let notFoundResult = [];
@@ -67,93 +87,146 @@ class SearchResult extends React.Component {
 
 
             for(var searchresult in this.props.searchResult){
+                this.props.searchResult[searchresult].checked = false;
                 foundlist.push(this.props.searchResult[searchresult])
+                this.state.searchResult.push[this.props.searchResult[searchresult]]
             }
             this.setState({
                 foundResult: foundlist ? foundlist : [],
             })
         }   
-        if(!this.props.hasSearchKey && prepProps.hasSearchKey){
-            
-        }     
+        if(this.state.changeState !== prevState.changeState){
+
+            this.setState({
+
+            })
+        }    
+        if(this.props.searchResult.length !== this.state.searchResult.length){
+            var x = this.initializeSearchResultList(this.props.searchResult)
+
+            this.setState({
+                searchResult: this.initializeSearchResultList(this.props.searchResult)
+            })
+
+        }
+        if(this.state.selectedObjectData.length !== prevState.selectedObjectData.length){
+
+            this.setState({
+
+            })
+        }
+
     }
 
-    handleChangeObjectStatusForm(eventKey) {
-        const eventItem = eventKey.split(':');
-        const isFound = eventItem[0]
-        const number = eventItem[1]
+    initializeSearchResultList(searchResults){
+        var searchResult = []
+        for(var searchresult in searchResults){
 
-        this.setState({
-            showEditObjectForm: true,
-            selectedObjectData: isFound.toLowerCase() === 'found' ? this.state.foundResult[number] : this.state.notFoundResult[number]
-        })
+            let result = searchResults[searchresult];
+            result.checked = false;
 
-        this.props.shouldUpdateTrackingData(false)
+            searchResult.push(result);
+        }
+
+        return searchResult
+    }
+
+    handleChangeObjectStatusFormShow(index) {
+        this.handleChangeObjectStatusForm('show', index)
     }
 
     handleChangeObjectStatusFormClose() {
-        this.setState({
-            showEditObjectForm: false,
-            showConfirmForm: false,
-        })
-        this.props.shouldUpdateTrackingData(true)
+        this.handleChangeObjectStatusForm('close', null)
     }
 
-    handleChangeObjectStatusFormSubmit(postOption) {
-
+    handleChangeObjectStatusForm(command, Option){
         this.setState({
-            selectedObjectData: {
-                ...this.state.selectedObjectData,
-                ...postOption,
-            },
-            showEditObjectForm: false,
+            ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm,
         })
-        setTimeout(
-            function() {
-                this.setState({
-                    showConfirmForm: true,
-                    formOption: postOption,
+        if(command === 'submit'){
+            this.handleConfirmForm('show', null)
+            var postOption = Option;
+
+            this.setState({
+                newStatus:postOption,
+                showEditObjectForm: false,
+                showConfirmForm: true,
+                changeState : ! this.state.changeState,
+            })
+            
+        }else if(command === 'close'){
+            this.handleConfirmForm('close', null)
+            this.setState({
+                showEditObjectForm: false,
+                addTransferDevices: false,
+                selectedObjectData: {},
+            })
+            this.props.shouldUpdateTrackingData(true)
+        }else if(command === 'show'){
+            var SearchResult = this.initializeSearchResultList(this.props.searchResult)
+            this.setState({
+                searchResult: SearchResult,
+                showEditObjectForm: true,
+            })
+        }else if(command === 'AddTransferDevices'){
+            var state = Option
+            this.state.searchResult[this.state.selectedSingleChangeObjectIndex].checked = true
+            this.setState({
+                addTransferDevices: state,
+                changeState: !this.state.changeState
+
+            })
+        }
+
+
+    }
+
+    handleConfirmForm(command, Option){
+        
+        if(command === 'submit'){
+            if(Option === true){
+                for(var i in this.state.selectedObjectData){
+                    this.state.selectedObjectData[i].status = this.state.newStatus.status
+                    this.state.selectedObjectData[i].transferred_location = this.state.newStatus.transferred_location
+                }
+                var selectedObjectData = []
+                for(var i in this.state.selectedObjectData){
+                    selectedObjectData.push(this.state.selectedObjectData[i])
+                }
+                axios.post(dataSrc.editObjectPackage, {
+                    formOption: selectedObjectData
+                }).then(res => {
+                    this.handleConfirmForm('close', null)
+                    
+
+                    this.props.shouldUpdateTrackingData()
+
+                }).catch( error => {
+                    console.log(error)
                 })
-            }.bind(this),
-            500
-        )
+            }
+            
+        }else if(command === 'close'){
+            this.setState({
+                showEditObjectForm: false,
+                showConfirmForm: false,
+                addTransferDevices: false,
+                selectedObjectData: {},
+                changeState: !this.state.changeState
+            })
+        }else if(command === 'show'){
+            this.setState({
+                showConfirmForm: true,
+            })
+        }
+        this.setState({
+            ShouldUpdateConfirmForm: ! this.state.ShouldUpdateConfirmForm,
+        })
     }
 
-    handleConfirmFormSubmit(e) {
-        const button = e.target
-        const postOption = this.state.formOption;
-        const colorPanel = this.props.colorPanel ? this.props.colorPanel : null;
-        let changedStatusSearchResult = this.props.searchResult.map(item => {
-            if (postOption.mac_address === item.mac_address) {
-                item = {
-                    ...item,
-                    ...postOption
-                }
-            }
-            return item
-        })
+  
 
-        axios.post(dataSrc.editObject, {
-            formOption: postOption
-        }).then(res => {
-            button.style.opacity = 0.4
-            setTimeout(
-                function() {
-                    this.setState ({
-                        showConfirmForm: false,
-                        formOption: [],
-                    })
-
-                    this.props.transferSearchResult(changedStatusSearchResult, colorPanel )
-                    this.props.shouldUpdateTrackingData(true)
-                }
-                .bind(this),
-                1000
-            )
-        }).catch( error => {
-            console.log(error)
-        })
-    } 
+    
 
     handleToggleNotFound(e) {
         e.preventDefault()
@@ -162,19 +235,63 @@ class SearchResult extends React.Component {
         })
         
     }
+    closeSearchResult(){
+        this.props.closeSearchResult()
+        this.handleChangeObjectStatusForm('close', null)
+        this.setState({
+            showConfirmForm: false,
+            showEditObjectForm: false,
+            addTransferDevices: false,
+            selectedObjectData: {},
+        })
+    }
 
-    
+
+
+    addDeviceSelection(e){
+
+        if(this.state.searchResult.length !== 0){
+            if(!this.state.addTransferDevices){
+                var index = e.target.getAttribute('name')
+                var item = this.state.searchResult[index]
+                this.setState({
+                    selectedSingleChangeObjectIndex: index
+                })
+                this.state.selectedObjectData = []
+                this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
+                this.handleChangeObjectStatusForm('show',this.state.searchResult[index])
+
+            }else{
+                var index = e.target.getAttribute('name')
+                this.state.searchResult[index].checked = ! this.state.searchResult[index].checked
+                var item = this.state.searchResult[index]
+                if(item.checked){
+                    this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
+                }else{
+
+                    delete this.state.selectedObjectData[item.mac_address]
+                }
+            }
+        }
+        
+        this.setState({
+            ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm
+        })   
+    }
     render() {
         const locale = this.context;
         const { searchResult, searchKey} = this.props;
 
         const style = {
             searchResult:{
-                height: '70vh',
+                height: '80vh',
                 overflowY: 'hidden',
                 boxShadow:'3px 3px 12px gray',
                 padding:'0px',
-                width: '100%',
+                width: this.state.addTransferDevices ? '100%' : '100%',
+
+                position: 'absolute',
+                right: '0%'
 
                 
             },
@@ -189,10 +306,9 @@ class SearchResult extends React.Component {
             firstText: {
                 paddingLeft: 15,
                 paddingRight: 0,
-                float: 'left',
-                // background: 'rgb(227, 222, 222)',
-                // height: 30,
-                // width: 30,
+                textAlign: 'center',
+                verticalAlign: 'baseline'
+                
             },
             middleText: {
 
@@ -229,69 +345,112 @@ class SearchResult extends React.Component {
         }
 
         return(
-            <div style = {style.searchResult} className='mx-0' >
+            <div style = {style.searchResult} className='mx-0 bg-light' >
 
-                <div style={style.titleText}>
-                    <Col md={11} xs={11} className="mx-1 d-flex justify-content-center">
-                        <h4>{locale.SEARCH_RESULT}</h4>
-                    </Col>
+                <div style={style.titleText} className="bg-primary justify-content-center">
                     
-                        <button className="btn btn-lg btn-light" onClick={this.props.closeSearchResult} style={{background:'#DDDDDD', padding:'0px', width:'40px', height:'40px'}}>x</button>
-                   
+                        <h4 className="text-light w-100">{locale.SEARCH_RESULT}</h4>
+                    
+                    
+                        <button className="btn btn-lg btn-light" onClick={this.closeSearchResult} style={{position: 'absolute',right: '0%'}}>x</button>
+                        
                 </div>
-                <Row className='d-flex justify-content-center mt-3' style={style.titleText}>
-                    <h5> {searchResult.length} {locale.DEVICE_FOUND}</h5>
-                </Row>
+                
+                <h5 className="bg-primary justify-content-center text-light w-100"> {searchResult.length} {locale.DEVICE_FOUND}</h5>
+                
 
-                <Row  id = "searchResultTable" className="hideScrollBar" style={{overflowY: 'scroll',height: '55vh'
-                }}>
-
+                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" style={{overflowY: 'scroll',height: '70vh'}}>
                     {this.state.foundResult.length === 0
-                    ?   <Col className='text-left' style={style.noResultDiv} >
-                            <em>no searchResult</em>
-                        </Col> 
+                    ?   
+                            <em className="text-center">no searchResult</em>
+                        
                     
-                    :   <Col className='hideScrollBar'>
+                    :   <div className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
 
-                            <ListGroup onSelect={this.handleChangeObjectStatusForm} >
-                                {this.state.foundResult.map((item,index) => {
+                            {this.props.searchResult.map((item,index) => {
+
                                     let element = 
-                                        <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'found:' + index} key={index}>
-                                            <Row className="d-flex align-self-center justify-content-center ">
-                                                <Col xl={1} lg={2} md={2} xs={2} className="font-weight-bold d-flex align-self-center resultText" style={style.firstText}>{index + 1}</Col>
-                                                <Col xl={3} lg={3} md={3} xs={4} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>{item.type}</Col>
 
-                                                <Col xl={4} lg={7} md={7} xs={6} className="d-flex align-self-center justify-content-center resultText" style={style.middleText}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
-                                                <Col xl={3} lg={0} md={0} xs={0} className="d-flex align-self-center justify-content-center resultText" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
+                                        <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} >
+                                            <Row className="align-items-stretch">
+                                                {! this.state.addTransferDevices
+                                                    ?
+                                                        <>
+                                                            <Col xl={2} lg={2} md={2} xs={2} className="d-flex justify-content-center" style={style.firstText} onClick={this.addDeviceSelection} name={index}>{index + 1}</Col>
+                                                            <Col xl={3} lg={3} md={3} xs={4} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>{item.type}</Col>
 
+                                                            <Col xl={4} lg={7} md={7} xs={6} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
+                                                            {config.searchResult.showImage
+                                                                ?
+                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
+                                                                :
+                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText} onClick={this.addDeviceSelection} name={index}></Col>
+                                                            }
+                                                        </>
+                                                    :
+                                                        <>
+                                                            <Col xl={1} lg={2} md={2} xs={2} className="d-flex justify-content-center" style={style.firstText} onClick={this.addDeviceSelection} name={index}>{index + 1}</Col>
+                                                            <Col xl={1} lg={2} md={2} xs={2} className="d-flex justify-content-center" style={style.firstText} onClick={this.addDeviceSelection} name={index}>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    className="custom-control-input w-100"
+                                                                    onChange={this.addDeviceSelection}
+                                                                    checked = {item.checked}
+                                                                    id={'check'+item.mac_address}
+                                                                    name={index}
+                                                                />
+                                                                <label className="custom-control-label" name={index} htmlFor={'check'+item.mac_address}>
+                                                                </label>
+                                                            </Col>
+                                                            <Col xl={3} lg={3} md={3} xs={4} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>{item.type}</Col>
+
+                                                            <Col xl={4} lg={7} md={7} xs={6} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
+
+                                                            {config.searchResult.showImage
+                                                                ?
+                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
+                                                                :
+                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText} onClick={this.addDeviceSelection} name={index}></Col>
+                                                            }
+                                                            
+                                                        </>
+                                                }
                                             </Row>
                                         </ListGroup.Item>
+                                        
+                                                
+                                            
+
+
                                     return element
                                 })}
-                            </ListGroup>
-                        </Col> 
-                       
-                    }
-                </Row>
-                
-            
+                        
+                        </div>
 
+                        
+                    }
+                    
+                </Row>
+            
 
                 <ChangeStatusForm 
                     show={this.state.showEditObjectForm} 
                     title='Report device status' 
                     selectedObjectData={this.state.selectedObjectData} 
-                    searchKey={searchKey}
-                    handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose}
-                    handleChangeObjectStatusFormSubmit={this.handleChangeObjectStatusFormSubmit}
+                    handleChangeObjectStatusForm = {this.handleChangeObjectStatusForm}
+
+                    ShouldUpdate = {this.state.ShouldUpdateChangeStatusForm}
                 />
 
                 <ConfirmForm 
                     show={this.state.showConfirmForm}  
                     title='Thank you for reporting' 
-                    selectedObjectData={this.state.formOption} 
-                    handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose} 
-                    handleConfirmFormSubmit={this.handleConfirmFormSubmit}
+                    selectedObjectData={this.state.selectedObjectData} 
+                    handleConfirmForm={this.handleConfirmForm}
+
+                    formOption = {this.state.newStatus}
+
+                    ShouldUpdate = {this.state.ShouldUpdateConfirmForm}
                 />
             </div>
         )
@@ -307,32 +466,6 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(null, mapDispatchToProps)(SearchResult);
 
-// {this.state.notFoundResult.length !== 0 
-//                 ? 
-//                     <div>
-//                         <Row className='d-flex justify-content-center mt-3 ' style={style.titleText}>
-//                             <h5> {this.state.notFoundResult.length} Devices Not Found </h5>
-//                         </Row>
-//                         {/* <Row className='text-left mt-3' style={style.titleText}>
-//                             <h5>Devices not found</h5>
-//                         </Row> */}
-//                         <Row style={style.notFoundResultDiv}>
-//                             <Col className=''>
-//                                 <ListGroup onSelect={this.handleChangeObjectStatusForm} className='overflow-auto hideScrollBar'>
-//                                     {this.state.notFoundResult.map((item,index) => {
-//                                         let element = 
-//                                             <ListGroup.Item href={'#' + index} action style={style.listItem} className='searchResultList' eventKey={'notfound:' + index} key={index}>
-//                                                 <Row className="d-flex justify-content-around">
-//                                                     <Col lg={1} className="font-weight-bold d-flex align-self-center" style={style.firstText}>{index + 1}</Col>
-//                                                     <Col lg={3} className="d-flex align-self-center justify-content-center" style={style.middleText}>{item.type}</Col>
-//                                                     <Col lg={4} className="d-flex align-self-center text-muted" style={style.middleText}>ACN: xxxx-xxxx-{item.access_control_number.slice(10, 14)}</Col>
-//                                                     <Col lg={3} className="d-flex align-self-center text-muted justify-content-center" style={style.lastText}>near {item.location_description}</Col>
-//                                                 </Row>
-//                                             </ListGroup.Item>
-//                                         return element
-//                                     })}
-//                                 </ListGroup>
-//                             </Col> 
-//                         </Row>
-//                     </div>
-//                 : null}
+                            
+                        
+

@@ -126,25 +126,6 @@ class SearchContainer extends React.Component {
     }
 
 
-    
-    // async getResultData(e) {
-    //     var searchResult = [];
-    //     var SearchKey = '';
-    //     console.log('searchResult')
-    //     searchResult = await GetResultData(e, this.state.searchableObjectData)
-    //     console.log('searchResult')
-    //     this.setState({
-    //         IsShowSection:false,
-    //         searchResult: searchResult,
-    //         IsShowResult: true,
-    //         changeState: !this.state.changeState
-    //     })
-    //     console.log(searchResult)
-    //     this.props.transferSearchResult(searchResult, null, SearchKey)
-
-    // }
-
-
     closeSearchResult(e){
 
         this.props.handleCloseSearchResult()
@@ -196,21 +177,7 @@ class SearchContainer extends React.Component {
 
                 left: '3%'
             }, 
-            SearchResult:{
-                height: '80vh',
-
-                display: (this.state.IsShowResult)?'block':'none',
-
-                zIndex: (this.state.IsShowResult)?1002:0,
-
-                background:'#FFFFFF',
-                
-                float: 'right', 
-
-                
-
-                position:'absolute',
-            }
+            
         }
         
         return (
@@ -236,7 +203,7 @@ class SearchContainer extends React.Component {
                             clickButtonHandler = {this.clickButtonHandler}
                         />
                     </Col>
-                    <Col id='searchableObjectType' md={12} sm={12} xs={12} className='mx-0 px-0 float-right' style={{zIndex: (this.state.IsShowSection)?1003:0}}>
+                    <Col id='searchableObjectType' md={12} sm={12} xs={12} className='mx-0 px-0 float-right' style={{zIndex: (this.state.IsShowSection)?1060:0}}>
 
                         <SearchableObjectType
                             handleMouseLeave = {this.state.handleMouseLeave}
@@ -247,14 +214,7 @@ class SearchContainer extends React.Component {
                         />
                     </Col> 
 
-                    <div id="searchResult" md={12} sm={12} xs={12} className='m-2 px-0' style={style.SearchResult} onMouseLeave={this.SearchResultMouseLeave}>
-                        <SearchResult 
-                            hasSearchKey = {this.state.hasSearchKey}
-                            transferSearchResult = {this.props.transferSearchResult}
-                            closeSearchResult = {this.closeSearchResult}
-                            searchResult={this.state.searchResult}
-                        />
-                    </div>
+                   
                 </div>
             </Row>
 
@@ -266,3 +226,12 @@ class SearchContainer extends React.Component {
 
 SearchContainer.contextType = LocaleContext;
 export default SearchContainer;
+
+ // <div id="searchResult" md={12} sm={12} xs={12} className='m-2 px-0' style={style.SearchResult} onMouseLeave={this.SearchResultMouseLeave}>
+ //                        <SearchResult 
+ //                            hasSearchKey = {this.state.hasSearchKey}
+ //                            transferSearchResult = {this.props.transferSearchResult}
+ //                            closeSearchResult = {this.closeSearchResult}
+ //                            searchResult={this.state.searchResult}
+ //                        />
+ //                    </div>

@@ -57,12 +57,12 @@ class Surveillance extends React.Component {
     }
 
     componentDidUpdate(prepProps){
-        
-        if(this.props.shouldTrackingDataUpdate) {
+
+        if(this.props.shouldTrackingDataUpdate || this.props.searchResult !== prepProps.searchResult) {
 
             /** Check whether there is the new tracking data retrieving from store */
             if (this.props.objectInfo !== prepProps.objectInfo) {
-                var objectInfo = this.props.objectInfo.slice(2,10)
+                var objectInfo = this.props.objectInfo.slice(1,10)
                 var objects = {}
                 for(var i of objectInfo){
                     objects[i.mac_address] = i
@@ -75,10 +75,12 @@ class Surveillance extends React.Component {
             this.handleObjectMarkers();
             this.createLbeaconMarkers();
         }
+
+        
     }
 
     shouldComponentUpdate(nextProps){
-        return this.props.shouldTrackingDataUpdate
+        return true
     }
 
     
@@ -311,12 +313,13 @@ class Surveillance extends React.Component {
             maxHeight: '300',
             className : 'customPopup',
         }
-        
+
         let counter = 0;
         for (var key in objects){
 
             /** Tag the searched object with searched and pinColor*/
             // console.log(searchedObjectDataMap)
+
             if(searchedObjectDataMap.has(key)) {
                 objects[key] = searchedObjectDataMap.get(key)
                 objects[key].searched = true;
@@ -430,8 +433,10 @@ class Surveillance extends React.Component {
     }
 
     collectObjectsByLatLng(currentPositionArray) {
+
         let objectList = []
         Object.values(this.state.objectInfo).map(item => {
+
             item.currentPosition.toString() === currentPositionArray.toString() ? objectList.push(item) : null;
         })
         return objectList 
@@ -481,6 +486,7 @@ class Surveillance extends React.Component {
      */
     popupContent (objectsMap){
         let currentPosition = objectsMap[0].currentPosition
+
         let objectList = this.collectObjectsByLatLng(currentPosition)
 
         /* The style sheet is right in the src/css/Surveillance.css*/

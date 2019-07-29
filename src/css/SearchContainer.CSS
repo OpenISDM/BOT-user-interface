@@ -47,11 +47,7 @@ a.sectionIndexItem:hover {
     #searchBar{
         height: 8vh
     }
-    #searchResult{
-    	width: 115%;
-        margin-left: 10%;
-        right: 15%;
-    }
+    
 
 }
 /* .activeIndex {

@@ -48,8 +48,8 @@ class ConfirmForm extends React.Component {
     }
   
     handleClose(e) {
-        if(this.props.handleChangeObjectStatusFormClose) {
-            this.props.handleChangeObjectStatusFormClose();
+        if(this.props.handleConfirmForm) {
+            this.props.handleConfirmForm('close', null);
         }
         this.setState({ 
             show: false ,
@@ -63,27 +63,28 @@ class ConfirmForm extends React.Component {
         });
     }
 
+    componentDidMount(){
+
+        this.setState({
+                show: this.props.show,
+                isShowForm: true,
+        })
+    }
 
     componentDidUpdate(prevProps) {
-        if (prevProps != this.props) {
+        if (prevProps.ShouldUpdate !== this.props.ShouldUpdate) {
+
             this.setState({
                 show: this.props.show,
                 isShowForm: true,
-                formOption: {
-                    name: this.props.selectedObjectData.name,
-                    type: this.props.selectedObjectData.type,
-                    status: this.props.selectedObjectData.status,
-                    transferredLocation: this.props.selectedObjectData.transferred_location ? {
-                        'value' : this.props.selectedObjectData.transferred_location,
-                        'label' : this.props.selectedObjectData.transferred_location
-                    } : null,
-                }
+                
+
             })
         }
     }
 
     handleSubmit(e) {
-        this.props.handleConfirmFormSubmit(e, this.state.addedDevices)
+        this.props.handleConfirmForm('submit',true)
     }
 
     handleChange(e) {
@@ -102,7 +103,7 @@ class ConfirmForm extends React.Component {
                 })
                 break;
             case 'remove device':
-                console.log(item)
+
                 break;
             case 'add notes':
             case 'hide notes':
@@ -127,6 +128,58 @@ class ConfirmForm extends React.Component {
         })
     }
 
+    generateDeviceList(){
+        var htmls =[]
+        const rwdProp = { 
+            sm: 5,
+            md: 5,
+            lg: 5,
+        }
+        for(var selectedObjectDataIndex in this.props.selectedObjectData){
+            if(this.props.selectedObjectData[selectedObjectDataIndex]!== null){
+                let selectedObjectData = this.props.selectedObjectData[selectedObjectDataIndex]
+
+                let html = 
+                    <Row key={selectedObjectDataIndex}>
+                        <Col sm={8}>
+                        
+                            <Row>
+                                <Col {...rwdProp}>
+                                    Device Type
+                                </Col>
+                                <Col sm={7} className='text-muted pb-1'>
+                                    {selectedObjectData.type}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col sm={5}>
+                                    Device Name
+                                </Col>
+                                <Col sm={7} className='text-muted pb-1'>
+                                    {selectedObjectData.name}
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col sm={5}>
+                                    ACN
+                                </Col>
+                                <Col sm={7} className='text-muted pb-1'>
+                                    {selectedObjectData.access_control_number}
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col sm={4} className='d-flex align-items-center'>
+                            <Image src={tempImg} width={80}/>
+                        </Col>
+
+                    </Row>
+
+                htmls.push(html)
+            }
+        }
+            
+        return htmls
+    }
   
     render() {
 
@@ -144,45 +197,28 @@ class ConfirmForm extends React.Component {
             }
         }
 
+        const customModalStyles = {
+            content : {
+                zIndex                : 1050,  
+                top                   : '10%',
+                left                  : '-30%',
+                right                 : 'auto',
+                bottom                : 'auto',
+            }
+        };
+
         const { title } = this.props;
 
         return (
             <>  
-                <Modal show={this.state.show} onHide={this.handleClose} size="md">
+                <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content}>
                     <Modal.Header closeButton className='font-weight-bold'>{title}</Modal.Header >
                     <Modal.Body>
                         <Form >
-                            <Row>
-                                <Col sm={10}>
-                                    <Row>
-                                        <Col sm={5}>
-                                            Device Type
-                                        </Col>
-                                        <Col sm={7} className='text-muted pb-1'>
-                                            {this.props.selectedObjectData.type}
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col sm={5}>
-                                            Device Name
-                                        </Col>
-                                        <Col sm={7} className='text-muted pb-1'>
-                                            {this.props.selectedObjectData.name}
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col sm={5}>
-                                            ACN
-                                        </Col>
-                                        <Col sm={7} className='text-muted pb-1'>
-                                            {this.props.selectedObjectData.access_control_number}
-                                        </Col>
-                                    </Row>
-                                </Col>
-                                <Col sm={2} className='d-flex align-items-center'>
-                                    <Image src={tempImg} width={60}/>
-                                </Col>
-                            </Row>
+                            <div style={{maxHeight: '25vh', overflowY: 'scroll', overflowX: 'hidden'}}>
+                                {this.generateDeviceList()}
+                            </div>
+                           
                             {this.state.addedDevices.length !== 0 
                                 ? 
                                     this.state.addedDevices.map((item,index) => {
@@ -230,9 +266,9 @@ class ConfirmForm extends React.Component {
                         <hr/>
                         <Row>
                             <Col className='d-flex justify-content-center'>
-                                <h5>{this.props.selectedObjectData.status}
-                                    {this.props.selectedObjectData.status === 'Transferred' 
-                                        ? '  to  ' + this.props.selectedObjectData.transferredLocation.value 
+                                <h5>{this.props.formOption.status}
+                                    {this.props.formOption.status === 'Transferred' 
+                                        ? '  to  ' + this.props.formOption.transferred_location.value 
                                         : null
                                     }
                                 </h5>
@@ -243,7 +279,7 @@ class ConfirmForm extends React.Component {
                                 <h6>{moment().format('LLLL')}</h6>    
                             </Col>
                         </Row>
-                        {this.props.selectedObjectData.status === 'Transferred' && 
+                        {this.props.formOption.status === 'Transferred' && 
                             <>
                                 <hr/>
                                 <Row className='d-flex justify-content-center'>
@@ -288,7 +324,7 @@ class ConfirmForm extends React.Component {
                     addedDevice={this.addedDevice}
                     handleAddDeviceFormClose={this.handleAddDeviceFormClose}
                     searchResult={this.props.searchResult}
-                    selectedObjectData={this.props.selectedObjectData}
+                    formOption={this.props.formOption}
                 />
             </>
         );

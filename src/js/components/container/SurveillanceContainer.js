@@ -287,22 +287,7 @@ class SurveillanceContainer extends React.Component {
 
                 </div>
 
-                <ChangeStatusForm 
-                    show={showEditObjectForm} 
-                    title='Report device status' 
-                    selectedObjectData={selectedObjectData} 
-                    searchKey={null}
-                    handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose}
-                    handleChangeObjectStatusFormSubmit={this.handleChangeObjectStatusFormSubmit}
-                />
-                <ConfirmForm 
-                    show={showConfirmForm}  
-                    title='Thank you for reporting' 
-                    selectedObjectData={formOption} 
-                    // handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose} 
-                    handleConfirmFormSubmit={this.handleConfirmFormSubmit}
-                    searchableObjectData={this.state.searchableObjectData}
-                />
+                
 
                 <PdfDownloadForm 
                     show={showPdfDownloadForm}
@@ -326,3 +311,20 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(SurveillanceContainer)
+
+// <ChangeStatusForm 
+//                     show={showEditObjectForm} 
+//                     title='Report device status' 
+//                     selectedObjectData={selectedObjectData} 
+//                     searchKey={null}
+//                     handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose}
+//                     handleChangeObjectStatusFormSubmit={this.handleChangeObjectStatusFormSubmit}
+//                 />
+//                 <ConfirmForm 
+//                     show={showConfirmForm}  
+//                     title='Thank you for reporting' 
+//                     selectedObjectData={formOption} 
+//                     // handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose} 
+//                     handleConfirmFormSubmit={this.handleConfirmFormSubmit}
+//                     searchableObjectData={this.state.searchableObjectData}
+//                 />

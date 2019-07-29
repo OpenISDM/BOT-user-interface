@@ -88,8 +88,8 @@ function query_editObject (formOption) {
 function query_addObject (formOption) {
 	const text = 
 		`
-		INSERT INTO object_table  (type, status, transferred_location, access_control_number, name, mac_address, available_status, registered_timestamp)
-		VALUES($1, $2, $3, $4, $5, $6, 1, $7)
+		INSERT INTO object_table  (type, status, transferred_location, access_control_number, name, mac_address, registered_timestamp)
+		VALUES($1, $2, $3, $4, $5, $6, $7)
 		`;
 		
 	const values = [formOption.type, formOption.status, formOption.transferredLocation?formOption.transferredLocation.value:null, formOption.access_control_number, formOption.name, formOption.mac_address, moment()];
@@ -105,28 +105,13 @@ function query_addObject (formOption) {
 function query_editObjectPackage (formOption) {
 	
 	let query = '';
-	formOption.map(item => {
-		query += `
-			Update object_table 
+	for( var i in formOption){
+		var item = formOption[i]
+		query += `Update object_table 
 			SET status = '${item.status}',
-				transferred_location = '${item.transferredLocation.value}'
-			WHERE mac_address = '${item.mac_address}';
-		`;
-	})
-
-	// const text = `
-	// 	UPDATE object_table as origin 
-	// 	SET
-	// 		status = package.status,
-	// 		transferred_location = package.transferredLocation
-	// 	FROM (values
-	// 		${formOption.map()}
-	// 		()
-	// 	) as package(mac_address, status, transferredLocation)
-	// 	WHERE package.mac_address = origin.mac_address
-	
-	// `
-
+			transferred_location = '${item.transferredLocation}'
+			WHERE mac_address = '${item.mac_address}';`;
+	}
 	return query
 }
 

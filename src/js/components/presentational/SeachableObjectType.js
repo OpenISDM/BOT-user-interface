@@ -85,12 +85,12 @@ const SearchableObjectType = (props) => {
 
                 first = sectionTitleData[titleData].values().next().value.charAt(0).toUpperCase()
 
-                Data.push(<ListGroup.Item id={first} key={first} className=" bg-primary text-right text-light"><strong><h6 className="m-0">{first}</h6></strong></ListGroup.Item>)
+                Data.push(<ListGroup.Item id={first} key={first} className=" text-right text-dark"><strong><h5 className="m-0">{first}</h5></strong></ListGroup.Item>)
                 for (let i of sectionTitleData[titleData]){
 
                     Data.push(
                         <ListGroup.Item key={i} className="my-0 py-0 w-100 text-right" onClick={mouseClick}>
-                                <h6>{i}</h6>
+                                <h5>{i}</h5>
                         </ListGroup.Item>
                     )
                 }

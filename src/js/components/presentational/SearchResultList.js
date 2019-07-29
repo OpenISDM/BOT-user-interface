@@ -29,20 +29,38 @@ class SearchResult extends React.Component {
         this.state = {
             showEditObjectForm: false,
             showConfirmForm: false,
-            selectedObjectData: [],
+            selectedObjectData: {},
             formOption: [],
             thisComponentShouldUpdate: true,
             foundResult: [],
             notFoundResult: [],
             showNotResult: false,
+            addTransferDevices: false,
+            newStatus: '',
+            changeState: false,
+            searchResult: [],
+            selectedSingleChangeObjectIndex: -1,
+
+            ShouldUpdateChangeStatusForm    : false,
+            ShouldUpdateConfirmForm         : false,
 
         }
 
-        this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
-        this.handleChangeObjectStatusFormSubmit = this.handleChangeObjectStatusFormSubmit.bind(this)
-        this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this)
+
+        this.handleChangeObjectStatusFormShow = this.handleChangeObjectStatusFormShow.bind(this)
+
+
         this.handleChangeObjectStatusFormClose = this.handleChangeObjectStatusFormClose.bind(this);
         this.handleToggleNotFound = this.handleToggleNotFound.bind(this);
+        this.closeSearchResult = this.closeSearchResult.bind(this)
+
+        this.addDeviceSelection = this.addDeviceSelection.bind(this)
+        this.handleConfirmForm = this.handleConfirmForm.bind(this)
+
+
+
+
+        this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
     }
     
     componentDidMount() {
@@ -51,15 +69,17 @@ class SearchResult extends React.Component {
 
 
         for(var searchresult in this.props.searchResult){
+            this.props.searchResult[searchresult].checked = false;
             foundlist.push(this.props.searchResult[searchresult])
+            this.state.searchResult.push[this.props.searchResult[searchresult]]
         }
         this.setState({
             foundResult: foundlist ? foundlist : [],
         })
         
     }
-    componentDidUpdate(prepProps) {
-        // console.log('Submit')
+    componentDidUpdate(prepProps, prevState) {
+
 
         if(!(_.isEqual(prepProps.searchResult, this.props.searchResult))) {
             let notFoundResult = [];
@@ -67,94 +87,146 @@ class SearchResult extends React.Component {
 
 
             for(var searchresult in this.props.searchResult){
+                this.props.searchResult[searchresult].checked = false;
                 foundlist.push(this.props.searchResult[searchresult])
+                this.state.searchResult.push[this.props.searchResult[searchresult]]
             }
             this.setState({
                 foundResult: foundlist ? foundlist : [],
             })
         }   
-        if(!this.props.hasSearchKey && prepProps.hasSearchKey){
-            
-        }     
+        if(this.state.changeState !== prevState.changeState){
+
+            this.setState({
+
+            })
+        }    
+        if(this.props.searchResult.length !== this.state.searchResult.length){
+            var x = this.initializeSearchResultList(this.props.searchResult)
+
+            this.setState({
+                searchResult: this.initializeSearchResultList(this.props.searchResult)
+            })
+
+        }
+        if(this.state.selectedObjectData.length !== prevState.selectedObjectData.length){
+
+            this.setState({
+
+            })
+        }
+
     }
 
-    handleChangeObjectStatusForm(eventKey) {
-        console.dir(eventKey.target.attributes.Name.nodeValue)
-        const isFound = 'found'
-        const number = eventKey.target.attributes.Name.nodeValue
-        console.log(this.state.foundResult[number])
-        this.setState({
-            showEditObjectForm: true,
-            selectedObjectData: isFound.toLowerCase() === 'found' ? this.state.foundResult[number] : this.state.notFoundResult[number]
-        })
+    initializeSearchResultList(searchResults){
+        var searchResult = []
+        for(var searchresult in searchResults){
 
-        this.props.shouldUpdateTrackingData(false)
+            let result = searchResults[searchresult];
+            result.checked = false;
+
+            searchResult.push(result);
+        }
+
+        return searchResult
+    }
+
+    handleChangeObjectStatusFormShow(index) {
+        this.handleChangeObjectStatusForm('show', index)
     }
 
     handleChangeObjectStatusFormClose() {
-        console.log('handleChangeObjectStatusFormClose')
-        this.setState({
-            showEditObjectForm: false,
-            showConfirmForm: false,
-        })
-        this.props.shouldUpdateTrackingData(true)
+        this.handleChangeObjectStatusForm('close', null)
     }
 
-    handleChangeObjectStatusFormSubmit(postOption) {
-
+    handleChangeObjectStatusForm(command, Option){
         this.setState({
-            selectedObjectData: {
-                ...this.state.selectedObjectData,
-                ...postOption,
-            },
-            showEditObjectForm: false,
+            ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm,
         })
-        setTimeout(
-            function() {
-                this.setState({
-                    showConfirmForm: true,
-                    formOption: postOption,
+        if(command === 'submit'){
+            this.handleConfirmForm('show', null)
+            var postOption = Option;
+
+            this.setState({
+                newStatus:postOption,
+                showEditObjectForm: false,
+                showConfirmForm: true,
+                changeState : ! this.state.changeState,
+            })
+            
+        }else if(command === 'close'){
+            this.handleConfirmForm('close', null)
+            this.setState({
+                showEditObjectForm: false,
+                addTransferDevices: false,
+                selectedObjectData: {},
+            })
+            this.props.shouldUpdateTrackingData(true)
+        }else if(command === 'show'){
+            var SearchResult = this.initializeSearchResultList(this.props.searchResult)
+            this.setState({
+                searchResult: SearchResult,
+                showEditObjectForm: true,
+            })
+        }else if(command === 'AddTransferDevices'){
+            var state = Option
+            this.state.searchResult[this.state.selectedSingleChangeObjectIndex].checked = true
+            this.setState({
+                addTransferDevices: state,
+                changeState: !this.state.changeState
+
+            })
+        }
+
+
+    }
+
+    handleConfirmForm(command, Option){
+        
+        if(command === 'submit'){
+            if(Option === true){
+                for(var i in this.state.selectedObjectData){
+                    this.state.selectedObjectData[i].status = this.state.newStatus.status
+                    this.state.selectedObjectData[i].transferred_location = this.state.newStatus.transferred_location
+                }
+                var selectedObjectData = []
+                for(var i in this.state.selectedObjectData){
+                    selectedObjectData.push(this.state.selectedObjectData[i])
+                }
+                axios.post(dataSrc.editObjectPackage, {
+                    formOption: selectedObjectData
+                }).then(res => {
+                    this.handleConfirmForm('close', null)
+                    
+
+                    this.props.shouldUpdateTrackingData()
+
+                }).catch( error => {
+                    console.log(error)
                 })
-            }.bind(this),
-            500
-        )
+            }
+            
+        }else if(command === 'close'){
+            this.setState({
+                showEditObjectForm: false,
+                showConfirmForm: false,
+                addTransferDevices: false,
+                selectedObjectData: {},
+                changeState: !this.state.changeState
+            })
+        }else if(command === 'show'){
+            this.setState({
+                showConfirmForm: true,
+            })
+        }
+        this.setState({
+            ShouldUpdateConfirmForm: ! this.state.ShouldUpdateConfirmForm,
+        })
     }
 
-    handleConfirmFormSubmit(e) {
-        const button = e.target
-        const postOption = this.state.formOption;
-        const colorPanel = this.props.colorPanel ? this.props.colorPanel : null;
-        let changedStatusSearchResult = this.props.searchResult.map(item => {
-            if (postOption.mac_address === item.mac_address) {
-                item = {
-                    ...item,
-                    ...postOption
-                }
-            }
-            return item
-        })
+  
 
-        axios.post(dataSrc.editObject, {
-            formOption: postOption
-        }).then(res => {
-            button.style.opacity = 0.4
-            setTimeout(
-                function() {
-                    this.setState ({
-                        showConfirmForm: false,
-                        formOption: [],
-                    })
-
-                    this.props.transferSearchResult(changedStatusSearchResult, colorPanel )
-                    this.props.shouldUpdateTrackingData(true)
-                }
-                .bind(this),
-                1000
-            )
-        }).catch( error => {
-            console.log(error)
-        })
-    } 
+    
 
     handleToggleNotFound(e) {
         e.preventDefault()
@@ -163,19 +235,63 @@ class SearchResult extends React.Component {
         })
         
     }
+    closeSearchResult(){
+        this.props.closeSearchResult()
+        this.handleChangeObjectStatusForm('close', null)
+        this.setState({
+            showConfirmForm: false,
+            showEditObjectForm: false,
+            addTransferDevices: false,
+            selectedObjectData: {},
+        })
+    }
 
-    
+
+
+    addDeviceSelection(e){
+
+        if(this.state.searchResult.length !== 0){
+            if(!this.state.addTransferDevices){
+                var index = e.target.getAttribute('name')
+                var item = this.state.searchResult[index]
+                this.setState({
+                    selectedSingleChangeObjectIndex: index
+                })
+                this.state.selectedObjectData = []
+                this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
+                this.handleChangeObjectStatusForm('show',this.state.searchResult[index])
+
+            }else{
+                var index = e.target.getAttribute('name')
+                this.state.searchResult[index].checked = ! this.state.searchResult[index].checked
+                var item = this.state.searchResult[index]
+                if(item.checked){
+                    this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
+                }else{
+
+                    delete this.state.selectedObjectData[item.mac_address]
+                }
+            }
+        }
+        
+        this.setState({
+            ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm
+        })   
+    }
     render() {
         const locale = this.context;
         const { searchResult, searchKey} = this.props;
 
         const style = {
             searchResult:{
-                height: '70vh',
+                height: '80vh',
                 overflowY: 'hidden',
                 boxShadow:'3px 3px 12px gray',
                 padding:'0px',
-                width: '100%',
+                width: this.state.addTransferDevices ? '100%' : '100%',
+
+                position: 'absolute',
+                right: '0%'
 
                 
             },
@@ -230,64 +346,123 @@ class SearchResult extends React.Component {
         }
 
         return(
-            <div style = {style.searchResult} className='mx-0' >
+            <div style = {style.searchResult} className='mx-0 bg-light' >
 
                 <div style={style.titleText} className="bg-primary justify-content-center">
                     
                         <h4 className="text-light w-100">{locale.SEARCH_RESULT}</h4>
                     
                     
-                        <button className="btn btn-lg btn-light" onClick={this.props.closeSearchResult} style={{position: 'absolute',right: '0%'}}>x</button>
+                        <button className="btn btn-lg btn-light" onClick={this.closeSearchResult} style={{position: 'absolute',right: '0%'}}>x</button>
                         
                 </div>
                 
                 <h5 className="bg-primary justify-content-center text-light w-100"> {searchResult.length} {locale.DEVICE_FOUND}</h5>
                 
 
-                <Row id = "searchResultTable" className="hideScrollBar justify-content-center" style={{overflowY: 'scroll',height: '55vh'}}>
+                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" style={{overflowY: 'scroll',height: '70vh'}}>
                     {this.state.foundResult.length === 0
                     ?   
                             <em className="text-center">no searchResult</em>
                         
                     
-                    :   
+                    :   <div className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
 
-                        <ol className="m-2">
-                            {this.state.foundResult.map((item,index) => {
-                                console.log(item)
+                            {this.props.searchResult.map((item,index) => {
+
                                     let element = 
-                                        <li href={'#' + index} className='searchResultList h6 text-left' onClick={this.handleChangeObjectStatusForm} key={index} name={index + 1}>
-                                            {item.type}, ACN: xxxx-xxxx-{item.last_four_acn}, is near at {item.location_description} &nbsp;&nbsp;
-                                            <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+                                        <Row key={index} className={"px-4 my-1 d-flex align-left"} onClick={this.addDeviceSelection} name={index}>
+                                            {this.state.addTransferDevices
+                                                ?   
+                                                    <>
+                                                        <div className="m-1" name={index}>{index + 1}</div>
+                                                        <div className="custom-control custom-checkbox m-2" name={index} style={{textAlign: 'left'}} >
+                                                            <input
+                                                                type="checkbox"
+                                                                className="custom-control-input"
+                                                                style={{textAlign: 'left'}}
+                                                                onChange={this.addDeviceSelection}
+                                                                checked = {item.checked}
+                                                                id={'check'+item.mac_address}
+                                                                name={index}
+                                                            />
+                                                            <label className="custom-control-label text-left" name={index} htmlFor={'check'+item.mac_address}>
+                                                                {item.type}, is near at {item.location_description}, <br /> 
+                                                                ACN: xxxx-xxxx-{item.last_four_acn},status is {item.status}
+                                                            </label>
+                                                        </div>
+                                                        <br/>
+                                                        {config.searchResult.showImage
+                                                            ?
+                                                                <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+                                                            :
+                                                                null
+                                                        }
+                                                        
+                                                       
+                                                    </>
+                                                :
+                                                    <>
+                                                        <div className="m-1" name={index}>{index + 1}</div>
+                                                        <div className="custom-control custom-checkbox"  style={{textAlign: 'left'}} name={index}>
+                                                            <input
+                                                                type="checkbox"
+                                                                name={index}
+                                                                className="custom-control-input"
+                                                                style={{textAlign: 'left'}}
+                                                                onChange={this.addDeviceSelection}
+                                                                checked = {parseInt(this.state.selectedSingleChangeObjectIndex) === index}
+                                                                id={'check'+item.mac_address}
+                                                            />
+                                                            
+                                                                {item.type}, is near at {item.location_description}, <br /> 
+                                                                ACN: xxxx-xxxx-{item.last_four_acn},status is {item.status}
+                                                        </div>
+                                                        <br />
+                                                       
+
+                                                       {config.searchResult.showImage
+                                                            ?
+                                                                <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+                                                            :
+                                                                null
+                                                        }
+                                                    </>
+
+
+                                            }
+                                                
                                             
-                                        </li>
+
+                                        </Row>
                                     return element
                                 })}
-                        </ol>
-
-                            
                         
-                       
+                        </div>
+
+                        
                     }
                 </Row>
             
-
 
                 <ChangeStatusForm 
                     show={this.state.showEditObjectForm} 
                     title='Report device status' 
                     selectedObjectData={this.state.selectedObjectData} 
-                    searchKey={searchKey}
-                    handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose}
-                    handleChangeObjectStatusFormSubmit={this.handleChangeObjectStatusFormSubmit}
+                    handleChangeObjectStatusForm = {this.handleChangeObjectStatusForm}
+
+                    ShouldUpdate = {this.state.ShouldUpdateChangeStatusForm}
                 />
 
                 <ConfirmForm 
                     show={this.state.showConfirmForm}  
                     title='Thank you for reporting' 
-                    selectedObjectData={this.state.formOption} 
-                    handleChangeObjectStatusFormClose={this.handleChangeObjectStatusFormClose} 
-                    handleConfirmFormSubmit={this.handleConfirmFormSubmit}
+                    selectedObjectData={this.state.selectedObjectData} 
+                    handleConfirmForm={this.handleConfirmForm}
+
+                    formOption = {this.state.newStatus}
+
+                    ShouldUpdate = {this.state.ShouldUpdateConfirmForm}
                 />
             </div>
         )
@@ -302,3 +477,45 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(SearchResult);
+// this.state.addTransferDevices 
+
+//                         ?
+//                             <ol className="m-0 p-0 justify-content-center" style={{width:'90%'}}>
+
+//                                 {this.state.foundResult.map((item,index) => {
+//                                         let element = 
+//                                             <Row key={index} className="px-5 d-flex justify-content-center align-middle">
+//                                                 <Col xl={1} className="px-0 my-4">
+//                                                    <input type="checkbox" checked={this.state.selectedObjectData[item.mac_address] !== undefined} className="form-check-input align-self-center d-flex" name={index + 1} onChange={this.addDeviceSelection}/>
+                                                    
+//                                                 </Col>
+//                                                 <Col xl={11} className="px-0 d-flex justify-content-center align-middle">
+//                                                     <li href={'#' + index} className='searchResultList h6 text-left' onClick={this.handleChangeObjectStatusFormShow}  name={index + 1}>
+//                                                         {item.type}, ACN: xxxx-xxxx-{item.last_four_acn}, is near at {item.location_description} &nbsp;&nbsp;
+//                                                         <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+
+//                                                     </li>
+//                                                 </Col>
+//                                             </Row>
+//                                         return element
+//                                     })}
+//                             }
+//                             </ol>
+//                         :
+//                             <ol className="m-0 p-2 justify-content-center" style={{width:'90%'}}>
+//                                 {this.state.foundResult.map((item,index) => {
+//                                         let element = 
+//                                                 <li href={'#' + index} className='searchResultList h6 text-left' onClick={this.handleChangeObjectStatusFormShow} key={index} name={index + 1}>
+                                                    
+//                                                     {item.type}, ACN: xxxx-xxxx-{item.last_four_acn}, is near at {item.location_description} &nbsp;&nbsp;
+//                                                     <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+
+//                                                 </li>
+                                            
+                                           
+//                                         return element
+//                                     })}
+//                             </ol>
+
+                            
+                        

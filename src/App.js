@@ -24,10 +24,12 @@ class App extends React.Component {
             locale: locale.changeLocale(config.locale.defaultLocale),
             shouldTrackingDataUpdate: props.shouldTrackingDataUpdate,
             loginStatus: Cookies.get('user')?Cookies.get('user'):null,
-            searchableObjectData: []
+            searchableObjectData: [],
+            ShouldUpdateTrackingData: false
         }
         this.handleChangeLocale = this.handleChangeLocale.bind(this);
         this.getTrackingData = this.getTrackingData.bind(this);
+        this.ShouldUpdateTrackingData = this.ShouldUpdateTrackingData.bind(this)
     }
 
     loginStatusHandler(){
@@ -47,9 +49,10 @@ class App extends React.Component {
         this.interval = this.props.shouldTrackingDataUpdate ? setInterval(this.getTrackingData, config.surveillanceMap.intevalTime) : null;
     }
 
-    componentDidUpdate(prepProps) {
-        if (prepProps.shouldTrackingDataUpdate !== this.props.shouldTrackingDataUpdate) {
-            this.interval = this.props.shouldTrackingDataUpdate ? setInterval(this.getTrackingData, config.surveillanceMap.intevalTime) : null;
+    componentDidUpdate(prepProps, prevState) {
+
+        if(prevState.ShouldUpdate !== this.state.ShouldUpdate){
+            this.getTrackingData()
         }
     }
 
@@ -58,6 +61,7 @@ class App extends React.Component {
     }
     
     getTrackingData() {
+
         axios.get(dataSrc.trackingData).then(res => {
             var data = res.data.rows.map((item) =>{
                 item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
@@ -72,6 +76,13 @@ class App extends React.Component {
         })
     }
 
+    ShouldUpdateTrackingData(){
+        console.log('ShouldUpdateTrackingData')
+        this.setState({
+            ShouldUpdateTrackingData: ! this.state.ShouldUpdateTrackingData,
+        })
+    }
+
 
 
 
@@ -80,6 +91,7 @@ class App extends React.Component {
         for( var i in routes){
             routes[i]['loginStatus'] = this.state.loginStatus
             routes[i]['searchableObjectData'] = this.state.searchableObjectData
+            routes[i]['ShouldUpdateTrackingData'] = this.ShouldUpdateTrackingData
         }
         return (
             <LocaleContext.Provider value={locale}>
