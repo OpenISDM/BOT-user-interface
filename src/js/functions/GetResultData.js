@@ -8,11 +8,13 @@ import dataSrc from '../dataSrc';
 // searchableObjectList is the found data list
 // viaMethod is the components call this function, such as frequent search and searchableObjectType
 export default async function GetResultData(SearchKey, searchableObjectList){
+	// console.log(searchableObjectList)
 	var searchResult = []
 	if(SearchKey === 'my devices'){
         await axios.post(dataSrc.userInfo, {
             username: Cookies.get('user')
         }).then( res => {
+
             var mydevice = new Set(res.data.rows[0].mydevice);
             for(var i in searchableObjectList){
 
@@ -28,6 +30,7 @@ export default async function GetResultData(SearchKey, searchableObjectList){
 		
 	}else{
 		if(SearchKey === 'all devices'){
+
 			for(var i in searchableObjectList){
 				searchResult.push(searchableObjectList[i])
 			}

@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+import moment from 'moment';
 /** Container Component */
 import { BrowserRouter as Router,Switch, Route,  } from "react-router-dom";
 import NavbarContainer from './js/components/presentational/NavbarContainer'
@@ -14,6 +16,7 @@ import { retrieveTrackingData } from './js/action/action';
 import { connect } from 'react-redux';
 
 import  UuidToLocation from './js/functions/UuidToLocation'
+import  GetTimeStampDifference from './js/functions/GetTimeStampDifference'
 
 import Cookies from 'js-cookie'
 class App extends React.Component {
@@ -25,7 +28,8 @@ class App extends React.Component {
             shouldTrackingDataUpdate: props.shouldTrackingDataUpdate,
             loginStatus: Cookies.get('user')?Cookies.get('user'):null,
             searchableObjectData: [],
-            ShouldUpdateTrackingData: false
+            ShouldUpdateTrackingData: false,
+            ShouldUpdate: 0
         }
         this.handleChangeLocale = this.handleChangeLocale.bind(this);
         this.getTrackingData = this.getTrackingData.bind(this);
@@ -50,8 +54,12 @@ class App extends React.Component {
     }
 
     componentDidUpdate(prepProps, prevState) {
-
         if(prevState.ShouldUpdate !== this.state.ShouldUpdate){
+            this.setState({
+
+            })
+        }
+        if(prevState.ShouldUpdateTrackingData !== this.state.ShouldUpdateTrackingData){
             this.getTrackingData()
         }
     }
@@ -61,15 +69,19 @@ class App extends React.Component {
     }
     
     getTrackingData() {
-
         axios.get(dataSrc.trackingData).then(res => {
             var data = res.data.rows.map((item) =>{
+                item['notFoundTime'] = GetTimeStampDifference(moment().valueOf(), Date.parse(item.last_seen_timestamp))
                 item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
+
+                return item
             })
             this.props.retrieveTrackingData(res.data)
             this.setState({
-                searchableObjectData: res.data.rows,
+                searchableObjectData: data,
+                ShouldUpdate: (this.state.ShouldUpdate + 1)%10000
             })
+            // console.log(this.state.ShouldUpdate)
         })
         .catch(error => {
             console.log(error)
@@ -79,7 +91,7 @@ class App extends React.Component {
     ShouldUpdateTrackingData(){
         console.log('ShouldUpdateTrackingData')
         this.setState({
-            ShouldUpdateTrackingData: ! this.state.ShouldUpdateTrackingData,
+            ShouldUpdateTrackingData: (this.state.ShouldUpdateTrackingData + 1)%10000,
         })
     }
 
@@ -87,10 +99,14 @@ class App extends React.Component {
 
 
     render() { 
-        const { locale } = this.state;
+        const { locale, loginStatus, searchableObjectData, ShouldUpdate } = this.state;
         for( var i in routes){
-            routes[i]['loginStatus'] = this.state.loginStatus
-            routes[i]['searchableObjectData'] = this.state.searchableObjectData
+
+            routes[i]['loginStatus'] = loginStatus
+            routes[i]['searchableObjectData'] = searchableObjectData
+            routes[i]['ShouldUpdate'] = ShouldUpdate
+
+
             routes[i]['ShouldUpdateTrackingData'] = this.ShouldUpdateTrackingData
         }
         return (

@@ -97,6 +97,8 @@ const config = {
         "Yunlin Christian Hospital",
         "NTU Hospital Yunlin",
         "NTU Hospital Taipei",
+        "1",
+        "2"
     ],
     
     locale: {
@@ -143,7 +145,7 @@ const config = {
     },
 
     searchResult:{
-        showImage: false,
+        showImage: true,
     }
 
 

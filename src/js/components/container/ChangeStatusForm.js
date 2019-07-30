@@ -50,13 +50,21 @@ class ChangeStatusForm extends React.Component {
         
         const { selectedObjectData } = this.props
         
-
+        // console.log(prevProps.ShouldUpdate !== this.props.ShouldUpdate)
+        if(this.props.show !== prevProps.show){
+            this.setState({
+                
+                show: this.props.show
+            })
+            
+        }
         if(prevProps.ShouldUpdate !== this.props.ShouldUpdate){
-
+            console.log('show')
+            console.log(this.props.show)
             let selectedObjectData = this.props.selectedObjectData.length !== 0 ? this.props.selectedObjectData : []
 
             this.setState({
-                show: this.props.show,
+                
                 isShowForm: true,
             })
         }
@@ -86,11 +94,11 @@ class ChangeStatusForm extends React.Component {
 
     
 
-    handleSubmit(e) {
+    handleSubmit() {
         var option = []
         option.status = this.state.status
         option.transferred_location = this.state.transferred_location 
-   
+        
         if(this.props.handleChangeObjectStatusForm) {
             this.props.handleChangeObjectStatusForm('submit', option);
         }
@@ -201,20 +209,28 @@ class ChangeStatusForm extends React.Component {
                             </div>
                             <hr/>
                             <Formik
-                                initialValues={{ Normal:false, Broken: false, Reserve: false, Transferred: false, status: '' }}
+                                initialValues={{ Normal:false, Broken: false, Reserve: false, Transferred: false, select: 'Unchoose', status: '', submit: false }}
                                 validate={values => {
                                     let errors = {};
 
                                     if (!values.Normal && !values.Broken &&!values.Reserve&&!values.Transferred) {
                                         errors.NoSelect = 'You should at least select one status';
                                     } 
+                                    console.log(values.select)
+                                    if(values.Transferred && values.select === 'Unchoose' && values.submit){
+                                        errors.NoLocation = 'You have to select a transfered location'
+                                    }
+                                    values.submit = false;
+
                                     return errors;
                                 }}
                                 onSubmit={(values, { setSubmitting }) => {
                                     setTimeout(() => {
                                         this.setState({
-                                            status: values.status
+                                            status: values.status,
+                                            transferred_location: values.select,
                                         })
+                                        this.handleSubmit()
                                         setSubmitting(false);
                                     }, 400);
                                 }}
@@ -229,9 +245,10 @@ class ChangeStatusForm extends React.Component {
                             isSubmitting,
                             /* and other goodies */
                             }) => (
-                                <form onSubmit={handleSubmit} className="justify-content-center">
+                                <form onSubmit={(e)=>{ values.submit = true;
+                                    handleSubmit(e)}} className="justify-content-center">
 
-                                    {errors.email && touched.email && errors.email}
+                                    
 
                                     <div className="custom-control custom-checkbox">
                                         <input
@@ -274,8 +291,8 @@ class ChangeStatusForm extends React.Component {
                                             type="checkbox"
                                             className="custom-control-input"
                                             name="Reserve"
-                                            onChange={(e)=>{handleChange(e);
-                                                values.status = 'Reserve';
+                                            onChange={(e)=>{handleChange(e)
+                                                values.status = 'Reserve'
                                                 this.setState({
                                                     status : 'Reserve'
                                                 })
@@ -291,8 +308,8 @@ class ChangeStatusForm extends React.Component {
                                             type="checkbox"
                                             className="custom-control-input"
                                             name="Transferred"
-                                            onChange={(e)=>{handleChange(e);
-                                                values.status = 'Transferred';
+                                            onChange={(e)=>{handleChange(e)
+                                                values.status = 'Transferred'
 
                                                 this.setState({
                                                     status : 'Transferred'
@@ -304,30 +321,31 @@ class ChangeStatusForm extends React.Component {
 
                                         <label className="custom-control-label" htmlFor="checkTransferred">Transferred</label>
 
-                                        <select className="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                                            <option value>Choose...</option>
+                                        <select className="custom-select my-3" disabled={!values.Transferred} id="inlineFormCustomSelect" name="select" onChange={(e)=> {values.select = e.target.value;}}>
+                                            <option value="Unchoose">Choose...</option>
                                             {
                                                 config.transferredLocation.map((location, index)=>{
-                                                    var html =  <option value={index} key={index}>
+                                                    var html =  <option value={location} key={index}>
                                                                     {location}
                                                                 </option>
                                                     return html
                                                 })
                                             }
                                         </select>
-
-                                     
-
-                                            
-
-
+                                        {<h5 className="text-danger">{errors.NoLocation}</h5>}
                                     
                                     </div>
-
-                                    <Button name="AddDevices" onClick={this.handleAddTransferDevices}>
-                                        Add Devices
-                                    </Button>
-                                    
+                                    <h5 className="text-danger">{errors.NoSelect}</h5>
+                                    <div className="btn-group d-flex justify-content-center my-3">
+                                        <Button name="AddDevices" onClick={this.handleAddTransferDevices}>
+                                            Add Devices
+                                        </Button>
+                                        <Button variant="outline-secondary" onClick={this.handleClose}>
+                                            Cancel
+                                        </Button>
+                                        <button type="submit">Submit</button>
+                                        
+                                    </div>
                                    
                                    
                                     
@@ -337,15 +355,7 @@ class ChangeStatusForm extends React.Component {
                             </Formik>
 
                     </Modal.Body>
-                    <Modal.Footer>
-                        
-                        <Button variant="outline-secondary" onClick={this.handleClose}>
-                            Cancel
-                        </Button>
-                        <Button variant="primary" onClick={this.handleSubmit}>
-                            Save
-                        </Button>
-                    </Modal.Footer>
+                    
                 </Modal>
             </>
         );

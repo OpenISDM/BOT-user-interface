@@ -102,16 +102,13 @@ function query_addObject (formOption) {
 	return query;
 }
 
-function query_editObjectPackage (formOption) {
-	
-	let query = '';
-	for( var i in formOption){
-		var item = formOption[i]
-		query += `Update object_table 
-			SET status = '${item.status}',
-			transferred_location = '${item.transferredLocation}'
-			WHERE mac_address = '${item.mac_address}';`;
-	}
+function query_editObjectPackage (data) {
+
+	var mac_string = data.macAddresses.join('\',\'')
+	var query = `Update object_table 
+			SET status = '${data.newStatus}',
+			transferred_location = '${data.newLocation}' WHERE mac_address in ('${mac_string}')`
+
 	return query
 }
 

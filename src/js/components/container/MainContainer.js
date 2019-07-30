@@ -8,7 +8,7 @@ import SearchContainer from './SearchContainer';
 
 import 'react-table/react-table.css';
 import '../../../css/MainContainer.css';
-import SearchResult from '../presentational/SearchResult'
+import SearchResult from '../presentational/SearchResultList'
 
 
 import { Row, Col, Hidden, Visible } from 'react-grid-system';
@@ -38,7 +38,12 @@ export default class ContentContainer extends React.Component{
             changeState: false,
             objectTypeList: [],
             IsShowResult: false,
-            ShouldUpdateSearchResult: false
+
+
+
+            ShouldUpdateForProps: -1,
+            ShouldUpdate: false,
+            ShouldUpdateSearchResult: 0
 
 
         }
@@ -52,34 +57,39 @@ export default class ContentContainer extends React.Component{
     }
     componentDidMount(){
         
+        this.setState({
+            searchableObjectData: this.props.route.searchableObjectData,
+            loginStatus: this.props.route.loginStatus,
+            objectTypeList: GetTypeKeyList(this.props.route.searchableObjectData),
+            ShouldUpdateSearchResult: !this.state.ShouldUpdateSearchResult,
+        })
     }
     componentWillUnmount(){
         
     }
 
-    shouldComponentUpdate(nextProps, nextState){
-        if(nextProps.route.searchableObjectData.length !== this.state.searchableObjectData.length){
-            return true
-        }
-        if(nextProps.route.loginStatus !== this.state.loginStatus){
-            return true
-        }
-        if(this.state.changeState !== nextState.changeState){
-            return true
-        }
-        if(this.state.ShouldUpdateSearchResult !== nextState.ShouldUpdateSearchResult){
-            return true
-        }
-        return false
-    }
-
+    // shouldComponentUpdate(nextProps, nextState){
+    //     if(nextProps.route.ShouldUpdate !== this.state.ShouldUpdateForProps){
+    //         return true
+    //     }
+    //     // if(this.state.ShouldUpdate !== nextState.ShouldUpdate){
+    //     //     return true
+    //     // }
+    //     return false
+    // }
     componentDidUpdate(preProps){
 
-        this.setState({
-            searchableObjectData: this.props.route.searchableObjectData,
-            loginStatus: this.props.route.loginStatus,
-            objectTypeList: GetTypeKeyList(this.props.route.searchableObjectData)
-        })
+        if(this.props.route.ShouldUpdate !== this.state.ShouldUpdateForProps){
+            this.setState({
+                ShouldUpdateForProps: this.props.route.ShouldUpdate,
+
+                searchableObjectData: this.props.route.searchableObjectData,
+                loginStatus: this.props.route.loginStatus,
+                objectTypeList: GetTypeKeyList(this.props.route.searchableObjectData),
+
+                ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
+            })
+        }
     }
 
 
@@ -89,7 +99,6 @@ export default class ContentContainer extends React.Component{
      *  The three variable will then pass into SurveillanceContainer
     */
     transferSearchResult(searchResult, colorPanel, searchKey) {
-        console.log(searchResult)
         let searchResultObjectTypeMap = {}
         searchResult.map( item => {
             if (!(item.type in searchResultObjectTypeMap)){
@@ -105,7 +114,7 @@ export default class ContentContainer extends React.Component{
                 colorPanel: colorPanel,
                 clearColorPanel: false,
                 searchResultObjectTypeMap: searchResultObjectTypeMap, 
-                ShouldUpdateSearchResult : !this.state.ShouldUpdateSearchResult
+                ShouldUpdateSearchResult : this.state.ShouldUpdateSearchResult + 1
                 
             })
         } else {
@@ -119,7 +128,7 @@ export default class ContentContainer extends React.Component{
                 colorPanel: null,
                 clearColorPanel: true,
                 searchResultObjectTypeMap: searchResultObjectTypeMap, 
-                ShouldUpdateSearchResult : !this.state.ShouldUpdateSearchResult
+                ShouldUpdateSearchResult : this.state.ShouldUpdateSearchResult + 1
                 
             })
         }
@@ -157,10 +166,11 @@ export default class ContentContainer extends React.Component{
     }
 
     async getSearchResult(e){
-
         var searchResult = [];
         var SearchKey = e;
+
         searchResult = await GetResultData(e, this.state.searchableObjectData)
+
         this.transferSearchResult(searchResult, null, SearchKey)
     }
 
@@ -174,7 +184,7 @@ export default class ContentContainer extends React.Component{
             SearchResult:[],
             SearchKey:null,
             searchResultObjectTypeMap: {},
-            ShouldUpdateSearchResult : ! this.state.ShouldUpdateSearchResult,
+            ShouldUpdateSearchResult :  this.state.ShouldUpdateSearchResult + 1,
         })
     }
 
@@ -194,24 +204,7 @@ export default class ContentContainer extends React.Component{
             alertText: {
                 fontWeight: '700'
             },
-            SearchResult:{
-                height: '80vh',
-
-                display: (this.state.IsShowResult)?'block':'none',
-
-                zIndex: (this.state.IsShowResult)?1051:0,
-
-                background:'#FFFFFF',
-                
-                float: 'right', 
-
-                width: '35%',
-
-                position:'absolute',
-
-                top:'10%',
-                right: '5%'
-            }
+            
 
         }
         return(
@@ -248,15 +241,15 @@ export default class ContentContainer extends React.Component{
                             hasSearchKey={this.state.hasSearchKey}
                             closeSearchResult = {this.state.closeSearchResult}
                             objectTypeList = {this.state.objectTypeList}
-                            searchResult = {this.state.searchResult}
                             handleCloseSearchResult={this.handleClearButton}
                         />
 
                     </Col>
 
                 </Row>
-                <div id="searchResult" md={12} sm={12} xs={12} className='m-2 px-0' style={style.SearchResult} onMouseLeave={this.SearchResultMouseLeave}>
+                
                     <SearchResult 
+                        Show = {this.state.IsShowResult}
                         hasSearchKey = {this.state.hasSearchKey}
                         searchResult={this.state.searchResult}
                         transferSearchResult = {this.transferSearchResult}
@@ -266,7 +259,6 @@ export default class ContentContainer extends React.Component{
 
                         ShouldUpdate={this.state.ShouldUpdateSearchResult}
                     />
-                </div>
 
             </div>
             
@@ -274,6 +266,6 @@ export default class ContentContainer extends React.Component{
     }
 }
 
-
+// 
 
                                 

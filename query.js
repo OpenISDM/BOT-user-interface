@@ -127,9 +127,9 @@ const addObject = (request, response) => {
 }
 
 const editObjectPackage = (request, response) => {
-    const formOption = request.body.formOption
-    console.log(request.body)
-    pool.query(queryType.query_editObjectPackage(formOption), (error, results) => {
+    const body = request.body
+
+    pool.query(queryType.query_editObjectPackage(body), (error, results) => {
         if (error) {
             console.log(error)
         } else {
