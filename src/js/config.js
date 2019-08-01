@@ -21,6 +21,11 @@ import CPM from '../img/objectImage/CPM.png'
 const config = {
 
 
+    CustomizedSetting: {
+        geofenceViolatioAlertTime: 30,
+        objectNotFoundAlertTime: 30,
+    },
+
     surveillanceMap: {
 
         /* Surveillance map source*/
@@ -141,11 +146,11 @@ const config = {
     },
 
     frequentSearch:{
-        showImage: false,
+        showImage: true,
     },
 
     searchResult:{
-        showImage: true,
+        showImage: false,
     }
 
 

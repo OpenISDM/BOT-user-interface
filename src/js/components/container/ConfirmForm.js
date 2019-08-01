@@ -266,10 +266,10 @@ class ConfirmForm extends React.Component {
                         <hr/>
                         <Row>
                             <Col className='d-flex justify-content-center'>
-                                <h5>{this.props.formOption.status}
-                                    {this.props.formOption.status === 'Transferred' 
-                                        ? '  to  ' + this.props.formOption.transferred_location.value 
-                                        : null
+                                <h5>{this.props.newStatus.status}
+                                    {this.props.newStatus.status === 'Transferred' 
+                                        ? '  to  ' + this.props.newStatus.transferred_location
+                                        :null
                                     }
                                 </h5>
                             </Col>
@@ -279,7 +279,7 @@ class ConfirmForm extends React.Component {
                                 <h6>{moment().format('LLLL')}</h6>    
                             </Col>
                         </Row>
-                        {this.props.formOption.status === 'Transferred' && 
+                        {this.props.newStatus.status === 'Transferred' && 
                             <>
                                 <hr/>
                                 <Row className='d-flex justify-content-center'>

@@ -5,11 +5,21 @@ import React from 'react';
 import SearchContainer from './SearchContainer';
 
 /** Import Presentational Component */
+import { retrieveTrackingData } from '../../action/action';
+import { connect } from 'react-redux';
+import  UuidToLocation from '../../functions/UuidToLocation'
+import  GetTimeStampDifference from '../../functions/GetTimeStampDifference'
+
+import config from '../../config';
+
+import dataSrc from '../../dataSrc';
 
 import 'react-table/react-table.css';
 import '../../../css/MainContainer.css';
 import SearchResult from '../presentational/SearchResultList'
 
+import axios from 'axios'
+import moment from 'moment'
 
 import { Row, Col, Hidden, Visible } from 'react-grid-system';
 import SurveillanceContainer from './SurveillanceContainer';
@@ -19,7 +29,7 @@ import { Alert } from 'react-bootstrap';
 import GetResultData from '../../functions/GetResultData'
 import GetTypeKeyList from '../../functions/GetTypeKeyList'
 
-export default class ContentContainer extends React.Component{
+class ContentContainer extends React.Component{
 
     constructor(props){
         super(props)
@@ -43,7 +53,8 @@ export default class ContentContainer extends React.Component{
 
             ShouldUpdateForProps: -1,
             ShouldUpdate: false,
-            ShouldUpdateSearchResult: 0
+            ShouldUpdateSearchResult: 0,
+            ShouldUpdateSearchContainer: 0
 
 
         }
@@ -53,52 +64,117 @@ export default class ContentContainer extends React.Component{
         this.transferSearchResult = this.transferSearchResult.bind(this)
         this.closeSearchResult = this.closeSearchResult.bind(this)
 
+        this.shouldUpdateTrackingData = this.shouldUpdateTrackingData.bind(this)
+        this.getTrackingData = this.getTrackingData.bind(this)
 
+        this.handleSearchSection= this.handleSearchSection.bind(this)
     }
     componentDidMount(){
-        
+        this.interval = setInterval(this.getTrackingData, config.surveillanceMap.intevalTime, true)
+        this.getTrackingData(true)
         this.setState({
-            searchableObjectData: this.props.route.searchableObjectData,
             loginStatus: this.props.route.loginStatus,
+
             objectTypeList: GetTypeKeyList(this.props.route.searchableObjectData),
-            ShouldUpdateSearchResult: !this.state.ShouldUpdateSearchResult,
+
         })
     }
     componentWillUnmount(){
-        
+        clearInterval(this.interval);
     }
 
-    // shouldComponentUpdate(nextProps, nextState){
-    //     if(nextProps.route.ShouldUpdate !== this.state.ShouldUpdateForProps){
-    //         return true
-    //     }
-    //     // if(this.state.ShouldUpdate !== nextState.ShouldUpdate){
-    //     //     return true
-    //     // }
-    //     return false
-    // }
-    componentDidUpdate(preProps){
+    componentDidUpdate(preProps, prevState){
+        // console.log(this.state.ShouldUpdateSearchContainer)
+        if(this.state.ShouldUpdate !== prevState.ShouldUpdate){
+            this.setState({
 
+            })
+        }
         if(this.props.route.ShouldUpdate !== this.state.ShouldUpdateForProps){
             this.setState({
                 ShouldUpdateForProps: this.props.route.ShouldUpdate,
 
-                searchableObjectData: this.props.route.searchableObjectData,
+                // searchableObjectData: this.props.route.searchableObjectData,
                 loginStatus: this.props.route.loginStatus,
-                objectTypeList: GetTypeKeyList(this.props.route.searchableObjectData),
+                objectTypeList: GetTypeKeyList(this.state.searchableObjectData),
 
-                ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
+
             })
         }
     }
 
+    getTrackingData(update) {
+        console.log('update')
+        var ShouldUpdate = false
+        axios.get(dataSrc.trackingData).then(res => {
+            var data = res.data.map((item) =>{
+                delete item['rssi']
+                return item
+            })
+            // console.log(data)
+            for(var i in  data){
+
+                var a = data[i]
+                var b = this.state.searchableObjectData[i]
+                if(a && b){
+                    if(a.name === b.name &&
+                        a.mac_address === b.mac_address &&
+                        a.status === b.status
+                        ){
+                        
+                    }else{
+                        ShouldUpdate = true
+                    }
+                }
+                
+            }
+            // console.log(this.state.searchableObjectData=== [])
+            this.props.retrieveTrackingData(res.data)
+            if(ShouldUpdate || this.state.searchableObjectData.length === 0){
+                var state = {
+                    searchableObjectData: data,
+                    objectTypeList: GetTypeKeyList(data),
+                    ShouldUpdate: this.state.ShouldUpdate + 1,
+                    ShouldUpdateSearchContainer: this.state.ShouldUpdateSearchContainer + 1,
+                    ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
+                }
+
+                if(update === false){
+                    return state
+                }else{
+                    this.setState(state)
+                }
+                console.log('uppppp')
+
+            }else{console.log('no update')}
+            
+
+            
+
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
+    async shouldUpdateTrackingData(){
+        var state = await this.getTrackingData(true)
+        
+        var searchResult = await this.getSearchResult(this.state.searchKey)
 
 
+        this.setState({
+            ...state,
+            searchResult: searchResult,
+        })
 
+        
+    }
     /**  the search result, not found list and color panel from SearchContainer, GridButton to MainContainer 
      *  The three variable will then pass into SurveillanceContainer
     */
-    transferSearchResult(searchResult, colorPanel, searchKey) {
+    transferSearchResult(searchResult, colorPanel, searchKey, update) {
+
         let searchResultObjectTypeMap = {}
         searchResult.map( item => {
             if (!(item.type in searchResultObjectTypeMap)){
@@ -107,34 +183,24 @@ export default class ContentContainer extends React.Component{
                 searchResultObjectTypeMap[item.type] = searchResultObjectTypeMap[item.type] + 1
             }
         })
-        if(colorPanel) {
-            this.setState({
-                hasSearchKey: colorPanel.size === 0 ? false : true,
-                searchResult: searchResult,
-                colorPanel: colorPanel,
-                clearColorPanel: false,
-                searchResultObjectTypeMap: searchResultObjectTypeMap, 
-                ShouldUpdateSearchResult : this.state.ShouldUpdateSearchResult + 1
-                
-            })
-        } else {
-
-            this.clearGridButtonBGColor();
-            this.setState({
-                hasSearchKey: true,
-                IsShowResult: true,
-                searchKey: searchKey,
-                searchResult: searchResult,
-                colorPanel: null,
-                clearColorPanel: true,
-                searchResultObjectTypeMap: searchResultObjectTypeMap, 
-                ShouldUpdateSearchResult : this.state.ShouldUpdateSearchResult + 1
-                
-            })
-        }
-        this.setState({
+        this.clearGridButtonBGColor();
+        var state = {
+            hasSearchKey: true,
+            IsShowResult: true,
+            searchKey: searchKey,
+            searchResult: searchResult,
+            colorPanel: null,
+            clearColorPanel: true,
+            searchResultObjectTypeMap: searchResultObjectTypeMap, 
+            ShouldUpdateSearchResult : this.state.ShouldUpdateSearchResult + 1,
             changeState: ! this.state.changeState
-        })
+            
+        }
+        if(!update){
+            return state
+        }else{
+            this.setState(state)
+        }
     }
 
     clearGridButtonBGColor() {
@@ -169,9 +235,16 @@ export default class ContentContainer extends React.Component{
         var searchResult = [];
         var SearchKey = e;
 
-        searchResult = await GetResultData(e, this.state.searchableObjectData)
+        var searchResult = await GetResultData(e, this.state.searchableObjectData)
 
-        this.transferSearchResult(searchResult, null, SearchKey)
+        return searchResult
+    }
+
+    async handleSearchSection(e){
+        var searchResult = await this.getSearchResult(e)
+        this.transferSearchResult(searchResult, null, e, true)
+
+        
     }
 
     closeSearchResult(){
@@ -233,7 +306,7 @@ export default class ContentContainer extends React.Component{
                     <Col id="seachSection" xs={12} sm={12} md={12} lg={4} xl={4} className="w-100 px-0 mx-0">
 
                         <SearchContainer 
-                            getSearchResult={this.getSearchResult}
+                            getSearchResult={this.handleSearchSection}
                             loginStatus={loginStatus}
                             searchableObjectData={this.state.searchableObjectData}
                             searchResult = {this.state.searchResult} 
@@ -242,6 +315,8 @@ export default class ContentContainer extends React.Component{
                             closeSearchResult = {this.state.closeSearchResult}
                             objectTypeList = {this.state.objectTypeList}
                             handleCloseSearchResult={this.handleClearButton}
+
+                            ShouldUpdate={this.state.ShouldUpdateSearchContainer}
                         />
 
                     </Col>
@@ -255,7 +330,7 @@ export default class ContentContainer extends React.Component{
                         transferSearchResult = {this.transferSearchResult}
                         closeSearchResult = {this.closeSearchResult}
 
-                        shouldUpdateTrackingData = {this.props.route.shouldUpdateTrackingData}
+                        UpdateTrackingData = {this.shouldUpdateTrackingData}
 
                         ShouldUpdate={this.state.ShouldUpdateSearchResult}
                     />
@@ -266,6 +341,19 @@ export default class ContentContainer extends React.Component{
     }
 }
 
-// 
+const mapStateToProps = (state) => {
+    return {
+        shouldTrackingDataUpdate: state.retrieveTrackingData.shouldTrackingDataUpdate,
+        locationAccuracy: state.retrieveTrackingData.locationAccuracy
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        retrieveTrackingData: object => dispatch(retrieveTrackingData(object)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContentContainer)
 
                                 

@@ -13,38 +13,68 @@ import '../../../css/SearchableObjectType.css'
         1. sectionIndexList : this is the alphabet list for user to search their objects by the first letter of their type
         2. sectionTitleList : when you hover a section Index List letter, the section title list will show a row of object types of same first letter (i.e. bed, bladder scanner, ...) 
 */
+class SearchableObjectType extends React.Component {
 
+    constructor(){
+        super()
+        this.state = {
+            sectionIndexList: ['A','B', 'C', 'D','E','F','G', 'H', 'I','J','K','L', 'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
 
-const SearchableObjectType = (props) => {
-    /* 
-        this.props contains several properties : 
-            1.sectionTitleData : this is an array contains the alphabet of the Index and the objects belong to it, the first element is a letter, and others are objects
-            2.IsShowSection : this decide whether to show the item by MouseOver and MouseLeave events
-            3.hasIndexItem : this shows whether a letter contains any object
-            4.sectionIndexList : this shows the alphabet letters (i.e. 'A'~'Z')
-    */
-    var {sectionTitleData} = props;
+            IsShowSection : false,
 
+            sectionTitleData : [],
+            
+            changeState: 0,
 
-    var sectionIndexList = ['A','B', 'C', 'D','E','F','G', 'H', 'I','J','K','L', 'M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+            ShouldUpdate: 1
+        }
 
-    var IsShowSection = true
+       this.handleHoverEvent = this.handleHoverEvent.bind(this)
+       this.mouseClick = this.mouseClick.bind(this)
+       this.mouseLeave = this.mouseLeave.bind(this)
+       this.sectionIndexHTML= this.sectionIndexHTML.bind(this)
+       this.sectionTitleListHTML = this.sectionTitleListHTML.bind(this)
+    }
 
-    var sectionTitleData = props.sectionTitleData
+    
     
 
-    function handleHoverEvent(e){
+    componentDidMount(){
+        this.setState({
+            sectionTitleData: this.props.objectTypeList
+        })
+    }
+    
 
-        props.getShowSectionState(true)
+    componentDidUpdate(prepProps, prevState){
+        // console.log(this.props.ShouldUpdate)
+        if(this.props.ShouldUpdate !== prepProps.ShouldUpdate){
+            this.setState({
+                sectionTitleData: this.props.objectTypeList
+            })
+        }
     }
 
-    function mouseClick(e){
-
-        props.getResultData(e.target.innerHTML)
-        props.clickButtonHandler()
+    handleHoverEvent(e){
+        this.setState({
+            IsShowSection: true,
+        })
     }
-
-    function sectionIndexHTML(){
+    mouseClick(e){
+        console.log('hi')
+        location.href = '#' + e.target.name
+        this.props.getResultData(e.target.innerHTML)
+        this.setState({
+            IsShowSection: false
+        })
+    }
+    mouseLeave(){
+        this.setState({
+            IsShowSection: false
+        })
+    }
+    sectionIndexHTML(){
+        const {sectionIndexList} = this.state
         var Data = [];
         let data = [];
         let index = 0;
@@ -56,9 +86,10 @@ const SearchableObjectType = (props) => {
                     key={i} 
                     active={false} 
                     href={'#' + sectionIndexList[i]} 
-                    className='py-0 h6'
+                    className='py-0'
                     name={sectionIndexList[i]}
-                    onMouseOver={handleHoverEvent} 
+                    onMouseOver={this.handleHoverEvent} 
+                    style = {{fontSize: '0.75rem'}}
                 >
                     {(index%2)?sectionIndexList[i]:'.'}
                 </Nav.Link>
@@ -69,29 +100,23 @@ const SearchableObjectType = (props) => {
         return Data;
     }
 
-    function mouseLeave(){
-
-        props.getShowSectionState(false)
-    }
-
-    // this function is to generate the html of the sectionTitleList
-    function sectionTitleListHTML(){
+    sectionTitleListHTML(){
 
         var Data = [];
         let first = []; 
-
+        const {sectionTitleData} = this.state
         for(var titleData in sectionTitleData){
             if (sectionTitleData[titleData].values().next().value != undefined){
 
                 first = sectionTitleData[titleData].values().next().value.charAt(0).toUpperCase()
 
-                Data.push(<ListGroup.Item id={first} key={first} className=" text-right text-dark"><strong><h5 className="m-0">{first}</h5></strong></ListGroup.Item>)
+                Data.push(<div id={first} key={first} className=" text-right text-dark" ><strong><h4 className="m-0">{first}</h4></strong></div>)
                 for (let i of sectionTitleData[titleData]){
 
                     Data.push(
-                        <ListGroup.Item key={i} className="my-0 py-0 w-100 text-right" onClick={mouseClick}>
-                                <h5>{i}</h5>
-                        </ListGroup.Item>
+                        <div key={i} className="my-0 py-0 w-100 text-right" onClick={this.mouseClick} >
+                                <h4 className="m-0">{i}</h4>
+                        </div>
                     )
                 }
             }
@@ -100,42 +125,67 @@ const SearchableObjectType = (props) => {
         return Data
 
     };
+    render() {
 
-    
-    return (
+        var  Setting = {
+        SectionIndex: {
 
-        <div onMouseLeave={mouseLeave} className="hideScrollBar">
-            {
-                // this section shows the layout of sectionIndexList (Alphabet List)
-            }
-            <Col  md={4} id = "SectionIndex"  className = "float-right">
+        } ,
+        SectionListBackgroundColor:{
+            backgroundColor:'rgba(200, 255, 255, 0.9)',
+        },
+        SectionList: {
+            overflowY: 'scroll', 
+            minHight : '60vh', 
+            maxHeight: '60vh',
+            padding: '2%'
+
+        },
+        SearchableObjectType:{
+            zIndex: (this.state.IsShowSection)?1060:0,
+        }
+
+        }
+        return(
+            <Col md={12} sm={12} xs={12}
+                id='searchableObjectType' 
+                onMouseLeave={this.mouseLeave} 
+                className="hideScrollBar mx-0 px-0 float-right" 
+                style = {{
+                    ...Setting.SearchableObjectType,
+
+                }}
+            >
                 {
-                    sectionIndexHTML()
-                }  
-            </Col>
-
-            {
-                // this section shows the layout of sectionTitleList (the search results when you hover the section Index List)
-
-            }
-            <div  id = "SectionList" className="hideScrollBar bg-light shadow border border-primary" style={{overflowY: 'scroll'}}>
-                {
-
-                    sectionTitleListHTML()
+                    // this section shows the layout of sectionIndexList (Alphabet List)
                 }
-            </div>
+                <Col  md={4} id = "SectionIndex"  className = "float-right" style = {Setting.SectionIndex.backgroundColor}>
+                    {
+                        this.sectionIndexHTML()
+                    }  
+                </Col>
+
+                {
+                    // this section shows the layout of sectionTitleList (the search results when you hover the section Index List)
+
+                }
+                <div  
+                    id = "SectionList" 
+                    className="hideScrollBar shadow border border-primary" 
+                    style={{
+                        ...Setting.SectionListBackgroundColor,
+                        ...Setting.SectionList,
+                    }}
+                >
+                    {
+                        this.sectionTitleListHTML(Setting)
+                    }
+                </div>
+            </Col>
+        )
             
-
-        </div>
-    )
         
-    
-
-    
-
+    }
 }
-
-
-
 
 export default SearchableObjectType

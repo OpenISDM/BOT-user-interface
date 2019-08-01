@@ -57,7 +57,7 @@ class SurveillanceContainer extends React.Component {
         this.handleMarkerClick = this.handleMarkerClick.bind(this);
         this.handleChangeObjectStatusFormClose = this.handleChangeObjectStatusFormClose.bind(this);
         this.handleChangeObjectStatusFormSubmit = this.handleChangeObjectStatusFormSubmit.bind(this);
-        this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this);
+        // this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this);
         this.handleClickButton = this.handleClickButton.bind(this)
         this.transferSearchableObjectData = this.transferSearchableObjectData.bind(this)
 
@@ -66,7 +66,7 @@ class SurveillanceContainer extends React.Component {
     }
 
     componentDidUpdate(){
-
+        // console.log(this.state.searchableObjectData)
         if(this.state.searchableObjectData.length !== this.props.searchableObjectData.length){
             this.setState({
                 searchableObjectData: this.props.searchableObjectData,
@@ -124,43 +124,43 @@ class SurveillanceContainer extends React.Component {
         )
     }
 
-    handleConfirmFormSubmit(e, addedDevices) {
-        const button = e.target
-        const postOption = this.state.formOption;
-        const { status, transferredLocation } = postOption
+    // handleConfirmFormSubmit(e, addedDevices) {
+    //     const button = e.target
+    //     const postOption = this.state.formOption;
+    //     const { status, transferredLocation } = postOption
 
-        let editObjectPackages = []
-        editObjectPackages.push(postOption)
+    //     let editObjectPackages = []
+    //     editObjectPackages.push(postOption)
 
-        editObjectPackages.push(postOption)
-        if (addedDevices) {
-            addedDevices.map( item => {
-                item.status = status
-                delete item.transferred_location
-                item.transferredLocation = transferredLocation
-                editObjectPackages.push(item)
-            })
-        }
+    //     editObjectPackages.push(postOption)
+    //     if (addedDevices) {
+    //         addedDevices.map( item => {
+    //             item.status = status
+    //             delete item.transferred_location
+    //             item.transferredLocation = transferredLocation
+    //             editObjectPackages.push(item)
+    //         })
+    //     }
         
-        axios.post(dataSrc.editObjectPackage, {
-            formOption: editObjectPackages
-        }).then(res => {
-            button.style.opacity = 0.4
-            setTimeout(
-                function() {
-                    this.setState ({
-                        showConfirmForm: false,
-                        formOption: [],
-                    }) 
-                    this.props.shouldUpdateTrackingData(true)
-                }
-                .bind(this),
-                1000
-            )
-        }).catch( error => {
-            console.log(error)
-        })
-    }
+    //     axios.post(dataSrc.editObjectPackage, {
+    //         formOption: editObjectPackages
+    //     }).then(res => {
+    //         button.style.opacity = 0.4
+    //         setTimeout(
+    //             function() {
+    //                 this.setState ({
+    //                     showConfirmForm: false,
+    //                     formOption: [],
+    //                 }) 
+    //                 this.props.shouldUpdateTrackingData(true)
+    //             }
+    //             .bind(this),
+    //             1000
+    //         )
+    //     }).catch( error => {
+    //         console.log(error)
+    //     })
+    // }
 
     handleClickButton(e) {
         const button = e.target;
@@ -246,7 +246,7 @@ class SurveillanceContainer extends React.Component {
 
         return(
             <div id="surveillanceContainer" style={style.surveillanceContainer} className='overflow-hidden'>
-                
+
                 <div style={style.mapBlock}>
                     <Surveillance 
                         rssi={rssi} 
@@ -258,7 +258,6 @@ class SurveillanceContainer extends React.Component {
                         handleMarkerClick={this.handleMarkerClick}
                         style={style.searchMap}
                         colorPanel={this.props.colorPanel}
-
                     />
                 </div>
                 <div style={style.navBlock}>

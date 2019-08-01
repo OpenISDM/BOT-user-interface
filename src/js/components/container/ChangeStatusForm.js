@@ -59,8 +59,6 @@ class ChangeStatusForm extends React.Component {
             
         }
         if(prevProps.ShouldUpdate !== this.props.ShouldUpdate){
-            console.log('show')
-            console.log(this.props.show)
             let selectedObjectData = this.props.selectedObjectData.length !== 0 ? this.props.selectedObjectData : []
 
             this.setState({
@@ -198,7 +196,7 @@ class ChangeStatusForm extends React.Component {
 
         return (
             <>
-                <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content} backdrop="static">
+                <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content} >
                     <Modal.Header closeButton className='font-weight-bold'>
                         {title}
                     </Modal.Header>
@@ -216,8 +214,7 @@ class ChangeStatusForm extends React.Component {
                                     if (!values.Normal && !values.Broken &&!values.Reserve&&!values.Transferred) {
                                         errors.NoSelect = 'You should at least select one status';
                                     } 
-                                    console.log(values.select)
-                                    if(values.Transferred && values.select === 'Unchoose' && values.submit){
+                                    if(values.status === 'Transferred' && values.select === 'Unchoose' && values.submit){
                                         errors.NoLocation = 'You have to select a transfered location'
                                     }
                                     values.submit = false;
@@ -226,10 +223,18 @@ class ChangeStatusForm extends React.Component {
                                 }}
                                 onSubmit={(values, { setSubmitting }) => {
                                     setTimeout(() => {
-                                        this.setState({
-                                            status: values.status,
-                                            transferred_location: values.select,
-                                        })
+                                        if(values.status === 'Transferred'){
+                                            this.setState({
+                                                status: values.status,
+                                                transferred_location: values.select,
+                                            })
+                                        }else{
+                                            this.setState({
+                                                status: values.status,
+                                                transferred_location: '',
+                                            })
+                                        }
+                                        
                                         this.handleSubmit()
                                         setSubmitting(false);
                                     }, 400);
@@ -321,7 +326,7 @@ class ChangeStatusForm extends React.Component {
 
                                         <label className="custom-control-label" htmlFor="checkTransferred">Transferred</label>
 
-                                        <select className="custom-select my-3" disabled={!values.Transferred} id="inlineFormCustomSelect" name="select" onChange={(e)=> {values.select = e.target.value;}}>
+                                        <select className="custom-select my-3" disabled={values.status !== 'Transferred'} id="inlineFormCustomSelect" name="select" onChange={(e)=> {values.select = e.target.value;}}>
                                             <option value="Unchoose">Choose...</option>
                                             {
                                                 config.transferredLocation.map((location, index)=>{
@@ -343,7 +348,7 @@ class ChangeStatusForm extends React.Component {
                                         <Button variant="outline-secondary" onClick={this.handleClose}>
                                             Cancel
                                         </Button>
-                                        <button type="submit">Submit</button>
+                                        <Button type="submit">Submit</Button>
                                         
                                     </div>
                                    

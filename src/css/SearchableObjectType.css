@@ -60,7 +60,7 @@
         margin-top: 5%;
     }
     #SectionList{
-        height: 60vh;
+        /*height: 60vh;*/
         position: absolute;
         right: 15%;
         width: 40%;

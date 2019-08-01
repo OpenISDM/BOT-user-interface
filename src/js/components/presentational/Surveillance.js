@@ -57,7 +57,6 @@ class Surveillance extends React.Component {
     }
 
     componentDidUpdate(prepProps){
-
         if(this.props.shouldTrackingDataUpdate || this.props.searchResult !== prepProps.searchResult) {
 
             /** Check whether there is the new tracking data retrieving from store */
@@ -356,33 +355,33 @@ class Surveillance extends React.Component {
                         number: ++counter
                     }
                 }
-			} else if (objects[key].geofence_type === 'Perimeter'){
+			} 
+            else if (objects[key].geofence_type === 'Perimeter'){
                 iconOption = geofencePAweIconOptions;
-                if (objects[key].searched && config.surveillanceMap.iconOptions.showNumber) {
-                    iconOption = {
-                        ...iconOption,
-                        number: ++counter
-                    }
-                }
-			} else if (objects[key].panic_button === 1) {
+                
+			} 
+
+            else if (objects[key].panic_button === 1) {
                 iconOption = sosIconOptions;
-            } else if (objects[key].searched && this.props.colorPanel) {
-                iconOption = {
-                    iconSize: iconSize,
-                    markerColor: objects[key].pinColor,
-                }
-            } else if (objects[key].searched) {
+            } 
+            // else if (objects[key].searched && this.props.colorPanel) {
+            //     iconOption = {
+            //         iconSize: iconSize,
+            //         markerColor: objects[key].pinColor,
+            //     }
+            // } 
+            else if (objects[key].searched) {
                 // console.log('searched')
-                config.surveillanceMap.iconOptions.showNumber 
-                ? 
-                    iconOption = {
-                        ...searchedObjectAweIconOptions,
-                        number: ++counter, 
-                    } 
-                : iconOption = searchedObjectAweIconOptions 
+                iconOption = searchedObjectAweIconOptions 
             }else {
 
                 iconOption = stationaryAweIconOptions;
+            }
+            if (objects[key].searched && config.surveillanceMap.iconOptions.showNumber) {
+                iconOption = {
+                    ...iconOption,
+                    number: ++counter
+                }
             }
 
             /** Insert the object's mac_address to be the data when clicking the object's marker */
@@ -536,7 +535,7 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
     return {
         shouldTrackingDataUpdate: state.retrieveTrackingData.shouldTrackingDataUpdate,
-        objectInfo: state.retrieveTrackingData.objectInfo.rows,
+        objectInfo: state.retrieveTrackingData.objectInfo,
     }
 }
 

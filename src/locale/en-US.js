@@ -38,7 +38,12 @@ const en =  {
     SIGN_OUT: 'Sign Out',
     SHIFT_CHANGE_RECORD: 'Shift Change Record',
 
-    DEVICE_FOUND: 'Devices found',
+    DEVICE_FOUND: function (length){
+        return 'found '+length.toString()+' devices'
+    },
+    DEVICE_NOT_FOUND: function (length){
+        return 'not found '+length.toString()+'devices'
+    },
     SEARCH_RESULT: 'Search Results',
 }
 

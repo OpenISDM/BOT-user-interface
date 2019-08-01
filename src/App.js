@@ -28,11 +28,10 @@ class App extends React.Component {
             shouldTrackingDataUpdate: props.shouldTrackingDataUpdate,
             loginStatus: Cookies.get('user')?Cookies.get('user'):null,
             searchableObjectData: [],
-            ShouldUpdateTrackingData: false,
-            ShouldUpdate: 0
+            ShouldUpdateTrackingData: false
         }
         this.handleChangeLocale = this.handleChangeLocale.bind(this);
-        this.getTrackingData = this.getTrackingData.bind(this);
+        // this.getTrackingData = this.getTrackingData.bind(this);
         this.ShouldUpdateTrackingData = this.ShouldUpdateTrackingData.bind(this)
     }
 
@@ -49,18 +48,14 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.props.shouldTrackingDataUpdate ? this.getTrackingData() : null;
+        // this.props.shouldTrackingDataUpdate ? this.getTrackingData() : null;
         this.interval = this.props.shouldTrackingDataUpdate ? setInterval(this.getTrackingData, config.surveillanceMap.intevalTime) : null;
     }
 
     componentDidUpdate(prepProps, prevState) {
-        if(prevState.ShouldUpdate !== this.state.ShouldUpdate){
-            this.setState({
 
-            })
-        }
-        if(prevState.ShouldUpdateTrackingData !== this.state.ShouldUpdateTrackingData){
-            this.getTrackingData()
+        if(prevState.ShouldUpdate !== this.state.ShouldUpdate){
+            // this.getTrackingData()
         }
     }
 
@@ -68,30 +63,33 @@ class App extends React.Component {
         clearInterval(this.interval);
     }
     
-    getTrackingData() {
-        axios.get(dataSrc.trackingData).then(res => {
-            var data = res.data.rows.map((item) =>{
-                item['notFoundTime'] = GetTimeStampDifference(moment().valueOf(), Date.parse(item.last_seen_timestamp))
-                item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
+    // getTrackingData() {
 
-                return item
-            })
-            this.props.retrieveTrackingData(res.data)
-            this.setState({
-                searchableObjectData: data,
-                ShouldUpdate: (this.state.ShouldUpdate + 1)%10000
-            })
-            // console.log(this.state.ShouldUpdate)
-        })
-        .catch(error => {
-            console.log(error)
-        })
-    }
+    //     axios.get(dataSrc.trackingData).then(res => {
+    //         var data = res.data.rows.map((item) =>{
+
+    //             item['notFoundTime'] = GetTimeStampDifference(item.last_seen_timestamp - moment())
+    //             item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
+
+    //             return item
+    //         })
+
+    //         this.props.retrieveTrackingData(res.data)
+    //         this.setState({
+    //             searchableObjectData: data,
+    //             ShouldUpdate: !this.state.ShouldUpdate + 1
+    //         })
+    //         console.log(this.state.searchableObjectData)
+    //     })
+    //     .catch(error => {
+    //         console.log(error)
+    //     })
+    // }
 
     ShouldUpdateTrackingData(){
-        console.log('ShouldUpdateTrackingData')
+
         this.setState({
-            ShouldUpdateTrackingData: (this.state.ShouldUpdateTrackingData + 1)%10000,
+            ShouldUpdateTrackingData: ! this.state.ShouldUpdateTrackingData,
         })
     }
 
@@ -99,15 +97,12 @@ class App extends React.Component {
 
 
     render() { 
-        const { locale, loginStatus, searchableObjectData, ShouldUpdate } = this.state;
+        const { locale } = this.state;
         for( var i in routes){
-
-            routes[i]['loginStatus'] = loginStatus
-            routes[i]['searchableObjectData'] = searchableObjectData
-            routes[i]['ShouldUpdate'] = ShouldUpdate
-
-
+            routes[i]['loginStatus'] = this.state.loginStatus
+            routes[i]['searchableObjectData'] = this.state.searchableObjectData
             routes[i]['ShouldUpdateTrackingData'] = this.ShouldUpdateTrackingData
+            routes[i]['ShouldUpdate'] = this.state.ShouldUpdate
         }
         return (
             <LocaleContext.Provider value={locale}>

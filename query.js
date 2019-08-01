@@ -6,6 +6,8 @@ const pg = require('pg');
 
 var pdf = require('html-pdf');
 
+// const Userconfig = require('./src/js/config')
+
 const config = {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -15,17 +17,61 @@ const config = {
 }
 const pool = new pg.Pool(config)
 
+function GetTimeStampDifference(timestamp1, timestamp2){
+    return timestamp1 - timestamp2;
+}
 
+function UuidToLocation(lbeacon_uuid){
+        /** Example of lbeacon_uuid: 00000018-0000-0000-7310-000000004610 */
+        try{
+            const zz = lbeacon_uuid.slice(6,8);
+            const xx = parseInt(lbeacon_uuid.slice(14,18) + lbeacon_uuid.slice(19,23));
+            const yy = parseInt(lbeacon_uuid.slice(-8));
+            return [yy, xx];
+        }catch{
+            return null
+        }
+        
+}
 
 const getTrackingData = (request, response) => {
 
     pool.query(queryType.query_getTrackingData(), (error, results) => {        
+        var data = results.rows
+        var processedData = {}
+        for(var i in data){
+            let item = data[i]
+            let notFoundTime = GetTimeStampDifference(moment().format('x'), moment(item.last_seen_timestamp).format('x'))
+            if(notFoundTime > 30 * 1000){
+                item['found'] = 0
+            }else{
+                item['found'] = 1
+            }
+
+            let stillUnderGeofenceViolation = GetTimeStampDifference(moment(item.geofence_violation_timestamp).format('x'), moment(item.first_seen_timestamp).format('x'))
+            let geofenceViolationTime = GetTimeStampDifference(moment().format('x'), moment(item.geofence_violation_timestamp).format('x'))
+            if(geofenceViolationTime > 30 * 1000 && stillUnderGeofenceViolation > 0){
+                item['geofence_violation'] = 1
+            }else{
+                item['geofence_violation'] = 0
+            }
+            item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
+            delete item['geofence_violation_timestamp']
+            delete item['first_seen_timestamp']
+            delete item['last_seen_timestamp']
+
+
+            console.log(item)
+            
+        }
+        
+
         if (error) {
             console.log("Get trackingData fails : " + error)
         } else {
             console.log('Get tracking data!')
         }
-        response.status(200).json(results)
+        response.status(200).json(data)
     })
 }
 
@@ -252,16 +298,18 @@ const  QRCode = (request, response) => {
     var table = "<table border='1' style='width:100%;word-break:break-word;'>";
     console.log(request.body)
     table += "<tr>";
-    table += "<th >Mac Address</th>";
+    table += "<th >Name</th>";
     table += "<th >Type</th>";
     table += "<th >ACN-number</th>";
+    table += "<th >Location</th>";
     table += "</tr>";
 
     for (var i of request.body){
         table += "<tr>";
-        table += "<td>"+i.mac_address+"</td>";
+        table += "<td>"+i.name+"</td>";
         table += "<td>"+i.type+"</td>";
         table += "<td>"+i.access_control_number+"</td>";
+        table += "<td>near "+i.location_description+"</td>";
         table += "</tr>";
     }
     table += "</table>"

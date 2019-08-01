@@ -32,10 +32,13 @@ class SearchResult extends React.Component {
 
             selectedObjectData: {},
             
-
+            // true the search result will be found
+            // else will be not found
+            foundMode: true,
             foundResult: [],
             notFoundResult: [],
-            showNotResult: false,
+
+            wholeSearchResult: [],
 
             searchResult: [],
             newStatus: {},
@@ -52,6 +55,7 @@ class SearchResult extends React.Component {
             ShouldUpdateConfirmForm         : 0,
 
         }
+
         // check whether props are properly logged in
         this.propsCheck = this.propsCheck.bind(this)
 
@@ -76,19 +80,24 @@ class SearchResult extends React.Component {
         
     }
     componentDidUpdate(prepProps, prevState) {
-        if(this.state.changeState !== prevState.changeState){
+        var state = {}
+        var update = false
+    
 
-            this.setState({
-
-            })
-        }    
         if(this.propsCheck('ShouldUpdate') !== this.state.ShouldUpdateForProps){
-            this.setState({
+            this.initializeSearchResultList()
+            update = true
+            state = {
+                ...state,
                 ShouldUpdateForProps: this.props.ShouldUpdate
-            })
+            }
+
             if(!this.state.addTransferDevices){
                 this.initializeSearchResultList()
             }
+        }
+        if(update){
+            this.setState(state)
         }
 
     }
@@ -104,10 +113,14 @@ class SearchResult extends React.Component {
 
 
     initializeSearchResultList(){
-
+        // console.log(this.props.searchResult)
         var searchResults = this.propsCheck('searchResult');
 
         var searchResult = []
+        var foundResult = []
+        var notFoundResult = []
+
+
         for(var searchresult in searchResults){
 
             let result = searchResults[searchresult];
@@ -116,11 +129,22 @@ class SearchResult extends React.Component {
 
             searchResult.push(result);
 
+            if(result.found){
+                foundResult.push(result)
+            }else{
+                notFoundResult.push(result)
+            }
         }
+        // console.log(foundResult)
         this.setState({
-            searchResult: searchResult,
+            wholeSearchResult: searchResult,
+            foundResult: foundResult,
+            notFoundResult: notFoundResult,
+            searchResult: this.state.foundMode ? foundResult: notFoundResult,
             changeState: this.state.changeState + 1,
         })
+
+
     }
 
     handleChangeObjectStatusFormShow(index) {
@@ -177,7 +201,10 @@ class SearchResult extends React.Component {
             newLocation: newStatus.transferred_location,
             macAddresses: macAddresses
         }).then(res => {
-                console.log('send success')
+            setTimeout( function() {
+                this.props.UpdateTrackingData()
+                this.handleConfirmForm('close', null)
+            }.bind(this), 500);
         }).catch( error => {
             console.log(error)
         })
@@ -188,6 +215,7 @@ class SearchResult extends React.Component {
         if(command === 'submit'){
             
             if(Option === true){
+
                 const {selectedObjectData, newStatus} = this.state;
 
                 var macAddresses = [];
@@ -198,10 +226,7 @@ class SearchResult extends React.Component {
                 // submit to backend
                 this.handleSubmitToBackend(newStatus, macAddresses)
                 
-                this.handleConfirmForm('close', null)
-            
-                // this.props.shouldUpdateTrackingData()
-                      
+                
             }
             
         }else if(command === 'close'){
@@ -213,7 +238,6 @@ class SearchResult extends React.Component {
                 changeState: this.state.changeState + 1
             })
         }else if(command === 'show'){
-
             this.setState({
                 showConfirmForm: true,
             })
@@ -230,7 +254,8 @@ class SearchResult extends React.Component {
     handleToggleNotFound(e) {
         e.preventDefault()
         this.setState({
-            showNotResult: !this.state.showNotResult
+            searchResult: ! this.state.foundMode ? this.state.foundResult : this.state.notFoundResult,
+            foundMode: ! this.state.foundMode,
         })
         
     }
@@ -346,9 +371,6 @@ class SearchResult extends React.Component {
                 display: 'flex'
                 
             }, 
-            notFoundResultDiv: {
-                display: 'block',
-            }, 
             searchResultCloseButton:{
                 height: '10px',
                 width: '10px',
@@ -359,22 +381,28 @@ class SearchResult extends React.Component {
         }
             // <div style = {style.searchResult} className='mx-0 bg-light' >
         return(
-            <div id="searchResult"className='m-2 px-0 shadow' style={style.SearchResult}>
 
+            <div id="searchResult"className='m-2 p-0 shadow' style={style.SearchResult}>
 
-                <div style={style.titleText} className="bg-primary justify-content-center">
+                <div className="bg-transparent px-3">
                     
-                        <h4 className="text-light w-100">{locale.SEARCH_RESULT}</h4>
+                        <h4 className="text-primary w-100 text-left bg-transparent">{locale.SEARCH_RESULT}</h4>
                     
                     
-                        <h1 onClick={this.closeSearchResult} className="text-light" style={{position: 'absolute',right: '5%'}}>x</h1>
+                        <h1 onClick={this.closeSearchResult} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
+
+                        <h6 className=" text-left  text-primary w-100 bg-transparent"> {this.state.foundMode? locale.DEVICE_NOT_FOUND(searchResult.length) : locale.DEVICE_FOUND(searchResult.length)}</h6>
+                
+                        <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent" style={{maxHeight: '8vh'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
                         
                 </div>
                 
-                <h5 className="bg-primary justify-content-center text-light w-100"> {searchResult.length} {locale.DEVICE_FOUND}</h5>
                 
+                
+                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-2 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh'}} >
+                    
+                    
 
-                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -10).toString() + 'vh', minHeight: (parseInt(Setting.minHeight.slice(0,2)) -10).toString() + 'vh'}} >
                     {this.state.searchResult.length === 0
                     ?   
                             <h1 className="text-center m-3">no searchResult</h1>
@@ -474,7 +502,7 @@ class SearchResult extends React.Component {
                     selectedObjectData={this.state.selectedObjectData} 
                     handleConfirmForm={this.handleConfirmForm}
 
-                    formOption = {this.state.newStatus}
+                    newStatus = {this.state.newStatus}
 
                     ShouldUpdate = {this.state.ShouldUpdateConfirmForm}
                 />

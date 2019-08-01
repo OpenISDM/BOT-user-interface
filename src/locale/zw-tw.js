@@ -35,7 +35,12 @@ const tw = {
     SIGN_OUT: '登出',
     SHIFT_CHANGE_RECORD: '交接記錄',
 
-    DEVICE_FOUND: '個儀器',
+    DEVICE_FOUND: function (length){
+        return '發現'+length.toString()+'個儀器'
+    },
+    DEVICE_NOT_FOUND: function (length){
+        return '沒發現'+length.toString()+'個儀器'
+    },
     SEARCH_RESULT: '搜尋結果',
 
 }

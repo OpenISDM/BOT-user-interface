@@ -43,11 +43,13 @@ class SearchContainer extends React.Component {
 
             loginStatus: null,
 
+            ShouldUpdateSearchableObjectType: 0,
 
+            ShouldUpdate: 0
         }
 
-        this.SearchIndexMouseOver = this.SearchIndexMouseOver.bind(this);
-        this.SearchIndexMouseLeave = this.SearchIndexMouseLeave.bind(this);
+        // this.SearchIndexMouseOver = this.SearchIndexMouseOver.bind(this);
+        // this.SearchIndexMouseLeave = this.SearchIndexMouseLeave.bind(this);
 
 
         this.getShowSectionState = this.getShowSectionState.bind(this)
@@ -65,65 +67,61 @@ class SearchContainer extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState){
-        if(this.props.loginStatus !== this.state.loginStatus){
-            return true
-        }
-        
-        if(this.props.objectTypeList !== this.state.objectTypeList){
-
-            return true
-        }
-        if(nextProps.hasSearchKey !== this.state.IsShowResult){
-            return true
-        }
-        if(this.state.changeState !== nextState.changeState){
-            return true
-        }
-        if(nextProps.searchResult !== this.state.searchResult){
-            return true
-        }
-        if(nextProps.searchableObjectData.length !== this.state.searchableObjectData.length){
-            return true
-        }
-        return false
+        return true
     }
     // this function when the this.props change or you call this.setState() function
     // In this function, if the searchableObjectData is changed, the layout will immediately change
     componentDidUpdate(prepProps, prevState){
 
+        
 
-        this.setState({
-            loginStatus: this.props.loginStatus,
-            objectTypeList: this.props.objectTypeList,
-            searchResult: this.props.searchResult,
-            searchableObjectData: this.props.searchableObjectData,
-            IsShowResult: this.props.hasSearchKey
-        })
+        
 
     }
-    // when the mouse hover the section Index List (Alphabet List), the section Title List will appear
-    SearchIndexMouseOver(e){
-
-        let text = e.target.name;
-
-
-        location.href = '#' + text;
-
-        this.setState({
-            sectionTitleData: this.state.sectionTitleList,
-            IsFirstUpdate:true,
-            IsShowSection: true,
-            changeState: !this.state.changeState
-        })
+    componentWillReceiveProps(nextProps, nextState){
+        console.log('Receive')
+        // console.log(this.props.searchableObjectData)
+        var state ={}
+        // console.log(this.state.ShouldUpdate)
+        if( this.state.ShouldUpdate !== nextProps.ShouldUpdate){
+            state.searchableObjectData = nextProps.searchableObjectData
+            state.objectTypeList = nextProps.objectTypeList
+            state.ShouldUpdateSearchableObjectType = this.state.ShouldUpdateSearchableObjectType + 1
+            state.ShouldUpdate = nextProps.ShouldUpdate
+        }
+        if(!_.isEqual(this.state.searchResult, nextProps.searchResult)){
+            state.searchResult = nextProps.searchResult
+        }
+        if(this.state.IsShowResult !== nextProps.IsShowResult){
+            state.IsShowResult = nextProps.IsShowResult
+        }
+        if(state.length!== {}){
+            this.setState(state)
+        }
     }
+    // // when the mouse hover the section Index List (Alphabet List), the section Title List will appear
+    // SearchIndexMouseOver(e){
 
-    SearchIndexMouseLeave(e){
+    //     let text = e.target.name;
 
-        this.setState({
-            IsShowSection:false,
-            changeState: !this.state.changeState
-        })
-    }
+
+    //     location.href = '#' + text;
+
+    //     this.setState({
+    //         sectionTitleData: this.state.sectionTitleList,
+    //         IsFirstUpdate:true,
+    //         IsShowSection: true,
+    //         changeState: !this.state.changeState
+    //     })
+    // }
+
+    // SearchIndexMouseLeave(e){
+
+    //     this.setState({
+    //         IsShowSection:false,
+    //         changeState: !this.state.changeState
+    //     })
+    // }
 
 
     closeSearchResult(e){
@@ -152,6 +150,11 @@ class SearchContainer extends React.Component {
             changeState: !this.state.changeState,
         })
         
+    }
+
+    getSearchResultfromSearchableObjectType(e){
+        this.props.getSearchResult(e)
+
     }
     render() {
         /** Customized CSS of searchResult */
@@ -203,16 +206,14 @@ class SearchContainer extends React.Component {
                             clickButtonHandler = {this.clickButtonHandler}
                         />
                     </Col>
-                    <Col id='searchableObjectType' md={12} sm={12} xs={12} className='mx-0 px-0 float-right' style={{zIndex: (this.state.IsShowSection)?1060:0}}>
+                    
 
-                        <SearchableObjectType
-                            handleMouseLeave = {this.state.handleMouseLeave}
-                            sectionTitleData = {this.state.objectTypeList}
-                            getShowSectionState = {this.getShowSectionState}
-                            getResultData = {this.props.getSearchResult}
-                            clickButtonHandler = {this.clickButtonHandler}
-                        />
-                    </Col> 
+                    <SearchableObjectType
+                        Show = {this.state.IsShowSection}
+                        objectTypeList = {this.state.objectTypeList}
+                        getResultData = {this.props.getSearchResult}
+                        ShouldUpdate = {this.state.ShouldUpdateSearchableObjectType}
+                    />
 
                    
                 </div>
@@ -226,12 +227,3 @@ class SearchContainer extends React.Component {
 
 SearchContainer.contextType = LocaleContext;
 export default SearchContainer;
-
- // <div id="searchResult" md={12} sm={12} xs={12} className='m-2 px-0' style={style.SearchResult} onMouseLeave={this.SearchResultMouseLeave}>
- //                        <SearchResult 
- //                            hasSearchKey = {this.state.hasSearchKey}
- //                            transferSearchResult = {this.props.transferSearchResult}
- //                            closeSearchResult = {this.closeSearchResult}
- //                            searchResult={this.state.searchResult}
- //                        />
- //                    </div>
