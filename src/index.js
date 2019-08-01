@@ -8,6 +8,7 @@ import { createStore, combineReducers } from 'redux';
 
 /** Bootstrap Custom CSS */
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'react-notifications/lib/notifications.css';
 
 /** Import Custom CSS */
 import './js/customizedCSS';

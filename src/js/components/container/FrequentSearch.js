@@ -87,13 +87,26 @@ class FrequentSearch extends React.Component {
                 background: '#EEEEEE',
                 float:'left',
 
-            }
+            },
+            FrequentSearch:{
+                height: '80vh',
+
+                zIndex: 1,
+
+                background:'#FFFFFF',
+                
+                float: 'left', 
+
+                position:'absolute',
+
+                left: '3%'
+            }, 
         }
 
         const locale = this.context;
         console.log(!this.props.ShouldUpdate)
         return (
-            <>
+            <Col id='FrequentSearch' sm={10} xs={10} className=' mx-1 px-0 float-left' style = {style.FrequentSearch} >
                 <Row className='d-flex justify-content-center'>
                     <h3>{locale.FREQUENT_SEARCH}</h3>
                 </Row>
@@ -149,7 +162,7 @@ class FrequentSearch extends React.Component {
                         </div>
                     
                 </Row>
-            </>
+            </Col>
         )
     }
 }
@@ -163,14 +176,3 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(FrequentSearch);
-
-// <Button
-
-//     className="FrequentSearchButton mx-2 btn-dark"
-//     onClick={this.handleClick} 
-//     style={{height: '50px', fontSize: '0.75rem'}}
-//     active={this.state.searchkey === 'my devices'}
-//     name={locale.MY_DEVICE}
-// >
-//     {locale.MY_DEVICE}
-// </Button>
