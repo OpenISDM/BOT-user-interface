@@ -258,6 +258,7 @@ class SurveillanceContainer extends React.Component {
                         handleMarkerClick={this.handleMarkerClick}
                         style={style.searchMap}
                         colorPanel={this.props.colorPanel}
+                        handleSearch={this.props.handleSearch}
                     />
                 </div>
                 <div style={style.navBlock}>

@@ -150,7 +150,7 @@ const config = {
     },
 
     searchResult:{
-        showImage: false,
+        showImage: true,
     }
 
 

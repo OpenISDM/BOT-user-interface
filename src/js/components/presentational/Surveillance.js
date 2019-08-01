@@ -428,7 +428,8 @@ class Surveillance extends React.Component {
 
         const currentPosition =  e.target.options.icon.options.currentPosition
         let objectList = this.collectObjectsByLatLng(currentPosition)
-        this.props.transferSearchResult(objectList, null, 'region')
+        console.log(objectList)
+        this.props.handleSearch(objectList)
     }
 
     collectObjectsByLatLng(currentPositionArray) {

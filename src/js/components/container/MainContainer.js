@@ -67,7 +67,7 @@ class ContentContainer extends React.Component{
         this.shouldUpdateTrackingData = this.shouldUpdateTrackingData.bind(this)
         this.getTrackingData = this.getTrackingData.bind(this)
 
-        this.handleSearchSection= this.handleSearchSection.bind(this)
+        this.handleSearch= this.handleSearch.bind(this)
     }
     componentDidMount(){
         this.interval = setInterval(this.getTrackingData, config.surveillanceMap.intevalTime, true)
@@ -104,7 +104,6 @@ class ContentContainer extends React.Component{
     }
 
     getTrackingData(update) {
-        console.log('update')
         var ShouldUpdate = false
         axios.get(dataSrc.trackingData).then(res => {
             var data = res.data.map((item) =>{
@@ -146,7 +145,9 @@ class ContentContainer extends React.Component{
                 }
                 console.log('uppppp')
 
-            }else{console.log('no update')}
+            }else{
+                // console.log('no update')
+            }
             
 
             
@@ -240,9 +241,15 @@ class ContentContainer extends React.Component{
         return searchResult
     }
 
-    async handleSearchSection(e){
-        var searchResult = await this.getSearchResult(e)
-        this.transferSearchResult(searchResult, null, e, true)
+    async handleSearch(e){
+        console.log(e)
+        if(typeof e === 'string'){
+            var searchResult = await this.getSearchResult(e)
+            this.transferSearchResult(searchResult, null, e, true)
+        }else{
+            this.transferSearchResult(e, null, 'region', true)
+        }
+        
 
         
     }
@@ -293,6 +300,7 @@ class ContentContainer extends React.Component{
                             hasSearchKey={hasSearchKey} 
                             searchResult={searchResult}
                             searchableObjectData = {this.state.searchableObjectData}
+                            handleSearch = {this.handleSearch}
                             transferSearchableObjectData={this.transferSearchableObjectData}
                             searchType={searchType}
                             colorPanel={colorPanel}
@@ -306,7 +314,7 @@ class ContentContainer extends React.Component{
                     <Col id="seachSection" xs={12} sm={12} md={12} lg={4} xl={4} className="w-100 px-0 mx-0">
 
                         <SearchContainer 
-                            getSearchResult={this.handleSearchSection}
+                            getSearchResult={this.handleSearch}
                             loginStatus={loginStatus}
                             searchableObjectData={this.state.searchableObjectData}
                             searchResult = {this.state.searchResult} 

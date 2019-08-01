@@ -38,9 +38,20 @@ class FrequentSearch extends React.Component {
     }
 
 
+    componentWillReceiveProps(nextProps){
+
+        if(!nextProps.ShouldUpdate){
+            
+            this.setState({})
+        }
+        if(nextProps.ShouldUpdate !== this.props.ShouldUpdate){
+
+        }
+    }
+
 
     componentDidMount(){
-        
+        console.log('hi')
         var intervalId = setInterval(this.cookieListener, 300);
        // store intervalId in the state so it can be accessed later:
         this.setState({intervalId: intervalId});
@@ -55,19 +66,11 @@ class FrequentSearch extends React.Component {
             })
         }
     }
-    componentDidUpdate(prepProps) {
-        if (prepProps.clearSearchResult !== this.props.clearSearchResult && !prepProps.clearSearchResult) {
-            this.setState({
-                searchkey: '',
-            })
-        }
-    }
 
 
     handleClick(e) {
         const itemName = e.target.name.toLowerCase();
         this.props.getResultData(itemName)
-        this.props.clickButtonHandler(itemName)
         this.setState({
             searchkey: itemName
         })
@@ -88,7 +91,7 @@ class FrequentSearch extends React.Component {
         }
 
         const locale = this.context;
-
+        console.log(!this.props.ShouldUpdate)
         return (
             <>
                 <Row className='d-flex justify-content-center'>
@@ -112,42 +115,37 @@ class FrequentSearch extends React.Component {
                                         null
                                 }
                                     
-                                    <Button 
-                                        className="FrequentSearchButton btn-light w-100 m-1"
-                                        style={{height: '50px', fontSize: '0.75rem'}}
+                                    <a
+                                        className="FrequentSearchButton w-100 m-3 h2 "
                                         onClick={this.handleClick} 
-                                        active={this.state.searchkey === item.name.toLowerCase()} 
+
                                         key={index}
                                         name={item.name}
                                     >
                                         {item.name}
-                                    </Button>
+                                    </a>
                                 </Row>
                             </div>
                         )
                     })}
                         <div className="btn-group btn-group-justified row w-100 d-flex justify-content-center mx-2 mt-4">
                         {Cookies.get('user') && 
-                            <Button
-
-                                className="FrequentSearchButton mx-2 btn-dark"
+                            <a
+                                className="FrequentSearchButton w-100 m-3 h2 "
                                 onClick={this.handleClick} 
-                                style={{height: '50px', fontSize: '0.75rem'}}
-                                active={this.state.searchkey === 'my devices'}
                                 name={locale.MY_DEVICE}
                             >
                                 {locale.MY_DEVICE}
-                            </Button>
+                            </a>
+                            
                         }
-                            <Button 
-                                className="FrequentSearchButton mx-2 btn-dark"
+                            <a
+                                className="FrequentSearchButton w-100 m-3 h2 "
                                 onClick={this.handleClick} 
-                                style={{height: '50px', fontSize: '0.75rem'}}
-                                active={this.state.searchkey === 'all devices'}
                                 name={locale.ALL_DEVICE}
                             >
                                 {locale.ALL_DEVICE}
-                            </Button>
+                            </a>
                         </div>
                     
                 </Row>
@@ -165,3 +163,14 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(FrequentSearch);
+
+// <Button
+
+//     className="FrequentSearchButton mx-2 btn-dark"
+//     onClick={this.handleClick} 
+//     style={{height: '50px', fontSize: '0.75rem'}}
+//     active={this.state.searchkey === 'my devices'}
+//     name={locale.MY_DEVICE}
+// >
+//     {locale.MY_DEVICE}
+// </Button>

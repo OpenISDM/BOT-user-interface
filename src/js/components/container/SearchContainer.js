@@ -47,17 +47,6 @@ class SearchContainer extends React.Component {
 
             ShouldUpdate: 0
         }
-
-        // this.SearchIndexMouseOver = this.SearchIndexMouseOver.bind(this);
-        // this.SearchIndexMouseLeave = this.SearchIndexMouseLeave.bind(this);
-
-
-        this.getShowSectionState = this.getShowSectionState.bind(this)
-        // this.getResultData = this.getResultData.bind(this);
-      
-        this.closeSearchResult = this.closeSearchResult.bind(this);
-        this.clickButtonHandler = this.clickButtonHandler.bind(this);
-
     }
 
     
@@ -99,63 +88,6 @@ class SearchContainer extends React.Component {
             this.setState(state)
         }
     }
-    // // when the mouse hover the section Index List (Alphabet List), the section Title List will appear
-    // SearchIndexMouseOver(e){
-
-    //     let text = e.target.name;
-
-
-    //     location.href = '#' + text;
-
-    //     this.setState({
-    //         sectionTitleData: this.state.sectionTitleList,
-    //         IsFirstUpdate:true,
-    //         IsShowSection: true,
-    //         changeState: !this.state.changeState
-    //     })
-    // }
-
-    // SearchIndexMouseLeave(e){
-
-    //     this.setState({
-    //         IsShowSection:false,
-    //         changeState: !this.state.changeState
-    //     })
-    // }
-
-
-    closeSearchResult(e){
-
-        this.props.handleCloseSearchResult()
-        this.setState({
-            IsShowResult: false,
-            IsShowSection: false,
-            changeState: !this.state.changeState,
-        })
-
-    }
-    clickButtonHandler(){
-        this.setState({
-            IsShowResult: true,
-            IsShowSection: false,
-            changeState: !this.state.changeState,
-        })
-    }
-    getShowSectionState(state){
-
-
-
-        this.setState({
-            IsShowSection: state,
-            changeState: !this.state.changeState,
-        })
-        
-    }
-
-    getSearchResultfromSearchableObjectType(e){
-        this.props.getSearchResult(e)
-
-    }
     render() {
         /** Customized CSS of searchResult */
         const locale = this.context;
@@ -193,7 +125,7 @@ class SearchContainer extends React.Component {
                             <Searchbar 
                                 placeholder={this.state.SearchKey}
                                 getResultData={this.props.getSearchResult}  
-                                clickButtonHandler = {this.clickButtonHandler}  
+                                 
                             />
                             
                         </div>
@@ -203,7 +135,8 @@ class SearchContainer extends React.Component {
                     <Col id='FrequentSearch' sm={10} xs={10} className=' mx-1 px-0 float-left' style = {style.FrequentSearch} >
                         <FrequentSearch 
                             getResultData={this.props.getSearchResult}
-                            clickButtonHandler = {this.clickButtonHandler}
+
+                            ShouldUpdate = {this.state.ShouldUpdateFrequentSearch}
                         />
                     </Col>
                     
