@@ -16,7 +16,7 @@ import dataSrc from '../../dataSrc';
 
 import 'react-table/react-table.css';
 import '../../../css/MainContainer.css';
-import SearchResult from '../presentational/SearchResultList'
+import SearchResult from '../presentational/SearchResult'
 
 import axios from 'axios'
 import moment from 'moment'
@@ -125,23 +125,26 @@ class ContentContainer extends React.Component{
                         }
                     }
 
-                    // console.log(this.state.ShouldUpdateSearchResult)
+                  
                 }
                 // is.state.searchableObjectData=== [])
-                console.log(data[0].status)
-                console.log(ShouldUpdate)
+             
                 this.props.retrieveTrackingData(res.data)
-                console.log(this.state.ShouldUpdateSearchResult)
+            
                 if(ShouldUpdate || this.state.searchableObjectData.length === 0){
-                    console.log(111111111111111)
+                    var dataMap = {}
+                    for( i in data){
+                        dataMap[data[i].mac_address] =data[i]
+                    }
                     var state = {
                         searchableObjectData: data,
+                        dataMap: dataMap,
                         objectTypeList: GetTypeKeyList(data),
                         ShouldUpdate: this.state.ShouldUpdate + 1,
                         ShouldUpdateSearchContainer: this.state.ShouldUpdateSearchContainer + 1,
                         ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
                     }
-                    console.log(this.state.ShouldUpdateSearchResult)
+                  
                     if(update === false){
                         return state
                     }else{
@@ -236,19 +239,12 @@ class ContentContainer extends React.Component{
                         
 
                     })
-                    console.log(ShouldUpdateSearchResult)
+
                 })
             })
-            // console.log(this.state.searchableObjectData[0].status)
+        
         }.bind(this), 300);
-        // this.getSearchResult(this.state.searchKey).then((searchResult)=>{
-        //             this.setState({
-        //                 ...state,
-        //                 searchResult: searchResult,
-        //             })
-        //             ate)
-        //             is.state.searchResult)
-        //         })
+       
     }
     /**  the search result, not found list and color panel from SearchContainer, GridButton to MainContainer 
      *  The three variable will then pass into SurveillanceContainer
@@ -371,13 +367,7 @@ class ContentContainer extends React.Component{
             
 
         }
-        try{
-            console.log('rendering')
-            console.log(this.state.searchResult[0].status)
-        }catch{
-
-        }
-        
+     
         return(
 
             /** "page-wrap" the default id named by react-burget-menu */
@@ -402,7 +392,7 @@ class ContentContainer extends React.Component{
                         />
                     </Col>
                     
-                    <Col id="seachSection" xs={12} sm={12} md={12} lg={4} xl={4} className="w-100 px-0 mx-0">
+                    <Col id="seachSection" xs={12} sm={12} md={12} lg={4} xl={4} className="w-100 px-0 my-2 bg-white" style={{zIndex: 1060, height: '80vh', borderRadius: '3%'}}>
 
                         <SearchContainer 
                             getSearchResult={this.handleSearch}
@@ -414,7 +404,6 @@ class ContentContainer extends React.Component{
                             closeSearchResult = {this.state.closeSearchResult}
                             objectTypeList = {this.state.objectTypeList}
                             handleCloseSearchResult={this.handleClearButton}
-
                             ShouldUpdate={this.state.ShouldUpdateSearchContainer}
                         />
 

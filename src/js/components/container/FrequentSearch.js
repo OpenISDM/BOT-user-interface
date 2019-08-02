@@ -89,7 +89,7 @@ class FrequentSearch extends React.Component {
 
             },
             FrequentSearch:{
-                height: '80vh',
+                height: '60vh',
 
                 zIndex: 1,
 

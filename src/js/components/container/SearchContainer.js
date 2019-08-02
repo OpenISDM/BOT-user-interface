@@ -10,7 +10,7 @@ import Searchbar from '../presentational/Searchbar';
 import FrequentSearch from './FrequentSearch';
 
 import SearchableObjectType from '../presentational/SeachableObjectType';
-import SearchResult from '../presentational/SearchResultList';
+// import SearchResult from '../presentational/SearchResultList';
 
 import Cookies from 'js-cookie'
 
@@ -39,9 +39,6 @@ class SearchContainer extends React.Component {
             ShouldUpdateSearchableObjectType: 0,
         }
     }
-
-    
-
     componentDidMount(){
         
     }
@@ -87,9 +84,9 @@ class SearchContainer extends React.Component {
         }
         
         return (
-            <Row>
-                <Row className='col-12 mx-2 d-flex justify-content-center'>
-                        <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'>
+            <Row >
+                <Row className='col-12 mx-3 d-flex justify-content-center ' >
+                        <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'  >
                             <Searchbar 
                                 placeholder={SearchKey}
                                 getResultData={getSearchResult} 

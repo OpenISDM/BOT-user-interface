@@ -2,7 +2,7 @@ import React from 'react';
 
 
 import { Alert, Tab, ListGroup, Col, Row } from 'react-bootstrap';
-
+// import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import LocaleContext from '../../context/LocaleContext';
 import ChangeStatusForm from '../container/ChangeStatusForm';
@@ -20,8 +20,11 @@ import '../../../css/hideScrollBar.css'
 import '../../../css/SearchResult.css'
 import config from '../../config';
 
+import SearchResultTable from './SearchResultTable'
 
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
+const Fragment = React.Fragment;
 class SearchResult extends React.Component {
 
     constructor(props){
@@ -54,7 +57,9 @@ class SearchResult extends React.Component {
             ShouldUpdateChangeStatusForm    : 0,
             ShouldUpdateConfirmForm         : 0,
 
+
         }
+
         // check whether props are properly logged in
         this.propsCheck = this.propsCheck.bind(this)
 
@@ -71,29 +76,56 @@ class SearchResult extends React.Component {
 
 
         this.initializeSearchResultList = this.initializeSearchResultList.bind(this);
+
+
+       
     }
     
     componentDidMount() {
-
         this.initializeSearchResultList()
         
     }
     componentDidUpdate(prepProps, prevState) {
-        if(this.state.changeState !== prevState.changeState){
+        var state = {}
+        var update = false
+    
 
-            this.setState({
-
-            })
-        }    
         if(this.propsCheck('ShouldUpdate') !== this.state.ShouldUpdateForProps){
-            this.setState({
+            this.initializeSearchResultList()
+            update = true
+            state = {
+                ...state,
                 ShouldUpdateForProps: this.props.ShouldUpdate
-            })
+            }
+
             if(!this.state.addTransferDevices){
                 this.initializeSearchResultList()
             }
         }
+        if(update){
+            this.setState(state)
+        }
 
+    }
+
+    componentWillReceiveProps(nextProps){
+        setTimeout(function(){
+         
+            
+            if(nextProps.ShouldUpdate !== this.state.ShouldUpdateForProps){
+                this.setState({
+                    ShouldUpdateForProps: nextProps.ShouldUpdate,
+                    searchResult: nextProps.searchResult
+                })
+            }
+            try{
+
+            }catch{
+
+            }
+            }.bind(this),2000)
+        
+        
     }
 
     propsCheck(attribute){
@@ -107,12 +139,13 @@ class SearchResult extends React.Component {
 
 
     initializeSearchResultList(){
-        console.log(this.props.searchResult)
+        // console.log(this.props.searchResult)
         var searchResults = this.propsCheck('searchResult');
 
         var searchResult = []
         var foundResult = []
         var notFoundResult = []
+        var wholeSearchResultMap = []
 
 
         for(var searchresult in searchResults){
@@ -129,7 +162,7 @@ class SearchResult extends React.Component {
                 notFoundResult.push(result)
             }
         }
-        console.log(foundResult)
+        // console.log(foundResult)
         this.setState({
             wholeSearchResult: searchResult,
             foundResult: foundResult,
@@ -195,8 +228,14 @@ class SearchResult extends React.Component {
             newLocation: newStatus.transferred_location,
             macAddresses: macAddresses
         }).then(res => {
-                console.log('send success')
+            
+
+                this.props.UpdateTrackingData()
+                this.handleConfirmForm('close', null)
+                NotificationManager.success('Edit object success', 'Success', 2000)
+            
         }).catch( error => {
+            NotificationManager.error('Edit object Fail', 'Fail', 2000)
             console.log(error)
         })
     }
@@ -206,6 +245,7 @@ class SearchResult extends React.Component {
         if(command === 'submit'){
             
             if(Option === true){
+
                 const {selectedObjectData, newStatus} = this.state;
 
                 var macAddresses = [];
@@ -216,10 +256,7 @@ class SearchResult extends React.Component {
                 // submit to backend
                 this.handleSubmitToBackend(newStatus, macAddresses)
                 
-                this.handleConfirmForm('close', null)
-            
-                // this.props.shouldUpdateTrackingData()
-                      
+                
             }
             
         }else if(command === 'close'){
@@ -231,7 +268,6 @@ class SearchResult extends React.Component {
                 changeState: this.state.changeState + 1
             })
         }else if(command === 'show'){
-
             this.setState({
                 showConfirmForm: true,
             })
@@ -246,6 +282,7 @@ class SearchResult extends React.Component {
     
 
     handleToggleNotFound(e) {
+        console.log('hihi')
         e.preventDefault()
         this.setState({
             searchResult: ! this.state.foundMode ? this.state.foundResult : this.state.notFoundResult,
@@ -256,10 +293,8 @@ class SearchResult extends React.Component {
     closeSearchResult(){
         var closeSearchResult = this.propsCheck('closeSearchResult')
         closeSearchResult()
-        this.handleChangeObjectStatusForm('close', null)
         this.setState({
-            showConfirmForm: false,
-            showEditObjectForm: false,
+
             addTransferDevices: false,
             selectedObjectData: {},
         })
@@ -297,15 +332,27 @@ class SearchResult extends React.Component {
             ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm
         })   
     }
+
+    
+
+    
     render() {
+    
         const locale = this.context;
         const { searchResult, searchKey} = this.props;
-        const Setting={
+        const defaultSetting={
+            
             maxHeight: '70vh',
             minHeight: '50vh',
             width: '25%',
             top: '10%',
             right: '5%',
+
+        }
+        var Setting = {
+
+            ...defaultSetting,
+            ...this.props.Setting,
         }
         const style = {
             SearchResult:{
@@ -315,7 +362,7 @@ class SearchResult extends React.Component {
 
                 display: (this.propsCheck('Show'))?'block':'none',
 
-                zIndex: (this.propsCheck('Show'))?1051:0,
+                zIndex: (this.propsCheck('Show'))?1100:0,
 
                 background:'#FFFFFF',
                 
@@ -336,27 +383,7 @@ class SearchResult extends React.Component {
                 color: 'grey',
                 fontSize: 30,
             },
-            firstText: {
-                paddingLeft: 15,
-                paddingRight: 0,
-                float: 'left',
-                // background: 'rgb(227, 222, 222)',
-                // height: 30,
-                // width: 30,
-            },
-            middleText: {
-
-                paddingLeft: 2,
-                paddingRight: 2,
-                float: 'left',
-                textAlign: 'center',
-
-            },
-            lastText: {
-                // textAlign: 'right'
-
-                float: 'left',
-            },
+            
             titleText: {
 
                 color: 'rgb(80, 80, 80, 0.9)', 
@@ -364,9 +391,6 @@ class SearchResult extends React.Component {
                 overflowX: 'hidden',
                 display: 'flex'
                 
-            }, 
-            notFoundResultDiv: {
-                display: 'block',
             }, 
             searchResultCloseButton:{
                 height: '10px',
@@ -376,98 +400,33 @@ class SearchResult extends React.Component {
             }
 
         }
-            // <div style = {style.searchResult} className='mx-0 bg-light' >
+
+
         return(
 
-
-            <div id="searchResult"className='m-2 px-0 shadow' style={style.SearchResult}>
-
-
-                <div style={style.titleText} className="bg-primary justify-content-center">
+            <div id="searchResult"className='m-0 p-0 shadow' style={style.SearchResult}>
+                <NotificationContainer />
+                <div className="bg-transparent px-3">
                     
-                        <h4 className="text-light w-100">{locale.SEARCH_RESULT}</h4>
+                        <h4 className="text-primary w-100 text-left bg-transparent">{locale.SEARCH_RESULT}</h4>
                     
                     
-                        <h1 onClick={this.closeSearchResult} className="text-light" style={{position: 'absolute',right: '5%'}}>x</h1>
+                        <h1 onClick={this.closeSearchResult} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
                         
                 </div>
                 
-                <h5 className="bg-primary justify-content-center text-light w-100">{this.state.foundMode? locale.DEVICE_FOUND(searchResult.length) :  locale.DEVICE_NOT_FOUND(searchResult.length)}</h5>
+                <SearchResultTable 
+                    addDeviceSelection = {this.addDeviceSelection}
+                    addTransferDevices = {this.state.addTransferDevices}
+                    foundResult = {this.state.foundResult}
+                    notFoundResult = {this.state.notFoundResult}
+                    searchResult = {this.state.searchResult}
+                    foundMode = {this.state.foundMode}
+                    handleToggleNotFound = {this.handleToggleNotFound}
+                    Setting = {Setting}
+                />
                 
-                <h5 onClick ={this.handleToggleNotFound} className="text-primary m-3 h-4 w-100" style={{maxHeight: '8vh'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h5>
-                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -10).toString() + 'vh', minHeight: (parseInt(Setting.minHeight.slice(0,2)) -10).toString() + 'vh'}} >
-                    
-                    {this.state.searchResult.length === 0
-                    ?   
-                            <em className="text-center">no searchResult</em>
-                        
-                    
-                    :   <div className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
-
-                            {this.state.searchResult.map((item,index) => {
-
-                                    let element = 
-
-                                        <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} >
-                                            <Row className="align-items-stretch">
-                                                {! this.state.addTransferDevices
-                                                    ?
-                                                        <>
-                                                            <Col xl={2} lg={2} md={2} xs={2} className="d-flex justify-content-center" style={style.firstText} onClick={this.addDeviceSelection} name={index}>{index + 1}</Col>
-                                                            <Col xl={3} lg={3} md={3} xs={4} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>{item.type}</Col>
-
-                                                            <Col xl={4} lg={7} md={7} xs={6} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
-                                                            {config.searchResult.showImage
-                                                                ?
-                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
-                                                                :
-                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText} onClick={this.addDeviceSelection} name={index}></Col>
-                                                            }
-                                                        </>
-                                                    :
-                                                        <>
-                                                            <Col xl={1} lg={2} md={2} xs={2} className="d-flex justify-content-center" style={style.firstText} onClick={this.addDeviceSelection} name={index}>{index + 1}</Col>
-                                                            <Col xl={1} lg={2} md={2} xs={2} className="d-flex justify-content-center" style={style.firstText} onClick={this.addDeviceSelection} name={index}>
-                                                                <input
-                                                                    type="checkbox"
-                                                                    className="custom-control-input w-100"
-                                                                    onChange={this.addDeviceSelection}
-                                                                    checked = {item.checked}
-                                                                    id={'check'+item.mac_address}
-                                                                    name={index}
-                                                                />
-                                                                <label className="custom-control-label" name={index} htmlFor={'check'+item.mac_address}>
-                                                                </label>
-                                                            </Col>
-                                                            <Col xl={3} lg={3} md={3} xs={4} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>{item.type}</Col>
-
-                                                            <Col xl={4} lg={7} md={7} xs={6} className="d-flex justify-content-center" style={style.middleText} onClick={this.addDeviceSelection} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
-
-                                                            {config.searchResult.showImage
-                                                                ?
-                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText}><img src={config.objectImage[item.type]} className="objectImage" alt="image"/></Col>
-                                                                :
-                                                                    <Col xl={3} lg={0} md={0} xs={0} className="d-flex justify-content-center" style={style.lastText} onClick={this.addDeviceSelection} name={index}></Col>
-                                                            }
-                                                            
-                                                        </>
-                                                }
-                                            </Row>
-                                        </ListGroup.Item>
-                                        
-                                                
-                                            
-
-
-                                    return element
-                                })}
-                        
-                        </div>
-
-                        
-                    }
-                    
-                </Row>
+                
             
 
                 <ChangeStatusForm 
@@ -489,7 +448,8 @@ class SearchResult extends React.Component {
 
                     ShouldUpdate = {this.state.ShouldUpdateConfirmForm}
                 />
-            </div>   
+            </div>
+
         )
     }
 }
@@ -502,3 +462,9 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(SearchResult);
+                            
+                //         <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-2 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh'}} >      
+                //     {
+                //         this.handleDisplayMode()
+                //     }
+                // </Row>

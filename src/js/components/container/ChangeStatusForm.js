@@ -196,7 +196,7 @@ class ChangeStatusForm extends React.Component {
 
         return (
             <>
-                <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content} >
+                <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content} enforceFocus={false}>
                     <Modal.Header closeButton className='font-weight-bold'>
                         {title}
                     </Modal.Header>

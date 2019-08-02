@@ -8,7 +8,7 @@ import dataSrc from '../../dataSrc';
 
 import Cookies from 'js-cookie'
 
-import SearchResult from '../presentational/SearchResultList'
+import SearchResult from '../presentational/SearchResult'
 
 import GetResultData from '../../functions/GetResultData'
 
