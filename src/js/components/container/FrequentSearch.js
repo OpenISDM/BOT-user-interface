@@ -51,7 +51,7 @@ class FrequentSearch extends React.Component {
 
 
     componentDidMount(){
-        console.log('hi')
+        // console.log('hi')
         var intervalId = setInterval(this.cookieListener, 300);
        // store intervalId in the state so it can be accessed later:
         this.setState({intervalId: intervalId});
@@ -104,7 +104,7 @@ class FrequentSearch extends React.Component {
         }
 
         const locale = this.context;
-        console.log(!this.props.ShouldUpdate)
+        // console.log(!this.props.ShouldUpdate)
         return (
             <Col id='FrequentSearch' sm={10} xs={10} className=' mx-1 px-0 float-left' style = {style.FrequentSearch} >
                 <Row className='d-flex justify-content-center'>

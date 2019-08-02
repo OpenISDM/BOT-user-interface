@@ -194,7 +194,7 @@ class NavbarContainer extends React.Component {
 
                     handleShiftChangeRecordSubmit = {this.handleShiftChangeRecordSubmit}
                     handleShiftChangeRecordClose={this.handleShiftChangeRecordClose}
-                    searchableObjectData = {this.props.searchableObjectData}
+                    
                 />
             </Navbar>
             

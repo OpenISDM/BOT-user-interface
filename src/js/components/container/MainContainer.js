@@ -82,9 +82,8 @@ class ContentContainer extends React.Component{
     componentWillUnmount(){
         clearInterval(this.interval);
     }
-
     componentDidUpdate(preProps, prevState){
-        // console.log(this.state.ShouldUpdateSearchContainer)
+        // is.state.ShouldUpdateSearchContainer)
         if(this.state.ShouldUpdate !== prevState.ShouldUpdate){
             this.setState({
 
@@ -105,71 +104,151 @@ class ContentContainer extends React.Component{
 
     getTrackingData(update) {
         var ShouldUpdate = false
-        axios.get(dataSrc.trackingData).then(res => {
-            var data = res.data.map((item) =>{
-                delete item['rssi']
-                return item
-            })
-            // console.log(data)
-            for(var i in  data){
+            axios.get(dataSrc.trackingData).then(res => {
+                var data = res.data.map((item) =>{
+                    delete item['rssi']
+                    return item
+                })
 
-                var a = data[i]
-                var b = this.state.searchableObjectData[i]
-                if(a && b){
-                    if(a.name === b.name &&
-                        a.mac_address === b.mac_address &&
-                        a.status === b.status
-                        ){
-                        
-                    }else{
-                        ShouldUpdate = true
+                for(var i in  data){
+
+                    var a = data[i]
+                    var b = this.state.searchableObjectData[i]
+                    if(a && b){
+                        if(a.name === b.name &&
+                            a.mac_address === b.mac_address &&
+                            a.status === b.status
+                            ){
+                            
+                        }else{
+                            ShouldUpdate = true
+                        }
                     }
+
+                    // console.log(this.state.ShouldUpdateSearchResult)
+                }
+                // is.state.searchableObjectData=== [])
+                console.log(data[0].status)
+                console.log(ShouldUpdate)
+                this.props.retrieveTrackingData(res.data)
+                console.log(this.state.ShouldUpdateSearchResult)
+                if(ShouldUpdate || this.state.searchableObjectData.length === 0){
+                    console.log(111111111111111)
+                    var state = {
+                        searchableObjectData: data,
+                        objectTypeList: GetTypeKeyList(data),
+                        ShouldUpdate: this.state.ShouldUpdate + 1,
+                        ShouldUpdateSearchContainer: this.state.ShouldUpdateSearchContainer + 1,
+                        ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
+                    }
+                    console.log(this.state.ShouldUpdateSearchResult)
+                    if(update === false){
+                        return state
+                    }else{
+
+                        this.setState(state)
+                    }
+
+
+                }else{
+                    // o update')
                 }
                 
-            }
-            // console.log(this.state.searchableObjectData=== [])
-            this.props.retrieveTrackingData(res.data)
-            if(ShouldUpdate || this.state.searchableObjectData.length === 0){
-                var state = {
-                    searchableObjectData: data,
-                    objectTypeList: GetTypeKeyList(data),
-                    ShouldUpdate: this.state.ShouldUpdate + 1,
-                    ShouldUpdateSearchContainer: this.state.ShouldUpdateSearchContainer + 1,
-                    ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
-                }
 
-                if(update === false){
-                    return state
-                }else{
-                    this.setState(state)
-                }
-                console.log('uppppp')
+                
 
-            }else{
-                // console.log('no update')
-            }
-            
+            })
+            .catch(error => {
 
-            
-
-        })
-        .catch(error => {
-            console.log(error)
-        })
+            })
     }
 
-    async shouldUpdateTrackingData(){
-        var state = await this.getTrackingData(true)
-        
-        var searchResult = await this.getSearchResult(this.state.searchKey)
+    newpromise(update){
+        var promise = new Promise(function(resolve, reject){
+            // 3123123123)
+            var ShouldUpdate = false
+            axios.get(dataSrc.trackingData).then(res => {
+                var data = res.data.map((item) =>{
+                    delete item['rssi']
+                    return item
+                })
+                // ta[0].status)
+                for(var i in  data){
 
+                    var a = data[i]
+                    var b = this.state.searchableObjectData[i]
+                    if(a && b){
+                        if(a.name === b.name &&
+                            a.mac_address === b.mac_address &&
+                            a.status === b.status
+                            ){
+                            
+                        }else{
+                            ShouldUpdate = true
+                        }
+                    }
 
-        this.setState({
-            ...state,
-            searchResult: searchResult,
+                    
+                }
+                
+                var state = 'hi'
+                this.props.retrieveTrackingData(res.data)
+                if(ShouldUpdate || this.state.searchableObjectData.length === 0){
+                    var state = {
+                        searchableObjectData: data,
+                        objectTypeList: GetTypeKeyList(data),
+                        ShouldUpdate: this.state.ShouldUpdate + 1,
+                        ShouldUpdateSearchContainer: this.state.ShouldUpdateSearchContainer + 1,
+                        ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
+                    }
+                    this.setState(state)
+                    if(update === false){
+                        resolve(state)
+                    }else{
+                        this.setState(state)
+                    }
+         
+
+                }else{
+                    // o update')
+                }
+                
+
+                
+
+            })
+            .catch(error => {
+
+            })
         })
+        return promise
+    }
 
-        
+    shouldUpdateTrackingData(){
+        setTimeout(function() {
+            // is.getTrackingData)
+            this.newpromise(false).then((state)=>{
+                this.getSearchResult(this.state.searchKey).then((searchResult)=>{
+
+                    this.setState({
+                        searchResult: searchResult,
+                        ...state,
+                        
+
+                    })
+                    console.log(ShouldUpdateSearchResult)
+                })
+            })
+            // console.log(this.state.searchableObjectData[0].status)
+        }.bind(this), 300);
+        // this.getSearchResult(this.state.searchKey).then((searchResult)=>{
+        //             this.setState({
+        //                 ...state,
+        //                 searchResult: searchResult,
+        //             })
+        //             ate)
+        //             is.state.searchResult)
+        //         })
     }
     /**  the search result, not found list and color panel from SearchContainer, GridButton to MainContainer 
      *  The three variable will then pass into SurveillanceContainer
@@ -232,17 +311,22 @@ class ContentContainer extends React.Component{
         this.handleClearButton('not switch')
     }
 
-    async getSearchResult(e){
-        var searchResult = [];
-        var SearchKey = e;
+    getSearchResult(e){
+        var promise = new Promise(function(resolve, reject) {
+            var searchResult = [];
+            var SearchKey = e;
 
-        var searchResult = await GetResultData(e, this.state.searchableObjectData)
+            var searchResult = GetResultData(e, this.state.searchableObjectData)
 
-        return searchResult
+            resolve(searchResult)
+        }.bind(this))
+
+        return promise
+        
     }
 
     async handleSearch(e){
-        console.log(e)
+        // 
         if(typeof e === 'string'){
             var searchResult = await this.getSearchResult(e)
             this.transferSearchResult(searchResult, null, e, true)
@@ -287,6 +371,13 @@ class ContentContainer extends React.Component{
             
 
         }
+        try{
+            console.log('rendering')
+            console.log(this.state.searchResult[0].status)
+        }catch{
+
+        }
+        
         return(
 
             /** "page-wrap" the default id named by react-burget-menu */

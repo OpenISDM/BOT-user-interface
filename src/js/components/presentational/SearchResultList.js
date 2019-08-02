@@ -2,7 +2,7 @@ import React from 'react';
 
 
 import { Alert, Tab, ListGroup, Col, Row } from 'react-bootstrap';
-
+// import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import LocaleContext from '../../context/LocaleContext';
 import ChangeStatusForm from '../container/ChangeStatusForm';
@@ -20,6 +20,7 @@ import '../../../css/hideScrollBar.css'
 import '../../../css/SearchResult.css'
 import config from '../../config';
 
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 
 class SearchResult extends React.Component {
@@ -54,6 +55,7 @@ class SearchResult extends React.Component {
             ShouldUpdateChangeStatusForm    : 0,
             ShouldUpdateConfirmForm         : 0,
 
+
         }
 
         // check whether props are properly logged in
@@ -72,10 +74,16 @@ class SearchResult extends React.Component {
 
 
         this.initializeSearchResultList = this.initializeSearchResultList.bind(this);
+
+
+        this.generateResultHTML = this.generateResultHTML.bind(this)
+        this.generateResultTableRowHTML = this.generateResultTableRowHTML.bind(this)
+
+        this.generateResultListRowHTML = this.generateResultListRowHTML.bind(this)
+        this.handleDisplayMode = this.handleDisplayMode.bind(this)
     }
     
     componentDidMount() {
-
         this.initializeSearchResultList()
         
     }
@@ -100,6 +108,29 @@ class SearchResult extends React.Component {
             this.setState(state)
         }
 
+    }
+
+    componentWillReceiveProps(nextProps){
+        setTimeout(function(){
+            try{
+                console.log(10101)
+                console.log(nextProps.searchResult[0].status)
+            }catch{}
+            
+            if(nextProps.ShouldUpdate !== this.state.ShouldUpdateForProps){
+                this.setState({
+                    ShouldUpdateForProps: nextProps.ShouldUpdate,
+                    searchResult: nextProps.searchResult
+                })
+            }
+            try{
+                console.log(nextProps.ShouldUpdate)
+            }catch{
+
+            }
+            }.bind(this),2000)
+        
+        
     }
 
     propsCheck(attribute){
@@ -201,11 +232,14 @@ class SearchResult extends React.Component {
             newLocation: newStatus.transferred_location,
             macAddresses: macAddresses
         }).then(res => {
-            setTimeout( function() {
+            
+
                 this.props.UpdateTrackingData()
                 this.handleConfirmForm('close', null)
-            }.bind(this), 500);
+                NotificationManager.success('Edit object success', 'Success', 2000)
+            
         }).catch( error => {
+            NotificationManager.error('Edit object Fail', 'Fail', 2000)
             console.log(error)
         })
     }
@@ -303,15 +337,208 @@ class SearchResult extends React.Component {
             ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm
         })   
     }
+
+    generateResultListRowHTML(item, index){
+
+        var {addDeviceSelection} = this
+        var {addTransferDevices} = this.state
+        var showImage = config.searchResult.showImage
+        const style = {
+            firstText: {
+                paddingLeft: 15,
+                paddingRight: 0,
+                float: 'left',
+            },
+            middleText: {
+                paddingLeft: 2,
+                paddingRight: 2,
+                float: 'left',
+                textAlign: 'center',
+            },
+            lastText: {
+                float: 'left',
+            },
+        }
+        let element = 
+
+            <Row key={index} className = "w-100" onClick={addDeviceSelection} name={index}>
+                
+                <>
+                    <div  name={index} className = "mx-3">{index + 1}.</div>
+                    <div  name={index}  className = "mx-3 text-left">
+                        <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            style={{textAlign: 'left'}}
+                            onChange={addDeviceSelection}
+                            checked = {item.checked}
+                            id={'check'+item.mac_address}
+                            name={index}
+                        />
+
+                        {addTransferDevices
+                            ?   
+                                <label className="custom-control-label text-left" name={index} htmlFor={'check'+item.mac_address}/>
+                            :
+                                null
+                        }
+
+                        {item.type}, is near at {item.location_description}, <br /> 
+
+                        ACN: xxxx-xxxx-{item.last_four_acn},status is {item.status}<br />
+
+                        near at {item.location_description}
+                        
+                    </div>
+
+
+                    {showImage
+                        ?
+                            <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+                        :
+                            null
+                    }
+                </>
+            </Row>
+
+        return element
+        
+    }
+    generateResultTableRowHTML(item, index){
+        var {addDeviceSelection} = this
+        var {addTransferDevices} = this.state
+        var showImage = config.searchResult.showImage
+        const style = {
+            firstText: {
+                paddingLeft: 15,
+                paddingRight: 0,
+                float: 'left',
+            },
+            middleText: {
+                paddingLeft: 2,
+                paddingRight: 2,
+                float: 'left',
+                textAlign: 'center',
+            },
+            lastText: {
+                float: 'left',
+            },
+        }
+        let element =
+            <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} >
+            <div className = "w-100" key={item.mac_address}>
+                <Col xl={2} lg={2} md={2} xs={2} className="float-left p-0"  onClick={this.addDeviceSelection} name={index}>{index + 1}</Col>
+                <Col xl={3} lg={3} md={3} xs={4} className="float-left p-0"  onClick={this.addDeviceSelection} name={index}>{item.type}</Col>
+                {addTransferDevices
+                    ?   
+                        <>
+                            <input
+                                type="checkbox"
+                                className="float-left p-0"
+                                onChange={addDeviceSelection}
+                                checked = {item.checked}
+                                id={'check'+item.mac_address}
+                                name={index}
+                            />
+                            <label name={index} htmlFor={'check'+item.mac_address} />
+                        </>
+                    :
+                        null 
+                }
+                <Col xl={4} lg={7} md={7} xs={6} onClick={addDeviceSelection} className="float-left p-0" name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
+                {showImage
+                    ?
+                        
+                            <img src={config.objectImage[item.type]} className="float-left p-0 objectImage" alt="image"/>
+
+                    :
+                        null
+                }
+            </div>
+            </ListGroup.Item>
+        return element
+    }
+    generateResultHTML(searchResult){
+        var {addTransferDevices} = this.state
+
+        var resultStyle = config.searchResult.style
+
+        if(searchResult === undefined){
+            console.error('search Result is undefined at generateResultTableHTML, ERROR!!!!')
+            return null
+        }
+        if(searchResult.length === 0){
+            return <h1 className="text-center m-3">no searchResult</h1>
+        }else{
+
+            return  <Row className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
+                {this.state.searchResult.map((item,index) => {
+                    if(resultStyle === 'table'){
+                        var html = this.generateResultTableRowHTML(item, index)
+                    }
+                    else if(resultStyle === 'list'){
+                        var html = this.generateResultListRowHTML(item, index)
+                    }
+                    
+                    return html
+                })}
+            </Row>
+
+        }
+    }
+
+    handleDisplayMode(){
+        var locale = this.context
+        var {foundResult, notFoundResult, searchResult} = this.state
+        var mode = config.searchResult.displayMode
+        var x;
+        if(mode === 'showAll'){
+
+            x = 
+                <>
+                    <h6 className=" text-left  text-primary w-100 bg-transparent"> {locale.DEVICE_FOUND(foundResult.length)}</h6>
+                    {
+                        this.generateResultHTML(foundResult)
+                    }
+                    <h6 className=" text-left  text-primary w-100 bg-transparent"> {locale.DEVICE_NOT_FOUND(notFoundResult.length)}</h6>
+                    {
+                        this.generateResultHTML(notFoundResult)
+                    }
+                </>
+
+        }else if(mode === 'switch'){
+            x = 
+                <>
+                    <h6 className=" text-left  text-primary w-100 bg-transparent"> {this.state.foundMode? locale.DEVICE_FOUND(searchResult.length) : locale.DEVICE_NOT_FOUND(searchResult.length)}</h6>
+                    
+                    {
+                        this.generateResultHTML(searchResult)
+                    }
+                </>
+        }else{
+            console.error(`the mode isn't recognized, please modify the config.js file {searchResult.displayMode} to {'switch', 'showAll'}`)
+            
+        }
+        return x 
+    }
+    
     render() {
+        console.log(this.props.ShouldUpdate)
         const locale = this.context;
         const { searchResult, searchKey} = this.props;
-        const Setting={
+        const defaultSetting={
+            
             maxHeight: '70vh',
             minHeight: '50vh',
             width: '25%',
             top: '10%',
             right: '5%',
+
+        }
+        var Setting = {
+
+            ...defaultSetting,
+            ...this.props.Setting,
         }
         const style = {
             SearchResult:{
@@ -342,27 +569,7 @@ class SearchResult extends React.Component {
                 color: 'grey',
                 fontSize: 30,
             },
-            firstText: {
-                paddingLeft: 15,
-                paddingRight: 0,
-                float: 'left',
-                // background: 'rgb(227, 222, 222)',
-                // height: 30,
-                // width: 30,
-            },
-            middleText: {
-
-                paddingLeft: 2,
-                paddingRight: 2,
-                float: 'left',
-                textAlign: 'center',
-
-            },
-            lastText: {
-                // textAlign: 'right'
-
-                float: 'left',
-            },
+            
             titleText: {
 
                 color: 'rgb(80, 80, 80, 0.9)', 
@@ -379,110 +586,37 @@ class SearchResult extends React.Component {
             }
 
         }
+
+// console.log(this.state.searchResult)
+console.log('render1231')
             // <div style = {style.searchResult} className='mx-0 bg-light' >
         return(
 
-            <div id="searchResult"className='m-2 p-0 shadow' style={style.SearchResult}>
-
+            <div id="searchResult"className='m-0 p-0 shadow' style={style.SearchResult}>
+                <NotificationContainer />
                 <div className="bg-transparent px-3">
                     
                         <h4 className="text-primary w-100 text-left bg-transparent">{locale.SEARCH_RESULT}</h4>
                     
                     
                         <h1 onClick={this.closeSearchResult} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
-
-                        <h6 className=" text-left  text-primary w-100 bg-transparent"> {this.state.foundMode? locale.DEVICE_NOT_FOUND(searchResult.length) : locale.DEVICE_FOUND(searchResult.length)}</h6>
+                        {config.searchResult.displayMode === 'switch'
+                            ?
+                                <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent" style={{maxHeight: '8vh'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
+                            :
+                                null
+                        }
+                        
                 
-                        <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent" style={{maxHeight: '8vh'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
+                        
                         
                 </div>
                 
                 
                 
-                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-2 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh'}} >
-                    
-                    
-
-                    {this.state.searchResult.length === 0
-                    ?   
-                            <h1 className="text-center m-3">no searchResult</h1>
-                        
-                    
-                    :   <div className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
-
-                            {this.state.searchResult.map((item,index) => {
-
-                                    let element = 
-                                        <Row key={index} className={"px-4 my-1 d-flex align-left"} onClick={this.addDeviceSelection} name={index}>
-                                            {this.state.addTransferDevices
-                                                ?   
-                                                    <>
-                                                        <div className="m-1" name={index}>{index + 1}</div>
-                                                        <div className="custom-control custom-checkbox m-2" name={index} style={{textAlign: 'left'}} >
-                                                            <input
-                                                                type="checkbox"
-                                                                className="custom-control-input"
-                                                                style={{textAlign: 'left'}}
-                                                                onChange={this.addDeviceSelection}
-                                                                checked = {item.checked}
-                                                                id={'check'+item.mac_address}
-                                                                name={index}
-                                                            />
-                                                            <label className="custom-control-label text-left" name={index} htmlFor={'check'+item.mac_address}>
-                                                                {item.type}, is near at {item.location_description}, <br /> 
-                                                                ACN: xxxx-xxxx-{item.last_four_acn},status is {item.status}
-                                                            </label>
-                                                        </div>
-                                                        <br/>
-                                                        {config.searchResult.showImage
-                                                            ?
-                                                                <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
-                                                            :
-                                                                null
-                                                        }
-                                                        
-                                                       
-                                                    </>
-                                                :
-                                                    <>
-                                                        <div className="m-1" name={index}>{index + 1}</div>
-                                                        <div className="custom-control custom-checkbox"  style={{textAlign: 'left'}} name={index}>
-                                                            <input
-                                                                type="checkbox"
-                                                                name={index}
-                                                                className="custom-control-input"
-                                                                style={{textAlign: 'left'}}
-                                                                onChange={this.addDeviceSelection}
-                                                                checked = {parseInt(this.state.selectedSingleChangeObjectIndex) === index}
-                                                                id={'check'+item.mac_address}
-                                                            />
-                                                            
-                                                                {item.type}, is near at {item.location_description}, <br /> 
-                                                                ACN: xxxx-xxxx-{item.last_four_acn},status is {item.status}
-                                                        </div>
-                                                        <br />
-                                                       
-
-                                                       {config.searchResult.showImage
-                                                            ?
-                                                                <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
-                                                            :
-                                                                null
-                                                        }
-                                                    </>
-
-
-                                            }
-                                                
-                                            
-
-                                        </Row>
-                                    return element
-                                })}
-                        
-                        </div>
-
-                        
+                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-2 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh'}} >      
+                    {
+                        this.handleDisplayMode()
                     }
                 </Row>
             
@@ -520,45 +654,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(SearchResult);
-// this.state.addTransferDevices 
-
-//                         ?
-//                             <ol className="m-0 p-0 justify-content-center" style={{width:'90%'}}>
-
-//                                 {this.state.foundResult.map((item,index) => {
-//                                         let element = 
-//                                             <Row key={index} className="px-5 d-flex justify-content-center align-middle">
-//                                                 <Col xl={1} className="px-0 my-4">
-//                                                    <input type="checkbox" checked={this.state.selectedObjectData[item.mac_address] !== undefined} className="form-check-input align-self-center d-flex" name={index + 1} onChange={this.addDeviceSelection}/>
-                                                    
-//                                                 </Col>
-//                                                 <Col xl={11} className="px-0 d-flex justify-content-center align-middle">
-//                                                     <li href={'#' + index} className='searchResultList h6 text-left' onClick={this.handleChangeObjectStatusFormShow}  name={index + 1}>
-//                                                         {item.type}, ACN: xxxx-xxxx-{item.last_four_acn}, is near at {item.location_description} &nbsp;&nbsp;
-//                                                         <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
-
-//                                                     </li>
-//                                                 </Col>
-//                                             </Row>
-//                                         return element
-//                                     })}
-//                             }
-//                             </ol>
-//                         :
-//                             <ol className="m-0 p-2 justify-content-center" style={{width:'90%'}}>
-//                                 {this.state.foundResult.map((item,index) => {
-//                                         let element = 
-//                                                 <li href={'#' + index} className='searchResultList h6 text-left' onClick={this.handleChangeObjectStatusFormShow} key={index} name={index + 1}>
-                                                    
-//                                                     {item.type}, ACN: xxxx-xxxx-{item.last_four_acn}, is near at {item.location_description} &nbsp;&nbsp;
-//                                                     <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
-
-//                                                 </li>
-                                            
-                                           
-//                                         return element
-//                                     })}
-//                             </ol>
-
                             
                         

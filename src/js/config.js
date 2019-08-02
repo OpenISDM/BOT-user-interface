@@ -150,7 +150,9 @@ const config = {
     },
 
     searchResult:{
-        showImage: true,
+        showImage: false,
+        style: 'list',
+        displayMode: 'switch',
     }
 
 

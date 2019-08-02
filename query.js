@@ -59,10 +59,6 @@ const getTrackingData = (request, response) => {
             delete item['geofence_violation_timestamp']
             delete item['first_seen_timestamp']
             delete item['last_seen_timestamp']
-
-
-            console.log(item)
-            
         }
         
 

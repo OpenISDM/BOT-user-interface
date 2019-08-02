@@ -8,7 +8,7 @@ import dataSrc from '../../dataSrc';
 
 import Cookies from 'js-cookie'
 
-import SearchResult from '../presentational/SearchResult'
+import SearchResult from '../presentational/SearchResultList'
 
 import GetResultData from '../../functions/GetResultData'
 
@@ -21,34 +21,23 @@ class ShiftChange extends React.Component {
         }
 
         this.handleClose = this.handleClose.bind(this)
-        this.getObjectData = this.getObjectData.bind(this)
-        this.getObjectData = this.getObjectData.bind(this)
+        this.getTrackingData = this.getTrackingData.bind(this)
     }
 
     componentDidMount() {
 
-        
-        this.getObjectData()
+        this.getTrackingData(true)
+
 
         
     }
 
     componentDidUpdate(preProps) {
         if (preProps != this.props){
-            this.getObjectData()
             this.setState({
                 show: this.props.show,
             })
         }
-    }
-
-    getObjectData(){
-        GetResultData('my devices', this.props.searchableObjectData).then(result=>{
-                this.setState({
-                    searchResult: result
-                })
-            }
-        ) 
     }
 
     handleClose() {
@@ -58,20 +47,40 @@ class ShiftChange extends React.Component {
         })
     }
 
+    getMyDevices(){
+
+    }
+
+    getTrackingData(update) {
+        var ShouldUpdate = false
+        axios.get(dataSrc.trackingData).then(res => {
+            var data = res.data
+            GetResultData('my devices', data).then(result=>{
+                this.setState({
+                    searchResult: result
+                })
+            }) 
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
 
     render() {
         const { show } = this.state;
         // const { handleSignupFormSubmit } = this.props;
-
+        // console.log(this.state.searchResult)
         return (
-            <Modal show={show} size="md" style={{height: '100vh'}} onShow = {this.getObjectData} onHide={this.handleClose}>
+            <Modal show={show} size="md" style={{height: '100vh'}} onShow = {this.getTrackingData(true)} onHide={this.handleClose}>
                 <Modal.Header > 
                     <h3 className="w-100 justify-content-center d-flex">Checked by {Cookies.get('user')}<br /></h3>
                 </Modal.Header>
-                <Modal.Body  style ={{padding: '0px 0px 0px 0px', marginBottom: '10px'}} >                       
+                <Modal.Body  style ={{padding: '0px 0px 0px 0px', marginBottom: '10px', height: '40vh'}} >                       
                     <SearchResult 
                         searchResult= {this.state.searchResult}
                         closeSearchResult = {this.handleClose}
+                        Show = "true"
+                        Setting = {{width:'100%', top: '0%', right: '0%', maxHeight: '100%', minHeight: '100%'}}
                     />
                 </Modal.Body>
                 <Modal.Footer style={{padding: '0px 0px 0px 0px',}}>
