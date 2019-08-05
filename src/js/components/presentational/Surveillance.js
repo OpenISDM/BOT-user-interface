@@ -53,23 +53,29 @@ class Surveillance extends React.Component {
     }
 
     componentDidMount(){
-        this.initMap();  
+        this.initMap();
     }
 
     componentDidUpdate(prepProps){
+        
         if(this.props.shouldTrackingDataUpdate || this.props.searchResult !== prepProps.searchResult) {
 
             /** Check whether there is the new tracking data retrieving from store */
             if (this.props.objectInfo !== prepProps.objectInfo) {
-                var objectInfo = this.props.objectInfo.slice(1,10)
+                var objectInfo = this.props.objectInfo
+                
+                // console.log(objectInfo)
                 var objects = {}
                 for(var i of objectInfo){
                     objects[i.mac_address] = i
                 }
+                
                 this.setState({
                     objectInfo: objects,
                 })
+
             }
+
 
             this.handleObjectMarkers();
             this.createLbeaconMarkers();
@@ -90,6 +96,7 @@ class Surveillance extends React.Component {
         let bounds = config.surveillanceMap.mapBound;
         let image = L.imageOverlay(config.surveillanceMap.map, bounds).addTo(map);
         map.fitBounds(bounds);
+        map.setView([4000, 10000], -5)
         this.map = map;
 
         /** Set the map's events */
@@ -120,7 +127,7 @@ class Surveillance extends React.Component {
         this.minZoom = this.map.getMinZoom();
         this.zoomDiff = this.currentZoom - this.minZoom;
         this.resizeFactor = Math.pow(2, (this.zoomDiff));
-        this.resizeConst = this.zoomDiff * 30;
+        this.resizeConst = this.zoomDiff * 15;
         this.scalableErrorCircleRadius = 200 * this.resizeFactor;
         this.scalableIconSize = config.surveillanceMap.iconOptions.iconSize + this.resizeConst
     }
@@ -129,9 +136,9 @@ class Surveillance extends React.Component {
      * Create the lbeacon and invisibleCircle markers
      */
     createLbeaconMarkers(){
-        /** 
-         * Creat the marker of all lbeacons onto the map 
-         */
+        // * 
+         // * Creat the marker of all lbeacons onto the map 
+         
         let lbeaconsPosition = this.state.lbeaconsPosition !== null ? Array.from(this.state.lbeaconsPosition) :[];
         lbeaconsPosition.map(items => {
             let lbLatLng = items.split(",")
@@ -142,9 +149,9 @@ class Surveillance extends React.Component {
             //     radius: 15,
             // }).addTo(this.map);
 
-        /** 
-         * Creat the invisible Circle marker of all lbeacons onto the map 
-         */
+        // * 
+         // * Creat the invisible Circle marker of all lbeacons onto the map 
+         
             let invisibleCircle = L.circleMarker(lbLatLng,{
                 color: 'rgba(0, 0, 0, 0',
                 fillColor: 'rgba(0, 76, 238, 0.995)',
@@ -203,12 +210,14 @@ class Surveillance extends React.Component {
      * Create the error circle of markers, and add into this.markersLayer.
      */
     handleObjectMarkers(){
+        console.log('handle')
         const { hasSearchKey, searchResult, searchType } = this.props;
         const objects = this.state.objectInfo;
 
 
         /** Process the search object data */
         var searchedObjectDataMap= new Map();
+        // console.log(searchResult)
         if (hasSearchKey) {
             searchResult.map( item => {
                 searchedObjectDataMap.set(item.mac_address, item)
@@ -240,7 +249,7 @@ class Surveillance extends React.Component {
 
         /** Icon options for pin */
         // const stationaryIconOptions = L.icon({
-        //     iconSize: iconSize,
+            // iconSize: iconSize,
         //     iconUrl: config.surveillanceMap.iconOptions.stationaryIconUrl,
         // });
 
@@ -250,22 +259,22 @@ class Surveillance extends React.Component {
         });
 
         // const sosIconOptions = L.icon({
-        //     iconSize: iconSize,
+            // iconSize: iconSize,
         //     iconUrl: config.surveillanceMap.iconOptions.sosIconUrl,
         // });
 		
-		//  const geofenceFIconOptions = L.icon({
-        //     iconSize: iconSize,
+		 // const geofenceFIconOptions = L.icon({
+            // iconSize: iconSize,
         //     iconUrl: config.surveillanceMap.iconOptions.geofenceIconFence,
         // });
 		
 		// const geofencePIconOptions = L.icon({
-        //     iconSize: iconSize,
+            // iconSize: iconSize,
         //     iconUrl: config.surveillanceMap.iconOptions.geofenceIconPerimeter,
         // });
 
         // const searchedObjectIconOptions = L.icon({
-        //     iconSize: iconSize,
+            // iconSize: iconSize,
         //     iconUrl: config.surveillanceMap.iconOptions.searchedObjectIconUrl
         // });
         
@@ -318,8 +327,9 @@ class Surveillance extends React.Component {
 
             /** Tag the searched object with searched and pinColor*/
             // console.log(searchedObjectDataMap)
-
+            // console.log(searchedObjectDataMap)
             if(searchedObjectDataMap.has(key)) {
+
                 objects[key] = searchedObjectDataMap.get(key)
                 objects[key].searched = true;
             } else {
@@ -344,7 +354,12 @@ class Surveillance extends React.Component {
              * then the color will be black, or grey.
              */
             let iconOption = {}
-            if (objects[key].status === 'Broken' || objects[key].status === 'Transferred') {
+
+            if (objects[key].panic_button === 1) {
+                console.log('paniccccc')
+                iconOption = sosIconOptions;
+            } 
+            else if (objects[key].status === 'Broken' || objects[key].status === 'Transferred') {
                 // console.log('broken')
                 iconOption = unNormalIconOptions;
             } else if (objects[key].geofence_type === 'Fence'){
@@ -361,12 +376,10 @@ class Surveillance extends React.Component {
                 
 			} 
 
-            else if (objects[key].panic_button === 1) {
-                iconOption = sosIconOptions;
-            } 
+            
             // else if (objects[key].searched && this.props.colorPanel) {
             //     iconOption = {
-            //         iconSize: iconSize,
+                    // iconSize: iconSize,
             //         markerColor: objects[key].pinColor,
             //     }
             // } 
@@ -428,7 +441,7 @@ class Surveillance extends React.Component {
 
         const currentPosition =  e.target.options.icon.options.currentPosition
         let objectList = this.collectObjectsByLatLng(currentPosition)
-        console.log(objectList)
+        // console.log(objectList)
         this.props.handleSearch(objectList)
     }
 
@@ -458,7 +471,7 @@ class Surveillance extends React.Component {
         /** Example of lbeacon_uuid: 01:1f:2d:13:5e:33 
          *                           0123456789       16
          */
- 
+        
         // const xx = mac_address.slice(15,16);
         // const yy = mac_address.slice(16,17);
         // const xSign = parseInt(mac_address.slice(9,10), 16) % 2 == 1 ? 1 : -1 ;

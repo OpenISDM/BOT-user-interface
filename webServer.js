@@ -95,10 +95,10 @@ app.post('/data/QRCode',db.QRCode)
 const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
 
-httpServer.listen(httpPort, () =>{
-    console.log(`HTTP Server running on port ${httpPort}`)
-})
-// httpsServer.listen(httpsPort, () => {
-//     console.log(`HTTPS Server running on PORT ${httpsPort}`)
+// httpServer.listen(httpPort, () =>{
+//     console.log(`HTTP Server running on port ${httpPort}`)
 // })
+httpsServer.listen(httpsPort, () => {
+    console.log(`HTTPS Server running on PORT ${httpsPort}`)
+})
 

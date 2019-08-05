@@ -211,7 +211,7 @@ class ChangeStatusForm extends React.Component {
                                 validate={values => {
                                     let errors = {};
 
-                                    if (!values.Normal && !values.Broken &&!values.Reserve&&!values.Transferred) {
+                                    if (values.status === '') {
                                         errors.NoSelect = 'You should at least select one status';
                                     } 
                                     if(values.status === 'Transferred' && values.select === 'Unchoose' && values.submit){
@@ -327,7 +327,7 @@ class ChangeStatusForm extends React.Component {
                                         <label className="custom-control-label" htmlFor="checkTransferred">Transferred</label>
 
                                         <select className="custom-select my-3" disabled={values.status !== 'Transferred'} id="inlineFormCustomSelect" name="select" onChange={(e)=> {values.select = e.target.value;}}>
-                                            <option value="Unchoose">Choose...</option>
+                                            <option value="Unchoose">Select transferred location</option>
                                             {
                                                 config.transferredLocation.map((location, index)=>{
                                                     var html =  <option value={location} key={index}>

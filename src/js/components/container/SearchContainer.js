@@ -84,28 +84,31 @@ class SearchContainer extends React.Component {
         }
         
         return (
-            <Row >
-                <Row className='col-12 mx-3 d-flex justify-content-center ' >
-                        <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'  >
-                            <Searchbar 
-                                placeholder={SearchKey}
-                                getResultData={getSearchResult} 
-                            />
-                        </div>
-                </Row>
-                <div id="searchList"  className="col-md-12 col-sm-12 px-0" style={style.SearchList}>
+            <Col id="seachSection"  className="w-100" style={{ position: 'relative'}}>
+            {console.log(this.props.floatUp)}
+                <div className="bg-white w-100 m-1"style={{zIndex: this.props.floatUp? 1070 : 1, position: 'absolute', height: '80vh', borderRadius: '3%', right: '1%'}}>
+                    <Row className='col-12 mx-3 d-flex justify-content-center ' >
+                            <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'  >
+                                <Searchbar 
+                                    placeholder={SearchKey}
+                                    getResultData={getSearchResult} 
+                                />
+                            </div>
+                    </Row>
                     <FrequentSearch 
                         getResultData={getSearchResult}
                         ShouldUpdate = {ShouldUpdateFrequentSearch}
                     />
-                    <SearchableObjectType
-                        Show = {IsShowSearchableObjectTypeList}
-                        objectTypeList = {objectTypeList}
-                        getResultData = {getSearchResult}
-                        ShouldUpdate = {ShouldUpdateSearchableObjectType}
-                    />
                 </div>
-            </Row>
+                <SearchableObjectType
+                    floatUp = {this.props.floatUp}
+                    Show = {IsShowSearchableObjectTypeList}
+                    objectTypeList = {objectTypeList}
+                    getResultData = {getSearchResult}
+                    ShouldUpdate = {ShouldUpdateSearchableObjectType}
+                />
+
+            </Col>
         )  
     }
 }

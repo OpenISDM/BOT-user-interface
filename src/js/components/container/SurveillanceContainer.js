@@ -24,7 +24,7 @@ import dataSrc from '../../dataSrc';
 import { connect } from 'react-redux'
 import { 
     shouldUpdateTrackingData,
-    changeLocationAccuracy
+
 } from '../../action/action'
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import GridButton from '../container/GridButton';
@@ -55,8 +55,8 @@ class SurveillanceContainer extends React.Component {
 
         this.adjustRssi = this.adjustRssi.bind(this);
         this.handleMarkerClick = this.handleMarkerClick.bind(this);
-        this.handleChangeObjectStatusFormClose = this.handleChangeObjectStatusFormClose.bind(this);
-        this.handleChangeObjectStatusFormSubmit = this.handleChangeObjectStatusFormSubmit.bind(this);
+        // this.handleChangeObjectStatusFormClose = this.handleChangeObjectStatusFormClose.bind(this);
+        // this.handleChangeObjectStatusFormSubmit = this.handleChangeObjectStatusFormSubmit.bind(this);
         // this.handleConfirmFormSubmit = this.handleConfirmFormSubmit.bind(this);
         this.handleClickButton = this.handleClickButton.bind(this)
         this.transferSearchableObjectData = this.transferSearchableObjectData.bind(this)
@@ -96,71 +96,9 @@ class SurveillanceContainer extends React.Component {
         this.props.shouldUpdateTrackingData(false)
     }
 
-    handleChangeObjectStatusFormClose() {
-        this.setState({
-            showEditObjectForm: false,
-            showConfirmForm: false,
-        })
-        this.props.shouldUpdateTrackingData(true);
-    }
+    
 
-    handleChangeObjectStatusFormSubmit(postOption) {
-        this.setState({
-            formOption: postOption,
-            selectedObjectData: {
-                ...this.state.selectedObjectData,
-                ...postOption,
-            },
-            showEditObjectForm: false,
-        })
-        setTimeout(
-            function() {
-                this.setState({
-                    showConfirmForm: true,
-                })
-                this.props.shouldUpdateTrackingData(false)
-            }.bind(this),
-            500
-        )
-    }
-
-    // handleConfirmFormSubmit(e, addedDevices) {
-    //     const button = e.target
-    //     const postOption = this.state.formOption;
-    //     const { status, transferredLocation } = postOption
-
-    //     let editObjectPackages = []
-    //     editObjectPackages.push(postOption)
-
-    //     editObjectPackages.push(postOption)
-    //     if (addedDevices) {
-    //         addedDevices.map( item => {
-    //             item.status = status
-    //             delete item.transferred_location
-    //             item.transferredLocation = transferredLocation
-    //             editObjectPackages.push(item)
-    //         })
-    //     }
-        
-    //     axios.post(dataSrc.editObjectPackage, {
-    //         formOption: editObjectPackages
-    //     }).then(res => {
-    //         button.style.opacity = 0.4
-    //         setTimeout(
-    //             function() {
-    //                 this.setState ({
-    //                     showConfirmForm: false,
-    //                     formOption: [],
-    //                 }) 
-    //                 this.props.shouldUpdateTrackingData(true)
-    //             }
-    //             .bind(this),
-    //             1000
-    //         )
-    //     }).catch( error => {
-    //         console.log(error)
-    //     })
-    // }
+   
 
     handleClickButton(e) {
         const button = e.target;
@@ -306,7 +244,7 @@ SurveillanceContainer.contextType = LocaleContext;
 const mapDispatchToProps = (dispatch) => {
     return {
         shouldUpdateTrackingData: value => dispatch(shouldUpdateTrackingData(value)),
-        changeLocationAccuracy: value => dispatch(changeLocationAccuracy(value))
+
     }
 }
 

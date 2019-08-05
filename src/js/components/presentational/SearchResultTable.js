@@ -30,7 +30,7 @@ export default class SearchResultTable extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log('hi')
+
     }
     
     generateResultListRowHTML(item, index){
@@ -59,21 +59,24 @@ export default class SearchResultTable extends React.Component {
             <Row key={index} className = "w-100" onClick={addDeviceSelection} name={index}>
                 
                 
-                    <div  name={index} className = "mx-3">{index + 1}.</div>
-                    <div  name={index}  className = "mx-3 text-left">
+                    <div  name={index} style={{cursor: 'grab'}} className = "mx-3">{index + 1}.</div>
+                    <div  name={index} style={{cursor: 'grab'}} className = "mx-3 text-left">
                         <input
                             type="checkbox"
                             className="custom-control-input"
-                            style={{textAlign: 'left'}}
+                            style={{textAlign: 'left', cursor: 'grab'}}
+
                             onChange={addDeviceSelection}
-                            checked = {item.checked}
+                            checked = {item.mac_address in this.props.selectedItem ? true: false
+                                
+                            }
                             id={'check'+item.mac_address}
                             name={index}
                         />
 
                         {addTransferDevices
                             ?   
-                                <label className="custom-control-label text-left" name={index} htmlFor={'check'+item.mac_address}/>
+                                <label className="custom-control-label text-left" style={{cursor: 'grab'}} name={index} htmlFor={'check'+item.mac_address}/>
                             :
                                 null
                         }
@@ -89,7 +92,7 @@ export default class SearchResultTable extends React.Component {
 
                     {showImage
                         ?
-                            <img src={config.objectImage[item.type]} className="objectImage" alt="image"/>
+                            <img src={config.objectImage[item.type]} style={{cursor: 'grab'}} className="objectImage" alt="image"/>
                         :
                             null
                     }
@@ -122,8 +125,8 @@ export default class SearchResultTable extends React.Component {
         let element =
             <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} >
             <div className = "w-100" key={item.mac_address}>
-                <Col xl={2} lg={2} md={2} xs={2} className="float-left p-0"  onClick={addDeviceSelection} name={index}>{index + 1}</Col>
-                <Col xl={3} lg={3} md={3} xs={4} className="float-left p-0"  onClick={addDeviceSelection} name={index}>{item.type}</Col>
+                <Col xl={2} lg={2} md={2} xs={2} className="float-left p-0"  onClick={addDeviceSelection} style={{cursor: 'grab'}} name={index}>{index + 1}</Col>
+                <Col xl={3} lg={3} md={3} xs={4} className="float-left p-0"  onClick={addDeviceSelection} style={{cursor: 'grab'}} sname={index}>{item.type}</Col>
                 {addTransferDevices
                     ?   
                         <Fragment>
@@ -131,20 +134,21 @@ export default class SearchResultTable extends React.Component {
                                 type="checkbox"
                                 className="float-left p-0"
                                 onChange={addDeviceSelection}
-                                checked = {item.checked}
+                                checked = {item.mac_address in this.props.selectedItem ? true: false }
                                 id={'check'+item.mac_address}
                                 name={index}
+                                style={{cursor: 'grab'}}
                             />
                             <label name={index} htmlFor={'check'+item.mac_address} />
                         </Fragment>
                     :
                         null 
                 }
-                <Col xl={4} lg={7} md={7} xs={6} onClick={addDeviceSelection} className="float-left p-0" name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
+                <Col xl={4} lg={7} md={7} xs={6} onClick={addDeviceSelection} className="float-left p-0" style={{cursor: 'grab'}} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
                 {showImage
                     ?
                         
-                            <img src={config.objectImage[item.type]} className="float-left p-0 objectImage" alt="image"/>
+                            <img src={config.objectImage[item.type]} className="float-left p-0 objectImage" alt="image" style={{cursor: 'grab'}}/>
 
                     :
                         null

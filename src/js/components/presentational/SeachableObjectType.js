@@ -47,7 +47,7 @@ class SearchableObjectType extends React.Component {
     
 
     componentDidUpdate(prepProps, prevState){
-        // console.log(this.props.ShouldUpdate)
+
         if(this.props.ShouldUpdate !== prepProps.ShouldUpdate){
             this.setState({
                 sectionTitleData: this.props.objectTypeList
@@ -61,7 +61,7 @@ class SearchableObjectType extends React.Component {
         })
     }
     mouseClick(e){
-        console.log('hi')
+       
         location.href = '#' + e.target.name
         this.props.getResultData(e.target.innerHTML)
         this.setState({
@@ -69,6 +69,7 @@ class SearchableObjectType extends React.Component {
         })
     }
     mouseLeave(){
+        console.log('leave')
         this.setState({
             IsShowSection: false
         })
@@ -89,7 +90,7 @@ class SearchableObjectType extends React.Component {
                     className='py-0'
                     name={sectionIndexList[i]}
                     onMouseOver={this.handleHoverEvent} 
-                    style = {{fontSize: '0.75rem'}}
+                    style = {{fontSize: '1rem'}}
                 >
                     {(index%2)?sectionIndexList[i]:'.'}
                 </Nav.Link>
@@ -114,7 +115,7 @@ class SearchableObjectType extends React.Component {
                 for (let i of sectionTitleData[titleData]){
 
                     Data.push(
-                        <div key={i} className="my-0 py-0 w-100 text-right" onClick={this.mouseClick} >
+                        <div key={i} className="my-0 py-0 w-100 text-right" style={{cursor: 'grab'}}onClick={this.mouseClick} >
                                 <h4 className="m-0">{i}</h4>
                         </div>
                     )
@@ -132,25 +133,32 @@ class SearchableObjectType extends React.Component {
 
         } ,
         SectionListBackgroundColor:{
-            backgroundColor:'rgba(200, 255, 255, 0.9)',
+
+            backgroundColor:'rgba(240, 240, 240, 0.95)',
         },
         SectionList: {
+            borderRadius: '3%',
             overflowY: 'scroll', 
-            minHight : '60vh', 
-            maxHeight: '60vh',
-            padding: '2%'
+
+            height: '60vh',
+
+            width: '20vw',
+            zIndex: (this.state.IsShowSection) ? 1500: 0
 
         },
         SearchableObjectType:{
-            zIndex: (this.state.IsShowSection)?1060:0,
+            position: 'absolute',
+            top: '10vh',
+            right: '1%'
+            
         }
 
         }
         return(
-            <Col md={12} sm={12} xs={12}
+            <Col md={6} sm={12} xs={12}
                 id='searchableObjectType' 
                 onMouseLeave={this.mouseLeave} 
-                className="hideScrollBar mx-0 px-0 float-right" 
+                className="hideScrollBar mx-4 px-0 float-right" 
                 style = {{
                     ...Setting.SearchableObjectType,
 
@@ -159,7 +167,7 @@ class SearchableObjectType extends React.Component {
                 {
                     // this section shows the layout of sectionIndexList (Alphabet List)
                 }
-                <Col  md={4} id = "SectionIndex"  className = "float-right" style = {Setting.SectionIndex.backgroundColor}>
+                <Col  md={4} id = "SectionIndex"  className = "float-right" style = {{zIndex: (this.props.floatUp)?1070:1}}>
                     {
                         this.sectionIndexHTML()
                     }  
@@ -171,10 +179,11 @@ class SearchableObjectType extends React.Component {
                 }
                 <div  
                     id = "SectionList" 
-                    className="hideScrollBar shadow border border-primary" 
+                    className="hideScrollBar shadow border border-primary float-right mx-0 px-3 py-2 border-secondary" 
                     style={{
                         ...Setting.SectionListBackgroundColor,
                         ...Setting.SectionList,
+
                     }}
                 >
                     {

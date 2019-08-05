@@ -116,7 +116,7 @@ class FrequentSearch extends React.Component {
                     }).map( (item, index) => {
                         
                         return (
-                            <div key={index} className="col col-6 " style={{float:'right'}}  >
+                            <div key={index} className="col col-6 " style={{float:'right', cursor: 'grab'}}  >
                                 
                                 <Row className="w-100">
                                 {config.frequentSearch.showImage 
@@ -144,6 +144,7 @@ class FrequentSearch extends React.Component {
                         <div className="btn-group btn-group-justified row w-100 d-flex justify-content-center mx-2 mt-4">
                         {Cookies.get('user') && 
                             <a
+                                style={{cursor: 'grab'}}
                                 className="FrequentSearchButton w-100 m-3 h2 "
                                 onClick={this.handleClick} 
                                 name={locale.MY_DEVICE}
@@ -153,6 +154,7 @@ class FrequentSearch extends React.Component {
                             
                         }
                             <a
+                                style={{cursor: 'grab'}}
                                 className="FrequentSearchButton w-100 m-3 h2 "
                                 onClick={this.handleClick} 
                                 name={locale.ALL_DEVICE}

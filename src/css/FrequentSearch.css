@@ -88,12 +88,12 @@
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
     .FrequentSearchButton{
-        font-size: 18px;
+        font-size: 22px;
     }
    
     .FrequentSearchobjectImage{
-        width:80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
     }
     .FrequentSearchTitle{
         font-size: 32px;

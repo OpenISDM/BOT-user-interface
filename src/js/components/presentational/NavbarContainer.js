@@ -122,6 +122,7 @@ class NavbarContainer extends React.Component {
                 boxShadow: "0 1px 6px 0 rgba(32,33,36,0.28)",
                 fontWeight: '450',
 
+
             },
             navbarBrand: {
                 color: 'black'
@@ -157,13 +158,13 @@ class NavbarContainer extends React.Component {
                         }
                     </Nav>
                     <Nav>
-                        <NavDropdown className='text-capitalize' title={locale.language} id="collasible-nav-dropdown" alignRight onSelect={this.handleLangSelect}>
+                        <NavDropdown className='text-capitalize' title={locale.language} id="collasible-nav-dropdown" alignRight onSelect={this.handleLangSelect} style={{zIndex: 1070}}>
                             {Object.values(supportedLocale).map( (locale,index) => {
                                 return <NavDropdown.Item key={index} className="lang-select" eventKey={locale.abbr}>{locale.name}</NavDropdown.Item>
                             })}
                         </NavDropdown>          
                         {Cookies.get('user')
-                            ? <NavDropdown title={<i className="fas fa-user-alt"></i> }id="collasible-nav-dropdown" alignRight>
+                            ? <NavDropdown title={<i className="fas fa-user-alt"></i> }id="collasible-nav-dropdown" alignRight >
                                 <NavDropdown.Item className="lang-select" disabled>{Cookies.get('user')}</NavDropdown.Item>
                                 <Dropdown.Divider />
                                 <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>{locale.SHIFT_CHANGE_RECORD}</NavDropdown.Item>

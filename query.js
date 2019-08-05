@@ -39,13 +39,22 @@ const getTrackingData = (request, response) => {
     pool.query(queryType.query_getTrackingData(), (error, results) => {        
         var data = results.rows
         var processedData = {}
+        // console.log(data)
         for(var i in data){
             let item = data[i]
-            let notFoundTime = GetTimeStampDifference(moment().format('x'), moment(item.last_seen_timestamp).format('x'))
+            let now = moment().format('x')
+            let notFoundTime = GetTimeStampDifference(now , moment(item.last_seen_timestamp).format('x'))
             if(notFoundTime > 30 * 1000){
                 item['found'] = 0
             }else{
                 item['found'] = 1
+            }
+
+            let panicTime = GetTimeStampDifference(now, moment(item.panic_timestamp).format('x'))
+            if(panicTime < 300000){
+                item['panic_button'] = 1
+            }else{
+                item['panic_button'] = 0
             }
 
             let stillUnderGeofenceViolation = GetTimeStampDifference(moment(item.geofence_violation_timestamp).format('x'), moment(item.first_seen_timestamp).format('x'))
@@ -59,13 +68,14 @@ const getTrackingData = (request, response) => {
             delete item['geofence_violation_timestamp']
             delete item['first_seen_timestamp']
             delete item['last_seen_timestamp']
+            delete item['panic_timestamp']
         }
         
 
         if (error) {
             console.log("Get trackingData fails : " + error)
         } else {
-            console.log('Get tracking data!')
+            // console.log('Get tracking data!')
         }
         response.status(200).json(data)
     })
@@ -242,7 +252,7 @@ const userInfo = (request, response) => {
         if (error) {
             console.log('Get user info Fails!')
         } else {
-            console.log('Get user info success')
+            // console.log('Get user info success')
         }
         response.status(200).json(results)
     })

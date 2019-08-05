@@ -1,27 +1,30 @@
-const IP = '140.109.22.249:3000';//'bot.iis.sinica.edu.tw'
+const IP = 'https://140.109.22.249';//'bot.iis.sinica.edu.tw'
 
-const trackingData = 'http://' + IP + '/data/trackingData';
-const objectTable = 'http://' + IP + '/data/objectTable';
-const lbeaconTable = 'http://' + IP + '/data/lbeaconTable';
-const gatewayTable = 'http://' + IP + '/data/gatewayTable';
-const searchResult = 'http://' + IP + '/data/searchResult';
-const geofenceData = 'http://' + IP + '/data/geofenceData';
+const trackingData = IP + '/data/trackingData';
+const objectTable = IP + '/data/objectTable';
+const lbeaconTable = IP + '/data/lbeaconTable';
+const gatewayTable = IP + '/data/gatewayTable';
+const searchResult = IP + '/data/searchResult';
+const geofenceData = IP + '/data/geofenceData';
 
-const editObject = 'http://' + IP + '/data/editObject';
-const addObject = 'http://' + IP + '/data/addObject';
+const editObject = IP + '/data/editObject';
+const addObject = IP + '/data/addObject';
 
-const editObjectPackage = 'http://' + IP +'/data/editObjectPackage';
-const signin = 'http://' + IP + '/user/signin';
-const signup = 'http://' + IP + '/user/signup';
-const userInfo = 'http://' + IP + '/user/info';
-const userSearchHistory = 'http://' + IP + '/user/searchHistory'
-const addUserSearchHistory = 'http://' + IP + '/user/addUserSearchHistory'
-const editLbeacon = 'http://' + IP + '/data/editLbeacon'
-
+const editObjectPackage = IP +'/data/editObjectPackage';
+const signin = IP + '/user/signin';
+const signup = IP + '/user/signup';
+const userInfo = IP + '/user/info';
+const userSearchHistory = IP + '/user/searchHistory'
+const addUserSearchHistory = IP + '/user/addUserSearchHistory'
+const editLbeacon = IP + '/data/editLbeacon'
 
 const pdfUrl = function(path){
-    return 'http:' + IP + path
+    return IP + '/' + path
 }
+
+const QRCode = IP + '/data/QRCOde'
+
+
 
 module.exports = {
     trackingData,
@@ -39,5 +42,6 @@ module.exports = {
     userSearchHistory,
     addUserSearchHistory,
     editLbeacon,
-    pdfUrl
+    pdfUrl,
+    QRCode
 };

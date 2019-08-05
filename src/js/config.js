@@ -1,4 +1,4 @@
-import map from '../img/IIS_Newbuilding_4F_reBack.png';
+import map from '../img/chunghua_christian_hospital.png';
 
 import black_pin from '../img/black_pin_v2.svg'
 import darkGrey_pin from '../img/darkGrey_pin_v2.svg';
@@ -34,7 +34,8 @@ const config = {
         /* Map customization */
         mapOptions: {
             crs: L.CRS.Simple,
-            minZoom: -5,
+
+            minZoom: -8,
             maxZoom: 0,
             zoomDelta: 0.25,
             zoomSnap: 0,
@@ -42,11 +43,12 @@ const config = {
             attributionControl: false,
             dragging: true,
             doubleClickZoom: false,
-            scrollWheelZoom: false
+            scrollWheelZoom: false,
+
         },
 
         iconOptions: {
-            iconSize: 50,
+            iconSize: 10,
             stationaryIconUrl: black_pin,
             movinfIconUrl: darkGrey_pin,
             sosIconUrl: sos,
@@ -76,7 +78,7 @@ const config = {
         intevalTime: 1000,
 
         /* Bound of surveillance map*/
-        mapBound:[[0,0], [21130,35710]],
+        mapBound:[[-6000, -8000], [13350,25600]],
         
         /* Tracking object Rssi filter */
         locationAccuracyMapToDefault: {
@@ -92,18 +94,16 @@ const config = {
         },
 
         /* Marker dispersity, can be any positive number */
-        markerDispersity: 8,
+        markerDispersity: 5,
 
         objectTypeSet: new Set(['Bed', 'EKG Machine', 'Infusion pump', 'SONOSITE Ultrasound', 'Ultrasound', 'Bladder scanner', 'CPM'])
         
     },
 
     transferredLocation: [
-        "Yunlin Christian Hospital",
+        "Yuanlin Christian Hospital",
         "NTU Hospital Yunlin",
         "NTU Hospital Taipei",
-        "1",
-        "2"
     ],
     
     locale: {
@@ -152,7 +152,7 @@ const config = {
     searchResult:{
         showImage: false,
         style: 'list',
-        displayMode: 'switch',
+        displayMode: 'showAll',
     }
 
 

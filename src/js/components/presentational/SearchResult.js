@@ -57,6 +57,9 @@ class SearchResult extends React.Component {
             ShouldUpdateChangeStatusForm    : 0,
             ShouldUpdateConfirmForm         : 0,
 
+            selectedItem: [],
+
+
 
         }
 
@@ -77,13 +80,14 @@ class SearchResult extends React.Component {
 
         this.initializeSearchResultList = this.initializeSearchResultList.bind(this);
 
+        this.onClickTableItem = this.onClickTableItem.bind(this)
+
 
        
     }
     
     componentDidMount() {
-        this.initializeSearchResultList()
-        
+        setTimeout(this.initializeSearchResultList,1000)
     }
     componentDidUpdate(prepProps, prevState) {
         var state = {}
@@ -92,41 +96,45 @@ class SearchResult extends React.Component {
 
         if(this.propsCheck('ShouldUpdate') !== this.state.ShouldUpdateForProps){
             this.initializeSearchResultList()
-            update = true
-            state = {
-                ...state,
-                ShouldUpdateForProps: this.props.ShouldUpdate
-            }
+            this.setState({
+                ShouldUpdateForProps: this.propsCheck('ShouldUpdate')
+            })
+                
 
-            if(!this.state.addTransferDevices){
-                this.initializeSearchResultList()
-            }
+            
         }
         if(update){
             this.setState(state)
         }
 
     }
+    shouldComponentUpdate(nextProps, nextState){
+        if(nextProps.ShouldUpdate !== this.state.ShouldUpdateForProps){
 
-    componentWillReceiveProps(nextProps){
-        setTimeout(function(){
+           return true
+        }else{return true}
+    }
+    
+    // componentWillReceiveProps(nextProps){
+    //     setTimeout(function(){
          
             
-            if(nextProps.ShouldUpdate !== this.state.ShouldUpdateForProps){
-                this.setState({
-                    ShouldUpdateForProps: nextProps.ShouldUpdate,
-                    searchResult: nextProps.searchResult
-                })
-            }
-            try{
+    //         if(nextProps.ShouldUpdate !== this.state.ShouldUpdateForProps){
 
-            }catch{
+    //             this.setState({
+    //                 ShouldUpdateForProps: nextProps.ShouldUpdate,
+    //                 searchResult: nextProps.searchResult
+    //             })
+    //         }
+    //         try{
 
-            }
-            }.bind(this),2000)
+    //         }catch{
+
+    //         }
+    //         }.bind(this),2000)
         
         
-    }
+    // }
 
     propsCheck(attribute){
 
@@ -146,6 +154,7 @@ class SearchResult extends React.Component {
         var foundResult = []
         var notFoundResult = []
         var wholeSearchResultMap = []
+        var searchResultMap = {}
 
 
         for(var searchresult in searchResults){
@@ -153,7 +162,7 @@ class SearchResult extends React.Component {
             let result = searchResults[searchresult];
             
             result.checked = false;
-
+            searchResultMap[result.mac_address] = result
             searchResult.push(result);
 
             if(result.found){
@@ -164,6 +173,7 @@ class SearchResult extends React.Component {
         }
         // console.log(foundResult)
         this.setState({
+            searchResultMap: searchResultMap,
             wholeSearchResult: searchResult,
             foundResult: foundResult,
             notFoundResult: notFoundResult,
@@ -199,24 +209,22 @@ class SearchResult extends React.Component {
           
         }else if(command === 'close'){
             this.handleConfirmForm('close', null)
+            this.props.handleSearchContainerFloatUp(false)
             this.setState({
                 showEditObjectForm: false,
                 addTransferDevices: false,
-                selectedObjectData: {},
             })
             // this.props.shouldUpdateTrackingData(true)
         }else if(command === 'show'){
             this.initializeSearchResultList()
+            this.props.handleSearchContainerFloatUp(true)
             this.setState({
                 showEditObjectForm: true,
             })
         }else if(command === 'AddTransferDevices'){
             var state = Option
-            this.state.searchResult[this.state.selectedSingleChangeObjectIndex].checked = true
             this.setState({
                 addTransferDevices: state,
-                changeState: this.state.changeState + 1
-
             })
         }
     }
@@ -232,11 +240,12 @@ class SearchResult extends React.Component {
 
                 this.props.UpdateTrackingData()
                 this.handleConfirmForm('close', null)
-                NotificationManager.success('Edit object success', 'Success', 2000)
+                NotificationManager.success('Edit object success', 'Success')
             
         }).catch( error => {
-            NotificationManager.error('Edit object Fail', 'Fail', 2000)
             console.log(error)
+            NotificationManager.error('Edit object Fail', 'Fail', 2000)
+
         })
     }
 
@@ -246,12 +255,12 @@ class SearchResult extends React.Component {
             
             if(Option === true){
 
-                const {selectedObjectData, newStatus} = this.state;
+                const {selectedItem, newStatus} = this.state;
 
                 var macAddresses = [];
                 // push the mac address to a list and finally send this to backend
-                for(var i in selectedObjectData){
-                    macAddresses.push(selectedObjectData[i].mac_address)
+                for(var i in selectedItem){
+                    macAddresses.push(selectedItem[i].mac_address)
                 }
                 // submit to backend
                 this.handleSubmitToBackend(newStatus, macAddresses)
@@ -260,11 +269,11 @@ class SearchResult extends React.Component {
             }
             
         }else if(command === 'close'){
+            this.props.handleSearchContainerFloatUp(true)
             this.setState({
                 showEditObjectForm: false,
                 showConfirmForm: false,
                 addTransferDevices: false,
-                selectedObjectData: {},
                 changeState: this.state.changeState + 1
             })
         }else if(command === 'show'){
@@ -282,7 +291,7 @@ class SearchResult extends React.Component {
     
 
     handleToggleNotFound(e) {
-        console.log('hihi')
+
         e.preventDefault()
         this.setState({
             searchResult: ! this.state.foundMode ? this.state.foundResult : this.state.notFoundResult,
@@ -290,14 +299,25 @@ class SearchResult extends React.Component {
         })
         
     }
+    onClickTableItem(e){
+        var index = e.target.getAttribute('name')
+        var item = this.state.searchResult[index]
+        if(this.state.addTransferDevices){          
+            if(item.mac_address in this.state.selectedItem){
+                delete this.state.selectedItem[item.mac_address]
+            }else{
+                this.state.selectedItem[item.mac_address] = item
+            }
+        }else{
+            this.state.selectedItem = []
+            this.state.selectedItem[item.mac_address] = item
+        }
+        this.handleChangeObjectStatusForm('show',this.state.selectedItem)
+
+    }
     closeSearchResult(){
         var closeSearchResult = this.propsCheck('closeSearchResult')
         closeSearchResult()
-        this.setState({
-
-            addTransferDevices: false,
-            selectedObjectData: {},
-        })
     }
 
 
@@ -322,7 +342,6 @@ class SearchResult extends React.Component {
                 if(item.checked){
                     this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
                 }else{
-
                     delete this.state.selectedObjectData[item.mac_address]
                 }
             }
@@ -345,7 +364,7 @@ class SearchResult extends React.Component {
             maxHeight: '70vh',
             minHeight: '50vh',
             width: '25%',
-            top: '10%',
+            top: '25%',
             right: '5%',
 
         }
@@ -374,6 +393,8 @@ class SearchResult extends React.Component {
 
                 top: Setting.top,
                 right: Setting.right,
+
+                borderRadius: '3%',
             },
             listItem: {
                 position: 'relative',
@@ -416,12 +437,13 @@ class SearchResult extends React.Component {
                 </div>
                 
                 <SearchResultTable 
-                    addDeviceSelection = {this.addDeviceSelection}
+                    addDeviceSelection = {this.onClickTableItem}
                     addTransferDevices = {this.state.addTransferDevices}
                     foundResult = {this.state.foundResult}
                     notFoundResult = {this.state.notFoundResult}
                     searchResult = {this.state.searchResult}
                     foundMode = {this.state.foundMode}
+                    selectedItem = {this.state.selectedItem}
                     handleToggleNotFound = {this.handleToggleNotFound}
                     Setting = {Setting}
                 />
@@ -432,7 +454,7 @@ class SearchResult extends React.Component {
                 <ChangeStatusForm 
                     show={this.state.showEditObjectForm} 
                     title='Report device status' 
-                    selectedObjectData={this.state.selectedObjectData} 
+                    selectedObjectData={this.state.selectedItem} 
                     handleChangeObjectStatusForm = {this.handleChangeObjectStatusForm}
 
                     ShouldUpdate = {this.state.ShouldUpdateChangeStatusForm}
@@ -441,7 +463,7 @@ class SearchResult extends React.Component {
                 <ConfirmForm 
                     show={this.state.showConfirmForm}  
                     title='Thank you for reporting' 
-                    selectedObjectData={this.state.selectedObjectData} 
+                    selectedObjectData={this.state.selectedItem} 
                     handleConfirmForm={this.handleConfirmForm}
 
                     newStatus = {this.state.newStatus}
@@ -463,8 +485,3 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(null, mapDispatchToProps)(SearchResult);
                             
-                //         <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-2 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh'}} >      
-                //     {
-                //         this.handleDisplayMode()
-                //     }
-                // </Row>

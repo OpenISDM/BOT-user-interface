@@ -49,7 +49,7 @@ class PdfDownloadForm extends React.Component {
     componentDidUpdate (preProps){
         // console.log(this.state.show)
         if(this.props.show && !this.state.show){
-            axios.post('https://140.109.22.249/data/QRCOde',this.props.data).then(res => {
+            axios.post(dataSrc.QRCode,this.props.data).then(res => {
                 this.setState({
                     savePath : res.data,
                     data: this.props.data,

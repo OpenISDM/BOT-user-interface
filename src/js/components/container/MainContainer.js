@@ -35,6 +35,9 @@ class ContentContainer extends React.Component{
         super(props)
         this.state = {
             timer: null,
+
+            floatUp: false,
+
             hasSearchKey: false,
             searchKey: '',
             searchableObjectData: [],
@@ -54,7 +57,10 @@ class ContentContainer extends React.Component{
             ShouldUpdateForProps: -1,
             ShouldUpdate: false,
             ShouldUpdateSearchResult: 0,
-            ShouldUpdateSearchContainer: 0
+            ShouldUpdateSearchContainer: 0,
+
+            locationAccuracy: 1, // init by "MED"
+            thresholdRSSIObject: []
 
 
         }
@@ -68,6 +74,9 @@ class ContentContainer extends React.Component{
         this.getTrackingData = this.getTrackingData.bind(this)
 
         this.handleSearch= this.handleSearch.bind(this)
+        this.changeLocationAccuracy = this.changeLocationAccuracy.bind(this)
+
+        this.handleSearchContainerFloatUp = this.handleSearchContainerFloatUp.bind(this)
     }
     componentDidMount(){
         this.interval = setInterval(this.getTrackingData, config.surveillanceMap.intevalTime, true)
@@ -105,20 +114,43 @@ class ContentContainer extends React.Component{
     getTrackingData(update) {
         var ShouldUpdate = false
             axios.get(dataSrc.trackingData).then(res => {
+                // console.log(res.data)
+                console.log(res.data)
+                var foundList = []
+                var notFoundList = []
                 var data = res.data.map((item) =>{
-                    delete item['rssi']
-                    return item
+
+                    var threshold = config.surveillanceMap.locationAccuracyMapToDefault[this.state.locationAccuracy]                
+                        
+                        if(item.rssi > threshold){
+                            
+                            foundList.push(item)
+                            return item
+                        }else{
+                            notFoundList.push(item)
+                        }
+                    
                 })
+                console.log(foundList)
+                data.pop()
+                data.shift()
+                data.splice(12,1)
+                data = data.filter(Boolean)
 
                 for(var i in  data){
 
                     var a = data[i]
                     var b = this.state.searchableObjectData[i]
                     if(a && b){
-                        if(a.name === b.name &&
+                        if(a.panic_button){
+                            console.log('panic')
+                        }
+                        if(
+                            a.name === b.name &&
                             a.mac_address === b.mac_address &&
-                            a.status === b.status
-                            ){
+                            a.status === b.status &&
+                            a.panic_button === b.panic_button
+                        ){
                             
                         }else{
                             ShouldUpdate = true
@@ -129,13 +161,25 @@ class ContentContainer extends React.Component{
                 }
                 // is.state.searchableObjectData=== [])
              
-                this.props.retrieveTrackingData(res.data)
-            
+                
+                try{
+                    
+                }catch{
+
+                }
+                
                 if(ShouldUpdate || this.state.searchableObjectData.length === 0){
+                    console.log('update in main')
+                    // console.log(data[0].status)
                     var dataMap = {}
-                    for( i in data){
+                    var thresholdRSSIObject = {}
+                    for(var  i in data){
                         dataMap[data[i].mac_address] =data[i]
+
                     }
+
+                    this.props.retrieveTrackingData(data)
+                    // console.log(data)
                     var state = {
                         searchableObjectData: data,
                         dataMap: dataMap,
@@ -145,105 +189,38 @@ class ContentContainer extends React.Component{
                         ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
                     }
                   
-                    if(update === false){
-                        return state
-                    }else{
-
-                        this.setState(state)
-                    }
-
-
-                }else{
-                    // o update')
-                }
-                
-
-                
-
-            })
-            .catch(error => {
-
-            })
-    }
-
-    newpromise(update){
-        var promise = new Promise(function(resolve, reject){
-            // 3123123123)
-            var ShouldUpdate = false
-            axios.get(dataSrc.trackingData).then(res => {
-                var data = res.data.map((item) =>{
-                    delete item['rssi']
-                    return item
-                })
-                // ta[0].status)
-                for(var i in  data){
-
-                    var a = data[i]
-                    var b = this.state.searchableObjectData[i]
-                    if(a && b){
-                        if(a.name === b.name &&
-                            a.mac_address === b.mac_address &&
-                            a.status === b.status
-                            ){
-                            
-                        }else{
-                            ShouldUpdate = true
-                        }
-                    }
-
                     
-                }
-                
-                var state = 'hi'
-                this.props.retrieveTrackingData(res.data)
-                if(ShouldUpdate || this.state.searchableObjectData.length === 0){
-                    var state = {
-                        searchableObjectData: data,
-                        objectTypeList: GetTypeKeyList(data),
-                        ShouldUpdate: this.state.ShouldUpdate + 1,
-                        ShouldUpdateSearchContainer: this.state.ShouldUpdateSearchContainer + 1,
-                        ShouldUpdateSearchResult: this.state.ShouldUpdateSearchResult + 1,
-                    }
-                    this.setState(state)
-                    if(update === false){
-                        resolve(state)
-                    }else{
+
                         this.setState(state)
-                    }
-         
+                    
 
                 }else{
                     // o update')
                 }
-                
-
-                
-
             })
             .catch(error => {
 
             })
-        })
-        return promise
     }
+
+    changeLocationAccuracy(accuracy){
+        accuracy = accuracy ? accuracy : this.state.locationAccuracy
+        this.setState({
+            locationAccuracy: accuracy,
+
+        })
+        this.getTrackingData()
+        // console.log(accuracy)
+    }
+
+
 
     shouldUpdateTrackingData(){
-        setTimeout(function() {
-            // is.getTrackingData)
-            this.newpromise(false).then((state)=>{
-                this.getSearchResult(this.state.searchKey).then((searchResult)=>{
-
-                    this.setState({
-                        searchResult: searchResult,
-                        ...state,
-                        
-
-                    })
-
-                })
-            })
-        
-        }.bind(this), 300);
+        // console.log('update')
+        this.getTrackingData()
+        setTimeout(function(){
+            this.handleSearch(this.state.searchKey)
+        }.bind(this), 500)
        
     }
     /**  the search result, not found list and color panel from SearchContainer, GridButton to MainContainer 
@@ -325,6 +302,7 @@ class ContentContainer extends React.Component{
         // 
         if(typeof e === 'string'){
             var searchResult = await this.getSearchResult(e)
+            // console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
             this.transferSearchResult(searchResult, null, e, true)
         }else{
             this.transferSearchResult(e, null, 'region', true)
@@ -348,6 +326,12 @@ class ContentContainer extends React.Component{
         })
     }
 
+    handleSearchContainerFloatUp(state){
+        console.log(state?'float Up':'float down')
+        this.setState({
+            floatUp: state
+        })
+    }
     
     render(){
 
@@ -367,14 +351,14 @@ class ContentContainer extends React.Component{
             
 
         }
-     
+        
         return(
 
             /** "page-wrap" the default id named by react-burget-menu */
             <div id="page-wrap" className='' >
                 <Row id="mainContainer" className='d-flex w-100 justify-content-around mx-0 px-0 overflow-hidden' style={style.container}>
                     
-                    <Col id="SurveillanceSection"sm={8} md={8} lg={8} xl={8}>
+                    <Col id="SurveillanceSection"sm={8} md={8} lg={8} xl={9}>
                         <br/>
 
                         <SurveillanceContainer 
@@ -388,16 +372,18 @@ class ContentContainer extends React.Component{
                             handleClearButton={this.handleClearButton}
                             transferSearchResult={this.transferSearchResult}
                             clearColorPanel={clearColorPanel}
+                            changeLocationAccuracy = {this.changeLocationAccuracy}
 
                         />
                     </Col>
                     
-                    <Col id="seachSection" xs={12} sm={12} md={12} lg={4} xl={4} className="w-100 px-0 my-2 bg-white" style={{zIndex: 1060, height: '80vh', borderRadius: '3%'}}>
+                    
 
                         <SearchContainer 
+                            floatUp = {this.state.floatUp}
                             getSearchResult={this.handleSearch}
                             loginStatus={loginStatus}
-                            searchableObjectData={this.state.searchableObjectData}
+                            searchableObjectData={this.state.thresholdRSSIObject}
                             searchResult = {this.state.searchResult} 
                             transferSearchResult={this.transferSearchResult}
                             hasSearchKey={this.state.hasSearchKey}
@@ -407,21 +393,21 @@ class ContentContainer extends React.Component{
                             ShouldUpdate={this.state.ShouldUpdateSearchContainer}
                         />
 
-                    </Col>
+                    
 
                 </Row>
                 
-                    <SearchResult 
-                        Show = {this.state.IsShowResult}
-                        hasSearchKey = {this.state.hasSearchKey}
-                        searchResult={this.state.searchResult}
-                        transferSearchResult = {this.transferSearchResult}
-                        closeSearchResult = {this.closeSearchResult}
+                <SearchResult 
+                    Show = {this.state.IsShowResult}
+                    hasSearchKey = {this.state.hasSearchKey}
+                    searchResult={this.state.searchResult}
+                    transferSearchResult = {this.transferSearchResult}
+                    closeSearchResult = {this.closeSearchResult}
+                    handleSearchContainerFloatUp = {this.handleSearchContainerFloatUp}
+                    UpdateTrackingData = {this.shouldUpdateTrackingData}
 
-                        UpdateTrackingData = {this.shouldUpdateTrackingData}
-
-                        ShouldUpdate={this.state.ShouldUpdateSearchResult}
-                    />
+                    ShouldUpdate={this.state.ShouldUpdateSearchResult}
+                />
 
             </div>
             
