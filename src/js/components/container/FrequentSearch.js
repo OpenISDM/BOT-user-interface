@@ -110,15 +110,15 @@ class FrequentSearch extends React.Component {
                 <Row className='d-flex justify-content-center'>
                     <h3>{locale.FREQUENT_SEARCH}</h3>
                 </Row>
-                <Row className='m-2 '  id='frequentSearch'>
+                <Row className='m-2 '  id='frequentSearch' >
                     {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
                         return item.name !== 'All'
                     }).map( (item, index) => {
                         
                         return (
-                            <div key={index} className="col col-6 " style={{float:'right', cursor: 'grab'}}  >
+                            <div key={index} className="col col-12 p-0 d-flex m-2" style={{float:'right', cursor: 'grab', verticalAlign: 'middle'}}  >
                                 
-                                <Row className="w-100">
+                                <Row className="w-100 m-0 p-0">
                                 {config.frequentSearch.showImage 
                                     ?
                                         <Row className="w-100 d-flex justify-content-center ">
@@ -129,7 +129,7 @@ class FrequentSearch extends React.Component {
                                 }
                                     
                                     <a
-                                        className="FrequentSearchButton w-100 m-3 h2 "
+                                        className="FrequentSearchButton w-100 h2 "
                                         onClick={this.handleClick} 
 
                                         key={index}

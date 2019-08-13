@@ -94,16 +94,17 @@ const config = {
         },
 
         /* Marker dispersity, can be any positive number */
-        markerDispersity: 5,
+        markerDispersity: 7,
 
-        objectTypeSet: new Set(['Bed', 'EKG Machine', 'Infusion pump', 'SONOSITE Ultrasound', 'Ultrasound', 'Bladder scanner', 'CPM'])
+        objectTypeSet: new Set(['electric sphygmomanometer', 'monitor', 'IV pump', 'syringe pump', 'blood warming device'])
         
     },
 
     transferredLocation: [
         "Yuanlin Christian Hospital",
-        "NTU Hospital Yunlin",
-        "NTU Hospital Taipei",
+        "Nantou Christial Hospital",
+        "Yunlin Christian Hospital",
+        "More"
     ],
     
     locale: {
@@ -114,7 +115,7 @@ const config = {
         logo: BOT_LOGO,
     },
 
-    companyName: 'BeDI Tech',
+    companyName: 'BeDITech',
 
     systemAdmin: {
 
@@ -126,14 +127,15 @@ const config = {
         pollGatewayTableIntevalTime: 60000,
     }, 
     objectImage: {
-        'Bladder scanner' : BladderScanner, 
-        'Bed' : Bed,
-        'SONOSITE Ultrasound': Ultrasound,
-        'Infusion pump': InfusionPump,
-        'Ultrasound': Ultrasound ,
-        'EKG Machine': EKG,
-        'CPM': CPM ,
+        // 'Bladder scanner' : BladderScanner, 
+        // 'Bed' : Bed,
+        // 'SONOSITE Ultrasound': Ultrasound,
+        // 'Infusion pump': InfusionPump,
+        // 'Ultrasound': Ultrasound ,
+        // 'EKG Machine': EKG,
+        // 'CPM': CPM ,
 
+        
     },
     objectImageTable:{
         BladderScanner : 'Bladder scanner', 
@@ -146,7 +148,7 @@ const config = {
     },
 
     frequentSearch:{
-        showImage: true,
+        showImage: false,
     },
 
     searchResult:{

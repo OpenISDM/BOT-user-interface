@@ -12,32 +12,94 @@ import _ from 'lodash';
 
 import config from '../../config';
 
+import Scroll from 'react-scroll'
+var scroll = Scroll.animateScroll;
+ 
 
 const Fragment = React.Fragment;
 export default class SearchResultTable extends React.Component {
 
     constructor(props){
+
         super(props)
+
+        this.state = {
+            searchResult: {
+                foundResult: [],
+                notFoundResult: [],
+            },
+            foundMode: 'found',
+            selectedMacList: [],
+            addTransferDevices: false,
+
+
+        }
+
         this.generateResultHTML = this.generateResultHTML.bind(this)
         this.generateResultTableRowHTML = this.generateResultTableRowHTML.bind(this)
 
         this.generateResultListRowHTML = this.generateResultListRowHTML.bind(this)
         this.handleDisplayMode = this.handleDisplayMode.bind(this)
-    }
 
+
+        this.handleToggleNotFound = this.handleToggleNotFound.bind(this)
+
+
+        this.API = {
+            setFoundMode: (foundMode) => {
+                this.setState({
+                    foundMode: (foundMode === 'found' || foundMode === 'notFound') ? foundMode : 'found',
+                })
+            },
+            toggleFoundMode: () => {
+                this.setState({
+                    foundMode: this.state.foundMode === 'found' ? 'notFound' : 'found',
+                })
+            },
+            updateSearchResult: (searchResult) => {
+
+                this.setState({
+                    searchResult: searchResult
+                })
+            },
+            updateSelectedMacList: (selectedMacList) => {
+                this.setState({
+                    selectedMacList: selectedMacList
+                })
+            },
+            updateAddTransferDeviceMode : (Mode) => {
+                this.setState({
+                    addTransferDevices: Mode,
+                })
+            },
+            setOnClick: (func) => {
+                this.itemOnClick = func
+            },
+            clearAll : () => {
+                this.setState({
+                    searchResult: {
+                        foundResult: [],
+                        notFoundResult: [],
+                    },
+                    selectedMacList: [],
+
+                    addTransferDevices: false,
+                    foundMode: 'found',
+                })
+            }
+        }
+    }
     componentDidMount(){
-
+        this.props.getAPI(this.API)
     }
 
-    componentWillReceiveProps(nextProps){
-
-    }
-    
     generateResultListRowHTML(item, index){
 
-        var {addDeviceSelection} = this.props
-        var {addTransferDevices} = this.props
+        var itemOnClick = this.itemOnClick
+        var {addTransferDevices, selectedMacList} = this.state
+
         var showImage = config.searchResult.showImage
+
         const style = {
             firstText: {
                 paddingLeft: 15,
@@ -56,27 +118,27 @@ export default class SearchResultTable extends React.Component {
         }
         let element = 
 
-            <Row key={index} className = "w-100" onClick={addDeviceSelection} name={index}>
+            <Row key={item.mac_address} className = "w-100" onClick={itemOnClick} name={index}>
                 
-                
-                    <div  name={index} style={{cursor: 'grab'}} className = "mx-3">{index + 1}.</div>
-                    <div  name={index} style={{cursor: 'grab'}} className = "mx-3 text-left">
+                    
+                    <div  name={item.mac_address} style={{cursor: 'grab'}} className = "mx-3 h5">{index + 1}.</div>
+                    <div  name={item.mac_address} style={{cursor: 'grab'}} className = "mx-3 text-left h5">
                         <input
                             type="checkbox"
                             className="custom-control-input"
                             style={{textAlign: 'left', cursor: 'grab'}}
 
-                            onChange={addDeviceSelection}
-                            checked = {item.mac_address in this.props.selectedItem ? true: false
+                            onChange={itemOnClick} 
+                            checked = {item.mac_address in this.state.selectedMacList ? true: false
                                 
                             }
                             id={'check'+item.mac_address}
-                            name={index}
+                            name={item.mac_address}
                         />
 
                         {addTransferDevices
                             ?   
-                                <label className="custom-control-label text-left" style={{cursor: 'grab'}} name={index} htmlFor={'check'+item.mac_address}/>
+                                <label className="custom-control-label text-left" style={{cursor: 'grab'}} name={item.mac_address} htmlFor={'check'+item.mac_address}/>
                             :
                                 null
                         }
@@ -85,8 +147,6 @@ export default class SearchResultTable extends React.Component {
 
                         ACN: xxxx-xxxx-{item.last_four_acn},status is {item.status}<br />
 
-                        near at {item.location_description}
-                        
                     </div>
 
 
@@ -103,9 +163,12 @@ export default class SearchResultTable extends React.Component {
         
     }
     generateResultTableRowHTML(item, index){
-        var {addDeviceSelection} = this.props
-        var {addTransferDevices} = this.props
+
+        var itemOnClick = this.itemOnClick
+        var {addTransferDevices, selectedMacList} = this.state
+
         var showImage = config.searchResult.showImage
+
         const style = {
             firstText: {
                 paddingLeft: 15,
@@ -122,29 +185,37 @@ export default class SearchResultTable extends React.Component {
                 float: 'left',
             },
         }
+        const layout = {
+            xl: [1, 4, 4, 3]
+        }
         let element =
-            <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} >
+            <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} onClick={itemOnClick} name={index}>
             <div className = "w-100" key={item.mac_address}>
-                <Col xl={2} lg={2} md={2} xs={2} className="float-left p-0"  onClick={addDeviceSelection} style={{cursor: 'grab'}} name={index}>{index + 1}</Col>
-                <Col xl={3} lg={3} md={3} xs={4} className="float-left p-0"  onClick={addDeviceSelection} style={{cursor: 'grab'}} sname={index}>{item.type}</Col>
+                <Col xl={layout.xl[0]} lg={2} md={2} xs={2} className="float-left p-0" style={{cursor: 'grab'}}>{index + 1}</Col>
+                
                 {addTransferDevices
                     ?   
                         <Fragment>
                             <input
                                 type="checkbox"
-                                className="float-left p-0"
-                                onChange={addDeviceSelection}
-                                checked = {item.mac_address in this.props.selectedItem ? true: false }
+                                className="custom-control-input float-left p-0"
+                                onChange={itemOnClick}
+                                checked = {item.mac_address in selectedMacList ? true: false }
                                 id={'check'+item.mac_address}
                                 name={index}
-                                style={{cursor: 'grab'}}
+                                style={{cursor: 'grab', float: 'left'}}
+
+
                             />
-                            <label name={index} htmlFor={'check'+item.mac_address} />
+                            <label className="custom-control-label" name={index} htmlFor={'check'+item.mac_address} />
                         </Fragment>
                     :
                         null 
                 }
-                <Col xl={4} lg={7} md={7} xs={6} onClick={addDeviceSelection} className="float-left p-0" style={{cursor: 'grab'}} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
+
+                <Col xl={layout.xl[1]} lg={3} md={3} xs={4} className="float-left p-0" style={{cursor: 'grab'}} name={index}>{item.type}</Col>
+                
+                <Col xl={layout.xl[2]} lg={7} md={7} xs={6} className="float-left p-0" style={{cursor: 'grab'}} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
                 {showImage
                     ?
                         
@@ -158,7 +229,6 @@ export default class SearchResultTable extends React.Component {
         return element
     }
     generateResultHTML(searchResult){
-        var {addTransferDevices} = this.props
 
         var resultStyle = config.searchResult.style
 
@@ -166,39 +236,60 @@ export default class SearchResultTable extends React.Component {
             console.error('search Result is undefined at generateResultTableHTML, ERROR!!!!')
             return null
         }
-        if(searchResult.length === 0){
-            return <h1 className="text-center m-3">no searchResult</h1>
+        
+        if(Object.keys(searchResult).length === 0){
+            return <h4 className="text-center m-3">No device</h4>
         }else{
 
-            return  <Row className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
-                {searchResult.map((item,index) => {
-                    if(resultStyle === 'table'){
-                        var html = this.generateResultTableRowHTML(item, index)
+            
+            let html =      
+                <Row className="m-0 p-0 justify-content-center" style={{width:'100%'}}>
+
+                    {
+                        (() => {
+                            var Html = []
+                            var index = 0
+
+                            if(resultStyle === 'table'){
+                                for(var item in searchResult){
+                                    
+                                    var html = this.generateResultTableRowHTML(searchResult[item], index)
+                                    index ++;
+                                    Html.push(html)
+                                }
+                            }else if(resultStyle === 'list'){
+                                for(var item in searchResult){
+
+                                    var html = this.generateResultListRowHTML(searchResult[item], index)
+                                    index ++;
+                                    Html.push(html)
+                                }
+                            }
+                            return Html
+                        })()
                     }
-                    else if(resultStyle === 'list'){
-                        var html = this.generateResultListRowHTML(item, index)
-                    }
-                    
-                    return html
-                })}
-            </Row>
+                </Row>
+            
+            return  html
+            
 
         }
     }
     handleDisplayMode(){
         var locale = this.context
-        var {foundResult, notFoundResult, searchResult} = this.props
+        var { foundMode} = this.state
+        var {foundResult, notFoundResult} = this.state.searchResult
         var mode = config.searchResult.displayMode
         var x;
         if(mode === 'showAll'){
 
             x = 
                 <Fragment>
-                    <h6 className=" text-left  text-primary w-100 bg-transparent"> {locale.DEVICE_FOUND(foundResult.length)}</h6>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_FOUND(foundResult.length || 0)}</h5>
                     {
                         this.generateResultHTML(foundResult)
                     }
-                    <h6 className=" text-left  text-primary w-100 bg-transparent"> {locale.DEVICE_NOT_FOUND(notFoundResult.length)}</h6>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_NOT_FOUND(notFoundResult.length || 0)}</h5>
                     {
                         this.generateResultHTML(notFoundResult)
                     }
@@ -207,9 +298,9 @@ export default class SearchResultTable extends React.Component {
         }else if(mode === 'switch'){
             x = 
                 <Fragment>
-                    <h6 className=" text-left  text-primary w-100 bg-transparent"> {this.props.foundMode? locale.DEVICE_FOUND(searchResult.length) : locale.DEVICE_NOT_FOUND(searchResult.length)}</h6>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {foundMode === 'found'? locale.DEVICE_FOUND(foundResult.length) : locale.DEVICE_NOT_FOUND(notFoundResult.length)}</h5>
                     {
-                        this.generateResultHTML(searchResult)
+                        this.generateResultHTML(foundMode === 'found' ? foundResult : notFoundResult)
                     }
                 </Fragment>
         }else{
@@ -218,6 +309,11 @@ export default class SearchResultTable extends React.Component {
         }
         return x 
     }
+
+    handleToggleNotFound(e){
+        e.preventDefault()
+        this.API.toggleFoundMode()
+    }
     render() {
         
 
@@ -225,7 +321,7 @@ export default class SearchResultTable extends React.Component {
             
             maxHeight: '70vh',
             minHeight: '50vh',
-            width: '25%',
+            width: '30%',
             top: '10%',
             right: '5%',
 
@@ -239,11 +335,11 @@ export default class SearchResultTable extends React.Component {
             <Fragment>
                 {config.searchResult.displayMode === 'switch'
                     ?
-                        <h6 onClick ={this.props.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent m-2 p-0" style={{maxHeight: '8vh'}}>Show {this.props.foundMode? 'Not Found' : 'Found'} Result</h6>
+                        <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent mx-3 p-0" style={{maxHeight: '8vh', cursor: 'grab'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
                     :
                         null
                 }
-                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-2 p-0" style={{overflowY: 'scroll',maxHeight: (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh'}} >      
+                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" ref="searchResultTable" style={{overflowY: 'scroll',maxHeight: Setting.maxHeight !== null ? (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh' : null}}>      
                     {
                         this.handleDisplayMode()
                     }

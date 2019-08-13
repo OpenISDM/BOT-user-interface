@@ -30,19 +30,20 @@ class SearchResult extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            showEditObjectForm: false,
-            showConfirmForm: false,
-
             selectedObjectData: {},
             
             // true the search result will be found
             // else will be not found
+            show: false,
             foundMode: true,
-            foundResult: [],
-            notFoundResult: [],
+            foundResult: {},
+            notFoundResult: {},
 
             wholeSearchResult: [],
-
+            searchResultBoth: {
+                foundResult: null,
+                notFoundResult: null,
+            },
             searchResult: [],
             newStatus: {},
 
@@ -59,34 +60,137 @@ class SearchResult extends React.Component {
 
             selectedItem: [],
 
-
+            tableRef: null, 
+            scrollToTop: 0
 
         }
+        this.staticParameters = {
+
+        }
+
+        this.API = {
+            closeSearchResult: () => {
+                this.setState({
+                    show: false,
+                    searchResult: [],
+                })
+            },
+            openSearchResult: (searchResult) => {
+                this.setState({
+                    show: true,
+                    searchResult: searchResult
+                })
+            },
+            clearSelectedItem: () => {
+                this.setState({
+                    selectedItem: [],
+                    addTransferDevices: false
+                })
+            },
+            clearAll: () => {
+                this.setState({
+                    searchResult: [],
+                    selectedItem: [],
+                    addTransferDevices: false
+                })
+            }
+        }
+
+
+        this.handleChangeStatusForm = {
+      
+            closeEvent: () => {
+                this.APIforConfirmForm.closeForm()
+                this.APIforTable.updateAddTransferDeviceMode(false)
+                this.API.clearAll()
+                this.props.handleSearchContainerFloatUp(false)
+            },
+            submitEvent: (status, transferred_location) => {
+                this.setState({
+                    newStatus: {
+                        status: status,
+                        transferred_location: transferred_location
+                    }
+                })
+                var {selectedItem, newStatus} = this.state
+                this.APIforChangeStatusForm.closeForm()
+                this.APIforConfirmForm.openForm(selectedItem, newStatus)
+                this.APIforTable.updateAddTransferDeviceMode(false)
+                this.props.handleSearchContainerFloatUp(false)
+            },
+
+            addDeviceEvent: () => {
+                this.APIforTable.updateAddTransferDeviceMode(true)
+                this.setState({
+                    addTransferDevices: true
+                })
+                this.props.handleSearchContainerFloatUp(true)
+            }
+        }
+
+        this.APIforTable = null
+        this.APIforConfirmForm = null
+        this.APIforChangeStatusForm = null
+
 
         // check whether props are properly logged in
         this.propsCheck = this.propsCheck.bind(this)
 
         // show either found list or not found list
-        this.handleToggleNotFound = this.handleToggleNotFound.bind(this);
+        // this.handleToggleNotFound = this.handleToggleNotFound.bind(this);
 
         this.closeSearchResult = this.closeSearchResult.bind(this)
 
         // forms handler
-        this.handleConfirmForm = this.handleConfirmForm.bind(this)
+        // this.handleConfirmForm = this.handleConfirmForm.bind(this)
         this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
 
-        this.addDeviceSelection = this.addDeviceSelection.bind(this)
+        // this.addDeviceSelection = this.addDeviceSelection.bind(this)
 
 
         this.initializeSearchResultList = this.initializeSearchResultList.bind(this);
 
         this.onClickTableItem = this.onClickTableItem.bind(this)
 
+        this.getAPIfromTable = this.getAPIfromTable.bind(this)
+        this.getAPIfromConfirmForm = this.getAPIfromConfirmForm.bind(this)
+        this.getAPIfromChangeStatusForm = this.getAPIfromChangeStatusForm.bind(this)
+
+
+        this.confirmFormOnSubmit = this.confirmFormOnSubmit.bind(this)
 
        
     }
+
+    getAPIfromTable(API){
+        // console.log('API')
+        this.APIforTable = API
+
+        this.APIforTable.setOnClick(this.onClickTableItem)
+    }
+
+    getAPIfromConfirmForm(API){
+        this.APIforConfirmForm = API
+
+        this.APIforConfirmForm.setOnSubmit(this.confirmFormOnSubmit)
+
+        this.APIforConfirmForm.setTitle('Thank you for reporting')
+    }
+
+    getAPIfromChangeStatusForm(API){
+        this.APIforChangeStatusForm = API
+
+        this.APIforChangeStatusForm.setOnSubmit(this.handleChangeStatusForm.submitEvent)
+
+        this.APIforChangeStatusForm.setOnClose(this.handleChangeStatusForm.closeEvent)
+
+        this.APIforChangeStatusForm.setAddDevice(this.handleChangeStatusForm.addDeviceEvent)
+
+        this.APIforChangeStatusForm.setTitle('Report device status')
+    }
     
     componentDidMount() {
+        this.props.getAPI(this.API)
         setTimeout(this.initializeSearchResultList,1000)
     }
     componentDidUpdate(prepProps, prevState) {
@@ -115,26 +219,6 @@ class SearchResult extends React.Component {
         }else{return true}
     }
     
-    // componentWillReceiveProps(nextProps){
-    //     setTimeout(function(){
-         
-            
-    //         if(nextProps.ShouldUpdate !== this.state.ShouldUpdateForProps){
-
-    //             this.setState({
-    //                 ShouldUpdateForProps: nextProps.ShouldUpdate,
-    //                 searchResult: nextProps.searchResult
-    //             })
-    //         }
-    //         try{
-
-    //         }catch{
-
-    //         }
-    //         }.bind(this),2000)
-        
-        
-    // }
 
     propsCheck(attribute){
 
@@ -151,8 +235,8 @@ class SearchResult extends React.Component {
         var searchResults = this.propsCheck('searchResult');
 
         var searchResult = []
-        var foundResult = []
-        var notFoundResult = []
+        var foundResult = {}
+        var notFoundResult = {}
         var wholeSearchResultMap = []
         var searchResultMap = {}
 
@@ -166,19 +250,20 @@ class SearchResult extends React.Component {
             searchResult.push(result);
 
             if(result.found){
-                foundResult.push(result)
+                foundResult[result.mac_address] = result
             }else{
-                notFoundResult.push(result)
+                notFoundResult[result.mac_address] = result
             }
         }
-        // console.log(foundResult)
-        this.setState({
-            searchResultMap: searchResultMap,
-            wholeSearchResult: searchResult,
+        var searchResultBoth = {
             foundResult: foundResult,
             notFoundResult: notFoundResult,
-            searchResult: this.state.foundMode ? foundResult: notFoundResult,
-            changeState: this.state.changeState + 1,
+        }
+
+        this.APIforTable.updateSearchResult(searchResultBoth)
+
+        this.setState({
+            searchResultMap: searchResultMap,
         })
 
 
@@ -197,19 +282,25 @@ class SearchResult extends React.Component {
             ShouldUpdateChangeStatusForm: this.state.ShouldUpdateChangeStatusForm + 1,
         })
         if(command === 'submit'){
-            this.handleConfirmForm('show', null)
-            var postOption = Option;
+            this.APIforTable.updateAddTransferDeviceMode(false)
+            var newStatus = Option;
+            this.APIforConfirmForm.openForm(this.state.selectedItem, newStatus)
+            // this.handleConfirmForm('show', null)
+            
 
             this.setState({
-                newStatus:postOption,
+                newStatus:newStatus,
                 showEditObjectForm: false,
                 showConfirmForm: true,
                 changeState :  this.state.changeState + 1,
             })
           
         }else if(command === 'close'){
-            this.handleConfirmForm('close', null)
+            // this.handleConfirmForm('close', null)
+
+            this.APIforConfirmForm.closeForm()
             this.props.handleSearchContainerFloatUp(false)
+            this.APIforTable.updateAddTransferDeviceMode(false)
             this.setState({
                 showEditObjectForm: false,
                 addTransferDevices: false,
@@ -223,6 +314,7 @@ class SearchResult extends React.Component {
             })
         }else if(command === 'AddTransferDevices'){
             var state = Option
+            this.APIforTable.updateAddTransferDeviceMode(true)
             this.setState({
                 addTransferDevices: state,
             })
@@ -237,9 +329,9 @@ class SearchResult extends React.Component {
             macAddresses: macAddresses
         }).then(res => {
             
-
+                this.APIforConfirmForm.closeForm()
                 this.props.UpdateTrackingData()
-                this.handleConfirmForm('close', null)
+                // this.handleConfirmForm('close', null)
                 NotificationManager.success('Edit object success', 'Success')
             
         }).catch( error => {
@@ -248,60 +340,23 @@ class SearchResult extends React.Component {
 
         })
     }
-
-    handleConfirmForm(command, Option){
-        
-        if(command === 'submit'){
-            
-            if(Option === true){
-
-                const {selectedItem, newStatus} = this.state;
-
-                var macAddresses = [];
-                // push the mac address to a list and finally send this to backend
-                for(var i in selectedItem){
-                    macAddresses.push(selectedItem[i].mac_address)
-                }
-                // submit to backend
-                this.handleSubmitToBackend(newStatus, macAddresses)
-                
-                
-            }
-            
-        }else if(command === 'close'){
-            this.props.handleSearchContainerFloatUp(true)
-            this.setState({
-                showEditObjectForm: false,
-                showConfirmForm: false,
-                addTransferDevices: false,
-                changeState: this.state.changeState + 1
-            })
-        }else if(command === 'show'){
-            this.setState({
-                showConfirmForm: true,
-            })
+    confirmFormOnSubmit(){
+        const {selectedItem, newStatus} = this.state;
+        var macAddresses = [];
+        // push the mac address to a list and finally send this to backend
+        for(var i in selectedItem){
+            macAddresses.push(selectedItem[i].mac_address)
         }
-        this.setState({
-            ShouldUpdateConfirmForm: ! this.state.ShouldUpdateConfirmForm,
-        })
+        // submit to backend
+        console.log(newStatus)
+        this.handleSubmitToBackend(newStatus, macAddresses)
     }
 
-  
-
-    
-
-    handleToggleNotFound(e) {
-
-        e.preventDefault()
-        this.setState({
-            searchResult: ! this.state.foundMode ? this.state.foundResult : this.state.notFoundResult,
-            foundMode: ! this.state.foundMode,
-        })
-        
-    }
     onClickTableItem(e){
+        
         var index = e.target.getAttribute('name')
-        var item = this.state.searchResult[index]
+        
+        var item = this.state.searchResultMap[index]
         if(this.state.addTransferDevices){          
             if(item.mac_address in this.state.selectedItem){
                 delete this.state.selectedItem[item.mac_address]
@@ -312,49 +367,19 @@ class SearchResult extends React.Component {
             this.state.selectedItem = []
             this.state.selectedItem[item.mac_address] = item
         }
-        this.handleChangeObjectStatusForm('show',this.state.selectedItem)
+        this.APIforTable.updateSelectedMacList(this.state.selectedItem)
+        this.APIforChangeStatusForm.openForm(this.state.selectedItem)
+        // this.APIforChangeStatusForm.updateselectedObjectData(this.state.selectedItem)
+        // this.handleChangeObjectStatusForm('show',this.state.selectedItem)
 
     }
     closeSearchResult(){
+        this.API.closeSearchResult()
         var closeSearchResult = this.propsCheck('closeSearchResult')
+        console.log('close')
         closeSearchResult()
     }
 
-
-
-    addDeviceSelection(e){
-
-        if(this.state.searchResult.length !== 0){
-            if(!this.state.addTransferDevices){
-                var index = e.target.getAttribute('name')
-                var item = this.state.searchResult[index]
-                this.setState({
-                    selectedSingleChangeObjectIndex: index
-                })
-                this.state.selectedObjectData = []
-                this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
-                this.handleChangeObjectStatusForm('show',this.state.searchResult[index])
-
-            }else{
-                var index = e.target.getAttribute('name')
-                this.state.searchResult[index].checked = ! this.state.searchResult[index].checked
-                var item = this.state.searchResult[index]
-                if(item.checked){
-                    this.state.selectedObjectData[item.mac_address] = this.state.searchResult[index];
-                }else{
-                    delete this.state.selectedObjectData[item.mac_address]
-                }
-            }
-        }
-        
-        this.setState({
-            ShouldUpdateChangeStatusForm: ! this.state.ShouldUpdateChangeStatusForm
-        })   
-    }
-
-    
-
-    
     render() {
     
         const locale = this.context;
@@ -363,7 +388,7 @@ class SearchResult extends React.Component {
             
             maxHeight: '70vh',
             minHeight: '50vh',
-            width: '25%',
+            width: '35%',
             top: '25%',
             right: '5%',
 
@@ -373,21 +398,22 @@ class SearchResult extends React.Component {
             ...defaultSetting,
             ...this.props.Setting,
         }
+
         const style = {
             SearchResult:{
                 maxHeight: Setting.maxHeight,
 
                 minHeight: Setting.minHeight,
 
-                display: (this.propsCheck('Show'))?'block':'none',
+                display: (this.state.show)?'block':'none',
 
-                zIndex: (this.propsCheck('Show'))?1100:0,
+                zIndex: (this.state.show)?1100:0,
 
                 background:'#FFFFFF',
                 
                 float: 'right', 
 
-                width: config.searchResult.showImage ?  (parseInt(Setting.width.slice(0,2))*1.3) + '%' : Setting.width,
+                width: config.searchResult.showImage ?  (Setting.width!== null? (parseInt(Setting.width.slice(0,2))*1.3) + '%': null): Setting.width,
 
                 position:'absolute',
 
@@ -421,37 +447,30 @@ class SearchResult extends React.Component {
             }
 
         }
-
+        console.log('render')
 
         return(
+            <Fragment>
+                <div id="searchResult"className='m-0 p-0 shadow' style={style.SearchResult}>
+                    <NotificationContainer />
 
-            <div id="searchResult"className='m-0 p-0 shadow' style={style.SearchResult}>
-                <NotificationContainer />
-                <div className="bg-transparent px-3">
-                    
-                        <h4 className="text-primary w-100 text-left bg-transparent">{locale.SEARCH_RESULT}</h4>
-                    
-                    
-                        <h1 onClick={this.closeSearchResult} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
+                    <div className="bg-transparent px-3">
                         
-                </div>
-                
-                <SearchResultTable 
-                    addDeviceSelection = {this.onClickTableItem}
-                    addTransferDevices = {this.state.addTransferDevices}
-                    foundResult = {this.state.foundResult}
-                    notFoundResult = {this.state.notFoundResult}
-                    searchResult = {this.state.searchResult}
-                    foundMode = {this.state.foundMode}
-                    selectedItem = {this.state.selectedItem}
-                    handleToggleNotFound = {this.handleToggleNotFound}
-                    Setting = {Setting}
-                />
-                
-                
-            
+                            <h3 className="text-primary w-100 text-left bg-transparent">{locale.SEARCH_RESULT}</h3>
+                        
+                        
+                            <h1 onClick={this.closeSearchResult} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
+                            
+                    </div>
 
+                    <SearchResultTable 
+                        getAPI = {this.getAPIfromTable}
+
+                        Setting = {Setting}
+                    />
+                </div>
                 <ChangeStatusForm 
+                    getAPI = {this.getAPIfromChangeStatusForm}
                     show={this.state.showEditObjectForm} 
                     title='Report device status' 
                     selectedObjectData={this.state.selectedItem} 
@@ -461,16 +480,9 @@ class SearchResult extends React.Component {
                 />
 
                 <ConfirmForm 
-                    show={this.state.showConfirmForm}  
-                    title='Thank you for reporting' 
-                    selectedObjectData={this.state.selectedItem} 
-                    handleConfirmForm={this.handleConfirmForm}
-
-                    newStatus = {this.state.newStatus}
-
-                    ShouldUpdate = {this.state.ShouldUpdateConfirmForm}
+                    getAPI = {this.getAPIfromConfirmForm}
                 />
-            </div>
+            </Fragment>
 
         )
     }

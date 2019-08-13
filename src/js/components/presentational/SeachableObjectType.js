@@ -142,7 +142,7 @@ class SearchableObjectType extends React.Component {
 
             height: '60vh',
 
-            width: '20vw',
+            width: '25vw',
             zIndex: (this.state.IsShowSection) ? 1500: 0
 
         },

@@ -12,7 +12,7 @@ const en =  {
     GEOFENCE: 'Geofence',
     OBJECT_MANAGEMENT: 'Object Management',
     // frequent search
-    FREQUENT_SEARCH: 'frequent searches',
+    FREQUENT_SEARCH: 'Frequent Searches',
     ALL_DEVICE: 'All Devices',
     MY_DEVICE: 'My Devices',
 
@@ -27,7 +27,7 @@ const en =  {
     SAVE : 'save',
     
     /* Search related term */
-    Yunlin_Christian_Hospital: "Yunlin Christian Hospital",
+    Yuanlin_Christian_Hospital: "Yuanlin Christian Hospital",
     NTU_Hospital_Yunlin: "NTU Hospital Yunlin Branch",
     NTU_Hospital_Taipe: "NTU Hospital Taipe Branch",
 
@@ -39,10 +39,10 @@ const en =  {
     SHIFT_CHANGE_RECORD: 'Shift Change Record',
 
     DEVICE_FOUND: function (length){
-        return 'found '+length.toString()+' devices'
+        return length.toString()+' devices are found'
     },
     DEVICE_NOT_FOUND: function (length){
-        return 'not found '+length.toString()+'devices'
+        return length.toString()+' devices are not found'
     },
     SEARCH_RESULT: 'Search Results',
 }

@@ -132,7 +132,6 @@ class SurveillanceContainer extends React.Component {
     pdfDownload(){
         this.setState({
             showPdfDownloadForm: true,
-            isSaving: true,
         })
         
 
@@ -141,7 +140,6 @@ class SurveillanceContainer extends React.Component {
     handleClosePdfForm(){
         this.setState({
             showPdfDownloadForm: false,
-            isSaving: false,
         })
     }
     render(){
@@ -231,7 +229,6 @@ class SurveillanceContainer extends React.Component {
                     show={showPdfDownloadForm}
                     data={searchResult}
                     handleClose = {this.handleClosePdfForm}
-                    isSaving={isSaving}
                 />
                 
 

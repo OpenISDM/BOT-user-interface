@@ -359,7 +359,7 @@ class Surveillance extends React.Component {
                 console.log('paniccccc')
                 iconOption = sosIconOptions;
             } 
-            else if (objects[key].status === 'Broken' || objects[key].status === 'Transferred') {
+            else if (objects[key].status === 'Broken' || objects[key].status === 'Transferred' || objects[key].status === 'Reserve') {
                 // console.log('broken')
                 iconOption = unNormalIconOptions;
             } else if (objects[key].geofence_type === 'Fence'){
@@ -375,16 +375,7 @@ class Surveillance extends React.Component {
                 iconOption = geofencePAweIconOptions;
                 
 			} 
-
-            
-            // else if (objects[key].searched && this.props.colorPanel) {
-            //     iconOption = {
-                    // iconSize: iconSize,
-            //         markerColor: objects[key].pinColor,
-            //     }
-            // } 
             else if (objects[key].searched) {
-                // console.log('searched')
                 iconOption = searchedObjectAweIconOptions 
             }else {
 
@@ -417,7 +408,7 @@ class Surveillance extends React.Component {
 
             marker.on('mouseover', function () { this.openPopup(); })
             marker.on('click', this.handleMarkerClick);
-            // marker.on('mouseout', function () { this.closePopup(); })
+            marker.on('mouseout', function () { this.closePopup(); })
             
 
             /** Set the error circles of the markers. */
@@ -440,9 +431,13 @@ class Surveillance extends React.Component {
     handleMarkerClick(e) {
 
         const currentPosition =  e.target.options.icon.options.currentPosition
+
         let objectList = this.collectObjectsByLatLng(currentPosition)
         // console.log(objectList)
-        this.props.handleSearch(objectList)
+        this.props.handleSearch({
+            dataType : 'location_description',
+            searchKey: objectList[0].location_description
+        })
     }
 
     collectObjectsByLatLng(currentPositionArray) {

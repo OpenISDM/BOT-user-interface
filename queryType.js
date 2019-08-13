@@ -152,13 +152,28 @@ function query_signup(signupPackage) {
 	return query
 }
 
+function query_modifyUserDevices(username, mode, acn){
+	console.log(acn)
+	var text = ""
+	if(mode === 'add'){
+		text = `UPDATE user_table SET mydevice = array_append(mydevice, '${acn}') WHERE name = '${username}';`
+	}else if(mode === 'remove'){
+		text = `UPDATE user_table SET mydevice = array_remove(mydevice, '${acn}') WHERE name = '${username}';`
+	}else{
+		text = ""
+	}
+
+	return text
+	
+}
+
 function query_getUserInfo(username) {
 	const text =  `
-	SELECT name, mydevice from user_table where name= $1
+		SELECT name, mydevice from user_table where name= $1
 	`;
 
 	const values = [username];
-
+	// console.log(username)
 	const query = {
 		text,
 		values
@@ -231,6 +246,7 @@ module.exports = {
 	query_editObjectPackage,
 	query_signin,
 	query_signup,
+	query_modifyUserDevices,
 	query_getUserInfo,
 	query_getUserSearchHistory,
 	query_addUserSearchHistory,

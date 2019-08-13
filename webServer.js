@@ -59,6 +59,8 @@ app.get('/save_file_path/:file', (req, res) =>{
 	res.sendFile(path.join(__dirname, 'save_file_path',req.params['file']));
 })
 
+app.get('/data/branches', db.getBranches);
+
 app.get('/data/objectTable', db.getObjectTable);
 
 app.get('/data/lbeaconTable', db.getLbeaconTable);
@@ -79,6 +81,8 @@ app.post('/user/signin', db.signin);
 
 app.post('/user/signup', db.signup);
 
+app.post('/data/modifyMyDevice', db.modifyUserDevices)
+
 app.post('/user/info', db.userInfo)
 
 app.post('/user/searchHistory', db.userSearchHistory)
@@ -86,6 +90,7 @@ app.post('/user/searchHistory', db.userSearchHistory)
 app.post('/user/addUserSearchHistory', db.addUserSearchHistory)
 
 app.post('/data/editLbeacon', db.editLbeacon)
+
 
 app.post('/data/QRCode',db.QRCode)
 
@@ -95,10 +100,10 @@ app.post('/data/QRCode',db.QRCode)
 const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
 
-// httpServer.listen(httpPort, () =>{
-//     console.log(`HTTP Server running on port ${httpPort}`)
-// })
-httpsServer.listen(httpsPort, () => {
-    console.log(`HTTPS Server running on PORT ${httpsPort}`)
+httpServer.listen(httpPort, () =>{
+    console.log(`HTTP Server running on port ${httpPort}`)
 })
+// httpsServer.listen(httpsPort, () => {
+//     console.log(`HTTPS Server running on PORT ${httpsPort}`)
+// })
 

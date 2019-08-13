@@ -17,115 +17,88 @@ const options = transferredLocations.map( location => {
     return locationObj
 })
   
+
+const initialFormOption = {
+    name: '',
+    type: '',
+    status: '', 
+    transferredLocation: null,
+}
+
 class ConfirmForm extends React.Component {
     
     constructor(props) {
         super(props);
 
         this.state = {
-            show: this.props.show,
+            title: 'title',
             isShowForm: false,
-            showAddDeviceForm: false,
-            formOption: {
-                name: '',
-                type: '',
-                status: '', 
-                transferredLocation: null,
-            },
-            showNotesControl: false,
-            notesText:'',
-            addedDevices: []
+            newStatus: initialFormOption,
+            selectedObjectData: {}
         };
+        this.onSubmit = null
+        this.API = {
+            setTitle: (title) => {
+                this.setState({
+                    title: title
+                })
+            },
+            closeForm: () => {
+                this.setState({
+                    isShowForm: false,
+                    newStatus: initialFormOption,
+                    selectedObjectData: {}
+                })
+            },
+            openForm: (selectedObjectData, newStatus) => {
+                this.setState({
+                    isShowForm: true,
+                    selectedObjectData: selectedObjectData,
+                    newStatus: newStatus
+                })
+            },
+            setOnSubmit: (func) => {
+                this.onSubmit = func
+            },
+            setDeviceList: (itemList) => {
+                this.setState({
+                    selectedObjectData: itemList
+                })
+            },
+            addDevice: (item) => {
+                var {selectedObjectData} = this.state
+                selectedObjectData[item.mac_address] = item
+                this.setState()
+            },
+            removeDevice: (item) => {
+                var {selectedObjectData} = this.state
+                delete selectedObjectData[item.mac_address]
+                this.setState()
+            },
+            switchDevice: (item) => {
+                var {selectedObjectData} = this.state
+                selectedObjectData = {}
+                selectedObjectData[item.mac_address] = item
+                this.setState()
+            },
+            clearDevice: () => {
+                var {selectedObjectData} = this.state
+                selectedObjectData = {}
 
-
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        this.addedDevice = this.addedDevice.bind(this);
-        this.handleAddDeviceFormClose = this.handleAddDeviceFormClose.bind(this)
-    }
-  
-    handleClose(e) {
-        if(this.props.handleConfirmForm) {
-            this.props.handleConfirmForm('close', null);
+                this.setState()
+            },
         }
-        this.setState({ 
-            show: false ,
-            addedDevices: []
-        });
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
   
-    handleShow() {
-        this.setState({ 
-            show: true 
-        });
-    }
 
     componentDidMount(){
-
-        this.setState({
-                show: this.props.show,
-                isShowForm: true,
-        })
-    }
-
-    componentDidUpdate(prevProps) {
-        if (prevProps.ShouldUpdate !== this.props.ShouldUpdate) {
-
-            this.setState({
-                show: this.props.show,
-                isShowForm: true,
-                
-
-            })
-        }
+        this.props.getAPI(this.API)
     }
 
     handleSubmit(e) {
-        this.props.handleConfirmForm('submit',true)
-    }
-
-    handleChange(e) {
-        const { name }  = e.target
-        this.setState({
-            [name]: e.target.value
-        })
-    }
-
-    handleClick(e) {
-        const item = e.target.innerText;
-        switch(item.toLowerCase()) {
-            case 'add device':
-                this.setState({
-                    showAddDeviceForm: true
-                })
-                break;
-            case 'remove device':
-
-                break;
-            case 'add notes':
-            case 'hide notes':
-                this.setState({
-                    showNotesControl: !this.state.showNotesControl
-                })
-                break;
-
-        }
-    }
-
-    addedDevice(selectedDevice) {
-        this.setState({
-            addedDevices: selectedDevice,
-            showAddDeviceForm: false,
-        })
-    }
-
-    handleAddDeviceFormClose() {
-        this.setState({
-            showAddDeviceForm: false
-        })
+        this.onSubmit()
+        this.API.closeForm()
     }
 
     generateDeviceList(){
@@ -135,9 +108,9 @@ class ConfirmForm extends React.Component {
             md: 5,
             lg: 5,
         }
-        for(var selectedObjectDataIndex in this.props.selectedObjectData){
-            if(this.props.selectedObjectData[selectedObjectDataIndex]!== null){
-                let selectedObjectData = this.props.selectedObjectData[selectedObjectDataIndex]
+        for(var selectedObjectDataIndex in this.state.selectedObjectData){
+            if(this.state.selectedObjectData[selectedObjectDataIndex]!== null){
+                let selectedObjectData = this.state.selectedObjectData[selectedObjectDataIndex]
 
                 let html = 
                     <Row key={selectedObjectDataIndex}>
@@ -168,10 +141,6 @@ class ConfirmForm extends React.Component {
                                 </Col>
                             </Row>
                         </Col>
-                        <Col sm={4} className='d-flex align-items-center'>
-                            <Image src={tempImg} width={80}/>
-                        </Col>
-
                     </Row>
 
                 htmls.push(html)
@@ -192,9 +161,6 @@ class ConfirmForm extends React.Component {
                 borderRight: 0,
                 
             },
-            notesControl: {
-                display: this.state.showNotesControl ? null : 'none', 
-            }
         }
 
         const customModalStyles = {
@@ -207,11 +173,11 @@ class ConfirmForm extends React.Component {
             }
         };
 
-        const { title } = this.props;
+        const { title } = this.state;
 
         return (
             <>  
-                <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content}>
+                <Modal show={this.state.isShowForm} onHide={this.API.closeForm} size="md" style={customModalStyles.content}>
                     <Modal.Header closeButton className='font-weight-bold'>{title}</Modal.Header >
                     <Modal.Body>
                         <Form >
@@ -219,56 +185,15 @@ class ConfirmForm extends React.Component {
                                 {this.generateDeviceList()}
                             </div>
                            
-                            {this.state.addedDevices.length !== 0 
-                                ? 
-                                    this.state.addedDevices.map((item,index) => {
-                                        return (
-                                            <>
-                                                <hr/>
-                                                <Row >
-                                                    <Col sm={10}>
-                                                        <Row>
-                                                            <Col sm={5}>
-                                                                Device Type
-                                                            </Col>
-                                                            <Col sm={7} className='text-muted pb-1'>
-                                                                {item.type}
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col sm={5}>
-                                                                Device Name
-                                                            </Col>
-                                                            <Col sm={7} className='text-muted pb-1'>
-                                                                {item.name}
-                                                            </Col>
-                                                        </Row>
-                                                        <Row>
-                                                            <Col sm={5}>
-                                                                ACN
-                                                            </Col>
-                                                            <Col sm={7} className='text-muted pb-1'>
-                                                                {item.access_control_number}
-                                                            </Col>
-                                                        </Row>
-                                                    </Col>
-                                                    <Col sm={2} className='d-flex align-items-center'>
-                                                        <Image src={tempImg} width={60}/>
-                                                    </Col>
-                                                </Row>
-                                            </>
-                                        )
-                                    })   
-                                : null
-                            }
+                            
                         </Form>
                         
                         <hr/>
                         <Row>
                             <Col className='d-flex justify-content-center'>
-                                <h5>{this.props.newStatus.status}
-                                    {this.props.newStatus.status === 'Transferred' 
-                                        ? '  to  ' + this.props.newStatus.transferred_location
+                                <h5>{this.state.newStatus.status}
+                                    {this.state.newStatus.status === 'Transferred' 
+                                        ? '  to  ' + this.state.newStatus.transferred_location
                                         :null
                                     }
                                 </h5>
@@ -279,37 +204,9 @@ class ConfirmForm extends React.Component {
                                 <h6>{moment().format('LLLL')}</h6>    
                             </Col>
                         </Row>
-                        {this.props.newStatus.status === 'Transferred' && 
-                            <>
-                                <hr/>
-                                <Row className='d-flex justify-content-center'>
-                                    <ButtonToolbar >
-                                        <Button variant="outline-secondary" className='mr-2' onClick={this.handleClick}>Add Device</Button>
-                                        <Button variant="outline-secondary" className='mr-2' onClick={this.handleClick}>Remove Device</Button>
-                                        <Button variant="outline-secondary" className='mr-2' onClick={this.handleClick}>
-                                            {this.state.showNotesControl ? 'Add Notes' : 'Hide Notes'}
-                                        </Button>
-                                    </ButtonToolbar>
-                                </Row>
-                            </>
-                        }
-
-                        <Form style={style.notesControl}>
-                        <hr/>
-                            <Form.Group controlId="exampleForm.ControlTextarea1">
-                                <Form.Control 
-                                    as="textarea" 
-                                    rows="3" 
-                                    placeholder='notes...' 
-                                    value={this.state.notesText}
-                                    name='notesText'
-                                    onChange={this.handleChange}
-                                />
-                            </Form.Group>
-                        </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="outline-secondary" onClick={this.handleClose}>
+                        <Button variant="outline-secondary" onClick={this.API.closeForm}>
                             Cancel
                         </Button>
                         <Button variant="primary" onClick={this.handleSubmit}>
@@ -317,15 +214,6 @@ class ConfirmForm extends React.Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <AddDeviceForm
-                    show={this.state.showAddDeviceForm}  
-                    title='Add device' 
-                    searchableObjectData={this.props.searchableObjectData}
-                    addedDevice={this.addedDevice}
-                    handleAddDeviceFormClose={this.handleAddDeviceFormClose}
-                    searchResult={this.props.searchResult}
-                    formOption={this.props.formOption}
-                />
             </>
         );
     }

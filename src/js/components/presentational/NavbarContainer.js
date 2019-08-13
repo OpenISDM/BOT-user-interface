@@ -130,7 +130,7 @@ class NavbarContainer extends React.Component {
         }
         const locale = this.context;
         const { isSignin, isShowSigninForm, isShowSignupForm, isShowShiftChange } = this.state;
-
+        console.log('render')
         return (
             <Navbar id='navbar' bg="white" className="navbar sticky-top navbar-light" expand='xl' style={style.navbar}>
                 <Navbar.Brand className='px-0 mx-0'>  
@@ -149,7 +149,7 @@ class NavbarContainer extends React.Component {
                 <Navbar.Collapse id="responsive-navbar-nav">  
                     <Nav className="mr-auto" >
                         <Nav.Item><Link to="/" className="nav-link nav-route" >Home</Link></Nav.Item>
-                        {!Cookies.get('user') &&
+                        {Cookies.get('user') &&
                             <>
                                 <Nav.Item><Link to="/page/healthReport" className="nav-link nav-route" >{locale.HEALTH_REPORT}</Link></Nav.Item>
                                 <Nav.Item><Link to="/page/geofence" className="nav-link nav-route" >Geofence</Link></Nav.Item>
@@ -165,7 +165,7 @@ class NavbarContainer extends React.Component {
                         </NavDropdown>          
                         {Cookies.get('user')
                             ? <NavDropdown title={<i className="fas fa-user-alt"></i> }id="collasible-nav-dropdown" alignRight >
-                                <NavDropdown.Item className="lang-select" disabled>{Cookies.get('user')}</NavDropdown.Item>
+                                <NavDropdown.Item className="lang-select" href="/page/userSetting">{Cookies.get('user')}</NavDropdown.Item>
                                 <Dropdown.Divider />
                                 <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>{locale.SHIFT_CHANGE_RECORD}</NavDropdown.Item>
                                 <Dropdown.Divider />

@@ -48,7 +48,7 @@ class App extends React.Component {
 
     componentDidMount() {
         // this.props.shouldTrackingDataUpdate ? this.getTrackingData() : null;
-        this.interval = this.props.shouldTrackingDataUpdate ? setInterval(this.getTrackingData, config.surveillanceMap.intevalTime) : null;
+        // this.interval = this.props.shouldTrackingDataUpdate ? setInterval(this.getTrackingData, config.surveillanceMap.intevalTime) : null;
     }
 
     componentDidUpdate(prepProps, prevState) {
@@ -62,28 +62,7 @@ class App extends React.Component {
         clearInterval(this.interval);
     }
     
-    // getTrackingData() {
-
-    //     axios.get(dataSrc.trackingData).then(res => {
-    //         var data = res.data.rows.map((item) =>{
-
-    //             item['notFoundTime'] = GetTimeStampDifference(item.last_seen_timestamp - moment())
-    //             item['currentPosition'] = UuidToLocation(item.lbeacon_uuid)
-
-    //             return item
-    //         })
-
-    //         this.props.retrieveTrackingData(res.data)
-    //         this.setState({
-    //             searchableObjectData: data,
-    //             ShouldUpdate: !this.state.ShouldUpdate + 1
-    //         })
-    //         console.log(this.state.searchableObjectData)
-    //     })
-    //     .catch(error => {
-    //         console.log(error)
-    //     })
-    // }
+   
 
     ShouldUpdateTrackingData(){
 
@@ -96,6 +75,7 @@ class App extends React.Component {
 
 
     render() { 
+
         const { locale } = this.state;
         for( var i in routes){
             routes[i]['loginStatus'] = this.state.loginStatus
@@ -109,8 +89,6 @@ class App extends React.Component {
                     <NavbarContainer 
                         changeLocale={this.handleChangeLocale} 
                         locale={locale} 
-                        trackingData={this.retrievingTrackingData}
-                        searchableObjectData={this.state.searchableObjectData}
                     />
                     <Switch>
                         {renderRoutes(routes)}

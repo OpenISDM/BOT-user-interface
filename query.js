@@ -4,7 +4,8 @@ const queryType = require ('./queryType');
 const bcrypt = require('bcrypt');
 const pg = require('pg');
 
-var pdf = require('html-pdf');
+const pdf = require('html-pdf');
+const csv=require('csvtojson')
 
 // const Userconfig = require('./src/js/config')
 
@@ -51,7 +52,7 @@ const getTrackingData = (request, response) => {
             }
 
             let panicTime = GetTimeStampDifference(now, moment(item.panic_timestamp).format('x'))
-            if(panicTime < 300000){
+            if(panicTime < 30){
                 item['panic_button'] = 1
             }else{
                 item['panic_button'] = 0
@@ -81,12 +82,40 @@ const getTrackingData = (request, response) => {
     })
 }
 
+const getBranches = (request, response) => {
+    const csvFilePath='./src/csv/branches.csv';
+    csv({
+        noheader:true,
+        output: "line"
+    })
+    .fromFile(csvFilePath)
+    .then((jsonObj)=>{
+        var branchList = {}
+        for(var row of jsonObj){
+
+            var splitted = row.split(',')
+            var branch = splitted[0]
+            branchList[branch] = []
+            for(var item of splitted.slice(1)){
+                console.log(item)
+                if(item !== ''){
+                    branchList[branch].push(item)
+                }
+                
+            }
+            
+        }
+        response.status(200).json(branchList)
+        
+    })
+}
+
 const getObjectTable = (request, response) => {
     pool.query(queryType.query_getObjectTable, (error, results) => {        
         if (error) {
             console.log("Get data fails : " + error)
         } else {
-            console.log('Get objectTable data!')
+            console.log('Get objecthtml data!')
         
             results.rows.map(item => {
                 const localLastReportTimeStamp = moment(item.last_report_timestamp).tz(process.env.TZ);
@@ -102,7 +131,7 @@ const getLbeaconTable = (request, response) => {
         if (error) {
             console.log("Get data fails : " + error)
         }
-        console.log('Get lbeaconTable data!')
+        console.log('Get lbeaconhtml data!')
     
         results.rows.map(item => {
             item.last_report_timestamp = moment(item.last_report_timestamp).tz(process.env.TZ).format();
@@ -116,7 +145,7 @@ const getGatewayTable = (request, response) => {
         if (error) {
             console.log("Get data fails : " + error)                
         } else {
-            console.log('Get gatewayTable data!')
+            console.log('Get gatewayhtml data!')
         }
 
         results.rows.map(item => {
@@ -180,7 +209,6 @@ const addObject = (request, response) => {
 
 const editObjectPackage = (request, response) => {
     const body = request.body
-
     pool.query(queryType.query_editObjectPackage(body), (error, results) => {
         if (error) {
             console.log(error)
@@ -246,6 +274,21 @@ const signup = (request, response) => {
 
 }
 
+const modifyUserDevices = (request, response) => {
+    const {username, mode, acn} = request.body
+    console.log(queryType.query_modifyUserDevices(username, mode, acn))
+    pool.query(queryType.query_modifyUserDevices(username, mode, acn), (error, results) => {
+        if (error) {
+            
+        } else {
+            console.log('Modify Success')
+            // console.log('Get user info success')
+        }
+        
+        response.status(200).json(results)
+    })
+}
+
 const userInfo = (request, response) => {
     const username = request.body.username;
     pool.query(queryType.query_getUserInfo(username), (error, results) => {
@@ -254,9 +297,12 @@ const userInfo = (request, response) => {
         } else {
             // console.log('Get user info success')
         }
+        
         response.status(200).json(results)
     })
 }
+
+
 
 const userSearchHistory = (request, response) => {
     const username = request.body.username;
@@ -266,7 +312,7 @@ const userSearchHistory = (request, response) => {
         } else {
             console.log('Get user search history success')
         }
- 
+        
         response.status(200).json(results)
     })
 }
@@ -301,43 +347,74 @@ const editLbeacon = (request, response) => {
 }
 
 const  QRCode = (request, response) => {
-    var table = "<table border='1' style='width:100%;word-break:break-word;'>";
-    console.log(request.body)
-    table += "<tr>";
-    table += "<th >Name</th>";
-    table += "<th >Type</th>";
-    table += "<th >ACN-number</th>";
-    table += "<th >Location</th>";
-    table += "</tr>";
+    // console.log(result)
+    var {foundResult, notFoundResult, user} = request.body
+    console.log(typeof user)
+    var header = "<h1 style='text-align: center;'>" + "checked by " + user + "</h1>"
+    console.log(header)
+    var timestamp = "<h3 style='text-align: center;'>" + moment().format('LLLL') + "</h3>"
 
-    for (var i of request.body){
-        table += "<tr>";
-        table += "<td>"+i.name+"</td>";
-        table += "<td>"+i.type+"</td>";
-        table += "<td>"+i.access_control_number+"</td>";
-        table += "<td>near "+i.location_description+"</td>";
-        table += "</tr>";
+    function generateTable(title, types, lists, attributes){
+        var html = "<div>"
+        html += "<h2 style='text-align: center;'>" + title + "</h2>"
+        html += "<table border='1' style='width:100%;word-break:break-word;'>";
+        html += "<tr>";
+        for(var i in types){
+            html += "<th >" + types[i] + "</th>";
+        }
+        for (var i of lists){
+            html += "<tr>";
+            for(var j of attributes){
+                html += "<td>"+i[j]+"</td>";
+            }
+        }
+        html += "</table></div>"
+
+        return html
     }
-    table += "</table>"
+
+    // foundResult to Table
+    
+    var types = ["Name", "Type", "ACN", "Location"]
+    var attributes = ["name", "type", "access_control_number", "location_description"]
+
+    var title = "Found Results"
+    var lists = foundResult
+    var foundTable = generateTable(title, types, lists, attributes)
+
+
+    var title = "Not Found Results"
+    var lists = notFoundResult
+    var notFoundTable = generateTable(title, types, lists, attributes)
+
+
+    
     
     var options = {
         "format": "A4",
         "orientation": "landscape",
         "border": {
-            "top": "0.1in",
+            "top": "0.3in",            // default is 0, units: mm, cm, in, px
+            "right": "2in",
+            "bottom": "0.3in",
+            "left": "2in"
         },
         "timeout": "120000"
     };
-    var filePath = 'save_file_path/test.pdf'
-    pdf.create(table, options).toFile(filePath, function(err, result) {
+    var html = header + timestamp + foundTable + notFoundTable
+    var filePath = `save_file_path/${user}_${moment().format('LLLL')}.pdf`
+    pdf.create(html, options).toFile(filePath, function(err, result) {
         if (err) return console.log(err);
         console.log("pdf create");
         response.status(200).json(filePath)
     });
 }
 
+
+
 module.exports = {
     getTrackingData,
+    getBranches,
     getObjectTable,
     getLbeaconTable,
     getGatewayTable,
@@ -347,6 +424,7 @@ module.exports = {
     editObjectPackage,
     signin,
     signup,
+    modifyUserDevices,
     userInfo,
     userSearchHistory,
     addUserSearchHistory,

@@ -10,43 +10,54 @@ import dataSrc from '../dataSrc';
 export default async function GetResultData(SearchKey, searchableObjectList){
 	// console.log(searchableObjectList)
 	var searchResult = []
-	if(SearchKey === 'my devices'){
-		if(Cookies.get('user')){
-			await axios.post(dataSrc.userInfo, {
-	            username: Cookies.get('user')
-	        }).then( res => {
+	if(typeof SearchKey === 'string'){
+		if(SearchKey === 'my devices'){
+			if(Cookies.get('user')){
+				await axios.post(dataSrc.userInfo, {
+		            username: Cookies.get('user')
+		        }).then( res => {
 
-	            var mydevice = new Set(res.data.rows[0].mydevice);
-	            for(var i in searchableObjectList){
+		            var mydevice = new Set(res.data.rows[0].mydevice);
+		            for(var i in searchableObjectList){
 
-	            	if(mydevice.has(searchableObjectList[i].access_control_number)){
-	            		searchResult.push(searchableObjectList[i])
-	            	}
+		            	if(mydevice.has(searchableObjectList[i].access_control_number)){
+		            		searchResult.push(searchableObjectList[i])
+		            	}
 
-	            }
-	            
-	        }).catch(error => {
-	            console.log(error)
-	        })
-		}
-        
-		
-	}else{
-		if(SearchKey === 'all devices'){
+		            }
+		            
+		        }).catch(error => {
+		            console.log(error)
+		        })
+			}
+	        
+			
+		}else{
+			if(SearchKey === 'all devices'){
 
-			for(var i in searchableObjectList){
-				searchResult.push(searchableObjectList[i])
+				for(var i in searchableObjectList){
+					searchResult.push(searchableObjectList[i])
+				}
+			}
+			else{
+				for(var i in searchableObjectList){
+
+					if (searchableObjectList[i].type.toLowerCase() === SearchKey.toLowerCase()){
+						searchResult.push(searchableObjectList[i])
+					}
+				}
 			}
 		}
-		else{
+	}else if(typeof SearchKey === 'object'){
+		if(SearchKey.dataType === 'location_description'){
 			for(var i in searchableObjectList){
-
-				if (searchableObjectList[i].type.toLowerCase() === SearchKey.toLowerCase()){
+				if(searchableObjectList[i][SearchKey.dataType] === SearchKey.searchKey){
 					searchResult.push(searchableObjectList[i])
 				}
 			}
 		}
 	}
+	
 
 	return await searchResult
 }
