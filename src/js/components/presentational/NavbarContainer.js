@@ -6,7 +6,7 @@ import { Navbar, Nav, NavDropdown, Image, Dropdown  } from 'react-bootstrap'
 import LocaleContext from '../../context/LocaleContext';
 import SigninPage from '../container/SigninPage';
 import SignupPage from '../container/SignupPage';
-import ShiftChange from '../container/ShiftChange';
+import ShiftChange from '../container/ShiftChange/ShiftChange';
 
 import Cookies from 'js-cookie'
 

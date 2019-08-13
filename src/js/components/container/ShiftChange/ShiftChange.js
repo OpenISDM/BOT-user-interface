@@ -4,15 +4,15 @@ import { Modal, Image, Row, Col } from 'react-bootstrap';
 
 
 import axios from 'axios';
-import dataSrc from '../../dataSrc';
+import dataSrc from '../../../dataSrc';
 
 import Cookies from 'js-cookie'
 
-import SearchResultTable from '../presentational/SearchResultTable'
+import SearchResultTable from './SearchResultTable'
 
-import GetResultData from '../../functions/GetResultData'
+import GetResultData from './GetResultData'
 
-import PdfDownloadForm from '../presentational/PdfDownloadForm'
+import PdfDownloadForm from './PdfDownloadForm'
 
 import moment from 'moment'
 
