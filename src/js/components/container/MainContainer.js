@@ -106,6 +106,7 @@ class ContentContainer extends React.Component{
             })
         }
         if(this.props.route.ShouldUpdate !== this.state.ShouldUpdateForProps){
+
             this.setState({
                 ShouldUpdateForProps: this.props.route.ShouldUpdate,
 
@@ -186,7 +187,7 @@ class ContentContainer extends React.Component{
                     }
                     // console.log(data)
                     this.props.retrieveTrackingData(foundData)
-
+                    console.log(GetTypeKeyList(data))
                     var state = {
                         searchableObjectData: data,
                         dataMap: dataMap,

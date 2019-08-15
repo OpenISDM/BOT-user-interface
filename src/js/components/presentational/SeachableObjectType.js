@@ -22,58 +22,118 @@ class SearchableObjectType extends React.Component {
 
             IsShowSection : false,
 
-            sectionTitleData : [],
+            
             
             changeState: 0,
 
-            ShouldUpdate: 1
+            
+
+        }
+        this.data = {
+            sectionTitleData : [],
+            floatUp: false
+        }
+        this.shouldUpdate = false
+        this.onSubmit = null
+
+
+        this.API = {
+            setObjectList : (objectList) => {
+                var firstLetterMap = new Array()
+                if(objectList.length !== 0){
+                    objectList.map((name) => {
+                        firstLetterMap[name[0]] 
+                            ? firstLetterMap[name[0]].push(name)
+                            : firstLetterMap[name[0]] = [name]
+                    })
+                }
+                this.shouldUpdate = true
+                
+                this.data.sectionTitleData = firstLetterMap
+                this.setState({})
+                
+            },
+            setOnSubmit : (func) => {
+                this.onSubmit = func
+            },
+            floatUp : () => {
+                this.shouldUpdate = true
+                this.data.floatUp = true
+                this.setState({})
+            },
+            floatDown: () => {
+                this.shouldUpdate = true
+                this.data.floatUp = false
+                this.setState({})
+            }
         }
 
-       this.handleHoverEvent = this.handleHoverEvent.bind(this)
-       this.mouseClick = this.mouseClick.bind(this)
-       this.mouseLeave = this.mouseLeave.bind(this)
-       this.sectionIndexHTML= this.sectionIndexHTML.bind(this)
-       this.sectionTitleListHTML = this.sectionTitleListHTML.bind(this)
+        this.handleHoverEvent = this.handleHoverEvent.bind(this)
+        this.mouseClick = this.mouseClick.bind(this)
+        this.mouseLeave = this.mouseLeave.bind(this)
+        this.sectionIndexHTML= this.sectionIndexHTML.bind(this)
+        this.sectionTitleListHTML = this.sectionTitleListHTML.bind(this)
     }
 
     
     
 
     componentDidMount(){
-        this.setState({
-            sectionTitleData: this.props.objectTypeList
-        })
+        if(this.props.getAPI){
+            this.props.getAPI(this.API)
+        }else if(this.props.onSubmit){
+            this.onSubmit = this.props.onSubmit
+        }else{
+            console.error('onSubmit is empty')
+        }
+        
     }
     
-
-    componentDidUpdate(prepProps, prevState){
-
-        if(this.props.ShouldUpdate !== prepProps.ShouldUpdate){
-            this.setState({
-                sectionTitleData: this.props.objectTypeList
-            })
+    shouldComponentUpdate(nextProps, nexState){
+        if(this.shouldUpdate){
+            this.shouldUpdate = false
+            return true
         }
+        if(!_.isEqual(this.props.objectTypeList, nextProps.objectTypeList) ){
+            this.API.setObjectList(nextProps.objectTypeList)
+            return true
+        }
+        if(this.props.floatUp !== nextProps.floatUp){
+            if(nextProps.floatUp){
+                this.API.floatUp()
+            }else{
+                this.API.floatDown()
+            }
+        }
+        return false
     }
 
     handleHoverEvent(e){
+        location.href = '#' + e.target.name
+        this.shouldUpdate = true
         this.setState({
             IsShowSection: true,
         })
     }
+
     mouseClick(e){
        
-        location.href = '#' + e.target.name
-        this.props.getResultData(e.target.innerHTML)
+        
+        this.onSubmit(e.target.innerHTML)
+        this.shouldUpdate = true
         this.setState({
             IsShowSection: false
         })
     }
+
     mouseLeave(){
-        console.log('leave')
+
+        this.shouldUpdate = true
         this.setState({
             IsShowSection: false
         })
     }
+
     sectionIndexHTML(){
         const {sectionIndexList} = this.state
         var Data = [];
@@ -105,29 +165,27 @@ class SearchableObjectType extends React.Component {
 
         var Data = [];
         let first = []; 
-        const {sectionTitleData} = this.state
+        const {sectionTitleData} = this.data
         for(var titleData in sectionTitleData){
-            if (sectionTitleData[titleData].values().next().value != undefined){
+            first = titleData
 
-                first = sectionTitleData[titleData].values().next().value.charAt(0).toUpperCase()
-
-                Data.push(<div id={first} key={first} className=" text-right text-dark" ><strong><h4 className="m-0">{first}</h4></strong></div>)
-                for (let i of sectionTitleData[titleData]){
-
-                    Data.push(
-                        <div key={i} className="my-0 py-0 w-100 text-right" style={{cursor: 'grab'}}onClick={this.mouseClick} >
-                                <h4 className="m-0">{i}</h4>
-                        </div>
-                    )
-                }
+            Data.push(<div id={first} key={first} className=" text-right text-dark" ><strong><h4 className="m-0">{first}</h4></strong></div>)
+            for (let i in sectionTitleData[titleData]){
+                let name = sectionTitleData[titleData][i]
+                Data.push(
+                    <div key={name} name={name} className="my-0 py-0 w-100 text-right" style={{cursor: 'grab'}} onClick={this.mouseClick} >
+                            <h4 className="m-0">{name}</h4>
+                    </div>
+                )
             }
+            
         
         }       
         return Data
 
     };
     render() {
-
+        console.log('render')
         var  Setting = {
         SectionIndex: {
 
@@ -167,7 +225,7 @@ class SearchableObjectType extends React.Component {
                 {
                     // this section shows the layout of sectionIndexList (Alphabet List)
                 }
-                <Col  md={4} id = "SectionIndex"  className = "float-right" style = {{zIndex: (this.props.floatUp)?1070:1}}>
+                <Col  md={4} id = "SectionIndex"  className = "float-right" style = {{zIndex: (this.data.floatUp)?1070:1}}>
                     {
                         this.sectionIndexHTML()
                     }  

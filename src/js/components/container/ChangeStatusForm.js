@@ -30,20 +30,18 @@ class ChangeStatusForm extends React.Component {
     
     constructor(props) {
         super(props);
-
+        this.ShouldUpdate = true
         this.state = {
             title: 'title',
             show: false,
             selectedObjectData: null,
             branches: null,
         };
-
         this.newStatus = {
             status : '',
             transferred_location : '',
         }
 
-        this.departmentHTML = null
 
 
         this.onClose = null
@@ -52,17 +50,21 @@ class ChangeStatusForm extends React.Component {
 
         this.API = {
             setTitle: (title) => {
+                this.ShouldUpdate = true
                 this.setState({
                     title: title
                 })
+
             },
             openForm: (selectedObjectData) => {
+                this.ShouldUpdate = true
                 this.setState({
                     show: true,
                     selectedObjectData: selectedObjectData,
                 })
             },
             closeForm: () => {
+                this.ShouldUpdate = true
                 this.setState({
                     show: false,
                     selectedObjectData: {}
@@ -87,26 +89,18 @@ class ChangeStatusForm extends React.Component {
                     ...this.newStatus,
                     ...newStatus
                 }
-
             }
             
         }
         this.event={
             closeForm: () => {
-                this.setState({
-                    show: false,
-                    selectedObjectData: {}
-                })
+                this.API.closeForm()
                 this.onClose()
             },
             openForm: (selectedObjectData) => {
-                this.setState({
-                    show: true,
-                    selectedObjectData: selectedObjectData,
-                })
+                this.API.openForm(selectedObjectData)
             },
             submitForm: (status, transferred_location) => {
-                console.log(status)
                 this.onSubmit(status, transferred_location);
             },
             addDevice : () => {
@@ -123,11 +117,21 @@ class ChangeStatusForm extends React.Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddTransferDevices = this.handleAddTransferDevices.bind(this)
+
+        this.formikSubmission = this.formikSubmission.bind(this)
+        this.formikOnChoose = this.formikOnChoose.bind(this)
     }
     
     componentDidMount(){
         this.props.getAPI(this.API)
         this.getBranches()
+    }
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.ShouldUpdate){
+            this.ShouldUpdate = false
+            return true
+        }
+        return false
     }
     componentDidUpdate(prevProps, prevState) {
     }
@@ -203,12 +207,65 @@ class ChangeStatusForm extends React.Component {
             
         return htmls
     }
-    
 
-    mouserOverTransferredLocation(e){
-        var name = e.target.name
-        console.log(name)
+    formikValidation(values){
+        let errors = {};
+        if (values.status === '') {
+            errors.NoSelect = 'You should at least select one status';
+        } 
+        if(values.status === 'Transferred' && values.branch === 'Unchoose' && values.submit){
+            errors.NoLocation = 'You have to select a transfered branch'
+        }
+
+        if(values.status === 'Transferred' && values.branch !== 'Unchoose' && values.department === 'Unchoose' && values.submit){
+            errors.NoLocation = 'You have to select a transfered department'
+        }
+        values.submit = false;
+
+        return errors;
     }
+    formikSubmission(values, {setSubmitting}){
+        if(values.status === 'Transferred'){
+            this.newStatus = {
+                status: values.status,
+                transferred_location: `${values.department}, ${values.branch}`,
+            }
+        }else{
+            this.newStatus = {
+                status: values.status,
+                transferred_location: '',
+            }
+        }
+        this.handleSubmit()
+        setSubmitting(false);
+    }
+    formikOnChoose(e,{values}, handleChange){
+        handleChange(e);
+        var name = e.target.name
+
+        values.status = name;
+        this.API.setNewStatus({
+            status : name
+        })
+    }
+    formikCheckBoxHtml(name, {values}, handleChange){
+        let html = 
+            <div className="custom-control custom-checkbox" key={name}>
+                <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    name={name}
+                    onChange={(e) => { this.formikOnChoose(e,{values}, handleChange) }}
+                    checked = {values.status === name }
+                    id={'check' + name}
+                />
+                 <label className="custom-control-label h4" htmlFor={'check' + name}>{name}</label>
+            </div>
+
+        return html
+    }
+
+    
     render() {
 
         const style = {
@@ -240,6 +297,7 @@ class ChangeStatusForm extends React.Component {
 
 
 
+
         return (
             <>
                 <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content} enforceFocus={false}>
@@ -253,141 +311,30 @@ class ChangeStatusForm extends React.Component {
                             </div>
                             <hr/>
                             <Formik
-                                initialValues={{department: 'Unchoose', branch: 'Unchoose', status: '', submit: false }}
-                                validate={values => {
-                                    let errors = {};
-                                    if (values.status === '') {
-                                        errors.NoSelect = 'You should at least select one status';
-                                    } 
-                                    if(values.status === 'Transferred' && values.branch === 'Unchoose' && values.submit){
-                                        errors.NoLocation = 'You have to select a transfered branch'
-                                    }
-                                    console.log(values.department)
-                                    if(values.status === 'Transferred' && values.branch !== 'Unchoose' && values.department === 'Unchoose' && values.submit){
-                                        errors.NoLocation = 'You have to select a transfered department'
-                                    }
-                                    values.submit = false;
-
-                                    return errors;
-                                }}
-                                onSubmit={(values, { setSubmitting }) => {
-                                    setTimeout(() => {
-                                        console.log('submitting')
-                                        if(values.status === 'Transferred'){
-     
-                                            this.newStatus = {
-                                                status: values.status,
-                                                transferred_location: `${values.department}, ${values.branch}`,
-                                            }
-                                            
-      
-                                        }else{
-                                            this.newStatus = {
-                                                status: values.status,
-                                                transferred_location: '',
-                                            }
-                                        }
-                                        
-                                        this.handleSubmit()
-                                        setSubmitting(false);
-                                    }, 400);
-                                }}
+                                initialValues={{department: 'Unchoose', branch: 'Unchoose', status: '', showDepartment: false, submit: false }}
+                                validate={this.formikValidation}
+                                onSubmit={this.formikSubmission}
                             >
-                            {({
-                            values,
-                            errors,
-                            touched,
-                            handleChange,
-                            handleBlur,
-                            handleSubmit,
-                            isSubmitting,
-                            /* and other goodies */
-                            }) => (
-                                <form onSubmit={(e)=>{ values.submit = true;
-                                    handleSubmit(e)}} className="justify-content-center">
+                            {({ values, errors, handleChange, handleSubmit }) => (
+                                <form onSubmit={(e)=>{ values.submit = true; handleSubmit(e)}} className="justify-content-center">
 
+                                    {config.statusOption.map((status) => {
+                                        return this.formikCheckBoxHtml(status, {values}, handleChange)
+                                    })}
                                     
 
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            name="Normal"
-                                            onChange={(e)=>{handleChange(e);
-                                                values.status = 'Normal';
-                                                this.API.setNewStatus({
-                                                    status : 'Normal'
-                                                })
-                                            }}
-                                            checked = {values.status === 'Normal' }
-                                            id="checkNormal"
-                                        />
-                                         <label className="custom-control-label" htmlFor="checkNormal">Normal</label>
-                                    </div>
-
-                                    
-
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            name="Broken"
-                                            onChange={(e)=>{handleChange(e);
-                                                values.status = 'Broken';
-                                                this.API.setNewStatus({
-                                                    status : 'Broken'
-                                                })
-                                            }}
-                                            checked = {values.status === 'Broken' }
-                                            id="checkBroken"
-                                        />
-                                        <label className="custom-control-label" htmlFor="checkBroken">Broken</label>
-                                    </div>
-
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            name="Reserve"
-                                            onChange={(e)=>{handleChange(e)
-                                                values.status = 'Reserve'
-                                                this.API.setNewStatus({
-                                                    status : 'Reserve'
-                                                })
-                                            }}
-                                            checked = {values.status === 'Reserve' }
-                                            id="checkReserve"
-                                        />
-                                        <label className="custom-control-label" htmlFor="checkReserve">Reserve</label>
-                                    </div>
-
-                                    <div className="custom-control custom-checkbox d-flex" style={{width: '180%', height: '10vh'}}>
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            name="Transferred"
-                                            onChange={(e)=>{handleChange(e)
-                                                values.status = 'Transferred'
-
-                                                this.API.setNewStatus({
-                                                    status : 'Transferred'
-                                                })
-                                            }}
-                                            checked = {values.status === 'Transferred' }
-                                            id="checkTransferred"
-                                        />
-
-                                        <label className="custom-control-label" htmlFor="checkTransferred">Transferred</label>
+                                    <div className="custom-control custom-checkbox d-inline-flex" style={{width: '150%', height: '1vh'}}>
                                         <div className = "m-1 p-1" style={{width: '100%'}}>
-                                            <Col xl={5} className="px-0" style={{top: '-50%', left: '15%', position: 'absolute'}}>
+                                            <Col sm={5} className="px-0" style={{top: '-150%', left: '25%', position: 'absolute'}}>
                                                 <select 
                                                     className="custom-select my-2 w-100 float-left" 
                                                     disabled={values.status !== 'Transferred'}
                                                     name="select" 
                                                     onChange={(e)=> {
                                                         var location = e.target.value
-                                                        console.log(location)
                                                         values.branch = location;
+                                                        values.showDepartment = true
+                                                        e.target.value = 'Unchoose'
                                                         handleChange(e)
                                                         
                                                     }} 
@@ -410,26 +357,26 @@ class ChangeStatusForm extends React.Component {
                                                     }
                                                 </select>
                                                 </Col>
-                                                <Col xl={4} className="px-0" style={{top: '-50%', left: '58%', position: 'absolute'}}>
-                                                    {(values.branch !== 'Unchoose' && values.status === 'Transferred')
+                                                <Col sm={4} className="px-0" style={{top: '-150%', left: '68%', position: 'absolute'}}>
+                                                    {(values.showDepartment)
                                                         ?
                                                             <ListGroup className = "my-2 w-100 float-left shadow border border-dark" disabled={values.branch === 'Unchoose' || values.status!== 'Transferred'}
                                                                 
                                                             >
                                                                 {
                                                                     (() => {
-                                                                        console.log(values.branch)
                                                                         var Html = []
                                                                         if(this.state.branches[values.branch]){
                                                                             Html = this.state.branches[values.branch].map((department)=>{
-                                                                                console.log(values.branches)
+
                                                                                 let html = 
                                                                                     <ListGroup.Item type="button" key = {department} name={department} className="border border-light" style={{borderRadius: '5px'}} action
                                                                                         onClick={(e)=>{
 
                                                                                             var department = e.target.name
                                                                                             values.department = department
-
+                                                                                            values.showDepartment = false
+                                                                                            handleChange(e)
                                                                                         }}
                                                                                     >
                                                                                         {department}
@@ -451,8 +398,14 @@ class ChangeStatusForm extends React.Component {
                                         
                                     
                                     </div>
-                                    {<h5 className="text-danger">{errors.NoLocation}</h5>}
-                                    {<h5 className="text-danger">{errors.NoSelect}</h5>}
+                                    {values.status === 'Transferred'
+                                        ? 
+                                            <h4 className="text-center mb-3">Transferred to {[values.department, values.branch].join(', ')}</h4>
+                                        :
+                                            null
+                                    }
+                                    {<h5 className="text-danger text-center">{errors.NoLocation}</h5>}
+                                    {<h5 className="text-danger text-center">{errors.NoSelect}</h5>}
                                     <Row className="btn-group d-flex justify-content-center mx-3">
                                         <Button name="AddDevices" onClick={this.handleAddTransferDevices}>
                                             Add Devices

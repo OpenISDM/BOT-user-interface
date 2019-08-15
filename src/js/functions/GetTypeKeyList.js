@@ -1,19 +1,12 @@
 
 
 export default function GetResultData(searchableObjectList){
-	var set = new Set()
-	for(var i in searchableObjectList){
-		set.add(searchableObjectList[i].type.toLowerCase())
-	}
-	var list = {}
-	for(var i of set){
-		let first = i[0]
-		if (list[first] === undefined){
-			list[first] = []
+	var set = new Array()
+	for(var item of searchableObjectList){
+		if(!set.includes(item.type)){
+			set.push(item.type)
 		}
 		
-		list[first].push(i)
-				
 	}
-	return list
+	return set
 }

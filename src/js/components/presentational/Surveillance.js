@@ -64,7 +64,7 @@ class Surveillance extends React.Component {
             if (this.props.objectInfo !== prepProps.objectInfo) {
                 var objectInfo = this.props.objectInfo
                 
-                // console.log(objectInfo)
+
                 var objects = {}
                 for(var i of objectInfo){
                     objects[i.mac_address] = i
@@ -210,14 +210,14 @@ class Surveillance extends React.Component {
      * Create the error circle of markers, and add into this.markersLayer.
      */
     handleObjectMarkers(){
-        console.log('handle')
+
         const { hasSearchKey, searchResult, searchType } = this.props;
         const objects = this.state.objectInfo;
 
 
         /** Process the search object data */
         var searchedObjectDataMap= new Map();
-        // console.log(searchResult)
+
         if (hasSearchKey) {
             searchResult.map( item => {
                 searchedObjectDataMap.set(item.mac_address, item)
@@ -326,8 +326,7 @@ class Surveillance extends React.Component {
         for (var key in objects){
 
             /** Tag the searched object with searched and pinColor*/
-            // console.log(searchedObjectDataMap)
-            // console.log(searchedObjectDataMap)
+
             if(searchedObjectDataMap.has(key)) {
 
                 objects[key] = searchedObjectDataMap.get(key)
@@ -356,11 +355,11 @@ class Surveillance extends React.Component {
             let iconOption = {}
 
             if (objects[key].panic_button === 1) {
-                console.log('paniccccc')
+
                 iconOption = sosIconOptions;
             } 
             else if (objects[key].status === 'Broken' || objects[key].status === 'Transferred' || objects[key].status === 'Reserve') {
-                // console.log('broken')
+
                 iconOption = unNormalIconOptions;
             } else if (objects[key].geofence_type === 'Fence'){
                 iconOption = geofenceFAweIconOptions;
@@ -433,7 +432,6 @@ class Surveillance extends React.Component {
         const currentPosition =  e.target.options.icon.options.currentPosition
 
         let objectList = this.collectObjectsByLatLng(currentPosition)
-        // console.log(objectList)
         this.props.handleSearch({
             dataType : 'location_description',
             searchKey: objectList[0].location_description

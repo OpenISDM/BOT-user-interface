@@ -38,7 +38,26 @@ class SearchContainer extends React.Component {
             ShouldUpdateFrequentSearch: 0,
             ShouldUpdateSearchableObjectType: 0,
         }
+
+        this.APIforSearchableObjectType = null
+
+
+        // this.getAPIfromSearchableObjectType = this.getAPIfromSearchableObjectType.bind(this)
     }
+
+    // getAPIfromSearchableObjectType(API){
+    //     var getSearchResult = this.props.getSearchResult
+
+    //     this.APIforSearchableObjectType = API
+
+    //     this.APIforSearchableObjectType.setOnSubmit(getSearchResult)
+
+    //     // this.APIforSearchableObjectType.floatUp()
+
+    //     // this.APIforSearchableObjectType.floatDown()
+
+    //     // this.APIforSearchableObjectType.setObjectList(objectTypeList)
+    // }
     componentDidMount(){
         
     }
@@ -51,7 +70,15 @@ class SearchContainer extends React.Component {
     componentWillReceiveProps(nextProps){
         var state ={}
         let {searchableObjectData, objectTypeList, ShouldUpdate} = nextProps
+        // if(this.props.floatUp !== nextProps.floatUp){
+        //     if(nextProps.floatUp){
+        //         this.APIforSearchableObjectType.floatUp()
+        //     }else{
+        //         this.APIforSearchableObjectType.floatDown()
+        //     }
+        // }
         if( this.state.ShouldUpdate !== nextProps.ShouldUpdate){
+            // this.APIforSearchableObjectType.setObjectList(objectTypeList)
             state = {
                 ...state,
                 searchableObjectData: searchableObjectData,
@@ -85,7 +112,7 @@ class SearchContainer extends React.Component {
         
         return (
             <Col id="seachSection"  className="w-100" style={{ position: 'relative'}}>
-            {console.log(this.props.floatUp)}
+
                 <div className="bg-white w-100 m-1"style={{zIndex: this.props.floatUp? 1070 : 1, position: 'absolute', height: '80vh', borderRadius: '3%', right: '1%'}}>
                     <Row className='col-12 mx-3 d-flex justify-content-center ' >
                             <div id='searchBar' className='d-flex justify-content-center align-items-center pt-4 pb-2 mx-3'  >
@@ -102,10 +129,8 @@ class SearchContainer extends React.Component {
                 </div>
                 <SearchableObjectType
                     floatUp = {this.props.floatUp}
-                    Show = {IsShowSearchableObjectTypeList}
-                    objectTypeList = {objectTypeList}
-                    getResultData = {getSearchResult}
-                    ShouldUpdate = {ShouldUpdateSearchableObjectType}
+                    objectTypeList = {this.state.objectTypeList}
+                    onSubmit={getSearchResult}
                 />
 
             </Col>

@@ -115,6 +115,13 @@ const config = {
         logo: BOT_LOGO,
     },
 
+    statusOption: [
+        "Normal",
+        "Broken",
+        "Reserve",
+        "Transferred"
+    ],
+
     companyName: 'BeDITech',
 
     systemAdmin: {
