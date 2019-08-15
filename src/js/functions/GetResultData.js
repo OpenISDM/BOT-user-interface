@@ -16,7 +16,7 @@ export default async function GetResultData(SearchKey, searchableObjectList){
 				await axios.post(dataSrc.userInfo, {
 		            username: Cookies.get('user')
 		        }).then( res => {
-
+		        	console.log(res.data.rows[0].mydevice)
 		            var mydevice = new Set(res.data.rows[0].mydevice);
 		            for(var i in searchableObjectList){
 

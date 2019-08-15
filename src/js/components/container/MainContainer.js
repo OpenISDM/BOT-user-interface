@@ -165,6 +165,8 @@ class ContentContainer extends React.Component{
 
                   
                 }
+
+
                 
                 if(ShouldUpdate || this.state.searchableObjectData.length === 0){
 
@@ -242,7 +244,7 @@ class ContentContainer extends React.Component{
         })
         this.clearGridButtonBGColor();
         this.APIforSearchResult.openSearchResult(searchResult)
-        console.log(searchResult)
+
         var state = {
             hasSearchKey: true,
             IsShowResult: true,
@@ -308,9 +310,9 @@ class ContentContainer extends React.Component{
     async handleSearch(e){
         // 
         if(typeof e === 'string'){
-            console.log(e)
+
             if(e === 'region'){
-                console.log(this.state.searchResult)
+
             }
             var searchResult = await this.getSearchResult(e)
             // console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')

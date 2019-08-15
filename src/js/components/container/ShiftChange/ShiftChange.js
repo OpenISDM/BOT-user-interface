@@ -42,13 +42,16 @@ class ShiftChange extends React.Component {
 
         this.APIforTable.setOnClick(this.onClickTableItem)
 
-        this.getTrackingData(true)
-
-        this.APIforTable.updateSearchResult(this.state.searchResult)
+        
+        setTimeout(()=>{
+            this.APIforTable.updateSearchResult(this.state.searchResult)
+        },100)
+        
+        
     }
 
     onClickTableItem(e){       
-
+        this.getTrackingData(true)
     }
 
     componentDidMount() {
@@ -72,17 +75,18 @@ class ShiftChange extends React.Component {
 
 
     getTrackingData(update) {
+        console.log('track')
         var ShouldUpdate = false
         axios.get(dataSrc.trackingData).then(res => {
             var data = res.data
             GetResultData('my devices', data).then(result=>{
-                var foundResult = []
-                var notFoundResult = []
+                var foundResult = {}
+                var notFoundResult = {}
                 for(var i in result){
                     if(result[i].found){
-                        foundResult.push(result[i])
+                        foundResult[result[i].mac_address] = result[i]
                     }else{
-                        notFoundResult.push(result[i])
+                        notFoundResult[result[i].mac_address] = result[i]
                     }
                 }
                 
@@ -124,7 +128,7 @@ class ShiftChange extends React.Component {
         const { show } = this.state;
         return (
             <Fragment>
-                <Modal show={show} size="lg" style={{height: '90vh'}} onShow = {this.getTrackingData(true)} onHide={this.handleClose}>
+                <Modal show={show} size="lg" style={{height: '90vh'}} onShow = {this.getTrackingData} onHide={this.handleClose}>
                     <Modal.Header > 
                         <div className="w-100 text-center">
                             <h3>Checked by {Cookies.get('user')}</h3>

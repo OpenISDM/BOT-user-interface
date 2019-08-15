@@ -86,6 +86,9 @@ export default class SearchResultTable extends React.Component {
                     addTransferDevices: false,
                     foundMode: 'found',
                 })
+            },
+            toTop : () => {
+                location.href = '#top'
             }
         }
     }
@@ -119,7 +122,7 @@ export default class SearchResultTable extends React.Component {
         let element = 
 
             <Row key={item.mac_address} className = "w-100" onClick={itemOnClick} name={index}>
-                
+                    
                     
                     <div  name={item.mac_address} style={{cursor: 'grab'}} className = "mx-3 h5">{index + 1}.</div>
                     <div  name={item.mac_address} style={{cursor: 'grab'}} className = "mx-3 text-left h5">
@@ -281,15 +284,15 @@ export default class SearchResultTable extends React.Component {
         var {foundResult, notFoundResult} = this.state.searchResult
         var mode = config.searchResult.displayMode
         var x;
-        if(mode === 'showAll'){
 
+        if(mode === 'showAll'){
             x = 
                 <Fragment>
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_FOUND(foundResult.length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_FOUND(Object.keys(foundResult).length || 0)}</h5>
                     {
                         this.generateResultHTML(foundResult)
                     }
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_NOT_FOUND(notFoundResult.length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_NOT_FOUND(Object.keys(notFoundResult).length || 0)}</h5>
                     {
                         this.generateResultHTML(notFoundResult)
                     }
@@ -333,6 +336,7 @@ export default class SearchResultTable extends React.Component {
         }
         return(
             <Fragment>
+
                 {config.searchResult.displayMode === 'switch'
                     ?
                         <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent mx-3 p-0" style={{maxHeight: '8vh', cursor: 'grab'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
@@ -340,6 +344,7 @@ export default class SearchResultTable extends React.Component {
                         null
                 }
                 <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" ref="searchResultTable" style={{overflowY: 'scroll',maxHeight: Setting.maxHeight !== null ? (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh' : null}}>      
+                    <div id="top"></div>
                     {
                         this.handleDisplayMode()
                     }

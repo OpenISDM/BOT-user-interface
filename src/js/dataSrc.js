@@ -25,10 +25,12 @@ const pdfUrl = function(path){
 }
 
 const QRCode = IP + '/data/QRCOde'
+const PDFInfo = IP + '/data/PDFInfo'
 
 
 
 module.exports = {
+    IP,
     trackingData,
     branches,
     objectTable,
@@ -47,5 +49,6 @@ module.exports = {
     addUserSearchHistory,
     editLbeacon,
     pdfUrl,
-    QRCode
+    QRCode,
+    PDFInfo
 };

@@ -2,7 +2,7 @@ import MainContainer from "./components/container/MainContainer";
 import HealthReport from "./components/container/HealthReport";
 import Geofence from "./components/container/Geofence";
 import ObjectManagementContainer from "./components/container/ObjectManagementContainer";
-import UserSettingContainer from "./components/container/UserSettingContainer";
+import UserSettingContainer from "./components/container/UserContainer/UserSettingContainer";
 
 const routes = [
     {

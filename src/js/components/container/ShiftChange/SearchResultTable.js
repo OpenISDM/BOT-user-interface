@@ -282,14 +282,14 @@ export default class SearchResultTable extends React.Component {
         var mode = config.searchResult.displayMode
         var x;
         if(mode === 'showAll'){
-
+            console.log(foundResult)
             x = 
                 <Fragment>
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_FOUND(foundResult.length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_FOUND(Object.keys(foundResult).length || 0)}</h5>
                     {
                         this.generateResultHTML(foundResult)
                     }
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_NOT_FOUND(notFoundResult.length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_NOT_FOUND(Object.keys(notFoundResult).length || 0)}</h5>
                     {
                         this.generateResultHTML(notFoundResult)
                     }

@@ -3,10 +3,14 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
 import { supportedLocale } from '../../../js/locale';
 import { Navbar, Nav, NavDropdown, Image, Dropdown  } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap';
+
 import LocaleContext from '../../context/LocaleContext';
 import SigninPage from '../container/SigninPage';
 import SignupPage from '../container/SignupPage';
 import ShiftChange from '../container/ShiftChange/ShiftChange';
+
+
 
 import Cookies from 'js-cookie'
 
@@ -36,7 +40,7 @@ class NavbarContainer extends React.Component {
         this.handleShiftChangeRecordSubmit = this.handleShiftChangeRecordSubmit.bind(this);
         this.handleShiftChangeRecordClose = this.handleShiftChangeRecordClose.bind(this);
 
-
+        this.linkToUserSetting = React.createRef();
     }
 
     handleLangSelect(eventKey) {
@@ -164,8 +168,10 @@ class NavbarContainer extends React.Component {
                             })}
                         </NavDropdown>          
                         {Cookies.get('user')
-                            ? <NavDropdown title={<i className="fas fa-user-alt"></i> }id="collasible-nav-dropdown" alignRight >
-                                <NavDropdown.Item className="lang-select" href="/page/userSetting">{Cookies.get('user')}</NavDropdown.Item>
+                            ? <NavDropdown title={<i className="fas fa-user-alt"></i> } id="collasible-nav-dropdown" alignRight >
+                                <LinkContainer to="/page/userSetting" className="bg-white">
+                                    <NavDropdown.Item className="lang-select">{Cookies.get('user')}</NavDropdown.Item>
+                                </LinkContainer>
                                 <Dropdown.Divider />
                                 <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>{locale.SHIFT_CHANGE_RECORD}</NavDropdown.Item>
                                 <Dropdown.Divider />

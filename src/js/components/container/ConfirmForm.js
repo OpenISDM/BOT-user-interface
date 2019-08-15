@@ -51,6 +51,7 @@ class ConfirmForm extends React.Component {
                 })
             },
             openForm: (selectedObjectData, newStatus) => {
+
                 this.setState({
                     isShowForm: true,
                     selectedObjectData: selectedObjectData,

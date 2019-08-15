@@ -346,7 +346,7 @@ const editLbeacon = (request, response) => {
     })
 }
 
-const  QRCode = (request, response) => {
+const  generatePDF = (request, response) => {
     // console.log(result)
     var {foundResult, notFoundResult, user} = request.body
     console.log(typeof user)
@@ -386,10 +386,6 @@ const  QRCode = (request, response) => {
     var title = "Not Found Results"
     var lists = notFoundResult
     var notFoundTable = generateTable(title, types, lists, attributes)
-
-
-    
-    
     var options = {
         "format": "A4",
         "orientation": "landscape",
@@ -402,13 +398,39 @@ const  QRCode = (request, response) => {
         "timeout": "120000"
     };
     var html = header + timestamp + foundTable + notFoundTable
-    var filePath = `save_file_path/${user}_${moment().format('LLLL')}.pdf`
+    var filePath = `save_file_path/${user}_${moment().format('x')}.pdf`
     pdf.create(html, options).toFile(filePath, function(err, result) {
         if (err) return console.log(err);
-        console.log("pdf create");
-        response.status(200).json(filePath)
+
+        var submit_time = moment().format()
+        var user_id = 1234
+        var file_path = filePath
+
+        pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path), (error, results) => {
+            if (error) {
+                console.log('save pdf file fails ' + error)
+            } else {
+                console.log('save pdf file success')
+                response.status(200).json(filePath)
+            }
+        })   
     });
 }
+
+const getPDFInfo = (request, response) => {
+    var query = queryType.query_getShiftChangeRecord()
+    pool.query(query, (error, results) => {
+        if (error) {
+            console.log('save pdf file fails ' + error)
+        } else {
+            response.status(200).json(results)
+            console.log('save pdf file success')
+        }
+        
+    })   
+}
+
+
 
 
 
@@ -429,6 +451,7 @@ module.exports = {
     userSearchHistory,
     addUserSearchHistory,
     editLbeacon,
-    QRCode
+    generatePDF,
+    getPDFInfo
     
 }

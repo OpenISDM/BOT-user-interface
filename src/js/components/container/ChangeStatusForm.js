@@ -87,7 +87,30 @@ class ChangeStatusForm extends React.Component {
                     ...this.newStatus,
                     ...newStatus
                 }
-                console.log(this.newStatus)
+
+            }
+            
+        }
+        this.event={
+            closeForm: () => {
+                this.setState({
+                    show: false,
+                    selectedObjectData: {}
+                })
+                this.onClose()
+            },
+            openForm: (selectedObjectData) => {
+                this.setState({
+                    show: true,
+                    selectedObjectData: selectedObjectData,
+                })
+            },
+            submitForm: (status, transferred_location) => {
+                console.log(status)
+                this.onSubmit(status, transferred_location);
+            },
+            addDevice : () => {
+                this.addDevice()
             }
         }
 
@@ -112,21 +135,19 @@ class ChangeStatusForm extends React.Component {
 
 
     handleClose(e) {
-        this.API.closeForm()
+        this.event.closeForm()
     }
   
     handleShow() {
-        this.API.openForm()
+        this.event.openForm()
     }
     handleSubmit() {
         var {status, transferred_location} = this.newStatus
-        if(this.onSubmit) {
-            this.onSubmit(status, transferred_location);
-        }
+        this.event.submitForm(status, transferred_location)
     }
 
     handleAddTransferDevices(state){   
-        this.addDevice()
+        this.event.addDevice()
     }
 
     generateDeviceList(){
@@ -182,7 +203,12 @@ class ChangeStatusForm extends React.Component {
             
         return htmls
     }
-  
+    
+
+    mouserOverTransferredLocation(e){
+        var name = e.target.name
+        console.log(name)
+    }
     render() {
 
         const style = {
@@ -211,7 +237,7 @@ class ChangeStatusForm extends React.Component {
         
 
         let { title } = this.state;
-        console.log(this.refs)
+
 
 
         return (
@@ -236,6 +262,7 @@ class ChangeStatusForm extends React.Component {
                                     if(values.status === 'Transferred' && values.branch === 'Unchoose' && values.submit){
                                         errors.NoLocation = 'You have to select a transfered branch'
                                     }
+                                    console.log(values.department)
                                     if(values.status === 'Transferred' && values.branch !== 'Unchoose' && values.department === 'Unchoose' && values.submit){
                                         errors.NoLocation = 'You have to select a transfered department'
                                     }
@@ -245,16 +272,20 @@ class ChangeStatusForm extends React.Component {
                                 }}
                                 onSubmit={(values, { setSubmitting }) => {
                                     setTimeout(() => {
+                                        console.log('submitting')
                                         if(values.status === 'Transferred'){
-                                            this.setState({
+     
+                                            this.newStatus = {
                                                 status: values.status,
                                                 transferred_location: `${values.department}, ${values.branch}`,
-                                            })
+                                            }
+                                            
+      
                                         }else{
-                                            this.setState({
+                                            this.newStatus = {
                                                 status: values.status,
                                                 transferred_location: '',
-                                            })
+                                            }
                                         }
                                         
                                         this.handleSubmit()
@@ -330,7 +361,7 @@ class ChangeStatusForm extends React.Component {
                                         <label className="custom-control-label" htmlFor="checkReserve">Reserve</label>
                                     </div>
 
-                                    <div className="custom-control custom-checkbox">
+                                    <div className="custom-control custom-checkbox d-flex" style={{width: '180%', height: '10vh'}}>
                                         <input
                                             type="checkbox"
                                             className="custom-control-input"
@@ -347,62 +378,82 @@ class ChangeStatusForm extends React.Component {
                                         />
 
                                         <label className="custom-control-label" htmlFor="checkTransferred">Transferred</label>
-                                        <Row className = "m-1 p-1 w-100">
-                                            <select 
-                                                className="custom-select my-2 w-75 float-left" 
-                                                disabled={values.status !== 'Transferred'}
-                                                name="select" 
-                                                onChange={(e)=> {
-                                                    var location = e.target.value
-                                                    console.log(location)
-                                                    values.branch = location;
-                                                    if(location === 'Unchoose'){
+                                        <div className = "m-1 p-1" style={{width: '100%'}}>
+                                            <Col xl={5} className="px-0" style={{top: '-50%', left: '15%', position: 'absolute'}}>
+                                                <select 
+                                                    className="custom-select my-2 w-100 float-left" 
+                                                    disabled={values.status !== 'Transferred'}
+                                                    name="select" 
+                                                    onChange={(e)=> {
+                                                        var location = e.target.value
+                                                        console.log(location)
+                                                        values.branch = location;
                                                         handleChange(e)
-                                                        return
+                                                        
+                                                    }} 
+                                                >
+                                                    <option value="Unchoose">Select transferred branch</option>
+                                                    {
+                                                        (() => {
+                                                            var Html = []
+                                                            for(var location of Object.keys(this.state.branches)){
+                                                                let html = 
+                                                                    <option value={location} key={location} name={location} >
+                                                                        {location}
+                                                                    </option>
+                                                                Html.push(html)
+                                                            }
+                                                            return Html
+                                                        })()
+
+
+                                                    }
+                                                </select>
+                                                </Col>
+                                                <Col xl={4} className="px-0" style={{top: '-50%', left: '58%', position: 'absolute'}}>
+                                                    {(values.branch !== 'Unchoose' && values.status === 'Transferred')
+                                                        ?
+                                                            <ListGroup className = "my-2 w-100 float-left shadow border border-dark" disabled={values.branch === 'Unchoose' || values.status!== 'Transferred'}
+                                                                
+                                                            >
+                                                                {
+                                                                    (() => {
+                                                                        console.log(values.branch)
+                                                                        var Html = []
+                                                                        if(this.state.branches[values.branch]){
+                                                                            Html = this.state.branches[values.branch].map((department)=>{
+                                                                                console.log(values.branches)
+                                                                                let html = 
+                                                                                    <ListGroup.Item type="button" key = {department} name={department} className="border border-light" style={{borderRadius: '5px'}} action
+                                                                                        onClick={(e)=>{
+
+                                                                                            var department = e.target.name
+                                                                                            values.department = department
+
+                                                                                        }}
+                                                                                    >
+                                                                                        {department}
+                                                                                    </ListGroup.Item>
+                                                                                return html
+                                                                            })
+                                                                        }
+                                                                        
+                                                                        return Html
+                                                                    })()}
+                                                            </ListGroup>
+                                                        :
+                                                            null
                                                     }
                                                     
-                                                    var Html = this.state.branches[location].map((department)=>{
-                                                        let html = 
-                                                            <option key = {department}>
-                                                                {department}
-                                                            </option>
-                                                        return html
-                                                    })
-                                                    console.log(Html)
-                                                    this.departmentHTML = Html
-                                                    this.setState({})
-                                                    handleChange(e)
-                                                    
-                                                }} 
-                                            >
-                                                <option value="Unchoose">Select transferred branch</option>
-                                                {
-                                                    (() => {
-                                                        var Html = []
-                                                        for(var location of Object.keys(this.state.branches)){
-                                                            let html = 
-                                                                <option value={location} key={location} name={location}>
-                                                                    {location}
-                                                                </option>
-                                                            Html.push(html)
-                                                        }
-                                                        return Html
-                                                    })()
+                                                </Col>
 
-
-                                                }
-                                            </select>
-                                            <select className = "custom-select my-2 w-75 float-left" disabled={values.branch === 'Unchoose' || values.status!== 'Transferred'}>
-                                                <option value="Unchoose">Select transferred department</option>
-                                                {this.departmentHTML}
-                                            </select>
-
-                                        </Row>
-                                        {<h5 className="text-danger">{errors.NoLocation}</h5>}
+                                        </div>
+                                        
                                     
                                     </div>
-                                    <h5 className="text-danger">{errors.NoSelect}</h5>
-                                    <div className="btn-group d-flex justify-content-center my-3">
+                                    {<h5 className="text-danger">{errors.NoLocation}</h5>}
+                                    {<h5 className="text-danger">{errors.NoSelect}</h5>}
+                                    <Row className="btn-group d-flex justify-content-center mx-3">
                                         <Button name="AddDevices" onClick={this.handleAddTransferDevices}>
                                             Add Devices
                                         </Button>
@@ -410,7 +461,7 @@ class ChangeStatusForm extends React.Component {
                                             Cancel
                                         </Button>
                                         <Button type="submit">Submit</Button>                                        
-                                    </div>
+                                    </Row>
                                 </form>
                             )}
                             </Formik>
