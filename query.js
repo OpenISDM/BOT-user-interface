@@ -222,6 +222,7 @@ const editObjectPackage = (request, response) => {
 const signin = (request, response) => {
     const username = request.body.username
     const pwd = request.body.password
+    const shift = request.body.shift
 
     pool.query(queryType.query_signin(username), (error, results) => {
         const hash = results.rows[0].password
@@ -239,6 +240,7 @@ const signin = (request, response) => {
                     response.json({
                         authentication: true,
                     })
+                    pool.query(queryType.query_setShift(shift, username))
                 } else {
                     response.json({
                         authentication: false,
@@ -253,7 +255,7 @@ const signin = (request, response) => {
 }
 
 const signup = (request, response) => {
-    const { username, password } = request.body;
+    const { username, password} = request.body;
     
     const saltRounds = 10;
     const hash = bcrypt.hashSync(password, saltRounds);
@@ -349,72 +351,86 @@ const editLbeacon = (request, response) => {
 const  generatePDF = (request, response) => {
     // console.log(result)
     var {foundResult, notFoundResult, user} = request.body
+    pool.query(`select shift from user_table where name = '${user}'`,(error, results) => {
+        var shift = results.rows[0].shift
+        console.log(shift)
+        var header = "<h1 style='text-align: center;'>" + "checked by " + user + "</h1>"
+        console.log(header)
+        var timestamp = "<h3 style='text-align: center;'>" + moment().format('LLLL') + "</h3>"
+        var shift = "<h3 style='text-align: center;'> Shift: " + shift + "</h3>"
+
+        var types = ["Name", "Type", "ACN", "Location"]
+        var attributes = ["name", "type", "access_control_number", "location_description"]
+
+        var title = "Found Results"
+        var lists = foundResult
+        var foundTable = generateTable(title, types, lists, attributes)
+
+
+        var title = "Not Found Results"
+        var lists = notFoundResult
+        var notFoundTable = generateTable(title, types, lists, attributes)
+        var options = {
+            "format": "A4",
+            "orientation": "landscape",
+            "border": {
+                "top": "0.3in",            // default is 0, units: mm, cm, in, px
+                "right": "2in",
+                "bottom": "0.3in",
+                "left": "2in"
+            },
+            "timeout": "120000"
+        };
+        var html = header + timestamp + shift + foundTable + notFoundTable
+        var filePath = `save_file_path/${user}_${moment().format('x')}.pdf`
+        pdf.create(html, options).toFile(filePath, function(err, result) {
+            if (err) return console.log(err);
+
+            var submit_time = moment().format()
+            var user_id = 1234
+            var file_path = filePath
+
+            pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path), (error, results) => {
+                if (error) {
+                    console.log('save pdf file fails ' + error)
+                } else {
+                    console.log('save pdf file success')
+                    response.status(200).json(filePath)
+                }
+            })   
+        });
+    })
+    
     console.log(typeof user)
-    var header = "<h1 style='text-align: center;'>" + "checked by " + user + "</h1>"
-    console.log(header)
-    var timestamp = "<h3 style='text-align: center;'>" + moment().format('LLLL') + "</h3>"
+    
 
     function generateTable(title, types, lists, attributes){
-        var html = "<div>"
-        html += "<h2 style='text-align: center;'>" + title + "</h2>"
-        html += "<table border='1' style='width:100%;word-break:break-word;'>";
-        html += "<tr>";
-        for(var i in types){
-            html += "<th >" + types[i] + "</th>";
-        }
-        for (var i of lists){
+        if(Object.keys(lists).length === 0){
+            return ''
+        }else{
+            var html = "<div>"
+            html += "<h2 style='text-align: center;'>" + title + "</h2>"
+            html += "<table border='1' style='width:100%;word-break:break-word;'>";
             html += "<tr>";
-            for(var j of attributes){
-                html += "<td>"+i[j]+"</td>";
+            for(var i in types){
+                html += "<th >" + types[i] + "</th>";
             }
-        }
-        html += "</table></div>"
+            for (var i in lists){
+                html += "<tr>";
+                for(var j of attributes){
+                    html += "<td>"+lists[i][j]+"</td>";
+                }
+            }
+            html += "</table></div>"
 
-        return html
+            return html
+        }
+        
     }
 
     // foundResult to Table
     
-    var types = ["Name", "Type", "ACN", "Location"]
-    var attributes = ["name", "type", "access_control_number", "location_description"]
-
-    var title = "Found Results"
-    var lists = foundResult
-    var foundTable = generateTable(title, types, lists, attributes)
-
-
-    var title = "Not Found Results"
-    var lists = notFoundResult
-    var notFoundTable = generateTable(title, types, lists, attributes)
-    var options = {
-        "format": "A4",
-        "orientation": "landscape",
-        "border": {
-            "top": "0.3in",            // default is 0, units: mm, cm, in, px
-            "right": "2in",
-            "bottom": "0.3in",
-            "left": "2in"
-        },
-        "timeout": "120000"
-    };
-    var html = header + timestamp + foundTable + notFoundTable
-    var filePath = `save_file_path/${user}_${moment().format('x')}.pdf`
-    pdf.create(html, options).toFile(filePath, function(err, result) {
-        if (err) return console.log(err);
-
-        var submit_time = moment().format()
-        var user_id = 1234
-        var file_path = filePath
-
-        pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path), (error, results) => {
-            if (error) {
-                console.log('save pdf file fails ' + error)
-            } else {
-                console.log('save pdf file success')
-                response.status(200).json(filePath)
-            }
-        })   
-    });
+    
 }
 
 const getPDFInfo = (request, response) => {

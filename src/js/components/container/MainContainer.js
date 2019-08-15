@@ -187,7 +187,6 @@ class ContentContainer extends React.Component{
                     }
                     // console.log(data)
                     this.props.retrieveTrackingData(foundData)
-                    console.log(GetTypeKeyList(data))
                     var state = {
                         searchableObjectData: data,
                         dataMap: dataMap,

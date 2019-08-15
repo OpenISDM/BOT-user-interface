@@ -121,6 +121,11 @@ const config = {
         "Reserve",
         "Transferred"
     ],
+    shiftOption: [
+        'day shift',
+        'night shift',
+        'graveyard shift'
+    ],
 
     companyName: 'BeDITech',
 

@@ -134,6 +134,13 @@ function query_signin(username) {
 	return query;
 	
 }
+function query_setShift(shift, username){
+	const query = `update user_table
+					set shift='${shift}'
+					where name='${username}'
+					`
+	return query
+}
 
 function query_signup(signupPackage) {
 
@@ -256,6 +263,7 @@ module.exports = {
 	query_addObject,
 	query_editObjectPackage,
 	query_signin,
+	query_setShift,
 	query_signup,
 	query_modifyUserDevices,
 	query_getUserInfo,

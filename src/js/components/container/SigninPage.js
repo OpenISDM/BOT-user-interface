@@ -74,7 +74,8 @@ class SigninPage extends React.Component {
                     <Formik
                         initialValues = {{
                             username: '',
-                            password: ''
+                            password: '',
+                            shift: config.shiftOption[0]
                         }}
 
                         validationSchema = {
@@ -83,10 +84,9 @@ class SigninPage extends React.Component {
                             password: Yup.string().required('Password is required')
                         })}
 
-                        onSubmit={({ username, password }, { setStatus, setSubmitting }) => {
-
+                        onSubmit={({ username, password, shift }, { setStatus, setSubmitting }) => {
                             axios.post(dataSrc.signin, {
-                            
+                                shift: shift,
                                 username: username,
                                 password: password
                             
@@ -107,7 +107,7 @@ class SigninPage extends React.Component {
 
                         }}
 
-                        render={({ errors, status, touched, isSubmitting }) => (
+                        render={({ errors, status, touched, isSubmitting, values, handleChange }) => (
                             <Form>
                                 <div className="form-group">
                                     {/* <label htmlFor="username">Username</label> */}
@@ -120,6 +120,32 @@ class SigninPage extends React.Component {
                                     <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} placeholder='Password' />
                                     <ErrorMessage name="password" component="div" className="invalid-feedback" />
                                 </div>
+                                <br/>
+                                <h4>Shift</h4>
+                                <div className="custom-control ml-3" data-toggle="buttons">
+
+                                    {config.shiftOption.map((shift) => {
+                                        return (
+                                            <div className="radio row" key = {shift}>
+                                                <input
+                                                    type="radio"
+                                                    className="custom-control-input"
+                                                    name={shift}
+                                                    onChange={(e) => {
+                                                        values.shift = e.target.name
+                                                        handleChange(e)
+                                                    }}
+                                                    checked={values.shift === shift}
+                                                    id={shift}
+                                                />                                                
+                                                 <label className="custom-control-label h4" htmlFor={shift}>{shift}</label>
+                                                 <br />
+                                            </div>
+                                        ) 
+                                    })}
+                                </div>
+                                <ErrorMessage name="shift" component="div" className="invalid-feedback" />
+                                
                                 <br/>
                                 <div className="form-group py-1">
                                     <button type="submit" className="btn btn-primary btn-block"  disabled={isSubmitting}>{locale.SIGN_IN}</button>

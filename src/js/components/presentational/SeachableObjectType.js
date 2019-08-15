@@ -5,8 +5,8 @@ import { Col, Row, ListGroup, Nav, Button } from 'react-bootstrap';
 import LocaleContext from '../../context/LocaleContext';
 
 
-import '../../../css/hideScrollBar.css'
-import '../../../css/shadow.css'
+// import '../../../css/hideScrollBar.css'
+// import '../../../css/shadow.css'
 import '../../../css/SearchableObjectType.css'
 /*
     this class contain three two components
@@ -201,7 +201,8 @@ class SearchableObjectType extends React.Component {
             height: '60vh',
 
             width: '25vw',
-            zIndex: (this.state.IsShowSection) ? 1500: 0
+            zIndex: 1500,
+            display: (this.state.IsShowSection) ? 'block' : 'none'
 
         },
         SearchableObjectType:{
