@@ -30,7 +30,7 @@ export default class ShiftChangeRecord extends React.Component{
 
     componentDidMount(){
         this.getPDFInfo()
-        this.props.getAPI(this.API)
+        // this.props.getAPI(this.API)
     }
     getPDFInfo(){
         axios.get(dataSrc.PDFInfo).then((res) => {

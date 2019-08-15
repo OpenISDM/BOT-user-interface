@@ -1,16 +1,7 @@
 import React from 'react';
-
-/** Import Presentational Component */
-import AddableList from './AddableList'
-
 import ListGroup from 'react-bootstrap/ListGroup';
 import dataSrc from "../../../dataSrc";
-
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
 import { Col, Row, Button, Nav, Container} from 'react-bootstrap';
-import axios from 'axios';
-import Cookies from 'js-cookie'
 
 import MyDeviceManager from './MyDeviceManager'
 import ShiftChangeRecord from './ShiftChangeRecord'
@@ -21,34 +12,7 @@ export default class UserSettingContainer extends React.Component{
     constructor() {
         super();
         this.state = {
-            myDevices: []
         }
-        // this.getAPIfromAddableList = this.getAPIfromAddableList.bind(this)
-        this.getAPIfromShiftChangeRecord = this.getAPIfromShiftChangeRecord.bind(this)
-        // this.getAPIfromMyDeviceManager = this.getAPIfromMyDeviceManager.bind(this)
-
-        this.APIforAddableList = null
-        this.APIforShiftChangeRecord = null
-        
-    }
-    getAPIfromShiftChangeRecord(API){
-        this.APIforShiftChangeRecord = API
-    }
-    getAPIfromMyDeviceManager(API){
-        this.APIforMyDeviceManager = API
-    }
-
-    componentDidMount(){
-        this.getPDFInfo()
-    }
-
-   
-
-    getPDFInfo(){
-        // axios.get(dataSrc.PDFInfo).then((res) => {
-        //     this.APIforShiftChangeRecord.setShiftChangeRecord(res.data.rows)
-
-        // })
     }
 
     sideNavMouseOver(e){
@@ -101,9 +65,7 @@ export default class UserSettingContainer extends React.Component{
                                 </h2>
                             </Row>
                             <Row className="w-100 m-3 d-flex" style={{height: '80vh'}}>
-                                    <ShiftChangeRecord 
-                                        getAPI = {this.getAPIfromShiftChangeRecord}
-                                    />
+                                <ShiftChangeRecord />
                             </Row>
                         </div>
                     </Col>
