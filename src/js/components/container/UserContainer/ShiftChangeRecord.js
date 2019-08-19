@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 import moment from 'moment'
 
+import LocaleContext from '../../../context/LocaleContext';
 import dataSrc from "../../../dataSrc";
 
 const Fragment = React.Fragment;
@@ -19,17 +20,17 @@ export default class ShiftChangeRecord extends React.Component{
         }
         this.API = {
             setShiftChangeRecord: (Arr) => {
-                console.log(Arr)
                 this.setState({
                     record: Arr
                 })
             },
-
         }
+        this.getPDFInfo = this.getPDFInfo.bind(this)
     }
 
     componentDidMount(){
-        this.getPDFInfo()
+        setTimeout(this.getPDFInfo, 100)
+        // this.getPDFInfo()
         // this.props.getAPI(this.API)
     }
     getPDFInfo(){
@@ -49,9 +50,9 @@ export default class ShiftChangeRecord extends React.Component{
     }
     render(){
         
-
+        var locale = this.context
         return (
-            <ListGroup className="w-100 border-0">
+            <ListGroup className="w-100 border-0" style={{overflowY:'scroll', height: '70vh'}}>
                 {this.state.record.map((record, index)=>{
                     return (
                         <ListGroup.Item key={record.id} onClick={this.onClickFile} name={record.file_path} style={{cursor: 'grab'}}>
@@ -63,3 +64,4 @@ export default class ShiftChangeRecord extends React.Component{
         )
     }
 }
+ShiftChangeRecord.contextType = LocaleContext;

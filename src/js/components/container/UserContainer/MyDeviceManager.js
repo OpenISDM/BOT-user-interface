@@ -3,6 +3,7 @@ import { Col, Row } from 'react-bootstrap';
 
 import axios from 'axios';
 import Cookies from 'js-cookie'
+import LocaleContext from '../../../context/LocaleContext';
 import dataSrc from "../../../dataSrc";
 
 import AddableList from './AddableList'
@@ -18,19 +19,29 @@ export default class MyDeviceManager extends React.Component{
         }
         this.device = {
             dataMap: null,
-            myDeviceList: null,
-            myDevices: null,
-            notMyDevices: null
+            myDeviceList: [],
+            myDevices: [],
+            notMyDevices: []
         }
         this.APIforAddableList_1 = null
         this.APIforAddableList_2 = null
 
         this.API = {
             setAllDevice: (deviceList) => {
-                this.allDevices = deviceList
+                this.API.allDevices = deviceList
             },
             setMyDevice: (myList) => {
-                this.myDevices = myList
+                this.API.myDevices = myList
+            },
+            addAllMyDevice: () => {
+                this.device.notMyDevices = {}
+                this.device.myDevices = this.device.dataMap
+                this.API.updateAddableList()
+            },
+            removeAllMyDevice: () => {
+                this.device.myDevices = {}
+                this.device.notMyDevices = this.device.dataMap
+                this.API.updateAddableList()
             },
             switchDevice: (acn) => {
 
@@ -45,8 +56,13 @@ export default class MyDeviceManager extends React.Component{
                 }else{
                     console.error('acn is not in device list')
                 }
+                this.API.updateAddableList()
+            },
+            updateAddableList: () => {
+                
                 this.APIforAddableList_1.setList(this.device.myDevices)
                 this.APIforAddableList_2.setList(this.device.notMyDevices)
+                
             },
             postMyDeviceChange: (mode, acn) => {
                 axios.post(dataSrc.modifyMyDevice, {
@@ -85,28 +101,35 @@ export default class MyDeviceManager extends React.Component{
     }
 
     getAPIfromAddableList_1(API){
+        var locale = this.context
         const {itemLayout, validation, onClick} = this.functionForAddableList
         this.APIforAddableList_1 = API
-        this.APIforAddableList_1.setTitle("My Devices List")
+
+        this.APIforAddableList_1.setTitle(locale.MY_DEVICES)
         this.APIforAddableList_1.setValidation(validation)
         this.APIforAddableList_1.setItemLayout(itemLayout)
         this.APIforAddableList_1.setOnClick(onClick)
     }
     getAPIfromAddableList_2(API){
+        var locale = this.context
         const {itemLayout, validation, onClick} = this.functionForAddableList
         this.APIforAddableList_2 = API
-        this.APIforAddableList_2.setTitle("Not My Devices List")
+        this.APIforAddableList_2.setTitle(locale.OTHER_DEVICES)
         this.APIforAddableList_2.setValidation(validation)
         this.APIforAddableList_2.setItemLayout(itemLayout)
         this.APIforAddableList_2.setOnClick(onClick)
     }
     componentDidMount(){
-        // if(this.props.getAPI){
-        //     this.props.getAPI(this.API)
-        // }else{
-        //     console.error('please set attributes called "getAPI" for UserSettingContainer')
-        // }
+        console.log(this.context)
         this.getObjectData()
+    }
+    componentDidUpdate(){
+        var locale = this.context
+        if(this.APIforAddableList_1) this.APIforAddableList_1.setTitle(locale.MY_DEVICES)
+        if(this.APIforAddableList_2) this.APIforAddableList_2.setTitle(locale.OTHER_DEVICES)
+    }
+    shouldComponentUpdate(nexProps){
+        return true
     }
     getObjectData() {
         axios.get(dataSrc.objectTable).then(res => {
@@ -124,7 +147,13 @@ export default class MyDeviceManager extends React.Component{
                 username: Cookies.get('user')
             }).then((res) => {
 
-                var myDeviceList = res.data.rows[0].mydevice
+                var myDeviceList
+                if(res.data.rows.length === 0){
+                    myDeviceList = []
+                }else{
+                    myDeviceList = res.data.rows[0].mydevice
+                }
+                
                 var allDeviceList = Object.keys(dataMap)
 
                 this.device.myDeviceList = myDeviceList
@@ -140,8 +169,7 @@ export default class MyDeviceManager extends React.Component{
                 this.device.myDevices = myDevices
                 this.device.notMyDevices = notMyDevices
 
-                this.APIforAddableList_1.setList(myDevices)
-                this.APIforAddableList_2.setList(notMyDevices)
+                this.API.updateAddableList()
 
             }).catch()
         })
@@ -152,6 +180,8 @@ export default class MyDeviceManager extends React.Component{
     
     
     render(){
+        
+        
         return (
             <Fragment>
                 <Col xl={5}>
@@ -161,9 +191,9 @@ export default class MyDeviceManager extends React.Component{
                 </Col>
                 <Col xl={2} className='p-5' style={{position: 'relative', top: '15%'}}>
 
-                        <i className="fas fa-angle-double-right fa-3x p-4"></i>
+                        <i className="fas fa-angle-double-right fa-3x p-4" onClick = {this.API.removeAllMyDevice}></i>
 
-                        <i className="fas fa-angle-double-left fa-3x p-4"></i>
+                        <i className="fas fa-angle-double-left fa-3x p-4" onClick = {this.API.addAllMyDevice}></i>
                 </Col>
                 <Col xl={5}>
                     <AddableList
@@ -174,3 +204,4 @@ export default class MyDeviceManager extends React.Component{
         )
     }
 }
+MyDeviceManager.contextType = LocaleContext;

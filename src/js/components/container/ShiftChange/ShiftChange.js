@@ -5,6 +5,7 @@ import { Modal, Image, Row, Col } from 'react-bootstrap';
 
 import axios from 'axios';
 import dataSrc from '../../../dataSrc';
+import LocaleContext from '../../../context/LocaleContext';
 
 import Cookies from 'js-cookie'
 
@@ -125,6 +126,7 @@ class ShiftChange extends React.Component {
     }
 
     render() {
+        var locale = this.context
         const { show } = this.state;
         return (
             <Fragment>
@@ -143,7 +145,7 @@ class ShiftChange extends React.Component {
                         />
                     </Modal.Body>
                     <Modal.Footer style={{padding: '0px 0px 0px 0px',}}>
-                        <button className = "btn btn-primary w-100 m-0 p-0" style={{height: '5vh'}} onClick = {this.confirmShift}>Confirm</button>
+                        <button className = "btn btn-primary w-100 m-0 p-0" style={{height: '5vh'}} onClick = {this.confirmShift}>{locale.CONFIRM}</button>
                         <a href={this.state.fileURL} ref="download" download style={{display: 'none'}}>hi</a>
                     </Modal.Footer>
                 </Modal>
@@ -153,5 +155,5 @@ class ShiftChange extends React.Component {
 
 
 }
-
+ShiftChange.contextType = LocaleContext;
 export default ShiftChange

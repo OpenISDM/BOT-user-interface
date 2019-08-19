@@ -19,6 +19,11 @@ const userInfo = IP + '/user/info';
 const userSearchHistory = IP + '/user/searchHistory'
 const addUserSearchHistory = IP + '/user/addUserSearchHistory'
 const editLbeacon = IP + '/data/editLbeacon'
+const getUserRole = IP + '/user/getUserRole'
+const setUserRole = IP + '/user/setUserRole'
+const getRoleNameList = IP + '/user/getRoleNameList'
+const getUserList = IP + '/user/getUserList'
+const removeUser = IP + '/user/removeUser'
 
 const pdfUrl = function(path){
     return IP + '/' + path
@@ -50,5 +55,10 @@ module.exports = {
     editLbeacon,
     pdfUrl,
     QRCode,
-    PDFInfo
+    PDFInfo,
+    getUserRole,
+    setUserRole,
+    getRoleNameList,
+    getUserList,
+    removeUser
 };

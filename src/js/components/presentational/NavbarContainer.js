@@ -169,7 +169,7 @@ class NavbarContainer extends React.Component {
                         </NavDropdown>          
                         {Cookies.get('user')
                             ? <NavDropdown title={<i className="fas fa-user-alt"></i> } id="collasible-nav-dropdown" alignRight >
-                                <LinkContainer to="/page/userSetting" className="bg-white">
+                                <LinkContainer to="/page/Setting" className="bg-white">
                                     <NavDropdown.Item className="lang-select">{Cookies.get('user')}</NavDropdown.Item>
                                 </LinkContainer>
                                 <Dropdown.Divider />
@@ -198,10 +198,8 @@ class NavbarContainer extends React.Component {
 
                 <ShiftChange 
                     show = {isShowShiftChange}
-
                     handleShiftChangeRecordSubmit = {this.handleShiftChangeRecordSubmit}
                     handleShiftChangeRecordClose={this.handleShiftChangeRecordClose}
-                    
                 />
             </Navbar>
             

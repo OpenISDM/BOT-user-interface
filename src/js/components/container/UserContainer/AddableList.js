@@ -118,7 +118,6 @@ export default class AddableList extends React.Component{
     }
     addListByEnter(e){
         if(event.key === 'Enter'){
-
             var newACN = e.target.value
             this.API.addItemCheck(newACN)
         }
@@ -132,7 +131,7 @@ export default class AddableList extends React.Component{
         return (
             <Fragment>
                 <h4>{this.state.title}</h4>
-                <ListGroup  variant = "flush" style={{maxHeight: '50vh', minHeight: '50vh', overflowY: 'scroll'}}>
+                <ListGroup  variant = "flush" style={{height: '70vh', overflowY: 'scroll'}}>
                     
 
                     {this.state.itemList !== null 

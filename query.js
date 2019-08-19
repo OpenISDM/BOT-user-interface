@@ -266,6 +266,7 @@ const signup = (request, response) => {
     pool.query(queryType.query_signup(signupPackage), (error, results) => {
 
         if (error) {
+            console.log(error)
             console.log("Login Fails!")
         } else {
             console.log('Sign up Success')
@@ -446,8 +447,65 @@ const getPDFInfo = (request, response) => {
     })   
 }
 
+const setUserRole = (request, response) => {
+    var {role, username} = request.body
+    var query = queryType.query_setUserRole(role, username)
+    pool.query(query,(error, results) => {
+        if(error){
+            console.log(error)
+        }else{
+            // console.log(results.rows)
+            response.send('success')
+        }
+    })}
 
+const getUserRole = (request, response) => {
+    var {username} = request.body
+    var query = queryType.query_getUserRole(username)
+    console.log(username)
+    pool.query(query, (error, results) => {
+        if(error){
+            console.log(error)
+        }else{
+            console.log(results.rows)
+            response.send(results.rows)
+        }
+    })   
+    
+    // response.send(request.body)
+}
 
+const getRoleNameList = (request, response) => {
+    var query = queryType.query_getRoleNameList()
+    pool.query(query, (error, results) => {
+        response.send(results.rows)
+    })   
+    
+}
+
+const getUserList = (request, response) => {
+    var query = queryType.query_getUserList()
+    pool.query(query, (error, results) => {
+        // console.log(results)
+        var userList = results.rows
+        response.send(userList)
+    })  
+}
+const removeUser = (request, response) => {
+    var username = request.body.username
+    var query = queryType.query_removeUser(username)
+    console.log(query)
+    pool.query(query, (error, results) => {
+        // console.log(results)
+        if(error){
+            console.log(error)
+        }else{
+            console.log('success')
+            response.send('success')
+        }
+        
+    })  
+}
 
 
 module.exports = {
@@ -468,6 +526,11 @@ module.exports = {
     addUserSearchHistory,
     editLbeacon,
     generatePDF,
-    getPDFInfo
+    getPDFInfo,
+    setUserRole,
+    getUserRole,
+    getRoleNameList,
+    getUserList,
+    removeUser
     
 }

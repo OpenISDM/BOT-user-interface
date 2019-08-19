@@ -43,6 +43,14 @@ const tw = {
     },
     SEARCH_RESULT: '搜尋結果',
 
+    User_Setting: '帳戶設定',
+    Devices_Management: '儀器管理',
+    Shift_Record_History: '換班紀錄',
+    ACCESS_RIGHT: '使用者權限',
+    MY_DEVICES: '我的儀器',
+    OTHER_DEVICES: '其他儀器',
+
+    CONFIRM: '確認', 
 }
 
 export default tw;

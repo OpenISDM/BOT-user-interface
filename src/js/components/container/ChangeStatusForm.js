@@ -2,6 +2,7 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
+import {Dropdown, DropdownButton} from 'react-bootstrap'
 // import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -213,13 +214,10 @@ class ChangeStatusForm extends React.Component {
         if (values.status === '') {
             errors.NoSelect = 'You should at least select one status';
         } 
-        if(values.status === 'Transferred' && values.branch === 'Unchoose' && values.submit){
-            errors.NoLocation = 'You have to select a transfered branch'
-        }
-
-        if(values.status === 'Transferred' && values.branch !== 'Unchoose' && values.department === 'Unchoose' && values.submit){
+        if(values.status === 'Transferred' && values.location === '' && values.submit){
             errors.NoLocation = 'You have to select a transfered department'
         }
+
         values.submit = false;
 
         return errors;
@@ -228,7 +226,7 @@ class ChangeStatusForm extends React.Component {
         if(values.status === 'Transferred'){
             this.newStatus = {
                 status: values.status,
-                transferred_location: `${values.department}, ${values.branch}`,
+                transferred_location: values.location,
             }
         }else{
             this.newStatus = {
@@ -239,7 +237,7 @@ class ChangeStatusForm extends React.Component {
         this.handleSubmit()
         setSubmitting(false);
     }
-    formikOnChoose(e,{values}, handleChange){
+    formikOnChoose(e,{values}, {handleChange}){
         handleChange(e);
         var name = e.target.name
 
@@ -248,14 +246,14 @@ class ChangeStatusForm extends React.Component {
             status : name
         })
     }
-    formikCheckBoxHtml(name, {values}, handleChange){
+    formikCheckBoxHtml(name, {values}, {handleChange}){
         let html = 
             <div className="custom-control custom-checkbox" key={name}>
                 <input
                     type="checkbox"
                     className="custom-control-input"
                     name={name}
-                    onChange={(e) => { this.formikOnChoose(e,{values}, handleChange) }}
+                    onChange={(e) => { this.formikOnChoose(e,{values}, {handleChange}) }}
                     checked = {values.status === name }
                     id={'check' + name}
                 />
@@ -263,6 +261,49 @@ class ChangeStatusForm extends React.Component {
             </div>
 
         return html
+    }
+
+    formikLocationSelect(branches, {values}, {handleChange}){
+        console.log(values)
+        var Html = []
+        for(var branch in branches){
+            var html = []
+            var sections = branches[branch]
+            html = (
+                <DropdownButton
+                    drop={'right'}
+                    variant="light"
+                    title={branch}
+                    key = {branch}
+                    id={`dropdown-button-drop-right`}
+                    size="lg"
+                    bsPrefix='btn-white p-0 m-0 w-100 h4 bg-white border-0'
+                    style={{fontSize: '1.5rem'}}
+                > 
+                    {sections.map((section, index )=> {
+                        return (
+                            <Dropdown.Item key={index} id={`${branch}, ${section}`} name={`${branch}, ${section}`} as={'h5'} 
+                                onClick={(e)=>{
+                                    handleChange(e)
+                                    var name = e.target.getAttribute('name')
+                                    values.location = name
+                            }}>
+                                {section}
+                            </Dropdown.Item>
+                        )
+                            
+                    })
+                    
+                    }
+                </DropdownButton>
+                
+            )
+            Html.push(html)
+
+            console.log(sections)
+
+        }
+        return Html
     }
 
     
@@ -311,7 +352,7 @@ class ChangeStatusForm extends React.Component {
                             </div>
                             <hr/>
                             <Formik
-                                initialValues={{department: 'Unchoose', branch: 'Unchoose', status: '', showDepartment: false, submit: false }}
+                                initialValues={{status: '', location: '', showDepartment: false, submit: false }}
                                 validate={this.formikValidation}
                                 onSubmit={this.formikSubmission}
                             >
@@ -319,91 +360,22 @@ class ChangeStatusForm extends React.Component {
                                 <form onSubmit={(e)=>{ values.submit = true; handleSubmit(e)}} className="justify-content-center">
 
                                     {config.statusOption.map((status) => {
-                                        return this.formikCheckBoxHtml(status, {values}, handleChange)
+                                        return this.formikCheckBoxHtml(status, {values}, {handleChange})
                                     })}
-                                    
-
-                                    <div className="custom-control custom-checkbox d-inline-flex" style={{width: '150%', height: '1vh'}}>
-                                        <div className = "m-1 p-1" style={{width: '100%'}}>
-                                            <Col sm={5} className="px-0" style={{top: '-150%', left: '25%', position: 'absolute'}}>
-                                                <select 
-                                                    className="custom-select my-2 w-100 float-left" 
-                                                    disabled={values.status !== 'Transferred'}
-                                                    name="select" 
-                                                    onChange={(e)=> {
-                                                        var location = e.target.value
-                                                        values.branch = location;
-                                                        values.showDepartment = true
-                                                        e.target.value = 'Unchoose'
-                                                        handleChange(e)
-                                                        
-                                                    }} 
-                                                >
-                                                    <option value="Unchoose">Select transferred branch</option>
+                                    {values.status === 'Transferred' 
+                                        ?
+                                            <Dropdown>
+                                                <Dropdown.Toggle id="dropdown-custom-1" varient='light' bsPrefix='dropdown-toggle bg-light text-dark' style={{width:'300px'}}>{values.location === '' ? 'Select Transferred Location' : values.location}</Dropdown.Toggle>
+                                                <Dropdown.Menu bsPrefix='dropdown-menu' style={{width:'200px'}}>
                                                     {
-                                                        (() => {
-                                                            var Html = []
-                                                            for(var location of Object.keys(this.state.branches)){
-                                                                let html = 
-                                                                    <option value={location} key={location} name={location} >
-                                                                        {location}
-                                                                    </option>
-                                                                Html.push(html)
-                                                            }
-                                                            return Html
-                                                        })()
-
-
+                                                        this.formikLocationSelect(this.state.branches, {values}, {handleChange})
                                                     }
-                                                </select>
-                                                </Col>
-                                                <Col sm={4} className="px-0" style={{top: '-150%', left: '68%', position: 'absolute'}}>
-                                                    {(values.showDepartment)
-                                                        ?
-                                                            <ListGroup className = "my-2 w-100 float-left shadow border border-dark" disabled={values.branch === 'Unchoose' || values.status!== 'Transferred'}
-                                                                
-                                                            >
-                                                                {
-                                                                    (() => {
-                                                                        var Html = []
-                                                                        if(this.state.branches[values.branch]){
-                                                                            Html = this.state.branches[values.branch].map((department)=>{
-
-                                                                                let html = 
-                                                                                    <ListGroup.Item type="button" key = {department} name={department} className="border border-light" style={{borderRadius: '5px'}} action
-                                                                                        onClick={(e)=>{
-
-                                                                                            var department = e.target.name
-                                                                                            values.department = department
-                                                                                            values.showDepartment = false
-                                                                                            handleChange(e)
-                                                                                        }}
-                                                                                    >
-                                                                                        {department}
-                                                                                    </ListGroup.Item>
-                                                                                return html
-                                                                            })
-                                                                        }
-                                                                        
-                                                                        return Html
-                                                                    })()}
-                                                            </ListGroup>
-                                                        :
-                                                            null
-                                                    }
-                                                    
-                                                </Col>
-
-                                        </div>
-                                        
-                                    
-                                    </div>
-                                    {values.status === 'Transferred'
-                                        ? 
-                                            <h4 className="text-center mb-3">Transferred to {[values.department, values.branch].join(', ')}</h4>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
                                         :
                                             null
                                     }
+                                    
                                     {<h5 className="text-danger text-center">{errors.NoLocation}</h5>}
                                     {<h5 className="text-danger text-center">{errors.NoSelect}</h5>}
                                     <Row className="btn-group d-flex justify-content-center mx-3">

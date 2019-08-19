@@ -96,7 +96,15 @@ app.post('/data/QRCode',db.generatePDF)
 
 app.get('/data/PDFInfo',db.getPDFInfo)
 
+app.post('/user/getUserRole', db.getUserRole)
 
+app.post('/user/setUserRole', db.setUserRole)
+
+app.get('/user/getRoleNameList', db.getRoleNameList)
+
+app.post('/user/removeUser', db.removeUser)
+
+app.get('/user/getUserList', db.getUserList)
 const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
 

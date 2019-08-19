@@ -147,7 +147,9 @@ function query_signup(signupPackage) {
 	const text = 
 		`
 		INSERT INTO user_table (name, password)
-		VALUES ($1, $2)
+		VALUES ($1, $2);
+		INSERT INTO user_roles(user_id, role_id) 
+		VALUES((select id from user_table where name=$1), 1);
 		`;
 	const values = [signupPackage.username, signupPackage.password];
 
@@ -252,7 +254,32 @@ function query_getShiftChangeRecord(){
 	return query
 }
 
+function query_setUserRole(role, username){
+	const query = `update user_roles
+					set role_id=(select id from roles where name='${role}')
+					where user_roles.user_id = (select id from user_table where name='${username}');
+	`
+	return query
+}
+function query_getUserRole(username){
+	const query = `select name      from roles      where 
+	    id=(       select role_id   from user_roles where 
+	    user_id=(  select id        from user_table where name='${username}'));`
+	return query
+}
 
+function query_getRoleNameList(){
+	const query = `select name from roles;`
+	return query
+}
+function query_getUserList(){
+	const query = `select * from user_table`
+	return query
+}
+function query_removeUser(username){
+	const query = `delete from user_roles where user_id=(select id from user_table where name='${username}'); delete from user_table where name = '${username}';`
+	return query
+}
 module.exports = {
     query_getTrackingData,
     query_getObjectTable,
@@ -271,5 +298,10 @@ module.exports = {
 	query_addUserSearchHistory,
 	query_editLbeacon,
 	query_addShiftChangeRecord,
-	query_getShiftChangeRecord
+	query_getShiftChangeRecord,
+	query_setUserRole,
+	query_getUserRole,
+	query_getRoleNameList,
+	query_getUserList,
+	query_removeUser
 }

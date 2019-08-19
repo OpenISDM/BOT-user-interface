@@ -45,6 +45,17 @@ const en =  {
         return length.toString()+' devices are not found'
     },
     SEARCH_RESULT: 'Search Results',
+
+    User_Setting: 'User Setting',
+    Devices_Management: 'Devices Management',
+    Shift_Record_History: 'Shift Change History',
+    ACCESS_RIGHT: 'Access Right',
+    MY_DEVICES: 'My Devices',
+    OTHER_DEVICES: 'Other Devices',
+    ADMIN: 'Admin',
+
+    CONFIRM: 'Confirm', 
+    REMOVE_USER_CONFIRM: 'Remove User'
 }
 
 export default en;

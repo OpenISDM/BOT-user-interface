@@ -25,10 +25,12 @@ class FrequentSearch extends React.Component {
             hasGetUserInfo: false,
             searchkey: '',
             cookie: document.cookie,
+            searchHistory: []
         }
 
         this.handleClick = this.handleClick.bind(this);
         this.cookieListener = this.cookieListener.bind(this);
+        this.getSearchHistory = this.getSearchHistory.bind(this)
     }
 
 
@@ -55,7 +57,18 @@ class FrequentSearch extends React.Component {
         var intervalId = setInterval(this.cookieListener, 300);
        // store intervalId in the state so it can be accessed later:
         this.setState({intervalId: intervalId});
+        this.getSearchHistory()
+    }
 
+    getSearchHistory(){
+        axios.post(dataSrc.userSearchHistory,{
+            username: Cookies.get('user')
+        }).then((res) => {
+            console.log(res.data.rows)
+            this.setState({
+                searchHistory: res.data.rows.search_history || []
+            })
+        })
     }
 
     cookieListener(){
@@ -111,10 +124,10 @@ class FrequentSearch extends React.Component {
                     <h3>{locale.FREQUENT_SEARCH}</h3>
                 </Row>
                 <Row className='m-2 '  id='frequentSearch' >
-                    {Cookies.get('searchHistory') && JSON.parse(Cookies.get('searchHistory')).filter( item => {
-                        return item.name !== 'All'
-                    }).map( (item, index) => {
-                        
+                    
+                       {console.log(this.state)}
+                        {this.state.searchHistory.map( (item, index) => {
+                        console.log(index)
                         return (
                             <div key={index} className="col col-12 p-0 d-flex m-2" style={{float:'right', cursor: 'grab', verticalAlign: 'middle'}}  >
                                 
@@ -141,6 +154,7 @@ class FrequentSearch extends React.Component {
                             </div>
                         )
                     })}
+
                         <div className="btn-group btn-group-justified row w-100 d-flex justify-content-center mx-2 mt-4">
                         {Cookies.get('user') && 
                             <a
