@@ -130,7 +130,7 @@ class ContentContainer extends React.Component{
                     var threshold = config.surveillanceMap.locationAccuracyMapToDefault[this.state.locationAccuracy]                
                         if(item.lbeacon_uuid !== null){
                             if(item.rssi > threshold){
-                            
+                                
                                 foundList.push(item)
                                 return item
                             }else{
@@ -293,17 +293,19 @@ class ContentContainer extends React.Component{
         this.handleClearButton('not switch')
     }
 
-    getSearchResult(e){
-        var promise = new Promise(function(resolve, reject) {
-            var searchResult = [];
-            var SearchKey = e;
+    getSearchResult(e, callBack){
+        
+        var searchResult = [];
+        var SearchKey = e;
 
-            var searchResult = GetResultData(e, this.state.searchableObjectData)
+        var searchResult = GetResultData(e, this.state.searchableObjectData, (searchResult) => {
+            callBack(searchResult)
+        })
 
-            resolve(searchResult)
-        }.bind(this))
+        
+        
 
-        return promise
+        // return promise
         
     }
 
@@ -314,12 +316,15 @@ class ContentContainer extends React.Component{
             if(e === 'region'){
 
             }
-            var searchResult = await this.getSearchResult(e)
+            this.getSearchResult(e, (searchResult) => {
+                this.transferSearchResult(searchResult, null, e, true)
+            })
             // console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
-            this.transferSearchResult(searchResult, null, e, true)
+            
         }else{
-            var searchResult = await this.getSearchResult(e)
-            this.transferSearchResult(searchResult, null, e, true)
+            this.getSearchResult(e, (searchResult) => {
+                this.transferSearchResult(searchResult, null, e, true)
+            })
         }
         
 

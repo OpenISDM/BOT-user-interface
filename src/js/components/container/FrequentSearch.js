@@ -12,7 +12,7 @@ import config from '../../config';
 
 import '../../../css/hideScrollBar.css'
 import '../../../css/FrequentSearch.css'
-
+import AxiosFunction from '../../functions/AxiosFunction'
 
 import GetResultData from '../../functions/GetResultData'
 
@@ -21,62 +21,55 @@ class FrequentSearch extends React.Component {
 
     constructor(){
         super()
-        this.state = {
-            hasGetUserInfo: false,
-            searchkey: '',
+        this.staticState = {
             cookie: document.cookie,
-            searchHistory: []
+            searchHistory: [],
         }
-
+        this.searchHistory = []
+        this.intervalId = null
         this.handleClick = this.handleClick.bind(this);
         this.cookieListener = this.cookieListener.bind(this);
+        // this.getSearchHistory = this.getSearchHistory.bind(this)
         this.getSearchHistory = this.getSearchHistory.bind(this)
     }
 
 
     componentWillUnmount() {
-       // use intervalId from the state to clear the interval
-       clearInterval(this.state.intervalId);
+       clearInterval(this.intervalId);
     }
+    getSearchHistory(){
+        AxiosFunction.getSearchHistory(
+        {
+            username: Cookies.get('user')
+        }, 
 
-
-    componentWillReceiveProps(nextProps){
-
-        if(!nextProps.ShouldUpdate){
-            
+        (err, res) => {
+            if(err){
+                console.error(err)
+            }else{
+                
+                var searchHistory = res.sort((a, b) => {
+                    return b.value - a.value
+                })
+                searchHistory =  searchHistory.slice(0, config.frequentSearch.maxfrequentSearchLength)
+                this.staticState.searchHistory = searchHistory
+            }
             this.setState({})
-        }
-        if(nextProps.ShouldUpdate !== this.props.ShouldUpdate){
+        }, 
 
-        }
+        {
+            default: []
+        }) 
     }
-
 
     componentDidMount(){
-        // console.log('hi')
-        var intervalId = setInterval(this.cookieListener, 300);
-       // store intervalId in the state so it can be accessed later:
-        this.setState({intervalId: intervalId});
+        this.intervalId = setInterval(this.cookieListener, 300);
         this.getSearchHistory()
     }
-
-    getSearchHistory(){
-        axios.post(dataSrc.userSearchHistory,{
-            username: Cookies.get('user')
-        }).then((res) => {
-            console.log(res.data.rows)
-            this.setState({
-                searchHistory: res.data.rows.search_history || []
-            })
-        })
-    }
-
     cookieListener(){
-        if(this.state.cookie !== document.cookie){
-
-            this.setState({
-                cookie : document.cookie
-            })
+        if(this.staticState.cookie !== document.cookie){
+            this.staticState.cookie = document.cookie
+            this.getSearchHistory()
         }
     }
 
@@ -117,17 +110,18 @@ class FrequentSearch extends React.Component {
         }
 
         const locale = this.context;
-        // console.log(!this.props.ShouldUpdate)
+        console.log('render')
         return (
+
             <Col id='FrequentSearch' sm={10} xs={10} className=' mx-1 px-0 float-left' style = {style.FrequentSearch} >
                 <Row className='d-flex justify-content-center'>
                     <h3>{locale.FREQUENT_SEARCH}</h3>
                 </Row>
                 <Row className='m-2 '  id='frequentSearch' >
                     
-                       {console.log(this.state)}
-                        {this.state.searchHistory.map( (item, index) => {
-                        console.log(index)
+
+                        {this.staticState.searchHistory.map( (item, index) => {
+
                         return (
                             <div key={index} className="col col-12 p-0 d-flex m-2" style={{float:'right', cursor: 'grab', verticalAlign: 'middle'}}  >
                                 

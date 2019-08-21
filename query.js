@@ -225,6 +225,7 @@ const addUserSearchHistory = (request, response) => {
     const { username, history } = request.body;
     pool.query(queryType.query_addUserSearchHistory(username, history), (error, results) => {
         if (error) {
+            console.log(error)
             console.log('Add user search history fails')
         } else {
             console.log('Add user searech history success')

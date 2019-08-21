@@ -161,12 +161,34 @@ const config = {
 
     frequentSearch:{
         showImage: false,
+        maxfrequentSearchLength: 6
     },
 
     searchResult:{
         showImage: false,
         style: 'list',
         displayMode: 'showAll',
+    },
+
+    searchBarKeyWords: {
+        type: [ 
+                'electric sphygmomanometer', 
+                'monitor', 
+                'IV pump', 
+                'syringe pump', 
+                'blood warming device'
+        ],
+        status: [
+                "Normal",
+                "Broken",
+                "Reserve",
+                "Transferred"
+        ],
+        found : ["found",
+                 "not found",   
+        ],
+        panic: ["panic"],
+        geofence: ["geofence"]
     }
 
 

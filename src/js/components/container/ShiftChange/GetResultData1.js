@@ -4,8 +4,6 @@ import axios from 'axios';
 
 import dataSrc from '../../../dataSrc';
 
-import AxiosFunction from '../../../functions/AxiosFunction'
-
 // e is the event parameter
 // searchableObjectList is the found data list
 // viaMethod is the components call this function, such as frequent search and searchableObjectType
@@ -17,8 +15,9 @@ export default async function GetResultData(SearchKey, searchableObjectList){
 			if(Cookies.get('user')){
 				await axios.post(dataSrc.userInfo, {
 		            username: Cookies.get('user')
-		        }).then( res => {	        	
-		            var mydevice = new Set(res.data[0].mydevice);
+		        }).then( res => {
+
+		            var mydevice = new Set(res.data.rows[0].mydevice);
 		            for(var i in searchableObjectList){
 
 		            	if(mydevice.has(searchableObjectList[i].access_control_number)){
@@ -42,6 +41,7 @@ export default async function GetResultData(SearchKey, searchableObjectList){
 			}
 			else{
 				for(var i in searchableObjectList){
+
 					if (searchableObjectList[i].type.toLowerCase() === SearchKey.toLowerCase()){
 						searchResult.push(searchableObjectList[i])
 					}
