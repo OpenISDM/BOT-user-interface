@@ -175,8 +175,9 @@ class NavbarContainer extends React.Component {
                                 <Dropdown.Divider />
                                 <NavDropdown.Item className="lang-select" onClick={this.handleShiftChangeRecordShowUp}>{locale.SHIFT_CHANGE_RECORD}</NavDropdown.Item>
                                 <Dropdown.Divider />
-                                <NavDropdown.Item className="lang-select" onClick={this.handleSignout}>{locale.SIGN_OUT}</NavDropdown.Item>
-
+                                <LinkContainer to="/" className="bg-white">
+                                    <NavDropdown.Item className="lang-select" onClick={this.handleSignout}>{locale.SIGN_OUT}</NavDropdown.Item>
+                                </LinkContainer>
                             </NavDropdown> 
                                 
                             : <Nav.Item className="nav-link" onClick={this.handleSigninFormShowUp}>{locale.SIGN_IN}</Nav.Item>

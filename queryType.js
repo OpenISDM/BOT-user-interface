@@ -115,97 +115,6 @@ function query_editObjectPackage (data) {
 	return query
 }
 
-function query_signin(username) {
-
-	const text =
-		`
-		SELECT password
-		FROM user_table
-		WHERE name= $1
-		`;
-
-	const values = [username];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query;
-	
-}
-function query_setShift(shift, username){
-	const query = `update user_table
-					set shift='${shift}'
-					where name='${username}'
-					`
-	return query
-}
-
-function query_signup(signupPackage) {
-
-	const text = 
-		`
-		INSERT INTO user_table (name, password)
-		VALUES ($1, $2);
-		INSERT INTO user_roles(user_id, role_id) 
-		VALUES((select id from user_table where name=$1), 1);
-		`;
-	const values = [signupPackage.username, signupPackage.password];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query
-}
-
-function query_modifyUserDevices(username, mode, acn){
-	console.log(acn)
-	var text = ""
-	if(mode === 'add'){
-		text = `UPDATE user_table SET mydevice = array_append(mydevice, '${acn}') WHERE name = '${username}';`
-	}else if(mode === 'remove'){
-		text = `UPDATE user_table SET mydevice = array_remove(mydevice, '${acn}') WHERE name = '${username}';`
-	}else{
-		text = ""
-	}
-
-	return text
-	
-}
-
-function query_getUserInfo(username) {
-	const text =  `
-		SELECT name, mydevice from user_table where name= $1
-	`;
-
-	const values = [username];
-	// console.log(username)
-	const query = {
-		text,
-		values
-	};
-
-	return query
-}
-
-function query_getUserSearchHistory (username) {
-	const text = `
-		SELECT search_history from user_table where name=$1
-	`;
-
-	const values = [username];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query
-}
-
 function query_addUserSearchHistory (username, history) {
 	const text = `
 		UPDATE user_table
@@ -249,37 +158,7 @@ function query_addShiftChangeRecord(submit_timestamp, user_id, file_path){
 	return query
 }
 
-function query_getShiftChangeRecord(){
-	const query = `SELECT * FROM shift_change_record`
-	return query
-}
 
-function query_setUserRole(role, username){
-	const query = `update user_roles
-					set role_id=(select id from roles where name='${role}')
-					where user_roles.user_id = (select id from user_table where name='${username}');
-	`
-	return query
-}
-function query_getUserRole(username){
-	const query = `select name      from roles      where 
-	    id=(       select role_id   from user_roles where 
-	    user_id=(  select id        from user_table where name='${username}'));`
-	return query
-}
-
-function query_getRoleNameList(){
-	const query = `select name from roles;`
-	return query
-}
-function query_getUserList(){
-	const query = `select * from user_table`
-	return query
-}
-function query_removeUser(username){
-	const query = `delete from user_roles where user_id=(select id from user_table where name='${username}'); delete from user_table where name = '${username}';`
-	return query
-}
 module.exports = {
     query_getTrackingData,
     query_getObjectTable,
@@ -289,19 +168,7 @@ module.exports = {
 	query_editObject,
 	query_addObject,
 	query_editObjectPackage,
-	query_signin,
-	query_setShift,
-	query_signup,
-	query_modifyUserDevices,
-	query_getUserInfo,
-	query_getUserSearchHistory,
 	query_addUserSearchHistory,
 	query_editLbeacon,
 	query_addShiftChangeRecord,
-	query_getShiftChangeRecord,
-	query_setUserRole,
-	query_getUserRole,
-	query_getRoleNameList,
-	query_getUserList,
-	query_removeUser
 }

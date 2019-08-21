@@ -1,14 +1,5 @@
 require('dotenv').config();
-const moment = require('moment-timezone');
-const queryType = require ('./queryType');
-const bcrypt = require('bcrypt');
 const pg = require('pg');
-
-const pdf = require('html-pdf');
-const csv=require('csvtojson')
-
-// const Userconfig = require('./src/js/config')
-
 const config = {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -17,6 +8,18 @@ const config = {
     port: process.env.DB_PORT,
 }
 const pool = new pg.Pool(config)
+
+const moment = require('moment-timezone');
+const queryType = require ('./queryType');
+const bcrypt = require('bcrypt');
+
+
+const pdf = require('html-pdf');
+const csv=require('csvtojson')
+const queryUserInfo = require('./queryUserInfo/queryUserInfo').queryUserInfo
+// const Userconfig = require('./src/js/config')
+
+
 
 function GetTimeStampDifference(timestamp1, timestamp2){
     return timestamp1 - timestamp2;
@@ -175,7 +178,6 @@ const getGeofenceData = (request, response) => {
 const editObject = (request, response) => {
 
     const formOptions = request.body.formOption
-    console.log(formOptions)
     for(var i in formOptions){
         let formOption = formOptions[i]
         console.log(formOption)
@@ -219,107 +221,6 @@ const editObjectPackage = (request, response) => {
     })
 }
 
-const signin = (request, response) => {
-    const username = request.body.username
-    const pwd = request.body.password
-    const shift = request.body.shift
-
-    pool.query(queryType.query_signin(username), (error, results) => {
-        const hash = results.rows[0].password
-        if (error) {
-            console.log("Login Fails: " + error)
-        } else {
-
-            if (results.rowCount < 1) {
-                response.json({
-                    authentication: false,
-                    message: "Username or password is incorrect"
-                })
-            } else {
-                if (bcrypt.compareSync(pwd, hash)) {
-                    response.json({
-                        authentication: true,
-                    })
-                    pool.query(queryType.query_setShift(shift, username))
-                } else {
-                    response.json({
-                        authentication: false,
-                        message: "password is incorrect"
-                    })
-                }
-            }
-        }
-
-    })
-
-}
-
-const signup = (request, response) => {
-    const { username, password} = request.body;
-    
-    const saltRounds = 10;
-    const hash = bcrypt.hashSync(password, saltRounds);
-    const signupPackage = {
-        username: username,
-        password: hash,
-    }
-    pool.query(queryType.query_signup(signupPackage), (error, results) => {
-
-        if (error) {
-            console.log(error)
-            console.log("Login Fails!")
-        } else {
-            console.log('Sign up Success')
-        }
-
-        response.status(200).json(results)
-    })
-
-}
-
-const modifyUserDevices = (request, response) => {
-    const {username, mode, acn} = request.body
-    console.log(queryType.query_modifyUserDevices(username, mode, acn))
-    pool.query(queryType.query_modifyUserDevices(username, mode, acn), (error, results) => {
-        if (error) {
-            
-        } else {
-            console.log('Modify Success')
-            // console.log('Get user info success')
-        }
-        
-        response.status(200).json(results)
-    })
-}
-
-const userInfo = (request, response) => {
-    const username = request.body.username;
-    pool.query(queryType.query_getUserInfo(username), (error, results) => {
-        if (error) {
-            console.log('Get user info Fails!')
-        } else {
-            // console.log('Get user info success')
-        }
-        
-        response.status(200).json(results)
-    })
-}
-
-
-
-const userSearchHistory = (request, response) => {
-    const username = request.body.username;
-    pool.query(queryType.query_getUserSearchHistory(username), (error, results) => {
-        if (error) {
-            console.log('Get user search history Fails')
-        } else {
-            console.log('Get user search history success')
-        }
-        
-        response.status(200).json(results)
-    })
-}
-
 const addUserSearchHistory = (request, response) => {
     const { username, history } = request.body;
     pool.query(queryType.query_addUserSearchHistory(username, history), (error, results) => {
@@ -350,7 +251,7 @@ const editLbeacon = (request, response) => {
 }
 
 const  generatePDF = (request, response) => {
-    // console.log(result)
+    console.log(request.body)
     var {foundResult, notFoundResult, user} = request.body
     pool.query(`select shift from user_table where name = '${user}'`,(error, results) => {
         var shift = results.rows[0].shift
@@ -428,85 +329,7 @@ const  generatePDF = (request, response) => {
         }
         
     }
-
-    // foundResult to Table
-    
-    
 }
-
-const getPDFInfo = (request, response) => {
-    var query = queryType.query_getShiftChangeRecord()
-    pool.query(query, (error, results) => {
-        if (error) {
-            console.log('save pdf file fails ' + error)
-        } else {
-            response.status(200).json(results)
-            console.log('save pdf file success')
-        }
-        
-    })   
-}
-
-const setUserRole = (request, response) => {
-    var {role, username} = request.body
-    var query = queryType.query_setUserRole(role, username)
-    pool.query(query,(error, results) => {
-        if(error){
-            console.log(error)
-        }else{
-            // console.log(results.rows)
-            response.send('success')
-        }
-    })}
-
-const getUserRole = (request, response) => {
-    var {username} = request.body
-    var query = queryType.query_getUserRole(username)
-    console.log(username)
-    pool.query(query, (error, results) => {
-        if(error){
-            console.log(error)
-        }else{
-            console.log(results.rows)
-            response.send(results.rows)
-        }
-    })   
-    
-    // response.send(request.body)
-}
-
-const getRoleNameList = (request, response) => {
-    var query = queryType.query_getRoleNameList()
-    pool.query(query, (error, results) => {
-        response.send(results.rows)
-    })   
-    
-}
-
-const getUserList = (request, response) => {
-    var query = queryType.query_getUserList()
-    pool.query(query, (error, results) => {
-        // console.log(results)
-        var userList = results.rows
-        response.send(userList)
-    })  
-}
-const removeUser = (request, response) => {
-    var username = request.body.username
-    var query = queryType.query_removeUser(username)
-    console.log(query)
-    pool.query(query, (error, results) => {
-        // console.log(results)
-        if(error){
-            console.log(error)
-        }else{
-            console.log('success')
-            response.send('success')
-        }
-        
-    })  
-}
-
 
 module.exports = {
     getTrackingData,
@@ -518,19 +341,8 @@ module.exports = {
     editObject,
     addObject,
     editObjectPackage,
-    signin,
-    signup,
-    modifyUserDevices,
-    userInfo,
-    userSearchHistory,
     addUserSearchHistory,
     editLbeacon,
     generatePDF,
-    getPDFInfo,
-    setUserRole,
-    getUserRole,
-    getRoleNameList,
-    getUserList,
-    removeUser
     
 }

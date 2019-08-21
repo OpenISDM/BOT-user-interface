@@ -7,6 +7,7 @@ import LocaleContext from '../../../context/LocaleContext';
 import dataSrc from "../../../dataSrc";
 
 import AddableList from './AddableList'
+import AxiosFunction from './AxiosFunction';
 
 const Fragment = React.Fragment;
 
@@ -36,15 +37,15 @@ export default class MyDeviceManager extends React.Component{
             addAllMyDevice: () => {
                 this.device.notMyDevices = {}
                 this.device.myDevices = this.device.dataMap
-                this.API.updateAddableList()
+                this.API.postMyDeviceChange('add', 'all')               
             },
             removeAllMyDevice: () => {
                 this.device.myDevices = {}
                 this.device.notMyDevices = this.device.dataMap
-                this.API.updateAddableList()
+                this.API.postMyDeviceChange('remove', 'all')
+                
             },
             switchDevice: (acn) => {
-
                 if(acn in this.device.myDevices){
                     this.device.notMyDevices[acn] = this.device.dataMap[acn]
                     delete this.device.myDevices[acn] 
@@ -56,23 +57,28 @@ export default class MyDeviceManager extends React.Component{
                 }else{
                     console.error('acn is not in device list')
                 }
-                this.API.updateAddableList()
             },
             updateAddableList: () => {
                 
-                this.APIforAddableList_1.setList(this.device.myDevices)
-                this.APIforAddableList_2.setList(this.device.notMyDevices)
+                this.APIforAddableList_1.setList(this.device.myDevices || [])
+                this.APIforAddableList_2.setList(this.device.notMyDevices || [])
                 
             },
             postMyDeviceChange: (mode, acn) => {
-                axios.post(dataSrc.modifyMyDevice, {
+                var Info = {
                     username: Cookies.get('user'),
                     mode: mode,
                     acn: acn
-                }).then((res) => {
-                    console.log('success')
+                }
+                AxiosFunction.modifyUserDevice(Info,(err, res) => {
+                    if(err){
+                        console.log(err)
+                    }else{
+                        this.getObjectData()
+                        console.log('success')
+                    }
                 })
-            }
+            },  
         }
 
         this.functionForAddableList = {
@@ -90,7 +96,6 @@ export default class MyDeviceManager extends React.Component{
                 }
             },
             itemLayout: (item, index) => {
-
                 return <h3 name={index}>{item.access_control_number}:<br/>{item.name}, status is {item.status}</h3>
             }
         }
@@ -143,35 +148,37 @@ export default class MyDeviceManager extends React.Component{
             }
             this.device.dataMap = dataMap
             // get My Device
-            axios.post(dataSrc.userInfo, {
+            var Info = {
                 username: Cookies.get('user')
-            }).then((res) => {
-
-                var myDeviceList
-                if(res.data.rows.length === 0){
-                    myDeviceList = []
+            }
+            var callBack = (err, res) => {
+                if(err){
+                    console.error(err)
                 }else{
-                    myDeviceList = res.data.rows[0].mydevice
-                }
-                
-                var allDeviceList = Object.keys(dataMap)
+                    var myDeviceList = res.mydevice
+                    var allDeviceList = Object.keys(dataMap)
 
-                this.device.myDeviceList = myDeviceList
-                var myDevices = {}, notMyDevices = {}
-                for(var acn of allDeviceList){
-                    if(myDeviceList.includes(acn)){
-                        myDevices[acn] = dataMap[acn]
-                    }else{
-                        notMyDevices[acn] = dataMap[acn]
+                    this.device.myDeviceList = myDeviceList
+                    console.log(myDeviceList)
+                    var myDevices = {}, notMyDevices = {}
+                    for(var acn of allDeviceList){
+                        if(myDeviceList.includes(acn)){
+                            myDevices[acn] = dataMap[acn]
+                        }else{
+                            notMyDevices[acn] = dataMap[acn]
+                        }
                     }
+                    this.device.myDevices = myDevices
+                    this.device.notMyDevices = notMyDevices
+
+                    this.API.updateAddableList()
                 }
-
-                this.device.myDevices = myDevices
-                this.device.notMyDevices = notMyDevices
-
-                this.API.updateAddableList()
-
-            }).catch()
+            }
+            var option = {
+                extract: ['mydevice'],
+                default: []
+            }
+            AxiosFunction.userInfo(Info, callBack, option)
         })
         .catch(function (error) {
             console.log(error);

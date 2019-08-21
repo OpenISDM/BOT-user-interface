@@ -37,10 +37,12 @@ class ChangeStatusForm extends React.Component {
             show: false,
             selectedObjectData: null,
             branches: null,
+            showAddNotes: ''
         };
         this.newStatus = {
             status : '',
             transferred_location : '',
+            notes: ''
         }
 
 
@@ -101,8 +103,8 @@ class ChangeStatusForm extends React.Component {
             openForm: (selectedObjectData) => {
                 this.API.openForm(selectedObjectData)
             },
-            submitForm: (status, transferred_location) => {
-                this.onSubmit(status, transferred_location);
+            submitForm: (newStatus) => {
+                this.onSubmit(newStatus);
             },
             addDevice : () => {
                 this.addDevice()
@@ -121,6 +123,7 @@ class ChangeStatusForm extends React.Component {
 
         this.formikSubmission = this.formikSubmission.bind(this)
         this.formikOnChoose = this.formikOnChoose.bind(this)
+        this.handleAddNotes = this.handleAddNotes.bind(this)
     }
     
     componentDidMount(){
@@ -136,9 +139,6 @@ class ChangeStatusForm extends React.Component {
     }
     componentDidUpdate(prevProps, prevState) {
     }
-
-
-
     handleClose(e) {
         this.event.closeForm()
     }
@@ -147,10 +147,15 @@ class ChangeStatusForm extends React.Component {
         this.event.openForm()
     }
     handleSubmit() {
-        var {status, transferred_location} = this.newStatus
-        this.event.submitForm(status, transferred_location)
+        this.event.submitForm(this.newStatus)
     }
-
+    handleAddNotes(){
+        console.log('addNote')
+        this.ShouldUpdate = true
+        this.setState({
+            showAddNotes: !this.state.showAddNotes
+        })
+    }
     handleAddTransferDevices(state){   
         this.event.addDevice()
     }
@@ -223,15 +228,23 @@ class ChangeStatusForm extends React.Component {
         return errors;
     }
     formikSubmission(values, {setSubmitting}){
+        var notes;
+        if(this.refs.note){
+            notes = this.refs.note.value || ''
+        }else{
+            notes = ''
+        }
         if(values.status === 'Transferred'){
             this.newStatus = {
                 status: values.status,
                 transferred_location: values.location,
+                notes: notes
             }
         }else{
             this.newStatus = {
                 status: values.status,
                 transferred_location: '',
+                notes: notes
             }
         }
         this.handleSubmit()
@@ -382,6 +395,9 @@ class ChangeStatusForm extends React.Component {
                                         <Button name="AddDevices" onClick={this.handleAddTransferDevices}>
                                             Add Devices
                                         </Button>
+                                        <Button name="AddNotes" onClick={this.handleAddNotes}>
+                                            Add Note
+                                        </Button>
                                         <Button variant="outline-secondary" onClick={this.handleClose}>
                                             Cancel
                                         </Button>
@@ -392,6 +408,16 @@ class ChangeStatusForm extends React.Component {
                             </Formik>
 
                     </Modal.Body>
+                    {this.state.showAddNotes
+                        ?
+                            <Modal.Footer>
+                                <label htmlFor="notes">Notes</label>
+                                <textarea className="form-control" id="notes" ref="notes" rows="3"></textarea>
+                            </Modal.Footer>
+                        :
+                            null
+                    }
+                    
                     
                 </Modal>
             </>

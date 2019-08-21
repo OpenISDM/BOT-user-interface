@@ -36,7 +36,6 @@ export default class AddableList extends React.Component{
                 console.error('the item is an object so you have to set your own itemLayout')
                 return 
             }
-            
         }
 
         this.API = {
@@ -139,12 +138,12 @@ export default class AddableList extends React.Component{
                             (() => {
                                 var {itemList} = this.state
                                 var Html = []
-                                var acnList = Object.keys(itemList) 
-
+                                var acnList = Object.keys(itemList)
                                 for(var acn of acnList){
                                     var html = []
-                                    var item = itemList[acn], index = item.access_control_number
-
+                                    var item = itemList[acn]
+                                    var index = item.access_control_number
+                                    
                                     if(item === 'add'){
                                         html = (
                                         <div className="py-1 pr-2" key = {index}>

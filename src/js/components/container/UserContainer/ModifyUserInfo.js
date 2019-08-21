@@ -44,18 +44,13 @@ export default class ModifyUserInfo extends React.Component{
         }
     }
     shouldComponentUpdate(nextProps, nextState){
-        if(!this.staticParameter.userRole && nextProps.userRole){
+        if(nextProps.show && !this.props.show){
             this.staticParameter.userRole = nextProps.userRole
-            return true
-        }
-        if(this.props.show || nextProps.show){
             return true
         }
         return true
     }
-    componentDidUpdate(prevProps, PrevState){
-        if(false){}
-        
+    componentDidUpdate(prevProps, PrevState){        
     }
     closeModifyUserInfo(){
         this.staticParameter.userRole = null
@@ -65,6 +60,8 @@ export default class ModifyUserInfo extends React.Component{
     submitModifyUserInfo(){
         var  role = this.staticParameter.userRole
         this.staticParameter.userRole = null
+        console.log('role')
+        console.log(role)
         this.API.closeUserInfo()
         this.props.onSubmit({
             role: role,

@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button}  from 'react-bootstrap';
-
+import Cookies from 'js-cookie'
 
 
 
@@ -9,7 +9,7 @@ import config from '../../config';
 import LocaleContext from '../../context/LocaleContext';
 import axios from 'axios';
 import dataSrc from '../../dataSrc';
-
+import AxiosFunction from '../../functions/AxiosFunction';
 
 var QRCode = require('qrcode.react');
 
@@ -46,12 +46,26 @@ class PdfDownloadForm extends React.Component {
             return true;
         }
     }
+    sendSearchResultToBackend(searchResultInfo, callBack){
+        axios.post(dataSrc.QRCode,searchResultInfo).then(res => {
+            callBack(res.data)
+        })
+    }
     componentDidUpdate (preProps){
         // console.log(this.state.show)
         if(this.props.show && !this.state.show){
-            axios.post(dataSrc.QRCode,this.props.data).then(res => {
+            var foundResult = [], notFoundResult = []
+            for(var item of this.props.data){
+                data.found ? foundResult.push(item) : notFoundResult.push(item)
+            }
+            var searResultInfo = {
+                user: Cookies.get('user'),
+                foundResult: foundResult,
+                notFoundResult: notFoundResult
+            }
+            AxiosFunction.sendSearchResultToBackend(searResultInfo,(path) => {
                 this.setState({
-                    savePath : res.data,
+                    savePath : path,
                     data: this.props.data,
                     show: this.props.show,
                     alreadyUpdate: true,
@@ -59,7 +73,6 @@ class PdfDownloadForm extends React.Component {
                     hasData: true
                 })  
             })
-            
         }
     }
     handleClose() {
@@ -88,7 +101,7 @@ class PdfDownloadForm extends React.Component {
             <div>  
                 <Modal show={this.state.show}  onHide={this.handleClose} size="lg" >
                     <Modal.Header closeButton>Print Search Result 
-                    </Modal.Header >
+                    </Modal.Header>
                     <Modal.Body>
 
 

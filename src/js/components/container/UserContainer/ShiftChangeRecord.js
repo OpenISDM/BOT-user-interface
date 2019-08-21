@@ -8,6 +8,7 @@ import moment from 'moment'
 
 import LocaleContext from '../../../context/LocaleContext';
 import dataSrc from "../../../dataSrc";
+import AxiosFunction from './AxiosFunction';
 
 const Fragment = React.Fragment;
 
@@ -34,15 +35,18 @@ export default class ShiftChangeRecord extends React.Component{
         // this.props.getAPI(this.API)
     }
     getPDFInfo(){
-        axios.get(dataSrc.PDFInfo).then((res) => {
-            this.API.setShiftChangeRecord(res.data.rows)
-            console.log(res.data.rows)
+        AxiosFunction.getShiftChangeRecord({},(err, res) => {
+            if(err){
+                console.log(err)
+            }else{
+                this.API.setShiftChangeRecord(res.rows)
+                console.log(res.data.rows)
+            }
         })
     }
     onClickFile(e){
         var file_path = e.target.getAttribute('name')
         var path = dataSrc.IP + '/' + file_path
-        console.log(path)
         window.open(path);
     }
     itemLayout(item, index, name){

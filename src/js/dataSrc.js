@@ -12,25 +12,25 @@ const editObject = IP + '/data/editObject';
 const addObject = IP + '/data/addObject';
 
 const editObjectPackage = IP +'/data/editObjectPackage';
-const signin = IP + '/user/signin';
-const signup = IP + '/user/signup';
-const modifyMyDevice = IP + '/data/modifyMyDevice';
-const userInfo = IP + '/user/info';
-const userSearchHistory = IP + '/user/searchHistory'
+const signin = IP + '/test/signin';
+const signup = IP + '/test/signup';
+const modifyUserDevice = IP + '/test/modifyUserDevices';
+const userInfo = IP + '/test/userInfo';
+const userSearchHistory = IP + '/test/userSearchHistory'
 const addUserSearchHistory = IP + '/user/addUserSearchHistory'
 const editLbeacon = IP + '/data/editLbeacon'
-const getUserRole = IP + '/user/getUserRole'
-const setUserRole = IP + '/user/setUserRole'
-const getRoleNameList = IP + '/user/getRoleNameList'
-const getUserList = IP + '/user/getUserList'
-const removeUser = IP + '/user/removeUser'
+const getUserRole = IP + '/test/getUserRole'
+const setUserRole = IP + '/test/setUserRole'
+const getRoleNameList = IP + '/test/getRoleNameList'
+const getUserList = IP + '/test/getUserList'
+const removeUser = IP + '/test/removeUser'
 
 const pdfUrl = function(path){
     return IP + '/' + path
 }
 
 const QRCode = IP + '/data/QRCOde'
-const PDFInfo = IP + '/data/PDFInfo'
+const PDFInfo = IP + '/test/getShiftChangeRecord'
 
 
 
@@ -48,7 +48,7 @@ module.exports = {
     editObjectPackage,
     signin,
     signup,
-    modifyMyDevice,
+    modifyUserDevice,
     userInfo,
     userSearchHistory,
     addUserSearchHistory,

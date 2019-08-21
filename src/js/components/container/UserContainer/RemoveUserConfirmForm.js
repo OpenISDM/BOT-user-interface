@@ -46,7 +46,7 @@ export default class RemoveUserConfirm extends React.Component{
 
     render(){
         const locale = this.context
-        console.log('renderrrr')
+
         return(
             <Modal 
                 show={this.props.show}

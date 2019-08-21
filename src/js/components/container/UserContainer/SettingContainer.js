@@ -25,28 +25,6 @@ export default class SettingContainer extends React.Component{
     componentDidMount(){
         // this.getUserRole(Cookies.get('user'))
     }
-
-    // getUserRole(username){
-    //     axios.post(dataSrc.getUserRole,{
-    //         username: username
-    //     }).then((res) => {
-    //         // console.log(res.data[0].name)
-    //         this.setState({
-    //             role: res.data[0].name
-    //         })
-    //         if(res.data[0].name === 'admin'){
-    //             this.getUserList()
-    //         }
-    //     })
-    // }
-    // getUserList(){
-    //     axios.get(dataSrc.getUserList).then((res) => {
-    //         console.log(res.data)
-    //         this.setState({
-    //             userList: res.data
-    //         })
-    //     })
-    // }
     sideNavMouseOver(e){
         e.target.style.fontSize = "1.6rem"
     }
@@ -57,7 +35,6 @@ export default class SettingContainer extends React.Component{
     render(){
         const locale = this.context
         const {role, userList} = this.state
-        // console.log(role)
         return(
             <div>
                 <Row className = "w-100 h-100">
@@ -119,7 +96,6 @@ export default class SettingContainer extends React.Component{
                                     </Fragment>
                                 :
                                     <Col xl={12} className="m-0" style={{overflow: 'hidden', height: '93vh'}}>
-                                        {console.log('hi')}
                                         <UserSettingContainer 
                                             userName={Cookies.get('user')}
                                         />

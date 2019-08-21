@@ -24,6 +24,8 @@ import SearchResultTable from './SearchResultTable'
 
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
+import AxiosFunction from '../../functions/AxiosFunction';
+
 const Fragment = React.Fragment;
 class SearchResult extends React.Component {
 
@@ -104,11 +106,8 @@ class SearchResult extends React.Component {
                 this.APIforTable.updateAddTransferDeviceMode(false)
                 this.props.handleSearchContainerFloatUp(false)
             },
-            submitEvent: (status, transferred_location) => {
-                this.staticParameters.newStatus = {
-                    status: status,
-                    transferred_location: transferred_location
-                }
+            submitEvent: (newStatus) => {
+                this.staticParameters.newStatus = newStatus
                 var {selectedItem, newStatus} = this.staticParameters
                 this.APIforChangeStatusForm.closeForm()
                 this.APIforConfirmForm.openForm(selectedItem, newStatus)
@@ -139,12 +138,6 @@ class SearchResult extends React.Component {
         this.closeSearchResult = this.closeSearchResult.bind(this)
 
         // forms handler
-        // this.handleConfirmForm = this.handleConfirmForm.bind(this)
-        // this.handleChangeObjectStatusForm = this.handleChangeObjectStatusForm.bind(this)
-
-        // this.addDeviceSelection = this.addDeviceSelection.bind(this)
-
-
         this.initializeSearchResultList = this.initializeSearchResultList.bind(this);
 
         this.onClickTableItem = this.onClickTableItem.bind(this)
@@ -248,21 +241,21 @@ class SearchResult extends React.Component {
 
     handleSubmitToBackend(newStatus, macAddresses){
         // send format are as follow
-        axios.post(dataSrc.editObjectPackage, {
+        var Info = {
             newStatus: newStatus.status,
             newLocation: newStatus.transferred_location,
+            notes: newStatus.notes,
             macAddresses: macAddresses
-        }).then(res => {
-            
+        }
+        AxiosFunction.editObjectPackage(Info,(err, res) => {
+            if(err){
+                console.log(error)
+                NotificationManager.error('Edit object Fail', 'Fail', 2000)
+            }else{
                 this.APIforConfirmForm.closeForm()
                 this.props.UpdateTrackingData()
-                // this.handleConfirmForm('close', null)
                 NotificationManager.success('Edit object success', 'Success')
-            
-        }).catch( error => {
-            console.log(error)
-            NotificationManager.error('Edit object Fail', 'Fail', 2000)
-
+            }
         })
     }
     confirmFormOnSubmit(){
@@ -295,18 +288,13 @@ class SearchResult extends React.Component {
 
             this.staticParameters.selectedItem[item.mac_address] = item
         }
-
-
         this.APIforTable.updateSelectedMacList(this.staticParameters.selectedItem)
         this.APIforChangeStatusForm.openForm(this.staticParameters.selectedItem)
-        // this.APIforChangeStatusForm.updateselectedObjectData(this.state.selectedItem)
-        // this.handleChangeObjectStatusForm('show',this.state.selectedItem)
 
     }
     closeSearchResult(){
         this.API.closeSearchResult()
         var closeSearchResult = this.propsCheck('closeSearchResult')
-
         closeSearchResult()
     }
 
@@ -324,7 +312,6 @@ class SearchResult extends React.Component {
 
         }
         var Setting = {
-
             ...defaultSetting,
             ...this.props.Setting,
         }

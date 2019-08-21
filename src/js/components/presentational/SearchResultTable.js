@@ -121,11 +121,11 @@ export default class SearchResultTable extends React.Component {
         }
         let element = 
 
-            <Row key={item.mac_address} className = "w-100" onClick={itemOnClick} name={index}>
+            <Row key={item.mac_address} className = "w-100 px-3" onClick={itemOnClick} name={index}>
                     
                     
-                    <div  name={item.mac_address} style={{cursor: 'grab'}} className = "mx-3 h5">{index + 1}.</div>
-                    <div  name={item.mac_address} style={{cursor: 'grab'}} className = "mx-3 text-left h5">
+                    <div  name={item.mac_address} style={{cursor: 'grab'}} className = "m-0 px-2 h5">{index + 1}.</div>
+                    <div  name={item.mac_address} style={{cursor: 'grab'}} className = "m-0 px-4 text-left h5">
                         <input
                             type="checkbox"
                             className="custom-control-input"
@@ -288,11 +288,11 @@ export default class SearchResultTable extends React.Component {
         if(mode === 'showAll'){
             x = 
                 <Fragment>
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_FOUND(Object.keys(foundResult).length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {locale.DEVICE_FOUND(Object.keys(foundResult).length || 0)}</h5>
                     {
                         this.generateResultHTML(foundResult)
                     }
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {locale.DEVICE_NOT_FOUND(Object.keys(notFoundResult).length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {locale.DEVICE_NOT_FOUND(Object.keys(notFoundResult).length || 0)}</h5>
                     {
                         this.generateResultHTML(notFoundResult)
                     }
@@ -301,7 +301,7 @@ export default class SearchResultTable extends React.Component {
         }else if(mode === 'switch'){
             x = 
                 <Fragment>
-                    <h5 className=" text-left  text-primary w-100 bg-transparent mx-3"> {foundMode === 'found'? locale.DEVICE_FOUND(foundResult.length) : locale.DEVICE_NOT_FOUND(notFoundResult.length)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {foundMode === 'found'? locale.DEVICE_FOUND(foundResult.length) : locale.DEVICE_NOT_FOUND(notFoundResult.length)}</h5>
                     {
                         this.generateResultHTML(foundMode === 'found' ? foundResult : notFoundResult)
                     }
@@ -339,7 +339,7 @@ export default class SearchResultTable extends React.Component {
 
                 {config.searchResult.displayMode === 'switch'
                     ?
-                        <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent mx-3 p-0" style={{maxHeight: '8vh', cursor: 'grab'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
+                        <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent m-0 p-0" style={{maxHeight: '8vh', cursor: 'grab'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
                     :
                         null
                 }

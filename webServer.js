@@ -10,21 +10,7 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const queryUserInfo = require('./queryUserInfo/queryUserInfo').queryUserInfo
 
 app.use(bodyParser.json())
 
@@ -77,16 +63,10 @@ app.post('/data/editObject', db.editObject);
 
 app.post('/data/editObjectPackage', db.editObjectPackage)
 
-app.post('/user/signin', db.signin);
-
-app.post('/user/signup', db.signup);
-
-app.post('/data/modifyMyDevice', db.modifyUserDevices)
-
-app.post('/user/info', db.userInfo)
-
-app.post('/user/searchHistory', db.userSearchHistory)
-
+app.post('/test/:mode',(req, res) => {
+  var mode = req.params.mode
+  queryUserInfo[mode](req,res)
+});
 app.post('/user/addUserSearchHistory', db.addUserSearchHistory)
 
 app.post('/data/editLbeacon', db.editLbeacon)
@@ -94,17 +74,7 @@ app.post('/data/editLbeacon', db.editLbeacon)
 
 app.post('/data/QRCode',db.generatePDF)
 
-app.get('/data/PDFInfo',db.getPDFInfo)
 
-app.post('/user/getUserRole', db.getUserRole)
-
-app.post('/user/setUserRole', db.setUserRole)
-
-app.get('/user/getRoleNameList', db.getRoleNameList)
-
-app.post('/user/removeUser', db.removeUser)
-
-app.get('/user/getUserList', db.getUserList)
 const httpsServer = https.createServer(credentials, app);
 const httpServer = http.createServer(app);
 

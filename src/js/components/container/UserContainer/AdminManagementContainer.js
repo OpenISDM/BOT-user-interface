@@ -46,14 +46,14 @@ export default class AdminManagementContainer extends React.Component{
         })
     }
     getUserList(){
-        axios.get(dataSrc.getUserList).then((res) => {
+        axios.post(dataSrc.getUserList,{}).then((res) => {
 
             this.setState({
                 userList: res.data
             })
         })
     }
-    getUserRole(selectedUser){
+    getUserRole(selectedUser, callBack){
 
         if(selectedUser){
 
@@ -65,26 +65,27 @@ export default class AdminManagementContainer extends React.Component{
                 if(res.data.length !== 0){
                     userRole = res.data[0].name
                 }
-                this.setState({
-                    userRole: userRole
-                })
+                callBack(userRole)
             })
         }
         
     }
     getRoleNameList(){
-        axios.get(dataSrc.getRoleNameList).then((res) => {
+        axios.post(dataSrc.getRoleNameList,{}).then((res) => {
             this.staticParamter.roleName = res.data
         })
     }
     
     onClickUser(e){
         var index = e.target.getAttribute('name')
-        this.getUserRole(this.state.userList[index])
-        this.setState({
-            showModifyUserInfo: true,
-            selectedUser: this.state.userList[index]
+        this.getUserRole(this.state.userList[index], (userRole) => {
+            this.setState({
+                showModifyUserInfo: true,
+                selectedUser: this.state.userList[index],
+                userRole: userRole
+            })
         })
+        
         
     }
     onCloseModifyUserInfo(){
@@ -95,6 +96,7 @@ export default class AdminManagementContainer extends React.Component{
         })
     }
     onSubmitModifyUserInfo(newInfo){
+        console.log(newInfo)
         axios.post(dataSrc.setUserRole,{
             username: this.state.selectedUser.name,
             ...newInfo
@@ -139,7 +141,7 @@ export default class AdminManagementContainer extends React.Component{
     render(){
         const {userList} = this.state
         const {roleName} = this.staticParamter
-
+        console.log('render')
         return(
             <div className="w-100">
                 <ListGroup variant="flush" className="my-2 border-0">
