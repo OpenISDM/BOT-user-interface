@@ -14,7 +14,7 @@ import axios from 'axios';
 import dataSrc from '../../dataSrc';
 import _ from 'lodash';
 import { deepEqual } from 'assert';
-
+import Cookies from 'js-cookie'
 
 import '../../../css/hideScrollBar.css'
 import '../../../css/SearchResult.css'
@@ -242,6 +242,7 @@ class SearchResult extends React.Component {
     handleSubmitToBackend(newStatus, macAddresses){
         // send format are as follow
         var Info = {
+            username: Cookies.get('user'),
             newStatus: newStatus.status,
             newLocation: newStatus.transferred_location,
             notes: newStatus.notes,
@@ -252,6 +253,7 @@ class SearchResult extends React.Component {
                 console.log(error)
                 NotificationManager.error('Edit object Fail', 'Fail', 2000)
             }else{
+                this.API.clearAll()
                 this.APIforConfirmForm.closeForm()
                 this.props.UpdateTrackingData()
                 NotificationManager.success('Edit object success', 'Success')
@@ -274,8 +276,10 @@ class SearchResult extends React.Component {
     onClickTableItem(e){
         
         var index = e.target.getAttribute('name')
-
+        console.log('nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+        console.log(index)
         var item = this.staticParameters.wholeSearchResult[index]
+        console.log(this.staticParameters)
         var {selectedItem, addTransferDevices} = this.staticParameters
         if(addTransferDevices){     
             if(index in selectedItem){
@@ -370,7 +374,7 @@ class SearchResult extends React.Component {
             <Fragment>
 
                 <NotificationContainer />
-                <div id="searchResult"className='m-0 p-0 shadow' style={style.SearchResult}>
+                <div id="searchResult"className='m-0 p-2 shadow' style={style.SearchResult}>
                     
 
                     <div className="bg-transparent px-3">

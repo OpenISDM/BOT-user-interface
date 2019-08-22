@@ -166,8 +166,8 @@ const config = {
 
     searchResult:{
         showImage: false,
-        style: 'list',
-        displayMode: 'showAll',
+        style: 'table',
+        displayMode: 'switch',
     },
 
     searchBarKeyWords: {

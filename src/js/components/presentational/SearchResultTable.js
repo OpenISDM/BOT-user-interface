@@ -121,7 +121,7 @@ export default class SearchResultTable extends React.Component {
         }
         let element = 
 
-            <Row key={item.mac_address} className = "w-100 px-3" onClick={itemOnClick} name={index}>
+            <Row key={item.mac_address} className = "w-100 px-3" onClick={itemOnClick} name={item.mac_address}>
                     
                     
                     <div  name={item.mac_address} style={{cursor: 'grab'}} className = "m-0 px-2 h5">{index + 1}.</div>
@@ -171,7 +171,7 @@ export default class SearchResultTable extends React.Component {
         var {addTransferDevices, selectedMacList} = this.state
 
         var showImage = config.searchResult.showImage
-
+        console.log(item)
         const style = {
             firstText: {
                 paddingLeft: 15,
@@ -192,9 +192,9 @@ export default class SearchResultTable extends React.Component {
             xl: [1, 4, 4, 3]
         }
         let element =
-            <ListGroup.Item  action style={style.listItem} className='searchResultList ' eventKey={'found:' + index} key={index} onClick={itemOnClick} name={index}>
-            <div className = "w-100" key={item.mac_address}>
-                <Col xl={layout.xl[0]} lg={2} md={2} xs={2} className="float-left p-0" style={{cursor: 'grab'}}>{index + 1}</Col>
+            <ListGroup.Item  action style={style.listItem} className='searchResultList' eventKey={'found:' + index} key={index} onClick={itemOnClick} name={item.mac_address}>
+            <div className = "w-100">
+                <Col xl={layout.xl[0]} lg={2} md={2} xs={2} className="float-left p-0" style={{cursor: 'grab'}} name={item.mac_address}>{index + 1}</Col>
                 
                 {addTransferDevices
                     ?   
@@ -202,23 +202,22 @@ export default class SearchResultTable extends React.Component {
                             <input
                                 type="checkbox"
                                 className="custom-control-input float-left p-0"
-                                onChange={itemOnClick}
                                 checked = {item.mac_address in selectedMacList ? true: false }
                                 id={'check'+item.mac_address}
-                                name={index}
+                                name={item.mac_address}
                                 style={{cursor: 'grab', float: 'left'}}
 
 
                             />
-                            <label className="custom-control-label" name={index} htmlFor={'check'+item.mac_address} />
+                            <label className="custom-control-label" name={item.mac_address} htmlFor={'check'+item.mac_address} />
                         </Fragment>
                     :
                         null 
                 }
 
-                <Col xl={layout.xl[1]} lg={3} md={3} xs={4} className="float-left p-0" style={{cursor: 'grab'}} name={index}>{item.type}</Col>
+                <Col xl={layout.xl[1]} lg={3} md={3} xs={4} className="float-left p-0" style={{cursor: 'grab'}} name={item.mac_address}>{item.type}</Col>
                 
-                <Col xl={layout.xl[2]} lg={7} md={7} xs={6} className="float-left p-0" style={{cursor: 'grab'}} name={index}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
+                <Col xl={layout.xl[2]} lg={7} md={7} xs={6} className="float-left p-0" style={{cursor: 'grab'}} name={item.mac_address}>ACN: xxxx-xxxx-{item.last_four_acn}</Col>
                 {showImage
                     ?
                         
@@ -252,17 +251,15 @@ export default class SearchResultTable extends React.Component {
                         (() => {
                             var Html = []
                             var index = 0
-
+                            console.log(searchResult)
                             if(resultStyle === 'table'){
                                 for(var item in searchResult){
-                                    
                                     var html = this.generateResultTableRowHTML(searchResult[item], index)
                                     index ++;
                                     Html.push(html)
                                 }
                             }else if(resultStyle === 'list'){
                                 for(var item in searchResult){
-
                                     var html = this.generateResultListRowHTML(searchResult[item], index)
                                     index ++;
                                     Html.push(html)
@@ -299,9 +296,10 @@ export default class SearchResultTable extends React.Component {
                 </Fragment>
 
         }else if(mode === 'switch'){
+            console.log(foundResult || 0)
             x = 
                 <Fragment>
-                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {foundMode === 'found'? locale.DEVICE_FOUND(foundResult.length) : locale.DEVICE_NOT_FOUND(notFoundResult.length)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {foundMode === 'found'? locale.DEVICE_FOUND(foundResult.length || 0) : locale.DEVICE_NOT_FOUND(notFoundResult.length || 0)}</h5>
                     {
                         this.generateResultHTML(foundMode === 'found' ? foundResult : notFoundResult)
                     }
@@ -343,7 +341,7 @@ export default class SearchResultTable extends React.Component {
                     :
                         null
                 }
-                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-0" ref="searchResultTable" style={{overflowY: 'scroll',maxHeight: Setting.maxHeight !== null ? (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh' : null}}>      
+                <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-1" ref="searchResultTable" style={{overflowY: 'scroll',maxHeight: Setting.maxHeight !== null ? (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh' : null}}>      
                     <div id="top"></div>
                     {
                         this.handleDisplayMode()

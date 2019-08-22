@@ -70,6 +70,7 @@ class ChangeStatusForm extends React.Component {
                 this.ShouldUpdate = true
                 this.setState({
                     show: false,
+                    showAddNotes: false,
                     selectedObjectData: {}
                 })
             },
@@ -97,6 +98,7 @@ class ChangeStatusForm extends React.Component {
         }
         this.event={
             closeForm: () => {
+                console.log('closeeeeeeeeeeee')
                 this.API.closeForm()
                 this.onClose()
             },
@@ -147,10 +149,11 @@ class ChangeStatusForm extends React.Component {
         this.event.openForm()
     }
     handleSubmit() {
+        console.log(this.newStatus)
         this.event.submitForm(this.newStatus)
     }
     handleAddNotes(){
-        console.log('addNote')
+
         this.ShouldUpdate = true
         this.setState({
             showAddNotes: !this.state.showAddNotes
@@ -229,8 +232,9 @@ class ChangeStatusForm extends React.Component {
     }
     formikSubmission(values, {setSubmitting}){
         var notes;
-        if(this.refs.note){
-            notes = this.refs.note.value || ''
+        console.log(this.refs.notes.value)
+        if(this.refs.notes){
+            notes = this.refs.notes.value || ''
         }else{
             notes = ''
         }
@@ -277,7 +281,7 @@ class ChangeStatusForm extends React.Component {
     }
 
     formikLocationSelect(branches, {values}, {handleChange}){
-        console.log(values)
+
         var Html = []
         for(var branch in branches){
             var html = []
@@ -313,7 +317,6 @@ class ChangeStatusForm extends React.Component {
             )
             Html.push(html)
 
-            console.log(sections)
 
         }
         return Html

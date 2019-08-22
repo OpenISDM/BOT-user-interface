@@ -60,7 +60,6 @@ export default class AdminManagementContainer extends React.Component{
             axios.post(dataSrc.getUserRole,{
                 username: selectedUser.name
             }).then((res) => {
-                console.log(res.data)
                 var userRole = ''
                 if(res.data.length !== 0){
                     userRole = res.data[0].name
@@ -96,7 +95,7 @@ export default class AdminManagementContainer extends React.Component{
         })
     }
     onSubmitModifyUserInfo(newInfo){
-        console.log(newInfo)
+
         axios.post(dataSrc.setUserRole,{
             username: this.state.selectedUser.name,
             ...newInfo
@@ -141,10 +140,9 @@ export default class AdminManagementContainer extends React.Component{
     render(){
         const {userList} = this.state
         const {roleName} = this.staticParamter
-        console.log('render')
         return(
             <div className="w-100">
-                <ListGroup variant="flush" className="my-2 border-0">
+                <ListGroup variant="flush" className="w-100 shadow" style={{overflowY:'scroll', height: '75vh'}}>
                     {userList.map((user, index) => {
                         if(user.name){
                             return (

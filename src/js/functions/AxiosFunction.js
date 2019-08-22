@@ -46,7 +46,7 @@ const AxiosFunction = {
 	// output: Object
 	userInfo: (Info, callBack, option) => {
 		axios.post(dataSrc.userInfo, Info).then((res) => {
-			var data = res.data[0];
+			var data = res.data[0] || [];
 
 			if(option){
 				if(option.filter){
@@ -65,11 +65,10 @@ const AxiosFunction = {
 					data = data || option.default
 				}
 			}
-			console.log(callBack)
-			console.log('callBack')
+			console.log(data)
             callBack(null, data)
         }).catch(err => {
-        	console.log(err)
+        	console.error(err)
         	callBack(err, null)
         })
 		
@@ -100,6 +99,44 @@ const AxiosFunction = {
         }).catch(err => {
         	callBack(err, null)
         })
-	}
+	},
+	getObjectData: (Info, callBack, option) => {
+		axios.get(dataSrc.objectTable).then((res) => {
+			var data = res.data.rows || []
+			if(option){
+				if(option.filter){
+					data.map((datum) => {
+						for(var i of option.filter){
+							delete datum[i]
+						}
+					})
+					
+				}
+				if(option.extract){
+					data = data.map((datum) => {
+						var buff = {}
+						for(var i of option.extract){
+							buff[i] = data[i]
+						}
+						return buff
+					})
+				}
+				if(option.key){
+					var dataMap = {}
+					data.map((datum) => {
+						dataMap[datum[option.key]] = datum
+					})
+					data = dataMap
+				}
+				if(option.default){
+					data = data || option.default
+				}
+			}
+			callBack(null, data)
+        }).catch(err => {
+        	console.error(err)
+        	callBack(err, null)
+        })
+    },
 }
 export default AxiosFunction

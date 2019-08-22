@@ -30,17 +30,14 @@ export default class ShiftChangeRecord extends React.Component{
     }
 
     componentDidMount(){
-        setTimeout(this.getPDFInfo, 100)
-        // this.getPDFInfo()
-        // this.props.getAPI(this.API)
+        this.getPDFInfo()
     }
     getPDFInfo(){
         AxiosFunction.getShiftChangeRecord({},(err, res) => {
             if(err){
-                console.log(err)
+                console.error(err)
             }else{
                 this.API.setShiftChangeRecord(res.rows)
-                console.log(res.data.rows)
             }
         })
     }
@@ -50,13 +47,12 @@ export default class ShiftChangeRecord extends React.Component{
         window.open(path);
     }
     itemLayout(item, index, name){
-        return <h3 name={name}>{index} . {item.user_id}, Checked at {moment(item.submit_timestamp).format('LLLL')}</h3> 
+        return <h3 name={name}>{index + 1} . {item.user_id}, Checked at {moment(item.submit_timestamp).format('LLLL')}</h3> 
     }
-    render(){
-        
+    render(){      
         var locale = this.context
         return (
-            <ListGroup className="w-100 border-0" style={{overflowY:'scroll', height: '70vh'}}>
+            <ListGroup className="w-100 shadow" style={{overflowY:'scroll', height: '75vh'}}>
                 {this.state.record.map((record, index)=>{
                     return (
                         <ListGroup.Item key={record.id} onClick={this.onClickFile} name={record.file_path} style={{cursor: 'grab'}}>

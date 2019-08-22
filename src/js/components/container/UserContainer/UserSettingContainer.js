@@ -9,13 +9,26 @@ import AdminManagementContainer from './AdminManagementContainer'
 import LocaleContext from '../../../context/LocaleContext';
 const Fragment = React.Fragment;
 export default class UserSettingContainer extends React.Component{
-
     constructor() {
         super();
-        this.state = {
-        }
+        this.pageList=[
+            {
+                pageName: 'DevicesManagement',
+                locale: 'Devices_Management',
+                component: <MyDeviceManager />
+            },
+            {
+                pageName: 'ShiftRecordHistory',
+                locale: 'Shift_Record_History',
+                component: <ShiftChangeRecord />
+            },
+            {
+                pageName: 'AdminManagement',
+                locale: 'ADMIN',
+                component: <AdminManagementContainer />
+            },
+        ]
     }
-
     sideNavMouseOver(e){
         e.target.style.fontSize = "1.6rem"
     }
@@ -24,82 +37,47 @@ export default class UserSettingContainer extends React.Component{
     }
     render(){
         var locale = this.context
-
         return (
             <div className = "d-flex justify-content-center">
                 <Row className = "w-100 h-100">
-
                     <Col xl={3} className="m-0">
                         <ListGroup variant="flush" className="my-4 border-0">
                             <ListGroup.Item className="border-0 my-2 h3">{locale.User_Setting}</ListGroup.Item>
-                            <ListGroup.Item className="border-0 my-2" href="#DevicesManagement"
-                                style={{fontSize: '1.5rem'}}
-                                onMouseOver={this.sideNavMouseOver}
-                                onMouseLeave={this.sideNavMouseLeave}
-                                action>
-                                {locale.Devices_Management}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="border-0 my-2" href="#ShiftRecordHistory"
-                                style={{fontSize: '1.5rem'}}
-                                onMouseOver={this.sideNavMouseOver}
-                                onMouseLeave={this.sideNavMouseLeave}
-                                action>
-                                {locale.Shift_Record_History}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="border-0 my-2" href="#AdminManagement"
-                                style={{fontSize: '1.5rem'}}
-                                onMouseOver={this.sideNavMouseOver}
-                                onMouseLeave={this.sideNavMouseLeave}
-                                action>
-                                {locale.ADMIN}
-                            </ListGroup.Item>
-                            
+                            {this.pageList.map((page) => {
+                                return(
+                                    <ListGroup.Item 
+                                        key={page.pageName}
+                                        className="border-0 my-2" 
+                                        href={'#' + page.pageName}
+                                        style={{fontSize: '1.5rem'}}
+                                        onMouseOver={this.sideNavMouseOver}
+                                        onMouseLeave={this.sideNavMouseLeave}
+                                        action>
+                                        {locale[page.locale]}
+                                    </ListGroup.Item>
+                                )
+                            })}
                         </ListGroup>
                     </Col>
                     <Col xl={9} className="m-0" style={{overflow: 'hidden', height: '93vh'}}>
                     {
                         // 
                     }
-                        <div id="DevicesManagement" className="p-3" style={{height: '93vh'}}>   
-                            <Row className="w-100 m-3" style={{height: '6vh'}}>                         
-                                <h2 >
-                                    {locale.Devices_Management}
-                                </h2>
-                            </Row>
-                            <Row className="w-100 m-3 d-flex bg-white" style={{height: '80vh'}}>
-                                <MyDeviceManager />                                
-                            </Row>
-                        </div>
-                    {
-                        // 
-                    }
-                        <div id="ShiftRecordHistory" className="p-3" style={{height: '93vh'}}>   
-                            <Row className="w-100 m-3" style={{height: '6vh'}}>                         
-                                <h2 >
-                                    {locale.Shift_Record_History}
-                                </h2>
-                            </Row>
-                            <Row className="w-100 m-3 d-flex bg-white" style={{height: '80vh'}}>
-                                <ShiftChangeRecord />
-                            </Row>
-                        </div>
-                    
-                        
-                        <div id="AdminManagement" className="p-3" style={{height: '93vh'}}>   
-                            <Row className="w-100 m-3" style={{height: '6vh'}}>                         
-                                <h2 >
-                                    {locale.ADMIN}
-                                </h2>
-                            </Row>
-                            <Row className="w-100 m-3 d-flex bg-white" style={{height: '80vh'}}>
-                                <AdminManagementContainer />                                
-                            </Row>
-                        </div>
-                    
-                        
+                        {this.pageList.map((page) => {
+                            return(
+                                <div id={page.pageName} key={page.pageName}className="p-3" style={{height: '93vh'}}>   
+                                    <Row className="w-100 m-3" style={{height: '6vh'}}>                         
+                                        <h2 >
+                                            {locale[page.locale]}
+                                        </h2>
+                                    </Row>
+                                    <Row className="w-100 m-3 d-flex bg-white" style={{height: '80vh'}}>
+                                        {page.component}                               
+                                    </Row>
+                                </div>
+                            )
+                        })}
                     </Col>
-                    
-                    
                 </Row>     
             </div>               
         )

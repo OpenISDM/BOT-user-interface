@@ -126,11 +126,16 @@ export default class AddableList extends React.Component{
         this.API.removeItem(ACN)
     }
     render(){
-        
+        var addableListStyle = {
+            height: '70vh', 
+            overflowY: 'scroll',
+            ...this.props.addableListStyle
+        }
+
         return (
             <Fragment>
-                <h4>{this.state.title}</h4>
-                <ListGroup  variant = "flush" style={{height: '70vh', overflowY: 'scroll'}}>
+                <div>{this.state.title}</div>
+                <ListGroup  variant = "flush" style={addableListStyle}>
                     
 
                     {this.state.itemList !== null 

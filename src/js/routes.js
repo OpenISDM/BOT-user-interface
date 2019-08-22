@@ -2,7 +2,7 @@ import MainContainer from "./components/container/MainContainer";
 import HealthReport from "./components/container/HealthReport";
 import Geofence from "./components/container/Geofence";
 import ObjectManagementContainer from "./components/container/ObjectManagementContainer";
-import SettingContainer from "./components/container/UserContainer/SettingContainer";
+import UserSettingContainer from "./components/container/UserContainer/UserSettingContainer";
 
 const routes = [
     {
@@ -32,7 +32,7 @@ const routes = [
     },
     {
         path: '/page/Setting',
-        component: SettingContainer,
+        component: UserSettingContainer,
         exact: true,
     },
 ];

@@ -99,8 +99,6 @@ export default class MyDeviceManager extends React.Component{
                 return <h3 name={index}>{item.access_control_number}:<br/>{item.name}, status is {item.status}</h3>
             }
         }
-
-
         this.getAPIfromAddableList_1 = this.getAPIfromAddableList_1.bind(this)
         this.getAPIfromAddableList_2 = this.getAPIfromAddableList_2.bind(this)
     }
@@ -109,8 +107,7 @@ export default class MyDeviceManager extends React.Component{
         var locale = this.context
         const {itemLayout, validation, onClick} = this.functionForAddableList
         this.APIforAddableList_1 = API
-
-        this.APIforAddableList_1.setTitle(locale.MY_DEVICES)
+        this.APIforAddableList_1.setTitle(<h3>{locale.MY_DEVICES}</h3>)
         this.APIforAddableList_1.setValidation(validation)
         this.APIforAddableList_1.setItemLayout(itemLayout)
         this.APIforAddableList_1.setOnClick(onClick)
@@ -119,95 +116,91 @@ export default class MyDeviceManager extends React.Component{
         var locale = this.context
         const {itemLayout, validation, onClick} = this.functionForAddableList
         this.APIforAddableList_2 = API
-        this.APIforAddableList_2.setTitle(locale.OTHER_DEVICES)
+        this.APIforAddableList_2.setTitle(<h3>{locale.OTHER_DEVICES}</h3>)
         this.APIforAddableList_2.setValidation(validation)
         this.APIforAddableList_2.setItemLayout(itemLayout)
         this.APIforAddableList_2.setOnClick(onClick)
     }
     componentDidMount(){
-        console.log(this.context)
         this.getObjectData()
     }
     componentDidUpdate(){
         var locale = this.context
-        if(this.APIforAddableList_1) this.APIforAddableList_1.setTitle(locale.MY_DEVICES)
-        if(this.APIforAddableList_2) this.APIforAddableList_2.setTitle(locale.OTHER_DEVICES)
+        if(this.APIforAddableList_1) this.APIforAddableList_1.setTitle(<h3>{locale.MY_DEVICES}</h3>)
+        if(this.APIforAddableList_2) this.APIforAddableList_2.setTitle(<h3>{locale.OTHER_DEVICES}</h3>)
     }
-    shouldComponentUpdate(nexProps){
-        return true
+    seperateMyDevice(dataMap, myDeviceList){
+        var allDeviceList = Object.keys(dataMap), myDevices = {}, notMyDevices = {}
+        for(var acn of allDeviceList){
+            myDeviceList.includes(acn) ? myDevices[acn] = dataMap[acn] : notMyDevices[acn] = dataMap[acn]
+        }
+        return {
+            myDevices: myDevices,
+            notMyDevices: notMyDevices
+        }
     }
     getObjectData() {
-        axios.get(dataSrc.objectTable).then(res => {
-
-
-            let data = res.data.rows
-            var dataMap = {}
-
-            for(var item of data){
-                dataMap[item.access_control_number] = item
-            }
-            this.device.dataMap = dataMap
-            // get My Device
-            var Info = {
-                username: Cookies.get('user')
-            }
-            var callBack = (err, res) => {
-                if(err){
-                    console.error(err)
-                }else{
-                    var myDeviceList = res.mydevice
-                    var allDeviceList = Object.keys(dataMap)
-
-                    this.device.myDeviceList = myDeviceList
-                    console.log(myDeviceList)
-                    var myDevices = {}, notMyDevices = {}
-                    for(var acn of allDeviceList){
-                        if(myDeviceList.includes(acn)){
-                            myDevices[acn] = dataMap[acn]
-                        }else{
-                            notMyDevices[acn] = dataMap[acn]
-                        }
-                    }
-                    this.device.myDevices = myDevices
-                    this.device.notMyDevices = notMyDevices
-
-                    this.API.updateAddableList()
+        AxiosFunction.getObjectData(null, 
+            (err, res) => {
+                var dataMap = res
+                var Info = {
+                    username: Cookies.get('user')
                 }
-            }
-            var option = {
-                extract: ['mydevice'],
+                var callBack = (err, res) => {
+                    if(err){
+                        console.error(err)
+                    }else{
+                        var myDeviceList = res.mydevice || []
+                        
+                        var { myDevices, notMyDevices } = this.seperateMyDevice(dataMap, myDeviceList)
+
+                        this.device = {
+                            ...this.device,
+                            dataMap,
+                            myDeviceList,
+                            myDevices,
+                            notMyDevices,
+                        }
+                        
+                        this.API.updateAddableList()
+                    }
+                }
+                var option = {
+                    extract: ['mydevice'],
+                    default: []
+                }
+                AxiosFunction.userInfo(Info, callBack, option)
+            }, 
+            {
+                key: 'access_control_number',
                 default: []
             }
-            AxiosFunction.userInfo(Info, callBack, option)
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+        )
     }
-    
-    
     render(){
-        
-        
         return (
-            <Fragment>
+            <div className="w-100 shadow d-flex" style={{height: '75vh'}}>
                 <Col xl={5}>
                     <AddableList
                         getAPI={this.getAPIfromAddableList_1}
+                        addableListStyle={{
+                            height: '65vh'
+                        }}
                     />
                 </Col>
                 <Col xl={2} className='p-5' style={{position: 'relative', top: '15%'}}>
-
                         <i className="fas fa-angle-double-right fa-3x p-4" onClick = {this.API.removeAllMyDevice}></i>
-
                         <i className="fas fa-angle-double-left fa-3x p-4" onClick = {this.API.addAllMyDevice}></i>
                 </Col>
                 <Col xl={5}>
                     <AddableList
                         getAPI={this.getAPIfromAddableList_2}
+                        addableListStyle={{
+                            height: '65vh'
+                        }}
                     />
                 </Col>
-            </Fragment>
+            </div>
         )
     }
 }

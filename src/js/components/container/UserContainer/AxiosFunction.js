@@ -65,26 +65,77 @@ const AxiosFunction = {
 					data = data || option.default
 				}
 			}
-
             callBack(null, data)
         }).catch(err => {
+        	console.error(err)
         	callBack(err, null)
         })
 		
 		
 	},
 	getSearchHistory: (Info, callBack, option) => {
-		axios.post(dataSrc.getSearchHistory, Info).then((res) => {
-			var data = res.data[0];
+		axios.post(dataSrc.userSearchHistory, Info).then((res) => {
+			if(res.data.rows[0]){
+				var data = res.data.rows[0].search_history;
+				if(option){
+					if(option.default){
+						data = data || option.default
+					}
+				}
+				console.log(data)
+	            callBack(null, data)
+			}else{
+				callBack(null, [])
+			}
+			
+        }).catch(err => {
+        	callBack(err, null)
+        })
+	},
+	addUserSearchHistory: (Info, callBack, option) => {
+		axios.post(dataSrc.addUserSearchHistory, Info).then((res) => {
+			callBack(null, 'success')
+        }).catch(err => {
+        	callBack(err, null)
+        })
+	},
+	getObjectData: (Info, callBack, option) => {
+		axios.get(dataSrc.objectTable).then((res) => {
+			var data = res.data.rows || []
 			if(option){
+				if(option.filter){
+					data.map((datum) => {
+						for(var i of option.filter){
+							delete datum[i]
+						}
+					})
+					
+				}
+				if(option.extract){
+					data = data.map((datum) => {
+						var buff = {}
+						for(var i of option.extract){
+							buff[i] = data[i]
+						}
+						return buff
+					})
+				}
+				if(option.key){
+					var dataMap = {}
+					data.map((datum) => {
+						dataMap[datum[option.key]] = datum
+					})
+					data = dataMap
+				}
 				if(option.default){
 					data = data || option.default
 				}
 			}
-            callBack(null, data)
+			callBack(null, data)
         }).catch(err => {
+        	console.error(err)
         	callBack(err, null)
         })
-	}
+    },
 }
 export default AxiosFunction
