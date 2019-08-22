@@ -107,19 +107,15 @@ function query_addObject (formOption) {
 
 function query_editObjectPackage (data) {
 	var nowTime = moment().format('LLLL')
-	console.log(nowTime)
-	var mac_string = data.macAddresses.join('\',\'')
-	console.log(data.macAddresses)
 	var query = `Update object_table 
 			SET status = '${data.newStatus}',
-			transferred_location = '${data.newLocation}' WHERE mac_address in ('${data.macAddresses.join('\',\'')}');
+			transferred_location = '${data.newLocation}' WHERE access_control_number in ('${data.acn.join('\',\'')}');
 			INSERT INTO edit_object_record
 			(edit_user_id, edit_time, notes, new_status, new_location, edit_objects) 
 			VALUES
 			((SELECT id FROM user_table WHERE name='${data.username}'), 
 			to_timestamp('${nowTime}', 'Day, Month DD, YYYY HH:MI'),
-			'${data.notes}', '${data.newStatus}', '${data.newLocation}', '{"${data.macAddresses.join('\",\"')}"}')`
-	console.log(query)
+			'${data.notes}', '${data.newStatus}', '${data.newLocation}', '{"${data.acn.join('\",\"')}"}')`
 	return query
 }
 

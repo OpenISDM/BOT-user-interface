@@ -111,6 +111,10 @@ const queryTypeforUserInfo = {
 		const query = `delete from user_roles where user_id=(select id from user_table where name='${username}'); delete from user_table where name = '${username}';`
 		return query
 	},
+	query_getEditObjectRecord: () => {
+		const query = `select * from edit_object_record;`
+		return query
+	}
 }
 module.exports = {
 	queryTypeforUserInfo

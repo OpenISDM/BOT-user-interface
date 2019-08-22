@@ -9,9 +9,6 @@ class NestedSelect extends React.Component {
         super(props);
         this.onClick = this.onClick.bind(this)
     }
-    
-    componentDidMount(){
-    }
     onClick(e){
         this.props.onClick(e.target.name)
     }
@@ -21,6 +18,7 @@ class NestedSelect extends React.Component {
         var Html = []
         for(var i in objectList){
             var child = objectList[i]
+            // check whether has sections under the choice
             if(typeof child !== 'object'){
                 Html.push(
                     <Dropdown.Item 

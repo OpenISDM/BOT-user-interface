@@ -25,6 +25,21 @@ const initialFormOption = {
     transferredLocation: null,
 }
 
+const objectListProperty = [
+    {
+        displayName: 'Device Type',
+        attributeName: 'type'
+    },
+    {
+        displayName: 'Device Name',
+        attributeName: 'name'
+    },
+    {
+        displayName: 'ACN',
+        attributeName: 'access_control_number'
+    },
+]
+
 class ConfirmForm extends React.Component {
     
     constructor(props) {
@@ -36,7 +51,6 @@ class ConfirmForm extends React.Component {
             newStatus: initialFormOption,
             selectedObjectData: {}
         };
-        this.onSubmit = null
         this.API = {
             setTitle: (title) => {
                 this.setState({
@@ -57,9 +71,6 @@ class ConfirmForm extends React.Component {
                     selectedObjectData: selectedObjectData,
                     newStatus: newStatus
                 })
-            },
-            setOnSubmit: (func) => {
-                this.onSubmit = func
             },
             setDeviceList: (itemList) => {
                 this.setState({
@@ -89,58 +100,48 @@ class ConfirmForm extends React.Component {
                 this.setState()
             },
         }
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.event = {
+            onSubmit: () => {
+                this.props.onSubmit()
+                this.API.closeForm()
+            },
+            onClose: () => {
+                this.props.onClose()
+                this.API.closeForm()
+            }
+        }
     }
-  
-
     componentDidMount(){
         this.props.getAPI(this.API)
     }
-
-    handleSubmit(e) {
-        this.onSubmit()
-        this.API.closeForm()
-    }
-
-    generateDeviceList(){
+    generateDeviceList(selectedObjectData){
         var htmls =[]
         const rwdProp = { 
             sm: 5,
             md: 5,
             lg: 5,
         }
-        for(var selectedObjectDataIndex in this.state.selectedObjectData){
-            if(this.state.selectedObjectData[selectedObjectDataIndex]!== null){
-                let selectedObjectData = this.state.selectedObjectData[selectedObjectDataIndex]
+        console.log(selectedObjectData)
+        var selectedObject = selectedObjectData
+        for(var selectedObjectDataIndex in selectedObject){
 
+            if(selectedObject[selectedObjectDataIndex]!== null){
+                let selectedObjectData = selectedObject[selectedObjectDataIndex]
                 let html = 
-                    <Row key={selectedObjectDataIndex}>
-                        <Col sm={8}>
-                        
-                            <Row>
-                                <Col {...rwdProp}>
-                                    Device Type
-                                </Col>
-                                <Col sm={7} className='text-muted pb-1'>
-                                    {selectedObjectData.type}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col sm={5}>
-                                    Device Name
-                                </Col>
-                                <Col sm={7} className='text-muted pb-1'>
-                                    {selectedObjectData.name}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col sm={5}>
-                                    ACN
-                                </Col>
-                                <Col sm={7} className='text-muted pb-1'>
-                                    {selectedObjectData.access_control_number}
-                                </Col>
-                            </Row>
+                    <Row key={selectedObjectDataIndex} className="px-3 py-1">
+                        <Col sm={12}>
+                            {objectListProperty.map((property) => {
+                                return (
+                                    <Row key={property.displayName}>
+                                        <Col sm={5}>
+                                            {property.displayName}
+                                        </Col>
+                                        <Col sm={7} className='text-muted pb-1'>
+                                            {selectedObjectData[property.attributeName]}
+                                        </Col>
+                                    </Row>
+                                )
+                            })}
                         </Col>
                     </Row>
 
@@ -174,16 +175,14 @@ class ConfirmForm extends React.Component {
             }
         };
 
-        const { title } = this.state;
-
         return (
             <>  
-                <Modal show={this.state.isShowForm} onHide={this.API.closeForm} size="md" style={customModalStyles.content}>
-                    <Modal.Header closeButton className='font-weight-bold'>{title}</Modal.Header >
-                    <Modal.Body>
+                <Modal show={this.state.isShowForm} onHide={this.event.onClose} size="md" style={customModalStyles.content}>
+                    <Modal.Header closeButton className='font-weight-bold'>{this.props.title}</Modal.Header>
+                    <Modal.Body className="p-0">
                         <Form >
                             <div style={{maxHeight: '25vh', overflowY: 'scroll', overflowX: 'hidden'}}>
-                                {this.generateDeviceList()}
+                                {this.generateDeviceList(this.state.selectedObjectData)}
                             </div>
                            
                             
@@ -210,7 +209,7 @@ class ConfirmForm extends React.Component {
                         <Button variant="outline-secondary" onClick={this.API.closeForm}>
                             Cancel
                         </Button>
-                        <Button variant="primary" onClick={this.handleSubmit}>
+                        <Button variant="primary" onClick={this.event.onSubmit}>
                             Send
                         </Button>
                     </Modal.Footer>

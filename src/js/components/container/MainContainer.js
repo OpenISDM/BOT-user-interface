@@ -166,9 +166,6 @@ class ContentContainer extends React.Component{
 
                   
                 }
-
-
-                
                 if(ShouldUpdate || this.state.searchableObjectData.length === 0){
 
                     var foundData = []
@@ -422,10 +419,9 @@ class ContentContainer extends React.Component{
                     hasSearchKey = {this.state.hasSearchKey}
                     searchResult={this.state.searchResult}
                     transferSearchResult = {this.transferSearchResult}
-                    closeSearchResult = {this.closeSearchResult}
+                    onClose = {this.closeSearchResult}
                     handleSearchContainerFloatUp = {this.handleSearchContainerFloatUp}
                     UpdateTrackingData = {this.shouldUpdateTrackingData}
-
                     ShouldUpdate={this.state.ShouldUpdateSearchResult}
                 />
 

@@ -46,6 +46,7 @@ const tw = {
     User_Setting: '帳戶設定',
     Devices_Management: '儀器管理',
     Shift_Record_History: '換班紀錄',
+    Edit_Object_Management: '儀器狀態更改紀錄',
     ACCESS_RIGHT: '使用者權限',
     MY_DEVICES: '我的儀器',
     OTHER_DEVICES: '其他儀器',

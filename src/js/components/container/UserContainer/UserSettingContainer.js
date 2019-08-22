@@ -6,6 +6,7 @@ import { Col, Row, Button, Nav, Container} from 'react-bootstrap';
 import MyDeviceManager from './MyDeviceManager'
 import ShiftChangeRecord from './ShiftChangeRecord'
 import AdminManagementContainer from './AdminManagementContainer'
+import EditObjectManagement from './EditObjectManagement'
 import LocaleContext from '../../../context/LocaleContext';
 const Fragment = React.Fragment;
 export default class UserSettingContainer extends React.Component{
@@ -27,6 +28,11 @@ export default class UserSettingContainer extends React.Component{
                 locale: 'ADMIN',
                 component: <AdminManagementContainer />
             },
+            {
+                pageName: 'EditObjectManagement',
+                locale: 'Edit_Object_Management',
+                component: <EditObjectManagement />
+            }
         ]
     }
     sideNavMouseOver(e){

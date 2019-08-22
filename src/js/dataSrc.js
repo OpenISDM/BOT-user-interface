@@ -24,6 +24,7 @@ const setUserRole = IP + '/test/setUserRole'
 const getRoleNameList = IP + '/test/getRoleNameList'
 const getUserList = IP + '/test/getUserList'
 const removeUser = IP + '/test/removeUser'
+const getEditObjectRecord = IP + '/test/getEditObjectRecord'
 
 const pdfUrl = function(path){
     return IP + '/' + path
@@ -60,5 +61,6 @@ module.exports = {
     setUserRole,
     getRoleNameList,
     getUserList,
-    removeUser
+    removeUser,
+    getEditObjectRecord
 };

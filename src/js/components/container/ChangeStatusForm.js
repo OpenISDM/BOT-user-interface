@@ -27,6 +27,20 @@ const options = transferredLocations.map( location => {
     locationObj["label"] = location;
     return locationObj
 })
+const objectListProperty = [
+    {
+        displayName: 'Device Type',
+        attributeName: 'type'
+    },
+    {
+        displayName: 'Device Name',
+        attributeName: 'name'
+    },
+    {
+        displayName: 'ACN',
+        attributeName: 'access_control_number'
+    },
+]
   
 class ChangeStatusForm extends React.Component {
     
@@ -45,12 +59,6 @@ class ChangeStatusForm extends React.Component {
             transferred_location : '',
             notes: ''
         }
-
-
-
-        this.onClose = null
-        this.onSubmit = null
-        this.addDevice = null
 
         this.API = {
             setTitle: (title) => {
@@ -80,15 +88,6 @@ class ChangeStatusForm extends React.Component {
                     selectedObjectData: selectedObjectData
                 })
             },
-            setOnSubmit: (func) => {
-                this.onSubmit = func
-            },
-            setOnClose: (func) => {
-                this.onClose = func
-            },
-            setAddDevice: (func) => {
-                this.addDevice = func
-            },
             setNewStatus: (newStatus) => {
                 this.newStatus = {
                     ...this.newStatus,
@@ -99,18 +98,17 @@ class ChangeStatusForm extends React.Component {
         }
         this.event={
             closeForm: () => {
-                console.log('closeeeeeeeeeeee')
                 this.API.closeForm()
-                this.onClose()
+                this.props.onClose()
             },
             openForm: (selectedObjectData) => {
                 this.API.openForm(selectedObjectData)
             },
             submitForm: (newStatus) => {
-                this.onSubmit(newStatus);
+                this.props.onSubmit(newStatus);
             },
             addDevice : () => {
-                this.addDevice()
+                this.props.onAddDevice()
             }
         }
         this.handleShow = this.handleShow.bind(this);
@@ -157,51 +155,35 @@ class ChangeStatusForm extends React.Component {
         this.event.addDevice()
     }
 
-    generateDeviceList(){
+    generateDeviceList(selectedObjectData){
         var htmls =[]
         const rwdProp = { 
             sm: 5,
             md: 5,
             lg: 5,
         }
-        var {selectedObjectData} = this.state
+        console.log(selectedObjectData)
+        var selectedObject = selectedObjectData
+        for(var selectedObjectDataIndex in selectedObject){
 
-
-        for(var selectedObjectDataIndex in selectedObjectData){
-            if(selectedObjectData[selectedObjectDataIndex]!== null){
-
-                let object = selectedObjectData[selectedObjectDataIndex]
-
+            if(selectedObject[selectedObjectDataIndex]!== null){
+                let selectedObjectData = selectedObject[selectedObjectDataIndex]
                 let html = 
-                    <Row key={selectedObjectDataIndex}>
+                    <Row key={selectedObjectDataIndex} className="px-3 py-1">
                         <Col sm={12}>
-                        
-                            <Row>
-                                <Col {...rwdProp}>
-                                    Device Type
-                                </Col>
-                                <Col sm={7} className='text-muted pb-1'>
-                                    {object.type}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col sm={5}>
-                                    Device Name
-                                </Col>
-                                <Col sm={7} className='text-muted pb-1'>
-                                    {object.name}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col sm={5}>
-                                    ACN
-                                </Col>
-                                <Col sm={7} className='text-muted pb-1'>
-                                    {object.access_control_number}
-                                </Col>
-                            </Row>
+                            {objectListProperty.map((property) => {
+                                return (
+                                    <Row key={property.displayName}>
+                                        <Col sm={5}>
+                                            {property.displayName}
+                                        </Col>
+                                        <Col sm={7} className='text-muted pb-1'>
+                                            {selectedObjectData[property.attributeName]}
+                                        </Col>
+                                    </Row>
+                                )
+                            })}
                         </Col>
-
                     </Row>
 
                 htmls.push(html)
@@ -285,8 +267,6 @@ class ChangeStatusForm extends React.Component {
                 borderRight: 0,
                 
             },
-
-
         }
 
         const customModalStyles = {
@@ -299,23 +279,16 @@ class ChangeStatusForm extends React.Component {
             }
         };
 
-        
-
-        let { title } = this.state;
-
-
-
-
         return (
             <>
                 <Modal show={this.state.show} onHide={this.handleClose} size="md" style={customModalStyles.content} enforceFocus={false}>
                     <Modal.Header closeButton className='font-weight-bold'>
-                        {title}
+                        {this.props.title}
                     </Modal.Header>
                     <Modal.Body>
                         
                             <div style={{maxHeight: '25vh', overflowY: 'scroll', overflowX: 'hidden'}}>
-                                {this.generateDeviceList()}
+                                {this.generateDeviceList(this.state.selectedObjectData)}
                             </div>
                             <hr/>
                             <Formik

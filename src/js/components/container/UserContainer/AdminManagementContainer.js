@@ -146,14 +146,14 @@ export default class AdminManagementContainer extends React.Component{
                     {userList.map((user, index) => {
                         if(user.name){
                             return (
-                                <ListGroup.Item key={user.name} className="my-0 h3" name={index}  action>
-                                    <Col sm={11} className='float-left'>
-                                        <h3 name={index} onClick = {this.onClickUser}>
+                                <ListGroup.Item key={user.name} className="m-0 py-2 px-2" name={index}  action>
+                                    <Col sm={11} className='float-left p-0'>
+                                        <h3 name={index} onClick = {this.onClickUser} style={{color: '#212529'}}>
                                             {user.name}
                                         </h3>
                                     </Col>
-                                    <Col sm={1} className='float-left'>
-                                        <i className="fa fa-trash float-right" aria-hidden="true" name={user.name} onClick={this.removeUser}></i>
+                                    <Col sm={1} className='float-left p-0'>
+                                        <i className="fa fa-2x fa-trash float-right" aria-hidden="true" name={user.name} onClick={this.removeUser}></i>
                                     </Col>
                                 </ListGroup.Item>
                             )

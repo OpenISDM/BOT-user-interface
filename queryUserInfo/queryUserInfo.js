@@ -167,6 +167,18 @@ const queryUserInfo = {
 	        }
 	        
 	    })  
+	},
+	getEditObjectRecord: (request, response) => {
+		var query = queryTypeforUserInfo.query_getEditObjectRecord()
+		console.log(query)
+		pool.query(query, (error, results) => {
+	        if(error){
+	            console.log(error)
+	        }else{
+	            response.send(results.rows)
+	        }
+	        
+	    }) 
 	}
 }
 module.exports = {

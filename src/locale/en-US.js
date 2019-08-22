@@ -49,6 +49,7 @@ const en =  {
     User_Setting: 'User Setting',
     Devices_Management: 'Devices Management',
     Shift_Record_History: 'Shift Change History',
+    Edit_Object_Management: 'Edit Object Record',
     ACCESS_RIGHT: 'Access Right',
     MY_DEVICES: 'My Devices',
     OTHER_DEVICES: 'Other Devices',

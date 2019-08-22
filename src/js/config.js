@@ -166,7 +166,7 @@ const config = {
 
     searchResult:{
         showImage: false,
-        style: 'table',
+        style: 'list',
         displayMode: 'switch',
     },
 

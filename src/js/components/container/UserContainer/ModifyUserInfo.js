@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, ListGroup, Modal, Button } from 'react-bootstrap';
+import { Col, Row, ListGroup, Modal, Button, Navbar, Nav } from 'react-bootstrap';
 
 import axios from 'axios';
 import Cookies from 'js-cookie'
@@ -60,8 +60,6 @@ export default class ModifyUserInfo extends React.Component{
     submitModifyUserInfo(){
         var  role = this.staticParameter.userRole
         this.staticParameter.userRole = null
-        console.log('role')
-        console.log(role)
         this.API.closeUserInfo()
         this.props.onSubmit({
             role: role,
@@ -105,7 +103,22 @@ export default class ModifyUserInfo extends React.Component{
                 show={this.props.show}
                 onHide={this.closeModifyUserInfo}
             >
-                <Modal.Header closeButton className='font-weight-bold'>
+                <Modal.Header closeButton className='font-weight-bold p-1'>
+                {
+                    // <Navbar className="w-100 p-1">
+                    //     <Nav className="w-100 p-1">
+                    //         <Col>
+                    //             <Nav.Item className="h4"></Nav.Item>
+                    //         </Col>
+                    //         <Col>
+                    //             <Nav.Item className="h4">1</Nav.Item>
+                    //         </Col>
+                    //         <Col>
+                    //             <Nav.Item className="h4">2</Nav.Item>
+                    //         </Col>
+                    //     </Nav>
+                    // </Navbar>
+                }
                     
                 </Modal.Header>
                 <Modal.Body className="d-block">

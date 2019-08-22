@@ -9,11 +9,9 @@ import ChangeStatusForm from '../container/ChangeStatusForm';
 import ConfirmForm from '../container/ConfirmForm';
 import shallowCompare from 'react-addons-shallow-compare'
 import { connect } from 'react-redux'
-import { shouldUpdateTrackingData } from '../../action/action';
 import axios from 'axios';
 import dataSrc from '../../dataSrc';
 import _ from 'lodash';
-import { deepEqual } from 'assert';
 import Cookies from 'js-cookie'
 
 import '../../../css/hideScrollBar.css'
@@ -52,7 +50,6 @@ class SearchResult extends React.Component {
                 
             },
             openSearchResult: (result) => {
-                this.APIforTable.toTop()
                 var foundResult = [], notFoundResult = []
                 for(var i of result){
                     if(i['found'] === 1){
@@ -83,10 +80,6 @@ class SearchResult extends React.Component {
 
                 this.staticParameters.selectedItem = {}
                 this.staticParameters.addTransferDevices = false
-                // this.setState({
-                //     selectedItem: [],
-                //     addTransferDevices: false
-                // })
             },
             clearAll: () => {
                 var {searchResult, selectedItem, addTransferDevices} = this.staticParameters
@@ -123,156 +116,67 @@ class SearchResult extends React.Component {
 
             }
         }
+        this.handleConfirmForm = {
+            closeEvent: () => {
+                this.API.clearAll()
+                this.APIforTable.updateAddTransferDeviceMode(false)
+                this.props.handleSearchContainerFloatUp(false)
+            },
+            submitEvent: () => {
+                const {selectedItem, newStatus} = this.staticParameters;
+
+                var acn = Object.values(selectedItem).map((item) => {
+                    return item.access_control_number
+                });
+
+                var Info = {
+                    username: Cookies.get('user'),
+                    newStatus: newStatus.status,
+                    newLocation: newStatus.transferred_location,
+                    notes: newStatus.notes,
+                    acn: acn
+                }
+
+                AxiosFunction.editObjectPackage(Info,(err, res) => {
+                    if(err){
+                        console.log(error)
+                        NotificationManager.error('Edit object Fail', 'Fail', 2000)
+                    }else{
+                        this.API.clearAll()
+                        this.APIforConfirmForm.closeForm()
+                        this.props.UpdateTrackingData()
+                        NotificationManager.success('Edit object success', 'Success')
+                    }
+                })
+            }
+        }
+        this.event = {
+            onClose: () => {
+                this.API.closeSearchResult()
+                this.props.onClose()
+            }
+        }
+        this.getAPIfromTable = (API) => {
+            this.APIforTable = API
+        }
+        this.getAPIfromConfirmForm = (API) => {
+            this.APIforConfirmForm = API
+        }
+        this.getAPIfromChangeStatusForm = (API) => {
+            this.APIforChangeStatusForm = API
+        }
 
         this.APIforTable = null
         this.APIforConfirmForm = null
         this.APIforChangeStatusForm = null
 
-
-        // check whether props are properly logged in
-        this.propsCheck = this.propsCheck.bind(this)
-
-        // show either found list or not found list
-        // this.handleToggleNotFound = this.handleToggleNotFound.bind(this);
-
-        this.closeSearchResult = this.closeSearchResult.bind(this)
-
-        // forms handler
-        this.initializeSearchResultList = this.initializeSearchResultList.bind(this);
-
-        this.onClickTableItem = this.onClickTableItem.bind(this)
-
-        this.getAPIfromTable = this.getAPIfromTable.bind(this)
-        this.getAPIfromConfirmForm = this.getAPIfromConfirmForm.bind(this)
-        this.getAPIfromChangeStatusForm = this.getAPIfromChangeStatusForm.bind(this)
-
-
-        this.confirmFormOnSubmit = this.confirmFormOnSubmit.bind(this)
-
-       
+        this.onClickTableItem = this.onClickTableItem.bind(this)   
     }
-
-    getAPIfromTable(API){
-
-        this.APIforTable = API
-
-        this.APIforTable.setOnClick(this.onClickTableItem)
-    }
-
-    getAPIfromConfirmForm(API){
-        this.APIforConfirmForm = API
-
-        this.APIforConfirmForm.setOnSubmit(this.confirmFormOnSubmit)
-
-        this.APIforConfirmForm.setTitle('Thank you for reporting')
-    }
-
-    getAPIfromChangeStatusForm(API){
-        this.APIforChangeStatusForm = API
-
-        this.APIforChangeStatusForm.setOnSubmit(this.handleChangeStatusForm.submitEvent)
-
-        this.APIforChangeStatusForm.setOnClose(this.handleChangeStatusForm.closeEvent)
-
-        this.APIforChangeStatusForm.setAddDevice(this.handleChangeStatusForm.addDeviceEvent)
-
-        this.APIforChangeStatusForm.setTitle('Report device status')
-    }
-    
     componentDidMount() {
         this.props.getAPI(this.API)
-        setTimeout(this.initializeSearchResultList,300)
     }
     componentDidUpdate(prepProps, prevState) {
-        var state = {}
-        var update = false
     }
-    
-
-    propsCheck(attribute){
-
-        if(attribute){
-            return this.props[attribute]
-        }else{
-            console.error(attribute + 'is undefined')
-        }
-    }
-
-
-    initializeSearchResultList(){
-        // console.log(this.props.searchResult)
-        var searchResults = this.propsCheck('searchResult');
-
-        var searchResult = []
-        var foundResult = {}
-        var notFoundResult = {}
-        var wholeSearchResultMap = []
-        var searchResultMap = {}
-
-
-        for(var searchresult in searchResults){
-
-            let result = searchResults[searchresult];
-            
-            result.checked = false;
-            searchResultMap[result.mac_address] = result
-            searchResult.push(result);
-
-            if(result.found){
-                foundResult[result.mac_address] = result
-            }else{
-                notFoundResult[result.mac_address] = result
-            }
-        }
-        var searchResultBoth = {
-            foundResult: foundResult,
-            notFoundResult: notFoundResult,
-        }
-
-        this.APIforTable.updateSearchResult(searchResultBoth)
-
-        this.setState({
-            searchResultMap: searchResultMap,
-        })
-
-
-    }
-
-
-    handleSubmitToBackend(newStatus, macAddresses){
-        // send format are as follow
-        var Info = {
-            username: Cookies.get('user'),
-            newStatus: newStatus.status,
-            newLocation: newStatus.transferred_location,
-            notes: newStatus.notes,
-            macAddresses: macAddresses
-        }
-        AxiosFunction.editObjectPackage(Info,(err, res) => {
-            if(err){
-                console.log(error)
-                NotificationManager.error('Edit object Fail', 'Fail', 2000)
-            }else{
-                this.API.clearAll()
-                this.APIforConfirmForm.closeForm()
-                this.props.UpdateTrackingData()
-                NotificationManager.success('Edit object success', 'Success')
-            }
-        })
-    }
-    confirmFormOnSubmit(){
-
-        const {selectedItem, newStatus} = this.staticParameters;
-        var macAddresses = [];
-        // push the mac address to a list and finally send this to backend
-        for(var i in selectedItem){
-            macAddresses.push(selectedItem[i].mac_address)
-        }
-        // submit to backend
-
-        this.handleSubmitToBackend(newStatus, macAddresses)
-    }
-
     onClickTableItem(e){
         
         var index = e.target.getAttribute('name')
@@ -293,14 +197,7 @@ class SearchResult extends React.Component {
         this.APIforChangeStatusForm.openForm(this.staticParameters.selectedItem)
 
     }
-    closeSearchResult(){
-        this.API.closeSearchResult()
-        var closeSearchResult = this.propsCheck('closeSearchResult')
-        closeSearchResult()
-    }
-
-    render() {
-    
+    render() {   
         const locale = this.context;
         const { searchResult, searchKey} = this.props;
         const defaultSetting={
@@ -327,10 +224,6 @@ class SearchResult extends React.Component {
 
                 zIndex: (this.state.show)?1100:0,
 
-                background:'#FFFFFF',
-                
-                float: 'right', 
-
                 width: config.searchResult.showImage ?  (Setting.width!== null? (parseInt(Setting.width.slice(0,2))*1.3) + '%': null): Setting.width,
 
                 position:'absolute',
@@ -338,72 +231,48 @@ class SearchResult extends React.Component {
                 top: Setting.top,
                 right: Setting.right,
 
-                borderRadius: '3%',
+                borderRadius: '10px',
             },
-            listItem: {
-                position: 'relative',
-                zIndex: 6,
-            }, 
-            noResultDiv: {
-                color: 'grey',
-                fontSize: 30,
-            },
-            
-            titleText: {
-
-                color: 'rgb(80, 80, 80, 0.9)', 
-                textAlign: 'center',
-                overflowX: 'hidden',
-                display: 'flex'
-                
-            }, 
-            searchResultCloseButton:{
-                height: '10px',
-                width: '10px',
-                fontSize: '30px',
-                float: 'right'
-            }
-
         }
-
-
         return(
             <Fragment>
 
                 <NotificationContainer />
-                <div id="searchResult"className='m-0 p-1 shadow' style={style.SearchResult}>
+                <div id="searchResult"className='m-0 p-1 shadow bg-white' style={style.SearchResult}>
                     
 
                     <div className="bg-transparent px-3">
                         
                             <h3 className="text-primary w-100 text-left bg-transparent">{locale.SEARCH_RESULT}</h3>
-                        
-                        
-                            <h1 onClick={this.closeSearchResult} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
+                                               
+                            <h1 onClick={this.event.onClose} className="text-primary bg-transparent" style={{position: 'absolute',top: '0%', right: '5%'}}>x</h1>
                             
                     </div>
 
                     <SearchResultTable 
                         getAPI = {this.getAPIfromTable}
-
+                        onClick = {this.onClickTableItem}
                         Setting = {Setting}
                     />
+
                 </div>
 
                 <ChangeStatusForm 
                     getAPI = {this.getAPIfromChangeStatusForm}
-                    
-                />
-                {
-                    // show={this.state.showEditObjectForm} 
-                    // title='Report device status' 
-                    // selectedObjectData={this.state.selectedItem} 
-                    // handleChangeObjectStatusForm = {this.handleChangeObjectStatusForm}
 
-                    // ShouldUpdate = {this.state.ShouldUpdateChangeStatusForm}
-                }
+                    onSubmit = {this.handleChangeStatusForm.submitEvent}
+                    onClose = {this.handleChangeStatusForm.closeEvent}
+                    onAddDevice = {this.handleChangeStatusForm.addDeviceEvent}
+
+                    title={'Report Devices Status'}
+                />
                 <ConfirmForm 
                     getAPI = {this.getAPIfromConfirmForm}
+
+                    onSubmit = {this.handleConfirmForm.submitEvent}
+                    onClose = {this.handleConfirmForm.closeEvent}
+
+                    title = {'Thank you for reporting'}
                 />
             </Fragment>
 
@@ -411,12 +280,5 @@ class SearchResult extends React.Component {
     }
 }
 SearchResult.contextType = LocaleContext;
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        shouldUpdateTrackingData: value => dispatch(shouldUpdateTrackingData(value))
-    }
-}
-
-export default connect(null, mapDispatchToProps)(SearchResult);
+export default SearchResult
                             

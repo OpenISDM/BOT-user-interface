@@ -46,7 +46,7 @@ const AxiosFunction = {
 	// output: Object
 	userInfo: (Info, callBack, option) => {
 		axios.post(dataSrc.userInfo, Info).then((res) => {
-			var data = res.data[0] || [];
+			var data = res.data[0];
 
 			if(option){
 				if(option.filter){
@@ -65,7 +65,6 @@ const AxiosFunction = {
 					data = data || option.default
 				}
 			}
-			console.log(data)
             callBack(null, data)
         }).catch(err => {
         	console.error(err)
@@ -138,5 +137,15 @@ const AxiosFunction = {
         	callBack(err, null)
         })
     },
+    getEditObjectRecord: (Info, callBack, Option) => {
+    	axios.post(dataSrc.getEditObjectRecord, Info).then((res) => {
+    		console.log(res.data)
+    		callBack(null, res.data)
+    	}).catch(err => {
+    		console.error(err)
+        	callBack(err, null)
+    	})
+    },
+    
 }
 export default AxiosFunction
