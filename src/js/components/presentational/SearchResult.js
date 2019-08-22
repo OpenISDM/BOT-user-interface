@@ -53,7 +53,7 @@ class SearchResult extends React.Component {
             },
             openSearchResult: (result) => {
                 this.APIforTable.toTop()
-                var foundResult = {}, notFoundResult = {}
+                var foundResult = [], notFoundResult = []
                 for(var i of result){
                     if(i['found'] === 1){
                         foundResult[i.mac_address] = i
@@ -276,10 +276,7 @@ class SearchResult extends React.Component {
     onClickTableItem(e){
         
         var index = e.target.getAttribute('name')
-        console.log('nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
-        console.log(index)
         var item = this.staticParameters.wholeSearchResult[index]
-        console.log(this.staticParameters)
         var {selectedItem, addTransferDevices} = this.staticParameters
         if(addTransferDevices){     
             if(index in selectedItem){
@@ -374,7 +371,7 @@ class SearchResult extends React.Component {
             <Fragment>
 
                 <NotificationContainer />
-                <div id="searchResult"className='m-0 p-2 shadow' style={style.SearchResult}>
+                <div id="searchResult"className='m-0 p-1 shadow' style={style.SearchResult}>
                     
 
                     <div className="bg-transparent px-3">

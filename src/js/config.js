@@ -189,7 +189,45 @@ const config = {
         ],
         panic: ["panic"],
         geofence: ["geofence"]
-    }
+    },
+    branches: [
+        {
+            name: '員林基督教醫院',
+            section: [
+                'ICU'
+            ]
+        },
+        {
+            name: '雲林基督教醫院',
+            section: [
+                'ICU', 
+                {
+                    name: '員林基督教醫院',
+                    section: [
+                        'ICU',
+                        '1',
+                        'abbbbbbbbbbbbb',
+                        {
+                            name: '2',
+                            section: [ '123']
+                        }
+                        
+                    ]
+                }
+            ]
+        },
+        {
+            name: '彰化基督教醫院',
+            section: ['ICU', ]
+        },
+        {
+            name: '南投基督教醫院',
+            section: ['ICU']
+        },
+    ]
+        
+
+    
 
 
 

@@ -17,6 +17,7 @@ import axios from 'axios';
 import dataSrc from '../../dataSrc';
 import { Image } from 'react-bootstrap'
 import tempImg from '../../../img/doppler.jpg'
+import NestedSelect from '../presentational/NestedSelect'
 
 const transferredLocations = config.transferredLocation;
 
@@ -112,12 +113,6 @@ class ChangeStatusForm extends React.Component {
                 this.addDevice()
             }
         }
-
-        this.getBranches = () => {
-            axios.get(dataSrc.branches).then((res)=>{
-                this.state.branches = res.data
-            })
-        }
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -130,7 +125,6 @@ class ChangeStatusForm extends React.Component {
     
     componentDidMount(){
         this.props.getAPI(this.API)
-        this.getBranches()
     }
     shouldComponentUpdate(nextProps, nextState){
         if(this.ShouldUpdate){
@@ -232,7 +226,6 @@ class ChangeStatusForm extends React.Component {
     }
     formikSubmission(values, {setSubmitting}){
         var notes;
-        console.log(this.refs.notes.value)
         if(this.refs.notes){
             notes = this.refs.notes.value || ''
         }else{
@@ -278,48 +271,6 @@ class ChangeStatusForm extends React.Component {
             </div>
 
         return html
-    }
-
-    formikLocationSelect(branches, {values}, {handleChange}){
-
-        var Html = []
-        for(var branch in branches){
-            var html = []
-            var sections = branches[branch]
-            html = (
-                <DropdownButton
-                    drop={'right'}
-                    variant="light"
-                    title={branch}
-                    key = {branch}
-                    id={`dropdown-button-drop-right`}
-                    size="lg"
-                    bsPrefix='btn-white p-0 m-0 w-100 h4 bg-white border-0'
-                    style={{fontSize: '1.5rem'}}
-                > 
-                    {sections.map((section, index )=> {
-                        return (
-                            <Dropdown.Item key={index} id={`${branch}, ${section}`} name={`${branch}, ${section}`} as={'h5'} 
-                                onClick={(e)=>{
-                                    handleChange(e)
-                                    var name = e.target.getAttribute('name')
-                                    values.location = name
-                            }}>
-                                {section}
-                            </Dropdown.Item>
-                        )
-                            
-                    })
-                    
-                    }
-                </DropdownButton>
-                
-            )
-            Html.push(html)
-
-
-        }
-        return Html
     }
 
     
@@ -380,18 +331,18 @@ class ChangeStatusForm extends React.Component {
                                     })}
                                     {values.status === 'Transferred' 
                                         ?
-                                            <Dropdown>
-                                                <Dropdown.Toggle id="dropdown-custom-1" varient='light' bsPrefix='dropdown-toggle bg-light text-dark' style={{width:'300px'}}>{values.location === '' ? 'Select Transferred Location' : values.location}</Dropdown.Toggle>
-                                                <Dropdown.Menu bsPrefix='dropdown-menu' style={{width:'200px'}}>
-                                                    {
-                                                        this.formikLocationSelect(this.state.branches, {values}, {handleChange})
-                                                    }
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                            <NestedSelect 
+                                                type="select"
+                                                title={"Select Transferred Location"}
+                                                onClick={
+                                                    (location) => {
+                                                    values.location = location;
+                                                    console.log(values.submit)
+                                                }}
+                                            />
                                         :
                                             null
-                                    }
-                                    
+                                    }                                    
                                     {<h5 className="text-danger text-center">{errors.NoLocation}</h5>}
                                     {<h5 className="text-danger text-center">{errors.NoSelect}</h5>}
                                     <Row className="btn-group d-flex justify-content-center mx-3">
@@ -423,6 +374,7 @@ class ChangeStatusForm extends React.Component {
                     
                     
                 </Modal>
+
             </>
         );
     }

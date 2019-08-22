@@ -171,7 +171,7 @@ export default class SearchResultTable extends React.Component {
         var {addTransferDevices, selectedMacList} = this.state
 
         var showImage = config.searchResult.showImage
-        console.log(item)
+
         const style = {
             firstText: {
                 paddingLeft: 15,
@@ -251,7 +251,6 @@ export default class SearchResultTable extends React.Component {
                         (() => {
                             var Html = []
                             var index = 0
-                            console.log(searchResult)
                             if(resultStyle === 'table'){
                                 for(var item in searchResult){
                                     var html = this.generateResultTableRowHTML(searchResult[item], index)
@@ -296,10 +295,10 @@ export default class SearchResultTable extends React.Component {
                 </Fragment>
 
         }else if(mode === 'switch'){
-            console.log(foundResult || 0)
+
             x = 
                 <Fragment>
-                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {foundMode === 'found'? locale.DEVICE_FOUND(foundResult.length || 0) : locale.DEVICE_NOT_FOUND(notFoundResult.length || 0)}</h5>
+                    <h5 className=" text-left  text-primary w-100 bg-transparent m-3"> {foundMode === 'found'? locale.DEVICE_FOUND(Object.keys(foundResult).length) : locale.DEVICE_NOT_FOUND(Object.keys(notFoundResult).length)}</h5>
                     {
                         this.generateResultHTML(foundMode === 'found' ? foundResult : notFoundResult)
                     }
