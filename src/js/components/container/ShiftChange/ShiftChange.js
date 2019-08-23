@@ -111,6 +111,7 @@ class ShiftChange extends React.Component {
                 user: Cookies.get('user'), 
                 foundResult: this.state.searchResult.foundResult,
                 notFoundResult: this.state.searchResult.notFoundResult,
+                save: true
             }).then(res => {
                 this.setState({
                     fileURL: res.data

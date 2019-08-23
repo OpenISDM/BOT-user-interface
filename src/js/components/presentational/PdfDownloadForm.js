@@ -59,7 +59,8 @@ class PdfDownloadForm extends React.Component {
             var searResultInfo = {
                 user: Cookies.get('user'),
                 foundResult: foundResult,
-                notFoundResult: notFoundResult
+                notFoundResult: notFoundResult,
+                save: false,
             }
             this.sendSearchResultToBackend(searResultInfo,(path) => {
                 this.setState({

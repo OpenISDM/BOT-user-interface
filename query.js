@@ -252,13 +252,10 @@ const editLbeacon = (request, response) => {
 }
 
 const  generatePDF = (request, response) => {
-    console.log(request.body)
-    var {foundResult, notFoundResult, user} = request.body
+    var {foundResult, notFoundResult, user, save} = request.body
     pool.query(`select shift from user_table where name = '${user}'`,(error, results) => {
         var shift = results.rows[0].shift
-        console.log(shift)
         var header = "<h1 style='text-align: center;'>" + "checked by " + user + "</h1>"
-        console.log(header)
         var timestamp = "<h3 style='text-align: center;'>" + moment().format('LLLL') + "</h3>"
         var shift = "<h3 style='text-align: center;'> Shift: " + shift + "</h3>"
 
@@ -292,19 +289,21 @@ const  generatePDF = (request, response) => {
             var submit_time = moment().format()
             var user_id = 1234
             var file_path = filePath
-
-            pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path), (error, results) => {
-                if (error) {
-                    console.log('save pdf file fails ' + error)
-                } else {
-                    console.log('save pdf file success')
-                    response.status(200).json(filePath)
-                }
-            })   
+            if(save){
+                pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path), (error, results) => {
+                    if (error) {
+                        console.log('save pdf file fails ' + error)
+                    } else {
+                        console.log('save pdf file success')
+                        response.status(200).json(filePath)
+                    }
+                })   
+            }else{
+                response.status(200).json(filePath)
+            }
+            
         });
     })
-    
-    console.log(typeof user)
     
 
     function generateTable(title, types, lists, attributes){
