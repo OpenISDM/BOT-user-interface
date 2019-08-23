@@ -13,8 +13,6 @@ import SearchResultTable from './SearchResultTable'
 
 import GetResultData from './GetResultData'
 
-import PdfDownloadForm from './PdfDownloadForm'
-
 import moment from 'moment'
 
 
@@ -38,11 +36,9 @@ class ShiftChange extends React.Component {
     }
 
     getAPIfromTable(API){
-        // console.log('API')
         this.APIforTable = API
 
         this.APIforTable.setOnClick(this.onClickTableItem)
-
         
         setTimeout(()=>{
             this.APIforTable.updateSearchResult(this.state.searchResult)
@@ -76,7 +72,6 @@ class ShiftChange extends React.Component {
 
 
     getTrackingData(update) {
-        console.log('track')
         var ShouldUpdate = false
         axios.get(dataSrc.trackingData).then(res => {
             var data = res.data
@@ -100,7 +95,7 @@ class ShiftChange extends React.Component {
             }) 
         })
         .catch(error => {
-            console.log(error)
+            console.error(error)
         })
     }
 
@@ -117,7 +112,6 @@ class ShiftChange extends React.Component {
                 foundResult: this.state.searchResult.foundResult,
                 notFoundResult: this.state.searchResult.notFoundResult,
             }).then(res => {
-                console.log(res.data)
                 this.setState({
                     fileURL: res.data
                 })
@@ -142,6 +136,7 @@ class ShiftChange extends React.Component {
                     <Modal.Body  style ={{padding: '0px 0px 0px 0px', marginBottom: '10px', height: '60vh', overflowY: 'hidden'}} >                       
                         <SearchResultTable 
                             getAPI = {this.getAPIfromTable}
+                            onClick={() => {}}
                         />
                     </Modal.Body>
                     <Modal.Footer style={{padding: '0px 0px 0px 0px',}}>

@@ -224,7 +224,7 @@ class SurveillanceContainer extends React.Component {
                 </div>
 
                 
-
+                {console.log(searchResult)}
                 <PdfDownloadForm 
                     show={showPdfDownloadForm}
                     data={searchResult}

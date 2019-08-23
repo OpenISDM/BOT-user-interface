@@ -9,7 +9,6 @@ import config from '../../config';
 import LocaleContext from '../../context/LocaleContext';
 import axios from 'axios';
 import dataSrc from '../../dataSrc';
-// import AxiosFunction from '../../functions/AxiosFunction';
 
 var QRCode = require('qrcode.react');
 
@@ -52,10 +51,8 @@ class PdfDownloadForm extends React.Component {
         })
     }
     componentDidUpdate (preProps){
-        // console.log(this.state.show)
         if(this.props.show && !this.state.show){
             var foundResult = [], notFoundResult = []
-            console.log(this.props.data)
             for(var item of this.props.data){
                 item.found ? foundResult.push(item) : notFoundResult.push(item)
             }
@@ -77,7 +74,6 @@ class PdfDownloadForm extends React.Component {
         }
     }
     handleClose() {
-        
         this.props.handleClose()
         this.setState({
             show: false,

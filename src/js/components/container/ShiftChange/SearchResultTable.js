@@ -73,7 +73,7 @@ export default class SearchResultTable extends React.Component {
                 })
             },
             setOnClick: (func) => {
-                this.itemOnClick = func
+                
             },
             clearAll : () => {
                 this.setState({
@@ -93,12 +93,13 @@ export default class SearchResultTable extends React.Component {
         }
     }
     componentDidMount(){
+        this.itemOnClick = this.props.onClick
         this.props.getAPI(this.API)
     }
 
     generateResultListRowHTML(item, index){
 
-        var itemOnClick = this.itemOnClick
+        var itemOnClick = this.props.onClick
         var {addTransferDevices, selectedMacList} = this.state
 
         var showImage = config.searchResult.showImage
@@ -167,7 +168,7 @@ export default class SearchResultTable extends React.Component {
     }
     generateResultTableRowHTML(item, index){
 
-        var itemOnClick = this.itemOnClick
+        var itemOnClick = this.props.onClick
         var {addTransferDevices, selectedMacList} = this.state
 
         var showImage = config.searchResult.showImage
