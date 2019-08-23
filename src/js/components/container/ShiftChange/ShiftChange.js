@@ -113,6 +113,7 @@ class ShiftChange extends React.Component {
                 notFoundResult: this.state.searchResult.notFoundResult,
                 save: true
             }).then(res => {
+                console.log(res.data)
                 this.setState({
                     fileURL: res.data
                 })
@@ -142,7 +143,7 @@ class ShiftChange extends React.Component {
                     </Modal.Body>
                     <Modal.Footer style={{padding: '0px 0px 0px 0px',}}>
                         <button className = "btn btn-primary w-100 m-0 p-0" style={{height: '5vh'}} onClick = {this.confirmShift}>{locale.CONFIRM}</button>
-                        <a href={this.state.fileURL} ref="download" download style={{display: 'none'}}>hi</a>
+                        <a href={dataSrc.pdfUrl(this.state.fileURL) } ref="download" download style={{display: 'none'}}>hi</a>
                     </Modal.Footer>
                 </Modal>
             </Fragment>

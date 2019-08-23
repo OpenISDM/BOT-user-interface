@@ -335,18 +335,21 @@ export default class SearchResultTable extends React.Component {
         return(
             <Fragment>
 
-                {config.searchResult.displayMode === 'switch'
-                    ?
-                        <h6 onClick ={this.handleToggleNotFound} className="text-left text-primary w-100 bg-transparent m-0 p-0" style={{maxHeight: '8vh', cursor: 'grab'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h6>
-                    :
-                        null
-                }
+                
                 <Row id = "searchResultTable" className="hideScrollBar justify-content-center w-100 m-0 p-1" ref="searchResultTable" style={{overflowY: 'scroll',maxHeight: Setting.maxHeight !== null ? (parseInt(Setting.maxHeight.slice(0,2)) -12).toString() + 'vh' : null}}>      
                     <div id="top"></div>
                     {
                         this.handleDisplayMode()
                     }
                 </Row>
+                {config.searchResult.displayMode === 'switch'
+                    ?
+
+                            <h5 onClick ={this.handleToggleNotFound} className="text-center text-primary w-100 bg-transparent m-0 p-1" style={{maxHeight: '8vh', cursor: 'grab'}}>Show {this.state.foundMode? 'Not Found' : 'Found'} Result</h5>
+                        
+                    :
+                        null
+                }
             </Fragment>
         )
     }

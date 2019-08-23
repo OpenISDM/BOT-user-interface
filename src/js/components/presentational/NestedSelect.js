@@ -10,6 +10,8 @@ class NestedSelect extends React.Component {
         this.onClick = this.onClick.bind(this)
     }
     onClick(e){
+        this.selectedLocation = e.target.name
+        this.setState({})
         this.props.onClick(e.target.name)
     }
 
@@ -26,8 +28,7 @@ class NestedSelect extends React.Component {
                         name={key + ', ' + child} 
                         as='button'
                         type='button'
-                        bsPrefix='btn-white p-2 m-0 w-100 h4 bg-white border-0'
-                        style={{fontSize: '1.5rem'}}
+                        bsPrefix='btn-white p-1 m-0 w-100 bg-white border-0'
                         onClick = {this.onClick}
                     >
                         {child}
@@ -42,8 +43,7 @@ class NestedSelect extends React.Component {
                         title={child.name}
                         id={`dropdown-button-drop-right`}
                         size="lg"
-                        bsPrefix='btn-white p-2 m-0 w-100 h4 bg-white border-0'
-                        style={{fontSize: '1.5rem'}}
+                        bsPrefix='btn-white p-1 m-0 w-100 bg-white border-0'
                     > 
                         {this.generateNestedSelect(child.section, key + child.name)}
                     </DropdownButton>
@@ -58,8 +58,8 @@ class NestedSelect extends React.Component {
     render(){
         return (
             <Dropdown>
-                <Dropdown.Toggle id="dropdown-custom-1" varient='light' bsPrefix='dropdown-toggle bg-light text-dark' style={{width:'300px'}}>{this.props.title}</Dropdown.Toggle>
-                <Dropdown.Menu bsPrefix='dropdown-menu' style={{width:'200px'}}>
+                <Dropdown.Toggle id="dropdown-custom-1" varient='light' bsPrefix='dropdown-toggle bg-light text-dark' style={{width:'300px'}}>{this.selectedLocation || this.props.title}</Dropdown.Toggle>
+                <Dropdown.Menu bsPrefix='dropdown-menu p-0' style={{width:'200px'}}>
                     {
                         this.generateNestedSelect(config.branches)
                     }

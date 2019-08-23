@@ -247,7 +247,7 @@ class ChangeStatusForm extends React.Component {
                     checked = {values.status === name }
                     id={'check' + name}
                 />
-                 <label className="custom-control-label h4" htmlFor={'check' + name}>{name}</label>
+                 <label className="custom-control-label" htmlFor={'check' + name}>{name}</label>
             </div>
 
         return html
