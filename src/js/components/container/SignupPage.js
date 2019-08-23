@@ -6,6 +6,7 @@ import config from '../../config';
 import axios from 'axios';
 import dataSrc from '../../dataSrc';
 import LocaleContext from '../../context/LocaleContext';
+import AxiosFunction from '../../functions/AxiosFunction'
 class SignupPage extends React.Component {
     constructor(props) {
         super(props);
@@ -13,16 +14,24 @@ class SignupPage extends React.Component {
             show: false,
             isSignin: false,
         }
+        this.accountName = []
         this.handleClose = this.handleClose.bind(this)
         this.handleSignupFormShowUp = this.handleSignupFormShowUp.bind(this)
     }
-
+    componentDidMount(){
+    }
     componentDidUpdate(preProps) {
-
-        if (preProps != this.props)
-        this.setState({
-            show: this.props.show,
-        })
+        if (preProps != this.props){
+            AxiosFunction.getUserList({}, (err, res) => {
+                this.accountName = res.map(user => {
+                    return user.name
+                })
+                this.setState({})
+            })
+            this.setState({
+                show: this.props.show,
+            })
+        }
     }
 
     handleClose() {
@@ -33,7 +42,6 @@ class SignupPage extends React.Component {
     }
 
     handleSignupFormShowUp() {
-        console.log(13)
         this.props.handleSignupFormShowUp()
     }
 
@@ -58,6 +66,7 @@ class SignupPage extends React.Component {
                     <Row className='d-flex justify-content-center'>
                         <h5>{locale.SIGN_UP}</h5>
                     </Row>
+                    {console.log(this.accountName)}
                     <Formik
                         initialValues = {{
                             username: '',
@@ -66,8 +75,8 @@ class SignupPage extends React.Component {
 
                         validationSchema = {
                             Yup.object().shape({
-                            username: Yup.string().required('Username is required'),
-                            password: Yup.string().required('Password is required')
+                            username: Yup.mixed().notOneOf(this.accountName, 'this name has been registered'),
+                            password: Yup.string().min(6).max(15).required('Password is required')
                         })}
 
                         onSubmit={({ username, password }, { setStatus, setSubmitting }) => {
@@ -76,7 +85,6 @@ class SignupPage extends React.Component {
                                 username: username,
                                 password: password
                             }).then(res => {
-                                console.log(res)
                                 handleSignupFormSubmit()
 
                             }).catch(error => {

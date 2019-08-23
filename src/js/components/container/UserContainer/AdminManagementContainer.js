@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Row, ListGroup } from 'react-bootstrap';
+import ReactTable from 'react-table'
 
 import axios from 'axios';
 import Cookies from 'js-cookie'
@@ -75,8 +76,7 @@ export default class AdminManagementContainer extends React.Component{
         })
     }
     
-    onClickUser(e){
-        var index = e.target.getAttribute('name')
+    onClickUser(index){
         this.getUserRole(this.state.userList[index], (userRole) => {
             this.setState({
                 showModifyUserInfo: true,
@@ -140,26 +140,93 @@ export default class AdminManagementContainer extends React.Component{
     render(){
         const {userList} = this.state
         const {roleName} = this.staticParamter
+        const column = [
+            {
+                Header: 'No.',
+                Cell: ({row}) => {
+                    return <div className="d-flex justify-content-center w-100 h-100">{row._index}</div>
+                },
+                resizable: false,
+            },
+            {
+                Header: 'ID',
+                Cell: ({row}) => {
+                    console.log(row._original)
+                    return <div className="d-flex justify-content-center w-100 h-100">{row._original.id}</div>
+                },
+                resizable: false,
+            },
+            {
+                Header: 'Name',
+                Cell: ({row}) => {
+                    console.log(row._original)
+                    return <div className="d-flex justify-content-center w-100 h-100">{row._original.name}</div>
+                },
+                resizable: false,
+            },
+            {
+                Header: 'Roles',
+                Cell: ({row}) => {
+                    console.log(row._original)
+                    return <div className="d-flex justify-content-center w-100 h-100">{row._original.role_type}</div>
+                }
+            },
+            {
+                Header: 'Delete',
+                Cell: ({row}) => {
+                    return (
+                        <div className="d-flex justify-content-center w-100 h-100">
+                            <i 
+                                className="fa fa-2x fa-trash float-right"  
+                                aria-hidden="true" 
+                                name={row.name} 
+                                onClick={this.removeUser}
+                            />
+                        </div>
+                    )
+                },
+                resizable: false,
+            }
+        ]
+        const onRowClick = (state, rowInfo, column, instance) => {
+            return {
+                onClick: e => {
+                    this.onClickUser(rowInfo.index)
+                }
+            }
+        }
+        console.log(userList)
         return(
             <div className="w-100">
-                <ListGroup variant="flush" className="w-100 shadow" style={{overflowY:'scroll', height: '75vh'}}>
-                    {userList.map((user, index) => {
-                        if(user.name){
-                            return (
-                                <ListGroup.Item key={user.name} className="m-0 py-2 px-2" name={index}  action>
-                                    <Col sm={11} className='float-left p-0'>
-                                        <h3 name={index} onClick = {this.onClickUser} style={{color: '#212529'}}>
-                                            {user.name}
-                                        </h3>
-                                    </Col>
-                                    <Col sm={1} className='float-left p-0'>
-                                        <i className="fa fa-2x fa-trash float-right" aria-hidden="true" name={user.name} onClick={this.removeUser}></i>
-                                    </Col>
-                                </ListGroup.Item>
-                            )
-                        }
-                    })}
-                </ListGroup>
+            {
+                // <ListGroup variant="flush" className="w-100 shadow" style={{overflowY:'scroll', height: '75vh'}}>
+                //     {userList.map((user, index) => {
+                //         if(user.name){
+                //             return (
+                //                 <ListGroup.Item key={user.name} className="m-0 py-2 px-2" name={index}  action>
+                //                     <Col sm={11} className='float-left p-0'>
+                //                         <h5 name={index} onClick = {this.onClickUser} style={{color: '#212529'}}>
+                //                             {user.name}
+                //                         </h5>
+                //                     </Col>
+                //                     <Col sm={1} className='float-left p-0'>
+                //                         <i className="fa fa-2x fa-trash float-right" aria-hidden="true" name={user.name} onClick={this.removeUser}></i>
+                //                     </Col>
+                //                 </ListGroup.Item>
+                //             )
+                //         }
+                //     })}
+                // </ListGroup>
+            }
+                <ReactTable 
+                    data = {userList} 
+                    columns = {column} 
+                    noDataText="No Data Available"
+                    className="-highlight"
+                    style={{height:'75vh'}}
+                    getTrProps={onRowClick}
+                />
+                
                 <ModifyUserInfo
                     roleName = {roleName}
                     show = {this.state.showModifyUserInfo}

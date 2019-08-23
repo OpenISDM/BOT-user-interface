@@ -161,7 +161,7 @@ const config = {
 
     frequentSearch:{
         showImage: false,
-        maxfrequentSearchLength: 6
+        maxfrequentSearchLength: 3
     },
 
     searchResult:{

@@ -1,18 +1,14 @@
 // npm packages
 import React from 'react';
-import { Col, Row, Nav, ListGroup} from 'react-bootstrap'
-import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { Col, Row} from 'react-bootstrap'
 
 import LocaleContext from '../../context/LocaleContext';
 
 // self-defined component
 import Searchbar from '../presentational/Searchbar';
 import FrequentSearch from './FrequentSearch';
-
 import SearchableObjectType from '../presentational/SeachableObjectType';
 // import SearchResult from '../presentational/SearchResultList';
-
-import Cookies from 'js-cookie'
 
 import GetResultData from '../../functions/GetResultData'
 /*
@@ -22,68 +18,32 @@ import GetResultData from '../../functions/GetResultData'
         3. SearchableObjectType
 */
 
-
-
-
 class SearchContainer extends React.Component {
 
     constructor(){
         super()
         this.state = {
-
-            objectTypeList: [],
-
             loginStatus: null,
 
             ShouldUpdateFrequentSearch: 0,
-            ShouldUpdateSearchableObjectType: 0,
         }
-
-        this.APIforSearchableObjectType = null
-
-
-        // this.getAPIfromSearchableObjectType = this.getAPIfromSearchableObjectType.bind(this)
+        this.staticState = {
+            objectTypeList: [],
+        }
     }
-
-    // getAPIfromSearchableObjectType(API){
-    //     var getSearchResult = this.props.getSearchResult
-
-    //     this.APIforSearchableObjectType = API
-
-    //     this.APIforSearchableObjectType.setOnSubmit(getSearchResult)
-
-    //     // this.APIforSearchableObjectType.floatUp()
-
-    //     // this.APIforSearchableObjectType.floatDown()
-
-    //     // this.APIforSearchableObjectType.setObjectList(objectTypeList)
-    // }
     componentDidMount(){
         
-    }
-
-    shouldComponentUpdate(nextProps, nextState){
-        return true
     }
     // this function when the this.props change
     // In this function, if the searchableObjectData is changed, the layout will immediately change
     componentWillReceiveProps(nextProps){
         var state ={}
-        let {searchableObjectData, objectTypeList, ShouldUpdate} = nextProps
-        // if(this.props.floatUp !== nextProps.floatUp){
-        //     if(nextProps.floatUp){
-        //         this.APIforSearchableObjectType.floatUp()
-        //     }else{
-        //         this.APIforSearchableObjectType.floatDown()
-        //     }
-        // }
+        let {objectTypeList, ShouldUpdate} = nextProps
         if( this.state.ShouldUpdate !== nextProps.ShouldUpdate){
             // this.APIforSearchableObjectType.setObjectList(objectTypeList)
             state = {
                 ...state,
-                searchableObjectData: searchableObjectData,
                 objectTypeList: objectTypeList,
-                ShouldUpdateSearchableObjectType: this.state.ShouldUpdateSearchableObjectType + 1,
                 ShouldUpdate: ShouldUpdate,
             }
         }
@@ -95,8 +55,6 @@ class SearchContainer extends React.Component {
         /** Customized CSS of searchResult */
         const locale = this.context;
         let {
-                ShouldUpdateSearchableObjectType, 
-                IsShowSearchableObjectTypeList,
                 ShouldUpdateFrequentSearch, 
                 objectTypeList, 
                 SearchKey, 

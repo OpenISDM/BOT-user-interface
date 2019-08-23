@@ -82,7 +82,6 @@ const AxiosFunction = {
 						data = data || option.default
 					}
 				}
-				console.log(data)
 	            callBack(null, data)
 			}else{
 				callBack(null, [])
@@ -139,7 +138,6 @@ const AxiosFunction = {
     },
     getEditObjectRecord: (Info, callBack, Option) => {
     	axios.post(dataSrc.getEditObjectRecord, Info).then((res) => {
-    		console.log(res.data)
     		callBack(null, res.data)
     	}).catch(err => {
     		console.error(err)

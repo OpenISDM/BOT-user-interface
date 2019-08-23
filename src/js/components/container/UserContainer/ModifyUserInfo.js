@@ -97,7 +97,6 @@ export default class ModifyUserInfo extends React.Component{
     render(){
         const {show} = this.state
         const {userRole} = this.staticParameter
-        console.log('renderrrr')
         return(
             <Modal 
                 show={this.props.show}

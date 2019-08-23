@@ -96,7 +96,7 @@ export default class MyDeviceManager extends React.Component{
                 }
             },
             itemLayout: (item, index) => {
-                return <h3 name={index}>{item.access_control_number}:<br/>{item.name}, status is {item.status}</h3>
+                return <h5 name={index}>{item.name}, Type {item.type}, ACN {item.access_control_number}</h5>
             }
         }
         this.getAPIfromAddableList_1 = this.getAPIfromAddableList_1.bind(this)
@@ -107,7 +107,7 @@ export default class MyDeviceManager extends React.Component{
         var locale = this.context
         const {itemLayout, validation, onClick} = this.functionForAddableList
         this.APIforAddableList_1 = API
-        this.APIforAddableList_1.setTitle(<h3>{locale.MY_DEVICES}</h3>)
+        this.APIforAddableList_1.setTitle(<h4>{locale.MY_DEVICES}</h4>)
         this.APIforAddableList_1.setValidation(validation)
         this.APIforAddableList_1.setItemLayout(itemLayout)
         this.APIforAddableList_1.setOnClick(onClick)
@@ -116,7 +116,7 @@ export default class MyDeviceManager extends React.Component{
         var locale = this.context
         const {itemLayout, validation, onClick} = this.functionForAddableList
         this.APIforAddableList_2 = API
-        this.APIforAddableList_2.setTitle(<h3>{locale.OTHER_DEVICES}</h3>)
+        this.APIforAddableList_2.setTitle(<h4>{locale.OTHER_DEVICES}</h4>)
         this.APIforAddableList_2.setValidation(validation)
         this.APIforAddableList_2.setItemLayout(itemLayout)
         this.APIforAddableList_2.setOnClick(onClick)
@@ -126,8 +126,8 @@ export default class MyDeviceManager extends React.Component{
     }
     componentDidUpdate(){
         var locale = this.context
-        if(this.APIforAddableList_1) this.APIforAddableList_1.setTitle(<h3>{locale.MY_DEVICES}</h3>)
-        if(this.APIforAddableList_2) this.APIforAddableList_2.setTitle(<h3>{locale.OTHER_DEVICES}</h3>)
+        if(this.APIforAddableList_1) this.APIforAddableList_1.setTitle(<h4>{locale.MY_DEVICES}</h4>)
+        if(this.APIforAddableList_2) this.APIforAddableList_2.setTitle(<h4>{locale.OTHER_DEVICES}</h4>)
     }
     seperateMyDevice(dataMap, myDeviceList){
         var allDeviceList = Object.keys(dataMap), myDevices = {}, notMyDevices = {}
@@ -179,24 +179,31 @@ export default class MyDeviceManager extends React.Component{
     }
     render(){
         return (
-            <div className="w-100 shadow d-flex" style={{height: '75vh'}}>
+            <div className="w-100 d-flex" style={{height: '75vh'}}>
                 <Col xl={5}>
                     <AddableList
                         getAPI={this.getAPIfromAddableList_1}
                         addableListStyle={{
-                            height: '65vh'
+                            height: '70vh'
                         }}
                     />
                 </Col>
-                <Col xl={2} className='p-5' style={{position: 'relative', top: '15%'}}>
-                        <i className="fas fa-angle-double-right fa-3x p-4" onClick = {this.API.removeAllMyDevice}></i>
-                        <i className="fas fa-angle-double-left fa-3x p-4" onClick = {this.API.addAllMyDevice}></i>
+                <Col xl={2} className='h-100 d-flex justify-content-center align-items-center'>
+                    <div className="my-auto">
+                        <div>
+                            <i className="fas fa-angle-double-right fa-3x py-3" onClick = {this.API.removeAllMyDevice}></i>
+                        </div>
+                        <div>
+                            <i className="fas fa-angle-double-left fa-3x py-3" onClick = {this.API.addAllMyDevice}></i>
+                        </div>
+                    </div>
+                    
                 </Col>
                 <Col xl={5}>
                     <AddableList
                         getAPI={this.getAPIfromAddableList_2}
                         addableListStyle={{
-                            height: '65vh'
+                            height: '70vh'
                         }}
                     />
                 </Col>

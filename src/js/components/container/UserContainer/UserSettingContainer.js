@@ -45,7 +45,7 @@ export default class UserSettingContainer extends React.Component{
         var locale = this.context
         return (
             <div className = "d-flex justify-content-center">
-                <Row className = "w-100 h-100">
+                <Row className = "w-75 h-100">
                     <Col xl={3} className="m-0">
                         <ListGroup variant="flush" className="my-4 border-0">
                             <ListGroup.Item className="border-0 my-2 h3">{locale.User_Setting}</ListGroup.Item>
@@ -53,7 +53,7 @@ export default class UserSettingContainer extends React.Component{
                                 return(
                                     <ListGroup.Item 
                                         key={page.pageName}
-                                        className="border-0 my-2" 
+                                        className="border-0 m-0" 
                                         href={'#' + page.pageName}
                                         style={{fontSize: '1.5rem'}}
                                         onMouseOver={this.sideNavMouseOver}
@@ -73,9 +73,9 @@ export default class UserSettingContainer extends React.Component{
                             return(
                                 <div id={page.pageName} key={page.pageName}className="p-3" style={{height: '93vh'}}>   
                                     <Row className="w-100 m-3" style={{height: '6vh'}}>                         
-                                        <h2 >
+                                        <h3>
                                             {locale[page.locale]}
-                                        </h2>
+                                        </h3>
                                     </Row>
                                     <Row className="w-100 m-3 d-flex bg-white" style={{height: '80vh'}}>
                                         {page.component}                               

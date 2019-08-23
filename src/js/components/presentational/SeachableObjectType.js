@@ -185,7 +185,6 @@ class SearchableObjectType extends React.Component {
 
     };
     render() {
-        console.log('render')
         var  Setting = {
         SectionIndex: {
 

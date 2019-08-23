@@ -26,62 +26,18 @@ class FrequentSearch extends React.Component {
             searchHistory: [],
         }
         this.searchHistory = []
-        this.intervalId = null
+        this.loginListener = null
         this.handleClick = this.handleClick.bind(this);
         this.cookieListener = this.cookieListener.bind(this);
-        // this.getSearchHistory = this.getSearchHistory.bind(this)
         this.getSearchHistory = this.getSearchHistory.bind(this)
     }
-
-
     componentWillUnmount() {
-       clearInterval(this.intervalId);
+       clearInterval(this.loginListener);
     }
-    getSearchHistory(){
-        AxiosFunction.getSearchHistory(
-        {
-            username: Cookies.get('user')
-        }, 
-
-        (err, res) => {
-            if(err){
-                console.error(err)
-            }else{
-                
-                var searchHistory = res.sort((a, b) => {
-                    return b.value - a.value
-                })
-                searchHistory =  searchHistory.slice(0, config.frequentSearch.maxfrequentSearchLength)
-                this.staticState.searchHistory = searchHistory
-            }
-            this.setState({})
-        }, 
-
-        {
-            default: []
-        }) 
-    }
-
     componentDidMount(){
-        this.intervalId = setInterval(this.cookieListener, 300);
+        this.loginListener = setInterval(this.cookieListener, 300);
         this.getSearchHistory()
     }
-    cookieListener(){
-        if(this.staticState.cookie !== document.cookie){
-            this.staticState.cookie = document.cookie
-            this.getSearchHistory()
-        }
-    }
-
-
-    handleClick(e) {
-        const itemName = e.target.name.toLowerCase();
-        this.props.getResultData(itemName)
-        this.setState({
-            searchkey: itemName
-        })
-    }
-
     render() {
         const style = {
             titleText: {
@@ -110,7 +66,6 @@ class FrequentSearch extends React.Component {
         }
 
         const locale = this.context;
-        console.log('render')
         return (
 
             <Col id='FrequentSearch' sm={10} xs={10} className=' mx-1 px-0 float-left' style = {style.FrequentSearch} >
@@ -175,14 +130,45 @@ class FrequentSearch extends React.Component {
             </Col>
         )
     }
-}
 
-FrequentSearch.contextType = LocaleContext;
+    getSearchHistory(){
+        AxiosFunction.getSearchHistory(
+        {
+            username: Cookies.get('user')
+        }, 
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        shouldUpdateTrackingData: value => dispatch(shouldUpdateTrackingData(value))
+        (err, res) => {
+            if(err){
+                console.error(err)
+            }else{
+                
+                var searchHistory = res.sort((a, b) => {
+                    return b.value - a.value
+                })
+                searchHistory =  searchHistory.slice(0, config.frequentSearch.maxfrequentSearchLength)
+                this.staticState.searchHistory = searchHistory
+            }
+            this.setState({})
+        }, 
+
+        {
+            default: []
+        }) 
+    }
+    cookieListener(){
+        if(this.staticState.cookie !== document.cookie){
+            this.staticState.cookie = document.cookie
+            this.getSearchHistory()
+        }
+    }
+    handleClick(e) {
+        const itemName = e.target.name.toLowerCase();
+        this.props.getResultData(itemName)
+        this.setState({
+            searchkey: itemName
+        })
     }
 }
 
-export default connect(null, mapDispatchToProps)(FrequentSearch);
+FrequentSearch.contextType = LocaleContext;
+export default FrequentSearch;

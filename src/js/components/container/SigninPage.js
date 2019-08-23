@@ -7,7 +7,7 @@ import axios from 'axios';
 import dataSrc from '../../dataSrc';
 import Cookies from 'js-cookie';
 import LocaleContext from '../../context/LocaleContext';
-
+import AxiosFunction from '../../functions/AxiosFunction'
 class SigninPage extends React.Component {
     constructor(props) {
         super(props);
@@ -15,17 +15,28 @@ class SigninPage extends React.Component {
             show: false,
             isSignin: false,
         }
+        this.accountName = []
         this.handleClose = this.handleClose.bind(this);
         this.handleSignupFormShowUp = this.handleSignupFormShowUp.bind(this);
         
     }
-
+    componentDidMount(){
+        
+    }
     componentDidUpdate(preProps) {
 
-        if (preProps != this.props)
-        this.setState({
-            show: this.props.show,
-        })
+        if (preProps != this.props){
+            AxiosFunction.getUserList({}, (err, res) => {
+                this.accountName = res.map(user => {
+                    return user.name
+                })
+                this.setState({})
+            })
+            this.setState({
+                show: this.props.show,
+            })
+        }
+        
     }
 
     handleClose() {
@@ -80,7 +91,7 @@ class SigninPage extends React.Component {
 
                         validationSchema = {
                             Yup.object().shape({
-                            username: Yup.string().required('Username is required'),
+                            username: Yup.mixed().oneOf(this.accountName, 'this name hasn\'t been registered'),
                             password: Yup.string().required('Password is required')
                         })}
 

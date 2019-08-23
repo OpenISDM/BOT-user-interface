@@ -104,7 +104,7 @@ const queryTypeforUserInfo = {
 		return query
 	},
 	query_getUserList: () => {
-		const query = `select * from user_table`
+		const query = `select a.*, b.name AS role_type from user_table a INNER JOIN (SELECT * from user_roles a INNER JOIN roles b ON a.role_id=b.id) b ON a.id = b.user_id`
 		return query
 	},
 	query_removeUser: (username) => {

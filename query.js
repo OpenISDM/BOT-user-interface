@@ -254,10 +254,10 @@ const editLbeacon = (request, response) => {
 const  generatePDF = (request, response) => {
     var {foundResult, notFoundResult, user, save} = request.body
     pool.query(`select shift from user_table where name = '${user}'`,(error, results) => {
-        var shift = results.rows[0].shift
+        var shiftType = results.rows[0] ? results.rows[0].shift : null
         var header = "<h1 style='text-align: center;'>" + "checked by " + user + "</h1>"
         var timestamp = "<h3 style='text-align: center;'>" + moment().format('LLLL') + "</h3>"
-        var shift = "<h3 style='text-align: center;'> Shift: " + shift + "</h3>"
+        var shift = shiftType ? ("<h3 style='text-align: center;'> Shift: " + shiftType + "</h3>") : ''
 
         var types = ["Name", "Type", "ACN", "Location"]
         var attributes = ["name", "type", "access_control_number", "location_description"]
@@ -289,8 +289,10 @@ const  generatePDF = (request, response) => {
             var submit_time = moment().format()
             var user_id = 1234
             var file_path = filePath
+            console.log(shift)
             if(save){
-                pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path), (error, results) => {
+                console.log(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path, shiftType))
+                pool.query(queryType.query_addShiftChangeRecord(submit_time, user_id, file_path, shiftType), (error, results) => {
                     if (error) {
                         console.log('save pdf file fails ' + error)
                     } else {

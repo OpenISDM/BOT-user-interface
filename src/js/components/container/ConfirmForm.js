@@ -121,7 +121,6 @@ class ConfirmForm extends React.Component {
             md: 5,
             lg: 5,
         }
-        console.log(selectedObjectData)
         var selectedObject = selectedObjectData
         for(var selectedObjectDataIndex in selectedObject){
 

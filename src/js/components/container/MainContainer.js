@@ -398,14 +398,7 @@ class ContentContainer extends React.Component{
                         <SearchContainer 
                             floatUp = {this.state.floatUp}
                             getSearchResult={this.handleSearch}
-                            loginStatus={loginStatus}
-                            searchableObjectData={this.state.thresholdRSSIObject}
-                            searchResult = {this.state.searchResult} 
-                            transferSearchResult={this.transferSearchResult}
-                            hasSearchKey={this.state.hasSearchKey}
-                            closeSearchResult = {this.state.closeSearchResult}
                             objectTypeList = {this.state.objectTypeList}
-                            handleCloseSearchResult={this.handleClearButton}
                             ShouldUpdate={this.state.ShouldUpdateSearchContainer}
                         />
 

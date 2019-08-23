@@ -156,9 +156,9 @@ function query_editLbeacon (uuid, low, med, high) {
 	return query
 }
 
-function query_addShiftChangeRecord(submit_timestamp, user_id, file_path){
-	const query = `INSERT INTO shift_change_record(submit_timestamp, user_id, file_path)
-					VALUES (to_timestamp('${submit_timestamp}', 'YYYY-MM-DDTHH:MI:SSTZH:TZM'), ${user_id}, '${file_path}');`
+function query_addShiftChangeRecord(submit_timestamp, user_id, file_path, shift){
+	const query = `INSERT INTO shift_change_record(submit_timestamp, user_id, file_path, shift)
+					VALUES (to_timestamp('${submit_timestamp}', 'YYYY-MM-DDTHH:MI:SSTZH:TZM'), ${user_id}, '${file_path}', '${shift}');`
 	return query
 }
 

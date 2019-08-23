@@ -82,7 +82,6 @@ const AxiosFunction = {
 						data = data || option.default
 					}
 				}
-				console.log(data)
 	            callBack(null, data)
 			}else{
 				callBack(null, [])
@@ -137,15 +136,54 @@ const AxiosFunction = {
         	callBack(err, null)
         })
     },
-    getEditObjectRecord: (Info, callBack, Option) => {
+    getEditObjectRecord: (Info, callBack, option) => {
     	axios.post(dataSrc.getEditObjectRecord, Info).then((res) => {
-    		console.log(res.data)
     		callBack(null, res.data)
     	}).catch(err => {
     		console.error(err)
         	callBack(err, null)
     	})
     },
+    getUserList: (Info, callBack, option) => {
+
+    	axios.post(dataSrc.getUserList,Info).then((res) => {
+    		var data = res.data || []
+			if(option){
+				if(option.filter){
+					data.map((datum) => {
+						for(var i of option.filter){
+							delete datum[i]
+						}
+					})
+					
+				}
+				if(option.extract){
+					data = data.map((datum) => {
+						var buff = {}
+						for(var i of option.extract){
+							buff[i] = data[i]
+						}
+						return buff
+					})
+				}
+				if(option.key){
+					var dataMap = {}
+					data.map((datum) => {
+						dataMap[datum[option.key]] = datum
+					})
+					data = dataMap
+				}
+				if(option.default){
+					data = data || option.default
+				}
+			}
+			callBack(null, data)
+        }).catch(err => {
+        	console.error(err)
+        	callBack(err, null)
+        })
+    }
+    
     
 }
 export default AxiosFunction

@@ -141,7 +141,6 @@ class ChangeStatusForm extends React.Component {
         this.event.openForm()
     }
     handleSubmit() {
-        console.log(this.newStatus)
         this.event.submitForm(this.newStatus)
     }
     handleAddNotes(){
@@ -162,7 +161,6 @@ class ChangeStatusForm extends React.Component {
             md: 5,
             lg: 5,
         }
-        console.log(selectedObjectData)
         var selectedObject = selectedObjectData
         for(var selectedObjectDataIndex in selectedObject){
 
@@ -310,7 +308,6 @@ class ChangeStatusForm extends React.Component {
                                                 onClick={
                                                     (location) => {
                                                     values.location = location;
-                                                    console.log(values.submit)
                                                 }}
                                             />
                                         :
