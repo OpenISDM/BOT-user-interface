@@ -10,11 +10,13 @@ import CombinedContext from './js/context/AppContext'
 const App = () => {
     return (
         <CombinedContext>
-            <Router>          
-                <NavbarContainer/>
-                <Switch>
-                    {renderRoutes(routes)}
-                </Switch>
+            <Router>
+                <div className="d-flex flex-column"style={{flex:1, height:'100vh',width:'100vw'}}>          
+                    <NavbarContainer/>
+                    <Switch>
+                        {renderRoutes(routes)}
+                    </Switch>
+                </div>
             </Router>
         </CombinedContext>
     );

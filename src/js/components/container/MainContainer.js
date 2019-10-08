@@ -12,6 +12,7 @@ import moment from 'moment'
 import axios from 'axios';
 import dataSrc from '../../dataSrc'
 import { AppContext } from '../../context/AppContext'
+import Scroll from 'react-scroll-component';
 
 const myDevices = config.frequentSearchOption.MY_DEVICES ;
 const allDevices = config.frequentSearchOption.ALL_DEVICES;
@@ -21,7 +22,7 @@ class MainContainer extends React.Component{
     static contextType = AppContext
 
     state = {
-        trackingData: [],
+        trackingData: [], 
         proccessedTrackingData: [],
         hasSearchKey: false,
         searchKey: '',
@@ -58,6 +59,7 @@ class MainContainer extends React.Component{
         } 
     }
 
+    /** pass data to DB */
     shouldComponentUpdate = (nextProps,nextState) => {
         let isTrackingDataChange = !(_.isEqual(this.state.trackingData, nextState.trackingData))
         let hasSearchKey = nextState.hasSearchKey !== this.state.hasSearchKey
@@ -298,25 +300,43 @@ class MainContainer extends React.Component{
 
         const style = {
             container: {
-
-                /** The height: 100vh will cause the page can only have 100vh height.
-                 * In other word, if the seaerch result is too long and have to scroll down, the page cannot scroll down
-                 */
-                // height: '100vh'
+                //border : "solid",
             },
             searchResultDiv: {
                 display: this.state.hasSearchKey ? null : 'none',
                 // paddingTop: 30,
             },
             
+            /** left area*/
+            MapAndResult:{
+                flex: 7
+            },
+
+            /** right area */
             searchPanel: {
+                flex: 3,
                 zIndex: this.state.isHighlightSearchPanel ? 1060 : 1,
                 background: 'white',
                 borderRadius: 10,
+                //border : "solid",
                 // height: '90vh'
+            },
+
+            /** left down area */
+            searchResultList: {
+                display: this.state.hasSearchKey ? null : 'none',
+                flex: 10,
+                //border : "solid",
+            },
+
+            /** left up area */
+            MapAndQrcode: {
+                flex:11,
+                //border : "solid",
             }
         }
         const { locale, auth } = this.context
+        const SearchResultListDiv = screen.height*0.6 - 100 - 65 -10;
 
         let deviceNum = this.state.trackingData.filter(item => item.found).length
         let devicePlural = deviceNum === 1 ? locale.texts.DEVICE : locale.texts.DEVICES
@@ -330,62 +350,53 @@ class MainContainer extends React.Component{
 
         return(
             /** "page-wrap" the default id named by react-burget-menu */
-            <div id="page-wrap" className='mx-1 my-2' >
-                <Row id="mainContainer" className='d-flex w-100 justify-content-around mx-0 overflow-hidden' style={style.container}>
-                    <Col sm={7} md={9} lg={8} xl={8} id='searchMap' className="pl-2 pr-1" >
-                        <InfoPrompt 
-                            data={data}
-                            title={locale.texts.FOUND} 
-                        />
-                        {/* {this.state.hasSearchKey 
-                            ?   this.state.searchResult.length !== 0   
-                                ?   <InfoPrompt 
-                                        data={this.state.searchResultObjectTypeMap} 
-                                        title={locale.texts.FOUND} 
-                                    />
-                                :                                         
-                            :   <InfoPrompt 
-                                    data={{
-                                        [devicePlural]: this.state.trackingData.filter(item => item.found).length
-                                    }}
-                                    title={locale.texts.FOUND} 
+            <div id="page-wrap" className='d-flex flex-column h-100 w-100 mx-1 my-2'>
+                <div id="mainContainer" className='d-flex flex-row h-100 w-100' style={style.container}>
+                    {/** left area of row */}
+                    <div className='d-flex flex-column' sm={7} md={9} lg={8} xl={8} id='searchMap' style={style.MapAndResult}>
+                        
+                        {/** including QR code and map */}
+                        <div className="d-flex" style={style.MapAndQrcode}>
+                            <SurveillanceContainer 
+                                proccessedTrackingData={proccessedTrackingData.length === 0 ? trackingData : proccessedTrackingData}
+                                hasSearchKey={hasSearchKey}
+                                colorPanel={colorPanel}
+                                handleClearButton={this.handleClearButton}
+                                getSearchKey={this.getSearchKey}
+                                clearColorPanel={clearColorPanel}
+                                changeLocationAccuracy={this.changeLocationAccuracy}
+                                changeArea={this.changeArea}
+                                auth={auth}
+                                data={data}
+                                area={this.state.area}
+                            />
+                        </div>
+
+                        {/** includeing search result */}                    
+                        <div id="serchResultListDiv" className="d-flex" style={style.searchResultList}>
+                            <Scroll direction="vertical" height={ SearchResultListDiv + "px"}>
+                                <SearchResultList
+                                    className="scrollbar scrollbar-primacy"
+                                    searchResult={this.state.searchResult} 
+                                    searchKey={this.state.searchKey}
+                                    highlightSearchPanel={this.highlightSearchPanel}
                                 />
-                        }      */}
-                        <SurveillanceContainer 
-                            proccessedTrackingData={proccessedTrackingData.length === 0 ? trackingData : proccessedTrackingData}
-                            hasSearchKey={hasSearchKey}
-                            colorPanel={colorPanel}
-                            handleClearButton={this.handleClearButton}
-                            getSearchKey={this.getSearchKey}
-                            clearColorPanel={clearColorPanel}
-                            changeLocationAccuracy={this.changeLocationAccuracy}
-                            changeArea={this.changeArea}
-                            auth={auth}
-                            area={this.state.area}
-                        />
-                    </Col>
-                    <Col id='searchPanel' xs={12} sm={5} md={3} lg={4} xl={4} className="w-100 px-2" style={style.searchPanel}>
+                            </Scroll>
+                        </div>
+                    </div>
+
+                    {/** right area of row */}
+                    <div id='searchPanel' xs={12} sm={5} md={3} lg={4} xl={4} className="h-100" style={style.searchPanel}>
                         <SearchContainer 
                             hasSearchKey={this.state.hasSearchKey}
                             clearSearchResult={this.state.clearSearchResult}
                             hasGridButton={this.state.hasGridButton}
                             auth={auth}
                             getSearchKey={this.getSearchKey}
-                            // objectTypeList={this.state.objectTypeList}
+                            objectTypeList={this.state.objectTypeList}
                         />
-                        
-                        <div 
-                            id='searchResult' 
-                            style={style.searchResultDiv} 
-                        >
-                            <SearchResultList
-                                searchResult={this.state.searchResult} 
-                                searchKey={this.state.searchKey}
-                                highlightSearchPanel={this.highlightSearchPanel}
-                            />
-                        </div>
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             </div>
         )
     }

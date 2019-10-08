@@ -114,7 +114,7 @@ const httpServer = http.createServer(app);
 httpServer.listen(httpPort, () =>{
     console.log(`HTTP Server running on port ${httpPort}`)
 })
-httpsServer.listen(httpsPort, () => {
-    console.log(`HTTPS Server running on PORT ${httpsPort}`)
-})
+// httpsServer.listen(httpsPort, () => {
+//     console.log(`HTTPS Server running on PORT ${httpsPort}`)
+// })
 

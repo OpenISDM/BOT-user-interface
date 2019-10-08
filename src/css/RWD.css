@@ -37,7 +37,7 @@
     }
 
     #mapid {
-        height: 40vh;
+        height: 90vh;
     } 
 
     .modal {
@@ -74,7 +74,7 @@
     }
 
     #mapid {
-        height: 45vh;
+
     } 
 
  }
@@ -95,7 +95,7 @@
     } */
 
     #mapid {
-        height: 45vh;
+        
     } 
     #searchbar {
         min-width: 200;
@@ -114,7 +114,7 @@
     }
 
     #mapid {
-        height: 50vh;
+        height: 45vh;
     } 
 
 }
@@ -126,7 +126,7 @@
         height: 65px;
     }
     #mapid {
-        height: 73vh;
+        
     } 
 
     #changeStatusForm {

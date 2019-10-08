@@ -82,7 +82,112 @@ class FrequentSearch extends React.Component {
                             </Button>
                         </AccessControl>
                         
-                            <Button 
+                        <Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
+                                variant="outline-custom"
+                                onClick={this.handleClick} 
+                                active={this.state.searchKey === 'all devices'}
+                                name='all devices'
+                            >
+                                {locale.texts.ALL_DEVICE}
+                            </Button><Button 
                                 variant="outline-custom"
                                 onClick={this.handleClick} 
                                 active={this.state.searchKey === 'all devices'}

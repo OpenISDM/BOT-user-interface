@@ -5,6 +5,7 @@ import {
     Nav, 
     Button,
     Image,
+    Row,
     ButtonToolbar
 }  from "react-bootstrap";
 import LocaleContext from "../../context/LocaleContext";
@@ -13,7 +14,9 @@ import PdfDownloadForm from "./PdfDownloadForm"
 import config from "../../config";
 import AccessControl from "../presentational/AccessControl"
 import { AppContext } from "../../context/AppContext";
-
+import QRcodeContainer from "./QRcode";
+import { isNullOrUndefined } from "util";
+import InfoPrompt from '../presentational/InfoPrompt';
 
 class SurveillanceContainer extends React.Component {
 
@@ -24,7 +27,8 @@ class SurveillanceContainer extends React.Component {
         selectedObjectData: [],
         showDevice: false,
         showPdfDownloadForm: false,
-        area: this.props.area
+        area: this.props.area,
+        data: this.props.data
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -95,23 +99,30 @@ class SurveillanceContainer extends React.Component {
             // surveillanceContainer: {
             //     height: "100vh"
             // },
-            navBlock: {
-                height: "40%"
+            MapAndQrcode: {
+              //border: "solid"
+            },
+            qrBlock: {
+                //border: "solid",
+                flex: 1
             }, 
             mapBlock: {
-                height: "60%",
                 border: "solid 2px rgba(227, 222, 222, 0.619)",
                 padding: "5px",
+                flex: 3,
+            },
+            searchResult: {
+
             },
             gridButton: {
                 display: this.state.showDevice ? null : "none"
             }
         }
         const { locale } = this.context;
-
+        
         return(
-            <div id="surveillanceContainer" style={style.surveillanceContainer} className="overflow-hidden">
-                <ButtonToolbar className='mb-2'>
+            <div id="surveillanceContainer" className="w-100 h-100 d-flex flex-column" style={style.MapAndQrcode}>
+                 <ButtonToolbar>
                     <Button 
                         variant="outline-primary" 
                         className="mr-1 text-capitalize" 
@@ -121,7 +132,7 @@ class SurveillanceContainer extends React.Component {
                     >
                         {locale.texts.IIS_SINICA_FLOOR_FOUR}
                     </Button>
-
+                
                     <Button 
                         variant="outline-primary" 
                         className="mr-1 text-capitalize" 
@@ -132,83 +143,33 @@ class SurveillanceContainer extends React.Component {
                         {locale.texts.NTUH_YUNLIN_WARD_FIVE_B}
                     </Button>
                 </ButtonToolbar>
-                <div style={style.mapBlock}>
-                    <Surveillance 
-                        rssi={this.state.rssi} 
-                        hasSearchKey={hasSearchKey}
-                        style={style.searchMap}
-                        colorPanel={this.props.colorPanel}
-                        proccessedTrackingData={this.props.proccessedTrackingData}
-                        getSearchKey={this.props.getSearchKey}
-                        area={this.props.area}
-                        auth={auth}
-                    />
-                </div>
-                <div style={style.navBlock}>
-                    <Nav className="d-flex align-items-start text-capitalize">
-                        <Nav.Item>
-                            <div style={style.title} 
-                            >
-                                {locale.texts.LOCATION_ACCURACY}
-                            </div>
-                        </Nav.Item>
-                        <Nav.Item className="pt-2 mr-2">
-                            <ToggleSwitch 
-                                changeLocationAccuracy={this.props.changeLocationAccuracy} 
-                                leftLabel="low"
-                                defaultLabel="med" 
-                                rightLabel="high"
+                <div className="d-flex w-100 h-100 flex-column">
+                    <div className="w-100 h-100 d-flex flex-row">
+                        <div style={style.qrBlock}>
+                            <QRcodeContainer 
+                                show={true}
+                                data={this.props.proccessedTrackingData.filter(item => item.searched)}
+                                handleClose = {this.handleClosePdfForm}
+                                userInfo={auth.user}
                             />
-                        </Nav.Item>
-                        <Nav.Item className="mt-2">
-                            <Button 
-                                variant="outline-primary" 
-                                className="mr-1 ml-2 text-capitalize" 
-                                onClick={this.handleClickButton} 
-                                name="clear"
-                            >
-                                {locale.texts.CLEAR}
-                            </Button>
-                        </Nav.Item>
-                        <AccessControl
-                            permission={"user:saveSearchRecord"}
-                            renderNoAccess={() => null}
-                        >
-                            <Nav.Item className="mt-2">
-                                <Button 
-                                    variant="outline-primary" 
-                                    className="mr-1 ml-2 text-capitalize" 
-                                    onClick={this.handleClickButton} 
-                                    name="save"
-                                >
-                                    {locale.texts.SAVE}
-                                </Button>
-                            </Nav.Item>
-                        </AccessControl>
-                        {/* <Nav.Item className="mt-2">
-                            <Button 
-                                variant="outline-primary" 
-                                className="mr-1 text-capitalize" 
-                                onClick={this.handleClickButton} 
-                                name="show devices"
-                            >
-                                {this.state.showDevice ? locale.texts.HIDE_DEVICES : locale.texts.SHOW_DEVICES }
-                            </Button>
-                        </Nav.Item >
-                        <div style={style.gridButton} className="mt-2 mx-3">
-                            <GridButton
-                                clearColorPanel={this.props.clearColorPanel}
+                            <InfoPrompt 
+                            data={this.props.data}
+                            title={locale.texts.FOUND} 
+                            /> 
+                        </div>
+                        <div style={style.mapBlock}>
+                            <Surveillance 
+                                rssi={this.state.rssi} 
+                                hasSearchKey={hasSearchKey}
+                                colorPanel={this.props.colorPanel}
+                                proccessedTrackingData={this.props.proccessedTrackingData}
                                 getSearchKey={this.props.getSearchKey}
+                                area={this.props.area}
+                                auth={auth}
                             />
-                        </div> */}
-                    </Nav>
-                </div>
-                <PdfDownloadForm 
-                    show={this.state.showPdfDownloadForm}
-                    data={this.props.proccessedTrackingData.filter(item => item.searched)}
-                    handleClose = {this.handleClosePdfForm}
-                    userInfo={auth.user}
-                />
+                        </div>
+                    </div>
+                </div>                
             </div>
         )
     }

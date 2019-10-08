@@ -18,26 +18,26 @@ const InfoPrompt = ({
     title
 }) => {
     return (
-        <Alert variant='secondary' className='d-flex justify-content-start'>
-            <div className='text-capitalize' style={style.alertTextTitle}>{title}</div>
-            &nbsp;
-            &nbsp;
-            {Object.keys(data).map((item, index) => {
-                return (
-                    <Row className='d-flex justify-content-start no-gutters' key={index}>
-                        <div style={style.alertText}>
-                            {data[item]}
-                        </div>
-                        &nbsp;
-                        <div>
-                            {item}
-                        </div>
-                        &nbsp;
-                        &nbsp;
-                    </Row>
-                )
-            })}
-        </Alert>
+            <div>
+                <div className='text-capitalize' style={style.alertTextTitle}>{title}</div>
+                &nbsp;
+                &nbsp;
+                {Object.keys(data).map((item, index) => {
+                    return (
+                        <Row className='d-flex justify-content-start no-gutters' key={index}>
+                            <div style={style.alertTextTitle}>
+                                {data[item]}
+                            </div>
+                            &nbsp;
+                            <div style={style.alertTextTitle}>
+                                {item}
+                            </div>
+                            &nbsp;
+                            &nbsp;
+                        </Row>
+                    )
+                })}
+            </div>
     )
 
 }

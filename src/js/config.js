@@ -1,5 +1,6 @@
 import IIS_SINICA_FLOOR_FOUR_MAP from '../img/IIS_Newbuilding_4F_reBack.png';
 import NTUH_YUNLIN_WARD_FIVE_B_MAP from '../img/NTUH_Yunlin_Branch_Map.png';
+import NTHU_MAP from '../img/nthu.png';
 
 import black_pin from '../img/colorPin/Black.svg'
 import darkGrey_pin from '../img/colorPin/DarkGrey.svg';
@@ -14,24 +15,30 @@ const config = {
     areaOptions: {
         1: "IIS_SINICA_FLOOR_FOUR",
         2: "NTUH_YUNLIN_WARD_FIVE_B",
+        3: "NTHU",
     },
     
     surveillanceMap: {
 
         /* Surveillance map source*/
         defaultArea: "IIS_SINICA_FLOOR_FOUR",
-        defaultMap: IIS_SINICA_FLOOR_FOUR_MAP,
-        IIS_SINICA_FLOOR_FOUR: IIS_SINICA_FLOOR_FOUR_MAP,
+        defaultMap: NTHU_MAP,
+        IIS_SINICA_FLOOR_FOUR: NTHU_MAP,
         NTUH_YUNLIN_WARD_FIVE_B: NTUH_YUNLIN_WARD_FIVE_B_MAP,
+        NTHU: NTHU_MAP,
 
         mapSelection: {
             IIS_SINICA_FLOOR_FOUR: {
-                map: IIS_SINICA_FLOOR_FOUR_MAP,
-                mapBound:[[0,0], [21130,35710]],
+                map: NTHU_MAP,
+                mapBound:[[0,0], [1354 ,2568]],
             },
             NTUH_YUNLIN_WARD_FIVE_B: {
                 map: NTUH_YUNLIN_WARD_FIVE_B_MAP,
                 mapBound:[[0,0], [45450,56160]],
+            },
+            NTHU: {
+                map: NTHU_MAP,
+                mapBound:[[0,0],[]],
             }
         },
 
@@ -44,9 +51,9 @@ const config = {
             maxZoom: 0,
             zoomDelta: 0.25,
             zoomSnap: 0,
-            zoomControl: true,
+            zoomControl: false,
             attributionControl: false,
-            dragging: true,
+            dragging: false,
             doubleClickZoom: false,
             scrollWheelZoom: false
         },
