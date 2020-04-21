@@ -74,32 +74,6 @@ const BrowserMainContainer = ({
                 className='d-flex w-100 justify-content-around mx-0' 
                 style={style.container}
             >
-                <Col sm={7} md={9} lg={8} xl={8} id='searchMap' className="pl-2 pr-1" >
-                    <InfoPrompt 
-                        searchKey={searchKey}
-                        searchResult={searchResult}
-                    />
-                    <MapContainer
-                        pathMacAddress={pathMacAddress} 
-                        proccessedTrackingData={proccessedTrackingData.length === 0 ? trackingData : proccessedTrackingData}
-                        hasSearchKey={hasSearchKey}
-                        searchKey={searchKey}
-                        searchResult={searchResult}
-                        handleClearButton={handleClearButton}
-                        getSearchKey={getSearchKey}
-                        setMonitor={setMonitor}
-                        lbeaconPosition={lbeaconPosition}
-                        geofenceConfig={geofenceConfig}
-                        locationMonitorConfig={locationMonitorConfig}
-                        clearAlerts={clearAlerts}
-                        handleClosePath={handleClosePath}
-                        handleShowPath={handleShowPath}
-                        searchedObjectType={searchedObjectType}
-                        showedObjects={showedObjects}
-                        setShowedObjects={setShowedObjects}
-                    />
-                </Col>
-
                 <Col id='searchPanel' xs={12} sm={5} md={3} lg={4} xl={4} className="w-100 px-2" style={style.searchPanel}>
                     <SearchContainer 
                         hasSearchKey={hasSearchKey}
