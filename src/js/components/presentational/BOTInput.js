@@ -51,9 +51,10 @@ class BOTInput extends React.Component {
                         style={{
                             border: '1px solid #ced4da',
                             // border: 'none',
-                            height: '2.5rem',
+                            height: '3rem',
                             padding: '.275rem .75rem',
-                            background: 'white'
+                            background: 'white',
+                            width: 300,
                         }}
                     >
                         <i 

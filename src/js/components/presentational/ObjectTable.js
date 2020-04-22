@@ -25,7 +25,7 @@ import messageGenerator from '../../service/messageGenerator'
 import { objectTableColumn } from '../../config/tables'
 import retrieveDataHelper from '../../service/retrieveDataHelper'
 import config from '../../config'
-
+ 
 
 class ObjectTable extends React.Component{
 
@@ -474,86 +474,75 @@ class ObjectTable extends React.Component{
         return(
     
             <div> 
-                <div className="d-flex justify-content-between">
-                    <Row noGutters>
-                        <Col>
-                            <BOTInput
-                                className='float-right'
-                                placeholder={locale.texts.SEARCH}
-                                getSearchKey={(key) => {
-                                    this.addObjectFilter(
-                                        key, 
-                                        ['name', 'type', 'area', 'status', 'macAddress', 'acn'], 
-                                        'search bar',
-                                    )
-                                }}
-                                clearSearchResult={null}    
-                            />
-                        </Col>
+                <div className="d-flex justify-content-between my-4">
+                    <div className="d-flex justify-content-start">
+                        <BOTInput
+                            className="mx-2"
+                            placeholder={locale.texts.SEARCH}
+                            getSearchKey={(key) => {
+                                this.addObjectFilter(
+                                    key, 
+                                    ['name', 'type', 'area', 'status', 'macAddress', 'acn'], 
+                                    'search bar',
+                                )
+                            }}
+                            clearSearchResult={null}    
+                        />
                         <AccessControl
                             renderNoAccess={() => null}
                             platform={['browser']}
                         >
-                            <Col>
-                                <Select
-                                    name="Select Type"
-                                    className="float-right w-100"
-                                    styles={styleConfig.reactSelect}
-                                    onChange={(value) => { 
-                                        if(value){
-                                            this.addObjectFilter(value.label, ['type'], 'type select' )
-                                        }else{
-                                            this.removeObjectFilter('type select')
-                                        }
-                                    }}
-                                    options={typeSelection}
-                                    isClearable={true}
-                                    isSearchable={false}
-                                    placeholder={locale.texts.TYPE}
-                                    styles={styleConfig.reactSelectSearch}
+                            <Select
+                                name="Select Type"
+                                className="mx-2"
+                                styles={styleConfig.reactSelectFilter}
+                                onChange={(value) => { 
+                                    if(value){
+                                        this.addObjectFilter(value.label, ['type'], 'type select' )
+                                    }else{
+                                        this.removeObjectFilter('type select')
+                                    }
+                                }}
+                                options={typeSelection}
+                                isClearable={true}
+                                isSearchable={false}
+                                placeholder={locale.texts.TYPE}
 
-                                />
-                            </Col>
-                            <Col >
-                                <Select
-                                    name="Select Area"
-                                    className='float-right w-100'
-                                    styles={styleConfig.reactSelect}
-                                    onChange={(value) => {
-                                        if(value){
-                                            this.addObjectFilter(value.label, ['area'], 'area select')
-                                        }else{
-                                            this.removeObjectFilter('area select')
-                                        }
-                                    }}
-                                    options={this.state.filterSelection.areaSelection}
-                                    isClearable={true}
-                                    isSearchable={false}
-                                    placeholder={locale.texts.AREA}
-                                    styles={styleConfig.reactSelectSearch}
-                                />
-                            </Col>
-                            <Col>
-                                <Select
-                                    name="Select Status"
-                                    className='float-right w-100'
-                                    styles={styleConfig.reactSelect}
-                                    onChange={(value) => {
-                                        if(value){
-                                            this.addObjectFilter(value.label, ['status'], 'status select')
-                                        }else{
-                                            this.removeObjectFilter('status select')
-                                        }
-                                    }}
-                                    options={this.state.filterSelection.statusOptions}
-                                    isClearable={true}
-                                    isSearchable={false}
-                                    placeholder={locale.texts.STATUS}
-                                    styles={styleConfig.reactSelectSearch}
-                                />
-                            </Col>
+                            />
+                            <Select
+                                name="Select Area"
+                                className="mx-2"
+                                styles={styleConfig.reactSelectFilter}
+                                onChange={(value) => {
+                                    if(value){
+                                        this.addObjectFilter(value.label, ['area'], 'area select')
+                                    }else{
+                                        this.removeObjectFilter('area select')
+                                    }
+                                }}
+                                options={this.state.filterSelection.areaSelection}
+                                isClearable={true}
+                                isSearchable={false}
+                                placeholder={locale.texts.AREA}
+                            />
+                            <Select
+                                name="Select Status"
+                                className="mx-2"
+                                styles={styleConfig.reactSelectFilter}
+                                onChange={(value) => {
+                                    if(value){
+                                        this.addObjectFilter(value.label, ['status'], 'status select')
+                                    }else{
+                                        this.removeObjectFilter('status select')
+                                    }
+                                }}
+                                options={this.state.filterSelection.statusOptions}
+                                isClearable={true}
+                                isSearchable={false}
+                                placeholder={locale.texts.STATUS}
+                            />
                         </AccessControl>
-                    </Row>
+                    </div>
                     <AccessControl
                         renderNoAccess={() => null}
                         platform={['browser', 'tablet']}
@@ -669,7 +658,6 @@ class ObjectTable extends React.Component{
                     }
                 />
             </div>
-
         )
     }
 }

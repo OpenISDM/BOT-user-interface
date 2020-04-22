@@ -76,6 +76,23 @@ const styleConfig = {
             paddingLeft: 35
         }),
     },
+
+    reactSelectFilter: {
+        control: (provided) => ({
+            ...provided,
+            fontSize: '1rem',
+            minHeight: '3rem',
+            position: 'none',
+            width: '300px',
+            borderRadius: 0,
+        }),
+
+        // valueContainer: base => ({
+        //     ...base,
+        //     paddingLeft: 35
+        // }),
+    },
+
     reactSelectSearchComponent : {
         IndicatorSeparator: () => null,
         DropdownIndicator:() => null,

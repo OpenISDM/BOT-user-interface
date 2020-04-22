@@ -528,66 +528,59 @@ class PatientTable extends React.Component{
 
         return(
             <div> 
-                <div className="d-flex justify-content-between">
-                    <Row noGutters> 
-                        <Col>
-                            <BOTInput
-                                className={'float-right'}
-                                placeholder={locale.texts.SEARCH}
-                                getSearchKey={(key) => {
-                                    this.addObjectFilter(
-                                        key, 
-                                        ['name', 'area', 'macAddress', 'acn', 'monitor', 'physician_name'], 
-                                        'search bar'
-                                    )
-                                }}
-                                clearSearchResult={null}                                        
-                            />
-                        </Col>
+                <div className="d-flex justify-content-between my-4">
+                    <div className="d-flex justify-content-start">                    
+                        <BOTInput
+                            className="mx-2"
+                            placeholder={locale.texts.SEARCH}
+                            getSearchKey={(key) => {
+                                this.addObjectFilter(
+                                    key, 
+                                    ['name', 'area', 'macAddress', 'acn', 'monitor', 'physician_name'], 
+                                    'search bar'
+                                )
+                            }}
+                            clearSearchResult={null}                                        
+                        />
                         <AccessControl
                             renderNoAccess={() => null}
                             platform={['browser']}
                         >
-                            <Col>
-                                <Select
-                                    name="Select Area Patient"
-                                    className='float-right w-100'
-                                    styles={styleConfig.reactSelect}
-                                    onChange={(value) => {
-                                        if(value){
-                                            this.addObjectFilter(value.label, ['area'], 'area select')
-                                        }else{
-                                            this.removeObjectFilter('area select')
-                                        }
-                                    }}
-                                    options={this.state.filterSelection.areaSelection}
-                                    isClearable={true}
-                                    isSearchable={false}
-                                    placeholder={locale.texts.SELECT_AREA}
-                                    styles={styleConfig.reactSelectSearch}
-                                />
-                            </Col> 
-                            <Col>
-                                <Select
-                                    name="Select Status"
-                                    className='float-right w-100'
-                                    styles={styleConfig.reactSelect}
-                                    onChange={(value) => {
-                                        if(value){
-                                            this.addObjectFilter(value.label, ['monitor'], 'monitor select')
-                                        }else{
-                                            this.removeObjectFilter('monitor select')
-                                        }
-                                    }}
-                                    options={this.state.filterSelection.monitorTypeOptions}
-                                    isClearable={true}
-                                    isSearchable={false}
-                                    placeholder={locale.texts.SELECT_MONITOR_TYPE}
-                                    styles={styleConfig.reactSelectSearch}
-                                />
-                            </Col>
+                            <Select
+                                name="Select Area Patient"
+                                className="mx-2"
+                                styles={styleConfig.reactSelectFilter}
+                                onChange={(value) => {
+                                    if(value){
+                                        this.addObjectFilter(value.label, ['area'], 'area select')
+                                    }else{
+                                        this.removeObjectFilter('area select')
+                                    }
+                                }}
+                                options={this.state.filterSelection.areaSelection}
+                                isClearable={true}
+                                isSearchable={false}
+                                placeholder={locale.texts.SELECT_AREA}
+                            />
+                    
+                            <Select
+                                name="Select Status"
+                                className="mx-2"
+                                styles={styleConfig.reactSelectFilter}
+                                onChange={(value) => {
+                                    if(value){
+                                        this.addObjectFilter(value.label, ['monitor'], 'monitor select')
+                                    }else{
+                                        this.removeObjectFilter('monitor select')
+                                    }
+                                }}
+                                options={this.state.filterSelection.monitorTypeOptions}
+                                isClearable={true}
+                                isSearchable={false}
+                                placeholder={locale.texts.SELECT_MONITOR_TYPE}
+                            />
                         </AccessControl>
-                    </Row>
+                    </div>
                     <AccessControl
                         renderNoAccess={() => null}
                         platform={['browser', 'tablet']}
