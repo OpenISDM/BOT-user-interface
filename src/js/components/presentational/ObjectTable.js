@@ -19,7 +19,7 @@ import dataSrc from "../../dataSrc"
 const SelectTable = selecTableHOC(ReactTable);
 import {
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import AccessControl from '../presentational/AccessControl'
 import messageGenerator from '../../service/messageGenerator' 
 import { objectTableColumn } from '../../config/tables'

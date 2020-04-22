@@ -20,7 +20,7 @@ import messageGenerator from '../../service/messageGenerator'
 const SelectTable = selecTableHOC(ReactTable);
 import {
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import AccessControl from '../presentational/AccessControl'
 
 class GatewayTable extends React.Component{

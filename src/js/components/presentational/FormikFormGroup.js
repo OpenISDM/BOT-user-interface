@@ -5,7 +5,7 @@ import {
 } from 'formik';
 import {
     FormFieldName
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 
 const FormikFormGroup = ({
    name = "default",

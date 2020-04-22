@@ -20,7 +20,7 @@ import styleConfig from '../../../config/styleConfig';
 const Fragment = React.Fragment;
 import {
     PrimaryButton 
-} from '../../../config/styleComponent'
+} from '../../BOTComponent/styleComponent'
 import AccessControl from '../../presentational/AccessControl'
 
 class AdminManagementContainer extends React.Component{

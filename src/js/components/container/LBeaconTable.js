@@ -19,11 +19,10 @@ import {
 import { AppContext } from '../../context/AppContext';
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import retrieveDataHelper from '../../service/retrieveDataHelper'
-import BOTCheckbox from '../presentational/BOTCheckbox'
 import styleConfig from '../../config/styleConfig'
 import {
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import AccessControl from '../presentational/AccessControl'
 
 const SelectTable = selecTableHOC(ReactTable);

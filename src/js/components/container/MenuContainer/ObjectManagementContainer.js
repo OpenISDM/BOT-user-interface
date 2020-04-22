@@ -20,7 +20,7 @@ import {
     BOTNavLink,
     BOTNav,
     PageTitle
-} from '../../../config/styleComponent'
+} from '../../BOTComponent/styleComponent'
 
 
 class ObjectManagementContainer extends React.Component{

@@ -3,7 +3,7 @@ import Item from 'react-bootstrap/ListGroupItem';
 import Link from 'react-bootstrap/NavLink'
 import NavLink from 'react-bootstrap/NavLink'
 import Nav from 'react-bootstrap/Nav'
-import styleSheet from './styleSheet'
+import styleSheet from '../../config/styleSheet'
 import Button from 'react-bootstrap/Button'
 
 export const EditedTime = styled.div`

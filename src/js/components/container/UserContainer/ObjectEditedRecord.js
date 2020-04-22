@@ -15,7 +15,7 @@ import styleConfig from '../../../config/styleConfig';
 import AccessControl from '../../presentational/AccessControl'
 import {
     PrimaryButton 
-} from '../../../config/styleComponent'
+} from '../../BOTComponent/styleComponent'
 
 class ObjectEditedRecord extends React.Component{
 

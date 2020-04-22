@@ -8,7 +8,7 @@ import {
     PageTitle,
     BOTNav,
     BOTNavLink
-} from '../../../config/styleComponent'
+} from '../../BOTComponent/styleComponent'
 import LocaleContext from '../../../context/LocaleContext'
 import AccessControl from '../../presentational/AccessControl'
 

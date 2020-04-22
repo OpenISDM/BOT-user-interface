@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     PrimaryButton
-} from '../../config/styleComponent'
+} from './styleComponent'
 
 const IconButton = ({
     iconName,

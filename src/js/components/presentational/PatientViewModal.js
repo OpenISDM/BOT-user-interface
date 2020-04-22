@@ -17,7 +17,7 @@ import {
     EditedTime,
     Primary,
     Paragraph 
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 
 const style = {
     index: {

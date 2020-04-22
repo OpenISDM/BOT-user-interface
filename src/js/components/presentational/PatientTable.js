@@ -27,7 +27,7 @@ import {
 import {
     LoaderWrapper, 
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import ReactLoading from "react-loading"; 
 import styled from 'styled-components'
 import messageGenerator from '../../service/messageGenerator'

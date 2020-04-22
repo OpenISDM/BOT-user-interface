@@ -6,7 +6,7 @@ import {
 import {
     FormFieldName,
     FieldLabel
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 
 const BOTFormikField = ({
    name = "default",

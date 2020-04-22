@@ -16,7 +16,7 @@ import selecTableHOC from 'react-table/lib/hoc/selectTable';
 import messageGenerator from '../../service/messageGenerator'
 import {
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import AccessControl from '../presentational/AccessControl'
 import { callbackify } from 'util';
 const SelectTable = selecTableHOC(ReactTable);

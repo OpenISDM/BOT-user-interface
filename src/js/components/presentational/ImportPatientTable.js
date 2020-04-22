@@ -17,7 +17,7 @@ import styleConfig from '../../config/styleConfig';
 import messageGenerator from '../../service/messageGenerator'
 import {
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import AccessControl from './AccessControl'
 import { importTableColumn } from '../../config/tables'
 import { getImportPatient } from '../../dataSrc'

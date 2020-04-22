@@ -30,14 +30,14 @@ import {
     NoDataFoundDiv,
     BOTContainer,
     PrimaryButton
-} from '../../config/styleComponent'
+} from '../BOTComponent/styleComponent'
 import Loader from '../presentational/Loader'
 import retrieveDataHelper from '../../service/retrieveDataHelper';
 import Select, {components} from 'react-select'
 import {
     FormFieldName,
     PageTitle
-} from '../../config/styleComponent';
+} from '../BOTComponent/styleComponent';
 import BOTFormikField from '../presentational/BOTFormikField';
 import BOTValueField from '../BOTComponent/BOTValueField';
 import IconButton from '../BOTComponent/IconButton';
