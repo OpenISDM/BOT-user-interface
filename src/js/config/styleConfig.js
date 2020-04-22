@@ -1,5 +1,29 @@
-import BOTCheckbox from '../components/presentational/BOTCheckbox'
-import BOTPagination from '../components/presentational/BOTPagination'
+import BOTCheckbox from '../components/presentational/BOTCheckbox';
+import BOTPagination from '../components/presentational/BOTPagination';
+import Select, {components} from 'react-select';
+import React from 'react';
+import styleSheet from './styleSheet';
+
+const ValueContainer = ({ children, ...props }) => {
+    return (
+        components.ValueContainer && (
+            <components.ValueContainer {...props}>
+            {!!children && (
+                <i
+                    className="fa fa-search"
+                    aria-hidden="true"
+                    style={{ 
+                        position: "absolute", 
+                        left: 10,
+                        color: styleSheet.iconColor
+                    }}
+                />
+            )}
+            {children}
+            </components.ValueContainer>
+        )
+    );
+};
 
 const styleConfig = {
     reactSelect: {
@@ -41,13 +65,23 @@ const styleConfig = {
         control: (provided) => ({
             ...provided,
             fontSize: '1rem',
-            minHeight: '2.5rem',
-            height:  'calc(2rem + 2px)',
+            minHeight: '3rem',
             position: 'none',
-            width: '250px',
+            width: '500px',
             borderRadius: 0                                
         }),
+
+        valueContainer: base => ({
+            ...base,
+            paddingLeft: 35
+        }),
     },
+    reactSelectSearchComponent : {
+        IndicatorSeparator: () => null,
+        DropdownIndicator:() => null,
+        ValueContainer
+    },
+
     reactSelectNavbar: {
         option: (provided, state) => ({
             ...provided,

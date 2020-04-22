@@ -58,7 +58,9 @@ class BOTInput extends React.Component {
                     >
                         <i 
                             className="fas fa-search"
-                            style={{color: '#80808029'}}
+                            style={{
+                                color: 'black'
+                            }}
                         />
                         <Form.Control 
                             type='text' 

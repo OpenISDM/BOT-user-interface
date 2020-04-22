@@ -189,9 +189,10 @@ class EditPatientForm extends React.Component {
                                         return sum
                                     }, 0)      
                                 :   0
-                            
+
+                            if (values.physician)
                             physicianList.map(item => { 
-                                if (values.physician)(
+                                (
                                 item.name == values.physician.value 
                                     ?   values.physician.value = item.id
                                     :   null

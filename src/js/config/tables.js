@@ -651,11 +651,15 @@ const locationHistoryByMacColumns = [
         accessor: "endTime",
         width: 250,
     },
+    {
+        Header: 'residence time',
+        accessor: 'residenceTime',
+    }
 ]
 
 const locationHistoryByUUIDColumns = [
     {
-        Header: "No",
+        Header: "POUND_SIGN",
         accessor: "id",
         width: 50,
     },

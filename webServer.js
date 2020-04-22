@@ -39,7 +39,7 @@ app.get('/image/pinImage/:pinImage', (req, res) => {
 })
 
 app.get(/^\/page\/(.*)/, (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist','index.html'));
+    res.redirect('/');
 })
 
 app.post('/data/getObjectTable', db.getObjectTable);

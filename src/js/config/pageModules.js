@@ -21,14 +21,7 @@ export const navbarNavList = [
         alias: "home",
         path: "/",
     },
-    {
-        name: "shift change",
-        alias: "shiftChange",
-        path: "/",
-        permission: "user:shiftChange",
-        platform: ['browser', 'tablet'],
-        hasEvent: true
-    },
+
     {
         name: "object management",
         alias: "objectManagement",
@@ -39,29 +32,8 @@ export const navbarNavList = [
     {
         name: "tracking history",
         alias: "trackinghistory",
-        path: "/page/trackingHistory",
+        path: "/page/trace",
         permission: "route:trackingHistory",
-        platform: ['browser', 'tablet', 'mobile'],
-    },
-    {
-        name: "big screen",
-        alias: "bigScreen",
-        path: "/page/bigScreen",
-        permission: "route:bigScreen",
-        platform: ['browser']
-    },
-    {
-        name: "monitor setting",
-        alias: "monitor",
-        path: "/page/monitor",
-        permission: "route:monitor",
-        platform: ['browser', 'tablet']
-    },
-    {
-        name: "report",
-        alias: "report",
-        path: "/page/report",
-        permission: "route:report",
         platform: ['browser', 'tablet', 'mobile'],
     },
     {

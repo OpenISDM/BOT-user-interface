@@ -8,6 +8,12 @@ const styleSheet = {
 
     inActive: '#00000054',
 
+    iconColor: 'black',
+
+    grey: '#00000038',
+
+    warning: 'red',
+
 
 
 }

@@ -14,7 +14,7 @@ html,body {
     /* background: #f0edf240; */
     color: rgb(92, 92, 92);
     letter-spacing: 1.5px;
-    height: '100vh';   
+    height: 100%;   
     overflow-x: hidden;
 }
 
@@ -170,11 +170,11 @@ a:hover {
     /* height:  calc(1.75rem + 2px); */
 }
 
-.form-control:disabled {
+/* .form-control:disabled {
     background-color: inherit;
     opacity: 0.6;
     font-style: italic;
-}
+} */
 
 .form-text {
     margin-top: 0;

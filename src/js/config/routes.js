@@ -7,6 +7,7 @@ import About from "../components/container/About"
 import TrackingHistoryContainer from "../components/container/menuContainer/TrackingHistoryContainer"
 import MonitorSettingContainer from "../components/container/menuContainer/MonitorSettingContainer"
 import ReportContainer from "../components/container/menuContainer/ReportContainer"
+import TraceContainer from "../components/container/TraceContainer";
 
 const routes = [
     {
@@ -30,28 +31,13 @@ const routes = [
         exact: true,
     },
     {
-        path: '/page/bigScreen',
-        component: BigScreenContainer,
-        exact: true,
-    },
-    {
         path: '/page/about',
         component: About,
         exact: true,
     },
     {
-        path: '/page/trackingHistory',
-        component: TrackingHistoryContainer,
-        exact: true,
-    },
-    {
-        path: '/page/monitor',
-        component: MonitorSettingContainer,
-        exact: true,
-    },
-    {
-        path: '/page/report',
-        component: ReportContainer,
+        path: '/page/trace',
+        component: TraceContainer,
         exact: true,
     },
 ];

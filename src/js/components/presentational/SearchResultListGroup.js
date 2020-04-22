@@ -1,5 +1,6 @@
 import React from 'react'
 import { ListGroup } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import config from '../../config';
 import { AppContext } from '../../context/AppContext'
 import { 
@@ -39,8 +40,17 @@ const SearchResultListGroup = ({
         >
             {data.map((item,index) => {
                 let element = 
-                    <ListGroup.Item 
-                        href={'#' + index} 
+                    <Link 
+                        to={{
+                            pathname: '/page/trace',
+                            state: {
+                                key: {
+                                    value: item.name,
+                                    label: item.name
+                                },
+                                mode: 'name'
+                            }
+                        }}
                         eventKey={item.found + ':'+ index} 
                         key={index} 
                         action={action}
@@ -80,7 +90,7 @@ const SearchResultListGroup = ({
                                 {`|${getRSSI(item, locale)}`}
                             </AccessControl>
                         }
-                    </ListGroup.Item>
+                    </Link>
                 return element
             })}
         </ListGroup>

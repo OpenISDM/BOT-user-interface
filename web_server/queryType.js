@@ -134,6 +134,34 @@ const getTrackingTableByMacAddress = (object_mac_address) => {
 const getLocationHistory = (key, startTime, endTime, mode) => {
 	let query = null
 	switch(mode) {
+		case 'name':
+			query =  `
+				SELECT 
+					location_history_table.uuid,
+					location_history_table.record_timestamp,
+					location_history_table.mac_address,
+					lbeacon_table.description,
+					object_table.name,
+					area_table.name as area
+				FROM location_history_table
+
+				LEFT JOIN lbeacon_table 
+				ON lbeacon_table.uuid = location_history_table.uuid
+
+				LEFT JOIN object_table 
+				ON location_history_table.mac_address = object_table.mac_address
+
+				LEFT JOIN area_table
+				ON location_history_table.area_id = area_table.id
+
+				WHERE object_table.name = '${key}'
+
+				${startTime ? `AND record_timestamp >= '${startTime}'` : ""}
+				${endTime ? `AND record_timestamp <= '${endTime}'` : ""}
+
+				ORDER BY location_history_table.record_timestamp ASC
+			`
+			break;
 		case "mac": 
 			query =  `
 				SELECT 
@@ -660,10 +688,8 @@ const addPatient = (formOption) => {
 			name,
 			mac_address, 
 			asset_control_number,
-			physician_id,
 			area_id,
 			object_type,
-			room,
 			monitor_type,
 			type,
 			status,
@@ -676,8 +702,6 @@ const addPatient = (formOption) => {
 			$4,
 			$5,
 			$6,
-			$7,
-			$8,
 			'Patient',
 			'normal',
 			now()
@@ -687,10 +711,8 @@ const addPatient = (formOption) => {
 		formOption.name,
 		formOption.mac_address,
 		formOption.asset_control_number,
-		formOption.physician.value,
 		formOption.area_id,
 		formOption.gender_id,
-		formOption.room,
 		formOption.monitor_type
 	];
 

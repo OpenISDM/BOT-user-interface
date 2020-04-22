@@ -156,6 +156,7 @@ const tw = {
     ROUTE:"路由",
     USER:"使用者",
     ADD_PERMISSION:"新增許可",
+    EXPORT: "匯出",
 
     /* field */
     NAME: "名稱",
@@ -290,7 +291,7 @@ const tw = {
     MAC_DO_NOT_MATCH:"不符合當前Mac",
     THE_MAC_ADDRESS_IS_ALREADY_USED_OR_FORMAT_IS_NOT_CORRECT: 'Mac Address已被使用或格式錯誤',
     MAC_ADDRESS_FORMAT_IS_NOT_CORRECT: "mac address格式錯誤",
-    TIME_FORMAT_IS_NOT_CORRECT: "時間格式錯誤",
+    TIME_FORMAT_IS_INCORRECT: "時間格式錯誤",
     LBEACON_FORMAT_IS_NOT_CORRECT: "Lbeacon格式錯誤",
     ASSET_CONTROL_NUMBER_IS_NOT_FOUND: "未有符合的財產編號",
     INCORRECT:"帳號錯誤",
@@ -315,6 +316,8 @@ const tw = {
     TYPING: "請輸入新紀錄...",
     WAIT_FOR_SEARCH: "等待搜尋...",
     NO_DATA_FOUND: "無搜尋結果",
+    SEARCH_FOR_NAME: "搜尋名字",
+    SEARCH_FOR_UUID: "搜尋uuid",
 
     /* Object Status */
     STATUS: "狀態",

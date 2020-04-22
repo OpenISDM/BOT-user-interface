@@ -172,17 +172,18 @@ const getObjectTable = (request, response) => {
         areas_id,
         objectType 
     } = request.body
+
     pool.query(queryType.getObjectTable(objectType, areas_id))       
         .then(res => {
-            console.log('Get objectTable data')
+            console.log('get object table succeed')
             res.rows.map(item => {
-                item.registered_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
+                item.registered_timestamp = moment.tz(item.registered_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
             })
 
             response.status(200).json(res)
         })
         .catch(err => {
-            console.log("Get objectTable fails: " + err)
+            console.log(`get object table failed ${err}`)
         })     
 }
 

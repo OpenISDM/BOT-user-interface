@@ -155,6 +155,8 @@ const en =  {
     ROUTE:"Route",
     USER:"User",
     ADD_PERMISSION:"add Permission",
+    EXPORT: "export",
+
 
     /* field */
     NAME: "name",
@@ -287,7 +289,7 @@ const en =  {
     MAC_DO_NOT_MATCH:"Mac address do not match",
     THE_MAC_ADDRESS_IS_ALREADY_USED_OR_FORMAT_IS_NOT_CORRECT: 'Mac Address is already used or the format is wrong',
     MAC_ADDRESS_FORMAT_IS_NOT_CORRECT: "mac address format is not correct",
-    TIME_FORMAT_IS_NOT_CORRECT: "time format is not correct",
+    TIME_FORMAT_IS_INCORRECT: "time format is incorrect",
     LBEACON_FORMAT_IS_NOT_CORRECT: "mac address format is not correct",
     ASSET_CONTROL_NUMBER_IS_NOT_FOUND: "asset control number is not found",
     INCORRECT:"username incorrect",
@@ -312,6 +314,8 @@ const en =  {
     TYPING: "typing...",
     WAIT_FOR_SEARCH: "wait for search...",
     NO_DATA_FOUND: "no data found",
+    SEARCH_FOR_NAME: "Search for name",
+    SEARCH_FOR_UUID: "Search for uuid",
 
     /* Object Status */
     STATUS: "status",

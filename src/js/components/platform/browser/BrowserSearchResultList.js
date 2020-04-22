@@ -33,7 +33,7 @@ const BrowserSearchResultList = ({
     return (
         <Fragment>
             <Row className='d-flex justify-content-center' style={style.titleText}>
-                <div className='title'>
+                <div className='title text-capitalize'>
                     {title}
                 </div>
             </Row>

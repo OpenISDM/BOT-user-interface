@@ -32,6 +32,14 @@ export const FormFieldName = styled.div`
     margin-bottom: 5px;
 `
 
+export const FieldLabel = styled.div`
+    color: ${styleSheet.grey};
+    font-size: .8rem;
+    margin-bottom: 5px;
+    text-transform: capitalize;
+    font-weight: 600;
+`
+
 export const PageTitle = styled.div`
     color: black;
     font-size: 1.4rem;
@@ -92,6 +100,7 @@ export const BOTNav = styled(Nav)`
 
 export const LoaderWrapper = styled.div`
     position: absolute;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -105,7 +114,7 @@ export const LoaderWrapper = styled.div`
 export const PrimaryButton = styled(Button)`
     font-size: 1rem;
     padding: 0.375rem 0.5rem;
-    height: 2.5rem;
+    height: 3rem;
     letter-spacing: 1px;
     text-transform: capitalize;
     margin: 0 .2rem;
@@ -113,7 +122,5 @@ export const PrimaryButton = styled(Button)`
 
 export const NoDataFoundDiv = styled.div`
     padding: 10px 20px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
     background: white;
-    text-transform: capitalize;
 `
