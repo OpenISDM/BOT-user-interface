@@ -283,6 +283,7 @@ const getObjectTable = (objectType, areas_id) => {
 		WHERE object_table.object_type IN (${objectType.map(type => type)})
 		${areas_id ? `AND object_table.area_id IN (${areas_id.map(id => id)})` : ''}
 		ORDER BY 
+			object_table.registered_timestamp DESC,
 			object_table.name ASC
 			
 			;
@@ -608,11 +609,8 @@ const editPatient = (formOption) => {
 		Update object_table 
 		SET name = $2,
 			mac_address = $3,
-			physician_id = $4,
-			area_id = $5,
-			object_type = $6,
-			room = $7,
-			monitor_type = $8
+			area_id = $4,
+			object_type = 1
 		WHERE asset_control_number = $1
 	`;
 		
@@ -620,11 +618,7 @@ const editPatient = (formOption) => {
 		formOption.asset_control_number,
 		formOption.name,
 		formOption.mac_address,
-		formOption.physicianIDNumber,
 		formOption.area_id,
-		formOption.gender_id,
-		formOption.room,
-		formOption.monitor_type
 	];
 
 	const query = {
@@ -690,7 +684,6 @@ const addPatient = (formOption) => {
 			asset_control_number,
 			area_id,
 			object_type,
-			monitor_type,
 			type,
 			status,
 			registered_timestamp
@@ -700,9 +693,8 @@ const addPatient = (formOption) => {
 			$2,
 			$3,
 			$4,
-			$5,
-			$6,
-			'Patient',
+			1,
+			'register',
 			'normal',
 			now()
 		)
@@ -712,8 +704,6 @@ const addPatient = (formOption) => {
 		formOption.mac_address,
 		formOption.asset_control_number,
 		formOption.area_id,
-		formOption.gender_id,
-		formOption.monitor_type
 	];
 
 	const query = {

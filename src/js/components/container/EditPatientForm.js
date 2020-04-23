@@ -3,22 +3,16 @@ import React from 'react';
 import { Modal, Button, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
 import config from '../../config';
-import LocaleContext from '../../context/LocaleContext';
 import axios from 'axios';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import CheckboxGroup from './CheckboxGroup'
-import Checkbox from '../presentational/Checkbox'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import styleConfig from '../../config/styleConfig'
-
-let monitorTypeMap = {};
-Object.keys(config.monitorType)
-    .forEach(key => {
-        monitorTypeMap[config.monitorType[key]] = key
-})
+import { AppContext } from '../../context/AppContext'
   
 class EditPatientForm extends React.Component {
+
+    static contextType = AppContext
   
     handleSubmit = (postOption) => {
         const path = this.props.formPath  
@@ -33,7 +27,9 @@ class EditPatientForm extends React.Component {
 
     render() {
 
-        const locale = this.context
+        const {
+            locale 
+        } = this.context
 
         const { 
             title, 
@@ -61,33 +57,6 @@ class EditPatientForm extends React.Component {
             };
         })
 
-        const genderOptions = [
-            { 
-                value: '1', 
-                label: locale.texts.MALE
-            },
-            { 
-                value: '2', 
-                label: locale.texts.FEMALE 
-            },
-        ]
-
-        let physicianListOptions = physicianList.map(user => {
-            return {
-                value: user.id,
-                label: user.name
-            }
-        }) 
-
-        physicianList.map(user => {
-            selectedRowData.physician_id == user.id
-                ?   selectedRowData['physician']  = {
-                        value: user.id,
-                        label: user.name
-                    }
-                :   null
-        })
-
         return (
             
             <Modal 
@@ -111,18 +80,6 @@ class EditPatientForm extends React.Component {
                             mac_address: mac_address || '',
 
                             asset_control_number:asset_control_number|| '',
-
-                            gender: object_type == locale.texts.FEMALE.toLowerCase() ? genderOptions[1] : genderOptions[0],
-
-                            monitorType: selectedRowData.length !== 0 ? monitor_type.split('/') : [],
-
-                            room: room 
-                                ? {
-                                    value: room,
-                                    label: room
-                                }
-                                : null,
-
                             
                         }}
                        
@@ -132,8 +89,6 @@ class EditPatientForm extends React.Component {
                                 name: Yup.string().required(locale.texts.NAME_IS_REQUIRED),
                                  
                                 area: Yup.string().required(locale.texts.AREA_IS_REQUIRED),
-
-                                gender: Yup.string().required(locale.texts.GENDER_IS_REQUIRED),
 
                                 asset_control_number: Yup.string()
                                     .required(locale.texts.NUMBER_IS_REQUIRED)
@@ -179,33 +134,11 @@ class EditPatientForm extends React.Component {
                         })}
 
 
-                        onSubmit={(values, { setStatus, setSubmitting }) => {
+                        onSubmit={values => {
                          
-                            let monitor_type = values.monitorType
-                                ?   values.monitorType
-                                    .filter(item => item)
-                                    .reduce((sum, item) => {
-                                        sum += parseInt(monitorTypeMap[item])
-                                        return sum
-                                    }, 0)      
-                                :   0
-
-                            if (values.physician)
-                            physicianList.map(item => { 
-                                (
-                                item.name == values.physician.value 
-                                    ?   values.physician.value = item.id
-                                    :   null
-                                )    })
-                             
                             const postOption = {
                                 ...values,
                                 area_id: values.area.id,
-                                gender_id : values.gender.value,
-                                monitor_type, 
-                                room: values.room ? values.room.label : '',
-                                object_type: values.gender.value,
-                                physicianIDNumber : values.physician  ? values.physician.value : this.props.physicianIDNumber
                             } 
                             this.handleSubmit(postOption)                            
                         }}
@@ -213,45 +146,20 @@ class EditPatientForm extends React.Component {
 
                         render={({ values, errors, status, touched, isSubmitting, setFieldValue,submitForm }) => (  
                             <Form>
-                                <Row noGutters>
-                                    <Col>
-                                        <FormikFormGroup 
-                                            type="text"
-                                            name="name"
-                                            label={locale.texts.NAME}
-                                            error={errors.name}
-                                            touched={touched.name}
-                                            placeholder=""
-                                        />
-                                    </Col>
-                                    <Col>
-                                        <FormikFormGroup 
-                                            name="gender"
-                                            label={locale.texts.PATIENT_GENDER}
-                                            error={errors.gender}
-                                            touched={touched.gender}
-                                            component={() => (
-                                                <Select 
-                                                    placeholder={locale.texts.CHOOSE_GENDER}
-                                                    name ="gender"            
-                                                    styles={styleConfig.reactSelect}                          
-                                                    value={values.gender}
-                                                    onChange={value => setFieldValue("gender", value)}
-                                                    options={genderOptions}
-                                                    components={{
-                                                        IndicatorSeparator: () => null
-                                                    }}
-                                                />
-                                            )}
-                                        />
-                                    </Col>
-                                </Row>
+                                <FormikFormGroup 
+                                    type="text"
+                                    name="name"
+                                    label={locale.texts.NAME}
+                                    error={errors.name}
+                                    touched={touched.name}
+                                    placeholder=""
+                                />
                                 <Row noGutters>
                                     <Col>
                                         <FormikFormGroup 
                                             type="text"
                                             name="asset_control_number"
-                                            label={locale.texts.PATIENT_NUMBER}
+                                            label={locale.texts.ID}
                                             error={errors.asset_control_number}
                                             touched={touched.asset_control_number}
                                             placeholder=""
@@ -270,13 +178,12 @@ class EditPatientForm extends React.Component {
                                         />
                                     </Col>
                                 </Row>
-                                <hr/>
                                 <Row noGutters>
                                     <Col>
                                         <FormikFormGroup 
                                             type="text"
                                             name="area"
-                                            label={locale.texts.AUTH_AREA}
+                                            label={locale.texts.AREA}
                                             error={errors.area}
                                             touched={touched.area}
                                             component={() => (
@@ -294,76 +201,7 @@ class EditPatientForm extends React.Component {
                                             )}
                                         />
                                     </Col>
-                                    <Col>
-                                        <FormikFormGroup 
-                                            type="text"
-                                            name="physician"
-                                            label={locale.texts.ATTENDING_PHYSICIAN}
-                                            error={errors.physician}
-                                            touched={touched.physician}
-                                            component={() => (
-                                                <Select
-                                                    placeholder = {locale.texts.SELECT_PHYSICIAN}
-                                                    name="physician"
-                                                    value = {values.physician}
-                                                    onChange= {(value) => setFieldValue("physician", value)}
-                                                    options={physicianListOptions}
-                                                    styles={styleConfig.reactSelect}
-                                                    components={{
-                                                        IndicatorSeparator: () => null
-                                                    }}
-                                                />
-                                            )}
-                                        />
-                                    </Col>
                                 </Row>
-                                <FormikFormGroup 
-                                    type="text"
-                                    name="room"
-                                    label={locale.texts.ROOM}
-                                    error={errors.room}
-                                    touched={touched.room}
-                                    component={() => (
-                                        <Select 
-                                            placeholder = {locale.texts.SELECT_ROOM}
-                                            name ="room"
-                                            styles={styleConfig.reactSelect}                          
-                                            value={values.room}
-                                            onChange={value => setFieldValue("room", value)}
-                                            options={this.props.roomOptions}
-                                            components={{
-                                                IndicatorSeparator: () => null
-                                            }}
-                                        />
-                                    )}
-                                />
-                                <hr/>
-                                <FormikFormGroup 
-                                    name="room"
-                                    label={locale.texts.MONITOR_TYPE}
-                                    error={errors.monitorType}
-                                    touched={touched.monitorType}
-                                    component={() => (
-                                        <CheckboxGroup
-                                            id="monitorType"
-                                            label={locale.texts.MONITOR_TYPE}
-                                            value={values.monitorType}
-                                            onChange={setFieldValue}                                            
-                                        >
-                                            {Object.keys(config.monitorType)
-                                                .filter(key => config.monitorTypeMap.patient.includes(parseInt(key)))
-                                                .map((key,index) => {
-                                                    return <Field
-                                                        key={index}
-                                                        component={Checkbox}
-                                                        name="checkboxGroup"
-                                                        id={config.monitorType[key]}
-                                                        label={config.monitorType[key]}
-                                                    />
-                                            })}
-                                        </CheckboxGroup>
-                                    )}
-                                />
                                 <Modal.Footer>
                                     <Button 
                                         variant="outline-secondary" 
@@ -388,7 +226,5 @@ class EditPatientForm extends React.Component {
         );
     }
 }
-
-EditPatientForm.contextType = LocaleContext;
   
 export default EditPatientForm;

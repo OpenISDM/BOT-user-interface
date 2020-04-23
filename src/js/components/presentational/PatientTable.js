@@ -562,23 +562,6 @@ class PatientTable extends React.Component{
                                 isSearchable={false}
                                 placeholder={locale.texts.SELECT_AREA}
                             />
-                    
-                            <Select
-                                name="Select Status"
-                                className="mx-2"
-                                styles={styleConfig.reactSelectFilter}
-                                onChange={(value) => {
-                                    if(value){
-                                        this.addObjectFilter(value.label, ['monitor'], 'monitor select')
-                                    }else{
-                                        this.removeObjectFilter('monitor select')
-                                    }
-                                }}
-                                options={this.state.filterSelection.monitorTypeOptions}
-                                isClearable={true}
-                                isSearchable={false}
-                                placeholder={locale.texts.SELECT_MONITOR_TYPE}
-                            />
                         </AccessControl>
                     </div>
                     <AccessControl
@@ -597,7 +580,7 @@ class PatientTable extends React.Component{
                                 className='text-capitalize mr-2 mb-1'
                                 onClick={this.handleClick}
                             >
-                                {locale.texts.ADD_INPATIENT}
+                                {locale.texts.ADD}
                             </PrimaryButton>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
@@ -629,7 +612,7 @@ class PatientTable extends React.Component{
                                     this.setState({
                                     isPatientShowEdit:true,
                                     selectedRowData: this.state.data[rowInfo.index],
-                                    formTitle: 'edit patient',
+                                    formTitle: 'edit info',
                                     disableASN: true,
                                     formPath: editPatient,
                                 })

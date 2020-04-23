@@ -293,46 +293,27 @@ const patientTableColumn = [
     {
         Header: "Name",
         accessor: "name",
-        width: 150
+        width: 250
     },
     {
-        Header: "PATIENT_GENDER",
-        accessor: "object_type",
-        width: 70,
-    },
-    {
-        Header: "patient Number",
+        Header: "ID",
         accessor: "asset_control_number",
-        width: 200,
+        width: 250,
     },
     {
-        Header: "auth Area",
+        Header: "area",
         accessor: "area_name.label",
-        width: 150,
-    },
-    {
-        Header: "room",
-        accessor: "room",
-        width: 100,
-    },
-    {
-        Header: "attending Physician",
-        accessor: "physician_name",
-        width: 100,
+        width: 200,
     },
     {
         Header: "Mac Address",
         accessor: "mac_address",
-        width: 200,
-    },
-    {
-        Header: "Monitor Type",
-        accessor: "monitor_type",
         width: 250,
     },
     {
         Header: "registered timestamp",
-        accessor: "registered_timestamp"
+        accessor: "registered_timestamp",
+        width: 300,
     }
 ]
 
@@ -348,7 +329,7 @@ const importTableColumn = [
         width: 200,
     },
     {
-        Header: "Asset Control Number",
+        Header: "ID",
         accessor: "asset_control_number",
         width: 200,
     },

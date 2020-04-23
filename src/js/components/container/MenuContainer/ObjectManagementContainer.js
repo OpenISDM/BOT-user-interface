@@ -27,7 +27,7 @@ class ObjectManagementContainer extends React.Component{
     
     static contextType = AppContext
 
-    defaultActiveKey = "devices_table"
+    defaultActiveKey = "patients_table"
     
     render(){
 
@@ -44,26 +44,10 @@ class ObjectManagementContainer extends React.Component{
                 >
                     <BOTNav>
                         <Nav.Item>
-                            <BOTNavLink eventKey="devices_table">
-                                {locale.texts.DEVICE_FORM}
-                            </BOTNavLink>
-                        </Nav.Item>
-                        <Nav.Item>
                             <BOTNavLink eventKey="patients_table">
-                                {locale.texts.PATIENT_FORM}
+                                {locale.texts.TAGS}
                             </BOTNavLink>
                         </Nav.Item>
-                        <AccessControl
-                            permission={"user:importTable"}
-                            renderNoAccess={() => null}
-                            platform={['browser']}
-                        >
-                            <Nav.Item>
-                                <BOTNavLink eventKey="import_devices">
-                                    {locale.texts.IMPORT_DEVICES_DATA}
-                                </BOTNavLink>
-                            </Nav.Item>
-                        </AccessControl>
                         <AccessControl
                             permission={"user:importTable"}
                             renderNoAccess={() => null}
@@ -79,23 +63,9 @@ class ObjectManagementContainer extends React.Component{
                     <Tab.Content
                         className="my-3"
                     >
-                        <Tab.Pane eventKey="devices_table"> 
-                            <ObjectTable/> 
-                        </Tab.Pane>
-
                         <Tab.Pane eventKey="patients_table">
                             <PatientTable/>
                         </Tab.Pane>
-                        
-                        <AccessControl
-                            permission={"user:importTable"}
-                            renderNoAccess={() => null}
-                            platform={['browser']}
-                        >
-                            <Tab.Pane eventKey="import_devices">
-                                <ImportObjectTable />
-                            </Tab.Pane>
-                        </AccessControl>
                         <AccessControl
                             permission={"user:importTable"}
                             renderNoAccess={() => null}
