@@ -537,12 +537,6 @@ p {
     text-transform: initial;
 }
 
-/** .search result list group style sheet*/ 
-.searchResultListGroup {
-    max-height: 42vh;
-    overflow:  hidden scroll; 
-}
-
 /** scroll bar customize */
 /** .search option custom scroll bar style */
 .searchOption::-webkit-scrollbar {

@@ -9,6 +9,20 @@ import AccessControl from '../../presentational/AccessControl';
 import SearchResultListGroup from '../../presentational/SearchResultListGroup'
 import LocaleContext from '../../../context/LocaleContext';
 
+const style = {
+    noResultDiv: {
+        color: 'grey',
+        fontSize: '1rem',
+    },
+    titleText: {
+        color: 'rgb(80, 80, 80, 0.9)',
+    }, 
+    list: {
+        maxHeight: '75vh',
+        overflow:  'hidden scroll'
+    }
+}
+
 const BrowserSearchResultList = ({
     searchResult,
     title,
@@ -19,16 +33,6 @@ const BrowserSearchResultList = ({
 }) => {
 
     let locale = React.useContext(LocaleContext);
-
-    const style = {
-        noResultDiv: {
-            color: 'grey',
-            fontSize: '1rem',
-        },
-        titleText: {
-            color: 'rgb(80, 80, 80, 0.9)',
-        }, 
-    }
 
     return (
         <Fragment>
@@ -43,7 +47,10 @@ const BrowserSearchResultList = ({
                             <div className='searchResultForDestop'>{locale.texts.NO_RESULT}</div>
                         </Col> 
                     :   
-                        <Col className="searchResultListGroup d-flex justify-content-center">
+                        <Col 
+                            className="d-flex justify-content-center"
+                            style={style.list}
+                        >
                             <ScrollArea 
                                 smoothScrolling={true}
                                 horizontal={false}

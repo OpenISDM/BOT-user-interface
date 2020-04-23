@@ -74,7 +74,12 @@ const BrowserMainContainer = ({
                 className='d-flex w-100 justify-content-around mx-0' 
                 style={style.container}
             >
-                <Col id='searchPanel' xs={12} sm={5} md={3} lg={4} xl={4} className="w-100 px-2" style={style.searchPanel}>
+                <Col 
+                    id='searchPanel' 
+                    // xs={12} sm={5} md={3} lg={6} xl={6} 
+                    className="w-100 px-2" 
+                    style={style.searchPanel}
+                >
                     <SearchContainer 
                         hasSearchKey={hasSearchKey}
                         clearSearchResult={clearSearchResult}
