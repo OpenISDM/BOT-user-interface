@@ -42,7 +42,6 @@ const getUserList = `${protocol}://${dataSrcIP}/test/getUserList`
 const getRoleNameList = `${protocol}://${dataSrcIP}/test/getRoleNameList`
 const deleteUser = `${protocol}://${dataSrcIP}/test/deleteUser`
 const setUserInfo = `${protocol}://${dataSrcIP}/test/setUserInfo`
-const getMainSecondArea = `${protocol}://${dataSrcIP}/data/getMainSecondArea`
 const getAreaTable = `${protocol}://${dataSrcIP}/data/getAreaTable`
 const getGeofenceConfig = `${protocol}://${dataSrcIP}/data/getGeofenceConfig`
 const setGeofenceConfig = `${protocol}://${dataSrcIP}/data/setGeofenceConfig`
@@ -68,6 +67,8 @@ const modifyRolesPermission= `${protocol}://${dataSrcIP}/data/modifyRolesPermiss
 const getLocationHistory = `${protocol}://${dataSrcIP}/data/getLocationHistory`
 const setUserSecondaryArea = `${protocol}://${dataSrcIP}/data/setUserSecondaryArea`
 const addPatientRecord = `${protocol}://${dataSrcIP}/data/addPatientRecord`
+const exportCSV = `${protocol}://${dataSrcIP}/exportCSV`
+
 
 const pdfUrl = function (path) {
     return `${protocol}://${dataSrcIP}/${path}`
@@ -120,7 +121,6 @@ module.exports = {
     getRoleNameList,
     deleteUser,
     setUserInfo,
-    getMainSecondArea,
     getAreaTable,
     getGeofenceConfig,
     setGeofenceConfig,
@@ -142,5 +142,6 @@ module.exports = {
     modifyRolesPermission,
     getLocationHistory,
     setUserSecondaryArea,
-    addPatientRecord
+    addPatientRecord,
+    exportCSV
 };

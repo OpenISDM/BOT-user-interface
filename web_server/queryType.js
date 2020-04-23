@@ -1070,34 +1070,6 @@ const validateUsername = (username) => {
 	return query
 }
 
-
-const getMainSecondArea = (username) => {
-	const query = `
-		SELECT
-
-			(
-				SELECT user_table.main_area
-				FROM user_table
-				WHERE user_table.name='${username}'
-			) as main_area,
-
-			array (
-				SELECT area_id
-				FROM user_area
-	     		WHERE user_area.user_id = (
-					SELECT id 
-					FROM user_table 
-					WHERE name='${username}'
-				)
-
-			) as second_area
-
-		FROM user_table 
-
-	`
-	return query
-}
-
 const getUserList = () => {
 	const query = `
 		SELECT
@@ -1106,7 +1078,10 @@ const getUserList = () => {
 			user_table.name, 
 			user_table.registered_timestamp,
 			user_table.last_visit_timestamp,
-			user_table.main_area,
+			JSON_BUILD_OBJECT(
+				'id', user_table.main_area,
+				'value', area_table.name
+			) AS main_area,
 			area_table.name as area_name,
 			ARRAY_AGG(roles.name) AS role_type,
 			COALESCE(areas.area_ids, ARRAY[]::JSONB[]) as area_ids		
@@ -2113,7 +2088,6 @@ module.exports = {
 	getRoleNameList,
 	deleteUser,
 	setUserInfo,
-	getMainSecondArea,
 	getEditObjectRecord,
 	deleteEditObjectRecord,
 	deleteShiftChangeRecord,

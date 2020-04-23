@@ -37,37 +37,18 @@ const style = {
 
 
 const lbeaconTableColumn = [
-
-    // {
-    //     Header: "status",
-    //     accessor: "health_status",
-    //     width: 60,
-    //     style: style.column,
-    //     Cell: props => props.value 
-    //         ? <i className="fas fa-check-circle text-center" style={style.icon.check}></i>
-    //         : <i className="fas fa-times-circle" style={style.icon.times}></i>
-    // },
     {
         Header: "health status",
         accessor: "health_status",
-        width: 70,
+        width: 100,
         style: style.textRight,
         Cell: props => config.healthStatusMap[props.value] ? config.healthStatusMap[props.value] : props.value
     },
     {
         Header: "product_version",
         accessor: "product_version",
-        width: 130,
+        width: 150,
         Cell: props => config.productVersionMap[props.value] ?  config.productVersionMap[props.value] : props.value
-    },
-    {
-        Header: "danger area",
-        accessor: "danger_area",
-        width: 100,
-        style: style.column,
-        Cell: props => props.value 
-            ? <i className="fas fa-circle" style={style.icon.circle}></i>
-            : null
     },
     {
         Header: "UUID",
@@ -80,11 +61,6 @@ const lbeaconTableColumn = [
         width: 130
     },
     {
-        Header: "room",
-        accessor: "room",
-        width: 60,
-    },
-    {
         Header: "IP Address",
         accessor: "ip_address",
         width: 150
@@ -95,35 +71,22 @@ const lbeaconTableColumn = [
         width: 180
     },
     {
-        Header: "Last Report Timestamp",
+        Header: "last reported timestamp",
         accessor: "last_report_timestamp",
-        width: 200,
+        width: 250,
     },
     {
         Header: "api version",
         accessor: 'api_version',
     },
-    {
-        Header: "server time offset",
-        accessor: "server_time_offset",
-    },
 ]
 
 const gatewayTableColumn = [
-    // {
-    //     Header: "Status",
-    //     accessor: "health_status",
-    //     width: 60,
-    //     style: style.column,
-    //     Cell: props => !props.value 
-    //         ? <i className="fas fa-check-circle text-center" style={style.icon.check}></i> 
-    //         : <i className="fas fa-times-circle" style={style.icon.times}></i>
-    // },
     {
         Header: "health status",
         accessor: "health_status",
         style: style.textRight,
-        width: 120,
+        width: 100,
         Cell: props => config.healthStatusMap[props.value] ? config.healthStatusMap[props.value] : props.value
     },
     {
@@ -423,18 +386,13 @@ const userInfoTableColumn = [
         width: 150,
     },
     {
-        Header: "user id",
-        accessor: 'id',
-        width: 50,
-    },
-    {
         Header: "Roles",
         accessor: "roles",
-        width: 150,
+        width: 200,
     },
     {
         Header: "Main Area",
-        accessor: "main_area",
+        accessor: "main_area.label",
         width: 150,
     },
     {
@@ -443,7 +401,7 @@ const userInfoTableColumn = [
         width: 200,
     },
     {
-        Header: "last visit timestamp",
+        Header: "last visited timestamp",
         accessor: "last_visit_timestamp",
         width: 250
     },

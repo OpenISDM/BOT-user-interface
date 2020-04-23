@@ -394,7 +394,7 @@ const editPatient = (request, response) => {
     } = formOption
     pool.query(queryType.editPatient(formOption))
         .then(res => {
-            console.log("edit patient success");
+            console.log("edit register succeed");
             if (process.env.RELOAD_GEO_CONFIG_PATH) {
                 exec(process.env.RELOAD_GEO_CONFIG_PATH, `-p 9999 -c cmd_reload_geo_fence_setting -r geofence_object -f area_one -a ${area_id}`.split(' '), function(err, data){
                     if(err){
@@ -411,7 +411,7 @@ const editPatient = (request, response) => {
             }
         })
         .catch(err => {
-            console.log(`edit patient fails ${err}`)
+            console.log(`edit register failed ${err}`)
         })
 }
 
@@ -635,21 +635,6 @@ const deleteUser = (request, response) => {
         .catch(err => {
             console.log(`delete user failer ${err}`)
         })  
-}
-
-const getMainSecondArea = (request, response) => { 
-    var {
-        username
-    } = request.body
-
-    pool.query(queryType.getMainSecondArea(username))
-        .then(res => {
-            console.log(`get Main Second Area success`)
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`get Main Second Area ${err}`)
-        })
 }
 
 const setUserInfo = (request, response) => { 
@@ -1568,7 +1553,6 @@ module.exports = {
     modifyUserInfo,
     validateUsername,
     setUserInfo,
-    getMainSecondArea,
     setMonitorConfig,
     setGeofenceConfig,
     checkoutViolation,

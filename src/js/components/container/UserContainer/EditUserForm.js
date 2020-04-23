@@ -18,7 +18,9 @@ import Checkbox from '../../presentational/Checkbox'
 import FormikFormGroup from '../../presentational/FormikFormGroup'
 import styleConfig from '../../../config/styleConfig';
 import LocaleContext from '../../../context/LocaleContext';
-import messageGenerator from '../../../service/messageGenerator'
+import messageGenerator from '../../../service/messageGenerator';
+
+
 const EditUserForm = ({
     show,
     title,
@@ -40,23 +42,15 @@ const EditUserForm = ({
         };
     })
 
-    const areaDefault = selectedUser 
-        ?   areaOptions.reduce((areaDefault, option) => {
-                if (option.id == selectedUser.main_area) {
-                    return option
-                }
-                return areaDefault
-            }, {})
-        :   {}
     return (
         <Modal 
             show={show} 
             size="sm" 
             onHide={handleClose}
-            className='text-capitalize'
         >
             <Modal.Header 
                 closeButton 
+                className='text-capitalize'
             >
                 {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
             </Modal.Header >
@@ -67,7 +61,7 @@ const EditUserForm = ({
                         name: selectedUser ? selectedUser.name : '',
                         password: '',
                         roles: selectedUser ? selectedUser.role_type : config.defaultRole,
-                        area: selectedUser ? areaDefault : '',
+                        area: selectedUser ? selectedUser.main_area : '',
                     }}
 
                     validationSchema = {
@@ -93,13 +87,12 @@ const EditUserForm = ({
                         })
                     }
 
-                    onSubmit={(values, { setStatus, setSubmitting }) => {
+                    onSubmit={values => {
                         
                         let callback = () => messageGenerator.setSuccessMessage(
-                                            'save success'
-                                        )  
-                        handleSubmit(values)
-                        callback()
+                            'save success'
+                        )  
+                        handleSubmit(values, callback)
                     }}
 
                     render={({ values, errors, status, touched, isSubmitting, setFieldValue }) => (

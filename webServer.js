@@ -118,8 +118,6 @@ app.post('/test/deleteUser', db.deleteUser)
 
 app.post('/test/setUserInfo', db.setUserInfo)
 
-app.post('/data/getMainSecondArea', db.getMainSecondArea)
-
 app.post('/test/getEditObjectRecord', db.getEditObjectRecord)
 
 app.post('/test/deleteEditObjectRecord', db.deleteEditObjectRecord)
