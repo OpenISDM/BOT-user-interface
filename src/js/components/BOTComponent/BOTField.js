@@ -15,7 +15,7 @@ const BOTField = ({
     className,
     boxWidth
 }) => {
-    return (
+    return ( 
         <div
             className={className}
             style={{

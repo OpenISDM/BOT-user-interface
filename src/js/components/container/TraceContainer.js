@@ -1,19 +1,14 @@
 import React, { Fragment } from 'react';
+import { CSVLink, CSVDownload } from 'react-csv'
 import dataSrc from "../../dataSrc"
 import axios from 'axios'; 
 import 'react-table/react-table.css'; 
 import { 
     Formik,
-    Field,
-
 } from 'formik';
 import * as Yup from 'yup';
 import { 
-    Button, 
-    Row,
-    Col,
     Nav,
-    Tab
 } from 'react-bootstrap';
 import styleConfig from '../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css';
@@ -35,14 +30,13 @@ import Loader from '../presentational/Loader'
 import retrieveDataHelper from '../../service/retrieveDataHelper';
 import Select, {components} from 'react-select'
 import {
-    FormFieldName,
     PageTitle
 } from '../BOTComponent/styleComponent';
-import BOTFormikField from '../presentational/BOTFormikField';
 import BOTValueField from '../BOTComponent/BOTValueField';
 import IconButton from '../BOTComponent/IconButton';
 import BOTField from '../BOTComponent/BOTField';
 import styleSheet from '../../config/styleSheet';
+import ExportModal from '../presentational/ExportModal';
 
 class TraceContainer extends React.Component{
 
@@ -53,6 +47,7 @@ class TraceContainer extends React.Component{
     state = {
         columns:[], 
         data:[],
+        showModal: false,
         additionalData: null,
         options: {
             name: [],
@@ -382,26 +377,54 @@ class TraceContainer extends React.Component{
         }
     }
 
-    onNavClick = (e) => {
-        let {
-            setFieldValue,
-            setErrors,
-            setTouched,
-            setStatus
-        } = this.formikRef.current
-        let mode = e.target.getAttribute('data-rb-event-key')
-        setFieldValue('key', null)
-        setFieldValue('mode', mode)
-        setFieldValue('startTime', "")
-        setFieldValue('endTime', "")
-        setErrors({})
-        setTouched({})
-        setStatus(this.statusMap.WAIT_FOR_SEARCH)
-        this.setState({
-            data: [],
-            columns: [],
-            additionalData: null
-        })
+    handleClick = (e) => {
+        let { name } = e.target
+        switch(name) {
+            case 'export':
+                // this.setState({
+                //     showModal: true
+                // })
+                axios.post(dataSrc.exportCSV, {
+                    data: {
+                        header: this.state.columns.map(item => {
+                            return {
+                                id: item.accessor,
+                                title: item.accessor
+                            }
+                        }),
+                        data: this.state.data
+                    }
+                })
+                .then(res => {
+                    console.log(res)
+                    var link = document.createElement('a');
+                    link.href = 'http://localhost:8080//Users/janelab/Desktop/out.csv'
+                    link.download = "";
+                    link.click();
+                })
+                break;
+            case 'nav':
+                let {
+                    setFieldValue,
+                    setErrors,
+                    setTouched,
+                    setStatus
+                } = this.formikRef.current
+                let mode = e.target.getAttribute('data-rb-event-key')
+                setFieldValue('key', null)
+                setFieldValue('mode', mode)
+                setFieldValue('startTime', "")
+                setFieldValue('endTime', "")
+                setErrors({})
+                setTouched({})
+                setStatus(this.statusMap.WAIT_FOR_SEARCH)
+                this.setState({
+                    data: [],
+                    columns: [],
+                    additionalData: null
+                })
+                break;
+        }
     }
  
     render(){
@@ -512,7 +535,8 @@ class TraceContainer extends React.Component{
                                             <BOTNavLink 
                                                 eventKey={nav.mode}
                                                 active={values.mode == nav.mode}                               
-                                                onClick={this.onNavClick}
+                                                onClick={this.handleClick}
+                                                name='nav'
                                             >
                                                 {locale.texts[nav.name.toUpperCase().replace(/ /g, '_')]}
                                             </BOTNavLink>
@@ -617,9 +641,22 @@ class TraceContainer extends React.Component{
                                     </div>
                                     <IconButton
                                         iconName="fas fa-download"
+                                        name="export"
+                                        onClick={this.handleClick}
                                     >
                                         {locale.texts.EXPORT}
                                     </IconButton>
+                                    {/* <CSVDownload
+                                        data={ [
+                                            { details: { firstName: 'Ahmed', lastName: 'Tomi' }, job: 'manager'},
+                                            { details: { firstName: 'John', lastName: 'Jones' }, job: 'developer'},
+                                          ]}
+                                        filename={"my-file.csv"}
+                                        className="btn btn-primary"
+                                        target="/desktop"
+                                    >
+                                        Download me
+                                    </CSVDownload> */}
                                 </div>
                             )}
                             {status == this.statusMap.LOADING && <Loader />}
@@ -641,6 +678,9 @@ class TraceContainer extends React.Component{
                             }         
                         </Fragment>
                     )}
+                />
+                <ExportModal
+                    show={this.state.showModal}
                 />
             </BOTContainer>
         )

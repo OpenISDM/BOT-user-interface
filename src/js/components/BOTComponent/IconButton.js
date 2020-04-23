@@ -5,11 +5,15 @@ import {
 
 const IconButton = ({
     iconName,
-    children
+    children,
+    name,
+    onClick
 }) => {
     return (
         <PrimaryButton
             variant="outline-primary"
+            name={name}
+            onClick={onClick}
         >
             <i className={`${iconName} mx-1`}></i>
             {children}
