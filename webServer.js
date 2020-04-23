@@ -12,6 +12,8 @@ const https = require('https');
 const session = require('express-session')
 // const csv = require('csv-parse')
 const csv =require('csvtojson')
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true,}));
@@ -173,6 +175,25 @@ app.post('/data/modifyPermission', db.modifyPermission)
 app.post('/data/modifyRolesPermission', db.modifyRolesPermission)
 
 app.post('/data/getLocationHistory', db.getLocationHistory)
+
+app.post('/exportCSV', (req, res) => {
+    let {
+        header,
+        data
+    } = req.body.data
+
+    const csvWriter = createCsvWriter({
+        path: '/Users/janelab/Desktop/out.csv',
+        header,
+    });
+      
+    csvWriter
+        .writeRecords(data)
+        .then((data)=> {
+            console.log('The CSV file was written successfully')
+            res.status(200).json(data)
+        });
+})
 
 app.get(`/${process.env.DEFAULT_FOLDER}/shift_record/:file`, (req, res) =>{
 	res.sendFile(path.join(`${process.env.LOCAL_FILE_PATH}`, `${process.env.DEFAULT_FOLDER}/shift_record`,req.params['file']));

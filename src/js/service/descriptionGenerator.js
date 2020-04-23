@@ -1,6 +1,4 @@
 import config from '../config'
-import AccessControl from '../components/presentational/AccessControl'
-import React from 'react'
 
 export const getDescription = (item, locale) => {
     var foundDeviceDescription = ``; 
@@ -45,9 +43,15 @@ export const getDescription = (item, locale) => {
         case '2':
 
             foundDeviceDescription += `
+
                 ${getName(item, locale)}
-                ${locale.texts.PHYSICIAN_NAME}: ${item.physician_name},
+
+                ${getID(item, locale)}
+
+                ${getAreaName(item, locale)}-
+
                 ${getPosition(item, locale)}
+
                 ${item.residence_time} 
 
             `    
@@ -143,12 +147,7 @@ export const getStatus = (item, locale) => {
 
 export const getPosition = (item, locale) => {
     return `
-        ${item.currentPosition 
-            ? locale.abbr == 'en' 
-                ? `${locale.texts.NEAR} ${item.location_description},` 
-                : `${locale.texts.NEAR}${item.location_description},` 
-            : `${locale.texts.NOT_AVAILABLE} `
-        }   
+        ${item.currentPosition && item.location_description}, 
     `
 }
 
@@ -163,5 +162,21 @@ export const getRSSI = (item, locale) => {
     return `
         ${locale.texts.RSSI}:
         ${item.rssi}
+    `
+}
+
+export const getAreaName = (item, locale) => {
+    return `
+        ${locale.texts.NEAR}${locale.texts[item.area.value]}
+    `
+}
+
+export const getID = (item, locale) => {
+    // return `
+    //     ${locale.texts.ID}:
+    //     ${config.ACNOmitsymbol}${item.asset_control_number.slice(-4)},
+    // `
+    return `
+        ${locale.texts.ID}: ${item.asset_control_number},
     `
 }
