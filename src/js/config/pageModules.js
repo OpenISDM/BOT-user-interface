@@ -21,7 +21,6 @@ export const navbarNavList = [
         alias: "home",
         path: "/",
     },
-
     {
         name: "object management",
         alias: "objectManagement",
@@ -58,18 +57,6 @@ export const userContainerModule = {
             href: '#UserProfile',
             component: (props) => <UserProfile />
         },
-        {
-            name: 'devices management',
-            path: 'devicesManagement',
-            href: '#DevicesManagement',
-            component: (props) => <MyDeviceManager />
-        },
-        {
-            name: 'patient management',
-            path: 'patientManagement',
-            href: '#PatientManagement',
-            component: (props) => <MyPatientManager />
-        },
     ],
 }
 
@@ -77,7 +64,7 @@ export const systemSettingModule = {
 
     title: "system setting",
 
-    defaultActiveKey: "lbeacon",
+    defaultActiveKey: "user_manager",
 
     tabList: [
         {
@@ -85,17 +72,6 @@ export const systemSettingModule = {
             permission: "route:bigScreen",
             component: (props) => <AdminManagementContainer {...props}/>,
             platform: ['browser', 'tablet'],
-        },
-        {
-            name: "transferred location management",
-            component: (props) => <TransferredLocationManagement {...props}/>,
-            platform: ['browser'],
-        },
-        {
-            name: "Role Permission Management",
-            permission: "rolePermissionManagement",
-            component: (props) => <RolePermissionManagement {...props}/>,
-            platform: ['browser']
         },
         {
             name: "lbeacon",
