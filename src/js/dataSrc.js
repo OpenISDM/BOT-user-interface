@@ -68,6 +68,7 @@ const getLocationHistory = `${protocol}://${dataSrcIP}/data/getLocationHistory`
 const setUserSecondaryArea = `${protocol}://${dataSrcIP}/data/setUserSecondaryArea`
 const addPatientRecord = `${protocol}://${dataSrcIP}/data/addPatientRecord`
 const exportCSV = `${protocol}://${dataSrcIP}/exportCSV`
+const exportPDF = `${protocol}://${dataSrcIP}/exportPDF`
 
 
 const pdfUrl = function (path) {
@@ -143,5 +144,6 @@ module.exports = {
     getLocationHistory,
     setUserSecondaryArea,
     addPatientRecord,
-    exportCSV
+    exportCSV,
+    exportPDF
 };

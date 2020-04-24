@@ -705,3 +705,8 @@ p {
 .font-color-black {
     color: black
 }
+
+.rw-widget>.rw-widget-container {
+    height: 3rem;
+    border-radius: 0px;
+}

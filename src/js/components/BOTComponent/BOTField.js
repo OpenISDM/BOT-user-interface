@@ -4,7 +4,7 @@ import {
     Field
 } from 'formik'
 
-const BOTField = ({
+const BOTField = ({ 
     name,
     iconName,
     error,

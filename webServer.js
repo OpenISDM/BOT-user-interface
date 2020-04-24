@@ -7,9 +7,11 @@ const httpsPort = process.env.HTTPS_PORT || 443;
 const db = require('./web_server/query')
 const path = require('path');
 const fs = require('fs')
-const http = require('http');;
+const http = require('http');
 const https = require('https');
-const session = require('express-session')
+const session = require('express-session');
+const pdf = require('html-pdf');
+
 // const csv = require('csv-parse')
 const csv =require('csvtojson')
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -177,38 +179,40 @@ app.post('/data/getLocationHistory', db.getLocationHistory)
 app.post('/exportCSV', (req, res) => {
     let {
         header,
-        data
-    } = req.body.data
+        data,
+        filePackage
+    } = req.body
 
+    let filePath = path.join(process.env.LOCAL_FILE_PATH, filePackage.path)
     const csvWriter = createCsvWriter({
-        path: '/Users/janelab/Desktop/out.csv',
+        path: filePath,
         header,
+
     });
       
     csvWriter
         .writeRecords(data)
         .then((data)=> {
-            console.log('The CSV file was written successfully')
+            console.log('the csv file was written successfully')
             res.status(200).json(data)
         });
 })
 
-app.get(`/${process.env.DEFAULT_FOLDER}/shift_record/:file`, (req, res) =>{
-	res.sendFile(path.join(`${process.env.LOCAL_FILE_PATH}`, `${process.env.DEFAULT_FOLDER}/shift_record`,req.params['file']));
+app.post('/exportPDF', (request, response) => {
+    const { 
+        pdfPackage, 
+    } = request.body
+    pdf.create(pdfPackage.pdf, pdfPackage.options).toFile(path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path), function(err, result) {
+        if (err) return console.log(`edit object package error ${err}`);
+    
+        console.log("pdf create succeed");
+        response.status(200).json(pdfPackage.path)
+    });
 })
 
-app.get(`/${process.env.DEFAULT_FOLDER}/search_result/:file`, (req, res) =>{
-	res.sendFile(path.join(__dirname, `${process.env.DEFAULT_FOLDER}/search_result`,req.params['file']));
+app.get(`/${process.env.DEFAULT_FOLDER}/:folder/:file`, (req, res) =>{
+	res.sendFile(path.join(`${process.env.LOCAL_FILE_PATH}`, `${process.env.DEFAULT_FOLDER}/${req.params.folder}`,req.params.file));
 })
-
-app.get(`/${process.env.DEFAULT_FOLDER}/edit_object_record/:file`, (req, res) =>{
-	res.sendFile(path.join(`${process.env.LOCAL_FILE_PATH}`, `${process.env.DEFAULT_FOLDER}/edit_object_record`,req.params['file']));
-})
-
-app.get(`/${process.env.DEFAULT_FOLDER}/patient_record/:file`, (req, res) =>{
-	res.sendFile(path.join(`${process.env.LOCAL_FILE_PATH}`, `${process.env.DEFAULT_FOLDER}/patient_record`,req.params['file']));
-})
-
 
 app.get('/download/com.beditech.IndoorNavigation.apk', (req, res) => {
     const file = `${__dirname}/download/com.beditech.IndoorNavigation.apk`;

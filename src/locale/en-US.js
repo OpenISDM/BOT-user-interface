@@ -15,6 +15,7 @@ const en =  {
     ABOUT: "about",
     TRACKING_HISTORY: "tracking history",
     TRACKING_PATH: "tracking path",
+    TRACKING_RECORD: "tracking record",
     HISTORICAL_TRACKING_RECORD: "historical tracking record",
     REAL_TIME_TRACKING_RECORD: "real-time tracking record",
     HISTORICAL_RECORD: "historical record",
@@ -157,11 +158,13 @@ const en =  {
     USER:"User",
     ADD_PERMISSION:"add Permission",
     EXPORT: "export",
-
+    EXPORT_CSV: "export CSV",
+    EXPORT_PDF: "export PDF",
 
     /* field */
     NAME: "name",
     PATIENT_NAME: "patient name",
+    KEY: "key",
     TYPE: "type",
     ASSET_CONTROL_NUMBER: "Asset ID",
     MAC_ADDRESS: "mac address",
@@ -307,6 +310,7 @@ const en =  {
     PASSWORD_NOT_FIT:"password not fit",
     ALEAST_CHOOSE_ONE_UUID:"aleast choose one uuid",
     ENTER_THE_RSSI:"Enter the RSSI",
+    REQUIRED: "required",
 
     /** placeholder */
     PLEASE_ENTER_OR_SCAN_MAC_ADDRESS: "please enter or scan mac address",

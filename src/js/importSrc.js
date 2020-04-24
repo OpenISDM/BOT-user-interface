@@ -55,6 +55,9 @@ import "../../node_modules/@fortawesome/fontawesome-free/css/all.css"
 /** pretty check box */
 import "../../node_modules/pretty-checkbox/dist/pretty-checkbox.min.css"
 
+/** react-widget */
+import 'react-widgets/dist/css/react-widgets.css';
+
 /** ant design */
 // import "../../node_modules/antd/dist/antd.css"
 

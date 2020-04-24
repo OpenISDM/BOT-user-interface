@@ -612,6 +612,16 @@ const locationHistoryByUUIDColumns = [
         accessor: "mac_address",
         width: 180,
     },
+    {
+        Header: "area",
+        accessor: "area",
+        width: 180,
+    },
+    {
+        Header: "description",
+        accessor: "description",
+        width: 180,
+    },
 ]
 
 

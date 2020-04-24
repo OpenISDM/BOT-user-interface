@@ -1,5 +1,7 @@
 import React, { Fragment } from 'react';
 import { CSVLink, CSVDownload } from 'react-csv'
+import { DateTimePicker } from 'react-widgets';
+import momentLocalizer from 'react-widgets-moment';
 import dataSrc from "../../dataSrc"
 import axios from 'axios'; 
 import 'react-table/react-table.css'; 
@@ -37,6 +39,9 @@ import IconButton from '../BOTComponent/IconButton';
 import BOTField from '../BOTComponent/BOTField';
 import styleSheet from '../../config/styleSheet';
 import ExportModal from '../presentational/ExportModal';
+import config from '../../config';
+
+momentLocalizer()
 
 class TraceContainer extends React.Component{
 
@@ -133,11 +138,12 @@ class TraceContainer extends React.Component{
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr !== prevState.locale) {   
             let columns = _.cloneDeep(this.columns).map(field => {
-                field.Header = this.context.locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+                field.name = field.Header
+                field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
                 return field
-            })      
+            })
             this.setState({
                 locale: this.context.locale.abbr,
                 columns,
@@ -182,8 +188,7 @@ class TraceContainer extends React.Component{
             let uuid = res.data.rows.map(lbeacon => {
                 return {
                     value: lbeacon.uuid,
-                    label: lbeacon.uuid
-
+                    label: `${lbeacon.description}[${lbeacon.uuid}]`
                 }
             })
             this.setState({
@@ -222,6 +227,7 @@ class TraceContainer extends React.Component{
         }
 
         let columns = _.cloneDeep(this.columns).map(field => {
+            field.name = field.Header
             field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
             return field
         })
@@ -233,7 +239,6 @@ class TraceContainer extends React.Component{
             mode: fields.mode
         })
         .then(res => {
-
             /** Condition handler when no result */
             if (res.data.rowCount == 0) {
                 this.formikRef.current.setStatus(this.statusMap.NO_RESULT)
@@ -257,42 +262,37 @@ class TraceContainer extends React.Component{
                                 uuid: pt.uuid,
                                 startTime:  moment(pt.record_timestamp).format(timeValidatedFormat),
                                 description: pt.description,
-                                area: locale.texts[pt.area],
+                                mode: fields.mode,
+                                area: locale.texts[pt.area]
                             })
                             prevUUID = pt.uuid
                         }
                         data[data.length - 1].endTime = moment(pt.record_timestamp).locale(locale.abbr).format(timeValidatedFormat)
                         data[data.length - 1].residenceTime = moment(pt.record_timestamp).from(moment(data[data.length - 1].startTime), true)
                     })
-                    if (res.data.rowCount != 0) {
-                        additionalData = {
-                            name: res.data.rows[0].name,
-                            area: res.data.rows[0].area
-                        }
-                    }
                     break;
                 case "uuid":
                     data = res.data.rows.map((item, index) => {
                         item.id = index + 1
+                        item.mode = fields.mode
+                        item.area= locale.texts[item.area]
                         return item
                     })
-                    if (res.data.rowCount != 0) {
-                        additionalData = {
-                            description: res.data.rows[0].description,
-                            area: res.data.rows[0].area
-                        }  
-                    }
+                    // if (res.data.rowCount != 0) {
+                    //     additionalData = {
+                    //         description: res.data.rows[0].description,
+                    //         area: res.data.rows[0].area
+                    //     }  
+                    // }
                     break;
             }
-
             this.setState({
                 data,
                 columns,
                 additionalData,
-            })
+            }, this.formikRef.current.setStatus(this.statusMap.SUCCESS))
 
             /** Set formik status as 1. Dismiss loading page */
-            this.formikRef.current.setStatus(this.statusMap.SUCCESS)
 
         })
         .catch(err => {
@@ -303,8 +303,8 @@ class TraceContainer extends React.Component{
     getInitialValues = () => {
         if (this.props.location.state) {
             let { state } = this.props.location;
-            let now = moment().format('YYYY/MM/DD HH:mm:ss');
-            let lastday = moment().subtract(30, 'minutes').format('YYYY/MM/DD HH:mm:ss');
+            let now = moment().toDate();
+            let lastday = moment().subtract(30, 'minutes').toDate();
             return {
                 mode: state.mode,
                 key: state.key,
@@ -314,28 +314,33 @@ class TraceContainer extends React.Component{
         }
         return {
             mode: this.defaultActiveKey,
+            key: null,
         }
     }
 
     onRowClick = (state, rowInfo, column, instance) => {
         let {
             setFieldValue,
-        } = this.formikRef.current
-        let values = this.formikRef.current.state.values
+        } = this.formikRef.current;
+        let values = this.formikRef.current.state.values;
+        let startTime;
+        let endTime;
         return {
             onClick: (e) => { 
                 let key;
-                switch(values.mode) {
+                switch(rowInfo.original.mode) {
                     case 'mac':
                     case 'name':
                         key = {
                             value: rowInfo.original.uuid,
                             label: rowInfo.original.uuid,
-                        }
+                        };
+                        startTime = moment(rowInfo.original.startTime).toDate()
+                        endTime = moment(rowInfo.original.endTime).toDate()
                         setFieldValue('key', key)
                         setFieldValue('mode', 'uuid')
-                        setFieldValue('startTime', rowInfo.original.startTime)
-                        setFieldValue('endTime', rowInfo.original.endTime)
+                        setFieldValue('startTime', startTime)
+                        setFieldValue('endTime', endTime)
                         this.getLocationHistory({
                             ...values,
                             ...rowInfo.original,
@@ -343,28 +348,17 @@ class TraceContainer extends React.Component{
                             mode: 'uuid'
                         })
                         break;
-                    // case 'uuid':
-                    //     setFieldValue('key', rowInfo.original.mac_address)
-                    //     setFieldValue('mode', 'mac')
-                    //     setFieldValue('startTime', values.startTime)
-                    //     setFieldValue('endTime', values.endTime)
-                    //     setSubmitting(true)
-                    //     this.getLocationHistory({
-                    //         ...values,
-                    //         ...rowInfo.original,
-                    //         key: rowInfo.original.mac_address,
-                    //         mode: 'mac'
-                    //     }, setSubmitting)
-                    //     break;
                     case 'uuid':
                         key = {
                             value: rowInfo.original.name,
                             label: rowInfo.original.name,
                         }
+                        startTime = moment(values.startTime).toDate()
+                        endTime = moment(values.endTime).toDate()
                         setFieldValue('key', key)
                         setFieldValue('mode', 'name')
-                        setFieldValue('startTime', values.startTime)
-                        setFieldValue('endTime', values.endTime)
+                        setFieldValue('startTime', startTime)
+                        setFieldValue('endTime', endTime)
                         this.getLocationHistory({
                             ...values,
                             ...rowInfo.original,
@@ -377,32 +371,71 @@ class TraceContainer extends React.Component{
         }
     }
 
+
     handleClick = (e) => {
         let { name } = e.target
+        let {
+            auth,
+            locale
+        } = this.context
+        let values = this.formikRef.current.state.values;
         switch(name) {
-            case 'export':
-                // this.setState({
-                //     showModal: true
-                // })
-                axios.post(dataSrc.exportCSV, {
-                    data: {
-                        header: this.state.columns.map(item => {
-                            return {
-                                id: item.accessor,
-                                title: item.accessor
-                            }
-                        }),
-                        data: this.state.data
+            case 'exportCSV':
+
+                let filePackage = config.pdfFormat.getPath(
+                    'trackingRecord',
+                )
+                let header = this.state.columns.map(column => {
+                    return {
+                        id: column.accessor,
+                        title: column.name
                     }
                 })
+                axios.post(dataSrc.exportCSV, {
+                    data: this.state.data,
+                    header,          
+                    filePackage
+                })
                 .then(res => {
-                    console.log(res)
                     var link = document.createElement('a');
-                    link.href = 'http://localhost:8080//Users/janelab/Desktop/out.csv'
+                    link.href = dataSrc.pdfUrl(filePackage.path)
                     link.download = "";
                     link.click();
                 })
+                .catch(err => {
+                    console.log(`export CSV failed ${err}`)
+                })
                 break;
+            case 'exportPDF':
+                let pdfPackage = config.getPdfPackage(
+                    'trackingRecord', 
+                    auth.user, 
+                    {
+                        columns: this.state.columns,
+                        data: this.state.data
+                    },
+                    locale,
+                    null,
+                    {
+                        extension: 'pdf',
+                        key: values.key.label,
+                        startTime: moment(values.startTime).format('lll'),
+                        endTime: moment(values.endTime).format('lll'),
+                        type: values.mode
+
+                    }
+                )  
+
+                axios.post(dataSrc.exportPDF, {
+                    userInfo: auth.user,
+                    pdfPackage,
+                }).then(res => {
+                    window.open(dataSrc.pdfUrl(pdfPackage.path))
+                }).catch(err => {
+                    console.log(`export PDF failed ${err}`)
+                })
+                break;
+
             case 'nav':
                 let {
                     setFieldValue,
@@ -413,16 +446,11 @@ class TraceContainer extends React.Component{
                 let mode = e.target.getAttribute('data-rb-event-key')
                 setFieldValue('key', null)
                 setFieldValue('mode', mode)
-                setFieldValue('startTime', "")
-                setFieldValue('endTime', "")
+                setFieldValue('startTime', null)
+                setFieldValue('endTime', null)
                 setErrors({})
                 setTouched({})
                 setStatus(this.statusMap.WAIT_FOR_SEARCH)
-                this.setState({
-                    data: [],
-                    columns: [],
-                    additionalData: null
-                })
                 break;
         }
     }
@@ -443,9 +471,29 @@ class TraceContainer extends React.Component{
         return (
             <BOTContainer>
                 <BOTContainer></BOTContainer>
-                <PageTitle>                                            
-                    {locale.texts.TRACKING_HISTORY}
-                </PageTitle>
+                <div className='d-flex justify-content-between'>
+                    <PageTitle>                                            
+                        {locale.texts.TRACKING_HISTORY}
+                    </PageTitle>
+                    {this.state.data.length !== 0 &&
+                        <div>
+                            <IconButton
+                                iconName="fas fa-download"
+                                name="exportPDF"
+                                onClick={this.handleClick}
+                            >
+                                {locale.texts.EXPORT_PDF}
+                            </IconButton>
+                            <IconButton
+                                iconName="fas fa-download"
+                                name="exportCSV"
+                                onClick={this.handleClick}
+                            >
+                                {locale.texts.EXPORT_CSV}
+                            </IconButton>
+                        </div>
+                    }
+                </div>
                 <Formik     
                     initialValues={initialValues}
 
@@ -461,31 +509,32 @@ class TraceContainer extends React.Component{
                         Yup.object().shape({
 
                             key: Yup.object()
-                                .required(locale.texts.MAC_ADDRESS_IS_REQUIRED)
-                                .when('mode', {
-                                    is: 'mac',
-                                    then: Yup.string().test(
-                                        'mode', 
-                                        locale.texts.MAC_ADDRESS_FORMAT_IS_NOT_CORRECT,
-                                        value => {  
-                                            if (value == undefined) return false
-                                            let pattern = new RegExp("^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$");
-                                            return value.match(pattern)
-                                        }
-                                    )
-                                })
-                                .when('mode', {
-                                    is: 'uuid',
-                                    then: Yup.object().test(
-                                        'uuid', 
-                                        locale.texts.LBEACON_FORMAT_IS_NOT_CORRECT,
-                                        value => {  
-                                            if (value == undefined) return false
-                                            let pattern = new RegExp("^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$");
-                                            return value.value.match(pattern)
-                                        }
-                                    )
-                                }),
+                                .nullable()
+                                .required(locale.texts.REQUIRED),
+                                // .when('mode', {
+                                //     is: 'mac',
+                                //     then: Yup.string().test(
+                                //         'mode', 
+                                //         locale.texts.MAC_ADDRESS_FORMAT_IS_NOT_CORRECT,
+                                //         value => {  
+                                //             if (value == undefined) return false
+                                //             let pattern = new RegExp("^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$");
+                                //             return value.match(pattern)
+                                //         }
+                                //     )
+                                // })
+                                // .when('mode', {
+                                //     is: 'uuid',
+                                //     then: Yup.object().test(
+                                //         'uuid', 
+                                //         locale.texts.LBEACON_FORMAT_IS_NOT_CORRECT,
+                                //         value => {  
+                                //             if (value == undefined) return false
+                                //             let pattern = new RegExp("^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$");
+                                //             return value.value.match(pattern)
+                                //         }
+                                //     )
+                                // }),
 
                             startTime: Yup.string()
                                 .required(locale.texts.START_TIME_IS_REQUIRED)
@@ -493,17 +542,19 @@ class TraceContainer extends React.Component{
                                     'startTime', 
                                     locale.texts.TIME_FORMAT_IS_INCORRECT,
                                     value => {  
-                                        return moment(value, timeValidatedFormat, true).isValid()
+                                        let test = moment(value).format(timeValidatedFormat)
+                                        return moment(test, timeValidatedFormat, true).isValid()
                                     }
                                 ),
 
-                            endTime: Yup.string('hi')
+                            endTime: Yup.string()
                                 .required(locale.texts.END_TIME_IS_REQUIRED)
                                 .test(
                                     'endTime', 
                                     locale.texts.TIME_FORMAT_IS_INCORRECT,
                                     value => {  
-                                        return moment(value, timeValidatedFormat, true).isValid()
+                                        let test = moment(value).format(timeValidatedFormat)
+                                        return moment(test, timeValidatedFormat, true).isValid()
                                     }
                                 ),
                     })}
@@ -566,20 +617,24 @@ class TraceContainer extends React.Component{
                                             styles={styleConfig.reactSelectSearch}
                                             components={styleConfig.reactSelectSearchComponent}                                    
                                         />
-                                        <div 
-                                            className="text-right"
-                                            style={{
-                                                fontSize: '0.6rem',
-                                                color: styleSheet.grey,
-                                                position: 'absolute',
-                                                right: 0,
-                                                bottom: -18,
-                                            }}
-                                        >
-                                            {this.modeInputField[values.mode].example}
-                                        </div>
+                                        {errors.key && (
+                                            <div 
+                                                className="text-left"
+                                                style={{
+                                                    fontSize: '0.6rem',
+                                                    color: styleSheet.warning,
+                                                    position: 'absolute',
+                                                    left: 0,
+                                                    bottom: -18,
+                                                }}
+                                            >
+                                                {errors.key}
+                                            </div>
+                                        )}
                                     </div>
-                                    <BOTField
+                                    {/* {console.log(values)}
+                                    {console.log(errors)} */}
+                                    {/* <BOTField
                                         name="startTime"
                                         iconName="far fa-clock"
                                         error={errors.startTime}
@@ -600,6 +655,25 @@ class TraceContainer extends React.Component{
                                         example={timeTypeExample}
                                         className="mx-2"
                                         boxWidth={350}
+                                    /> */}
+                                    <DateTimePicker 
+                                        name="startTime"
+                                        className="mx-2"
+                                        value={values.startTime}
+                                        onChange={(value) => {
+                                            setFieldValue('startTime', moment(value).toDate())
+                                        }}
+                                        placeholder={locale.texts.START_TIME}
+                                    />
+                                    <DateTimePicker 
+                                        name="endTime"
+                                        className="mx-2"
+                                        value={values.endTime}
+                                        onChange={(value) => {
+                                            console.log(123)
+                                            setFieldValue('endTime', moment(value).toDate())
+                                        }}
+                                        placeholder={locale.texts.START_TIME}
                                     />
                                   
                                 </div>
@@ -616,7 +690,7 @@ class TraceContainer extends React.Component{
                                     </PrimaryButton>
                                 </div>
                             </div>
-                            {this.state.data.length != 0 && <hr/>}
+                            {/* {this.state.data.length != 0 && <hr/>}
                             {additionalData && (
                                 <div className="d-flex justify-content-between my-3">
                                     <div className="d-flex justify-content-start">
@@ -646,19 +720,8 @@ class TraceContainer extends React.Component{
                                     >
                                         {locale.texts.EXPORT}
                                     </IconButton>
-                                    {/* <CSVDownload
-                                        data={ [
-                                            { details: { firstName: 'Ahmed', lastName: 'Tomi' }, job: 'manager'},
-                                            { details: { firstName: 'John', lastName: 'Jones' }, job: 'developer'},
-                                          ]}
-                                        filename={"my-file.csv"}
-                                        className="btn btn-primary"
-                                        target="/desktop"
-                                    >
-                                        Download me
-                                    </CSVDownload> */}
                                 </div>
-                            )}
+                            )} */}
                             {status == this.statusMap.LOADING && <Loader />}
                             <hr/>
                             {this.state.data.length != 0 ? 

@@ -15,6 +15,7 @@ const tw = {
     ABOUT: "關於",
     TRACKING_HISTORY: "追蹤紀錄",
     TRACKING_PATH: "追蹤路徑",
+    TRACKING_RECORD: "追蹤紀錄",
     HISTORICAL_TRACKING_RECORD: "歷史紀錄",
     REAL_TIME_TRACKING_RECORD: "即時紀錄",
     HISTORICAL_RECORD: "歷史紀錄",
@@ -159,10 +160,13 @@ const tw = {
     USER:"使用者",
     ADD_PERMISSION:"新增許可",
     EXPORT: "匯出",
+    EXPORT_CSV: "匯出CSV",
+    EXPORT_PDF: "匯出PDF",
 
     /* field */
     NAME: "名稱",
     PATIENT_NAME: "病人姓名",
+    KEY: "關鍵字",
     TYPE: "類別",
     ASSET_CONTROL_NUMBER: "財產編號",
     MAC_ADDRESS: "mac address",
@@ -268,7 +272,7 @@ const tw = {
     CHECK_PASSWORD:"確認新密碼",
     LEVEL:"等級",
 
-    /** Error Message */
+    /** error message */
     GENDER_IS_REQUIRED: "請選擇性別",
     ROLE_IS_REQUIRED: "請選擇至少一個權限",
     NAME_IS_REQUIRED: "請填入名字",
@@ -309,6 +313,7 @@ const tw = {
     PASSWORD_NOT_FIT:"密碼需要相符",
     ALEAST_CHOOSE_ONE_UUID:"至少選擇一個UUID",
     ENTER_THE_RSSI:"請填入RSSI",
+    REQUIRED: "必填",
 
     /** placeholder */
     PLEASE_ENTER_OR_SCAN_MAC_ADDRESS: "請輸入或掃描mac address",

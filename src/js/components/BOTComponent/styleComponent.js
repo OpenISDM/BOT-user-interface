@@ -4,7 +4,8 @@ import Link from 'react-bootstrap/NavLink'
 import NavLink from 'react-bootstrap/NavLink'
 import Nav from 'react-bootstrap/Nav'
 import styleSheet from '../../config/styleSheet'
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import DataTimePicker from 'react-widgets/lib/DateTimePicker';
 
 export const EditedTime = styled.div`
     font-size: 0.8em;
@@ -123,4 +124,8 @@ export const PrimaryButton = styled(Button)`
 export const NoDataFoundDiv = styled.div`
     padding: 10px 20px;
     background: white;
+`
+
+export const BOTDataTimePicker = styled(DataTimePicker)`
+    height: 3rem;
 `

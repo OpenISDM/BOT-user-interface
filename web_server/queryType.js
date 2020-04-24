@@ -142,7 +142,7 @@ const getLocationHistory = (key, startTime, endTime, mode) => {
 					location_history_table.mac_address,
 					lbeacon_table.description,
 					object_table.name,
-					area_table.name as area
+					area_table.name AS area
 				FROM location_history_table
 
 				LEFT JOIN lbeacon_table 
@@ -170,7 +170,7 @@ const getLocationHistory = (key, startTime, endTime, mode) => {
 					location_history_table.mac_address,
 					lbeacon_table.description,
 					object_table.name,
-					area_table.name as area
+					area_table.name AS area
 				FROM location_history_table
 
 				LEFT JOIN lbeacon_table 
@@ -196,7 +196,7 @@ const getLocationHistory = (key, startTime, endTime, mode) => {
 					location_history_table.uuid,
 					location_history_table.mac_address,
 					lbeacon_table.description,
-					area_table.name as area,
+					area_table.name AS area,
 					object_table.name
 				FROM location_history_table
 
@@ -219,7 +219,8 @@ const getLocationHistory = (key, startTime, endTime, mode) => {
 					location_history_table.uuid,
 					object_table.name,
 					lbeacon_table.description,
-					area_table.name
+					area_table.name,
+					location_history_table.area_id
 
 				ORDER BY object_table.name ASC
 

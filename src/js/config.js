@@ -1,6 +1,7 @@
 import BOT_LOGO from "../img//logo/BOT_LOGO_RED.png";
 import moment from 'moment'
-import siteConfig from '../../site_module/siteConfig'
+import siteConfig from '../../site_module/siteConfig';
+import React from 'react'
 
 const config = {
 
@@ -155,11 +156,18 @@ const config = {
     searchResultFolderPath: "search_result",
 
     folderPath: {
+
         broken: `${process.env.DEFAULT_FOLDER}/edit_object_record`,
+
         transferred: `${process.env.DEFAULT_FOLDER}/edit_object_record`,
+
         shiftChange: `${process.env.DEFAULT_FOLDER}/shift_record`,
+
         searchResult: `${process.env.DEFAULT_FOLDER}/search_result`,
-        patientRecord: `${process.env.DEFAULT_FOLDER}/patient_record`
+
+        patientRecord: `${process.env.DEFAULT_FOLDER}/patient_record`,
+
+        trackingRecord: `${process.env.DEFAULT_FOLDER}/tracking_record`
     },
 
     shiftRecordFileNameTimeFormat: "MM_DD_YYYY",
@@ -231,10 +239,10 @@ const config = {
     /** Create pdf package, including header, body and the pdf path
      * options include shiftChange, searchResult, broken report, transffered report
      */
-    getPdfPackage: (option, user, data, locale, signature, shiftOption) => {
-        const header = config.pdfFormat.getHeader(user, locale, option, signature, shiftOption, data)
-        const body = config.pdfFormat.getBody[option](data, locale, user, location, signature)
-        const path = config.pdfFormat.getPath(option, user)
+    getPdfPackage: (option, user, data, locale, signature, additional) => {
+        const header = config.pdfFormat.getHeader(user, locale, option, signature, additional, data, )
+        const body = config.pdfFormat.getBody[option](data, locale, user, location, signature, additional)
+        const path = config.pdfFormat.getPath(option, additional).path
         const pdf = header + body
         
         return {
@@ -247,9 +255,9 @@ const config = {
     /** Pdf format config */
     pdfFormat: {
 
-        getHeader: (user, locale, option, signature, selectValue, data) => {
+        getHeader: (user, locale, option, signature, additional, data) => {
             let title = config.pdfFormat.getTitle(option, locale)
-            let subTitle = config.pdfFormat.getSubTitle[option](locale, user, signature, selectValue, data)
+            let subTitle = config.pdfFormat.getSubTitle[option](locale, user, signature, additional, data)
             return title + subTitle
         },
 
@@ -266,33 +274,40 @@ const config = {
             transferred: "DEVICE_TRANSFER_RECORD",
             shiftChange: "SHIFT_CHANGE_RECORD",
             searchResult: "SEARCH_RESULT",
-            patientRecord: "PATIENT_RECORD"
+            patientRecord: "PATIENT_RECORD",
+            trackingRecord: "TRACKING_RECORD",
         },
     
 
-        getPath: (option, user) =>{
-            let fileDir = config.folderPath[option]
-            let fileName = config.pdfFormat.getFileName[option](user, option)
-            let filePath = `${fileDir}/${fileName}`
-    
-            return filePath
+        getPath: (option, additional) =>{
+            let directory = config.folderPath[option]
+            let name = config.pdfFormat.getFileName[option](option, additional)
+            let path = `${directory}/${name}`
+            return {
+                directory,
+                name,
+                path
+            }
         },
     
         getFileName: {
-            broken: (user, option) => {
+            broken: (option) => {
                 return `${option}_report_${moment().format(config.pdfFileNameTimeFormat)}.pdf`
             },
-            transferred: (user, option) => {
+            transferred: (option) => {
                 return `${option}_report_${moment().format(config.pdfFileNameTimeFormat)}.pdf`
             },
-            shiftChange: (user) => {
-                return `${user.name}_${moment().format(config.pdfFileNameTimeFormat)}.pdf`
+            shiftChange: (option, additional) => {
+                return `${additional.name}_${moment().format(config.pdfFileNameTimeFormat)}.pdf`
             },
-            searchResult: (user, option) => {
+            searchResult: option => {
                 return `${option}_${moment().format(config.pdfFileNameTimeFormat)}.pdf`
             },
-            patientRecord: (user, option) => {
+            patientRecord: option => {
                 return `${option}_${moment().format(config.pdfFileNameTimeFormat)}.pdf`
+            },
+            trackingRecord: (option, additional) => {
+                return `${option}_${moment().format(config.pdfFileNameTimeFormat)}.${additional.extension}`
             }
             
         },
@@ -406,6 +421,18 @@ const config = {
 
                 return title + content
             },
+
+            trackingRecord: (data, locale, user, location, signature, additional) => {
+                let table;
+                switch(additional.type) {
+                    case 'name':
+                        table = config.pdfFormat.getBodyItem.getLocationHistoryByNameAsTable(data, locale)
+                        break;
+                    case 'uuid':
+                        table = config.pdfFormat.getBodyItem.getLocationHistoryByUUIDAsTable(data, locale)
+                }                
+                return table
+            },
         },
         getBodyItem: {
 
@@ -438,6 +465,91 @@ const config = {
                         </div>
                     `
                 }).join(" ")
+            },
+
+            getLocationHistoryByName: (data, locale) => {
+                return data.map((item, index) => {
+                    return `
+                        <div style="margin-bottom: 10px;" key=${index}>
+                            ${index + 1}. 
+                            &nbsp;
+                            ${item.area}, 
+                            ${locale.texts.LAST_FOUR_DIGITS_IN_ACN}: ${item.last_four_acn.slice(-4)}, 
+                            ${locale.texts.NEAR} ${item.location_description},
+                            ${item.residence_time}
+                        </div>
+                    `
+                }).join(" ")
+            },
+
+            getLocationHistoryByNameAsTable: (dataObject, locale) => {
+                let {
+                    columns, 
+                    data
+                } = dataObject
+
+                let headers = columns.map(field => {
+                    return `
+                        <th>
+                            ${field.Header}
+                        </th>
+                    `
+                }).join(" ")
+                return `
+                    <table 
+                        style="width:100%; font-size= 5px;"
+                    >
+                        ${headers}
+                        ${data.map((item, index) => {
+                            return `
+                                <tr
+                                    style="font-size= 10px;"
+                                >
+                                    <td>${item.area}</td>
+                                    <td>${item.description}</td>
+                                    <td>${item.startTime}</td>
+                                    <td>${item.endTime}</td>
+                                    <td>${item.residenceTime}</td>
+                                </tr>
+                            `
+                        }).join(' ')}
+                    </table>
+                `
+            },
+
+            getLocationHistoryByUUIDAsTable: (dataObject, locale) => {
+                let {
+                    columns, 
+                    data
+                } = dataObject
+
+                let headers = columns.map(field => {
+                    return `
+                        <th>
+                            ${field.Header}
+                        </th>
+                    `
+                }).join(" ")
+                return `
+                    <table 
+                        style="width:100%; font-size= 5px;"
+                    >
+                        ${headers}
+                        ${data.map((item, index) => {
+                            return `
+                                <tr
+                                    style="font-size= 10px;"
+                                >
+                                    <td>${index + 1}</td>
+                                    <td>${item.name}</td>
+                                    <td>${item.mac_address}</td>
+                                    <td>${item.area}</td>
+                                    <td>${item.description}</td>
+                                </tr>
+                            `
+                        }).join(' ')}
+                    </table>
+                `
             },
 
             getPatientContent: (data, locale) => {
@@ -578,7 +690,7 @@ const config = {
                 return timestamp + username
             },
 
-            patientRecord: (locale, user, name, selectValue, data) => {
+            patientRecord: (locale, user, name, additional, data) => {
                 let timestamp = config.pdfFormat.getTimeStamp(locale)
                 let patientName = config.pdfFormat.getSubTitleInfo.patientName(locale, data)
                 let providerName = config.pdfFormat.getSubTitleInfo.providerName(locale, data)
@@ -586,6 +698,21 @@ const config = {
                 return timestamp + patientName + patientID + providerName
             },
 
+            trackingRecord: (locale, user, name, additional, data) => {
+                let {
+                    key,
+                    startTime,
+                    endTime,
+                    mode,
+                } = additional
+
+                let timestamp = config.pdfFormat.getTimeStamp(locale)
+                key = config.pdfFormat.getSubTitleInfo.field(locale, 'KEY', key)
+                startTime = config.pdfFormat.getSubTitleInfo.field(locale, 'START_TIME', startTime)
+                endTime = config.pdfFormat.getSubTitleInfo.field(locale, 'END_TIME', endTime)
+
+                return timestamp + key + startTime + endTime
+            }
         },
     
         getSubTitleInfo: {
@@ -617,6 +744,20 @@ const config = {
                     </div>
                 `
             },
+            startTime: (locale, value) => {
+                return `
+                    <div style="text-transform: capitalize;">
+                        ${locale.texts.START_TIME}: ${value}
+                    </div>
+                `
+            },
+            field: (locale, key, value) => {
+                return `
+                    <div style="text-transform: capitalize;">
+                        ${locale.texts[key]}: ${value}
+                    </div>
+                `
+            }
         },
 
         /** The pdf option setting in html-pdf */

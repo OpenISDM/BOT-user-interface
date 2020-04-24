@@ -8,6 +8,7 @@ import TrackingHistoryContainer from "../components/container/menuContainer/Trac
 import MonitorSettingContainer from "../components/container/menuContainer/MonitorSettingContainer"
 import ReportContainer from "../components/container/menuContainer/ReportContainer"
 import TraceContainer from "../components/container/TraceContainer";
+import PDF from '../components/presentational/PDF'
 
 const routes = [
     {
@@ -32,7 +33,7 @@ const routes = [
     },
     {
         path: '/page/about',
-        component: About,
+        component: PDF,
         exact: true,
     },
     {

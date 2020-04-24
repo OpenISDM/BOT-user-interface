@@ -67,7 +67,7 @@ const styleConfig = {
             fontSize: '1rem',
             minHeight: '3rem',
             position: 'none',
-            width: '500px',
+            width: '550px',
             borderRadius: 0                                
         }),
 
