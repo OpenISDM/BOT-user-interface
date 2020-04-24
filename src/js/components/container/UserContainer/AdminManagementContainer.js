@@ -15,6 +15,7 @@ import { AppContext } from '../../../context/AppContext';
 import DeleteUserForm from './DeleteUserForm'
 import DeleteConfirmationForm from '../../presentational/DeleteConfirmationForm';
 import retrieveDataHelper from '../../../service/retrieveDataHelper';
+import messageGenerator from '../../../service/messageGenerator';
 import styleConfig from '../../../config/styleConfig';
 const Fragment = React.Fragment;
 import {
@@ -152,8 +153,10 @@ class AdminManagementContainer extends React.Component{
             username: this.state.deleteUserName
         })
         .then(res => {
-            this.getUserList()
-            this.handleClose()
+            let callback = () => messageGenerator.setSuccessMessage(
+                'save success'
+            )  
+            this.getUserList(callback)
         })
         .catch(err => {
             console.log(`delete user failed ${err}`);
