@@ -138,14 +138,21 @@ class TraceContainer extends React.Component{
     }
 
     componentDidUpdate = (prevProps, prevState) => {
+        let {
+            locale
+        } = this.context
         if (this.context.locale.abbr !== prevState.locale) {   
             let columns = _.cloneDeep(this.columns).map(field => {
                 field.name = field.Header
                 field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
                 return field
             })
+            this.state.data.map(item => {
+                item.area = locale.texts[item.area_original]
+                item.residenceTime = moment(item.startTime).locale(locale.abbr).from(moment(item.endTime), true)
+            })
             this.setState({
-                locale: this.context.locale.abbr,
+                locale: locale.abbr,
                 columns,
             })
         }
@@ -263,27 +270,24 @@ class TraceContainer extends React.Component{
                                 startTime:  moment(pt.record_timestamp).format(timeValidatedFormat),
                                 description: pt.description,
                                 mode: fields.mode,
+                                area_original: pt.area,
                                 area: locale.texts[pt.area]
                             })
                             prevUUID = pt.uuid
                         }
                         data[data.length - 1].endTime = moment(pt.record_timestamp).locale(locale.abbr).format(timeValidatedFormat)
-                        data[data.length - 1].residenceTime = moment(pt.record_timestamp).from(moment(data[data.length - 1].startTime), true)
+                        data[data.length - 1].residenceTime = moment(pt.record_timestamp).locale(locale.abbr).from(moment(data[data.length - 1].startTime), true)
                     })
                     break;
                 case "uuid":
                     data = res.data.rows.map((item, index) => {
                         item.id = index + 1
                         item.mode = fields.mode
+                        item.area_original = item.area
                         item.area= locale.texts[item.area]
+
                         return item
                     })
-                    // if (res.data.rowCount != 0) {
-                    //     additionalData = {
-                    //         description: res.data.rows[0].description,
-                    //         area: res.data.rows[0].area
-                    //     }  
-                    // }
                     break;
             }
             this.setState({

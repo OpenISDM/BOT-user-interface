@@ -183,8 +183,10 @@ app.post('/exportCSV', (req, res) => {
         filePackage
     } = req.body
 
-    if (!fs.existsSync(filePackage.directory)){
-        fs.mkdirSync(filePackage.directory);
+    let folderPath = path.join(process.env.LOCAL_FILE_PATH, filePackage.directory)
+
+    if (!fs.existsSync(folderPath)){
+        fs.mkdirSync(folderPath);
     }
 
     let filePath = path.join(process.env.LOCAL_FILE_PATH, filePackage.path)
