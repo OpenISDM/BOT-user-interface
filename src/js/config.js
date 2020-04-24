@@ -5,7 +5,7 @@ import React from 'react'
 
 const config = {
 
-    version: "v1.0 b.1900",
+    version: "v1.1 b.1900",
     
     objectStatus: {
         PERIMETER: "perimeter",
@@ -490,21 +490,21 @@ const config = {
 
                 let headers = columns.map(field => {
                     return `
-                        <th>
+                        <th 
+                            style="text-align: left"
+                        >
                             ${field.Header}
                         </th>
                     `
                 }).join(" ")
                 return `
                     <table 
-                        style="width:100%; font-size= 5px;"
+                        style="width:100%; font-size: 0.8rem;"
                     >
                         ${headers}
                         ${data.map((item, index) => {
                             return `
-                                <tr
-                                    style="font-size= 10px;"
-                                >
+                                <tr>
                                     <td>${item.area}</td>
                                     <td>${item.description}</td>
                                     <td>${item.startTime}</td>
@@ -525,21 +525,21 @@ const config = {
 
                 let headers = columns.map(field => {
                     return `
-                        <th>
+                        <th
+                            style="text-align: left"
+                        >
                             ${field.Header}
                         </th>
                     `
                 }).join(" ")
                 return `
                     <table 
-                        style="width:100%; font-size= 5px;"
+                        style="width:100%; font-size: 0.8rem;"
                     >
                         ${headers}
                         ${data.map((item, index) => {
                             return `
-                                <tr
-                                    style="font-size= 10px;"
-                                >
+                                <tr>
                                     <td>${index + 1}</td>
                                     <td>${item.name}</td>
                                     <td>${item.mac_address}</td>

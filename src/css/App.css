@@ -4,7 +4,7 @@ html,body {
     -webkit-overflow-scrolling: touch;
     margin: 0;
     /* font-family: "Lucida Sans"; */
-    /* font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; */
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     /* font-size: 1.8vh; */
     font-size: 16px;
     /* position: fixed; */

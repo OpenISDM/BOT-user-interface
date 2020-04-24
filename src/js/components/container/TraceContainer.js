@@ -384,6 +384,9 @@ class TraceContainer extends React.Component{
 
                 let filePackage = config.pdfFormat.getPath(
                     'trackingRecord',
+                    {
+                        extension: 'csv',
+                    }
                 )
                 let header = this.state.columns.map(column => {
                     return {
@@ -411,7 +414,7 @@ class TraceContainer extends React.Component{
                     'trackingRecord', 
                     auth.user, 
                     {
-                        columns: this.state.columns,
+                        columns: this.state.columns.filter(column => column.accessor != 'uuid'),
                         data: this.state.data
                     },
                     locale,

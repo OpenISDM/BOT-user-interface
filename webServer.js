@@ -183,13 +183,18 @@ app.post('/exportCSV', (req, res) => {
         filePackage
     } = req.body
 
+    if (!fs.existsSync(filePackage.directory)){
+        fs.mkdirSync(filePackage.directory);
+    }
+
     let filePath = path.join(process.env.LOCAL_FILE_PATH, filePackage.path)
     const csvWriter = createCsvWriter({
         path: filePath,
         header,
-
+        encoding: 'utf8'
     });
-      
+    
+
     csvWriter
         .writeRecords(data)
         .then((data)=> {
