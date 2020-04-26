@@ -296,24 +296,6 @@ const cleanBinding = (request, response) => {
     })
 }
 
-const getGatewayTable = (request, response) => {
-    let { locale } = request.body
-
-    pool.query(queryType.getGatewayTable)
-        .then(res => {
-            console.log(`get gateway table succeed`)
-            res.rows.map(item => {
-                item.last_report_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-                item.registered_timestamp = moment.tz(item.registered_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-            })
-            response.status(200).json(res)
-        })    
-        .catch(err => {
-            console.log(`get gateway table failed ${err}`)                
-
-        })
-}
-
 const setLocaleID = (request, response) => {
     const userID = request.body.userID
     const lang = request.body.lang
@@ -874,20 +856,6 @@ const deletePatient = (request, response) => {
         console.log('deletePatient error: ', err)
     })
 }
-
-
-const deleteGateway = (request, response) => {
-    const { idPackage } = request.body
-    pool.query(queryType.deleteGateway(idPackage))
-        .then(res => {
-            console.log('delete Gateway record success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('deleteGateway error: ', err)
-        })
-}
-
 
 const deleteDevice = (request, response) => {
     const { formOption } = request.body
@@ -1471,7 +1439,6 @@ module.exports = {
     getImportTable,
     getImportPatient,
     getImportData,
-    getGatewayTable,
     getUserList,
     getRoleNameList,
     getAreaTable,
@@ -1499,7 +1466,6 @@ module.exports = {
     deletePatient,
     deleteDevice,
     deleteImportData,
-    deleteGateway,
     deleteUser,
     signin,
     signup,

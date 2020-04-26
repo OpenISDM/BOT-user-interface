@@ -15,7 +15,7 @@ const retrieveDataHelper = {
         user, 
         areaId
     ) {
-        return await axios.post(dataSrc.getTrackingData,{
+        return await axios.post(dataSrc.trackingData,{
             locale,
             user,
             areaId,
@@ -42,13 +42,13 @@ const retrieveDataHelper = {
     },
 
     getLbeaconTable: async function(locale) {
-        return await axios.post(dataSrc.getLbeaconTable, {
+        return await axios.post(dataSrc.lbeacon, {
             locale,
         })
     },
 
     getGatewayTable: async function(locale) {
-        return await axios.post(dataSrc.getGatewayTable, {
+        return await axios.post(dataSrc.gateway, {
             locale,
         })
     },

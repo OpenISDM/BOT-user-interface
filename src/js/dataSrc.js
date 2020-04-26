@@ -72,6 +72,8 @@ const getUrl = url => {
 }
 const trackingData = `${domain}/data/trackingData`;
 const lbeacon = `${domain}/data/lbeacon`;
+const gateway = `${domain}/data/gateway`;
+
 
 // const trackingData = `${protocol}://${dataSrcIP}/data/trackingData`;
 
@@ -83,6 +85,7 @@ const pdfUrl = function (path) {
 module.exports = {
     trackingData,
     lbeacon,
+    gateway,
 
 
     domain,

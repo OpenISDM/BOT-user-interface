@@ -60,8 +60,6 @@ app.post('/data/addAssociation_Patient', db.addAssociation_Patient);
 
 app.post('/data/cleanBinding', db.cleanBinding);
 
-app.post('/data/getGatewayTable', db.getGatewayTable);
-
 // app.post('/data/getTrackingData', db.getTrackingData);
 
 app.post('/data/editObject', db.editObject);
@@ -127,8 +125,6 @@ app.post('/test/deletePatient', db.deletePatient)
 app.post('/test/deleteDevice', db.deleteDevice)
 
 app.post('/test/deleteImportData', db.deleteImportData)
-
-app.post('/test/deleteGateway', db.deleteGateway)
 
 app.post('/data/addShiftChangeRecord', db.addShiftChangeRecord)
 
@@ -225,9 +221,12 @@ app.get('/download/com.beditech.IndoorNavigation.apk', (req, res) => {
 
 const trackingDataRoutes = require('./api/routes/trackingDataRoutes');
 const lbeaconRoutes = require('./api/routes/lbeaconRoutes');
+const gatewayRoutes = require('./api/routes/gatewayRoutes');
 
 trackingDataRoutes(app);
 lbeaconRoutes(app);
+gatewayRoutes(app);
+
 
 
 /** privatekey name: private.key

@@ -459,21 +459,6 @@ function getImportData(formOption){
 	return query;
 }
 
-const getGatewayTable = `
-	SELECT 
-		ip_address, 
-		health_status, 
-		last_report_timestamp,
-		registered_timestamp,
-		id,
-		api_version,
-		product_version,
-		abnormal_lbeacon_list
-	FROM 
-		gateway_table 
-	ORDER BY ip_address DESC
-`;	
-
 function objectImport (idPackage) {
 
 	let text =  `
@@ -1254,16 +1239,6 @@ const deleteImportData = (idPackage) => {
 	return query
 }
 
-const deleteGateway = (idPackage) => {
-	const query = `
-		DELETE FROM gateway_table
-		WHERE id IN (${idPackage.map(item => `'${item}'`)});
-	`
-	return query
-}
-
-
-
 const setShift = (shift, username) => {
 	const query = `
 		update user_table
@@ -2003,7 +1978,6 @@ module.exports = {
 	getTrackingTableByMacAddress,
 	getObjectTable,
 	getImportTable,
-	getGatewayTable,
 	getMonitorConfig,
 	setGeofenceConfig,
 	editPatient,
@@ -2033,7 +2007,6 @@ module.exports = {
 	deleteDevice, 
 	deleteImportData,
 	setShift,
-	deleteGateway,
 	setVisitTimestamp,
 	insertUserData,
 	addEditObjectRecord,
