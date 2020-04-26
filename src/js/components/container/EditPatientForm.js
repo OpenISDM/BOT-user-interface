@@ -2,9 +2,7 @@
 import React from 'react';
 import { Modal, Button, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
-import config from '../../config';
-import axios from 'axios';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import styleConfig from '../../config/styleConfig'

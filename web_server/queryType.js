@@ -510,31 +510,6 @@ function editObject (formOption) {
 	return query;
 }
 
-const editPatient = (formOption) => {
-	const text = `
-		Update object_table 
-		SET name = $2,
-			mac_address = $3,
-			area_id = $4,
-			object_type = 1
-		WHERE asset_control_number = $1
-	`;
-		
-	const values = [
-		formOption.asset_control_number,
-		formOption.name,
-		formOption.mac_address,
-		formOption.area_id,
-	];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query;
-}
-
  
 const addObject = (formOption) => {
 	const text = `
@@ -572,45 +547,6 @@ const addObject = (formOption) => {
 		formOption.monitor_type
 	];
 
-
-	const query = {
-		text,
-		values
-	};
-
-	return query;
-}
-
-const addPatient = (formOption) => {
-	const text = 
-		`
-		INSERT INTO object_table (
-			name,
-			mac_address, 
-			asset_control_number,
-			area_id,
-			object_type,
-			type,
-			status,
-			registered_timestamp
-		)
-		VALUES (
-			$1,
-			$2,
-			$3,
-			$4,
-			1,
-			'register',
-			'normal',
-			now()
-		)
-		`;
-	const values = [
-		formOption.name,
-		formOption.mac_address,
-		formOption.asset_control_number,
-		formOption.area_id,
-	];
 
 	const query = {
 		text,
@@ -1045,15 +981,6 @@ const deletePatient = (idPackage) => {
 	const query = `
 		DELETE FROM object_table
 		WHERE id IN (${idPackage.map(item => `'${item}'`)});
-	`
-	return query
-}
- 
-
-const deleteDevice = (formOption) => {
-	const query = `
-		DELETE FROM object_table
-		WHERE mac_address IN (${formOption.map(item => `'${item}'`)});
 	`
 	return query
 }
@@ -1771,12 +1698,10 @@ module.exports = {
 	getImportTable,
 	getMonitorConfig,
 	setGeofenceConfig,
-	editPatient,
 	editObject,
 	editImport,
 	objectImport,
 	addObject,
-	addPatient,
 	editObjectPackage,
 	signin,
 	editPassword,
@@ -1792,7 +1717,6 @@ module.exports = {
 	deleteEditObjectRecord,
 	deleteShiftChangeRecord,
 	deletePatient,
-	deleteDevice, 
 	deleteImportData,
 	setShift,
 	setVisitTimestamp,

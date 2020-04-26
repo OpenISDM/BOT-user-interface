@@ -10,7 +10,6 @@ const setLocaleID = `${protocol}://${dataSrcIP}/data/setLocaleID`;
 const editImport = `${protocol}://${dataSrcIP}/data/editImport`;
 const editPatient = `${protocol}://${dataSrcIP}/data/editPatient`;
 const addObject = `${protocol}://${dataSrcIP}/data/addObject`;
-const addPatient= `${protocol}://${dataSrcIP}/data/addPatient`;
 const getImportTable = `${protocol}://${dataSrcIP}/data/getImportTable`;
 const getImportData = `${protocol}://${dataSrcIP}/data/getImportData`;
 const addAssociation = `${protocol}://${dataSrcIP}/data/addAssociation`;
@@ -30,7 +29,6 @@ const getEditObjectRecord = `${protocol}://${dataSrcIP}/test/getEditObjectRecord
 const deleteEditObjectRecord = `${protocol}://${dataSrcIP}/test/deleteEditObjectRecord`
 const deleteShiftChangeRecord = `${protocol}://${dataSrcIP}/test/deleteShiftChangeRecord`
 const deletePatient = `${protocol}://${dataSrcIP}/test/deletePatient`
-const deleteDevice = `${protocol}://${dataSrcIP}/test/deleteDevice`
 const deleteImportData = `${protocol}://${dataSrcIP}/test/deleteImportData`
 const deleteGateway= `${protocol}://${dataSrcIP}/test/deleteGateway`
 const getRoleNameList = `${protocol}://${dataSrcIP}/test/getRoleNameList`
@@ -116,7 +114,6 @@ module.exports = {
     generatePDF,
     modifyMyDevice,
     modifyUserInfo,
-    deleteDevice,
     deleteImportData,
     deleteGateway,
     getShiftChangeRecord,

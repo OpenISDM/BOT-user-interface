@@ -70,13 +70,9 @@ app.post('/data/addPatientRecord', db.addPatientRecord)
 
 app.post('/data/setUserSecondaryArea', db.setUserSecondaryArea)
 
-app.post('/data/editPatient', db.editPatient);
-
 app.post('/data/objectImport', db.objectImport);
 
 app.post('/data/addObject', db.addObject);
-
-app.post('/data/addPatient', db.addPatient);
 
 app.post('/data/editObjectPackage', db.editObjectPackage)
 
@@ -111,8 +107,6 @@ app.post('/test/deleteEditObjectRecord', db.deleteEditObjectRecord)
 app.post('/test/deleteShiftChangeRecord', db.deleteShiftChangeRecord)
 
 app.post('/test/deletePatient', db.deletePatient)
-
-app.post('/test/deleteDevice', db.deleteDevice)
 
 app.post('/test/deleteImportData', db.deleteImportData)
 

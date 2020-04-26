@@ -58,6 +58,82 @@ const getObject = (objectType, areas_id) => {
 	return text
 } 
 
+const addPersona = (formOption) => {
+	const text = 
+		`
+		INSERT INTO object_table (
+			name,
+			mac_address, 
+			asset_control_number,
+			area_id,
+			object_type,
+			type,
+			status,
+			registered_timestamp
+		)
+		VALUES (
+			$1,
+			$2,
+			$3,
+			$4,
+			1,
+			'register',
+			'normal',
+			now()
+		)
+		`;
+	const values = [
+		formOption.name,
+		formOption.mac_address,
+		formOption.asset_control_number,
+		formOption.area_id,
+	];
+
+	const query = {
+		text,
+		values
+	};
+
+	return query;
+}
+
+const editPersona = (formOption) => {
+	const text = `
+		Update object_table 
+		SET name = $2,
+			mac_address = $3,
+			area_id = $4,
+			object_type = 1
+		WHERE asset_control_number = $1
+	`;
+		
+	const values = [
+		formOption.asset_control_number,
+		formOption.name,
+		formOption.mac_address,
+		formOption.area_id,
+	];
+
+	const query = {
+		text,
+		values
+	};
+
+	return query;
+}
+
+const deleteObject = (formOption) => {
+    
+	const query = `
+		DELETE FROM object_table
+		WHERE mac_address IN (${formOption.map(item => `'${item}'`)});
+	`
+	return query
+}
+
 module.exports = {
-    getObject
+    getObject,
+    addPersona,
+    editPersona,
+    deleteObject,
 }

@@ -28,6 +28,7 @@ import AccessControl from './AccessControl';
 import { patientTableColumn } from '../../config/tables';
 import retrieveDataHelper from '../../service/retrieveDataHelper';
 import config from '../../config';
+import dataSrc from '../../dataSrc';
 
 
 class PatientTable extends React.Component{
@@ -181,15 +182,19 @@ class PatientTable extends React.Component{
             disableASN: false,
             isPatientShowEdit: true,
             formTitle: 'add inpatient',
-            formPath: addPatient,
+            apiMethod: 'post',
             selectedRowData:'',
         })
     }
 
     handleSubmitForm = (formOption) => {
-        let formPath = this.state.formPath
-        axios.post(formPath, {
-            formOption
+        let {
+            apiMethod
+        } = this.state
+
+        axios[apiMethod](dataSrc.object, {
+            formOption,
+            mode: 'PERSONA',
         }).then(res => { 
             let callback = () => {
                 messageGenerator.setSuccessMessage(
@@ -295,12 +300,19 @@ class PatientTable extends React.Component{
                 :
                 formOption.push(this.state.data[item].mac_address)
             })
-           
-        axios.post(deleteDevice, {
-            formOption
+
+        axios.delete(dataSrc.object, {
+            data: {
+                formOption
+            }
         })
         .then(res => {
-            this.handleSubmitForm()
+            let callback = () => {
+                messageGenerator.setSuccessMessage(
+                    'save success'
+                )
+            }
+            this.getData(callback)
         })
         .catch(err => {
             console.log(err)
@@ -525,12 +537,12 @@ class PatientTable extends React.Component{
                             onClick: (e) => { 
                                 if (!e.target.type) { 
                                     this.setState({
-                                    isPatientShowEdit:true,
-                                    selectedRowData: this.state.data[rowInfo.index],
-                                    formTitle: 'edit info',
-                                    disableASN: true,
-                                    formPath: editPatient,
-                                })
+                                        isPatientShowEdit:true,
+                                        selectedRowData: this.state.data[rowInfo.index],
+                                        formTitle: 'edit info',
+                                        disableASN: true,
+                                        apiMethod: 'put',
+                                    })
                                 } 
                             },
                         }

@@ -331,34 +331,6 @@ const editImport = (request, response) => {
         })
 }
 
-const editPatient = (request, response) => {
-    const formOption = request.body.formOption
-    let {
-        area_id
-    } = formOption
-    pool.query(queryType.editPatient(formOption))
-        .then(res => {
-            console.log("edit register succeed");
-            if (process.env.RELOAD_GEO_CONFIG_PATH) {
-                exec(process.env.RELOAD_GEO_CONFIG_PATH, `-p 9999 -c cmd_reload_geo_fence_setting -r geofence_object -f area_one -a ${area_id}`.split(' '), function(err, data){
-                    if(err){
-                        console.log(`execute reload geofence setting fails ${err}`)
-                        response.status(200).json(res)
-                    }else{
-                        console.log(`execute reload geofence setting success`)
-                        response.status(200).json(res)
-                    }
-                })
-            } else {
-                response.status(200).json(res)
-                console.log('IPC has not set')
-            }
-        })
-        .catch(err => {
-            console.log(`edit register failed ${err}`)
-        })
-}
-
 const objectImport = (request, response) => {
     const idPackage = request.body.newData
        pool.query(queryType.objectImport(idPackage))
@@ -393,19 +365,6 @@ const addObject = (request, response) => {
 
         })
 }
-
-const addPatient = (request, response) => {
-    const formOption = request.body.formOption
-    pool.query(queryType.addPatient(formOption))
-        .then(res => {
-            console.log("add patient succeed");
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`add patient failed ${err}`)
-        })
-}
-
 
 
 const editObjectPackage = (request, response) => {
@@ -771,18 +730,6 @@ const deletePatient = (request, response) => {
     .catch(err => {
         console.log('deletePatient error: ', err)
     })
-}
-
-const deleteDevice = (request, response) => {
-    const { formOption } = request.body
-    pool.query(queryType.deleteDevice(formOption))
-        .then(res => {
-            console.log('delete Device success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('deleteDevice error: ', err)
-        })
 }
 
 const deleteImportData = (request, response) => {
@@ -1365,7 +1312,6 @@ module.exports = {
     addShiftChangeRecord,
     addUserSearchHistory,
     addObject,
-    addPatient,
     addBulkObject,
     addAssociation,
     addAssociation_Patient,
@@ -1373,13 +1319,11 @@ module.exports = {
     editObject,
     setLocaleID,
     editImport,
-    editPatient,
     objectImport,
     editObjectPackage,
     deleteEditObjectRecord,
     deleteShiftChangeRecord,
     deletePatient,
-    deleteDevice,
     deleteImportData,
     signin,
     editPassword,
