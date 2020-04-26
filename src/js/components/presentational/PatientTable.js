@@ -186,13 +186,20 @@ class PatientTable extends React.Component{
         })
     }
 
-    handleSubmitForm = () => {
-        let callback = () => {
-            messageGenerator.setSuccessMessage(
-                'save success'
-            )
-        }
-        this.getData(callback)
+    handleSubmitForm = (formOption) => {
+        let formPath = this.state.formPath
+        axios.post(formPath, {
+            formOption
+        }).then(res => { 
+            let callback = () => {
+                messageGenerator.setSuccessMessage(
+                    'save success'
+                )
+            }
+            this.getData(callback)
+        }).catch( error => {
+            console.log(error)
+        })
     }
 
 
@@ -533,7 +540,7 @@ class PatientTable extends React.Component{
                     show = {this.state.isPatientShowEdit} 
                     title= {this.state.formTitle} 
                     selectedRowData={selectedRowData  || ''} 
-                    handleSubmitForm={this.handleSubmitForm}
+                    handleSubmit={this.handleSubmitForm}
                     formPath={this.state.formPath}
                     handleClose={this.handleClose}
                     data={this.state.data}
