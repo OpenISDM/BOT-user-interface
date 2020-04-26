@@ -72,7 +72,7 @@ class PatientTable extends React.Component{
     componentDidMount = () => {
         this.getData();
         this.getAreaTable();
-        this.getImportData();
+        this.getImportedData();
     }
 
     getData = (callback) => {
@@ -122,10 +122,12 @@ class PatientTable extends React.Component{
         })
     }
 
-    getImportData = () => {
+    getImportedData = () => {
         let { locale } = this.context
-        axios.post(getImportPatient, {
-            locale: locale.abbr
+        axios.post(dataSrc.importedObject, {
+            params: {
+                locale: locale.abbr
+            }
         })
         .then(res => {
             this.setState({

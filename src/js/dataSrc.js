@@ -46,7 +46,6 @@ const deleteMonitorConfig = `${protocol}://${dataSrcIP}/data/deleteMonitorConfig
 const backendSearch = `${protocol}://${dataSrcIP}/data/backendSearch`
 const getSearchQueue = `${protocol}://${dataSrcIP}/data/getSearchQueue`
 const objectImport = `${protocol}://${dataSrcIP}/data/objectImport`
-const getImportPatient = `${protocol}://${dataSrcIP}/data/getImportPatient`
 const pinImage = `${protocol}://${dataSrcIP}/image/pinImage`
 const getTransferredLocation = `${protocol}://${dataSrcIP}/data/getTransferredLocation`
 const modifyTransferredLocation= `${protocol}://${dataSrcIP}/data/modifyTransferredLocation`
@@ -68,6 +67,7 @@ const lbeacon = `${domain}/data/lbeacon`;
 const gateway = `${domain}/data/gateway`;
 const user = `${domain}/data/user`;
 const object = `${domain}/data/object`;
+const importedObject = `${domain}/data/importedObject`
 
 // const trackingData = `${protocol}://${dataSrcIP}/data/trackingData`;
 
@@ -82,6 +82,7 @@ module.exports = {
     gateway,
     user,
     object,
+    importedObject,
 
 
     domain,
@@ -93,7 +94,6 @@ module.exports = {
     editImport,
     cleanBinding,
     getImportTable,
-    getImportPatient,
     getGatewayTable,
     getMonitorConfig,
     getTransferredLocation,
@@ -103,7 +103,6 @@ module.exports = {
     deletePatient,
     editPatient,
     addObject,
-    addPatient,
     editObjectPackage,
     signin,
     editPassword,

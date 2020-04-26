@@ -1,26 +1,29 @@
 import React from 'react';
-import { Form, Button,Container,   ButtonToolbar,Row,Col } from 'react-bootstrap';
+import { 
+    ButtonToolbar
+} from 'react-bootstrap';
 import { AppContext } from '../../context/AppContext';
 import ReactTable from 'react-table'; 
 import selecTableHOC from 'react-table/lib/hoc/selectTable';
-import XLSX from "xlsx";
-import InputFiles from "react-input-files";
+import XLSX from 'xlsx';
+import InputFiles from 'react-input-files';
 import axios from 'axios';
-import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-const SelectTable = selecTableHOC(ReactTable);
+import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm';
 import { 
     objectImport,
     deleteImportData,
     deleteObjectWithImport
-} from "../../dataSrc"
+} from '../../dataSrc';
 import styleConfig from '../../config/styleConfig';
-import messageGenerator from '../../service/messageGenerator'
+import messageGenerator from '../../service/messageGenerator';
 import {
     PrimaryButton
-} from '../BOTComponent/styleComponent'
-import AccessControl from './AccessControl'
-import { importTableColumn } from '../../config/tables'
-import { getImportPatient } from '../../dataSrc'
+} from '../BOTComponent/styleComponent';
+import AccessControl from './AccessControl';
+import { importTableColumn } from '../../config/tables';
+import dataSrc from '../../dataSrc';
+const SelectTable = selecTableHOC(ReactTable);
+
 
 class ImportObjectTable extends React.Component{
     static contextType = AppContext   
@@ -40,8 +43,10 @@ class ImportObjectTable extends React.Component{
 
     getData = () => {
         let { locale } = this.context
-        axios.post(getImportPatient, {
-            locale: locale.abbr
+        axios.get(dataSrc.importedObject, {
+            params: {
+                locale: locale.abbr
+            }
         })
         .then(res => {
             let columns = _.cloneDeep(importTableColumn)
@@ -81,11 +86,11 @@ class ImportObjectTable extends React.Component{
         let selection = [...this.state.selection];
 
 
-        let splitKey =""
+        let splitKey =''
         if (key.split('-')[1]){
             for ( var i = 1 ; i < key.split('-').length ; i++){
                 splitKey += key.split('-')[i] 
-                i != key.split('-').length-1 ? splitKey+= "-" : null
+                i != key.split('-').length-1 ? splitKey+= '-' : null
             }            
         }
 
@@ -174,7 +179,7 @@ class ImportObjectTable extends React.Component{
  
         let { name } = e.target
         switch(name) {
-            case "delete import data":
+            case 'delete import data':
                     this.setState({
                         showDeleteConfirmation: true,
                         warningSelect : 2
@@ -200,20 +205,20 @@ class ImportObjectTable extends React.Component{
             fileReader.onload = event => {
                 try {
                     // 判斷上傳檔案的類型 可接受的附檔名
-                    const validExts = new Array(".xlsx", ".xls");
+                    const validExts = new Array('.xlsx', '.xls');
                     const fileExt = event.target.name;
          
                     if (fileExt == null) {
-                        throw "檔案為空值";
+                        throw '檔案為空值';
                     }
         
-                    const fileExtlastof = fileExt.substring(fileExt.lastIndexOf("."));
+                    const fileExtlastof = fileExt.substring(fileExt.lastIndexOf('.'));
                     if (validExts.indexOf(fileExtlastof) == -1) {
-                        throw "檔案類型錯誤，可接受的副檔名有：" + validExts.toString();
+                        throw '檔案類型錯誤，可接受的副檔名有：' + validExts.toString();
                     }
       
                     const { result } = event.target; // 以二進制流方式讀取得到整份excel表格對象
-                    const workbook = XLSX.read(result, { type: "binary" });
+                    const workbook = XLSX.read(result, { type: 'binary' });
                     let data = []; // 存儲獲取到的數據 // 遍歷每張工作表進行讀取（這裡默認只讀取第一張表）
                     for (const sheet in workbook.Sheets) {
                         if (workbook.Sheets.hasOwnProperty(sheet)) {
@@ -271,7 +276,7 @@ class ImportObjectTable extends React.Component{
                 } catch (e) {
                     // 這裡可以拋出文件類型錯誤不正確的相關提示
                     alert(e);
-                    //console.log("文件類型不正確");
+                    //console.log('文件類型不正確');
                     return;
                 }
            
@@ -314,22 +319,22 @@ class ImportObjectTable extends React.Component{
 
         return(
             <div> 
-                <div className="d-flex justify-content-between">
+                <div className='d-flex justify-content-between'>
                     <AccessControl
                         renderNoAccess={() => null}
                         platform={['browser', 'tablet']}
                     >                
                         <ButtonToolbar>
-                            <InputFiles accept=".xlsx, .xls" name="import_patient" onChange={this.onImportExcel}>
+                            <InputFiles accept='.xlsx, .xls' name='import_patient' onChange={this.onImportExcel}>
                                 <PrimaryButton
-                                    className="mr-2 mb-1"
+                                    className='mr-2 mb-1'
                                 >
                                     {locale.texts.IMPORT_OBJECT}
                                 </PrimaryButton>
                             </InputFiles>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name="delete import data"
+                                name='delete import data'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.DELETE}
@@ -343,7 +348,7 @@ class ImportObjectTable extends React.Component{
                     data={this.state.data}
                     columns={this.state.columns}
                     ref={r => (this.selectTable = r)}
-                    className="-highlight"
+                    className='-highlight'
                     style={{maxHeight:'75vh'}} 
                     pageSize={this.state.data.length}
                     onPageChange={(e) => {this.setState({selectAll:false,selection:''})}} 

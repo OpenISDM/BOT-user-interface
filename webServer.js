@@ -80,8 +80,6 @@ app.post('/user/signin', db.signin)
 
 app.post('/user/editPassword', db.editPassword)
 
-app.post('/data/getImportPatient', db.getImportPatient);
-
 app.post('/user/getUserInfo', db.getUserInfo)
 
 app.post('/user/addUserSearchHistory', db.addUserSearchHistory)
@@ -205,12 +203,14 @@ const lbeaconRoutes = require('./api/routes/lbeaconRoutes');
 const gatewayRoutes = require('./api/routes/gatewayRoutes');
 const userRoutes = require('./api/routes/userRoutes');
 const objectRoutes = require('./api/routes/objectRoutes');
+const importedObject = require('./api/routes/importedObjectRoutes');
 
 trackingDataRoutes(app);
 lbeaconRoutes(app);
 gatewayRoutes(app);
 userRoutes(app);
 objectRoutes(app);
+importedObject(app);
 
 
 
