@@ -14,9 +14,6 @@ import BOTInput from '../presentational/BOTInput';
 import axios from 'axios';
 import EditPatientForm from '../container/EditPatientForm';
 import { 
-    editPatient,
-    addPatient,
-    deleteDevice,
     getImportPatient
 } from '../../dataSrc';
 import {
@@ -321,10 +318,7 @@ class PatientTable extends React.Component{
 
 
     filterData = (data, key, filteredAttribute) => {
-                    
-        this.setState({
-            loadingFlag:  true
-        })
+
         const { locale } = this.context  
         key = key.toLowerCase()
         let filteredData = data.filter(obj => { 
@@ -335,28 +329,11 @@ class PatientTable extends React.Component{
                     return true
                 }
             }
-            if(filteredAttribute.includes('type')){
-
-                let keyRex = new RegExp(key)
-                
-                if(obj.type.toLowerCase().match(keyRex)){
-                    return true
-                }
-            }
 
             if(filteredAttribute.includes('acn')){
                 let keyRex = new RegExp(key)
                 if(obj.asset_control_number.toLowerCase().match(keyRex)) return true
 
-            }
-
-            if  (filteredAttribute.includes('status')){
-                
-                let keyRex = new RegExp(key.toLowerCase())
-
-                if(obj.status.label.toLowerCase().match(keyRex)){
-                    return true
-                }
             }
 
             if (filteredAttribute.includes('area')){ 
@@ -368,40 +345,15 @@ class PatientTable extends React.Component{
                 } 
             }
 
-            if (filteredAttribute.includes('monitor')){
-                let keyRex = new RegExp(key)
-                if(obj.monitor_type.toLowerCase().match(keyRex)){
-                    return true
-                }
-            }
-
             if  (filteredAttribute.includes('macAddress')){
 
                 let keyRex = key.replace(/:/g, '')
                 if (obj.mac_address.replace(/:/g, '').toLowerCase().match(keyRex)) return true
             }
 
-            if(filteredAttribute.includes('sex')){
-               
-                if (obj.object_type == key){
-                    return true
-                }
-            }
- 
-            if(filteredAttribute.includes('physician_name')){
-              
-                let keyRex = new RegExp(key)
-
-                if (obj.physician_name && obj.physician_name.toLowerCase().match(keyRex)){
-                    return true
-                } 
-            }
-
             return false
         })
-        this.setState({ loadingFlag:  false })
         return filteredData
-        
     }
 
     addObjectFilter = (key, attribute, source) => {
@@ -463,7 +415,7 @@ class PatientTable extends React.Component{
                             getSearchKey={(key) => {
                                 this.addObjectFilter(
                                     key, 
-                                    ['name', 'area', 'macAddress', 'acn', 'monitor', 'physician_name'], 
+                                    ['name', 'area', 'macAddress', 'acn'], 
                                     'search bar'
                                 )
                             }}
