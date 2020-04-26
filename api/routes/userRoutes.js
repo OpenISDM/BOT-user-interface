@@ -10,6 +10,6 @@ module.exports = app => {
         .get(userController.getAllUser)
         .delete(userController.deleteUser)
         .post(userController.addUser)
-
+        .put(userController.editUserInfo)
 
 }

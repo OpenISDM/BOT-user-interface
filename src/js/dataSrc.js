@@ -35,7 +35,6 @@ const deleteDevice = `${protocol}://${dataSrcIP}/test/deleteDevice`
 const deleteImportData = `${protocol}://${dataSrcIP}/test/deleteImportData`
 const deleteGateway= `${protocol}://${dataSrcIP}/test/deleteGateway`
 const getRoleNameList = `${protocol}://${dataSrcIP}/test/getRoleNameList`
-const setUserInfo = `${protocol}://${dataSrcIP}/test/setUserInfo`
 const getAreaTable = `${protocol}://${dataSrcIP}/data/getAreaTable`
 const getGeofenceConfig = `${protocol}://${dataSrcIP}/data/getGeofenceConfig`
 const setGeofenceConfig = `${protocol}://${dataSrcIP}/data/setGeofenceConfig`
@@ -126,7 +125,6 @@ module.exports = {
     deleteEditObjectRecord,
     deleteShiftChangeRecord,
     getRoleNameList,
-    setUserInfo,
     getAreaTable,
     getGeofenceConfig,
     setGeofenceConfig,

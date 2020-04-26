@@ -106,8 +106,6 @@ app.post('/validation/username', db.validateUsername)
 
 app.post('/test/getRoleNameList', db.getRoleNameList)
 
-app.post('/test/setUserInfo', db.setUserInfo)
-
 app.post('/test/getEditObjectRecord', db.getEditObjectRecord)
 
 app.post('/test/deleteEditObjectRecord', db.deleteEditObjectRecord)

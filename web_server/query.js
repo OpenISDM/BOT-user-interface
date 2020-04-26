@@ -553,21 +553,6 @@ const editPassword = (request, response) => {
         })  
  
 }
-
-const setUserInfo = (request, response) => { 
-    var {
-        user
-    } = request.body
-    pool.query(queryType.setUserInfo(user))
-        .then(res => {
-            console.log(`set user info succeed`)
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`set user info failed ${err}`)
-        })
-}
-
 const setUserSecondaryArea = (request, response) => {
     const {
         user
@@ -1424,7 +1409,6 @@ module.exports = {
     modifyUserDevices,
     modifyUserInfo,
     validateUsername,
-    setUserInfo,
     setMonitorConfig,
     setGeofenceConfig,
     checkoutViolation,

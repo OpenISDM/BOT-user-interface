@@ -53,7 +53,7 @@ class Auth extends React.Component {
     }
 
     setUser = (user, callback) => {
-        axios.post(dataSrc.setUserInfo, {
+        axios.put(dataSrc.user, {
             user
         })
         .then(res => {

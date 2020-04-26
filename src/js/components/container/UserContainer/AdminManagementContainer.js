@@ -9,6 +9,7 @@ import {
     getRoleNameList,
     deleteUser,
 } from "../../../dataSrc";
+import dataSrc from '../../../dataSrc';
 import { userInfoTableColumn } from '../../../config/tables'
 import EditUserForm from './EditUserForm';
 import { AppContext } from '../../../context/AppContext';
@@ -57,8 +58,10 @@ class AdminManagementContainer extends React.Component{
         let { 
             locale
         } = this.context
-        axios.post(getUserList, {
-            locale: locale.abbr 
+        axios.get(dataSrc.user, {
+            params: {
+                locale: locale.abbr 
+            }
         }).then(res => { 
             let columns = _.cloneDeep(userInfoTableColumn)
             columns.map((field, index) => {
@@ -149,8 +152,10 @@ class AdminManagementContainer extends React.Component{
     }
 
     handleWarningChecked = () => {
-        axios.post(deleteUser, {
-            username: this.state.deleteUserName
+        axios.delete(dataSrc.user, {
+            data: {
+                username: this.state.deleteUserName
+            }
         })
         .then(res => {
             let callback = () => messageGenerator.setSuccessMessage(

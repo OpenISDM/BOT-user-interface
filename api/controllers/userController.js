@@ -69,6 +69,20 @@ const addUser = (request, response) => {
         })
 }
 
+const editUserInfo = (request, response) => { 
+    var {
+        user
+    } = request.body
+    pool.query(dbQueries.editUserInfo(user))
+        .then(res => {
+            console.log(`edit user info succeed`)
+            response.status(200).json(res)
+        })
+        .catch(err => {
+            console.log(`edit user info failed ${err}`)
+        })
+}
+
 const deleteUser = (request, response) => {
     var username = request.body.username
     pool.query(dbQueries.deleteUser(username))
@@ -84,5 +98,6 @@ const deleteUser = (request, response) => {
 module.exports = {
     getAllUser,
     addUser,
+    editUserInfo,
     deleteUser
 }

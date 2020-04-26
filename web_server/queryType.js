@@ -1042,50 +1042,6 @@ const getRoleNameList = () => {
 	return query
 }
 
-const setUserInfo = user => {
-	return `
-
-		DELETE FROM user_role 
-		WHERE user_id = ${user.id};
-
-		DELETE FROM user_area
-		WHERE user_id = ${user.id};
-
-		UPDATE user_table
-		SET 
-			name = '${user.name}',
-			main_area = ${user.main_area}
-		WHERE id = ${user.id};
-
-		INSERT INTO user_role (
-			user_id, 
-			role_id
-		)
-			VALUES 
-			${
-				user.roles.map(roleName => `(
-					${user.id}, 
-					(
-						SELECT id 
-						FROM roles
-						WHERE name='${roleName}'
-					)
-				)`).join(',')
-			};
-
-		INSERT INTO user_area (
-			user_id, 
-			area_id
-		)
-			VALUES 
-			${
-				user.areas_id.map(areaId => `(
-					${user.id}, 
-					${areaId}
-				)`).join(',')
-			};
-	`
-}
 
 const setUserSecondaryArea = (user) => {
 	return `
@@ -1893,7 +1849,6 @@ module.exports = {
 	validateUsername,
 	getUserList,
 	getRoleNameList,
-	setUserInfo,
 	getEditObjectRecord,
 	deleteEditObjectRecord,
 	deleteShiftChangeRecord,
