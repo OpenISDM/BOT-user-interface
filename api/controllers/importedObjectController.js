@@ -26,6 +26,19 @@ const getImportedObject = (request, response) => {
         })     
 }
 
+const deleteImportedObject = (request, response) => {
+    const { idPackage } = request.body 
+        pool.query(dbQueries.deleteImporedtObject(idPackage))
+        .then(res => {
+            console.log('delete imported object succeed')
+            response.status(200).json(res)
+        })
+        .catch(err => {
+            console.log(`delete imported object failed ${err}`)
+        })
+}
+
 module.exports = {
-    getImportedObject
+    getImportedObject,
+    deleteImportedObject
 }
