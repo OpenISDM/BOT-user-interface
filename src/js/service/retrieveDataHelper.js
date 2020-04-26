@@ -30,10 +30,12 @@ const retrieveDataHelper = {
         areas_id, 
         objectType
     ){
-        return await axios.post(dataSrc.getObjectTable, {
-            locale,
-            areas_id,
-            objectType,
+        return await axios.get(dataSrc.object, {
+            params: {
+                locale,
+                areas_id,
+                objectType,
+            }
         })
     },
 

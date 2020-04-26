@@ -46,8 +46,6 @@ app.get(/^\/page\/(.*)/, (req, res) => {
     res.redirect('/');
 })
 
-app.post('/data/getObjectTable', db.getObjectTable);
-
 app.post('/data/getTrackingTableByMacAddress', db.getTrackingTableByMacAddress);
 
 app.post('/data/getImportTable', db.getImportTable);
@@ -212,11 +210,13 @@ const trackingDataRoutes = require('./api/routes/trackingDataRoutes');
 const lbeaconRoutes = require('./api/routes/lbeaconRoutes');
 const gatewayRoutes = require('./api/routes/gatewayRoutes');
 const userRoutes = require('./api/routes/userRoutes');
+const objectRoutes = require('./api/routes/objectRoutes');
 
 trackingDataRoutes(app);
 lbeaconRoutes(app);
 gatewayRoutes(app);
 userRoutes(app);
+objectRoutes(app);
 
 
 

@@ -166,27 +166,6 @@ const getTrackingData = (request, response) => {
     })
 }
 
-const getObjectTable = (request, response) => {
-    let { 
-        locale, 
-        areas_id,
-        objectType 
-    } = request.body
-
-    pool.query(queryType.getObjectTable(objectType, areas_id))       
-        .then(res => {
-            console.log('get object table succeed')
-            res.rows.map(item => {
-                item.registered_timestamp = moment.tz(item.registered_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-            })
-
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`get object table failed ${err}`)
-        })     
-}
-
 const getTrackingTableByMacAddress = (request, response) => {
     let{ locale, object_mac_address} = request.body
     pool.query(queryType.getTrackingTableByMacAddress(object_mac_address))
@@ -1372,7 +1351,6 @@ const addPatientRecord = (request, response) => {
 
 module.exports = {
     getTrackingData,
-    getObjectTable,
     getImportTable,
     getImportPatient,
     getImportData,

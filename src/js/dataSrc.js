@@ -3,7 +3,6 @@ const protocol = process.env.PROTOCOL;
 const domain = `${protocol}://${dataSrcIP}`;
 const getTrackingData = `${protocol}://${dataSrcIP}/data/getTrackingData`;
 const getTrackingTableByMacAddress = `${protocol}://${dataSrcIP}/data/getTrackingTableByMacAddress`;
-const getObjectTable = `${protocol}://${dataSrcIP}/data/getObjectTable`;
 const getGatewayTable = `${protocol}://${dataSrcIP}/data/getGatewayTable`;
 const searchResult = `${protocol}://${dataSrcIP}/data/searchResult`;
 const editObject = `${protocol}://${dataSrcIP}/data/editObject`;
@@ -70,6 +69,7 @@ const trackingData = `${domain}/data/trackingData`;
 const lbeacon = `${domain}/data/lbeacon`;
 const gateway = `${domain}/data/gateway`;
 const user = `${domain}/data/user`;
+const object = `${domain}/data/object`;
 
 // const trackingData = `${protocol}://${dataSrcIP}/data/trackingData`;
 
@@ -83,6 +83,7 @@ module.exports = {
     lbeacon,
     gateway,
     user,
+    object,
 
 
     domain,
@@ -93,7 +94,6 @@ module.exports = {
     addAssociation_Patient,
     editImport,
     cleanBinding,
-    getObjectTable,
     getImportTable,
     getImportPatient,
     getGatewayTable,

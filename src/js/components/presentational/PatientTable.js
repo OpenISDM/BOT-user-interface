@@ -1,41 +1,33 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { 
-    Button, 
     ButtonToolbar,
-    Row,
-    Col 
 } from 'react-bootstrap';
 import { AppContext } from '../../context/AppContext';
 import ReactTable from 'react-table'; 
 import styleConfig from '../../config/styleConfig';
 import selecTableHOC from 'react-table/lib/hoc/selectTable';
-import BindForm from '../container/BindForm'
-import DissociationForm from '../container/DissociationForm'
-import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
+import BindForm from '../container/BindForm';
+import DissociationForm from '../container/DissociationForm';
+import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm';
 import Select from 'react-select';
-import BOTInput from '../presentational/BOTInput'
+import BOTInput from '../presentational/BOTInput';
 import axios from 'axios';
-import EditPatientForm from '../container/EditPatientForm'
+import EditPatientForm from '../container/EditPatientForm';
 import { 
     editPatient,
     addPatient,
     deleteDevice,
-    getLbeaconTable,
-    getUserList,
     getImportPatient
-} from "../../dataSrc"
+} from '../../dataSrc';
 import {
-    LoaderWrapper, 
     PrimaryButton
-} from '../BOTComponent/styleComponent'
-import ReactLoading from "react-loading"; 
-import styled from 'styled-components'
-import messageGenerator from '../../service/messageGenerator'
+} from '../BOTComponent/styleComponent';
+import messageGenerator from '../../service/messageGenerator';
 const SelectTable = selecTableHOC(ReactTable);
 import AccessControl from './AccessControl';
-import { patientTableColumn } from '../../config/tables'
-import retrieveDataHelper from '../../service/retrieveDataHelper'
-import config from '../../config'
+import { patientTableColumn } from '../../config/tables';
+import retrieveDataHelper from '../../service/retrieveDataHelper';
+import config from '../../config';
 
 
 class PatientTable extends React.Component{
@@ -82,8 +74,6 @@ class PatientTable extends React.Component{
     componentDidMount = () => {
         this.getData();
         this.getAreaTable();
-        this.getLbeaconData();
-        this.getPhysicianList();
         this.getImportData();
     }
 
@@ -101,7 +91,6 @@ class PatientTable extends React.Component{
         .then(res => {
             let columns = _.cloneDeep(patientTableColumn)
             let data = [] 
-            let typeList = {} 
 
             columns.map(field => {
                 field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
@@ -110,9 +99,6 @@ class PatientTable extends React.Component{
             res.data.rows
             .filter(item => item.object_type != 0)
             .map(item => {
-
-                item.monitor_type = this.getMonitorTypeArray(item, 'patient').join('/')
-                item.object_type = locale.texts.genderSelect[item.object_type]
                 
                 item.area_name = {
                     value: item.area_name,
@@ -120,7 +106,6 @@ class PatientTable extends React.Component{
                     id: item.area_id
                 }
                 data.push(item)
-
             }) 
 
             this.setState({
@@ -179,60 +164,6 @@ class PatientTable extends React.Component{
             .catch(err => {
                 console.log(`get area table failed ${err}`)
             })
-    }
-
-    getMonitorTypeArray = (item, type) => {
-        return Object.keys(config.monitorType)
-            .reduce((checkboxGroup, index) => {
-                if (item.monitor_type & index) {
-                    checkboxGroup.push(config.monitorType[index])
-                }
-                return checkboxGroup
-            }, [])
-    }
-
-    getLbeaconData = () => {
-        let { locale } = this.context
-        axios.post(getLbeaconTable, {
-            locale: locale.abbr
-        })
-        .then(res => {
-            let roomOptions = []
-            res.data.rows.map(item => {
-                if (item.room) {
-                    roomOptions.push({
-                        value: item.id,
-                        label: item.room
-                    })
-                }
-            })  
-            this.setState({
-                roomOptions,
-            })
-        })
-        .catch(err => {
-            console.log("get lbeacon data fail : " + err);
-        })
-    }
-
-    getPhysicianList = () => {
-        let { locale } = this.context
-        axios.post(getUserList, {
-            locale: locale.abbr 
-        })
-        .then(res => {
-            let physicianList = res.data.rows
-                .filter(user => {
-                    return user.role_type.includes("care_provider")
-                })
-
-            this.setState({
-                physicianList
-            })
-        })
-        .catch(err => {
-            console.log(err)
-        })
     }
 
     handleClose = () => {
@@ -317,13 +248,13 @@ class PatientTable extends React.Component{
 
         let { name } = e.target
         switch(name) {
-            case "associate_patient":
+            case 'associate_patient':
                 this.setState({
                     isShowBind: true,
                     bindCase: 2,
                 })
             break;
-            case "deletePatient":
+            case 'deletePatient':
                 this.setState({
                     showDeleteConfirmation: true,
                     warningSelect : 0,
@@ -479,29 +410,6 @@ class PatientTable extends React.Component{
         })
     }
 
-    addPatientFilter = (key, attribute, source) => {
-        this.state.patientFilter = this.state.patientFilter.filter(filter => source != filter.source)
-        this.state.patientFilter.push({
-            key, attribute, source
-        }) 
-       
-        this.filterPatients()
-    }
-
-    removePatientFilter = (source) => {
-        this.state.patientFilter = this.state.patientFilter.filter(filter => source != filter.source)
-        this.filterPatients()
-    }
-
-    filterPatients = () => {
-        let filteredPatient = this.state.patientFilter.reduce((acc, curr) => {
-            return this.filterData(acc, curr.key, curr.attribute)
-        }, this.state.dataPatient)
-        this.setState({
-            filteredPatient
-        }) 
-    }
-
     render(){
 
         const { locale } = this.context 
@@ -527,11 +435,11 @@ class PatientTable extends React.Component{
         };
 
         return(
-            <div> 
-                <div className="d-flex justify-content-between my-4">
-                    <div className="d-flex justify-content-start">                    
+            <Fragment> 
+                <div className='d-flex justify-content-between my-4'>
+                    <div className='d-flex justify-content-start'>                    
                         <BOTInput
-                            className="mx-2"
+                            className='mx-2'
                             placeholder={locale.texts.SEARCH}
                             getSearchKey={(key) => {
                                 this.addObjectFilter(
@@ -547,8 +455,8 @@ class PatientTable extends React.Component{
                             platform={['browser']}
                         >
                             <Select
-                                name="Select Area Patient"
-                                className="mx-2"
+                                name='Select Area Patient'
+                                className='mx-2'
                                 styles={styleConfig.reactSelectFilter}
                                 onChange={(value) => {
                                     if(value){
@@ -571,7 +479,7 @@ class PatientTable extends React.Component{
                         <ButtonToolbar>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name="associate_patient"
+                                name='associate_patient'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.ASSOCIATE}
@@ -584,7 +492,7 @@ class PatientTable extends React.Component{
                             </PrimaryButton>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name="deletePatient"
+                                name='deletePatient'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.DELETE}
@@ -598,7 +506,7 @@ class PatientTable extends React.Component{
                     data={this.state.filteredData}
                     columns={this.state.columns}
                     ref={r => (this.selectTable = r)}
-                    className="-highlight text-none"
+                    className='-highlight text-none'
                     style={{maxHeight:'75vh'}} 
                     onPageChange={(e) => {this.setState({selectAll:false,selection:''})}} 
                     {...extraProps}
@@ -677,8 +585,7 @@ class PatientTable extends React.Component{
               
                     }
                 />
-            </div>
-
+            </Fragment>
         )
     }
 }
