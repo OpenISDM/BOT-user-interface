@@ -48,8 +48,10 @@ const retrieveDataHelper = {
     },
 
     getGatewayTable: async function(locale) {
-        return await axios.post(dataSrc.gateway, {
-            locale,
+        return await axios.get(dataSrc.gateway, {
+            params: {
+                locale
+            }
         })
     },
 

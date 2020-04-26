@@ -7,7 +7,7 @@ module.exports = app => {
     app.options('/data/gateway', cors()) 
 
     app.route('/data/gateway')
-        .post(gatewayController.getAllGateway)
+        .get(gatewayController.getAllGateway)
         .delete(gatewayController.deleteGateway)
 
 }

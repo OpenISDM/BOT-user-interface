@@ -15,7 +15,7 @@ const pool = new pg.Pool(config)
 
 const getAllGateway = (request, response) => {
 
-    let { locale } = request.body
+    let { locale } = request.query
 
     pool.query(dbQueries.getAllGateway)
         .then(res => {
