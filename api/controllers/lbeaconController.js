@@ -15,7 +15,8 @@ const pool = new pg.Pool(config)
 
 const getAllLbeacon= (request, response) => {
 
-    let { locale } = request.body 
+    let { locale } = request.query;
+
     pool.query(dbQueries.getLbeaconTable)
         .then(res => {
             console.log('get lbeacon table data succeed')

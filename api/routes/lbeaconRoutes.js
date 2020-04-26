@@ -7,7 +7,7 @@ module.exports = app => {
     app.options('/data/lbeacon', cors()) 
 
     app.route('/data/lbeacon')
-        .post(lbeaconController.getAllLbeacon)
+        .get(lbeaconController.getAllLbeacon)
         .delete(lbeaconController.deleteLBeacon)
         .put(lbeaconController.editLbeacon)
 

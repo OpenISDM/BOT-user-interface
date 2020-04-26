@@ -84,8 +84,6 @@ app.post('/data/editObjectPackage', db.editObjectPackage)
 
 app.post('/user/signin', db.signin)
 
-app.post('/user/signup', db.signup);
-
 app.post('/user/editPassword', db.editPassword)
 
 app.post('/data/getImportPatient', db.getImportPatient);
@@ -106,11 +104,7 @@ app.post('/data/getAreaTable', db.getAreaTable)
 
 app.post('/validation/username', db.validateUsername)
 
-app.post('/test/getUserList', db.getUserList)
-
 app.post('/test/getRoleNameList', db.getRoleNameList)
-
-app.post('/test/deleteUser', db.deleteUser)
 
 app.post('/test/setUserInfo', db.setUserInfo)
 
@@ -216,16 +210,15 @@ app.get('/download/com.beditech.IndoorNavigation.apk', (req, res) => {
 
 
 
-
-
-
 const trackingDataRoutes = require('./api/routes/trackingDataRoutes');
 const lbeaconRoutes = require('./api/routes/lbeaconRoutes');
 const gatewayRoutes = require('./api/routes/gatewayRoutes');
+const userRoutes = require('./api/routes/userRoutes');
 
 trackingDataRoutes(app);
 lbeaconRoutes(app);
 gatewayRoutes(app);
+userRoutes(app);
 
 
 

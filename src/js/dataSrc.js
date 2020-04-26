@@ -19,7 +19,6 @@ const addAssociation_Patient = `${protocol}://${dataSrcIP}/data/addAssociation_P
 const cleanBinding = `${protocol}://${dataSrcIP}/data/cleanBinding`;
 const editObjectPackage = `${protocol}://${dataSrcIP}/data/editObjectPackage`;
 const signin = `${protocol}://${dataSrcIP}/user/signin`;
-const signup = `${protocol}://${dataSrcIP}/user/signup`;
 const editPassword = `${protocol}://${dataSrcIP}/user/editPassword`; 
 const getUserInfo = `${protocol}://${dataSrcIP}/user/getUserInfo`;
 const addUserSearchHistory = `${protocol}://${dataSrcIP}/user/addUserSearchHistory`;
@@ -35,9 +34,7 @@ const deletePatient = `${protocol}://${dataSrcIP}/test/deletePatient`
 const deleteDevice = `${protocol}://${dataSrcIP}/test/deleteDevice`
 const deleteImportData = `${protocol}://${dataSrcIP}/test/deleteImportData`
 const deleteGateway= `${protocol}://${dataSrcIP}/test/deleteGateway`
-const getUserList = `${protocol}://${dataSrcIP}/test/getUserList`
 const getRoleNameList = `${protocol}://${dataSrcIP}/test/getRoleNameList`
-const deleteUser = `${protocol}://${dataSrcIP}/test/deleteUser`
 const setUserInfo = `${protocol}://${dataSrcIP}/test/setUserInfo`
 const getAreaTable = `${protocol}://${dataSrcIP}/data/getAreaTable`
 const getGeofenceConfig = `${protocol}://${dataSrcIP}/data/getGeofenceConfig`
@@ -73,7 +70,7 @@ const getUrl = url => {
 const trackingData = `${domain}/data/trackingData`;
 const lbeacon = `${domain}/data/lbeacon`;
 const gateway = `${domain}/data/gateway`;
-
+const user = `${domain}/data/user`;
 
 // const trackingData = `${protocol}://${dataSrcIP}/data/trackingData`;
 
@@ -86,6 +83,7 @@ module.exports = {
     trackingData,
     lbeacon,
     gateway,
+    user,
 
 
     domain,
@@ -111,7 +109,6 @@ module.exports = {
     addPatient,
     editObjectPackage,
     signin,
-    signup,
     editPassword,
     getUserInfo,
     objectImport,
@@ -128,9 +125,7 @@ module.exports = {
     getEditObjectRecord,
     deleteEditObjectRecord,
     deleteShiftChangeRecord,
-    getUserList,
     getRoleNameList,
-    deleteUser,
     setUserInfo,
     getAreaTable,
     getGeofenceConfig,

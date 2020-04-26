@@ -554,54 +554,6 @@ const editPassword = (request, response) => {
  
 }
 
-
-
-const signup = (request, response) => {
-
-    const { 
-        name, 
-        password, 
-        roles,
-        area_id,
-    } = request.body;    
-    const saltRounds = 10;
-    const hash = bcrypt.hashSync(password, saltRounds);
-
-    const signupPackage = {
-        name,
-        password: hash,
-        area_id
-    }
-
-    pool.query(queryType.signup(signupPackage))
-        .then(res => {
-            pool.query(queryType.insertUserData(name, roles, area_id))
-                .then(res => {
-                    console.log('sign up succeed')
-                    response.status(200).json(res)
-                })
-                .catch(err => {
-                    console.log(`sinup failed ${err}`)
-                })
-        })
-        .catch(err => {
-            console.log(`signup failed ${err}`)
-        })
-}
-
-
-const deleteUser = (request, response) => {
-    var username = request.body.username
-    pool.query(queryType.deleteUser(username))
-        .then(res => {
-            console.log('delete user success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`delete user failer ${err}`)
-        })  
-}
-
 const setUserInfo = (request, response) => { 
     var {
         user
@@ -1466,9 +1418,7 @@ module.exports = {
     deletePatient,
     deleteDevice,
     deleteImportData,
-    deleteUser,
     signin,
-    signup,
     editPassword,
     generatePDF,
     modifyUserDevices,

@@ -42,8 +42,10 @@ const retrieveDataHelper = {
     },
 
     getLbeaconTable: async function(locale) {
-        return await axios.post(dataSrc.lbeacon, {
-            locale,
+        return await axios.get(dataSrc.lbeacon, {
+            params: {
+                locale,
+            }
         })
     },
 

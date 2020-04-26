@@ -847,41 +847,6 @@ const editPassword = (user_id,password) => {
 }
 
 
-
-
-
-const signup = (signupPackage) => {
-
-	const text = 
-		`
-		INSERT INTO user_table 
-			(
-				name, 
-				password,
-				registered_timestamp,
-				main_area
-			)
-		VALUES (
-			$1, 
-			$2, 
-			now(),
-			$3
-		);
-		`;
-	const values = [
-		signupPackage.name, 
-		signupPackage.password,
-		signupPackage.area_id
-	];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query
-}
-
 function getUserInfo(username) {
 
 	const text =  `
@@ -1077,37 +1042,6 @@ const getRoleNameList = () => {
 	return query
 }
 
-
-const deleteUser = (username) => {
-	
-	const query = `
-		
-		DELETE FROM user_role 
-		WHERE user_id = (
-			SELECT id 
-			FROM user_table 
-			WHERE name='${username}'
-		); 
-
-		DELETE FROM user_area
-		WHERE user_id = (
-			SELECT id
-			FROM user_table
-			WHERE name='${username}'
-		);
-
-		DELETE FROM user_table 
-		WHERE id = (
-			SELECT id 
-			FROM user_table
-			WHERE name='${username}'
-		);
-	`
-	return query
-}
-
-
-
 const setUserInfo = user => {
 	return `
 
@@ -1256,44 +1190,6 @@ const setVisitTimestamp = (username) => {
 	`
 }
 
-const insertUserData = (name, roles, area_id) => {
-
-	return `
-		INSERT INTO user_role (
-			user_id, 
-			role_id
-		)
-		VALUES 
-		${
-			roles.map(role => `(
-				(
-					SELECT id
-					FROM user_table
-					WHERE name = '${name}'
-				), 
-				(
-					SELECT id 
-					FROM roles
-					WHERE name = '${role}'
-				)
-			)`
-		)};
-
-		INSERT INTO user_area (
-			user_id, 
-			area_id
-		)
-		VALUES 
-			(
-				(
-					SELECT id 
-					FROM user_table 
-					WHERE name ='${name}'
-				),
-				${area_id}
-			)
-	`
-}
 
 const addEditObjectRecord = (formOption, username, filePath) => {
 
@@ -1988,7 +1884,6 @@ module.exports = {
 	addPatient,
 	editObjectPackage,
 	signin,
-	signup,
 	editPassword,
 	getUserInfo,
 	addUserSearchHistory,
@@ -1998,7 +1893,6 @@ module.exports = {
 	validateUsername,
 	getUserList,
 	getRoleNameList,
-	deleteUser,
 	setUserInfo,
 	getEditObjectRecord,
 	deleteEditObjectRecord,
@@ -2008,7 +1902,6 @@ module.exports = {
 	deleteImportData,
 	setShift,
 	setVisitTimestamp,
-	insertUserData,
 	addEditObjectRecord,
 	addShiftChangeRecord,
 	getAreaTable,
