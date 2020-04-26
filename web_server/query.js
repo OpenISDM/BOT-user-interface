@@ -296,23 +296,6 @@ const cleanBinding = (request, response) => {
     })
 }
 
-const getLbeaconTable = (request, response) => {
-
-    let { locale } = request.body 
-    pool.query(queryType.getLbeaconTable)
-        .then(res => {
-            console.log('get lbeacon table data succeed')
-            res.rows.map(item => {
-                item.last_report_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-            })
-            response.status(200).json(res)
-
-        })
-        .catch(err => {
-            console.log(`get lbeacon table failed ${err}`)
-        })        
-}
-
 const getGatewayTable = (request, response) => {
     let { locale } = request.body
 
@@ -904,18 +887,6 @@ const deletePatient = (request, response) => {
     })
 }
 
-
-const deleteLBeacon = (request, response) => {
-    const { idPackage } = request.body
-    pool.query(queryType.deleteLBeacon(idPackage))
-        .then(res => {
-            console.log('delete LBeacon record success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('deleteLBeacon error: ', err)
-        })
-}
 
 const deleteGateway = (request, response) => {
     const { idPackage } = request.body
@@ -1512,7 +1483,6 @@ module.exports = {
     getImportTable,
     getImportPatient,
     getImportData,
-    getLbeaconTable,
     getGatewayTable,
     getUserList,
     getRoleNameList,
@@ -1542,7 +1512,6 @@ module.exports = {
     deletePatient,
     deleteDevice,
     deleteImportData,
-    deleteLBeacon,
     deleteGateway,
     deleteUser,
     signin,

@@ -1301,18 +1301,6 @@ const deleteImportData = (idPackage) => {
 	return query
 }
 
-
-
-
-const deleteLBeacon = (idPackage) => {
-	const query = `
-		DELETE FROM lbeacon_table
-		WHERE id IN (${idPackage.map(item => `'${item}'`)});
-	`
-	return query
-}
-
-
 const deleteGateway = (idPackage) => {
 	const query = `
 		DELETE FROM gateway_table
@@ -1320,8 +1308,6 @@ const deleteGateway = (idPackage) => {
 	`
 	return query
 }
-
-
 
 
 
@@ -2096,7 +2082,6 @@ module.exports = {
 	deleteDevice, 
 	deleteImportData,
 	setShift,
-	deleteLBeacon,
 	deleteGateway,
 	setVisitTimestamp,
 	insertUserData,

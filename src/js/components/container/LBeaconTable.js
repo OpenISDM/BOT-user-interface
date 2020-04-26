@@ -183,8 +183,10 @@ class LbeaconTable extends React.Component{
                 ?   null
                 :   idPackage.push(parseInt(this.state.data[item].id))
             }) 
-            axios.post(deleteLBeacon, {
-                idPackage
+            axios.delete(`${dataSrc.lbeacon}`, {
+                data: {
+                    idPackage
+                }
             })
             .then(res => {
                 this.getData(() => {

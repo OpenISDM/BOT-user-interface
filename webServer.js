@@ -60,11 +60,9 @@ app.post('/data/addAssociation_Patient', db.addAssociation_Patient);
 
 app.post('/data/cleanBinding', db.cleanBinding);
 
-app.post('/data/getLbeaconTable', db.getLbeaconTable);
-
 app.post('/data/getGatewayTable', db.getGatewayTable);
 
-app.post('/data/getTrackingData', db.getTrackingData);
+// app.post('/data/getTrackingData', db.getTrackingData);
 
 app.post('/data/editObject', db.editObject);
 
@@ -131,8 +129,6 @@ app.post('/test/deletePatient', db.deletePatient)
 app.post('/test/deleteDevice', db.deleteDevice)
 
 app.post('/test/deleteImportData', db.deleteImportData)
-
-app.post('/test/deleteLBeacon', db.deleteLBeacon)
 
 app.post('/test/deleteGateway', db.deleteGateway)
 
@@ -225,6 +221,17 @@ app.get('/download/com.beditech.IndoorNavigation.apk', (req, res) => {
 });
 
 
+
+
+
+
+const trackingDataRoutes = require('./api/routes/trackingDataRoutes');
+const lbeaconRoutes = require('./api/routes/lbeaconRoutes');
+
+trackingDataRoutes(app);
+lbeaconRoutes(app);
+
+
 /** privatekey name: private.key
  *  certificate name: certificate.cert or certificate.crt
  *  ca_bundle name: ca.bundle.crt
@@ -235,22 +242,22 @@ app.get('/download/com.beditech.IndoorNavigation.apk', (req, res) => {
  * If it is window os, please refer to https://tecadmin.net/install-openssl-on-windows/ install openssl 
  * and set the environment variables*/
 
-var privateKey = process.env.PRIVATE_KEY && fs.readFileSync(__dirname + `/ssl/${process.env.PRIVATE_KEY}`)
-var certificate = process.env.CERTIFICATE && fs.readFileSync(__dirname + `/ssl/${process.env.CERTIFICATE}`) 
-var ca_bundle = process.env.CA_BUNDLE && fs.readFileSync(__dirname + `/ssl/${process.env.CA_BUNDLE}`)
+// var privateKey = process.env.PRIVATE_KEY && fs.readFileSync(__dirname + `/ssl/${process.env.PRIVATE_KEY}`)
+// var certificate = process.env.CERTIFICATE && fs.readFileSync(__dirname + `/ssl/${process.env.CERTIFICATE}`) 
+// var ca_bundle = process.env.CA_BUNDLE && fs.readFileSync(__dirname + `/ssl/${process.env.CA_BUNDLE}`)
 
-var credentials = { 
-    key: privateKey, 
-    cert: certificate,
-    ca: ca_bundle
-}
+// var credentials = { 
+//     key: privateKey, 
+//     cert: certificate,
+//     ca: ca_bundle
+// }
 
-const httpsServer = https.createServer(credentials, app)
+// const httpsServer = https.createServer(credentials, app)
 
-/** Enable HTTPS server */
-httpsServer.listen(httpsPort, () => {
-    console.log(`HTTPS Server running on PORT ${httpsPort}`)
-})
+// /** Enable HTTPS server */
+// httpsServer.listen(httpsPort, () => {
+//     console.log(`HTTPS Server running on PORT ${httpsPort}`)
+// })
 
 const httpServer = process.env.HTTP_PORT 
     ?   http.createServer(app).listen(httpPort, () =>{

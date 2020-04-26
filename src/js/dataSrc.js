@@ -4,7 +4,6 @@ const domain = `${protocol}://${dataSrcIP}`;
 const getTrackingData = `${protocol}://${dataSrcIP}/data/getTrackingData`;
 const getTrackingTableByMacAddress = `${protocol}://${dataSrcIP}/data/getTrackingTableByMacAddress`;
 const getObjectTable = `${protocol}://${dataSrcIP}/data/getObjectTable`;
-const getLbeaconTable = `${protocol}://${dataSrcIP}/data/getLbeaconTable`;
 const getGatewayTable = `${protocol}://${dataSrcIP}/data/getGatewayTable`;
 const searchResult = `${protocol}://${dataSrcIP}/data/searchResult`;
 const editObject = `${protocol}://${dataSrcIP}/data/editObject`;
@@ -36,7 +35,6 @@ const deleteShiftChangeRecord = `${protocol}://${dataSrcIP}/test/deleteShiftChan
 const deletePatient = `${protocol}://${dataSrcIP}/test/deletePatient`
 const deleteDevice = `${protocol}://${dataSrcIP}/test/deleteDevice`
 const deleteImportData = `${protocol}://${dataSrcIP}/test/deleteImportData`
-const deleteLBeacon= `${protocol}://${dataSrcIP}/test/deleteLBeacon`
 const deleteGateway= `${protocol}://${dataSrcIP}/test/deleteGateway`
 const getUserList = `${protocol}://${dataSrcIP}/test/getUserList`
 const getRoleNameList = `${protocol}://${dataSrcIP}/test/getRoleNameList`
@@ -68,15 +66,28 @@ const getLocationHistory = `${protocol}://${dataSrcIP}/data/getLocationHistory`
 const setUserSecondaryArea = `${protocol}://${dataSrcIP}/data/setUserSecondaryArea`
 const addPatientRecord = `${protocol}://${dataSrcIP}/data/addPatientRecord`
 const exportCSV = `${protocol}://${dataSrcIP}/exportCSV`
-const exportPDF = `${protocol}://${dataSrcIP}/exportPDF`
+const exportPDF = `${protocol}://${dataSrcIP}/exportPDF`;
+
+const getUrl = url => {
+    return domain + url
+}
+const trackingData = `${domain}/data/trackingData`;
+const lbeacon = `${domain}/data/lbeacon`;
+
+// const trackingData = `${protocol}://${dataSrcIP}/data/trackingData`;
+
 
 
 const pdfUrl = function (path) {
     return `${protocol}://${dataSrcIP}/${path}`
 }
 module.exports = {
+    trackingData,
+    lbeacon,
+
+
     domain,
-    getTrackingData,
+    // getTrackingData,
     getTrackingTableByMacAddress,
     getImportData,
     addAssociation,
@@ -86,7 +97,6 @@ module.exports = {
     getObjectTable,
     getImportTable,
     getImportPatient,
-    getLbeaconTable,
     getGatewayTable,
     getMonitorConfig,
     getTransferredLocation,
@@ -111,7 +121,6 @@ module.exports = {
     modifyUserInfo,
     deleteDevice,
     deleteImportData,
-    deleteLBeacon,
     deleteGateway,
     getShiftChangeRecord,
     validateUsername,    
