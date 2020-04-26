@@ -1,13 +1,8 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import LocaleContext from '../../context/LocaleContext';
-import axios from 'axios';
-import dataSrc from '../../dataSrc';
 import { Formik, Field, Form } from 'formik';
-import RadioButtonGroup from "../container/RadioButtonGroup"
-import RadioButton from "./RadioButton"
-import FormikFormGroup from './FormikFormGroup'
-import messageGenerator from '../../service/messageGenerator'
+import FormikFormGroup from './FormikFormGroup';
 /**
  * EditLbeaconForm will update if user selects one of the object table.
  * The selected object data will transfer from ObjectMangentContainer to EditLbeaconForm
@@ -24,10 +19,9 @@ const EditLbeaconForm = ({
     let locale = React.useContext(LocaleContext)
 
     let {
-        danger_area,
         uuid,
-        room,
-        description
+        description,
+        comment
     } = selectedObjectData
 
     return (
@@ -46,30 +40,21 @@ const EditLbeaconForm = ({
                 <Formik
                     initialValues = {{
                         description: description || '',
-                        danger_area: danger_area 
-                            ?   danger_area.toString()
-                            :   '0',
-                        room: room || '',
-                        uuid: uuid
+                        uuid: uuid,
+                        comment: comment,
                     }}
 
-                    onSubmit={(values, { setStatus, setSubmitting }) => {
+                    onSubmit={values => {
                         let {
                             description,
-                            danger_area,
-                            room
+                            comment
                         } = values
                         let lbeaconSettingPackage = {
                             ...selectedObjectData,
                             description,
-                            danger_area,
-                            room,
+                            comment
                         }
-                        let callback = () => messageGenerator.setSuccessMessage(
-                                            'save success'
-                                        )  
                         handleSubmit(lbeaconSettingPackage)
-                        callback()
                     }}
 
                     render={({ values, errors, status, touched, isSubmitting }) => (
@@ -93,39 +78,9 @@ const EditLbeaconForm = ({
                             />
                             <FormikFormGroup 
                                 type="text"
-                                name="room"
-                                label={locale.texts.ROOM}
+                                name="comment"
+                                label={locale.texts.COMMENT}
                                 placeholder=""
-                            />
-                            <FormikFormGroup 
-                                type="text"
-                                name="danger_area"
-                                label={locale.texts.DANGER_AREA}
-                                error={errors.danger_area}
-                                touched={touched.danger_area}
-                                placeholder=""
-                                component={() => (
-                                    <RadioButtonGroup
-                                        id="danger_area"
-                                        label={locale.texts.DANGER_AREA}
-                                        value={values.danger_area}
-                                        error={errors.danger_area}
-                                        touched={touched.danger_area}
-                                    >
-                                        <Field
-                                            component={RadioButton}
-                                            name="danger_area"
-                                            id="1"
-                                            label={locale.texts.ENABLE}
-                                        />
-                                        <Field
-                                            component={RadioButton}
-                                            name="danger_area"
-                                            id="0"
-                                            label={locale.texts.DISABLE}
-                                        />
-                                    </RadioButtonGroup>
-                                )}
                             />
                             <Modal.Footer>
                                 <Button 

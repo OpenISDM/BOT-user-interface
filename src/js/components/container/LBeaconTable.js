@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-    Button, 
     ButtonToolbar 
 } from 'react-bootstrap';
 import ReactTable from 'react-table';
@@ -8,22 +7,20 @@ import 'react-table/react-table.css';
 import EditLbeaconForm from './../presentational/EditLbeaconForm'
 import selecTableHOC from 'react-table/lib/hoc/selectTable';
 import axios from 'axios';
-import dataSrc from '../../dataSrc'
+import dataSrc from '../../dataSrc';
 import config from '../../config';
-import { 
-    deleteLBeacon,
-} from "../../dataSrc"
 import { 
     lbeaconTableColumn,
 } from '../../config/tables';
 import { AppContext } from '../../context/AppContext';
-import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import retrieveDataHelper from '../../service/retrieveDataHelper'
-import styleConfig from '../../config/styleConfig'
+import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm';
+import retrieveDataHelper from '../../service/retrieveDataHelper';
+import styleConfig from '../../config/styleConfig';
 import {
     PrimaryButton
-} from '../BOTComponent/styleComponent'
-import AccessControl from '../presentational/AccessControl'
+} from '../BOTComponent/styleComponent';
+import AccessControl from '../presentational/AccessControl';
+import messageGenerator from '../../service/messageGenerator';
 
 const SelectTable = selecTableHOC(ReactTable);
 
@@ -105,16 +102,13 @@ class LbeaconTable extends React.Component{
     }  
 
     handleSubmitForm = (formOption) => {
-
-        axios.post(dataSrc.editLbeacon, {
+        let callback = () => messageGenerator.setSuccessMessage(
+            'save success'
+        ) 
+        axios.put(dataSrc.lbeacon, {
             formOption,
         }).then(res => {
-            this.getData(() => {
-                this.props.setMessage(
-                    'success', 
-                    'edit lbeacon success'
-                )
-            }) 
+            this.getData(callback) 
         }).catch(err => {
             console.log(`edit lbeacon failed ${err}`)
         })
@@ -183,7 +177,7 @@ class LbeaconTable extends React.Component{
                 ?   null
                 :   idPackage.push(parseInt(this.state.data[item].id))
             }) 
-            axios.delete(`${dataSrc.lbeacon}`, {
+            axios.delete(dataSrc.lbeacon, {
                 data: {
                     idPackage
                 }

@@ -96,8 +96,6 @@ app.post('/user/getUserInfo', db.getUserInfo)
 
 app.post('/user/addUserSearchHistory', db.addUserSearchHistory)
 
-app.post('/data/editLbeacon', db.editLbeacon)
-
 app.post('/data/generatePDF',db.generatePDF)
 
 app.post('/data/PDFInfo',db.getShiftChangeRecord)

@@ -8,6 +8,8 @@ module.exports = app => {
 
     app.route('/data/lbeacon')
         .post(lbeaconController.getAllLbeacon)
-        .delete(lbeaconController.deleteLBeacon);
+        .delete(lbeaconController.deleteLBeacon)
+        .put(lbeaconController.editLbeacon)
 
+    
 }

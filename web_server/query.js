@@ -693,18 +693,6 @@ const addUserSearchHistory = (request, response) => {
         })
 }
 
-const editLbeacon = (request, response) => {
-    const { formOption } = request.body
-    pool.query(queryType.editLbeacon(formOption))
-        .then(res => {
-            console.log('Edit lbeacon success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('Edit lbeacon fails ' + err)
-        })
-}
-
 const generatePDF = (request, response) => {
     let { pdfPackage } = request.body
     /** If there are some trouble when download pdf, try npm rebuild phantomjs-prebuilt */
@@ -1505,7 +1493,6 @@ module.exports = {
     editImport,
     editPatient,
     objectImport,
-    editLbeacon,
     editObjectPackage,
     deleteEditObjectRecord,
     deleteShiftChangeRecord,

@@ -228,6 +228,7 @@ const en =  {
     RECORDED_BY: "recorded by",
     ADD_NEW_RECORD: "add new record",
     FOLD:"fold",
+    COMMENT: "comment",
 
     /** form title */
     EDIT_LBEACON: "edit lbeacon",

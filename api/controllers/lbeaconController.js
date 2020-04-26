@@ -44,7 +44,20 @@ const deleteLBeacon = (request, response) => {
         })
 }
 
+const editLbeacon = (request, response) => {
+    const { formOption } = request.body
+    pool.query(dbQueries.editLbeacon(formOption))
+        .then(res => {
+            console.log('edit lbeacon succeed')
+            response.status(200).json(res)
+        })
+        .catch(err => {
+            console.log(`edit lbeacon failed ${err}`)
+        })
+}
+
 module.exports = {
     getAllLbeacon,
-    deleteLBeacon
+    deleteLBeacon,
+    editLbeacon
 }

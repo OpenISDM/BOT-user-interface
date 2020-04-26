@@ -217,7 +217,6 @@ const tw = {
     PERIMETERS_GROUP: "perimeters group",
     FENCE_RSSI:"fences rssi",
     PERIMETER_RSSI:"perimeter rssi",
-    
     FENCES_GROUP: "fences group",
     RSSI: "rssi",
     YES: '是',
@@ -230,6 +229,7 @@ const tw = {
     RECORDED_BY: "紀錄",
     ADD_NEW_RECORD: "新增紀錄",
     FOLD:"折疊",
+    COMMENT: "註解",
 
     /** form title */
     EDIT_LBEACON: "編輯 lbeacon",

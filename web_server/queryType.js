@@ -459,26 +459,6 @@ function getImportData(formOption){
 	return query;
 }
 
-
-
-const getLbeaconTable = `
-	SELECT 
-		id,
-		uuid, 
-		description, 
-		ip_address, 
-		health_status, 
-		gateway_ip_address, 
-		last_report_timestamp,
-		danger_area,
-		room,
-		api_version,
-		server_time_offset,
-		product_version
-	FROM lbeacon_table
-	ORDER BY ip_address DESC
-`;
-
 const getGatewayTable = `
 	SELECT 
 		ip_address, 
@@ -960,33 +940,6 @@ const addUserSearchHistory = (username, keyType, keyWord) => {
 		keyType, 
 		username
 	];
-
-	const query = {
-		text, 
-		values
-	};
-
-	return query
-}
-
-function editLbeacon (formOption) {
-	const text =
-		`
-		UPDATE lbeacon_table
-		SET 
-			description = $2,
-			danger_area = $3,
-			room = $4
-
-		WHERE uuid = $1
-	`;
-
-	const values = [
-		formOption.uuid,
-		formOption.description,
-		formOption.danger_area,
-		formOption.room
-	]
 
 	const query = {
 		text, 
@@ -2050,7 +2003,6 @@ module.exports = {
 	getTrackingTableByMacAddress,
 	getObjectTable,
 	getImportTable,
-    getLbeaconTable,
 	getGatewayTable,
 	getMonitorConfig,
 	setGeofenceConfig,
@@ -2066,7 +2018,6 @@ module.exports = {
 	editPassword,
 	getUserInfo,
 	addUserSearchHistory,
-	editLbeacon,
 	modifyUserDevices,
 	modifyUserInfo,
 	getShiftChangeRecord,
