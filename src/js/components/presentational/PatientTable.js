@@ -124,7 +124,7 @@ class PatientTable extends React.Component{
 
     getImportedData = () => {
         let { locale } = this.context
-        axios.post(dataSrc.importedObject, {
+        axios.get(dataSrc.importedObject, {
             params: {
                 locale: locale.abbr
             }
