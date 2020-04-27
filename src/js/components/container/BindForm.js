@@ -10,7 +10,12 @@ import {
 import { AppContext } from '../../context/AppContext';
 import Select from 'react-select';
 import config from '../../config'
-import messageGenerator from '../../service/messageGenerator'
+import messageGenerator from '../../service/messageGenerator';
+import FormikFormGroup from '../presentational/FormikFormGroup';
+import {
+    FormFieldName
+} from '../BOTComponent/styleComponent';
+import dataSrc from '../../dataSrc';
 
 class BindForm extends React.Component {
 
@@ -33,8 +38,7 @@ class BindForm extends React.Component {
             bindData:'',
             objectType:'',
             selectData: {},
-        })
-        this.props.handleClose()
+        },  this.props.handleClose())
     }
  
     render() {
@@ -71,6 +75,7 @@ class BindForm extends React.Component {
             show
         } = this.props
         let lock = 0 
+
         return (
             <Modal 
                 show={show} 
@@ -98,7 +103,7 @@ class BindForm extends React.Component {
                                 .required(locale.texts.ASSET_CONTROL_NUMBER_IS_REQUIRED)
                                 .test(
                                     'acn', 
-                                    locale.texts.THE_ASSET_CONTROL_NUMBER_IS_ALREADY_LINK,
+                                    locale.texts.THE_ID_IS_ALREADY_ASSOCIATED,
                                     value => {  
                                         if (value != undefined){
                                             let findFlag = true 
@@ -164,59 +169,42 @@ class BindForm extends React.Component {
                                 mac_address: values.mac,
                                 area_id: values.area.id || 0
                             }
-                            if (this.props.bindCase == 1) 
-                            {
-                                axios.post(addAssociation, {
-                                    formOption
-                                }).then(res => {
-                                    setTimeout(function() {  
-                                       this.props.handleSubmitForm()
-                                        this.handleClose() 
-                                    }.bind(this),1000)
-                                }).catch( error => {
-                                    console.log(error)
-                                })
-                            }else if (this.props.bindCase == 2){
-                                axios.post(addAssociation_Patient, {
-                                    formOption
-                                }).then(res => {
-                                    setTimeout(function() { 
-                                        this.props.handleSubmitForm()
-                                        this.handleClose()
-                                    }.bind(this),1000)
-                                }).catch( error => {
-                                    console.log(error)
-                                })
-                            }
+
+                            axios.post(dataSrc.object, {
+                                formOption,
+                                mode: 'PERSONA'
+                            }).then(res => {
+                                this.handleClose()
+                            }).catch( error => {
+                                console.log(error)
+                            })
                         
                         }}
 
                         render={({ values, errors, status, touched, isSubmitting, setFieldValue, submitForm }) => (
-                            <Form className="text-capitalize">
-                                <div className="form-group">
-                                    <small id="TextIDsmall" className="form-text text-muted">{locale.texts.ASSET_CONTROL_NUMBER}</small>
-                                   <Field 
-                                        type="text"
-                                        name="acn"
-                                        placeholder={locale.texts.PLEASE_ENTER_OR_SCAN_ASSET_CONTROL_NUMBER}
-                                        className={'text-capitalize form-control' + (errors.acn && touched.acn ? ' is-invalid' : '')} 
-                                    />
-                                      <ErrorMessage name="acn" component="div" className="invalid-feedback" />
-                                </div>
+                            <Form>
+                                <FormikFormGroup 
+                                    type="text"
+                                    name="acn"
+                                    error={errors.acn}
+                                    touched={touched.acn}                                        
+                                    label={locale.texts.ID}   
+                                    placeholder={locale.texts.PLEASE_TYPE_PERSONA_ID}
+                                /> 
 
                                 {this.state.showDetail &&
-                                    <div>
+                                    <div>        
+                                        <FormikFormGroup 
+                                            type="text"
+                                            name="name"
+                                            label={locale.texts.NAME}    
+                                            disabled
+                                            value={this.state.bindData.name}
+                                        />                          
                                         <div className="form-group">
-                                            <small id="TextIDsmall" className="form-text text-muted">{locale.texts.NAME}</small>
-                                            <input type="readOnly" className="form-control" id="TextID" placeholder="名稱" disabled = {true}  value={this.state.bindData.name} ></input>  
-                                        </div>                                      
-                                        <div className="form-group">
-                                            <small id="TextTypesmall" className="form-text text-muted">{locale.texts.TYPE}</small>
-                                            <input type="readOnly" className="form-control" id="TextType" placeholder="類型" disabled = {true}  value={this.state.bindData.type}></input>  
-                                        </div>  
-                                        <div className="form-group">
-                                            <small id="TextIDsmall" className="form-text text-muted">{locale.texts.AUTH_AREA}</small>
-
+                                            <FormFieldName>
+                                                {locale.texts.AREA} 
+                                            </FormFieldName>
                                             <Select
                                                 placeholder = {locale.texts.SELECT_AREA}
                                                 name="area"
@@ -236,35 +224,33 @@ class BindForm extends React.Component {
                                             </Row>   
                                             <ErrorMessage name="area" component="div" className="invalid-feedback" />
                                         </div>
-                                        <div className="form-group">
-                                            <small id="inputMacAddresssmall" className="form-text text-muted">{locale.texts.MAC_ADDRESS}</small>
-                                            <Field 
-                                                type="text"
-                                                name="mac"
-                                                placeholder={locale.texts.PLEASE_ENTER_OR_SCAN_MAC_ADDRESS} 
-                                                className={'text-capitalize form-control' + (errors.mac && touched.mac ? ' is-invalid' : '')} 
-                                            />
-                                            <ErrorMessage name="mac" component="div" className="invalid-feedback" />
-                                        </div>
+
+                                        <FormikFormGroup 
+                                            type="text"
+                                            name="mac"
+                                            error={errors.mac}
+                                            touched={touched.mac}
+                                            label={locale.texts.MAC_ADDRESS}   
+                                            placeholder={locale.texts.PLEASE_ENTER_OR_SCAN_MAC_ADDRESS} 
+                                        />    
                                     </div>
                                 }
-
-                                {this.state.showDetail &&
-                                    <Modal.Footer>
-                                        <Button variant="outline-secondary" className="text-capitalize" onClick={this.handleClose}>
-                                            {locale.texts.CANCEL}
-                                        </Button>
-                                        <Button 
-                                            type="button" 
-                                            className="text-capitalize" 
-                                            variant="primary" 
-                                            disabled={isSubmitting}
-                                            onClick={submitForm}
-                                        >
-                                            {locale.texts.SAVE}
-                                        </Button>
-                                    </Modal.Footer>
-                                }
+                                <Modal.Footer>
+                                    <Button 
+                                        variant="outline-secondary" 
+                                        onClick={this.handleClose}
+                                    >
+                                        {locale.texts.CANCEL}
+                                    </Button>
+                                    <Button 
+                                        type="button" 
+                                        variant="primary" 
+                                        disabled={!this.state.showDetail || isSubmitting}
+                                        onClick={submitForm}
+                                    >
+                                        {locale.texts.SAVE}
+                                    </Button>
+                                </Modal.Footer>
                             </Form>
                         )}
                     />

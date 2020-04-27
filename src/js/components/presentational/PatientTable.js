@@ -13,9 +13,6 @@ import Select from 'react-select';
 import BOTInput from '../presentational/BOTInput';
 import axios from 'axios';
 import EditPatientForm from '../container/EditPatientForm';
-import { 
-    getImportPatient
-} from '../../dataSrc';
 import {
     PrimaryButton
 } from '../BOTComponent/styleComponent';
@@ -52,21 +49,7 @@ class PatientTable extends React.Component{
         objectTable: [],
         importData: [],
         filteredData: [],
-        filterSelection: {
-            statusOptions: config.statusOptions.map(item => {
-                return {
-                    value: item,
-                    label: this.context.locale.texts[item.replace(/ /g, '_').toUpperCase()]
-                }
-            }),
-            monitorTypeOptions: config.monitorOptions.map(item => {
-                return {
-                    value: item,
-                    label: item 
-                }
-            }),
-           
-        },
+        filterSelection: {},
     }
 
     componentDidMount = () => {
@@ -259,13 +242,13 @@ class PatientTable extends React.Component{
 
         let { name } = e.target
         switch(name) {
-            case 'associate_patient':
+            case 'associate':
                 this.setState({
                     isShowBind: true,
                     bindCase: 2,
                 })
             break;
-            case 'deletePatient':
+            case 'delete':
                 this.setState({
                     showDeleteConfirmation: true,
                     warningSelect : 0,
@@ -452,7 +435,7 @@ class PatientTable extends React.Component{
                         <ButtonToolbar>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name='associate_patient'
+                                name='associate'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.ASSOCIATE}
@@ -465,7 +448,7 @@ class PatientTable extends React.Component{
                             </PrimaryButton>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name='deletePatient'
+                                name='delete'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.DELETE}
@@ -524,7 +507,7 @@ class PatientTable extends React.Component{
                     formPath={this.state.formPath}
                     handleClose={this.handleClose}
                     objectTable={this.state.objectTable}
-                    ImportData= {this.state.importData}
+                    importedData= {this.state.importData}
                     areaTable={this.state.areaTable}
                     PatientImportData = {this.state.importData}
                     data={this.state.importData.reduce((dataMap, item) => {

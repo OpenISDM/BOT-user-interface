@@ -309,6 +309,7 @@ const en =  {
     MUST_BE_NEGATIVE_NUMBER:"must be negative number",
     CONNECT_TO_DATABASE_FAILED: "connect to database failed",
     THE_ASSET_CONTROL_NUMBER_IS_ALREADY_LINK:"this asn already linked",
+    THE_ID_IS_ALREADY_ASSOCIATED: "the ID is already associated",
     ENTER_THE_PASSWORD:"enter new password",
     PASSWORD_NOT_FIT:"password not fit",
     ALEAST_CHOOSE_ONE_UUID:"aleast choose one uuid",
@@ -325,6 +326,7 @@ const en =  {
     NO_DATA_FOUND: "no data found",
     SEARCH_FOR_NAME: "Search for name",
     SEARCH_FOR_UUID: "Search for uuid",
+    PLEASE_TYPE_PERSONA_ID: "please type ID",
 
     /* Object Status */
     STATUS: "status",

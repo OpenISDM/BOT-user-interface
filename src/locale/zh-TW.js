@@ -311,6 +311,7 @@ const tw = {
     MUST_BE_NEGATIVE_NUMBER:'必須是負數',
     CONNECT_TO_DATABASE_FAILED: '連線失敗',
     THE_ASSET_CONTROL_NUMBER_IS_ALREADY_LINK:'此編號已綁定',
+    THE_ID_IS_ALREADY_ASSOCIATED: '此編號已綁定',
     ENTER_THE_PASSWORD:'請輸入新密碼',
     PASSWORD_NOT_FIT:'密碼需要相符',
     ALEAST_CHOOSE_ONE_UUID:'至少選擇一個UUID',
@@ -327,6 +328,7 @@ const tw = {
     NO_DATA_FOUND: '無搜尋結果',
     SEARCH_FOR_NAME: '搜尋名字',
     SEARCH_FOR_UUID: '搜尋uuid',
+    PLEASE_TYPE_PERSONA_ID: "請輸入人員編號",
 
     /* Object Status */
     STATUS: '狀態',
@@ -363,7 +365,7 @@ const tw = {
     DEVICES: '儀器',
     
     /** table Field */
-    ID: 'ID',
+    ID: '人員編號',
     USER_ID: 'ID',
     HEALTH_STATUS: '狀態',
     UUID: 'UUID',
