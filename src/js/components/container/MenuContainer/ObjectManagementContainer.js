@@ -1,26 +1,22 @@
 import React, { Fragment } from 'react';
 import { 
     Fade,
-    
-} from 'react-transition-group'
-import 'react-table/react-table.css'; 
+} from 'react-transition-group';
 import { 
     Nav,
     Tab,
 } from 'react-bootstrap';
 import 'react-tabs/style/react-tabs.css';
 import { AppContext } from '../../../context/AppContext';
-import AccessControl from '../../presentational/AccessControl'
-import ObjectTable from '../../presentational/ObjectTable'
-import PatientTable from '../../presentational/PatientTable'
-import ImportObjectTable from '../../presentational/ImportObjectTable'
-import ImportPatientTable from '../../presentational/ImportPatientTable' 
+import AccessControl from '../../presentational/AccessControl';
+import PatientTable from '../../presentational/PatientTable';
+import ImportPatientTable from '../../presentational/ImportPatientTable';
 import {
     BOTContainer,
     BOTNavLink,
     BOTNav,
     PageTitle
-} from '../../BOTComponent/styleComponent'
+} from '../../BOTComponent/styleComponent';
 
 
 class ObjectManagementContainer extends React.Component{
@@ -45,7 +41,7 @@ class ObjectManagementContainer extends React.Component{
                     <BOTNav>
                         <Nav.Item>
                             <BOTNavLink eventKey="patients_table">
-                                {locale.texts.TAGS}
+                                {locale.texts.PERSONA_LIST}
                             </BOTNavLink>
                         </Nav.Item>
                         <AccessControl
@@ -55,7 +51,7 @@ class ObjectManagementContainer extends React.Component{
                         >
                             <Nav.Item>
                                 <BOTNavLink eventKey="import_patients">
-                                    {locale.texts.IMPORT_PATIENTS_DATA}
+                                    {locale.texts.IMPORT_PERSONA}
                                 </BOTNavLink>
                             </Nav.Item>
                         </AccessControl>

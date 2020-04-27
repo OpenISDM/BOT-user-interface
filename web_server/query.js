@@ -166,27 +166,6 @@ const getTrackingData = (request, response) => {
     })
 }
 
-const getObjectTable = (request, response) => {
-    let { 
-        locale, 
-        areas_id,
-        objectType 
-    } = request.body
-
-    pool.query(queryType.getObjectTable(objectType, areas_id))       
-        .then(res => {
-            console.log('get object table succeed')
-            res.rows.map(item => {
-                item.registered_timestamp = moment.tz(item.registered_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-            })
-
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`get object table failed ${err}`)
-        })     
-}
-
 const getTrackingTableByMacAddress = (request, response) => {
     let{ locale, object_mac_address} = request.body
     pool.query(queryType.getTrackingTableByMacAddress(object_mac_address))
@@ -215,18 +194,6 @@ const getLocationHistory = (request, response) => {
     .catch(err => {
         console.log(`get location history by ${mode} failed ${err}`)
     })
-}
-
-const getImportPatient = (request, response) => {
-    let { locale, areaId } = request.body
-    pool.query(queryType.getImportPatient())       
-        .then(res => {
-            console.log('get ImportPatient data')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log("get ImportPatient fails: " + err)
-        })     
 }
 
 const getImportTable = (request, response) => {
@@ -296,41 +263,6 @@ const cleanBinding = (request, response) => {
     })
 }
 
-const getLbeaconTable = (request, response) => {
-
-    let { locale } = request.body 
-    pool.query(queryType.getLbeaconTable)
-        .then(res => {
-            console.log('get lbeacon table data succeed')
-            res.rows.map(item => {
-                item.last_report_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-            })
-            response.status(200).json(res)
-
-        })
-        .catch(err => {
-            console.log(`get lbeacon table failed ${err}`)
-        })        
-}
-
-const getGatewayTable = (request, response) => {
-    let { locale } = request.body
-
-    pool.query(queryType.getGatewayTable)
-        .then(res => {
-            console.log(`get gateway table succeed`)
-            res.rows.map(item => {
-                item.last_report_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-                item.registered_timestamp = moment.tz(item.registered_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-            })
-            response.status(200).json(res)
-        })    
-        .catch(err => {
-            console.log(`get gateway table failed ${err}`)                
-
-        })
-}
-
 const setLocaleID = (request, response) => {
     const userID = request.body.userID
     const lang = request.body.lang
@@ -387,34 +319,6 @@ const editImport = (request, response) => {
         })
 }
 
-const editPatient = (request, response) => {
-    const formOption = request.body.formOption
-    let {
-        area_id
-    } = formOption
-    pool.query(queryType.editPatient(formOption))
-        .then(res => {
-            console.log("edit register succeed");
-            if (process.env.RELOAD_GEO_CONFIG_PATH) {
-                exec(process.env.RELOAD_GEO_CONFIG_PATH, `-p 9999 -c cmd_reload_geo_fence_setting -r geofence_object -f area_one -a ${area_id}`.split(' '), function(err, data){
-                    if(err){
-                        console.log(`execute reload geofence setting fails ${err}`)
-                        response.status(200).json(res)
-                    }else{
-                        console.log(`execute reload geofence setting success`)
-                        response.status(200).json(res)
-                    }
-                })
-            } else {
-                response.status(200).json(res)
-                console.log('IPC has not set')
-            }
-        })
-        .catch(err => {
-            console.log(`edit register failed ${err}`)
-        })
-}
-
 const objectImport = (request, response) => {
     const idPackage = request.body.newData
        pool.query(queryType.objectImport(idPackage))
@@ -449,19 +353,6 @@ const addObject = (request, response) => {
 
         })
 }
-
-const addPatient = (request, response) => {
-    const formOption = request.body.formOption
-    pool.query(queryType.addPatient(formOption))
-        .then(res => {
-            console.log("add patient succeed");
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`add patient failed ${err}`)
-        })
-}
-
 
 
 const editObjectPackage = (request, response) => {
@@ -588,69 +479,6 @@ const editPassword = (request, response) => {
         })  
  
 }
-
-
-
-const signup = (request, response) => {
-
-    const { 
-        name, 
-        password, 
-        roles,
-        area_id,
-    } = request.body;    
-    const saltRounds = 10;
-    const hash = bcrypt.hashSync(password, saltRounds);
-
-    const signupPackage = {
-        name,
-        password: hash,
-        area_id
-    }
-
-    pool.query(queryType.signup(signupPackage))
-        .then(res => {
-            pool.query(queryType.insertUserData(name, roles, area_id))
-                .then(res => {
-                    console.log('sign up succeed')
-                    response.status(200).json(res)
-                })
-                .catch(err => {
-                    console.log(`sinup failed ${err}`)
-                })
-        })
-        .catch(err => {
-            console.log(`signup failed ${err}`)
-        })
-}
-
-
-const deleteUser = (request, response) => {
-    var username = request.body.username
-    pool.query(queryType.deleteUser(username))
-        .then(res => {
-            console.log('delete user success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`delete user failer ${err}`)
-        })  
-}
-
-const setUserInfo = (request, response) => { 
-    var {
-        user
-    } = request.body
-    pool.query(queryType.setUserInfo(user))
-        .then(res => {
-            console.log(`set user info succeed`)
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log(`set user info failed ${err}`)
-        })
-}
-
 const setUserSecondaryArea = (request, response) => {
     const {
         user
@@ -707,18 +535,6 @@ const addUserSearchHistory = (request, response) => {
         })
         .catch(err => {
             console.log(`add user search history fails ${err}`)
-        })
-}
-
-const editLbeacon = (request, response) => {
-    const { formOption } = request.body
-    pool.query(queryType.editLbeacon(formOption))
-        .then(res => {
-            console.log('Edit lbeacon success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('Edit lbeacon fails ' + err)
         })
 }
 
@@ -902,44 +718,6 @@ const deletePatient = (request, response) => {
     .catch(err => {
         console.log('deletePatient error: ', err)
     })
-}
-
-
-const deleteLBeacon = (request, response) => {
-    const { idPackage } = request.body
-    pool.query(queryType.deleteLBeacon(idPackage))
-        .then(res => {
-            console.log('delete LBeacon record success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('deleteLBeacon error: ', err)
-        })
-}
-
-const deleteGateway = (request, response) => {
-    const { idPackage } = request.body
-    pool.query(queryType.deleteGateway(idPackage))
-        .then(res => {
-            console.log('delete Gateway record success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('deleteGateway error: ', err)
-        })
-}
-
-
-const deleteDevice = (request, response) => {
-    const { formOption } = request.body
-    pool.query(queryType.deleteDevice(formOption))
-        .then(res => {
-            console.log('delete Device success')
-            response.status(200).json(res)
-        })
-        .catch(err => {
-            console.log('deleteDevice error: ', err)
-        })
 }
 
 const deleteImportData = (request, response) => {
@@ -1508,12 +1286,8 @@ const addPatientRecord = (request, response) => {
 
 module.exports = {
     getTrackingData,
-    getObjectTable,
     getImportTable,
-    getImportPatient,
     getImportData,
-    getLbeaconTable,
-    getGatewayTable,
     getUserList,
     getRoleNameList,
     getAreaTable,
@@ -1525,7 +1299,6 @@ module.exports = {
     addShiftChangeRecord,
     addUserSearchHistory,
     addObject,
-    addPatient,
     addBulkObject,
     addAssociation,
     addAssociation_Patient,
@@ -1533,26 +1306,18 @@ module.exports = {
     editObject,
     setLocaleID,
     editImport,
-    editPatient,
     objectImport,
-    editLbeacon,
     editObjectPackage,
     deleteEditObjectRecord,
     deleteShiftChangeRecord,
     deletePatient,
-    deleteDevice,
     deleteImportData,
-    deleteLBeacon,
-    deleteGateway,
-    deleteUser,
     signin,
-    signup,
     editPassword,
     generatePDF,
     modifyUserDevices,
     modifyUserInfo,
     validateUsername,
-    setUserInfo,
     setMonitorConfig,
     setGeofenceConfig,
     checkoutViolation,

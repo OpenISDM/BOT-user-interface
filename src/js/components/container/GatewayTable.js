@@ -1,13 +1,11 @@
-import React from 'react';
-import { Container,  Nav, Button, ButtonToolbar } from 'react-bootstrap';
+import React, { Fragment } from 'react';
+import { ButtonToolbar } from 'react-bootstrap';
 import ReactTable from 'react-table';
 import 'react-table/react-table.css'; 
 import selecTableHOC from 'react-table/lib/hoc/selectTable';
 import axios from 'axios';
 import config from '../../config';
-import {  
-    deleteGateway
-} from "../../dataSrc" 
+import dataSrc from '../../dataSrc';
 import { 
     gatewayTableColumn
 } from '../../config/tables';
@@ -55,7 +53,7 @@ class GatewayTable extends React.Component{
         clearInterval(this.getGatewayDataInterval);
     }
 
-    getData = () => {
+    getData = (callback) => {
         let { 
             locale
         } = this.context
@@ -71,8 +69,11 @@ class GatewayTable extends React.Component{
             this.setState({
                 data: res.data.rows,
                 columns: column,
-                locale: locale.abbr
-            })
+                locale: locale.abbr,
+                selection: [],
+                selectAll: false,
+                showDeleteConfirmation: false
+            }, callback)
         })
         .catch(err => {
             this.props.setMessage(
@@ -160,21 +161,16 @@ class GatewayTable extends React.Component{
                 ?   null
                 :   idPackage.push(parseInt(this.state.data[item].id))
             }) 
-            axios.post(deleteGateway, {
-                idPackage
+            axios.delete(dataSrc.gateway, {
+                data: {
+                    idPackage
+                }
             })
             .then(res => {
-                   this.getData()
-                    let callback = () => messageGenerator.setSuccessMessage(
+                let callback = () => messageGenerator.setSuccessMessage(
                     'save success'
                 )
-                this.setState({
-                    selection: [],
-                    selectAll: false,
-                    showDeleteConfirmation: false
-                }, callback)
-
- 
+                this.getData(callback) 
             })
             .catch(err => {
                 console.log(err)
@@ -206,7 +202,7 @@ class GatewayTable extends React.Component{
         const { locale } = this.context 
 
         return(
-            <div>  
+            <Fragment>  
                 <div className="d-flex justify-content-start">
                     <AccessControl
                         renderNoAccess={() => null}
@@ -266,7 +262,7 @@ class GatewayTable extends React.Component{
                     handleClose={this.handleClose}
                     handleSubmit={this.deleteRecordGateway}
                 />
-            </div>
+            </Fragment>
 
         )
     }

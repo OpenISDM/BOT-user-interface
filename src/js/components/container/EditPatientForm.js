@@ -2,9 +2,7 @@
 import React from 'react';
 import { Modal, Button, Row, Col } from 'react-bootstrap';
 import Select from 'react-select';
-import config from '../../config';
-import axios from 'axios';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import styleConfig from '../../config/styleConfig'
@@ -14,17 +12,6 @@ class EditPatientForm extends React.Component {
 
     static contextType = AppContext
   
-    handleSubmit = (postOption) => {
-        const path = this.props.formPath  
-        axios.post(path, {
-            formOption: postOption
-        }).then(res => { 
-            this.props.handleSubmitForm()
-        }).catch( error => {
-            console.log(error)
-        })
-    }
-
     render() {
 
         const {
@@ -34,7 +21,6 @@ class EditPatientForm extends React.Component {
         const { 
             title, 
             selectedRowData,
-            physicianList = [],
             show,
             handleClose
         } = this.props;
@@ -44,9 +30,6 @@ class EditPatientForm extends React.Component {
             area_name,
             mac_address,
             asset_control_number,
-            object_type,
-            monitor_type = [],
-            room,
         } = selectedRowData
 
         const areaOptions = this.props.areaTable.map(area => {
@@ -57,8 +40,7 @@ class EditPatientForm extends React.Component {
             };
         })
 
-        return (
-            
+        return (         
             <Modal 
                 show={show} 
                 onHide={handleClose} 
@@ -140,7 +122,7 @@ class EditPatientForm extends React.Component {
                                 ...values,
                                 area_id: values.area.id,
                             } 
-                            this.handleSubmit(postOption)                            
+                            this.props.handleSubmit(postOption)                            
                         }}
 
 

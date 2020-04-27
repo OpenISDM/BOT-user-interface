@@ -40,7 +40,7 @@ class Auth extends React.Component {
             roles, 
             area, 
         } = values
-        axios.post(dataSrc.signup, {
+        axios.post(dataSrc.user, {
             name: name.toLowerCase(),
             password,
             roles,
@@ -53,7 +53,7 @@ class Auth extends React.Component {
     }
 
     setUser = (user, callback) => {
-        axios.post(dataSrc.setUserInfo, {
+        axios.put(dataSrc.user, {
             user
         })
         .then(res => {

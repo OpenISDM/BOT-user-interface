@@ -1,41 +1,31 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { 
-    Button, 
     ButtonToolbar,
-    Row,
-    Col 
 } from 'react-bootstrap';
 import { AppContext } from '../../context/AppContext';
 import ReactTable from 'react-table'; 
 import styleConfig from '../../config/styleConfig';
 import selecTableHOC from 'react-table/lib/hoc/selectTable';
-import BindForm from '../container/BindForm'
-import DissociationForm from '../container/DissociationForm'
-import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
+import BindForm from '../container/BindForm';
+import DissociationForm from '../container/DissociationForm';
+import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm';
 import Select from 'react-select';
-import BOTInput from '../presentational/BOTInput'
+import BOTInput from '../presentational/BOTInput';
 import axios from 'axios';
-import EditPatientForm from '../container/EditPatientForm'
+import EditPatientForm from '../container/EditPatientForm';
 import { 
-    editPatient,
-    addPatient,
-    deleteDevice,
-    getLbeaconTable,
-    getUserList,
     getImportPatient
-} from "../../dataSrc"
+} from '../../dataSrc';
 import {
-    LoaderWrapper, 
     PrimaryButton
-} from '../BOTComponent/styleComponent'
-import ReactLoading from "react-loading"; 
-import styled from 'styled-components'
-import messageGenerator from '../../service/messageGenerator'
+} from '../BOTComponent/styleComponent';
+import messageGenerator from '../../service/messageGenerator';
 const SelectTable = selecTableHOC(ReactTable);
 import AccessControl from './AccessControl';
-import { patientTableColumn } from '../../config/tables'
-import retrieveDataHelper from '../../service/retrieveDataHelper'
-import config from '../../config'
+import { patientTableColumn } from '../../config/tables';
+import retrieveDataHelper from '../../service/retrieveDataHelper';
+import config from '../../config';
+import dataSrc from '../../dataSrc';
 
 
 class PatientTable extends React.Component{
@@ -82,9 +72,7 @@ class PatientTable extends React.Component{
     componentDidMount = () => {
         this.getData();
         this.getAreaTable();
-        this.getLbeaconData();
-        this.getPhysicianList();
-        this.getImportData();
+        this.getImportedData();
     }
 
     getData = (callback) => {
@@ -101,7 +89,6 @@ class PatientTable extends React.Component{
         .then(res => {
             let columns = _.cloneDeep(patientTableColumn)
             let data = [] 
-            let typeList = {} 
 
             columns.map(field => {
                 field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
@@ -110,9 +97,6 @@ class PatientTable extends React.Component{
             res.data.rows
             .filter(item => item.object_type != 0)
             .map(item => {
-
-                item.monitor_type = this.getMonitorTypeArray(item, 'patient').join('/')
-                item.object_type = locale.texts.genderSelect[item.object_type]
                 
                 item.area_name = {
                     value: item.area_name,
@@ -120,7 +104,6 @@ class PatientTable extends React.Component{
                     id: item.area_id
                 }
                 data.push(item)
-
             }) 
 
             this.setState({
@@ -139,10 +122,12 @@ class PatientTable extends React.Component{
         })
     }
 
-    getImportData = () => {
+    getImportedData = () => {
         let { locale } = this.context
-        axios.post(getImportPatient, {
-            locale: locale.abbr
+        axios.get(dataSrc.importedObject, {
+            params: {
+                locale: locale.abbr
+            }
         })
         .then(res => {
             this.setState({
@@ -181,60 +166,6 @@ class PatientTable extends React.Component{
             })
     }
 
-    getMonitorTypeArray = (item, type) => {
-        return Object.keys(config.monitorType)
-            .reduce((checkboxGroup, index) => {
-                if (item.monitor_type & index) {
-                    checkboxGroup.push(config.monitorType[index])
-                }
-                return checkboxGroup
-            }, [])
-    }
-
-    getLbeaconData = () => {
-        let { locale } = this.context
-        axios.post(getLbeaconTable, {
-            locale: locale.abbr
-        })
-        .then(res => {
-            let roomOptions = []
-            res.data.rows.map(item => {
-                if (item.room) {
-                    roomOptions.push({
-                        value: item.id,
-                        label: item.room
-                    })
-                }
-            })  
-            this.setState({
-                roomOptions,
-            })
-        })
-        .catch(err => {
-            console.log("get lbeacon data fail : " + err);
-        })
-    }
-
-    getPhysicianList = () => {
-        let { locale } = this.context
-        axios.post(getUserList, {
-            locale: locale.abbr 
-        })
-        .then(res => {
-            let physicianList = res.data.rows
-                .filter(user => {
-                    return user.role_type.includes("care_provider")
-                })
-
-            this.setState({
-                physicianList
-            })
-        })
-        .catch(err => {
-            console.log(err)
-        })
-    }
-
     handleClose = () => {
         this.setState({
             isShowBind:false,
@@ -250,18 +181,29 @@ class PatientTable extends React.Component{
             disableASN: false,
             isPatientShowEdit: true,
             formTitle: 'add inpatient',
-            formPath: addPatient,
+            apiMethod: 'post',
             selectedRowData:'',
         })
     }
 
-    handleSubmitForm = () => {
-        let callback = () => {
-            messageGenerator.setSuccessMessage(
-                'save success'
-            )
-        }
-        this.getData(callback)
+    handleSubmitForm = (formOption) => {
+        let {
+            apiMethod
+        } = this.state
+
+        axios[apiMethod](dataSrc.object, {
+            formOption,
+            mode: 'PERSONA',
+        }).then(res => { 
+            let callback = () => {
+                messageGenerator.setSuccessMessage(
+                    'save success'
+                )
+            }
+            this.getData(callback)
+        }).catch( error => {
+            console.log(error)
+        })
     }
 
 
@@ -317,13 +259,13 @@ class PatientTable extends React.Component{
 
         let { name } = e.target
         switch(name) {
-            case "associate_patient":
+            case 'associate_patient':
                 this.setState({
                     isShowBind: true,
                     bindCase: 2,
                 })
             break;
-            case "deletePatient":
+            case 'deletePatient':
                 this.setState({
                     showDeleteConfirmation: true,
                     warningSelect : 0,
@@ -357,12 +299,19 @@ class PatientTable extends React.Component{
                 :
                 formOption.push(this.state.data[item].mac_address)
             })
-           
-        axios.post(deleteDevice, {
-            formOption
+
+        axios.delete(dataSrc.object, {
+            data: {
+                formOption
+            }
         })
         .then(res => {
-            this.handleSubmitForm()
+            let callback = () => {
+                messageGenerator.setSuccessMessage(
+                    'save success'
+                )
+            }
+            this.getData(callback)
         })
         .catch(err => {
             console.log(err)
@@ -371,10 +320,7 @@ class PatientTable extends React.Component{
 
 
     filterData = (data, key, filteredAttribute) => {
-                    
-        this.setState({
-            loadingFlag:  true
-        })
+
         const { locale } = this.context  
         key = key.toLowerCase()
         let filteredData = data.filter(obj => { 
@@ -385,28 +331,11 @@ class PatientTable extends React.Component{
                     return true
                 }
             }
-            if(filteredAttribute.includes('type')){
-
-                let keyRex = new RegExp(key)
-                
-                if(obj.type.toLowerCase().match(keyRex)){
-                    return true
-                }
-            }
 
             if(filteredAttribute.includes('acn')){
                 let keyRex = new RegExp(key)
                 if(obj.asset_control_number.toLowerCase().match(keyRex)) return true
 
-            }
-
-            if  (filteredAttribute.includes('status')){
-                
-                let keyRex = new RegExp(key.toLowerCase())
-
-                if(obj.status.label.toLowerCase().match(keyRex)){
-                    return true
-                }
             }
 
             if (filteredAttribute.includes('area')){ 
@@ -418,40 +347,15 @@ class PatientTable extends React.Component{
                 } 
             }
 
-            if (filteredAttribute.includes('monitor')){
-                let keyRex = new RegExp(key)
-                if(obj.monitor_type.toLowerCase().match(keyRex)){
-                    return true
-                }
-            }
-
             if  (filteredAttribute.includes('macAddress')){
 
                 let keyRex = key.replace(/:/g, '')
                 if (obj.mac_address.replace(/:/g, '').toLowerCase().match(keyRex)) return true
             }
 
-            if(filteredAttribute.includes('sex')){
-               
-                if (obj.object_type == key){
-                    return true
-                }
-            }
- 
-            if(filteredAttribute.includes('physician_name')){
-              
-                let keyRex = new RegExp(key)
-
-                if (obj.physician_name && obj.physician_name.toLowerCase().match(keyRex)){
-                    return true
-                } 
-            }
-
             return false
         })
-        this.setState({ loadingFlag:  false })
         return filteredData
-        
     }
 
     addObjectFilter = (key, attribute, source) => {
@@ -479,29 +383,6 @@ class PatientTable extends React.Component{
         })
     }
 
-    addPatientFilter = (key, attribute, source) => {
-        this.state.patientFilter = this.state.patientFilter.filter(filter => source != filter.source)
-        this.state.patientFilter.push({
-            key, attribute, source
-        }) 
-       
-        this.filterPatients()
-    }
-
-    removePatientFilter = (source) => {
-        this.state.patientFilter = this.state.patientFilter.filter(filter => source != filter.source)
-        this.filterPatients()
-    }
-
-    filterPatients = () => {
-        let filteredPatient = this.state.patientFilter.reduce((acc, curr) => {
-            return this.filterData(acc, curr.key, curr.attribute)
-        }, this.state.dataPatient)
-        this.setState({
-            filteredPatient
-        }) 
-    }
-
     render(){
 
         const { locale } = this.context 
@@ -527,16 +408,16 @@ class PatientTable extends React.Component{
         };
 
         return(
-            <div> 
-                <div className="d-flex justify-content-between my-4">
-                    <div className="d-flex justify-content-start">                    
+            <Fragment> 
+                <div className='d-flex justify-content-between my-4'>
+                    <div className='d-flex justify-content-start'>                    
                         <BOTInput
-                            className="mx-2"
+                            className='mx-2'
                             placeholder={locale.texts.SEARCH}
                             getSearchKey={(key) => {
                                 this.addObjectFilter(
                                     key, 
-                                    ['name', 'area', 'macAddress', 'acn', 'monitor', 'physician_name'], 
+                                    ['name', 'area', 'macAddress', 'acn'], 
                                     'search bar'
                                 )
                             }}
@@ -547,8 +428,8 @@ class PatientTable extends React.Component{
                             platform={['browser']}
                         >
                             <Select
-                                name="Select Area Patient"
-                                className="mx-2"
+                                name='Select Area Patient'
+                                className='mx-2'
                                 styles={styleConfig.reactSelectFilter}
                                 onChange={(value) => {
                                     if(value){
@@ -571,7 +452,7 @@ class PatientTable extends React.Component{
                         <ButtonToolbar>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name="associate_patient"
+                                name='associate_patient'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.ASSOCIATE}
@@ -584,7 +465,7 @@ class PatientTable extends React.Component{
                             </PrimaryButton>
                             <PrimaryButton
                                 className='text-capitalize mr-2 mb-1'
-                                name="deletePatient"
+                                name='deletePatient'
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.DELETE}
@@ -598,7 +479,7 @@ class PatientTable extends React.Component{
                     data={this.state.filteredData}
                     columns={this.state.columns}
                     ref={r => (this.selectTable = r)}
-                    className="-highlight text-none"
+                    className='-highlight text-none'
                     style={{maxHeight:'75vh'}} 
                     onPageChange={(e) => {this.setState({selectAll:false,selection:''})}} 
                     {...extraProps}
@@ -610,12 +491,12 @@ class PatientTable extends React.Component{
                             onClick: (e) => { 
                                 if (!e.target.type) { 
                                     this.setState({
-                                    isPatientShowEdit:true,
-                                    selectedRowData: this.state.data[rowInfo.index],
-                                    formTitle: 'edit info',
-                                    disableASN: true,
-                                    formPath: editPatient,
-                                })
+                                        isPatientShowEdit:true,
+                                        selectedRowData: this.state.data[rowInfo.index],
+                                        formTitle: 'edit info',
+                                        disableASN: true,
+                                        apiMethod: 'put',
+                                    })
                                 } 
                             },
                         }
@@ -625,7 +506,7 @@ class PatientTable extends React.Component{
                     show = {this.state.isPatientShowEdit} 
                     title= {this.state.formTitle} 
                     selectedRowData={selectedRowData  || ''} 
-                    handleSubmitForm={this.handleSubmitForm}
+                    handleSubmit={this.handleSubmitForm}
                     formPath={this.state.formPath}
                     handleClose={this.handleClose}
                     data={this.state.data}
@@ -677,8 +558,7 @@ class PatientTable extends React.Component{
               
                     }
                 />
-            </div>
-
+            </Fragment>
         )
     }
 }

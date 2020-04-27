@@ -232,66 +232,6 @@ const getLocationHistory = (key, startTime, endTime, mode) => {
 	return query
 }
 
-const getObjectTable = (objectType, areas_id) => {
-
-	let text =  `
-		SELECT 
-			object_table.id,
-			object_table.name, 
-			object_table.type, 
-			object_table.asset_control_number, 
-			object_table.status, 
-			object_table.transferred_location, 
-			SPLIT_PART(object_table.transferred_location, ',', 1) AS branch_id,
-			SPLIT_PART(object_table.transferred_location, ',', 2) AS department_id,
-			branch_and_department.branch_name as branch_name,
-			CASE WHEN CAST(
-				COALESCE(
-					NULLIF(SPLIT_PART(object_table.transferred_location, ',', 1), '')
-				, '0') AS INTEGER
-			) IS NOT NULL THEN branch_and_department.department[CAST(
-				COALESCE(
-					NULLIF(SPLIT_PART(object_table.transferred_location, ',', 1), '')
-				, '0') AS INTEGER
-			)] END AS department_name,
-			object_table.mac_address,
-			object_table.monitor_type,
-			object_table.area_id,
-			area_table.name as area_name,
-			object_table.registered_timestamp,
-			object_table.object_type,
-			object_table.id,
-			object_table.room,
-			object_table.physician_id,
-			(
-				SELECT name
-				FROM user_table
-				WHERE user_table.id = object_table.physician_id
-			) as physician_name
-
-		FROM object_table 
-
-		LEFT JOIN area_table
-		ON area_table.id = object_table.area_id
-
-		LEFT JOIN branch_and_department
-		ON branch_and_department.id = CAST(
-			COALESCE(
-				NULLIF(SPLIT_PART(object_table.transferred_location, ',', 1), '')
-			, '0') AS INTEGER
-		)
-	
-		WHERE object_table.object_type IN (${objectType.map(type => type)})
-		${areas_id ? `AND object_table.area_id IN (${areas_id.map(id => id)})` : ''}
-		ORDER BY 
-			object_table.registered_timestamp DESC,
-			object_table.name ASC
-			
-			;
-	`
-	return text
-} 
-
 const getImportTable = () => {
 
 	let text = `
@@ -302,20 +242,6 @@ const getImportTable = () => {
 				import_table.id
 			FROM import_table 
 			WHERE import_table.type != 'patient'
-		`;
-	
-	return text
-} 
-
-const getImportPatient = () => {
-
-	let text = `
-			SELECT 
-				import_table.name, 
-				import_table.asset_control_number,
-				import_table.type,
-				import_table.id
-			FROM import_table WHERE import_table.type ='patient'
 		`;
 	
 	return text
@@ -459,41 +385,6 @@ function getImportData(formOption){
 	return query;
 }
 
-
-
-const getLbeaconTable = `
-	SELECT 
-		id,
-		uuid, 
-		description, 
-		ip_address, 
-		health_status, 
-		gateway_ip_address, 
-		last_report_timestamp,
-		danger_area,
-		room,
-		api_version,
-		server_time_offset,
-		product_version
-	FROM lbeacon_table
-	ORDER BY ip_address DESC
-`;
-
-const getGatewayTable = `
-	SELECT 
-		ip_address, 
-		health_status, 
-		last_report_timestamp,
-		registered_timestamp,
-		id,
-		api_version,
-		product_version,
-		abnormal_lbeacon_list
-	FROM 
-		gateway_table 
-	ORDER BY ip_address DESC
-`;	
-
 function objectImport (idPackage) {
 
 	let text =  `
@@ -605,31 +496,6 @@ function editObject (formOption) {
 	return query;
 }
 
-const editPatient = (formOption) => {
-	const text = `
-		Update object_table 
-		SET name = $2,
-			mac_address = $3,
-			area_id = $4,
-			object_type = 1
-		WHERE asset_control_number = $1
-	`;
-		
-	const values = [
-		formOption.asset_control_number,
-		formOption.name,
-		formOption.mac_address,
-		formOption.area_id,
-	];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query;
-}
-
  
 const addObject = (formOption) => {
 	const text = `
@@ -667,45 +533,6 @@ const addObject = (formOption) => {
 		formOption.monitor_type
 	];
 
-
-	const query = {
-		text,
-		values
-	};
-
-	return query;
-}
-
-const addPatient = (formOption) => {
-	const text = 
-		`
-		INSERT INTO object_table (
-			name,
-			mac_address, 
-			asset_control_number,
-			area_id,
-			object_type,
-			type,
-			status,
-			registered_timestamp
-		)
-		VALUES (
-			$1,
-			$2,
-			$3,
-			$4,
-			1,
-			'register',
-			'normal',
-			now()
-		)
-		`;
-	const values = [
-		formOption.name,
-		formOption.mac_address,
-		formOption.asset_control_number,
-		formOption.area_id,
-	];
 
 	const query = {
 		text,
@@ -882,41 +709,6 @@ const editPassword = (user_id,password) => {
 }
 
 
-
-
-
-const signup = (signupPackage) => {
-
-	const text = 
-		`
-		INSERT INTO user_table 
-			(
-				name, 
-				password,
-				registered_timestamp,
-				main_area
-			)
-		VALUES (
-			$1, 
-			$2, 
-			now(),
-			$3
-		);
-		`;
-	const values = [
-		signupPackage.name, 
-		signupPackage.password,
-		signupPackage.area_id
-	];
-
-	const query = {
-		text,
-		values
-	};
-
-	return query
-}
-
 function getUserInfo(username) {
 
 	const text =  `
@@ -960,33 +752,6 @@ const addUserSearchHistory = (username, keyType, keyWord) => {
 		keyType, 
 		username
 	];
-
-	const query = {
-		text, 
-		values
-	};
-
-	return query
-}
-
-function editLbeacon (formOption) {
-	const text =
-		`
-		UPDATE lbeacon_table
-		SET 
-			description = $2,
-			danger_area = $3,
-			room = $4
-
-		WHERE uuid = $1
-	`;
-
-	const values = [
-		formOption.uuid,
-		formOption.description,
-		formOption.danger_area,
-		formOption.room
-	]
 
 	const query = {
 		text, 
@@ -1140,81 +905,6 @@ const getRoleNameList = () => {
 }
 
 
-const deleteUser = (username) => {
-	
-	const query = `
-		
-		DELETE FROM user_role 
-		WHERE user_id = (
-			SELECT id 
-			FROM user_table 
-			WHERE name='${username}'
-		); 
-
-		DELETE FROM user_area
-		WHERE user_id = (
-			SELECT id
-			FROM user_table
-			WHERE name='${username}'
-		);
-
-		DELETE FROM user_table 
-		WHERE id = (
-			SELECT id 
-			FROM user_table
-			WHERE name='${username}'
-		);
-	`
-	return query
-}
-
-
-
-const setUserInfo = user => {
-	return `
-
-		DELETE FROM user_role 
-		WHERE user_id = ${user.id};
-
-		DELETE FROM user_area
-		WHERE user_id = ${user.id};
-
-		UPDATE user_table
-		SET 
-			name = '${user.name}',
-			main_area = ${user.main_area}
-		WHERE id = ${user.id};
-
-		INSERT INTO user_role (
-			user_id, 
-			role_id
-		)
-			VALUES 
-			${
-				user.roles.map(roleName => `(
-					${user.id}, 
-					(
-						SELECT id 
-						FROM roles
-						WHERE name='${roleName}'
-					)
-				)`).join(',')
-			};
-
-		INSERT INTO user_area (
-			user_id, 
-			area_id
-		)
-			VALUES 
-			${
-				user.areas_id.map(areaId => `(
-					${user.id}, 
-					${areaId}
-				)`).join(',')
-			};
-	`
-}
-
 const setUserSecondaryArea = (user) => {
 	return `
 		DELETE FROM user_area
@@ -1280,15 +970,6 @@ const deletePatient = (idPackage) => {
 	`
 	return query
 }
- 
-
-const deleteDevice = (formOption) => {
-	const query = `
-		DELETE FROM object_table
-		WHERE mac_address IN (${formOption.map(item => `'${item}'`)});
-	`
-	return query
-}
 
 const deleteImportData = (idPackage) => {
 	const query = `
@@ -1300,30 +981,6 @@ const deleteImportData = (idPackage) => {
 	`
 	return query
 }
-
-
-
-
-const deleteLBeacon = (idPackage) => {
-	const query = `
-		DELETE FROM lbeacon_table
-		WHERE id IN (${idPackage.map(item => `'${item}'`)});
-	`
-	return query
-}
-
-
-const deleteGateway = (idPackage) => {
-	const query = `
-		DELETE FROM gateway_table
-		WHERE id IN (${idPackage.map(item => `'${item}'`)});
-	`
-	return query
-}
-
-
-
-
 
 const setShift = (shift, username) => {
 	const query = `
@@ -1342,44 +999,6 @@ const setVisitTimestamp = (username) => {
 	`
 }
 
-const insertUserData = (name, roles, area_id) => {
-
-	return `
-		INSERT INTO user_role (
-			user_id, 
-			role_id
-		)
-		VALUES 
-		${
-			roles.map(role => `(
-				(
-					SELECT id
-					FROM user_table
-					WHERE name = '${name}'
-				), 
-				(
-					SELECT id 
-					FROM roles
-					WHERE name = '${role}'
-				)
-			)`
-		)};
-
-		INSERT INTO user_area (
-			user_id, 
-			area_id
-		)
-		VALUES 
-			(
-				(
-					SELECT id 
-					FROM user_table 
-					WHERE name ='${name}'
-				),
-				${area_id}
-			)
-	`
-}
 
 const addEditObjectRecord = (formOption, username, filePath) => {
 
@@ -2062,44 +1681,31 @@ const addPatientRecord = objectPackage => {
 module.exports = {
 	getTrackingData,
 	getTrackingTableByMacAddress,
-	getObjectTable,
 	getImportTable,
-    getLbeaconTable,
-	getGatewayTable,
 	getMonitorConfig,
 	setGeofenceConfig,
-	editPatient,
 	editObject,
 	editImport,
 	objectImport,
 	addObject,
-	addPatient,
 	editObjectPackage,
 	signin,
-	signup,
 	editPassword,
 	getUserInfo,
 	addUserSearchHistory,
-	editLbeacon,
 	modifyUserDevices,
 	modifyUserInfo,
 	getShiftChangeRecord,
 	validateUsername,
 	getUserList,
 	getRoleNameList,
-	deleteUser,
-	setUserInfo,
 	getEditObjectRecord,
 	deleteEditObjectRecord,
 	deleteShiftChangeRecord,
 	deletePatient,
-	deleteDevice, 
 	deleteImportData,
 	setShift,
-	deleteLBeacon,
-	deleteGateway,
 	setVisitTimestamp,
-	insertUserData,
 	addEditObjectRecord,
 	addShiftChangeRecord,
 	getAreaTable,
@@ -2117,7 +1723,6 @@ module.exports = {
 	getImportData,
 	setLocaleID,
 	addImport,
-	getImportPatient,
 	addGeofenceConfig,
 	deleteMonitorConfig,
 	addMonitorConfig,

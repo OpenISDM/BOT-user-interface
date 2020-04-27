@@ -15,7 +15,7 @@ const retrieveDataHelper = {
         user, 
         areaId
     ) {
-        return await axios.post(dataSrc.getTrackingData,{
+        return await axios.post(dataSrc.trackingData,{
             locale,
             user,
             areaId,
@@ -30,10 +30,12 @@ const retrieveDataHelper = {
         areas_id, 
         objectType
     ){
-        return await axios.post(dataSrc.getObjectTable, {
-            locale,
-            areas_id,
-            objectType,
+        return await axios.get(dataSrc.object, {
+            params: {
+                locale,
+                areas_id,
+                objectType,
+            }
         })
     },
 
@@ -42,14 +44,18 @@ const retrieveDataHelper = {
     },
 
     getLbeaconTable: async function(locale) {
-        return await axios.post(dataSrc.getLbeaconTable, {
-            locale,
+        return await axios.get(dataSrc.lbeacon, {
+            params: {
+                locale,
+            }
         })
     },
 
     getGatewayTable: async function(locale) {
-        return await axios.post(dataSrc.getGatewayTable, {
-            locale,
+        return await axios.get(dataSrc.gateway, {
+            params: {
+                locale
+            }
         })
     },
 

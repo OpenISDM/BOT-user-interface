@@ -61,6 +61,11 @@ const lbeaconTableColumn = [
         width: 130
     },
     {
+        Header: "comment",
+        accessor: "comment",
+        width: 130
+    },
+    {
         Header: "IP Address",
         accessor: "ip_address",
         width: 150
