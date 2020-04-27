@@ -57,11 +57,7 @@ class Auth extends React.Component {
             user
         })
         .then(res => {
-            this.setCookies('user', user)
-            this.setState({
-                ...this.state,
-                user, 
-            },callback)
+            callback()
         })
         .catch(err => {
             console.log(`set user info failed ${err}`)
