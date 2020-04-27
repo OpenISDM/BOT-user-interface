@@ -114,7 +114,7 @@ class AdminManagementContainer extends React.Component{
             })
     }
 
-    handleSubmit = (values, callback) => {
+    handleSubmit = (values) => {
         let {
             auth
         } = this.context
@@ -137,6 +137,10 @@ class AdminManagementContainer extends React.Component{
 
         if (!user.areas_id.includes(user.area.id)) {
             user.areas_id.push(user.area.id)
+        }
+
+        let callback = () => {
+            messageGenerator.setSuccessMessage('save success')
         }
  
         auth[api](user, () => {

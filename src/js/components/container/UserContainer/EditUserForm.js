@@ -1,8 +1,6 @@
 import React from 'react';
 import { 
     Modal, 
-    Row, 
-    Col,
     Button, 
 } from 'react-bootstrap';
 import { 
@@ -13,9 +11,9 @@ import {
 import Select from 'react-select';
 import * as Yup from 'yup';
 import config from '../../../config';
-import CheckboxGroup from '../CheckboxGroup'
-import Checkbox from '../../presentational/Checkbox'
-import FormikFormGroup from '../../presentational/FormikFormGroup'
+import CheckboxGroup from '../CheckboxGroup';
+import Checkbox from '../../presentational/Checkbox';
+import FormikFormGroup from '../../presentational/FormikFormGroup';
 import styleConfig from '../../../config/styleConfig';
 import LocaleContext from '../../../context/LocaleContext';
 import messageGenerator from '../../../service/messageGenerator';
@@ -88,11 +86,7 @@ const EditUserForm = ({
                     }
 
                     onSubmit={values => {
-                        
-                        let callback = () => messageGenerator.setSuccessMessage(
-                            'save success'
-                        )  
-                        handleSubmit(values, callback)
+                        handleSubmit(values)
                     }}
 
                     render={({ values, errors, status, touched, isSubmitting, setFieldValue }) => (
