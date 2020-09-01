@@ -486,7 +486,7 @@ class MainContainer extends React.Component{
                         return item.object_type == 0
                     })
                     .map(item => {
-                        if (item.list_id = auth.user.list_id) {
+                        if (item.list_id == auth.user.list_id) {
                             item.searched = true;
                             item.searchedType = -1;
                             searchResult.push(item)
