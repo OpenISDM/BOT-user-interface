@@ -54,7 +54,7 @@ module.exports = {
                 
                 item.isInHealthInterval = 
                     (item.health_status == process.env.IS_LBEACON_HEALTH_STATUS_CODE || 
-                    item.health_status != statusCode.LBEACON_STATUS_NOT_AVAILABLE)  &&
+                    item.health_status == statusCode.LBEACON_STATUS_NOT_AVAILABLE)  &&
                     moment().diff(item.last_report_timestamp, 'minutes') < process.env.LBEACON_HEALTH_TIME_INTERVAL_IN_MIN;
 
                 item.last_report_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
