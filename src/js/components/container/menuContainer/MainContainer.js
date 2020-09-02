@@ -571,19 +571,28 @@ class MainContainer extends React.Component{
                     searchObjectArray.push(searchKey.value)
                 }
 
-                searchResult = proccessedTrackingData
-                   .filter(item => {
-                        return searchObjectArray.some(key => {
-                            return searchableField.some(field => {
-                                if (item[field] && item[field] == key) {
-                                    item.keyword = key;
-                                    return true;
-                                }
-                                return false;
-                            })
+				for(let index = searchObjectArray.length - 1; index >= 0 ; index--){
+					
+					let singleSearchObjectArray = [];
+					
+					singleSearchObjectArray.push(searchObjectArray[index]);
+					
+					let moreSearchResult = proccessedTrackingData
+                       .filter(item => {
+                            return singleSearchObjectArray.some(key => {
+                                return searchableField.some(field => {
+                                    if (item[field] && item[field] == key) {
+                                        item.keyword = key;
+                                        return true;
+                                    }
+                                    return false;
+                                })
+                           })
                        })
-                   })
-
+				   
+				    searchResult = searchResult.concat(moreSearchResult);
+				}
+				
                 break;
 
             case PIN_SELETION:
