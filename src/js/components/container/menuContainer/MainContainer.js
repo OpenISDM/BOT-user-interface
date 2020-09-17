@@ -87,9 +87,9 @@ class MainContainer extends React.Component{
         geofenceConfig: null,
         locationMonitorConfig: null,
         violatedObjects: {},
-        hasSearchKey: true,
+        hasSearchKey: false,
         searchKey: {
-            type: ALL_DEVICES,
+            type: null,
             value: null,
         },
         lastsearchKey: '',
@@ -236,7 +236,8 @@ class MainContainer extends React.Component{
             markerClickPackage 
         } = this.state
         
-        this.getSearchKey(searchKey, markerClickPackage)
+		if(searchKey.type != null)
+	        this.getSearchKey(searchKey, markerClickPackage)
     }
 
     /** set the geofence and location monitor enable */
@@ -583,6 +584,22 @@ class MainContainer extends React.Component{
                                 return searchableField.some(field => {
                                     if (item[field] && item[field] == key) {
                                         item.keyword = key;
+										
+										item.searched = true;
+										if(item.object_type == 0){
+                                            item.searchedType = -1;
+											if (!searchedObjectType.includes(-1)) { 
+                                                searchedObjectType.push(-1)
+                                                showedObjects.push(-1)
+                                            }
+									    }else if(item.object_type !=0){
+											item.searchedType = -2;
+											if (!searchedObjectType.includes(-2)) { 
+                                                searchedObjectType.push(-2)
+                                                showedObjects.push(-2)
+                                            }
+								        }
+
                                         return true;
                                     }
                                     return false;
@@ -592,6 +609,8 @@ class MainContainer extends React.Component{
 				   
 				    searchResult = searchResult.concat(moreSearchResult);
 				}
+				
+
 				
                 break;
 
@@ -735,9 +754,9 @@ class MainContainer extends React.Component{
                     })
         
                 this.setState({
-                    hasSearchKey: true,
+                    hasSearchKey: false,
                     searchKey: {
-                        type: ALL_DEVICES,
+                        type: null,
                         value: null,
                     },
                     lastsearchKey: '',
@@ -747,8 +766,9 @@ class MainContainer extends React.Component{
                     clearSearchResult: this.state.hasSearchKey ? true : false,
                     proccessedTrackingData: [],
                     display: true,
-                    searchedObjectType: [0],
-                    showedObjects: [0],
+                    searchedObjectType: [],
+                    showedObjects: [],
+					searchObjectArray: [],
                     showMobileMap: true,
                 })
 

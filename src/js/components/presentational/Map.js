@@ -580,7 +580,7 @@ class Map extends React.Component {
                 let objectList = this.collectObjectsByPosition(
                     proccessedTrackingData, 
                     item.currentPosition, 
-                    showedObjects.filter(item => item == 0)
+                    showedObjects
                 );
                 await this.props.getSearchKey({
                     type: PIN_SELETION,
@@ -633,7 +633,11 @@ class Map extends React.Component {
             .filter(item => {
                 if (!item.found) return false; 
                 if (item.currentPosition == null) return false;
-                if (!showedObjects.includes(parseInt(item.object_type))) return false;
+               /* if (!showedObjects.includes(parseInt(item.object_type))) 
+					return false;*/
+				if (!showedObjects.includes(parseInt(item.object_type)) && 
+				    !showedObjects.includes(parseInt(item.searchedType))) 
+					return false;
 
                 let yDiff = Math.abs(item.currentPosition[0] - position[0]);
                 let xDiff = Math.abs(item.currentPosition[1] - position[1]);
