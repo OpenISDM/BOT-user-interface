@@ -36,7 +36,7 @@ import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { CacheFirst, NetworkFirst } from 'workbox-strategies';
 
-let VERSION = 'v1.0 b.1960'
+let VERSION = 'v1.0 b.1961'
 
 self.VERSION = VERSION
 self.__WB_MANIFEST

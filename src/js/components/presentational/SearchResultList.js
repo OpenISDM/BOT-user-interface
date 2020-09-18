@@ -114,7 +114,7 @@ class SearchResultList extends React.Component {
     }
 
     toggleSelection = (number, isFound) => {
-        let selection = [...this.state.selection]
+		let selection = [...this.state.selection]
         let selectItem = isFound ? this.props.searchResult.filter(item => item.found)[number]
                                 : this.props.searchResult.filter(item => !item.found)[number]
         let mac = selectItem.mac_address
@@ -254,11 +254,13 @@ class SearchResultList extends React.Component {
         })
     }
 
-    handleRemoveButton = (e) => {
-        let mac = e.target.getAttribute('name')
+   handleRemoveButton = (e) => {
+		
+		let mac = e.target.getAttribute('name')
         let selection = [...this.state.selection]
         let selectedObjectData = [...this.state.selectedObjectData]
         let index = selection.indexOf(mac)
+
         if (index > -1) {
             selection = [...selection.slice(0, index), ...selection.slice(index + 1)]
             selectedObjectData = [...selectedObjectData.slice(0, index), ...selectedObjectData.slice(index + 1)]
@@ -325,6 +327,7 @@ class SearchResultList extends React.Component {
         this.setState({
             showEditObjectForm: true,
             selectedObjectData: this.props.searchResult,
+			selection : this.props.searchResult.map(a => a.mac_address),
             showAddDevice: true,
         })
     }

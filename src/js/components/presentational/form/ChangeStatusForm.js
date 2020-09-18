@@ -165,7 +165,7 @@ export default class ChangeStatusForm extends React.Component {
         } = this.props
 
         selectedObjectData = selectedObjectData.length ? selectedObjectData : []
-      
+ 
         return (
             <Modal  
                 show={this.props.show}
@@ -386,13 +386,7 @@ export default class ChangeStatusForm extends React.Component {
                                             >
                                                 {locale.texts.ADD_DEVICE}
                                             </Button>
-                                            <Button 
-                                                name='tracking path'
-                                                variant="outline-secondary" 
-                                                onClick={this.handleClick} 
-                                            >
-                                                {locale.texts.TRACKING_PATH}
-                                            </Button>  
+											
                                         </ButtonToolbar>
                                     </Row>
                                 </AccessControl>
