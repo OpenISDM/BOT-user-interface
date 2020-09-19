@@ -740,6 +740,7 @@ class MainContainer extends React.Component{
                 break;
 
             case CLEAR_SEARCH_RESULT: 
+			/*
                 let {
                     proccessedTrackingData
                 } = this.state
@@ -752,7 +753,7 @@ class MainContainer extends React.Component{
                         item.searchedType = 0
                         return item
                     })
-        
+        */
                 this.setState({
                     hasSearchKey: false,
                     searchKey: {
@@ -760,7 +761,7 @@ class MainContainer extends React.Component{
                         value: null,
                     },
                     lastsearchKey: '',
-                    searchResult,
+                    searchResult: [],
                     colorPanel: null,
                     clearColorPanel: true,
                     clearSearchResult: this.state.hasSearchKey ? true : false,
