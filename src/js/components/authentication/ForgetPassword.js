@@ -133,7 +133,7 @@ const ForgetPassword = () => {
                             {locale.texts.FORGET_PASSWORD}
                         </Title>
                         <Paragraph>
-                            Enter the email address you used when you joined and we’ll send you instructions to reset your password.
+						    {locale.texts.REQUEST_EMAIL_INSTRUCTION} 
                         </Paragraph>
                         
                         <FormikFormGroup 
