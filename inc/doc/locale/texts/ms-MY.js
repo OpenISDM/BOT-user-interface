@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        en-US.js
+        ms-MY.js
 
     File Description:
         BOT UI component
@@ -34,7 +34,7 @@
 
 const ms = {
 
-    LICENCE: '© 2020 BiDaE Technology, Diperbadankan'
+    LICENCE: '© 2020 BiDaE Teknologi, Diperbadankan'
 
 }
 

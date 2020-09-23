@@ -34,6 +34,8 @@
 
 import tw from './texts/zh-TW';
 import en from './texts/en-US';
+import ms from './texts/ms-MY';
+import cn from './texts/zh-CN';
 
 const text = {
 
@@ -41,9 +43,9 @@ const text = {
 
     en,
 
-    ms: en,
+    ms,
     
-    cn: tw,
+    cn,
 }
 
 export default text;

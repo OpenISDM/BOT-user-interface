@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        en-US.js
+        zh-CN.js
 
     File Description:
         BOT UI component
