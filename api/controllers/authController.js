@@ -210,10 +210,10 @@ module.exports = {
                     }, encrypt.secret);
             
                     const message = {
-                        from: 'BiDaEAssistCenter@gmail', // Sender address
+                        from: process.env.EMAIL_SENDER_ADDRESS, // Sender address
                         to: email,
-                        subject: resetPasswordInstruction.subject, 
-                        html: resetPasswordInstruction.content(token)
+						subject: resetPasswordInstruction.subject, 
+						text: resetPasswordInstruction.content(token)
                     };
                     
                     mailTransporter.sendMail(message)

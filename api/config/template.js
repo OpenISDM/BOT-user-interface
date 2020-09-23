@@ -39,21 +39,15 @@ let domain = `${dataSrcProtocol}://${dataSrcIP}`;
 
 const resetPasswordInstruction = {
 
-    subject: 'BOT Password Assistance',
+    subject: 'BiDaE Object Tracker Password Assistance',
 
     content: token => {
-        return `
-            <div>
-                <p>Greetings from BiDaE Object Tracker Service,</p>
+        return `Greetings from BiDaE Object Tracker Service. We received a request to reset the password for the BOT account associated with this e-mail address. Click the link below to reset your password using our secure server:
+		${domain}/resetpassword/new/${token}
 
-                <p>We received a request to reset the password for the BOT account associated with this e-mail address. Click the link below to reset your password using our secure server:</p>
-                            
-                ${domain}/resetpassword/new/${token}
-
-                <p>Sincerely,</p>
-                <p>The BOT Service Team
-                </p>
-            </div>
+        Sincerely,
+        The BOT Service Team    
+            
         `
     }
 }

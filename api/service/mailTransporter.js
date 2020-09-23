@@ -45,11 +45,12 @@ require('dotenv');
 // });
 
 var transport = nodemailer.createTransport({
-    service: process.env.EMAIL_HOST,
+    host: process.env.EMAIL_HOST,
+	port: process.env.EMAIL_PORT,
 
     auth: {
-      user: process.env.EMAIL_SENDER_ADDRESS,
-      pass: 'jane1807',
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
     },
 });
 
