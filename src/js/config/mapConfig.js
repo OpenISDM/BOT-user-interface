@@ -142,7 +142,7 @@ const mapConfig = {
         specifiedNumberTop: '8%',
 
         /* Set the Marker dispersity that can be any positive number */
-        markerDispersity: 200,
+        markerDispersity: 60,
 
         geoFenceMarkerOptions: {
 
@@ -211,7 +211,7 @@ const mapConfig = {
         numberSize: 8, 
 
         /* Set the Marker dispersity that can be any positive number */
-        markerDispersity: 100,
+        markerDispersity: 60,
 
         geoFenceMarkerOptions: {
 
@@ -246,7 +246,7 @@ const mapConfig = {
         showNumber: false,
 
         /* Set the Marker dispersity that can be any positive number */
-        markerDispersity: 100,
+        markerDispersity: 60,
     }, 
 
     /** Set the icon option for tablet */
@@ -267,7 +267,7 @@ const mapConfig = {
         numberSize: 8, 
 
         /* Set the Marker dispersity that can be any positive number */
-        markerDispersity: 1,
+        markerDispersity: 60,
 
         geoFenceMarkerOptions: {
 
