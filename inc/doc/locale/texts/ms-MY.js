@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        text.js
+        en-US.js
 
     File Description:
         BOT UI component
@@ -32,20 +32,10 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import tw from './texts/zh-TW';
-import en from './texts/en-US';
-import ms from './texts/ms-MY';
-import cn from './texts/zh-CN';
+const ms = {
 
-const text = {
+    LICENCE: '© 2020 BiDaE Technology, Diperbadankan'
 
-    tw,
-
-    en,
-
-    ms,
-    
-    cn,
 }
 
-export default text;
+module.exports = ms;
