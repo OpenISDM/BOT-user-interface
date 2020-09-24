@@ -43,7 +43,6 @@ const en =  {
     HEALTH_REPORT: "health report",
     DEVICE_MONITOR: "device monitor",
     SYSTEM_SETTING: "system setting",
-    SETTINGS: "settings",
     BOT_ADMIN: "BOT admin",
     CONTACT_TREE: "contact tree",
     MONITOR_MANAGEMENT: "monitor management",
