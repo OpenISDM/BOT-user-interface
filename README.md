@@ -60,6 +60,13 @@ To initiate the web server, execute below:
 npm run server
 ```
 
+### ngrok settings
+```bash
+ngrok http -hostname=bidae.tech.ngrok.io https://localhost
+or
+ngrok http -hostname=bidae.tech.ngrok.io 80
+``` 
+
 ## Usage Guide
 
 ### SQL command interface
