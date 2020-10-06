@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,32 +32,31 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer');
-const CompressionPlugin = require('compression-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { InjectManifest } = require('workbox-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const zlib = require('zlib');
-const webpack = require('webpack');
-const dotenv = require('dotenv');
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+const CompressionPlugin = require('compression-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const { InjectManifest } = require('workbox-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const zlib = require('zlib')
+const webpack = require('webpack')
+const dotenv = require('dotenv')
 var path = require('path')
-const env = dotenv.config().parsed;
+const env = dotenv.config().parsed
 const envKeys = Object.keys(env).reduce((prev, next) => {
-    prev[next] = JSON.stringify(env[next]);
-    return prev;
-}, {});
+    prev[next] = JSON.stringify(env[next])
+    return prev
+}, {})
 
 module.exports = {
-
     entry: './src/index.js',
     mode: env.NODE_ENV,
     // devtool: 'none',
     output: {
         path: path.join(__dirname, 'dist'),
 
-        filename: "./js/[name].bundle.js",
+        filename: './js/[name].bundle.js',
 
         chunkFilename: './js/[name].bundle.js',
 
@@ -70,16 +69,16 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader"
-                },                
+                    loader: 'babel-loader',
+                },
             },
             {
                 test: /\.html$/,
                 use: [
                     {
-                        loader: "html-loader"
-                    }
-                ]
+                        loader: 'html-loader',
+                    },
+                ],
             },
             {
                 test: /\.(eot|woff|woff2|[ot]tf)$/,
@@ -88,8 +87,8 @@ module.exports = {
                     options: {
                         name: '[name].[ext]',
                         outputPath: 'fonts',
-                    }
-                }
+                    },
+                },
             },
             {
                 test: /\.(webp|svg|png|jpe?g|gif)(\?\S*)?$/,
@@ -104,33 +103,26 @@ module.exports = {
                     {
                         loader: 'image-webpack-loader',
                         options: {
-                          bypassOnDebug: true,
-                        }
-                    }
+                            bypassOnDebug: true,
+                        },
+                    },
                 ],
             },
             {
                 test: /\.(sa|sc|c)ss$/,
-                use: [
-                    'sass-loader'
-                ]
+                use: ['sass-loader'],
             },
             {
                 test: /\.(sa|sc|c)ss$/,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'sass-loader'
-                ]
-            }
-        ]
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+            },
+        ],
     },
     devServer: {
         historyApiFallback: true,
     },
-    
-    plugins: [
 
+    plugins: [
         new CleanWebpackPlugin(),
 
         /** Webpack tool for analyzing the package size */
@@ -141,13 +133,13 @@ module.exports = {
         // }),
 
         new HtmlWebPackPlugin({
-            template: "./src/index.html",
-            filename: "./index.html"
+            template: './src/index.html',
+            filename: './index.html',
         }),
 
         /** Include the env parameters as web page parameters */
         new webpack.DefinePlugin({
-            'process.env': envKeys
+            'process.env': envKeys,
         }),
 
         /** Only introduce used moment locale package */
@@ -159,7 +151,7 @@ module.exports = {
             algorithm: 'brotliCompress',
             test: /\.(js)$/,
             compressionOptions: {
-              level: 11,
+                level: 11,
             },
             // threshold: 10240,
             minRatio: 0.8,
@@ -174,7 +166,6 @@ module.exports = {
             swSrc: path.join(__dirname, 'src', 'js', 'serviceWorker', 'sw.js'),
             swDest: path.join(__dirname, 'dist', 'sw.js'),
             maximumFileSizeToCacheInBytes: 5000000000,
-
         }),
 
         new CopyWebpackPlugin({
@@ -182,42 +173,38 @@ module.exports = {
                 { from: 'src/img/logo', to: 'imgs/logo' },
                 'src/manifest.webmanifest',
             ],
-            
         }),
-        
     ],
 
     optimization: {
-
-		splitChunks: {
+        splitChunks: {
             chunks: 'all',
-			cacheGroups: {
+            cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/](!react-bootstrap)(!leaflet)(!mdbreact)(!xlsx)(!react-app-polyfill)[\\/]/,
-                    name: "vendor",
+                    name: 'vendor',
                 },
-				xlsxVendor: {
-					test: /[\\/]node_modules[\\/](xlsx)[\\/]/,
+                xlsxVendor: {
+                    test: /[\\/]node_modules[\\/](xlsx)[\\/]/,
                     name: 'xlsxVendor',
                 },
                 reactVendor: {
                     test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                    name: "reactVendor"
+                    name: 'reactVendor',
                 },
                 leaflet: {
                     test: /[\\/]node_modules[\\/](leaflet)[\\/]/,
-                    name: "leafletVendor"
+                    name: 'leafletVendor',
                 },
                 reactAppPolyfill: {
                     test: /[\\/]node_modules[\\/](react-app-polyfill)[\\/]/,
-                    name: "reactAppPolyfillVendor"
+                    name: 'reactAppPolyfillVendor',
                 },
                 bootstrapVendor: {
                     test: /[\\/]node_modules[\\/](react-bootstrap)[\\/]/,
-                    name: "bootstrapVendor"
+                    name: 'bootstrapVendor',
                 },
-                
-			}
-		}
-	}
-};
+            },
+        },
+    },
+}

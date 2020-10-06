@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,33 +32,27 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { AppContext } from '../../context/AppContext';
-import { 
-    ButtonToolbar,
-} from "react-bootstrap"
-import config from "../../config"
+import React from 'react'
+import { AppContext } from '../../context/AppContext'
+import { ButtonToolbar } from 'react-bootstrap'
+import config from '../../config'
 import ReactTable from 'react-table'
 import { geofenceConfigColumn } from '../../config/tables'
 import EditGeofenceConfig from '../presentational/form/EditGeofenceConfig'
-import styleConfig from '../../config/styleConfig';
+import styleConfig from '../../config/styleConfig'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import selecTableHOC from 'react-table/lib/hoc/selectTable';
+import selecTableHOC from 'react-table/lib/hoc/selectTable'
 import messageGenerator from '../../helper/messageGenerator'
-import {
-    PrimaryButton
-} from '../BOTComponent/styleComponent'
-import AccessControl from '../authentication/AccessControl';
-import apiHelper from '../../helper/apiHelper';
-import { JSONClone } from '../../helper/utilities';
+import { PrimaryButton } from '../BOTComponent/styleComponent'
+import AccessControl from '../authentication/AccessControl'
+import apiHelper from '../../helper/apiHelper'
+import { JSONClone } from '../../helper/utilities'
 
-const SelectTable = selecTableHOC(ReactTable);
+const SelectTable = selecTableHOC(ReactTable)
 
 let lock = false
 
-class GeoFenceSettingBlock extends React.Component{
-
+class GeoFenceSettingBlock extends React.Component {
     static contextType = AppContext
 
     state = {
@@ -69,28 +63,31 @@ class GeoFenceSettingBlock extends React.Component{
         selectedData: null,
         show: false,
         showDeleteConfirmation: false,
-        locale: this.context.locale.abbr,   
+        locale: this.context.locale.abbr,
         isEdited: false,
-        path: ''   ,
+        path: '',
         selection: [],
-        selectAll: false,  
-        exIndex:9999,
+        selectAll: false,
+        exIndex: 9999,
     }
- 
 
-    componentDidMount = () => { 
+    componentDidMount = () => {
         this.getMonitorConfig()
-        this.getLbeaconTable() 
+        this.getLbeaconTable()
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.exIndex != this.props.nowIndex){
-            this.setState({selectAll : false,selection:'',exIndex:this.props.nowIndex}) 
+        if (this.state.exIndex != this.props.nowIndex) {
+            this.setState({
+                selectAll: false,
+                selection: '',
+                exIndex: this.props.nowIndex,
+            })
         }
         if (this.context.locale.abbr !== prevState.locale) {
             this.getMonitorConfig()
             this.setState({
-                locale: this.context.locale.abbr
+                locale: this.context.locale.abbr,
             })
         }
     }
@@ -98,84 +95,92 @@ class GeoFenceSettingBlock extends React.Component{
     getLbeaconTable = () => {
         let { locale } = this.context
 
-        apiHelper.lbeaconApiAgent.getLbeaconTable({
-            locale: locale.abbr
-        })
-        .then(res => {
-            this.setState({
-                lbeaconsTable: res.data.rows
+        apiHelper.lbeaconApiAgent
+            .getLbeaconTable({
+                locale: locale.abbr,
             })
-        })
+            .then((res) => {
+                this.setState({
+                    lbeaconsTable: res.data.rows,
+                })
+            })
     }
 
     getMonitorConfig = (callback) => {
-        let { 
-            auth,
-            locale,
-        } = this.context
-        apiHelper.geofenceApis.getGeofenceConfig(
-            auth.user.areas_id
-        )
-        .then(res => {
-            let columns = JSONClone(geofenceConfigColumn)
+        let { auth, locale } = this.context
+        apiHelper.geofenceApis
+            .getGeofenceConfig(auth.user.areas_id)
+            .then((res) => {
+                let columns = JSONClone(geofenceConfigColumn)
 
-            columns.map(field => {
-                field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+                columns.map((field) => {
+                    field.Header =
+                        locale.texts[
+                            field.Header.toUpperCase().replace(/ /g, '_')
+                        ]
+                })
+
+                res.data.rows.map((item, index) => {
+                    item.parsePerimeters.lbeacons[index] += ','
+                    item.key = index + 1
+                    item.area = {
+                        value: config.mapConfig.areaOptions[item.area_id],
+                        label:
+                            locale.texts[
+                                config.mapConfig.areaOptions[item.area_id]
+                            ],
+                        id: item.area_id,
+                    }
+                    item.p_rssi = item.perimeters.split(',')[
+                        item.perimeters.split(',').length - 2
+                    ]
+                    item.f_rssi = item.fences.split(',')[
+                        item.fences.split(',').length - 2
+                    ]
+                })
+                this.setState(
+                    {
+                        data: res.data.rows,
+                        columns,
+                        show: false,
+                        showDeleteConfirmation: false,
+                        selectedData: null,
+                        selection: '',
+                        selectAll: false,
+                    },
+                    callback
+                )
             })
-            
-            res.data.rows.map((item,index) => { 
-                item.parsePerimeters.lbeacons[index]+=","
-                item.key=index + 1
-                item.area = {
-                    value: config.mapConfig.areaOptions[item.area_id],
-                    label: locale.texts[config.mapConfig.areaOptions[item.area_id]],
-                    id: item.area_id
-                }
-                item.p_rssi = item.perimeters.split(',')[item.perimeters.split(',').length-2]
-                item.f_rssi = item.fences.split(',')[item.fences.split(',').length-2] 
+            .catch((err) => {
+                console.log(err)
             })
-            this.setState({
-                data: res.data.rows,
-                columns,
-                show: false,
-                showDeleteConfirmation: false,
-                selectedData: null, 
-                selection: '',
-                selectAll:false
-            }, callback)
-        })
-        .catch(err => {
-            console.log(err)
-        })
     }
 
     handleClickButton = (e, value) => {
- 
-
         let { name } = e.target
-        switch(name) {
-            case "add rule": 
+        switch (name) {
+            case 'add rule':
                 this.setState({
                     show: true,
                     isEdited: false,
-                    path: 'add'
+                    path: 'add',
                 })
-                break;
-            case "edit":
+                break
+            case 'edit':
                 this.setState({
                     show: true,
                     selectedData: value.original,
                     isEdited: true,
-                    path: 'setGeofenceConfig'
+                    path: 'setGeofenceConfig',
                 })
-                break;
-            case "delete":
-                this.setState({ 
-                    showDeleteConfirmation: true, 
-                    path: 'delete',  
-                }) 
-                lock = true  
-                break;
+                break
+            case 'delete':
+                this.setState({
+                    showDeleteConfirmation: true,
+                    path: 'delete',
+                })
+                lock = true
+                break
         }
     }
 
@@ -183,178 +188,172 @@ class GeoFenceSettingBlock extends React.Component{
         this.setState({
             show: false,
             showDeleteConfirmation: false,
-            selectedData: null , 
+            selectedData: null,
         })
-        lock=false 
+        lock = false
     }
 
     handleSubmit = (pack) => {
-        lock=true
+        lock = true
         let configPackage = pack ? pack : {}
-        let { 
-            path,
-            selectedData
-        } = this.state 
-        configPackage["type"] = config.monitorSettingUrlMap[this.props.type]
+        let { path, selectedData } = this.state
+        configPackage['type'] = config.monitorSettingUrlMap[this.props.type]
         // configPackage["id"] = selectedData ? selectedData.id : null
-        // configPackage["id"] = this.state.selection  
-        path == "setGeofenceConfig" ? configPackage["id"] = selectedData.id : configPackage["id"] =  this.state.selection 
+        // configPackage["id"] = this.state.selection
+        path == 'setGeofenceConfig'
+            ? (configPackage['id'] = selectedData.id)
+            : (configPackage['id'] = this.state.selection)
 
-        apiHelper.geofenceApis[path](
-            configPackage
-        )
-        .then(res => {
+        apiHelper.geofenceApis[path](configPackage)
+            .then((res) => {
+                let callback = () =>
+                    messageGenerator.setSuccessMessage('save success')
+                this.getMonitorConfig(callback)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
-            let callback = () => messageGenerator.setSuccessMessage(
-                'save success'
-            )   
-            this.getMonitorConfig(callback)
-
-        })
-        .catch(err => { 
-            console.log(err)
+    toggleSelection = (key, shift, row) => {
+        let selection = [...this.state.selection]
+        key = key.split('-')[1] ? key.split('-')[1] : key
+        const keyIndex = selection.indexOf(key)
+        if (keyIndex >= 0) {
+            selection = [
+                ...selection.slice(0, keyIndex),
+                ...selection.slice(keyIndex + 1),
+            ]
+        } else {
+            selection.push(key)
+        }
+        this.setState({
+            selection,
         })
     }
 
-    toggleSelection = (key, shift, row) => { 
-        let selection = [...this.state.selection]; 
-        key = key.split('-')[1] ? key.split('-')[1] : key
-        const keyIndex = selection.indexOf(key);
-        if (keyIndex >= 0) {
-            selection = [
-            ...selection.slice(0, keyIndex),
-            ...selection.slice(keyIndex + 1)
-            ];
-        } else {
-            selection.push(key);
-        }
-        this.setState({ 
-            selection 
-        });  
-    };
- 
-    toggleAll = () => { 
-        const selectAll = this.state.selectAll ? false : true;
-        let selection = [];
-        let rowsCount = 0 ; 
-       
+    toggleAll = () => {
+        const selectAll = this.state.selectAll ? false : true
+        let selection = []
+        let rowsCount = 0
+
         if (selectAll) {
-            const wrappedInstance = this.selectTable.getWrappedInstance();
-            // const currentRecords = wrappedInstance.props.data 
-            const currentRecords = wrappedInstance.getResolvedState().sortedData;      
-            currentRecords.forEach(item =>{
-                rowsCount++; 
-                if ((rowsCount > wrappedInstance.state.pageSize * wrappedInstance.state.page) && ( rowsCount <= wrappedInstance.state.pageSize +wrappedInstance.state.pageSize * wrappedInstance.state.page) ){
+            const wrappedInstance = this.selectTable.getWrappedInstance()
+            // const currentRecords = wrappedInstance.props.data
+            const currentRecords = wrappedInstance.getResolvedState().sortedData
+            currentRecords.forEach((item) => {
+                rowsCount++
+                if (
+                    rowsCount >
+                        wrappedInstance.state.pageSize *
+                            wrappedInstance.state.page &&
+                    rowsCount <=
+                        wrappedInstance.state.pageSize +
+                            wrappedInstance.state.pageSize *
+                                wrappedInstance.state.page
+                ) {
                     selection.push(item._original.id)
-                } 
-            });
-        }else{
-            selection = [];
+                }
+            })
+        } else {
+            selection = []
         }
-         this.setState({ selectAll, selection });
+        this.setState({ selectAll, selection })
+    }
 
-    };
+    isSelected = (key) => {
+        return this.state.selection.includes(key)
+    }
 
-    isSelected = (key) => {  
-        return this.state.selection.includes(key);
-    };
- 
     render() {
-        const {  
-            selectedRowData,
-            selectAll,
-            selectType,
-        } = this.state
-       
-        const {
-            toggleSelection,
-            toggleAll,
-            isSelected,
-        } = this;
+        const { selectedRowData, selectAll, selectType } = this.state
+
+        const { toggleSelection, toggleAll, isSelected } = this
 
         const extraProps = {
             selectAll,
             isSelected,
             toggleAll,
             toggleSelection,
-            selectType
-        };
+            selectType,
+        }
 
-        let {
-            type
-        } = this.props
+        let { type } = this.props
 
-        let {
-            lbeaconsTable,
-            isEdited,
-        } = this.state
+        let { lbeaconsTable, isEdited } = this.state
 
         let { locale } = this.context
 
         return (
-            <div>  
+            <div>
                 <div className="d-flex justify-content-start">
                     <AccessControl
                         renderNoAccess={() => null}
                         platform={['browser', 'tablet']}
-                    >                
+                    >
                         <ButtonToolbar>
                             <PrimaryButton
-                                className='text-capitalize mr-2 mb-1'
+                                className="text-capitalize mr-2 mb-1"
                                 name="add rule"
                                 onClick={this.handleClickButton}
                             >
                                 {locale.texts.ADD_RULE}
                             </PrimaryButton>
                             <PrimaryButton
-                                className='mr-2 mb-1'
+                                className="mr-2 mb-1"
                                 name="delete"
-                                onClick={this.handleClickButton} 
+                                onClick={this.handleClickButton}
                             >
                                 {locale.texts.DELETE}
                             </PrimaryButton>
                         </ButtonToolbar>
                     </AccessControl>
                 </div>
-                <hr/>
+                <hr />
                 <SelectTable
-                    keyField='id'
+                    keyField="id"
                     data={this.state.data}
                     columns={this.state.columns}
-                    ref={r => (this.selectTable = r)}
+                    ref={(r) => (this.selectTable = r)}
                     className="-highlight"
                     minRows={0}
-                    onSortedChange={(e) => {this.setState({selectAll:false,selection:''})}} 
+                    onSortedChange={(e) => {
+                        this.setState({ selectAll: false, selection: '' })
+                    }}
                     {...extraProps}
                     {...styleConfig.reactTable}
-                    getTrProps={(state, rowInfo, column, instance) => {   
-                          return {
-                              onClick: (e, handleOriginal) => {  
-                                   this.setState({
+                    getTrProps={(state, rowInfo, column, instance) => {
+                        return {
+                            onClick: (e, handleOriginal) => {
+                                this.setState({
                                     show: true,
                                     selectedData: rowInfo.row._original,
                                     isEdited: true,
-                                    path: 'setGeofenceConfig'
-                                })  
-                          }
-                      }}
-                    }
+                                    path: 'setGeofenceConfig',
+                                })
+                            },
+                        }
+                    }}
                 />
-            
+
                 <EditGeofenceConfig
-                    handleShowPath={this.props.handleShowPath} 
+                    handleShowPath={this.props.handleShowPath}
                     selectedData={this.state.selectedData}
-                    show={this.state.show} 
+                    show={this.state.show}
                     handleClose={this.handleClose}
-                    title={isEdited ? 'edit geofence config' : 'add geofence config'}
-                    type={config.monitorSettingUrlMap[this.props.type]} 
+                    title={
+                        isEdited
+                            ? 'edit geofence config'
+                            : 'add geofence config'
+                    }
+                    type={config.monitorSettingUrlMap[this.props.type]}
                     handleSubmit={this.handleSubmit}
                     lbeaconsTable={lbeaconsTable}
                     areaOptions={config.mapConfig.areaOptions}
                     isEdited={this.state.isEdited}
                 />
                 <DeleteConfirmationForm
-                    show={this.state.showDeleteConfirmation} 
+                    show={this.state.showDeleteConfirmation}
                     handleClose={this.handleClose}
                     handleSubmit={this.handleSubmit}
                 />
@@ -364,4 +363,3 @@ class GeoFenceSettingBlock extends React.Component{
 }
 
 export default GeoFenceSettingBlock
- 

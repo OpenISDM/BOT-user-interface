@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,23 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+let authController = require('../../controllers/authController')
 
+module.exports = (app) => {
+    app.route('/data/auth/signin').post(authController.signin)
 
-let authController = require('../../controllers/authController');
+    app.route('/data/auth/signout').post(authController.signout)
 
-module.exports = app => {
-    app.route('/data/auth/signin')
-        .post(authController.signin)
+    app.route('/data/auth/validation').post(authController.validation)
 
-    app.route('/data/auth/signout')
-        .post(authController.signout)
+    app.route('/data/auth/sentResetPwdInstruction').post(
+        authController.sentResetPwdInstruction
+    )
 
-    app.route('/data/auth/validation')
-        .post(authController.validation)
-
-    app.route('/data/auth/sentResetPwdInstruction')
-        .post(authController.sentResetPwdInstruction)
-
-    app.route('/data/auth/resetpassword')
-        .post(authController.resetPassword)
+    app.route('/data/auth/resetpassword').post(authController.resetPassword)
 }

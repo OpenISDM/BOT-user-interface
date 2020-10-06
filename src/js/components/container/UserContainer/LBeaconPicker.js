@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,45 +32,46 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import React from 'react'
+import Select from 'react-select'
+import { AppContext } from '../../../context/AppContext'
+import apiHelper from '../../../helper/apiHelper'
 
-import React from 'react';
-import Select from 'react-select';
-import { AppContext } from '../../../context/AppContext';
-import apiHelper from '../../../helper/apiHelper';
-  
 class LBeaconPicker extends React.Component {
-
     static contextType = AppContext
 
     state = {
         beacons: [],
     }
     componentDidMount = () => {
-        this.getBeacon()        
+        this.getBeacon()
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if(prevProps.area != this.props.area){
+        if (prevProps.area != this.props.area) {
             this.getBeacon()
         }
-        
     }
 
     getBeacon = () => {
-        if(this.props.area){
+        if (this.props.area) {
             let { locale } = this.context
 
-            apiHelper.lbeaconApiAgent.getLbeaconTable({
-                locale: locale.abbr
-            })
-            .then(res => {
-                let beacons = res.data.rows.filter(beacon => {
-                    return parseInt(beacon.uuid.slice(0, 4)) == parseInt(this.props.area)
+            apiHelper.lbeaconApiAgent
+                .getLbeaconTable({
+                    locale: locale.abbr,
                 })
-                this.setState({
-                    beacons
+                .then((res) => {
+                    let beacons = res.data.rows.filter((beacon) => {
+                        return (
+                            parseInt(beacon.uuid.slice(0, 4)) ==
+                            parseInt(this.props.area)
+                        )
+                    })
+                    this.setState({
+                        beacons,
+                    })
                 })
-            })
         }
     }
 
@@ -78,19 +79,16 @@ class LBeaconPicker extends React.Component {
         this.props.getValue(option.value, this.props.id, this.props.beacon_id)
     }
 
-
-
     render() {
-
-        let options = this.state.beacons.map(item => {
+        let options = this.state.beacons.map((item) => {
             return {
                 value: item,
-                label: item.uuid
+                label: item.uuid,
             }
         })
         let defaultValue = {
             value: this.props.value,
-            label: this.props.value
+            label: this.props.value,
         }
 
         let { locale } = this.context
@@ -98,15 +96,15 @@ class LBeaconPicker extends React.Component {
             <Select
                 name="beaconPicker"
                 value={defaultValue}
-                onChange={value => this.onChange(value)}
+                onChange={(value) => this.onChange(value)}
                 options={options}
                 isSearchable={false}
                 components={{
-                    IndicatorSeparator: () => null
+                    IndicatorSeparator: () => null,
                 }}
             />
         )
     }
 }
 
-export default LBeaconPicker;
+export default LBeaconPicker

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,33 +32,30 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
 module.exports = {
-
-
-	getLocationHistory: (key, startTime, endTime, mode) => {
-		let query = null 
-		switch(mode) { 
-			case 'nameGroupByArea':
-				query = `
+    getLocationHistory: (key, startTime, endTime, mode) => {
+        let query = null
+        switch (mode) {
+            case 'nameGroupByArea':
+                query = `
 					WITH ranges AS (
-						SELECT 
-							mac_address, 
-							area_id, 
-							record_timestamp, 
-							battery_voltage, 
-							average_rssi, 
-							CASE WHEN LAG(area_id) OVER (PARTITION BY mac_address ORDER BY mac_address, record_timestamp) = area_id 
+						SELECT
+							mac_address,
+							area_id,
+							record_timestamp,
+							battery_voltage,
+							average_rssi,
+							CASE WHEN LAG(area_id) OVER (PARTITION BY mac_address ORDER BY mac_address, record_timestamp) = area_id
 								THEN NULL ELSE 1 END r
-						FROM 
-						(			 
-							SELECT 
+						FROM
+						(
+							SELECT
 								location_history_table.mac_address AS mac_address,
 								location_history_table.area_id AS area_id,
 								location_history_table.record_timestamp AS record_timestamp,
 								location_history_table.battery_voltage AS battery_voltage,
 								location_history_table.average_rssi AS average_rssi
-							FROM location_history_table 
+							FROM location_history_table
 
 							INNER JOIN object_table
 							ON location_history_table.mac_address = object_table.mac_address
@@ -67,10 +64,10 @@ module.exports = {
 							INNER JOIN user_area
 							ON object_table.area_id = user_area.area_id
 
-							INNER JOIN user_table 
+							INNER JOIN user_table
 							ON user_table.id = user_area.user_id
 
-							WHERE 
+							WHERE
 								object_table.name = '${key}'
 								AND record_timestamp >= '${startTime}'
 								AND record_timestamp <= '${endTime}'
@@ -78,19 +75,19 @@ module.exports = {
 						) AS raw_data
 					)
 					, groups AS (
-						SELECT 
-							mac_address, 
-							area_id, 
-							record_timestamp, 
-							battery_voltage, 
-							average_rssi, 
-							r, 
+						SELECT
+							mac_address,
+							area_id,
+							record_timestamp,
+							battery_voltage,
+							average_rssi,
+							r,
 							SUM(r) OVER (ORDER BY mac_address, record_timestamp) grp
 						FROM ranges
 					)
 
-					SELECT 
-						MIN(groups.mac_address::TEXT) AS mac_address, 
+					SELECT
+						MIN(groups.mac_address::TEXT) AS mac_address,
 						MIN(object_table.name) AS name,
 						MIN(groups.area_id) AS area_id,
 						MIN(area_table.name) AS area_name,
@@ -108,34 +105,34 @@ module.exports = {
 					INNER JOIN area_table
 					ON area_table.id = groups.area_id
 
-					GROUP BY 
-						grp, 
+					GROUP BY
+						grp,
 						groups.mac_address
 					ORDER by mac_address ASC, start_time DESC
 					`
-				break;
-			case 'nameGroupByUUID':
-				query = `
+                break
+            case 'nameGroupByUUID':
+                query = `
 					WITH ranges AS (
-						SELECT 
-							mac_address, 
-							area_id, 
-							uuid, 
-							record_timestamp, 
-							battery_voltage, 
-							average_rssi, 
-							CASE WHEN LAG(uuid) OVER (PARTITION BY mac_address ORDER BY mac_address, record_timestamp) = uuid 
+						SELECT
+							mac_address,
+							area_id,
+							uuid,
+							record_timestamp,
+							battery_voltage,
+							average_rssi,
+							CASE WHEN LAG(uuid) OVER (PARTITION BY mac_address ORDER BY mac_address, record_timestamp) = uuid
 								THEN NULL ELSE 1 END r
-						FROM 
-						(			 
-							SELECT 
+						FROM
+						(
+							SELECT
 								location_history_table.mac_address AS mac_address,
 								location_history_table.area_id AS area_id,
 								location_history_table.uuid AS uuid,
 								location_history_table.record_timestamp AS record_timestamp,
 								location_history_table.battery_voltage AS battery_voltage,
 								location_history_table.average_rssi AS average_rssi
-							FROM location_history_table 
+							FROM location_history_table
 
 							INNER JOIN object_table
 							ON location_history_table.mac_address = object_table.mac_address
@@ -144,10 +141,10 @@ module.exports = {
 							INNER JOIN user_area
 							ON object_table.area_id = user_area.area_id
 
-							INNER JOIN user_table 
+							INNER JOIN user_table
 							ON user_table.id = user_area.user_id
 
-							WHERE 
+							WHERE
 								object_table.name = '${key}'
 								AND record_timestamp >= '${startTime}'
 								AND record_timestamp <= '${endTime}'
@@ -155,14 +152,14 @@ module.exports = {
 						) AS raw_data
 					)
 					, groups AS (
-						SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r, 
-							SUM(r) 
+						SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r,
+							SUM(r)
 								OVER (ORDER BY mac_address, record_timestamp) grp
 						FROM ranges
 					)
 
-					SELECT 
-						MIN(groups.mac_address::TEXT) AS mac_address, 
+					SELECT
+						MIN(groups.mac_address::TEXT) AS mac_address,
 						MIN(object_table.name) AS name,
 						MIN(groups.area_id) AS area_id,
 						MIN(area_table.name) AS area_name,
@@ -186,11 +183,11 @@ module.exports = {
 
 					GROUP BY grp, groups.mac_address
 					ORDER by mac_address ASC, start_time DESC
-				`;
-				break;
-			case "uuid":
-				query =  `
-					SELECT 
+				`
+                break
+            case 'uuid':
+                query = `
+					SELECT
 						location_history_table.uuid,
 						location_history_table.mac_address,
 						lbeacon_table.description AS location_description,
@@ -198,10 +195,10 @@ module.exports = {
 						object_table.name
 					FROM location_history_table
 
-					LEFT JOIN lbeacon_table 
+					LEFT JOIN lbeacon_table
 					ON lbeacon_table.uuid = location_history_table.uuid
 
-					LEFT JOIN object_table 
+					LEFT JOIN object_table
 					ON location_history_table.mac_address = object_table.mac_address
 
 					LEFT JOIN area_table
@@ -212,8 +209,8 @@ module.exports = {
 						AND record_timestamp >= '${startTime}'
 						AND record_timestamp <= '${endTime}'
 
-					GROUP BY 
-						location_history_table.mac_address, 
+					GROUP BY
+						location_history_table.mac_address,
 						location_history_table.uuid,
 						object_table.name,
 						lbeacon_table.description,
@@ -223,16 +220,16 @@ module.exports = {
 					ORDER BY object_table.name ASC
 
 				`
-				break;
-			case 'area':
-				query = `
-					SELECT 
+                break
+            case 'area':
+                query = `
+					SELECT
 						object_table.name,
 						location_history_table.mac_address,
 						area_table.name AS area
 					FROM location_history_table
 
-					LEFT JOIN object_table 
+					LEFT JOIN object_table
 					ON location_history_table.mac_address = object_table.mac_address
 
 					LEFT JOIN area_table
@@ -243,42 +240,41 @@ module.exports = {
 						AND record_timestamp >= '${startTime}'
 						AND record_timestamp <= '${endTime}'
 
-					GROUP BY 
-						location_history_table.mac_address, 
+					GROUP BY
+						location_history_table.mac_address,
 						object_table.name,
 						area_table.name,
 						location_history_table.area_id
 
 					ORDER BY object_table.name ASC
 				`
-				break;
+                break
+        }
 
-		}
+        return query
+    },
 
-		return query
-	},
-
-	getContactTree: (child, duplicate, startTime, endTime) => {
-		let query = `
+    getContactTree: (child, duplicate, startTime, endTime) => {
+        let query = `
 			WITH parent AS (
 				WITH ranges AS (
-					SELECT 
-						mac_address, 
-						area_id, 
-						record_timestamp, 
-						battery_voltage, 
-						average_rssi, 
+					SELECT
+						mac_address,
+						area_id,
+						record_timestamp,
+						battery_voltage,
+						average_rssi,
 						CASE WHEN LAG(area_id) OVER (PARTITION BY mac_address ORDER BY mac_address, record_timestamp) = area_id
 							THEN NULL ELSE 1 END r
-					FROM 
-					(			 
-						SELECT 
+					FROM
+					(
+						SELECT
 							location_history_table.mac_address AS mac_address,
 							location_history_table.area_id AS area_id,
 							location_history_table.record_timestamp AS record_timestamp,
 							location_history_table.battery_voltage AS battery_voltage,
 							location_history_table.average_rssi AS average_rssi
-						FROM location_history_table 
+						FROM location_history_table
 
 						INNER JOIN object_table
 						ON location_history_table.mac_address = object_table.mac_address
@@ -287,10 +283,10 @@ module.exports = {
 						INNER JOIN user_area
 						ON object_table.area_id = user_area.area_id
 
-						INNER JOIN user_table 
+						INNER JOIN user_table
 						ON user_table.id = user_area.user_id
 
-						WHERE 
+						WHERE
 							object_table.name = '${child}'
 							AND record_timestamp >= '${startTime}'
 							AND record_timestamp <= '${endTime}'
@@ -298,19 +294,19 @@ module.exports = {
 					) AS raw_data
 				)
 				, groups AS (
-					SELECT 
-						mac_address, 
-						area_id, 
-						record_timestamp, 
-						battery_voltage, 
-						average_rssi, 
-						r, 
+					SELECT
+						mac_address,
+						area_id,
+						record_timestamp,
+						battery_voltage,
+						average_rssi,
+						r,
 						SUM(r)OVER (ORDER BY mac_address, record_timestamp) grp
 					FROM ranges
 				)
 
-				SELECT 
-					MIN(groups.mac_address::TEXT) AS mac_address, 
+				SELECT
+					MIN(groups.mac_address::TEXT) AS mac_address,
 					MIN(object_table.name) AS name,
 					MIN(groups.area_id) AS area_id,
 					MIN(area_table.name) AS area_name,
@@ -327,16 +323,16 @@ module.exports = {
 				INNER JOIN area_table
 				ON area_table.id = groups.area_id
 
-				GROUP BY 
-					grp, 
+				GROUP BY
+					grp,
 					groups.mac_address
 
-				ORDER by 
-					mac_address ASC, 
+				ORDER by
+					mac_address ASC,
 					start_time DESC
 			)
-			
-			SELECT 
+
+			SELECT
 				DISTINCT ON (object_table.name) object_table.name AS child,
 				parent.name AS parent,
 				parent.area_id,
@@ -351,25 +347,22 @@ module.exports = {
 			AND children.record_timestamp <= parent.end_time
 			AND children.mac_address::text != parent.mac_address::text
 
-			LEFT JOIN object_table 
+			LEFT JOIN object_table
 			ON children.mac_address = object_table.mac_address
 			AND object_table.object_type != 0
 
-			WHERE object_table.name NOT IN (${duplicate.map(dup => `'${dup}'`)})
+			WHERE object_table.name NOT IN (${duplicate.map((dup) => `'${dup}'`)})
 
-			GROUP BY 
-				child, 
+			GROUP BY
+				child,
 				parent,
 				parent.area_id
 
-			ORDER BY 
+			ORDER BY
 				child ASC,
 				start_time ASC
 
-			`;
-		return query
-
-	}
-
+			`
+        return query
+    },
 }
-

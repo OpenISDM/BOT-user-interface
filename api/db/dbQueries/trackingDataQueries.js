@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,10 +32,9 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
 const getTrackingData = (areas_id, key) => {
-	const query = `
-		SELECT 
+    const query = `
+		SELECT
 			object_table.mac_address,
 			object_summary_table.uuid as lbeacon_uuid,
 			object_summary_table.first_seen_timestamp,
@@ -69,8 +68,8 @@ const getTrackingData = (areas_id, key) => {
 				'id', area_table.id,
 				'value', area_table.name
 			) AS lbeacon_area,
-			COALESCE(patient_record.record, ARRAY[]::JSON[]) as records	
-		
+			COALESCE(patient_record.record, ARRAY[]::JSON[]) as records
+
 		FROM object_table
 
 		LEFT JOIN object_summary_table
@@ -86,7 +85,7 @@ const getTrackingData = (areas_id, key) => {
 		ON object_table.note_id = edit_object_record.id
 
 		LEFT JOIN (
-			SELECT 
+			SELECT
 				object_id,
 				ARRAY_AGG(JSON_BUILD_OBJECT(
 					'created_timestamp', created_timestamp,
@@ -94,37 +93,37 @@ const getTrackingData = (areas_id, key) => {
 					'recorded_user', (
 						SELECT name
 						FROM user_table
-						WHERE id = editing_user_id 
+						WHERE id = editing_user_id
 					)
-				)) as record 
+				)) as record
 			FROM (
 				SELECT *
 				FROM patient_record
 				ORDER BY created_timestamp DESC
 			) as patient_record_table
-			GROUP BY object_id					
+			GROUP BY object_id
 		) as patient_record
 		ON object_table.id = patient_record.object_id
 
 		LEFT JOIN (
-			SELECT 
+			SELECT
 				mac_address,
 				json_agg(json_build_object(
-					'type', monitor_type, 
+					'type', monitor_type,
 					'time', violation_timestamp
 				))
 			FROM (
-				SELECT 
+				SELECT
 					mac_address,
 					monitor_type,
 					MIN(violation_timestamp) AS violation_timestamp
 				FROM (
-					SELECT 
+					SELECT
 						mac_address,
 						monitor_type,
 						violation_timestamp
 					FROM notification_table
-					WHERE 
+					WHERE
 						web_processed IS NULL
 				)	as tmp_1
 				GROUP BY mac_address, monitor_type
@@ -136,17 +135,17 @@ const getTrackingData = (areas_id, key) => {
 		LEFT JOIN branches
 		ON object_table.transferred_location = branches.id
 
-		WHERE object_table.area_id IN (${areas_id.map(item => item)}) 
+		WHERE object_table.area_id IN (${areas_id.map((item) => item)})
 
-		ORDER BY 
+		ORDER BY
 			object_table.area_id,
-			object_table.type, 
+			object_table.type,
 			object_table.asset_control_number
 			DESC;
 	`
-	return query;
+    return query
 }
 
 module.exports = {
-	getTrackingData
+    getTrackingData,
 }

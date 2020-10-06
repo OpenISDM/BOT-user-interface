@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,15 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
 const getLbeaconTable = `
-	SELECT 
+	SELECT
 		id,
-		uuid, 
-		description, 
-		ip_address, 
-		health_status, 
-		gateway_ip_address, 
+		uuid,
+		description,
+		ip_address,
+		health_status,
+		gateway_ip_address,
 		last_report_timestamp,
 		danger_area,
 		room,
@@ -50,44 +49,39 @@ const getLbeaconTable = `
         comment
 	FROM lbeacon_table
 	ORDER BY ip_address DESC
-`;
+`
 
 const deleteLBeacon = (idPackage) => {
-	const query = `
+    const query = `
 		DELETE FROM lbeacon_table
-		WHERE id IN (${idPackage.map(item => `'${item}'`)});
+		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
 	`
-	return query
+    return query
 }
 
 const editLbeacon = (formOption) => {
-	const text =
-		`
+    const text = `
 		UPDATE lbeacon_table
-		SET 
+		SET
             description = $2,
             comment = $3
 
 
 		WHERE uuid = $1
-	`;
+	`
 
-	const values = [
-		formOption.uuid,
-		formOption.description,
-		formOption.comment
-	]
+    const values = [formOption.uuid, formOption.description, formOption.comment]
 
-	const query = {
-		text, 
-		values
-	};
+    const query = {
+        text,
+        values,
+    }
 
-	return query
+    return query
 }
 
 module.exports = {
     getLbeaconTable,
     deleteLBeacon,
-    editLbeacon
+    editLbeacon,
 }

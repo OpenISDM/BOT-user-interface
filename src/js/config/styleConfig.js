@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,33 +32,32 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import BOTCheckbox from '../components/presentational/BOTCheckbox';
-import BOTPagination from '../components/presentational/BOTPagination';
-import Select, {components} from 'react-select';
-import React from 'react';
-import styleSheet from './styleSheet';
+import BOTCheckbox from '../components/presentational/BOTCheckbox'
+import BOTPagination from '../components/presentational/BOTPagination'
+import Select, { components } from 'react-select'
+import React from 'react'
+import styleSheet from './styleSheet'
 
 const ValueContainer = ({ children, ...props }) => {
     return (
         components.ValueContainer && (
             <components.ValueContainer {...props}>
-            {!!children && (
-                <i
-                    className="fa fa-search"
-                    aria-hidden="true"
-                    style={{ 
-                        position: "absolute", 
-                        left: 10,
-                        color: styleSheet.iconColor
-                    }}
-                />
-            )}
-            {children}
+                {!!children && (
+                    <i
+                        className="fa fa-search"
+                        aria-hidden="true"
+                        style={{
+                            position: 'absolute',
+                            left: 10,
+                            color: styleSheet.iconColor,
+                        }}
+                    />
+                )}
+                {children}
             </components.ValueContainer>
         )
-    );
-};
+    )
+}
 
 const styleConfig = {
     reactSelect: {
@@ -70,25 +69,24 @@ const styleConfig = {
         valueContainer: (provided) => ({
             ...provided,
             position: 'static',
-            color: 'red'
+            color: 'red',
         }),
         indicatorsContainer: (provided) => ({
             ...provided,
-            height: 40
+            height: 40,
         }),
-        menu: (provided) => ({ 
+        menu: (provided) => ({
             ...provided,
-            padding: 0
+            padding: 0,
         }),
         control: (provided) => ({
             ...provided,
             fontSize: '1rem',
             minHeight: '2.5rem',
-            height:  'calc(2rem + 2px)',
+            height: 'calc(2rem + 2px)',
             position: 'none',
             // width: '250px',
             // borderRadius: 0
-
         }),
         singleValue: (provided) => ({
             ...provided,
@@ -96,25 +94,25 @@ const styleConfig = {
             // maxWidth: 'calc(90% - 8px)'
         }),
     },
-    reactSelectSearch : {
+    reactSelectSearch: {
         control: (provided) => ({
             ...provided,
             fontSize: '1rem',
             minHeight: '2rem',
             position: 'none',
             width: '550px',
-            borderRadius: 0                                
+            borderRadius: 0,
         }),
 
-        valueContainer: base => ({
+        valueContainer: (base) => ({
             ...base,
-            paddingLeft: 35
+            paddingLeft: 35,
         }),
 
         placeholder: (provided) => ({
             ...provided,
             textTransform: 'capitalize',
-        })
+        }),
     },
 
     reactSelectFilter: {
@@ -133,10 +131,10 @@ const styleConfig = {
         // }),
     },
 
-    reactSelectSearchComponent : {
+    reactSelectSearchComponent: {
         IndicatorSeparator: () => null,
-        DropdownIndicator:() => null,
-        ValueContainer
+        DropdownIndicator: () => null,
+        ValueContainer,
     },
 
     reactSelectNavbar: {
@@ -146,16 +144,15 @@ const styleConfig = {
             fontSize: '0.8rem',
             cursor: 'pointer',
         }),
-        
+
         control: (provided) => ({
             ...provided,
             border: 'none',
             width: 200,
             outline: 0,
-            boxShadow: 'none'
-            
+            boxShadow: 'none',
         }),
-        
+
         singleValue: (provided, state) => ({
             opacity: state.isDisabled ? 0.5 : 1,
             transition: 'opacity 300ms',
@@ -163,7 +160,6 @@ const styleConfig = {
         }),
     },
     reactTable: {
-
         getTdProps: () => {
             return {
                 style: {
@@ -173,8 +169,8 @@ const styleConfig = {
                     alignItems: 'center',
                     color: 'black',
                     minHeight: '3rem',
-                    height: '3rem'
-                }
+                    height: '3rem',
+                },
             }
         },
 
@@ -191,17 +187,16 @@ const styleConfig = {
                     color: 'black',
                     // backgroundColor: '#80808014',
                     // boxShadow: 'rgba(32, 33, 36, 0.28) 0px 0px 0px 0px',
-                    
-                }
+                },
             }
         },
-        
+
         getProps: () => {
             return {
                 style: {
                     border: 'none',
                     // borderTop: '1px solid #cec7c7',
-                }
+                },
             }
         },
 
@@ -212,7 +207,7 @@ const styleConfig = {
                     borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
                     // height: '1rem'
                     textTransform: 'capitalize',
-                }
+                },
             }
         },
 
@@ -222,8 +217,8 @@ const styleConfig = {
                     padding: '10px 20px',
                     border: '1px solid rgba(0, 0, 0, 0.1)',
                     // borderRadius: '5px',
-                    background: 'white'
-                }
+                    background: 'white',
+                },
             }
         },
 
@@ -245,18 +240,17 @@ const styleConfig = {
 
         nextText: <i className="fas fa-chevron-right"></i>,
 
-        NoDataComponent: () => null
-
+        NoDataComponent: () => null,
     },
     checkbox: {
         fontSize: '0.9rem',
-        margin: '.5rem .2rem'
+        margin: '.5rem .2rem',
     },
     radioButton: {
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
     },
     link: {
-        color: '#1890ff'
+        color: '#1890ff',
     },
 }
 

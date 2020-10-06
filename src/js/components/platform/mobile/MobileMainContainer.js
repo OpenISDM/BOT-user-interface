@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,19 +32,15 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import React from 'react'
+import SearchResultList from '../../presentational/SearchResultList'
+import SearchContainer from '../../container/SearchContainer'
+import { Row, Col } from 'react-bootstrap'
+import AuthenticationContext from '../../../context/AuthenticationContext'
+import LocaleContext from '../../../context/LocaleContext'
+import MapContainer from '../../container/MapContainer'
 
-import React from 'react';
-import SearchResultList from '../../presentational/SearchResultList';
-import SearchContainer from '../../container/SearchContainer';
-import {
-    Row,
-    Col
-} from 'react-bootstrap';
-import AuthenticationContext from '../../../context/AuthenticationContext';
-import LocaleContext from '../../../context/LocaleContext';
-import MapContainer from '../../container/MapContainer';
-
-const MobileMainContainer = ({ 
+const MobileMainContainer = ({
     handleClearButton,
     getSearchKey,
     setMonitor,
@@ -55,7 +51,7 @@ const MobileMainContainer = ({
     showedObjects,
     highlightSearchPanel,
     showMobileMap,
-    clearSearchResult, 
+    clearSearchResult,
     searchKey,
     searchResult,
     trackingData,
@@ -74,38 +70,45 @@ const MobileMainContainer = ({
     display,
     handleShowResultListForMobile,
 }) => {
-
-    let auth = React.useContext(AuthenticationContext);
-    let locale = React.useContext(LocaleContext);
+    let auth = React.useContext(AuthenticationContext)
+    let locale = React.useContext(LocaleContext)
 
     const style = {
-
         searchPanelForMobile: {
             // zIndex: isHighlightSearchPanel ? 1060 : 1,
             display: display ? null : 'none',
             fontSize: '2rem',
-            background: "white",
+            background: 'white',
             borderRadius: 10,
             //border: 'solid',
             height: '90vh',
             // width:'90vw'
         },
         mapForMobile: {
-            display: showMobileMap ? null : 'none'
+            display: showMobileMap ? null : 'none',
         },
-
     }
 
     return (
-        <div id="page-wrap" className='d-flex flex-column' style={{height: "90vh"}}>
-            <div className='h-100' style={{overflow: 'hidden hidden'}}>
-                <div id='searchPanel' className="h-100" style={style.searchPanelForMobile}> 
-                    <SearchContainer 
+        <div
+            id="page-wrap"
+            className="d-flex flex-column"
+            style={{ height: '90vh' }}
+        >
+            <div className="h-100" style={{ overflow: 'hidden hidden' }}>
+                <div
+                    id="searchPanel"
+                    className="h-100"
+                    style={style.searchPanelForMobile}
+                >
+                    <SearchContainer
                         hasSearchKey={hasSearchKey}
                         clearSearchResult={clearSearchResult}
                         auth={auth}
                         getSearchKey={getSearchKey}
-                        handleShowResultListForMobile={handleShowResultListForMobile}
+                        handleShowResultListForMobile={
+                            handleShowResultListForMobile
+                        }
                         searchObjectArray={searchObjectArray}
                         pinColorArray={pinColorArray}
                         keywords={keywords}
@@ -113,8 +116,12 @@ const MobileMainContainer = ({
                 </div>
                 <div style={style.mapForMobile} className="m-1">
                     <MapContainer
-                        pathMacAddress={pathMacAddress} 
-                        proccessedTrackingData={proccessedTrackingData.length === 0 ? trackingData : proccessedTrackingData}
+                        pathMacAddress={pathMacAddress}
+                        proccessedTrackingData={
+                            proccessedTrackingData.length === 0
+                                ? trackingData
+                                : proccessedTrackingData
+                        }
                         hasSearchKey={hasSearchKey}
                         searchKey={searchKey}
                         searchResult={searchResult}
@@ -133,14 +140,14 @@ const MobileMainContainer = ({
                     />
                 </div>
                 {/* <ButtonGroup style={{marginTop:'5px',marginBottom:'5px'}}>
-                    <Button 
-                        variant='outline-primary' 
+                    <Button
+                        variant='outline-primary'
                         onClick={mapButtonHandler}
                     >
                         {showMobileMap ? locale.texts.HIDE_MAP : locale.texts.SHOW_MAP}
                     </Button>
-                    <Button 
-                        variant='outline-primary' 
+                    <Button
+                        variant='outline-primary'
                         onClick={handleClearButton}
                     >
                         {locale.texts.NEW_SEARCH}
@@ -148,7 +155,7 @@ const MobileMainContainer = ({
                 </ButtonGroup>
                 <div className='d-flex justify-content-center'>
                     <SearchResultList
-                        searchResult={searchResult} 
+                        searchResult={searchResult}
                         searchKey={searchKey}
                         highlightSearchPanel={highlightSearchPanel}
                         handleShowPath={handleShowPath}

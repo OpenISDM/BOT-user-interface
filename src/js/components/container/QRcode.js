@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,82 +32,85 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import Modal from 'react-bootstrap/Modal';
-import { 
-    Button,
-    Row,
-}  from 'react-bootstrap';
-import axios from 'axios';
-import dataSrc from '../../dataSrc';
-import QRCode from 'qrcode.react';
+import React from 'react'
+import Modal from 'react-bootstrap/Modal'
+import { Button, Row } from 'react-bootstrap'
+import axios from 'axios'
+import dataSrc from '../../dataSrc'
+import QRCode from 'qrcode.react'
 import moment from 'moment'
 import config from '../../config'
-import { AppContext } from '../../context/AppContext';
+import { AppContext } from '../../context/AppContext'
 
 // need Inputs : search Result
 // this component will send json to back end, backend will return a url, and the component generate a qrcode
 class QRCodeContainer extends React.Component {
-    
     static contextType = AppContext
 
     state = {
         show: false,
-        savePath: "",
+        savePath: '',
         data: null,
         alreadyUpdate: false,
         hasData: false,
         isDone: false,
-        searchKey: "",
+        searchKey: '',
     }
 
     shouldComponentUpdate = (nextProps, nextState) => {
-        if(nextProps.show || nextState.show){
-            return true;
-        }else{
-            return true;
+        if (nextProps.show || nextState.show) {
+            return true
+        } else {
+            return true
         }
     }
 
     sendSearchResultToBackend = (searchResultInfo, callBack) => {
-        axios.post(dataSrc.generatePDF ,searchResultInfo)
-            .then(res => {
+        axios
+            .post(dataSrc.generatePDF, searchResultInfo)
+            .then((res) => {
                 callBack(res.data)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err)
             })
     }
     componentWillUpdate = (preProps) => {
-        if(this.props.isSearched){
-            
-            let data = { 
-                foundResult: [], 
-                notFoundResult: [] 
+        if (this.props.isSearched) {
+            let data = {
+                foundResult: [],
+                notFoundResult: [],
             }
 
-            for(var item of this.props.data){
-                item.found ? data.foundResult.push(item) : data.notFoundResult.push(item)
+            for (var item of this.props.data) {
+                item.found
+                    ? data.foundResult.push(item)
+                    : data.notFoundResult.push(item)
             }
 
             let { locale, auth, stateReducer } = this.context
-            let [{areaId}] = stateReducer
-            let pdfPackage = config.getPdfPackage('searchResult', auth.user, data, locale, areaId)
+            let [{ areaId }] = stateReducer
+            let pdfPackage = config.getPdfPackage(
+                'searchResult',
+                auth.user,
+                data,
+                locale,
+                areaId
+            )
             //console.log(foundResult)
             var searResultInfo = {
                 userInfo: auth.user,
                 pdfPackage,
             }
-            this.sendSearchResultToBackend(searResultInfo,(path) => {
+            this.sendSearchResultToBackend(searResultInfo, (path) => {
                 this.setState({
-                    savePath : path,
+                    savePath: path,
                     data: this.props.data,
                     searchKey: this.props.searchKey,
                     alreadyUpdate: true,
                     isDone: true,
-                    hasData: true
-                })  
+                    hasData: true,
+                })
             })
         }
     }
@@ -115,49 +118,43 @@ class QRCodeContainer extends React.Component {
         this.props.handleClose()
         this.setState({
             show: false,
-            alreadyUpdate:false,
+            alreadyUpdate: false,
             isDone: false,
         })
     }
     PdfDownloader = () => {
-
-        window.open(this.state.savePath);
+        window.open(this.state.savePath)
     }
 
     render() {
-        const {
-            hasData, 
-            show, 
-            savePath, 
-            isDone
-        } = this.state
+        const { hasData, show, savePath, isDone } = this.state
 
-        const {locale} = this.context
+        const { locale } = this.context
 
         //var clientHeight = document.getElementById('qrcode').offsetHeight;
 
         //console.log(this.state.savePath)
 
         return (
-            <div id = 'qrcode' style={style.QRcodeDiv}>
+            <div id="qrcode" style={style.QRcodeDiv}>
                 <QRCode
-                    value={dataSrc.pdfUrl(savePath)} 
+                    value={dataSrc.pdfUrl(savePath)}
                     style={style.QRcodeSize}
                 />
             </div>
-        );
+        )
     }
 }
 
 const style = {
     QRcodeDiv: {
-        margin: "auto",
+        margin: 'auto',
     },
     QRcodeSize: {
-        marginTop: "5%",
-        width: "70%",
-        height: "70%"
-    }
+        marginTop: '5%',
+        width: '70%',
+        height: '70%',
+    },
 }
-  
-export default QRCodeContainer;
+
+export default QRCodeContainer

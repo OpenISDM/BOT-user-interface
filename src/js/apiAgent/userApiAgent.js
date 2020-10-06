@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,84 +32,59 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import dataSrc from '../dataSrc';
-import axios from 'axios';
+import dataSrc from '../dataSrc'
+import axios from 'axios'
 
 export default {
-
-    getAllUser: async function ({
-        locale
-    }) {
+    getAllUser: async function ({ locale }) {
         return await axios.get(dataSrc.user, {
             params: {
-                locale
-            }
+                locale,
+            },
         })
     },
 
-    addSearchHistory: async function ({
-        username,
-        keyType,
-        keyWord
-    }) {
+    addSearchHistory: async function ({ username, keyType, keyWord }) {
         return await axios.put(dataSrc.userInfo.searchHistory, {
             username,
             keyType,
-            keyWord
+            keyWord,
         })
     },
 
-    editMyDevice: async function({
-        username,
-        mode,
-        acn,  
-    }) {
+    editMyDevice: async function ({ username, mode, acn }) {
         return await axios.put(dataSrc.userInfo.mydevice, {
             username,
             mode,
-            acn  
+            acn,
         })
     },
 
-    editMaxSearchHistoryCount: async function({
-        info,
-        username,
-    }) {
+    editMaxSearchHistoryCount: async function ({ info, username }) {
         return await axios.post(dataSrc.userInfo.maxSearchHistoryCount, {
             info,
             username,
         })
     },
 
-    setLocale: async function({
-        userId,
-        localeName
-    }) {
+    setLocale: async function ({ userId, localeName }) {
         return await axios.post(dataSrc.userInfo.locale, {
             userId,
-            localeName
+            localeName,
         })
     },
 
-    editKeywordType: async function({
-        userId,
-        keywordTypeId
-    }) {
+    editKeywordType: async function ({ userId, keywordTypeId }) {
         return await axios.put(dataSrc.userInfo.keywordType, {
             userId,
-            keywordTypeId
+            keywordTypeId,
         })
     },
 
-    editListId: async function({
-        userId,
-        listId
-    }) {
+    editListId: async function ({ userId, listId }) {
         return await axios.put(dataSrc.userInfo.listId, {
             userId,
-            listId
+            listId,
         })
-    }
-
+    },
 }

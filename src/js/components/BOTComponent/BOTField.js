@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,14 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import React, { Fragment } from 'react'
+import styleSheet from '../../config/styleSheet'
+import { Field } from 'formik'
 
-import React, { Fragment } from 'react';
-import styleSheet from '../../config/styleSheet';
-import {
-    Field
-} from 'formik'
-
-const BOTField = ({ 
+const BOTField = ({
     name,
     iconName,
     error,
@@ -48,45 +45,44 @@ const BOTField = ({
     label,
     example,
     className,
-    boxWidth
+    boxWidth,
 }) => {
-    return ( 
+    return (
         <div
             className={className}
             style={{
-                position: 'relative'
+                position: 'relative',
             }}
         >
-            {iconName &&
+            {iconName && (
                 <i
                     className={iconName}
                     aria-hidden="true"
-                    style={{ 
-                        position: "absolute", 
+                    style={{
+                        position: 'absolute',
                         left: 10,
                         top: 16,
-                        color: styleSheet.iconColor
+                        color: styleSheet.iconColor,
                     }}
-                />   
-            }
+                />
+            )}
             <Field
                 type="text"
                 name={name}
                 error={error}
                 touched={touched}
-                className={'form-control'} 
+                className={'form-control'}
                 placeholder={placeholder}
                 label={label}
                 style={{
                     width: boxWidth,
                     height: '3rem',
                     borderRadius: 0,
-                    paddingLeft:35                                                       
-                        
+                    paddingLeft: 35,
                 }}
             />
             {error && (
-                <div 
+                <div
                     className=""
                     style={{
                         fontSize: '0.6rem',
@@ -98,7 +94,7 @@ const BOTField = ({
                     {error}
                 </div>
             )}
-            <div 
+            <div
                 className=""
                 style={{
                     fontSize: '0.6rem',

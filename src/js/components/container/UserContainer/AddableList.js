@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,18 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import React from 'react'
+import ListGroup from 'react-bootstrap/ListGroup'
+const Fragment = React.Fragment
 
-import React from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
-const Fragment = React.Fragment;
-
-class AddableList extends React.Component{
-
+class AddableList extends React.Component {
     constructor() {
-        super();
+        super()
         this.state = {
-            title: "title",
-            itemList: []
+            title: 'title',
+            itemList: [],
         }
         this.addNewItem = this.addNewItem.bind(this)
         this.addListByEnter = this.addListByEnter.bind(this)
@@ -51,20 +49,17 @@ class AddableList extends React.Component{
 
         this.validation = (item) => {
             return true
-        } 
+        }
 
         this.itemLayout = (item) => {
-            if(typeof item === 'string'){
-                return(
-                    <Fragment>
-                        {item}
-                    </Fragment>
-                )    
-            }else{
-                console.error('the item is an object so you have to set your own itemLayout')
-                return 
+            if (typeof item === 'string') {
+                return <Fragment>{item}</Fragment>
+            } else {
+                console.error(
+                    'the item is an object so you have to set your own itemLayout'
+                )
+                return
             }
-            
         }
 
         this.API = {
@@ -80,9 +75,9 @@ class AddableList extends React.Component{
                 return this.state.itemList
             },
             setList: (list) => {
-                if(typeof list === 'object'){
+                if (typeof list === 'object') {
                     this.setState({
-                        itemList: list
+                        itemList: list,
                     })
                 }
             },
@@ -94,119 +89,131 @@ class AddableList extends React.Component{
             },
             pushItem: (itemValue) => {
                 this.setState({
-                    itemList: this.state.itemList.push(itemValue)
+                    itemList: this.state.itemList.push(itemValue),
                 })
-                
             },
             addItem: () => {
-                var {itemList} = this.state
-                if(itemList[itemList.length - 1] !== 'add'){
+                var { itemList } = this.state
+                if (itemList[itemList.length - 1] !== 'add') {
                     itemList.push('add')
                     this.setState({})
                 }
             },
             addItemCheck: (item) => {
-                var {itemList} = this.state
-                if(itemList[itemList.length - 1] === 'add' ){
+                var { itemList } = this.state
+                if (itemList[itemList.length - 1] === 'add') {
                     var validationValue = this.validation(item)
-                    if(validationValue){
+                    if (validationValue) {
                         itemList.pop()
                         itemList.push(validationValue)
                         this.setState({})
                         this.Update('add', validationValue)
                     }
                 }
-                            }, 
+            },
             whenUpdate: (func) => {
-                this.Update = func;
+                this.Update = func
             },
             setValidation: (func) => {
-                this.validation = func;
+                this.validation = func
             },
             setOnClick: (func) => {
-
                 this.onClick = func
             },
             setItemLayout: (func) => {
                 this.itemLayout = func
-            }
+            },
         }
     }
 
-    componentDidMount(){
-        if(this.props.getAPI){
+    componentDidMount() {
+        if (this.props.getAPI) {
             this.props.getAPI(this.API)
-        }else{
-            console.error('please set attributes called "getAPI" for UserSettingContainer')
+        } else {
+            console.error(
+                'please set attributes called "getAPI" for UserSettingContainer'
+            )
         }
     }
-    
-    addNewItem(){    
+
+    addNewItem() {
         this.API.addItem()
     }
-    addListByEnter(e){
-        if(event.key === 'Enter'){
-
+    addListByEnter(e) {
+        if (event.key === 'Enter') {
             var newACN = e.target.value
             this.API.addItemCheck(newACN)
         }
     }
-    removeItem(e){
+    removeItem(e) {
         var ACN = e.target.getAttribute('name')
         this.API.removeItem(ACN)
     }
-    render(){
-
+    render() {
         const style = {
             item: {
-                cursor: "pointer",
-            }
+                cursor: 'pointer',
+            },
         }
         return (
             <Fragment>
-                <ListGroup 
+                <ListGroup
                     className="overflow-hidden-scroll custom-scrollbar"
-                    variant = "flush" 
+                    variant="flush"
                 >
-                    {this.state.itemList !== null 
-                        ? 
-                            (() => {
-                                var {itemList} = this.state
-                                var Html = []
-                                var acnList = Object.keys(itemList) 
+                    {this.state.itemList !== null
+                        ? (() => {
+                              var { itemList } = this.state
+                              var Html = []
+                              var acnList = Object.keys(itemList)
 
-                                for(var acn of acnList){
-                                    var html = []
-                                    var item = itemList[acn], index = item.asset_control_number
+                              for (var acn of acnList) {
+                                  var html = []
+                                  var item = itemList[acn],
+                                      index = item.asset_control_number
 
-                                    if(item === 'add'){
-                                        html = (
-                                        <div className="py-1 pr-2" key = {index}>
-                                            <input  type="text" className="form-control h5 float-left w-75 border-0" onKeyPress={this.addListByEnter}></input>
-                                            <h4 className="float-right" name="add" onClick={this.removeItem}>x</h4>
-                                        </div>      
-                                    )}else{
-                                        html = (
-                                            <ListGroup.Item 
-                                                key = {index} 
-                                                onClick={this.onClick} 
-                                                name={index} 
-                                                action 
-                                                className="cursor-pointer"
-                                                style={style.item} 
-                                            >
-                                                {this.itemLayout(item, index)}
-                                            </ListGroup.Item>
-                                        )
-                                    }
-                                    Html.push(html)
-                                }
-                                return Html
-                            })()
-                        : 
-                            null
-                    }                    
-                </ListGroup> 
+                                  if (item === 'add') {
+                                      html = (
+                                          <div
+                                              className="py-1 pr-2"
+                                              key={index}
+                                          >
+                                              <input
+                                                  type="text"
+                                                  className="form-control h5 float-left w-75 border-0"
+                                                  onKeyPress={
+                                                      this.addListByEnter
+                                                  }
+                                              ></input>
+                                              <h4
+                                                  className="float-right"
+                                                  name="add"
+                                                  onClick={this.removeItem}
+                                              >
+                                                  x
+                                              </h4>
+                                          </div>
+                                      )
+                                  } else {
+                                      html = (
+                                          <ListGroup.Item
+                                              key={index}
+                                              onClick={this.onClick}
+                                              name={index}
+                                              action
+                                              className="cursor-pointer"
+                                              style={style.item}
+                                          >
+                                              {this.itemLayout(item, index)}
+                                          </ListGroup.Item>
+                                      )
+                                  }
+                                  Html.push(html)
+                              }
+                              return Html
+                          })()
+                        : null}
+                </ListGroup>
             </Fragment>
         )
     }

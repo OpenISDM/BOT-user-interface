@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,75 +32,69 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-require('dotenv').config();
-require('moment-timezone');
-const dbQueries = require('../db/dbQueries/monitorQueries');
-const pool = require('../db/dev/connection');
+require('dotenv').config()
+require('moment-timezone')
+const dbQueries = require('../db/dbQueries/monitorQueries')
+const pool = require('../db/dev/connection')
 
 module.exports = {
-
     getMonitorConfig: (request, response) => {
-        let {
-            type,
-        } = request.body
+        let { type } = request.body
         pool.query(dbQueries.getMonitorConfig(type))
-            .then(res => {
+            .then((res) => {
                 console.log(`get ${type} succeed`)
-                let toReturn = res.rows
-                .map(item => {
-                    item.start_time = item.start_time.split(':').filter((item,index) => index < 2).join(':')
-                    item.end_time = item.end_time.split(':').filter((item,index) => index < 2).join(':')
+                let toReturn = res.rows.map((item) => {
+                    item.start_time = item.start_time
+                        .split(':')
+                        .filter((item, index) => index < 2)
+                        .join(':')
+                    item.end_time = item.end_time
+                        .split(':')
+                        .filter((item, index) => index < 2)
+                        .join(':')
                     return item
                 })
                 response.status(200).json(toReturn)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`get ${type} failed ${err}`)
             })
     },
-    
+
     deleteMonitorConfig: (request, response) => {
-        let {
-            configPackage
-        } = request.body
+        let { configPackage } = request.body
         pool.query(dbQueries.deleteMonitorConfig(configPackage))
-            .then(res => {
+            .then((res) => {
                 console.log(`delete ${configPackage.type.replace(/_/g, ' ')}`)
                 response.status(200).json(res)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`delete monitor config failed ${err}`)
             })
     },
 
     addMonitorConfig: (request, response) => {
-        let {
-            configPackage,
-        } = request.body
+        let { configPackage } = request.body
 
         pool.query(dbQueries.addMonitorConfig(configPackage))
-            .then(res => {
+            .then((res) => {
                 console.log(`add ${configPackage.type} config success`)
                 response.status(200).json(res)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`add ${type} fail ${err}`)
             })
     },
 
-    setMonitorConfig: (request, response) =>{
-        let { 
-            configPackage 
-        } = request.body 
+    setMonitorConfig: (request, response) => {
+        let { configPackage } = request.body
         pool.query(dbQueries.setMonitorConfig(configPackage))
-            .then(res => {
+            .then((res) => {
                 console.log(`set ${configPackage.type} config success`)
                 response.status(200).json(res)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`set ${configPackage.type} config failed ${err}`)
             })
-    }
-
+    },
 }

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,18 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
 const getObject = (objectType, areas_id) => {
-
-	let text =  `
-		SELECT 
+    let text = `
+		SELECT
 			object_table.id,
-			object_table.name, 
-			object_table.type, 
+			object_table.name,
+			object_table.type,
 			object_table.nickname,
-			object_table.asset_control_number, 
-			object_table.status, 
-			object_table.transferred_location, 
+			object_table.asset_control_number,
+			object_table.status,
+			object_table.transferred_location,
 			object_table.list_id,
 			object_table.type_alias,
 			JSON_BUILD_OBJECT(
@@ -64,33 +62,32 @@ const getObject = (objectType, areas_id) => {
 				SELECT name
 				FROM user_table
 				WHERE user_table.id = object_table.physician_id
-			) as physician_name 
+			) as physician_name
 
-		FROM object_table 
+		FROM object_table
 
 		LEFT JOIN area_table
 		ON area_table.id = object_table.area_id
 
 		LEFT JOIN branches
 		ON branches.id = object_table.transferred_location
-	
-		WHERE object_table.object_type IN (${objectType.map(type => type)})
-		${areas_id ? `AND object_table.area_id IN (${areas_id.map(id => id)})` : ''}
-		ORDER BY 
+
+		WHERE object_table.object_type IN (${objectType.map((type) => type)})
+		${areas_id ? `AND object_table.area_id IN (${areas_id.map((id) => id)})` : ''}
+		ORDER BY
 			object_table.name ASC,
 			object_table.registered_timestamp DESC
-			
+
 			;
 	`
-	return text
-} 
+    return text
+}
 
 const addPersona = (formOption) => {
-	const text = 
-		`
+    const text = `
 		INSERT INTO object_table (
 			name,
-			mac_address, 
+			mac_address,
 			asset_control_number,
 			area_id,
 			monitor_type,
@@ -109,59 +106,56 @@ const addPersona = (formOption) => {
 			'Patient',
 			'returned',
 			now()
-		)`;
+		)`
 
-	const values = [
-		formOption.name,
-		formOption.mac_address,
-		formOption.asset_control_number,
-		formOption.area_id,
-		formOption.monitor_type,
-		formOption.object_type
-	];
+    const values = [
+        formOption.name,
+        formOption.mac_address,
+        formOption.asset_control_number,
+        formOption.area_id,
+        formOption.monitor_type,
+        formOption.object_type,
+    ]
 
-	const query = {
-		text,
-		values
-	};
+    const query = {
+        text,
+        values,
+    }
 
-	return query;
+    return query
 }
 
 const editPersona = (formOption) => {
-	const text = `  
-		Update object_table 
+    const text = `
+		Update object_table
 		SET name = $2,
 			mac_address = $3,
 			area_id = $4,
 			monitor_type = $5,
 			object_type = $6
 		WHERE asset_control_number = $1
-	`;
-		
-	const values = [
-		formOption.asset_control_number,
-		formOption.name,
-		formOption.mac_address,
-		formOption.area_id,
-		formOption.monitor_type,
-		formOption.object_type
-	];
+	`
 
-	const query = {
-		text,
-		values
-	};
+    const values = [
+        formOption.asset_control_number,
+        formOption.name,
+        formOption.mac_address,
+        formOption.area_id,
+        formOption.monitor_type,
+        formOption.object_type,
+    ]
 
-	return query;
+    const query = {
+        text,
+        values,
+    }
+
+    return query
 }
 
-
 const editDevice = (formOption) => {
-	 
-	let text = 
-		`
-		Update object_table 
+    let text = `
+		Update object_table
 		SET type = $2,
 			status = $3,
 			asset_control_number = $4,
@@ -173,38 +167,37 @@ const editDevice = (formOption) => {
 			transferred_location = $10
 		WHERE id = $1
 		`
-	const values = [
-		formOption.id,
-		formOption.type, 
-		formOption.status, 
-		formOption.asset_control_number, 
-		formOption.name,
-		formOption.monitor_type,
-		formOption.area_id,
-		formOption.mac_address,
-		formOption.nickname,
-		formOption.transferred_location
-	];
+    const values = [
+        formOption.id,
+        formOption.type,
+        formOption.status,
+        formOption.asset_control_number,
+        formOption.name,
+        formOption.monitor_type,
+        formOption.area_id,
+        formOption.mac_address,
+        formOption.nickname,
+        formOption.transferred_location,
+    ]
 
-	const query = {
-		text,
-		values
-	};
+    const query = {
+        text,
+        values,
+    }
 
-	return query;
+    return query
 }
 
-const deleteObject = formOption => {
-    
-	const query = `
+const deleteObject = (formOption) => {
+    const query = `
 		DELETE FROM object_table
-		WHERE id IN (${formOption.map(item => `'${item.id}'`)})
+		WHERE id IN (${formOption.map((item) => `'${item.id}'`)})
 	`
-	return query
+    return query
 }
 
-const disassociate = formOption => {
-	const text = `
+const disassociate = (formOption) => {
+    const text = `
 		UPDATE object_table
 		SET mac_address = null
 		WHERE id = $1
@@ -214,25 +207,21 @@ const disassociate = formOption => {
 			FROM object_table
 			WHERE id = $1
 		)
-	`;
+	`
 
-	const values = [
-		formOption.id
-	];
-	
-	return {
-		text,
-		values
-	}
+    const values = [formOption.id]
 
-
+    return {
+        text,
+        values,
+    }
 }
 
 const addObject = (formOption) => {
-	const text = `
+    const text = `
 		INSERT INTO object_table (
-			type, 
-			asset_control_number, 
+			type,
+			asset_control_number,
 			name,
 			mac_address,
 			area_id,
@@ -243,8 +232,8 @@ const addObject = (formOption) => {
 			registered_timestamp
 		)
 		VALUES (
-			$1, 
-			$2, 
+			$1,
+			$2,
 			$3,
 			$4,
 			$5,
@@ -254,110 +243,114 @@ const addObject = (formOption) => {
 			'normal',
 			now()
 		);
-	`;
-		
-	const values = [
-		formOption.type, 
-		formOption.asset_control_number, 
-		formOption.name, 
-		formOption.mac_address,
-		formOption.area_id,
-		formOption.monitor_type,
-		formOption.nickname
-	];
+	`
 
+    const values = [
+        formOption.type,
+        formOption.asset_control_number,
+        formOption.name,
+        formOption.mac_address,
+        formOption.area_id,
+        formOption.monitor_type,
+        formOption.nickname,
+    ]
 
-	const query = {
-		text,
-		values
-	};
+    const query = {
+        text,
+        values,
+    }
 
-	return query;
+    return query
 }
 
 const editObjectPackage = (
-	formOption, 
-	username, 
-	record_id, 
-	reservedTimestamp
+    formOption,
+    username,
+    record_id,
+    reservedTimestamp
 ) => {
-	let item = formOption[0]
-	let text = `
+    let item = formOption[0]
+    let text = `
 		UPDATE object_table
-		SET 
+		SET
 			status = '${item.status}',
-			transferred_location = ${item.status == 'transferred' ? item.transferred_location.id : null},
+			transferred_location = ${
+                item.status == 'transferred'
+                    ? item.transferred_location.id
+                    : null
+            },
 			note_id = ${record_id},
-			reserved_timestamp = ${item.status == 'reserve' ? `'${reservedTimestamp}'` : null},
+			reserved_timestamp = ${
+                item.status == 'reserve' ? `'${reservedTimestamp}'` : null
+            },
 			reserved_user_id = (SELECT id
 				FROM user_table
 				WHERE user_table.name='${username}')
-								
-		WHERE asset_control_number IN (${formOption.map(item => `'${item.asset_control_number}'`)});
+
+		WHERE asset_control_number IN (${formOption.map(
+            (item) => `'${item.asset_control_number}'`
+        )});
 	`
-	return text
+    return text
 }
 
-const deleteObjectSummaryRecord = mac_address_array => {
-	return `
+const deleteObjectSummaryRecord = (mac_address_array) => {
+    return `
 		DELETE FROM object_summary_table
-		WHERE mac_address IN (${mac_address_array.map(item => `'${item}'`)});
+		WHERE mac_address IN (${mac_address_array.map((item) => `'${item}'`)});
 	`
 }
 
 const getIdleMacaddr = () => {
-	return `
-		SELECT 
+    return `
+		SELECT
 			ARRAY_AGG(object_summary_table.mac_address) AS mac_set
 		FROM object_summary_table
 
 		LEFT JOIN object_table
 		ON object_summary_table.mac_address = object_table.mac_address
-		
+
 		WHERE object_table.name IS NULL
 	`
 }
 
 const getAlias = () => {
-	return `
+    return `
 		SELECT
 			DISTINCT type,
 			type_alias
-		FROM object_table 
-		WHERE type != 'Patient'  
+		FROM object_table
+		WHERE type != 'Patient'
 		ORDER BY type ASC
 	`
 }
 
 const editAlias = (objectType, alias) => {
-	let text = `
+    let text = `
 		UPDATE object_table
 		SET type_alias = $2
 		WHERE type = $1
 	`
 
-	let values = [
-		objectType,
-		alias
-	]
+    let values = [objectType, alias]
 
-	return {
-		text,
-		values
-	}
+    return {
+        text,
+        values,
+    }
 }
 
 module.exports = {
     getObject,
-	addPersona,
-	addObject,
-	editDevice,
+    addPersona,
+    addObject,
+    editDevice,
     editPersona,
-	deleteObject,
-	disassociate,
-	editObjectPackage,
-	deleteObjectSummaryRecord,
-	getIdleMacaddr,
-	getAlias,
-	editAlias
+    deleteObject,
+    disassociate,
+    editObjectPackage,
+    deleteObjectSummaryRecord,
+    getIdleMacaddr,
+    getAlias,
+    editAlias,
 }

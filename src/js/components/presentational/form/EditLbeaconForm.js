@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,69 +32,62 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import LocaleContext from '../../../context/LocaleContext';
-import { Formik, Field, Form } from 'formik';
-import FormikFormGroup from '../FormikFormGroup';
+import React from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import LocaleContext from '../../../context/LocaleContext'
+import { Formik, Field, Form } from 'formik'
+import FormikFormGroup from '../FormikFormGroup'
 /**
  * EditLbeaconForm will update if user selects one of the object table.
  * The selected object data will transfer from ObjectMangentContainer to EditLbeaconForm
  */
-  
+
 const EditLbeaconForm = ({
     title,
     selectedObjectData,
     show,
     handleClose,
-    handleSubmit
+    handleSubmit,
 }) => {
-
     let locale = React.useContext(LocaleContext)
 
-    let {
-        uuid,
-        description,
-        comment
-    } = selectedObjectData
+    let { uuid, description, comment } = selectedObjectData
 
     return (
-        <Modal 
-            show={show} 
-            onHide={handleClose} 
+        <Modal
+            show={show}
+            onHide={handleClose}
             size="md"
-            className='text-capitalize'
+            className="text-capitalize"
         >
-            <Modal.Header 
-                closeButton 
-            >
+            <Modal.Header closeButton>
                 {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-            </Modal.Header >
+            </Modal.Header>
             <Modal.Body>
                 <Formik
-                    initialValues = {{
+                    initialValues={{
                         description: description || '',
                         uuid: uuid,
                         comment: comment,
                     }}
-
-                    onSubmit={values => {
-                        let {
-                            description,
-                            comment
-                        } = values
+                    onSubmit={(values) => {
+                        let { description, comment } = values
                         let lbeaconSettingPackage = {
                             ...selectedObjectData,
                             description,
-                            comment
+                            comment,
                         }
                         handleSubmit(lbeaconSettingPackage)
                     }}
-
-                    render={({ values, errors, status, touched, isSubmitting }) => (
-                        <Form >
-                            <FormikFormGroup 
+                    render={({
+                        values,
+                        errors,
+                        status,
+                        touched,
+                        isSubmitting,
+                    }) => (
+                        <Form>
+                            <FormikFormGroup
                                 type="text"
                                 name="uuid"
                                 label={locale.texts.UUID}
@@ -103,7 +96,7 @@ const EditLbeaconForm = ({
                                 placeholder=""
                                 disabled
                             />
-                            <FormikFormGroup 
+                            <FormikFormGroup
                                 type="text"
                                 name="description"
                                 label={locale.texts.DESCRIPTION}
@@ -111,22 +104,22 @@ const EditLbeaconForm = ({
                                 touched={touched.description}
                                 placeholder=""
                             />
-                            <FormikFormGroup 
+                            <FormikFormGroup
                                 type="text"
                                 name="comment"
                                 label={locale.texts.COMMENT}
                                 placeholder=""
                             />
                             <Modal.Footer>
-                                <Button 
-                                    variant="outline-secondary" 
-                                    onClick={handleClose} 
+                                <Button
+                                    variant="outline-secondary"
+                                    onClick={handleClose}
                                 >
                                     {locale.texts.CANCEL}
                                 </Button>
-                                <Button 
-                                    type="submit" 
-                                    variant="primary" 
+                                <Button
+                                    type="submit"
+                                    variant="primary"
                                     disabled={isSubmitting}
                                 >
                                     {locale.texts.SEND}
@@ -137,7 +130,7 @@ const EditLbeaconForm = ({
                 />
             </Modal.Body>
         </Modal>
-    );
+    )
 }
-        
-export default EditLbeaconForm;
+
+export default EditLbeaconForm

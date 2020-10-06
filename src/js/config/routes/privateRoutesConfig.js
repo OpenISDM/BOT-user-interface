@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import Loadable from 'react-loadable';
-import Loader from '../../components/presentational/Loader';
+import Loadable from 'react-loadable'
+import Loader from '../../components/presentational/Loader'
 
 // import MainContainer from '../../components/container/menuContainer/MainContainer';
 // import SystemSetting from '../../components/container/menuContainer/SystemSetting';
@@ -45,65 +45,71 @@ import Loader from '../../components/presentational/Loader';
 // import MonitorSettingContainer from "../../components/container/menuContainer/MonitorSettingContainer";
 // import ReportContainer from "../../components/container/menuContainer/ReportContainer";
 // import TrackingHistoryContainer from '../../components/container/menuContainer/TrackingHistoryContainer';
-import routes from './routes';
+import routes from './routes'
 // import BOTAdminContainer from '../../components/container/menuContainer/BOTAdminContainer';
 
-
 const ObjectManagementContainer = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "ObjectManagementContainer" */
-        '../../components/container/menuContainer/ObjectManagementContainer'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "ObjectManagementContainer" */
+            '../../components/container/menuContainer/ObjectManagementContainer'
+        ),
+    loading: Loader,
+})
 
 const UserContainer = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "UserContainer" */
-        '../../components/container/menuContainer/UserContainer'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "UserContainer" */
+            '../../components/container/menuContainer/UserContainer'
+        ),
+    loading: Loader,
+})
 
 const MainContainer = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "MainContainer" */
-        '../../components/container/menuContainer/MainContainer'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "MainContainer" */
+            '../../components/container/menuContainer/MainContainer'
+        ),
+    loading: Loader,
+})
 
 const SystemSetting = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "SystemSetting" */
-        '../../components/container/menuContainer/SystemSetting'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "SystemSetting" */
+            '../../components/container/menuContainer/SystemSetting'
+        ),
+    loading: Loader,
+})
 
 const ReportContainer = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "ReportContainer" */
-        '../../components/container/menuContainer/ReportContainer'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "ReportContainer" */
+            '../../components/container/menuContainer/ReportContainer'
+        ),
+    loading: Loader,
+})
 
 const BOTAdminContainer = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "BOTAdminContainer" */
-        '../../components/container/menuContainer/BOTAdminContainer'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "BOTAdminContainer" */
+            '../../components/container/menuContainer/BOTAdminContainer'
+        ),
+    loading: Loader,
+})
 
 const About = Loadable({
-    loader: () => import(
-        /* webpackChunkName: "About" */
-        '../../components/container/About'
-    ),
-    loading: Loader
-});
+    loader: () =>
+        import(
+            /* webpackChunkName: "About" */
+            '../../components/container/About'
+        ),
+    loading: Loader,
+})
 
 const privateRoutesConfig = [
     {
@@ -161,11 +167,8 @@ const privateRoutesConfig = [
         component: BOTAdminContainer,
         exact: true,
     },
-];
-
-export const privateRouteParam = [
-    'page',
-    'resetpassword'
 ]
 
-export default privateRoutesConfig;
+export const privateRouteParam = ['page', 'resetpassword']
+
+export default privateRoutesConfig

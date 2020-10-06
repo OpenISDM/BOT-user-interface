@@ -1,5 +1,5 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
 
     License:
@@ -20,12 +20,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -35,17 +35,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import styled, {css} from 'styled-components';
-import Item from 'react-bootstrap/ListGroupItem';
+import styled, { css } from 'styled-components'
+import Item from 'react-bootstrap/ListGroupItem'
 import Link from 'react-bootstrap/NavLink'
 import NavLink from 'react-bootstrap/NavLink'
 import Nav from 'react-bootstrap/Nav'
 import styleSheet from '../../config/styleSheet'
-import Button from 'react-bootstrap/Button';
-import DataTimePicker from 'react-widgets/lib/DateTimePicker';
-import Alert from 'react-bootstrap/Alert';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import Button from 'react-bootstrap/Button'
+import DataTimePicker from 'react-widgets/lib/DateTimePicker'
+import Alert from 'react-bootstrap/Alert'
+import DropdownButton from 'react-bootstrap/DropdownButton'
 
 export const EditedTime = styled.div`
     font-size: 0.8rem;
@@ -53,7 +52,7 @@ export const EditedTime = styled.div`
     align-items: flex-end;
     padding-left: 5px;
     color: #999;
-`;
+`
 
 export const Primary = styled.div`
     font-size: 0.8rem;
@@ -72,14 +71,14 @@ export const Paragraph = styled.p`
 
 export const FormFieldName = styled.div`
     color: black;
-    font-size: .8rem;
+    font-size: 0.8rem;
     margin-bottom: 5px;
     text-transform: capitalize;
 `
 
 export const FieldLabel = styled.div`
     color: ${styleSheet.grey};
-    font-size: .8rem;
+    font-size: 0.8rem;
     margin-bottom: 5px;
     text-transform: capitalize;
     font-weight: 600;
@@ -90,18 +89,24 @@ export const Title = styled.div`
     text-transform: capitalize;
     font-size: 1rem;
     font-weight: 400;
-    ${props => props.page && css`
-        color: black;
-        font-size: 1.2rem;
-        font-weight: 450;
-        margin-bottom: 1rem;
-    `}
-    ${props => props.list && css`
-        color: black;
-    `}
-    ${props => props.sub && css`
-        margin-bottom: 5px;
-    `}
+    ${(props) =>
+        props.page &&
+        css`
+            color: black;
+            font-size: 1.2rem;
+            font-weight: 450;
+            margin-bottom: 1rem;
+        `}
+    ${(props) =>
+        props.list &&
+        css`
+            color: black;
+        `}
+    ${(props) =>
+        props.sub &&
+        css`
+            margin-bottom: 5px;
+        `}
 `
 
 export const PageTitle = styled.div`
@@ -155,25 +160,29 @@ export const BOTNavLink = styled(Link)`
     font-weight: 500;
     text-transform: capitalize;
 
-    ${props => props.primary && css`
-        background: white;
-        color: black;
-        &:hover {
-            color: ${styleSheet.grey};
-        }
-    `}
-    ${props => props.secondary && css`
-        background: white;
-        color: ${styleSheet.inActive};
-        &.active {
-            color: ${styleSheet.theme};
-            border-bottom: 3px solid ${styleSheet.theme};
-            border-radius: 0px;
-        }
-        &:hover {
-            color: ${styleSheet.theme};
-        }
-    `}
+    ${(props) =>
+        props.primary &&
+        css`
+            background: white;
+            color: black;
+            &:hover {
+                color: ${styleSheet.grey};
+            }
+        `}
+    ${(props) =>
+        props.secondary &&
+        css`
+            background: white;
+            color: ${styleSheet.inActive};
+            &.active {
+                color: ${styleSheet.theme};
+                border-bottom: 3px solid ${styleSheet.theme};
+                border-radius: 0px;
+            }
+            &:hover {
+                color: ${styleSheet.theme};
+            }
+        `}
 `
 
 export const BOTNav = styled(Nav)`
@@ -191,7 +200,7 @@ export const LoaderWrapper = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: ${props => props.backdrop && 'rgb(255,255,255,0.8)'};
+    background-color: ${(props) => props.backdrop && 'rgb(255,255,255,0.8)'};
 `
 
 export const PrimaryButton = styled(Button)`
@@ -200,7 +209,7 @@ export const PrimaryButton = styled(Button)`
     height: 3rem;
     letter-spacing: 1px;
     text-transform: capitalize;
-    margin: 0 .2rem;
+    margin: 0 0.2rem;
 `
 
 export const NoDataFoundDiv = styled.div`
@@ -257,24 +266,27 @@ export const FontBoldDiv = styled.div`
 `
 
 export const ToggleDisplayDiv = styled.div`
-    ${props => !props.display && css`
-        display: none;
-    `}
+    ${(props) =>
+        !props.display &&
+        css`
+            display: none;
+        `}
 `
 
 export const ReactBootstrapAlert = styled(Alert)`
-    ${props => props.variant == 'secondary' && css`
-        border: 0;
-        background: ${styleSheet.lightGrey};
-        box-shadow: 2px 2px 4px 0 #cbcbcb;
-        margin-bottom: 0.8rem;
-        z-Index: 1700;
-    `}
+    ${(props) =>
+        props.variant == 'secondary' &&
+        css`
+            border: 0;
+            background: ${styleSheet.lightGrey};
+            box-shadow: 2px 2px 4px 0 #cbcbcb;
+            margin-bottom: 0.8rem;
+            z-index: 1700;
+        `}
 `
 
 export const ReactDropdownButton = styled(DropdownButton)`
     color: black;
     background: red;
     font-size: 1px;
-
 `

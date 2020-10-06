@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,26 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React  from 'react';
-import { 
-    Button 
-} from 'react-bootstrap';
-import AccessControl from '../authentication/AccessControl';
-import { AppContext } from '../../context/AppContext';
+import React from 'react'
+import { Button } from 'react-bootstrap'
+import AccessControl from '../authentication/AccessControl'
+import { AppContext } from '../../context/AppContext'
 import {
     SEARCH_HISTORY,
     ALL_DEVICES,
     ALL_PATIENTS,
     MY_DEVICES,
-    MY_PATIENTS
-} from '../../config/wordMap';
-import {
-    Title
-} from '../BOTComponent/styleComponent';
+    MY_PATIENTS,
+} from '../../config/wordMap'
+import { Title } from '../BOTComponent/styleComponent'
 
 class FrequentSearch extends React.Component {
-
     static contextType = AppContext
 
     state = {
@@ -59,7 +53,10 @@ class FrequentSearch extends React.Component {
     }
 
     componentDidUpdate = (prepProps) => {
-        if (prepProps.clearSearchResult !== this.props.clearSearchResult && !prepProps.clearSearchResult) {
+        if (
+            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            !prepProps.clearSearchResult
+        ) {
             this.setState({
                 searchKey: '',
             })
@@ -67,10 +64,7 @@ class FrequentSearch extends React.Component {
     }
 
     handleClick = (e) => {
-        const {
-            name,
-            value
-        } = e.target
+        const { name, value } = e.target
 
         let searchKey = {
             type: name,
@@ -83,48 +77,42 @@ class FrequentSearch extends React.Component {
     }
 
     render() {
-        const { 
-            locale, 
-            auth 
-        } = this.context
+        const { locale, auth } = this.context
 
-        const {
-            searchObjectArray,
-            pinColorArray
-        } = this.props
-        
+        const { searchObjectArray, pinColorArray } = this.props
+
         return (
             <div>
-                <Title 
-                    list
-                    className='text-center'
-                > 
+                <Title list className="text-center">
                     {locale.texts.FREQUENT_SEARCH}
                 </Title>
-                <div 
-                    className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar max-height-30"
-                >
-                    <div
-                        className='text-center'
-                    >
-                        {auth.authenticated && auth.user.searchHistory &&
+                <div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar max-height-30">
+                    <div className="text-center">
+                        {auth.authenticated &&
+                            auth.user.searchHistory &&
                             auth.user.searchHistory
-                                .filter( (item,index) => {
+                                .filter((item, index) => {
                                     return index < auth.user.freqSearchCount
                                 })
                                 .map((item, index) => {
-
-                                    let pinColorIndex = searchObjectArray.indexOf(item)
+                                    let pinColorIndex = searchObjectArray.indexOf(
+                                        item
+                                    )
 
                                     return (
                                         <Button
                                             variant="outline-custom"
                                             className="text-none"
-                                            onClick={this.handleClick} 
+                                            onClick={this.handleClick}
                                             style={{
-                                                color: pinColorIndex > -1 ? pinColorArray[pinColorIndex] : null
+                                                color:
+                                                    pinColorIndex > -1
+                                                        ? pinColorArray[
+                                                              pinColorIndex
+                                                          ]
+                                                        : null,
                                             }}
-                                            // active={this.state.searchKey === item.name.toLowerCase()} 
+                                            // active={this.state.searchKey === item.name.toLowerCase()}
                                             key={index}
                                             name={SEARCH_HISTORY}
                                             value={item}
@@ -132,19 +120,19 @@ class FrequentSearch extends React.Component {
                                             {item}
                                         </Button>
                                     )
-                        })}
+                                })}
                     </div>
-                  
-                    <hr/>
-                    <Button 
+
+                    <hr />
+                    <Button
                         variant="outline-custom"
-                        onClick={this.handleClick} 
+                        onClick={this.handleClick}
                         // active={this.state.searchKey === 'all devices'}
                         name={ALL_DEVICES}
                     >
                         {locale.texts.ALL_DEVICES}
                     </Button>
-                    <Button 
+                    <Button
                         variant="outline-custom"
                         onClick={this.handleClick}
                         // active={this.state.searchKey === 'all devices'}
@@ -158,7 +146,7 @@ class FrequentSearch extends React.Component {
                     >
                         <Button
                             variant="outline-custom"
-                            onClick={this.handleClick} 
+                            onClick={this.handleClick}
                             // active={this.state.searchKey === 'my devices'}
                             name={MY_DEVICES}
                         >
@@ -183,5 +171,4 @@ class FrequentSearch extends React.Component {
     }
 }
 
-export default FrequentSearch;
-
+export default FrequentSearch

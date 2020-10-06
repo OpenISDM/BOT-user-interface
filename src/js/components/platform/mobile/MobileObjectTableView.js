@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,20 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React, { Fragment } from 'react';
-import LocaleContext from "../../../context/LocaleContext";
-import styleConfig from '../../../config/styleConfig';
-import BOTInput from '../../presentational/BOTInput';
-import { 
-    ButtonToolbar,
-} from 'react-bootstrap';
-import Select from 'react-select';
-import {
-    PrimaryButton
-} from '../../BOTComponent/styleComponent';
-import AccessControl from '../../authentication/AccessControl';
-
+import React, { Fragment } from 'react'
+import LocaleContext from '../../../context/LocaleContext'
+import styleConfig from '../../../config/styleConfig'
+import BOTInput from '../../presentational/BOTInput'
+import { ButtonToolbar } from 'react-bootstrap'
+import Select from 'react-select'
+import { PrimaryButton } from '../../BOTComponent/styleComponent'
+import AccessControl from '../../authentication/AccessControl'
 
 const MobileObjectTableView = ({
     addObjectFilter,
@@ -53,66 +47,66 @@ const MobileObjectTableView = ({
     filterSelection,
     handleClickButton,
     selection,
-    handleClick
+    handleClick,
 }) => {
     const locale = React.useContext(LocaleContext)
 
     return (
         <Fragment>
-            <div className='d-flex justify-content-start'>                    
+            <div className="d-flex justify-content-start">
                 <BOTInput
-                    className='mx-2'
+                    className="mx-2"
                     placeholder={locale.texts.SEARCH}
                     getSearchKey={(key) => {
                         addObjectFilter(
-                            key, 
-                            ['name', 'area', 'macAddress', 'acn'], 
+                            key,
+                            ['name', 'area', 'macAddress', 'acn'],
                             'search bar'
                         )
                     }}
-                    clearSearchResult={null}                                        
+                    clearSearchResult={null}
                 />
-                 
             </div>
-            <AccessControl
-                    renderNoAccess={() => null}
-                    platform={['mobile']}
-                >
-                    <Select
-                        name='Select Area Patient'
-                        className='mb-2'
-                        styles={styleConfig.reactSelectFilter}
-                        onChange={(value) => {
-                            if(value){
-                                addObjectFilter(value.label, ['area'], 'area select')
-                            }else{
-                                removeObjectFilter('area select')
-                            }
-                        }}
-                        options={filterSelection.areaSelection}
-                        isClearable={true}
-                        isSearchable={false}
-                        placeholder={locale.texts.SELECT_AREA}
-                    />
+            <AccessControl renderNoAccess={() => null} platform={['mobile']}>
+                <Select
+                    name="Select Area Patient"
+                    className="mb-2"
+                    styles={styleConfig.reactSelectFilter}
+                    onChange={(value) => {
+                        if (value) {
+                            addObjectFilter(
+                                value.label,
+                                ['area'],
+                                'area select'
+                            )
+                        } else {
+                            removeObjectFilter('area select')
+                        }
+                    }}
+                    options={filterSelection.areaSelection}
+                    isClearable={true}
+                    isSearchable={false}
+                    placeholder={locale.texts.SELECT_AREA}
+                />
             </AccessControl>
 
             <ButtonToolbar>
                 <PrimaryButton
-                    className='text-capitalize mr-2 mb-1'
-                    name='associate'
+                    className="text-capitalize mr-2 mb-1"
+                    name="associate"
                     onClick={handleClickButton}
                 >
                     {locale.texts.ASSOCIATE}
                 </PrimaryButton>
                 <PrimaryButton
-                    className='text-capitalize mr-2 mb-1'
+                    className="text-capitalize mr-2 mb-1"
                     onClick={handleClick}
                 >
                     {locale.texts.ADD}
                 </PrimaryButton>
                 <PrimaryButton
-                    className='text-capitalize mr-2 mb-1'
-                    name='delete'
+                    className="text-capitalize mr-2 mb-1"
+                    name="delete"
                     onClick={handleClickButton}
                     disabled={selection.length == 0}
                 >

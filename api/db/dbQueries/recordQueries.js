@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,9 +32,9 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const getShiftChangeRecord = () =>{
-	const query = `
-		SELECT 
+const getShiftChangeRecord = () => {
+    const query = `
+		SELECT
 			shift_change_record.id,
 			shift_change_record.file_path,
 			shift_change_record.submit_timestamp,
@@ -42,7 +42,7 @@ const getShiftChangeRecord = () =>{
 			user_table.name as user_name,
 			device_group_list.name as list_name
 		FROM shift_change_record
-		
+
 		LEFT JOIN user_table
 		ON user_table.id = shift_change_record.user_id
 
@@ -52,11 +52,11 @@ const getShiftChangeRecord = () =>{
 		ORDER BY shift_change_record.submit_timestamp DESC;
 
 	`
-	return query
+    return query
 }
 
 const getEditObjectRecord = () => {
-	const query = `
+    const query = `
 		SELECT
 			user_table.name,
 			edit_object_record.id,
@@ -72,64 +72,61 @@ const getEditObjectRecord = () => {
 		ORDER BY edit_object_record.edit_time DESC
 
 	`
-	return query
+    return query
 }
 
 const addEditObjectRecord = (formOption, username, filePath) => {
-
-	const text = `
+    const text = `
 		INSERT INTO edit_object_record (
-			edit_user_id, 
-			notes, 
-			new_status, 
-			new_location, 
+			edit_user_id,
+			notes,
+			new_status,
+			new_location,
 			edit_objects,
 			path,
 			edit_time
 		)
 		VALUES (
 			(
-				SELECT id 
-				FROM user_table 
+				SELECT id
+				FROM user_table
 				WHERE name = $1
 			),
 			$2,
 			$3,
 			$4,
-			ARRAY ['${formOption.map(item => item.asset_control_number)}'],
+			ARRAY ['${formOption.map((item) => item.asset_control_number)}'],
 			$5,
 			now()
 		)
 		RETURNING id;
 	`
-	const values = [
-		username,
-		formOption[0].notes,
-		formOption[0].status,
-		formOption[0].transferred_location,
-		filePath
-	]
+    const values = [
+        username,
+        formOption[0].notes,
+        formOption[0].status,
+        formOption[0].transferred_location,
+        filePath,
+    ]
 
-	const query = {
-		text, 
-		values
-	}
-	return query
-
+    const query = {
+        text,
+        values,
+    }
+    return query
 }
 
 const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
- 
-	const text = `
+    const text = `
 		INSERT INTO shift_change_record (
-			user_id, 
+			user_id,
 			shift,
 			file_path,
 			list_id,
 			submit_timestamp
 		)
 		VALUES (
-			$1, 
+			$1,
 			$2,
 			$3,
 			$4,
@@ -137,64 +134,54 @@ const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
 		);
 	`
 
-	const values = [
-		userInfo.id,
-		shift.value,
-		file_path,
-		list_id,
-	];
+    const values = [userInfo.id, shift.value, file_path, list_id]
 
-	return {
-		text,
-		values
-	}
+    return {
+        text,
+        values,
+    }
 }
 
-const addPatientRecord = objectPackage => {
-	let text = `
+const addPatientRecord = (objectPackage) => {
+    let text = `
 		INSERT INTO patient_record (
 			object_id,
-			editing_user_id, 
+			editing_user_id,
 			record,
 			created_timestamp
-		) 
+		)
 		VALUES (
 			$1,
 			$2,
 			$3,
 			NOW()
 		)
-		
-	`
-	let values = [
-		objectPackage.id,
-		objectPackage.userId,
-		objectPackage.record
-	]	
 
-	let query = {
-		text,
-		values
-	}
-	
-	return query
-	
+	`
+    let values = [objectPackage.id, objectPackage.userId, objectPackage.record]
+
+    let query = {
+        text,
+        values,
+    }
+
+    return query
 }
 
-const deleteShiftChangeRecord = idPackage => {
-	const query = `
+const deleteShiftChangeRecord = (idPackage) => {
+    const query = `
 		DELETE FROM shift_change_record
-		WHERE id IN (${idPackage.map(item => `'${item}'`)})
+		WHERE id IN (${idPackage.map((item) => `'${item}'`)})
 		RETURNING *;
 	`
-	return query
+    return query
 }
 
 module.exports = {
     getShiftChangeRecord,
     getEditObjectRecord,
-	addEditObjectRecord,
-	addShiftChangeRecord,
-	addPatientRecord,
-	deleteShiftChangeRecord
+    addEditObjectRecord,
+    addShiftChangeRecord,
+    addPatientRecord,
+    deleteShiftChangeRecord,
 }

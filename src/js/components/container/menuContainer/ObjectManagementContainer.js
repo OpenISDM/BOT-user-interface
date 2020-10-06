@@ -1,81 +1,61 @@
-import React from 'react';
-import 'react-table/react-table.css'; 
-import { 
-    Nav,
-    Tab,
-} from 'react-bootstrap';
-import 'react-tabs/style/react-tabs.css';
-import { AppContext } from '../../../context/AppContext';
+import React from 'react'
+import 'react-table/react-table.css'
+import { Nav, Tab } from 'react-bootstrap'
+import 'react-tabs/style/react-tabs.css'
+import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
-import ObjectTable from '../../presentational/ObjectTable';
-import PatientTable from '../../presentational/PatientTable';
-import ImportObjectTable from '../../presentational/ImportObjectTable';
-import ImportPatientTable from '../../presentational/ImportPatientTable';
+import ObjectTable from '../../presentational/ObjectTable'
+import PatientTable from '../../presentational/PatientTable'
+import ImportObjectTable from '../../presentational/ImportObjectTable'
+import ImportPatientTable from '../../presentational/ImportPatientTable'
 import {
     BOTContainer,
     BOTNavLink,
     BOTNav,
-    PageTitle
-} from '../../../components/BOTComponent/styleComponent';
+    PageTitle,
+} from '../../../components/BOTComponent/styleComponent'
 
-class ObjectManagementContainer extends React.Component{
-    
+class ObjectManagementContainer extends React.Component {
     static contextType = AppContext
 
-    defaultActiveKey = "devices_table"
-    
-    render(){
+    defaultActiveKey = 'devices_table'
 
-        const { 
-            locale
-        } = this.context
-        
-        return (     
-            <BOTContainer>     
-                <PageTitle>                                            
-                    {locale.texts.OBJECT_MANAGEMENT}
-                </PageTitle>
-                <Tab.Container 
-                    defaultActiveKey={this.defaultActiveKey}
-                >
+    render() {
+        const { locale } = this.context
+
+        return (
+            <BOTContainer>
+                <PageTitle>{locale.texts.OBJECT_MANAGEMENT}</PageTitle>
+                <Tab.Container defaultActiveKey={this.defaultActiveKey}>
                     <BOTNav>
                         <Nav.Item>
-                            <BOTNavLink 
-                                secondary
-                                eventKey="devices_table"
-                            >
+                            <BOTNavLink secondary eventKey="devices_table">
                                 {locale.texts.DEVICE_FORM}
                             </BOTNavLink>
                         </Nav.Item>
                         <Nav.Item>
-                            <BOTNavLink 
-                                secondary
-                                eventKey="patients_table"
-                            >
+                            <BOTNavLink secondary eventKey="patients_table">
                                 {locale.texts.PATIENT_FORM}
                             </BOTNavLink>
                         </Nav.Item>
                         <AccessControl
-                            permission={"user:importTable"}
+                            permission={'user:importTable'}
                             renderNoAccess={() => null}
                             platform={['browser']}
                         >
                             <Nav.Item>
-                                <BOTNavLink 
-                                    secondary
-                                    eventKey="import_devices"
-                                >
+                                <BOTNavLink secondary eventKey="import_devices">
                                     {locale.texts.IMPORT_DEVICES_DATA}
                                 </BOTNavLink>
                             </Nav.Item>
                         </AccessControl>
                         <AccessControl
-                            permission={"user:importTable"}
+                            permission={'user:importTable'}
                             renderNoAccess={() => null}
                             platform={['browser']}
                         >
                             <Nav.Item>
-                                <BOTNavLink 
+                                <BOTNavLink
                                     secondary
                                     eventKey="import_patients"
                                 >
@@ -84,19 +64,17 @@ class ObjectManagementContainer extends React.Component{
                             </Nav.Item>
                         </AccessControl>
                     </BOTNav>
-                    <Tab.Content
-                        className="my-3"
-                    >
-                        <Tab.Pane eventKey="devices_table"> 
-                            <ObjectTable /> 
+                    <Tab.Content className="my-3">
+                        <Tab.Pane eventKey="devices_table">
+                            <ObjectTable />
                         </Tab.Pane>
 
                         <Tab.Pane eventKey="patients_table">
-                            <PatientTable /> 
+                            <PatientTable />
                         </Tab.Pane>
-                        
+
                         <AccessControl
-                            permission={"user:importTable"}
+                            permission={'user:importTable'}
                             renderNoAccess={() => null}
                             platform={['browser']}
                         >
@@ -105,7 +83,7 @@ class ObjectManagementContainer extends React.Component{
                             </Tab.Pane>
                         </AccessControl>
                         <AccessControl
-                            permission={"user:importTable"}
+                            permission={'user:importTable'}
                             renderNoAccess={() => null}
                             platform={['browser']}
                         >

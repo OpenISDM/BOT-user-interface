@@ -39,7 +39,7 @@
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
     border: 2px solid #007bff;
-    
+
 }
 
 /* When the checkbox is checked, add a blue background */
@@ -59,7 +59,7 @@
 /* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
     display: block;
-    
+
 }
 
 /* Style the checkmark/indicator */

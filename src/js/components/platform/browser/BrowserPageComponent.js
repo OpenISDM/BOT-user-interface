@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,29 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { useEffect } from 'react';
-import {
-    Tab,
-    ListGroup
-} from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import { Tab, ListGroup } from 'react-bootstrap'
 import {
     BOTSideNavTitle,
     BOTSideNav,
-    Title
-} from '../../BOTComponent/styleComponent';
-import LocaleContext from '../../../context/LocaleContext';
-import AccessControl from '../../authentication/AccessControl';
+    Title,
+} from '../../BOTComponent/styleComponent'
+import LocaleContext from '../../../context/LocaleContext'
+import AccessControl from '../../authentication/AccessControl'
 
-const BrowserPageComponent = ({
-    containerModule,
-    setMessage,
-}) => {
-
-    let {
-        tabList,
-        title,
-        defaultActiveKey
-    } = containerModule
+const BrowserPageComponent = ({ containerModule, setMessage }) => {
+    let { tabList, title, defaultActiveKey } = containerModule
 
     let locale = React.useContext(LocaleContext)
     let [key, setKey] = React.useState(defaultActiveKey)
@@ -64,19 +53,15 @@ const BrowserPageComponent = ({
     }, [defaultActiveKey])
 
     return (
-        <Tab.Container 
-            transition={false} 
+        <Tab.Container
+            transition={false}
             activeKey={key}
             onSelect={(k) => {
-                setKey(k);
+                setKey(k)
             }}
         >
-            <div 
-                className="BOTsidenav"
-            >
-                <div 
-                    className="font-size-120-percent font-weight-bold color-black"
-                >
+            <div className="BOTsidenav">
+                <div className="font-size-120-percent font-weight-bold color-black">
                     {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
                 </div>
                 <ListGroup>
@@ -91,17 +76,20 @@ const BrowserPageComponent = ({
                                     eventKey={tab.name.replace(/ /g, '_')}
                                     action
                                 >
-                                    {locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
+                                    {
+                                        locale.texts[
+                                            tab.name
+                                                .toUpperCase()
+                                                .replace(/ /g, '_')
+                                        ]
+                                    }
                                 </BOTSideNav>
                             </AccessControl>
                         )
-                    })}  
-                </ListGroup>  
-                
+                    })}
+                </ListGroup>
             </div>
-            <div
-                className="BOTsidemain"
-            >
+            <div className="BOTsidemain">
                 <Tab.Content>
                     {tabList.map((tab, index) => {
                         let props = {
@@ -109,21 +97,25 @@ const BrowserPageComponent = ({
                             setMessage,
                         }
                         return (
-                            <Tab.Pane 
+                            <Tab.Pane
                                 eventKey={tab.name.replace(/ /g, '_')}
                                 key={tab.name.replace(/ /g, '_')}
                             >
-                                <div
-                                    className="font-size-140-percent color-black"
-                                >
-                                    {locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
+                                <div className="font-size-140-percent color-black">
+                                    {
+                                        locale.texts[
+                                            tab.name
+                                                .toUpperCase()
+                                                .replace(/ /g, '_')
+                                        ]
+                                    }
                                 </div>
-                                <hr/>
+                                <hr />
                                 {tab.component(props)}
                             </Tab.Pane>
                         )
                     })}
-                </Tab.Content>         
+                </Tab.Content>
             </div>
         </Tab.Container>
     )

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,25 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { 
-    Modal, 
-    Button, 
-    Row, 
-    Col 
-} from 'react-bootstrap'
-import Select from 'react-select';
-import { 
-    Formik,  
-    Form 
-} from 'formik';
+import React from 'react'
+import { Modal, Button, Row, Col } from 'react-bootstrap'
+import Select from 'react-select'
+import { Formik, Form } from 'formik'
 import DateTimePicker from '../../container/DateTimePicker'
 import Switcher from '../../container/Switcher'
-import styleConfig from '../../../config/styleConfig';
+import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
-import LocaleContext from '../../../context/LocaleContext';
-const EditMonitorConfigForm =  ({
+import LocaleContext from '../../../context/LocaleContext'
+const EditMonitorConfigForm = ({
     selectedData,
     isEdited,
     areaOptions,
@@ -58,53 +49,54 @@ const EditMonitorConfigForm =  ({
     handleClose,
     handleSubmit,
     title,
-    type
+    type,
 }) => {
-
     let locale = React.useContext(LocaleContext)
-        
+
     return (
-        <Modal  
-            show={show} 
-            onHide={handleClose} 
-            size="md" 
+        <Modal
+            show={show}
+            onHide={handleClose}
+            size="md"
             enforceFocus={false}
-            className='text-capitalize'
+            className="text-capitalize"
         >
-            <Modal.Header 
-                closeButton 
-            >
+            <Modal.Header closeButton>
                 {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-            </Modal.Header >
+            </Modal.Header>
             <Modal.Body>
                 <Formik
-                    initialValues = {{
+                    initialValues={{
                         enable: selectedData ? selectedData.enable : 1,
                         area: selectedData ? selectedData.area : '',
                         start_time: selectedData ? selectedData.start_time : '',
                         end_time: selectedData ? selectedData.end_time : '',
                     }}
-
-                    onSubmit={(values, { setStatus, setSubmitting }) => { 
+                    onSubmit={(values, { setStatus, setSubmitting }) => {
                         let monitorConfigPackage = {
                             ...values,
-                            id: isEdited == true  ? selectedData.id : '',
+                            id: isEdited == true ? selectedData.id : '',
                             type: type,
                             area_id: values.area.id,
                         }
                         handleSubmit(monitorConfigPackage)
-
                     }}
-
-                    render={({ values, errors, status, touched, isSubmitting, setFieldValue }) => (
+                    render={({
+                        values,
+                        errors,
+                        status,
+                        touched,
+                        isSubmitting,
+                        setFieldValue,
+                    }) => (
                         <Form>
                             <Row className="d-flex align-items-center">
                                 <Col>
                                     <Switcher
                                         leftLabel="on"
                                         rightLabel="off"
-                                        onChange={e => {
-                                            let { value }= e.target
+                                        onChange={(e) => {
+                                            let { value } = e.target
                                             setFieldValue('enable', value)
                                         }}
                                         status={values.enable}
@@ -112,8 +104,8 @@ const EditMonitorConfigForm =  ({
                                     />
                                 </Col>
                             </Row>
-                            <hr/> 
-                            <FormikFormGroup 
+                            <hr />
+                            <FormikFormGroup
                                 label={locale.texts.AREA}
                                 error={errors.area}
                                 touched={touched.area}
@@ -121,12 +113,14 @@ const EditMonitorConfigForm =  ({
                                 component={() => (
                                     <Select
                                         placeholder={locale.texts.SELECT_AREA}
-                                        name='area'
+                                        name="area"
                                         options={areaOptions}
                                         value={values.area}
                                         styles={styleConfig.reactSelect}
                                         isDisabled={isEdited}
-                                        onChange={value => setFieldValue('area', value)}
+                                        onChange={(value) =>
+                                            setFieldValue('area', value)
+                                        }
                                         components={{
                                             IndicatorSeparator: () => null,
                                         }}
@@ -135,11 +129,16 @@ const EditMonitorConfigForm =  ({
                             />
                             <Row noGutters className="mb-3">
                                 <Col>
-                                    <small  className="form-text text-muted">{locale.texts.ENABLE_START_TIME}</small>
+                                    <small className="form-text text-muted">
+                                        {locale.texts.ENABLE_START_TIME}
+                                    </small>
                                     <DateTimePicker
                                         value={values.start_time}
-                                        getValue={value => {
-                                            setFieldValue("start_time", value.value)
+                                        getValue={(value) => {
+                                            setFieldValue(
+                                                'start_time',
+                                                value.value
+                                            )
                                         }}
                                         name="start_time"
                                         start="0"
@@ -147,10 +146,17 @@ const EditMonitorConfigForm =  ({
                                     />
                                 </Col>
                                 <Col>
-                                    <small  className="form-text text-muted">{locale.texts.ENABLE_END_TIME}</small>
+                                    <small className="form-text text-muted">
+                                        {locale.texts.ENABLE_END_TIME}
+                                    </small>
                                     <DateTimePicker
                                         value={values.end_time}
-                                        getValue={value => setFieldValue("end_time", value.value)}
+                                        getValue={(value) =>
+                                            setFieldValue(
+                                                'end_time',
+                                                value.value
+                                            )
+                                        }
                                         name="end_time"
                                         start="0"
                                         end="24"
@@ -158,15 +164,15 @@ const EditMonitorConfigForm =  ({
                                 </Col>
                             </Row>
                             <Modal.Footer>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={handleClose}
                                 >
                                     {locale.texts.CANCEL}
                                 </Button>
-                                <Button 
-                                    type="submit" 
-                                    variant="primary" 
+                                <Button
+                                    type="submit"
+                                    variant="primary"
                                     disabled={isSubmitting}
                                 >
                                     {locale.texts.SAVE}
@@ -177,10 +183,7 @@ const EditMonitorConfigForm =  ({
                 />
             </Modal.Body>
         </Modal>
-    );
-
-
+    )
 }
-  
-export default EditMonitorConfigForm;
 
+export default EditMonitorConfigForm

@@ -32,37 +32,34 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react';
-import AppContext from './js/context/AppContext';
-import PrivateRoutes from '../src/js/components/utils/PrivateRoutes';
-import { ToastContainer } from 'react-toastify';
-import config from './js/config';
-import { 
-    BrowserRouter,
-    Route,  
-    Switch
-} from 'react-router-dom';
-import publicRoutes from './js/config/routes/publicRoutesConfig';
+import React from 'react'
+import AppContext from './js/context/AppContext'
+import PrivateRoutes from '../src/js/components/utils/PrivateRoutes'
+import { ToastContainer } from 'react-toastify'
+import config from './js/config'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import publicRoutes from './js/config/routes/publicRoutesConfig'
 
 const App = () => {
-
     return (
         <AppContext>
-            <BrowserRouter>     
+            <BrowserRouter>
                 <Switch>
                     {publicRoutes.map(route => {
-                        return <Route path={route.path} exact component={route.component} />
-
+                        return (
+                            <Route
+                                path={route.path}
+                                exact
+                                component={route.component}
+                            />
+                        )
                     })}
                     <PrivateRoutes />
                 </Switch>
             </BrowserRouter>
             <ToastContainer {...config.TOAST_PROPS} />
         </AppContext>
-    );
-};
+    )
+}
 
-export default App;
-
-
-
+export default App

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,16 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import BOT_LOGO from '../img/logo/BOT_LOGO_GREEN.png';
-import BOT_LOGO_WEBP from '../img/logo/BOT_LOGO_GREEN.webp';
-import mapConfig from './config/mapConfig';
-import viewConfig from './config/viewConfig';
-import moment from 'moment';
-import supportedLocale from './locale/supportedLocale';
+import BOT_LOGO from '../img/logo/BOT_LOGO_GREEN.png'
+import BOT_LOGO_WEBP from '../img/logo/BOT_LOGO_GREEN.webp'
+import mapConfig from './config/mapConfig'
+import viewConfig from './config/viewConfig'
+import moment from 'moment'
+import supportedLocale from './locale/supportedLocale'
 
 const config = {
-
     VERSION: 'v1.0 b.1965',
 
     TIMESTAMP_FORMAT: 'LLL',
@@ -60,30 +58,28 @@ const config = {
 
     RECORD_TYPE: {
         EDITED_OBJECT: 'editedObject',
-        SHIFT_CHANGE: 'shiftChange'
+        SHIFT_CHANGE: 'shiftChange',
     },
-    
+
     DEFAULT_USER: {
         roles: 'guest',
         areas_id: [0],
-        permissions:[
-            'form:view',
-        ],
+        permissions: ['form:view'],
         locale: 'tw',
         main_area: 1,
     },
 
-    KEYWORD_TYPE: [
-        'type_alias',
-        'type'
-    ],
+    KEYWORD_TYPE: ['type_alias', 'type'],
 
-    /** Set the default locale based on the language of platform. 
-     *  Default locale for can be tw or en 
-    */
+    /** Set the default locale based on the language of platform.
+     *  Default locale for can be tw or en
+     */
     DEFAULT_LOCALE: Object.values(supportedLocale).reduce((abbr, locale) => {
         let navigatorLang = navigator.language.toLocaleUpperCase()
-        if (navigatorLang == locale.code.toLocaleUpperCase() || navigatorLang == locale.abbr.toUpperCase()) {
+        if (
+            navigatorLang == locale.code.toLocaleUpperCase() ||
+            navigatorLang == locale.abbr.toUpperCase()
+        ) {
             return locale.abbr
         }
         return abbr
@@ -93,64 +89,55 @@ const config = {
 
     LOGO_WEBP: BOT_LOGO_WEBP,
 
-    statusOptions: [
-        'normal',
-        'broken',
-        'reserve',
-        'transferred'
-    ],
+    statusOptions: ['normal', 'broken', 'reserve', 'transferred'],
 
     GENDER_OPTIONS: {
         1: {
             id: 1,
-            value: 'male'
+            value: 'male',
         },
         2: {
             id: 2,
-            value: 'female'
+            value: 'female',
         },
     },
 
-    monitorOptions: [
-        'geofence',
-        'panic',
-        'movement',
-        'location'
-    ],
+    monitorOptions: ['geofence', 'panic', 'movement', 'location'],
 
     monitorTypeMap: {
         object: [1, 16],
-        patient: [1,2,4,8]
+        patient: [1, 2, 4, 8],
     },
 
     monitorSettingType: {
-        MOVEMENT_MONITOR: "movement monitor",
-        LONG_STAY_IN_DANGER_MONITOR: "long stay in danger monitor",
-        NOT_STAY_ROOM_MONITOR: "not stay room monitor",
-        GEOFENCE_MONITOR: "geofence monitor",
+        MOVEMENT_MONITOR: 'movement monitor',
+        LONG_STAY_IN_DANGER_MONITOR: 'long stay in danger monitor',
+        NOT_STAY_ROOM_MONITOR: 'not stay room monitor',
+        GEOFENCE_MONITOR: 'geofence monitor',
     },
 
     monitorSettingUrlMap: {
-        "movement monitor": "movement_config",
-        "long stay in danger monitor": "location_long_stay_in_danger_config",
-        "not stay room monitor": "location_not_stay_room_config",
-        "geofence monitor": "geo_fence_config"
+        'movement monitor': 'movement_config',
+        'long stay in danger monitor': 'location_long_stay_in_danger_config',
+        'not stay room monitor': 'location_not_stay_room_config',
+        'geofence monitor': 'geo_fence_config',
     },
 
     monitorSetting: {
-        "movement monitor": "movement_config",
-        "long stay in danger monitor": "location_long_stay_in_danger_config",
-        location: "location_not_stay_room_config",
-        geo: "geo_fence_config"
+        'movement monitor': 'movement_config',
+        'long stay in danger monitor': 'location_long_stay_in_danger_config',
+        location: 'location_not_stay_room_config',
+        geo: 'geo_fence_config',
     },
 
-    getLbeaconDataIntervalTime: process.env.GET_LBEACON_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
+    getLbeaconDataIntervalTime:
+        process.env.GET_LBEACON_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
 
-    getGatewayDataIntervalTime: process.env.GET_GATEWAY_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
+    getGatewayDataIntervalTime:
+        process.env.GET_GATEWAY_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
 
     FOLDER_PATH: {
-
-        trackingRecord: `tracking_record`
+        trackingRecord: `tracking_record`,
     },
 
     AJAX_STATUS_MAP: {
@@ -160,15 +147,11 @@ const config = {
         WAIT_FOR_SEARCH: 'wait for search',
     },
 
-    PDF_FILENAME_TIME_FORMAT: "YYYY-MM-Do_hh_mm_ss",
+    PDF_FILENAME_TIME_FORMAT: 'YYYY-MM-Do_hh_mm_ss',
 
-    DEFAULT_ROLE: ['system_admin'], 
+    DEFAULT_ROLE: ['system_admin'],
 
-    ROLES_SELECTION: [
-        'system_admin',
-        'care_provider',
-        'dev',
-    ],
+    ROLES_SELECTION: ['system_admin', 'care_provider', 'dev'],
 
     HEALTH_STATUS_MAP: {
         0: 'normal',
@@ -186,74 +169,67 @@ const config = {
         closeOnClick: true,
         rtl: false,
         pauseOnVisibilityChange: true,
-        draggable: true
+        draggable: true,
     },
 
-    SHIFT_OPTIONS: [
-        "day shift",
-        "swing shift",
-        "night shift",
-    ],
+    SHIFT_OPTIONS: ['day shift', 'swing shift', 'night shift'],
 
-    SEARCHABLE_FIELD: [ 
-        'type', 
-        'asset_control_number', 
-        'name', 
-        'nickname', 
+    SEARCHABLE_FIELD: [
+        'type',
+        'asset_control_number',
+        'name',
+        'nickname',
         'location_description',
-        'type_alias'
+        'type_alias',
     ],
 
     AUTOSUGGEST_NUMBER_LIMIT: 10,
 
     monitorType: {
-        1: "geofence",
-        2: "panic",
-        4: "movement",
-        8: "location",
-        16: "bed",
+        1: 'geofence',
+        2: 'panic',
+        4: 'movement',
+        8: 'location',
+        16: 'bed',
     },
 
     monitorSettingType: {
-        MOVEMENT_MONITOR: "movement monitor",
-        LONG_STAY_IN_DANGER_MONITOR: "long stay in danger monitor",
-        NOT_STAY_ROOM_MONITOR: "not stay room monitor",
-        GEOFENCE_MONITOR: "geofence monitor",
+        MOVEMENT_MONITOR: 'movement monitor',
+        LONG_STAY_IN_DANGER_MONITOR: 'long stay in danger monitor',
+        NOT_STAY_ROOM_MONITOR: 'not stay room monitor',
+        GEOFENCE_MONITOR: 'geofence monitor',
     },
 
     monitorSettingUrlMap: {
-        "movement monitor": "movement_config",
-        "long stay in danger monitor": "location_long_stay_in_danger_config",
-        "not stay room monitor": "location_not_stay_room_config",
-        "geofence monitor": "geo_fence_config"
+        'movement monitor': 'movement_config',
+        'long stay in danger monitor': 'location_long_stay_in_danger_config',
+        'not stay room monitor': 'location_not_stay_room_config',
+        'geofence monitor': 'geo_fence_config',
     },
 
     monitorSetting: {
-        "movement monitor": "movement_config",
-        "long stay in danger monitor": "location_long_stay_in_danger_config",
-        location: "location_not_stay_room_config",
-        geo: "geo_fence_config"
+        'movement monitor': 'movement_config',
+        'long stay in danger monitor': 'location_long_stay_in_danger_config',
+        location: 'location_not_stay_room_config',
+        geo: 'geo_fence_config',
     },
 
     toastMonitorMap: {
-        1: "warn",
-        2: "error",
-        4: "error",
-        8: "error",
+        1: 'warn',
+        2: 'error',
+        4: 'error',
+        8: 'error',
     },
 
-    statusToCreatePdf: [
-        "broken",
-        "transferred"
-    ],
+    statusToCreatePdf: ['broken', 'transferred'],
 
     getShift: () => {
         const hour = moment().hours()
-        if (hour < 17 && hour > 8){
+        if (hour < 17 && hour > 8) {
             return config.SHIFT_OPTIONS[0]
-        }else if(hour < 24 && hour > 17){
+        } else if (hour < 24 && hour > 17) {
             return config.SHIFT_OPTIONS[1]
-        }else{
+        } else {
             return config.SHIFT_OPTIONS[2]
         }
     },
@@ -261,9 +237,6 @@ const config = {
     ...viewConfig,
 
     mapConfig,
-
-
 }
 
 export default config
-

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,38 +32,31 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React, { Fragment, useEffect } from 'react';
-import { 
-    Row
-} from 'react-bootstrap'
-import { AppContext } from '../../context/AppContext';
+import React, { Fragment, useEffect } from 'react'
+import { Row } from 'react-bootstrap'
+import { AppContext } from '../../context/AppContext'
 import {
     BrowserView,
     TabletView,
     MobileOnlyView,
     isTablet,
     CustomView,
-    isMobile 
+    isMobile,
 } from 'react-device-detect'
-import { SWITCH_SEARCH_LIST } from '../../config/wordMap';
+import { SWITCH_SEARCH_LIST } from '../../config/wordMap'
 import {
     HoverDiv,
     HoverWithUnderlineDiv,
     JustifyCenterDiv,
     FontBoldDiv,
     ToggleDisplayDiv,
-    ReactBootstrapAlert
-} from '../BOTComponent/styleComponent';
-import wordMap from '../../config/wordMap';
-import { searchResultToMap } from '../../helper/dataTransfer';
+    ReactBootstrapAlert,
+} from '../BOTComponent/styleComponent'
+import wordMap from '../../config/wordMap'
+import { searchResultToMap } from '../../helper/dataTransfer'
 
-export default ({
-    searchKey,
-    searchResult,
-    handleClick
-}) => {
-    const appContext = React.useContext(AppContext);
+export default ({ searchKey, searchResult, handleClick }) => {
+    const appContext = React.useContext(AppContext)
     const [showDetail, setShowDetail] = React.useState(false)
 
     const { locale } = appContext
@@ -71,45 +64,43 @@ export default ({
     let searchResultMap = searchResultToMap(searchResult)
 
     const handleShowDetail = () => {
-       setShowDetail(!showDetail)
+        setShowDetail(!showDetail)
     }
 
     return (
         <Fragment>
             <CustomView condition={isTablet != true && isMobile != true}>
-                <div
-                    className="d-flex justify-content-center"
-                >
+                <div className="d-flex justify-content-center">
                     <ReactBootstrapAlert
-                        variant='secondary' 
-                        className='px-4 position-fixed sm:display-none xs:display-none'
+                        variant="secondary"
+                        className="px-4 position-fixed sm:display-none xs:display-none"
                         style={{
-                            width: '32%'
+                            width: '32%',
                         }}
                     >
                         <Row>
-                            <HoverWithUnderlineDiv
-                                onClick={handleClick}
-                            >
+                            <HoverWithUnderlineDiv onClick={handleClick}>
                                 {stringBlock({
                                     name: SWITCH_SEARCH_LIST,
                                     value: true,
-                                    data: searchResult.filter(item => item.found).length,
+                                    data: searchResult.filter(
+                                        (item) => item.found
+                                    ).length,
                                     label: wordMap.FOUND,
                                     locale,
-                                    onClick: handleClick
+                                    onClick: handleClick,
                                 })}
                             </HoverWithUnderlineDiv>
-                            <HoverWithUnderlineDiv
-                                onClick={handleClick}
-                            >
+                            <HoverWithUnderlineDiv onClick={handleClick}>
                                 {stringBlock({
                                     name: SWITCH_SEARCH_LIST,
                                     value: false,
-                                    data: searchResult.filter(item => !item.found).length,
+                                    data: searchResult.filter(
+                                        (item) => !item.found
+                                    ).length,
                                     label: wordMap.NOT_FOUND,
                                     locale,
-                                    onClick: handleClick
+                                    onClick: handleClick,
                                 })}
                             </HoverWithUnderlineDiv>
                             <HoverDiv
@@ -118,24 +109,20 @@ export default ({
                             >
                                 {locale.texts.DETAIL}
                                 &nbsp;
-                                <i 
-                                    className={`fas ${showDetail ? 'fa-angle-up' : 'fa-angle-down'}`}
+                                <i
+                                    className={`fas ${
+                                        showDetail
+                                            ? 'fa-angle-up'
+                                            : 'fa-angle-down'
+                                    }`}
                                 />
                             </HoverDiv>
-
                         </Row>
-                        <ToggleDisplayDiv
-                            display={showDetail}
-                            className="pt-1"
-                        >
+                        <ToggleDisplayDiv display={showDetail} className="pt-1">
                             {Object.keys(searchResultMap).map((item, index) => {
                                 return (
-                                    <Row
-                                        className='text-capitalize'
-                                    >
-                                        <JustifyCenterDiv
-                                            className='mr-1'
-                                        >
+                                    <Row className="text-capitalize">
+                                        <JustifyCenterDiv className="mr-1">
                                             {locale.texts.FOUND}
                                             &nbsp;
                                             <FontBoldDiv>
@@ -145,61 +132,50 @@ export default ({
                                             {item}
                                         </JustifyCenterDiv>
                                         &nbsp;
-                                        <JustifyCenterDiv
-                                            className='mr-1'
-                                        >
+                                        <JustifyCenterDiv className="mr-1">
                                             {locale.texts.NOT_FOUND}
                                             &nbsp;
                                             <FontBoldDiv>
-                                                {searchResultMap[item][0] - searchResultMap[item][1]}
+                                                {searchResultMap[item][0] -
+                                                    searchResultMap[item][1]}
                                             </FontBoldDiv>
                                             &nbsp;
                                             {item}
                                         </JustifyCenterDiv>
                                     </Row>
                                 )
-                            })} 
+                            })}
                         </ToggleDisplayDiv>
                     </ReactBootstrapAlert>
                 </div>
-            </CustomView> 
+            </CustomView>
             <TabletView>
                 <FontBoldDiv>
-                    {searchKey ? locale.texts.FOUND : locale.texts.PLEASE_SELECT_SEARCH_OBJECT}
-                    {searchKey ? searchResult.filter(item => item.found).length : ""}
-                    {searchKey 
-                        ?   
-                            locale.texts.OBJECTS
-                        :   ""
-                    }
+                    {searchKey
+                        ? locale.texts.FOUND
+                        : locale.texts.PLEASE_SELECT_SEARCH_OBJECT}
+                    {searchKey
+                        ? searchResult.filter((item) => item.found).length
+                        : ''}
+                    {searchKey ? locale.texts.OBJECTS : ''}
                 </FontBoldDiv>
             </TabletView>
         </Fragment>
     )
-};
+}
 
-const stringBlock = ({
-    name,
-    value,
-    data,
-    label,
-    locale,
-    onClick
-}) => {
-    switch(locale.abbr) {
+const stringBlock = ({ name, value, data, label, locale, onClick }) => {
+    switch (locale.abbr) {
         case locale.supportedLocale.en.abbr:
         case locale.supportedLocale.ms.abbr:
             return (
-                <div 
-                    className='d-flex justify-content-start mr-2'
+                <div
+                    className="d-flex justify-content-start mr-2"
                     name={name}
                     value={value}
                     onClick={onClick}
                 >
-                    <FontBoldDiv
-                        name={name}
-                        value={value}
-                    >
+                    <FontBoldDiv name={name} value={value}>
                         {data}
                     </FontBoldDiv>
                     &nbsp;
@@ -211,18 +187,15 @@ const stringBlock = ({
         case locale.supportedLocale.tw.abbr:
         case locale.supportedLocale.cn.abbr:
             return (
-                <div 
-                    className='d-flex justify-content-start mr-2'
+                <div
+                    className="d-flex justify-content-start mr-2"
                     name={name}
                     value={value}
                     onClick={onClick}
                 >
                     {locale.texts[label.toUpperCase().replace(/ /g, '_')]}
                     &nbsp;
-                    <FontBoldDiv
-                        name={name}
-                        value={value}
-                    >
+                    <FontBoldDiv name={name} value={value}>
                         {data}
                     </FontBoldDiv>
                     &nbsp;

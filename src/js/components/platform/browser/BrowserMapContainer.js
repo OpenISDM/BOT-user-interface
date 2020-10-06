@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,34 +32,21 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react';
-import { 
-    AppContext
-} from '../../../context/AppContext';
+import React from 'react'
+import { AppContext } from '../../../context/AppContext'
 import config from '../../../config'
-import {
-    Nav,
-    Button 
-} from 'react-bootstrap'
+import { Nav, Button } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
-import Map from '../../presentational/Map';
-import {
-    CLEAR_SEARCH_RESULT
-} from '../../../config/wordMap';
+import Map from '../../presentational/Map'
+import { CLEAR_SEARCH_RESULT } from '../../../config/wordMap'
 
 export default class BrowserMapContainer extends React.Component {
-
     static contextType = AppContext
 
     render() {
+        const { locale, stateReducer, auth } = this.context
 
-        const { 
-            locale,
-            stateReducer,
-            auth
-        } = this.context;
-
-        const { 
+        const {
             hasSearchKey,
             geofenceConfig,
             locationMonitorConfig,
@@ -75,40 +62,42 @@ export default class BrowserMapContainer extends React.Component {
             searchKey,
             handleClick,
             getSearchKey,
-            searchResultListRef
-        } = this.props;
+            searchResultListRef,
+        } = this.props
 
-        let [{areaId}] = stateReducer
+        let [{ areaId }] = stateReducer
 
         const style = {
             mapForMobile: {
-                border: "solid 2px rgba(227, 222, 222, 0.619)",
-                padding: "5px",
+                border: 'solid 2px rgba(227, 222, 222, 0.619)',
+                padding: '5px',
             },
-           
+
             MapAndQrcode: {
-                height: '42vh'
+                height: '42vh',
             },
             qrBlock: {
                 width: '10vw',
             },
             mapBlockForTablet: {
-                border: "solid 2px rgba(227, 222, 222, 0.619)",
-                padding: "5px",
-                width: '60vw'
+                border: 'solid 2px rgba(227, 222, 222, 0.619)',
+                padding: '5px',
+                width: '60vw',
             },
             button: {
-                fontSize: "0.8rem"
-            }
+                fontSize: '0.8rem',
+            },
         }
-        
+
         return (
-            <div id="MapContainer" style={style.MapContainer} className="overflow-hidden">
-                <div 
-                    className='p-1 border-grey'
-                >
+            <div
+                id="MapContainer"
+                style={style.MapContainer}
+                className="overflow-hidden"
+            >
+                <div className="p-1 border-grey">
                     <Map
-                        pathMacAddress={this.props.pathMacAddress} 
+                        pathMacAddress={this.props.pathMacAddress}
                         hasSearchKey={hasSearchKey}
                         colorPanel={this.props.colorPanel}
                         proccessedTrackingData={proccessedTrackingData}
@@ -134,10 +123,10 @@ export default class BrowserMapContainer extends React.Component {
                 <div>
                     <Nav className="d-flex align-items-start text-capitalize bd-highlight">
                         <Nav.Item className="mt-2">
-                            <Button 
-                                variant="outline-primary" 
-                                className="mr-1 ml-2 text-capitalize" 
-                                onClick={handleClickButton} 
+                            <Button
+                                variant="outline-primary"
+                                className="mr-1 ml-2 text-capitalize"
+                                onClick={handleClickButton}
                                 name={CLEAR_SEARCH_RESULT}
                                 disabled={!this.props.hasSearchKey}
                             >
@@ -145,121 +134,153 @@ export default class BrowserMapContainer extends React.Component {
                             </Button>
                         </Nav.Item>
                         <AccessControl
-                            permission={"user:saveSearchRecord"}
+                            permission={'user:saveSearchRecord'}
                             renderNoAccess={() => null}
                         >
                             <Nav.Item className="mt-2">
-                                <Button 
-                                    variant="outline-primary" 
-                                    className="mr-1 ml-2 text-capitalize" 
-                                    onClick={handleClickButton} 
+                                <Button
+                                    variant="outline-primary"
+                                    className="mr-1 ml-2 text-capitalize"
+                                    onClick={handleClickButton}
                                     name="save"
                                     value={1}
-                                    disabled={!this.props.hasSearchKey || this.props.showPdfDownloadForm}
+                                    disabled={
+                                        !this.props.hasSearchKey ||
+                                        this.props.showPdfDownloadForm
+                                    }
                                 >
                                     {locale.texts.SAVE}
                                 </Button>
                             </Nav.Item>
                         </AccessControl>
                         <AccessControl
-                            permission={"user:toggleShowDevices"}
+                            permission={'user:toggleShowDevices'}
                             renderNoAccess={() => null}
                         >
                             <Nav.Item className="mt-2">
-                                <Button 
-                                    variant="primary" 
-                                    className="mr-1 ml-2 text-capitalize" 
-                                    onClick={handleClickButton} 
+                                <Button
+                                    variant="primary"
+                                    className="mr-1 ml-2 text-capitalize"
+                                    onClick={handleClickButton}
                                     name="searchedObjectType"
                                     value={[-1, 0]}
-                                    active={(this.props.showedObjects.includes(0) || this.props.showedObjects.includes(-1)) }
+                                    active={
+                                        this.props.showedObjects.includes(0) ||
+                                        this.props.showedObjects.includes(-1)
+                                    }
                                     disabled={
-                                        !(searchedObjectType.includes(-1) ||
-                                        searchedObjectType.includes(0))
+                                        !(
+                                            searchedObjectType.includes(-1) ||
+                                            searchedObjectType.includes(0)
+                                        )
                                     }
                                 >
-                                    {!(showedObjects.includes(0) || showedObjects.includes(-1)) 
-                                        ?   locale.texts.SHOW_DEVICES 
-                                        :   locale.texts.HIDE_DEVICES 
-                                    }
+                                    {!(
+                                        showedObjects.includes(0) ||
+                                        showedObjects.includes(-1)
+                                    )
+                                        ? locale.texts.SHOW_DEVICES
+                                        : locale.texts.HIDE_DEVICES}
                                 </Button>
                             </Nav.Item>
                         </AccessControl>
                         <AccessControl
-                            permission={"user:toggleShowResidents"}
+                            permission={'user:toggleShowResidents'}
                             renderNoAccess={() => null}
                         >
                             <Nav.Item className="mt-2">
-                                <Button 
-                                    variant="primary" 
-                                    className="mr-1 ml-2 text-capitalize" 
-                                    onClick={handleClickButton} 
+                                <Button
+                                    variant="primary"
+                                    className="mr-1 ml-2 text-capitalize"
+                                    onClick={handleClickButton}
                                     name="searchedObjectType"
                                     value={[-2, 1, 2]}
-                                    active={(this.props.showedObjects.includes(1) || this.props.showedObjects.includes(2))}
+                                    active={
+                                        this.props.showedObjects.includes(1) ||
+                                        this.props.showedObjects.includes(2)
+                                    }
                                     disabled={
-                                        !(searchedObjectType.includes(1) ||
-                                        searchedObjectType.includes(2))
+                                        !(
+                                            searchedObjectType.includes(1) ||
+                                            searchedObjectType.includes(2)
+                                        )
                                     }
                                 >
-                                    {!(showedObjects.includes(1) || showedObjects.includes(2)) 
-                                        ?   locale.texts.SHOW_RESIDENTS
-                                        :   locale.texts.HIDE_RESIDENTS 
-                                    }
+                                    {!(
+                                        showedObjects.includes(1) ||
+                                        showedObjects.includes(2)
+                                    )
+                                        ? locale.texts.SHOW_RESIDENTS
+                                        : locale.texts.HIDE_RESIDENTS}
                                 </Button>
                             </Nav.Item>
                         </AccessControl>
-                        <div
-                            className="d-flex bd-highligh ml-auto"
-                        >
+                        <div className="d-flex bd-highligh ml-auto">
                             {locationMonitorConfig &&
-                                Object.keys(locationMonitorConfig).includes(areaId.toString()) &&
-                                    <Nav.Item className="mt-2 bd-highligh">    
-                                        <Button 
-                                            variant="warning" 
-                                            className="mr-1 ml-2" 
-                                            onClick={handleClickButton} 
+                                Object.keys(locationMonitorConfig).includes(
+                                    areaId.toString()
+                                ) && (
+                                    <Nav.Item className="mt-2 bd-highligh">
+                                        <Button
+                                            variant="warning"
+                                            className="mr-1 ml-2"
+                                            onClick={handleClickButton}
                                             name="location"
-                                            value={locationMonitorConfig[areaId].enable}
-                                            active={!locationMonitorConfig[areaId].enable}                                                            
-                                        >
-                                            {locationMonitorConfig[areaId].enable 
-                                                ? locale.texts.LOCATION_MONITOR_ON 
-                                                : locale.texts.LOCATION_MONITOR_OFF
+                                            value={
+                                                locationMonitorConfig[areaId]
+                                                    .enable
                                             }
+                                            active={
+                                                !locationMonitorConfig[areaId]
+                                                    .enable
+                                            }
+                                        >
+                                            {locationMonitorConfig[areaId]
+                                                .enable
+                                                ? locale.texts
+                                                      .LOCATION_MONITOR_ON
+                                                : locale.texts
+                                                      .LOCATION_MONITOR_OFF}
                                         </Button>
-                                </Nav.Item>                              
-                            }
+                                    </Nav.Item>
+                                )}
                             {geofenceConfig &&
-                                Object.keys(geofenceConfig).includes(areaId.toString()) &&
+                                Object.keys(geofenceConfig).includes(
+                                    areaId.toString()
+                                ) && (
                                     <div className="d-flex">
-                                        <Nav.Item className="mt-2 bd-highligh">    
-                                            <Button 
-                                                variant="warning" 
-                                                className="mr-1 ml-2" 
-                                                onClick={handleClickButton} 
+                                        <Nav.Item className="mt-2 bd-highligh">
+                                            <Button
+                                                variant="warning"
+                                                className="mr-1 ml-2"
+                                                onClick={handleClickButton}
                                                 name="geofence"
-                                                value={geofenceConfig[areaId].enable}
-                                                active={!geofenceConfig[areaId].enable}                                                            
-                                            >
-                                                {geofenceConfig[areaId].enable 
-                                                    ? locale.texts.FENCE_ON 
-                                                    : locale.texts.FENCE_OFF
+                                                value={
+                                                    geofenceConfig[areaId]
+                                                        .enable
                                                 }
+                                                active={
+                                                    !geofenceConfig[areaId]
+                                                        .enable
+                                                }
+                                            >
+                                                {geofenceConfig[areaId].enable
+                                                    ? locale.texts.FENCE_ON
+                                                    : locale.texts.FENCE_OFF}
                                             </Button>
                                         </Nav.Item>
                                         <Nav.Item className="mt-2">
-                                            <Button 
-                                                variant="outline-primary" 
-                                                className="mr-1 ml-2" 
-                                                onClick={handleClickButton} 
+                                            <Button
+                                                variant="outline-primary"
+                                                className="mr-1 ml-2"
+                                                onClick={handleClickButton}
                                                 name="clearAlerts"
                                             >
                                                 {locale.texts.CLEAR_ALERTS}
                                             </Button>
                                         </Nav.Item>
                                     </div>
-                            }
+                                )}
                         </div>
                     </Nav>
                 </div>

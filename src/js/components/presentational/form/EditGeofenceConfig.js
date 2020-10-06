@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,49 +32,38 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { 
-    Modal, 
-    Button, 
-    Row, 
-    Col 
-} from 'react-bootstrap'
-import Select from 'react-select';
-import { 
-    Formik,
-    Field, 
-    Form 
-} from 'formik';
-import * as Yup from 'yup';
+import React from 'react'
+import { Modal, Button, Row, Col } from 'react-bootstrap'
+import Select from 'react-select'
+import { Formik, Field, Form } from 'formik'
+import * as Yup from 'yup'
 import DateTimePicker from '../../container/DateTimePicker'
-import { AppContext } from '../../../context/AppContext';
+import { AppContext } from '../../../context/AppContext'
 import Switcher from '../../container/Switcher'
-import styleConfig from '../../../config/styleConfig';
-import LocaleContext from '../../../context/LocaleContext';
+import styleConfig from '../../../config/styleConfig'
+import LocaleContext from '../../../context/LocaleContext'
 import FormikFormGroup from '../FormikFormGroup'
-import RadioButtonGroup from '../../container/RadioButtonGroup';
+import RadioButtonGroup from '../../container/RadioButtonGroup'
 import RadioButton from '../RadioButton'
 
 let style = {
     icon: {
         minus: {
-           color: 'red',
-           cursor: 'pointer'
+            color: 'red',
+            cursor: 'pointer',
         },
         add: {
             color: 'rgb(0, 123, 255, 0.6)',
-            cursor: 'pointer'
-        }, 
+            cursor: 'pointer',
+        },
     },
     error: {
-        color: "#dc3545"
-    }
-
+        color: '#dc3545',
+    },
 }
-let lbeacon_error={
-    f:"",
-    p:"",
+let lbeacon_error = {
+    f: '',
+    p: '',
 }
 
 const EditGeofenceConfig = ({
@@ -86,116 +75,140 @@ const EditGeofenceConfig = ({
     title,
     handleSubmit,
     type,
-    lbeaconsTable
+    lbeaconsTable,
 }) => {
-
     let appContext = React.useContext(AppContext)
 
-    let {
-        auth,
-        locale
-    } = appContext
-  
+    let { auth, locale } = appContext
+
     areaOptions = auth.user.areas_id
-        .filter(item => { 
+        .filter((item) => {
             return areaOptions[item]
         })
-        .map(item => { 
+        .map((item) => {
             return {
                 value: areaOptions[item],
                 label: locale.texts[areaOptions[item]],
-                id: item
-            }        
-        }) 
+                id: item,
+            }
+        })
 
- 
     return (
-       
-        <Modal  
-            show={show} 
-            onHide={handleClose} 
-            size="md" 
-            id='EditGeofenceConfig' 
+        <Modal
+            show={show}
+            onHide={handleClose}
+            size="md"
+            id="EditGeofenceConfig"
             enforceFocus={false}
-            className='text-capitalize'
-
+            className="text-capitalize"
         >
-            <Modal.Header 
-                closeButton 
-            >
+            <Modal.Header closeButton>
                 {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-            </Modal.Header > 
-            
+            </Modal.Header>
+
             <Modal.Body>
-         
                 <Formik
                     validateOnChange={false}
                     validateOnBlur={false}
-                    initialValues = {{
+                    initialValues={{
                         enable: selectedData ? selectedData.enable : 1,
                         geofenceName: selectedData ? selectedData.name : '',
                         area: selectedData ? selectedData.area : '',
                         start_time: selectedData ? selectedData.start_time : '',
                         end_time: selectedData ? selectedData.end_time : '',
-                        p_lbeacon: selectedData ? selectedData.parsePerimeters.lbeacons : [],
-                        f_lbeacon: selectedData ? selectedData.parseFences.lbeacons : [],
-                        p_rssi: selectedData ? selectedData.parsePerimeters.rssi : '',
-                        f_rssi: selectedData ? selectedData.parseFences.rssi : '',
+                        p_lbeacon: selectedData
+                            ? selectedData.parsePerimeters.lbeacons
+                            : [],
+                        f_lbeacon: selectedData
+                            ? selectedData.parseFences.lbeacons
+                            : [],
+                        p_rssi: selectedData
+                            ? selectedData.parsePerimeters.rssi
+                            : '',
+                        f_rssi: selectedData
+                            ? selectedData.parseFences.rssi
+                            : '',
                         selected_p_lbeacon: null,
                         selected_f_lbeacon: null,
-                        isGlobal: selectedData ? selectedData.is_global_fence : 1,  
+                        isGlobal: selectedData
+                            ? selectedData.is_global_fence
+                            : 1,
                     }}
-                    
-                    validationSchema = {
-                        Yup.object().shape({ 
-                            geofenceName: Yup.string().required(locale.texts.NAME_IS_REQUIRED),   
-                            p_rssi: Yup.string()
+                    validationSchema={Yup.object().shape({
+                        geofenceName: Yup.string().required(
+                            locale.texts.NAME_IS_REQUIRED
+                        ),
+                        p_rssi: Yup.string()
                             .required(locale.texts.ENTER_THE_RSSI)
                             .test(
-                                'p_rssi', 
+                                'p_rssi',
                                 locale.texts.MUST_BE_NEGATIVE_NUMBER,
-                                value => { if (value < 0) return true   }
+                                (value) => {
+                                    if (value < 0) return true
+                                }
                             ),
-                            f_rssi: Yup.string()
+                        f_rssi: Yup.string()
                             .required(locale.texts.ENTER_THE_RSSI)
                             .test(
                                 'f_rssi',
                                 locale.texts.MUST_BE_NEGATIVE_NUMBER,
-                                value => { if (value < 0) return true   }
-                            ) ,  
-                            start_time:  Yup.string().required(locale.texts.NAME_IS_REQUIRED),   
-                            end_time:  Yup.string().required(locale.texts.NAME_IS_REQUIRED),   
-                            area:  Yup.string().required(locale.texts.AREA_IS_REQUIRED),    
-                            p_lbeacon:Yup.array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
-                            f_lbeacon:Yup.array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID)
+                                (value) => {
+                                    if (value < 0) return true
+                                }
+                            ),
+                        start_time: Yup.string().required(
+                            locale.texts.NAME_IS_REQUIRED
+                        ),
+                        end_time: Yup.string().required(
+                            locale.texts.NAME_IS_REQUIRED
+                        ),
+                        area: Yup.string().required(
+                            locale.texts.AREA_IS_REQUIRED
+                        ),
+                        p_lbeacon: Yup.array().required(
+                            locale.texts.ALEAST_CHOOSE_ONE_UUID
+                        ),
+                        f_lbeacon: Yup.array().required(
+                            locale.texts.ALEAST_CHOOSE_ONE_UUID
+                        ),
                     })}
-                    
-                    onSubmit={(values, { setStatus, setSubmitting },error ) => { 
+                    onSubmit={(values, { setStatus, setSubmitting }, error) => {
                         let monitorConfigPackage = {
                             ...values,
                             id: isEdited ? selectedData.id : '',
                             type: type,
-                            perimeters: transferTypeToString(values.p_lbeacon, values.p_rssi),
-                            fences: transferTypeToString(values.f_lbeacon, values.f_rssi),
+                            perimeters: transferTypeToString(
+                                values.p_lbeacon,
+                                values.p_rssi
+                            ),
+                            fences: transferTypeToString(
+                                values.f_lbeacon,
+                                values.f_rssi
+                            ),
                             area_id: values.area.id,
                             action: isEdited ? 'set' : 'add',
-                            is_global_fence: values.isGlobal
+                            is_global_fence: values.isGlobal,
                         }
                         handleSubmit(monitorConfigPackage)
                     }}
-
-                    render={({ values, errors, status, touched, isSubmitting, setFieldValue }) => (
-                       
-                        <Form>    
-                          {(lbeacon_error.f = errors.f_lbeacon) && ''} 
-                          {(lbeacon_error.p = errors.p_lbeacon) && ''} 
-                            <Row className="d-flex align-items-center"> 
+                    render={({
+                        values,
+                        errors,
+                        status,
+                        touched,
+                        isSubmitting,
+                        setFieldValue,
+                    }) => (
+                        <Form>
+                            {(lbeacon_error.f = errors.f_lbeacon) && ''}
+                            {(lbeacon_error.p = errors.p_lbeacon) && ''}
+                            <Row className="d-flex align-items-center">
                                 <Col>
                                     <Switcher
                                         leftLabel="on"
                                         rightLabel="off"
-                                        onChange={e => {
-                                            let { value }= e.target
+                                        onChange={(e) => {
+                                            let { value } = e.target
                                             setFieldValue('enable', value)
                                         }}
                                         status={values.enable}
@@ -203,7 +216,7 @@ const EditGeofenceConfig = ({
                                     />
                                 </Col>
                                 <Col>
-                                    <FormikFormGroup 
+                                    <FormikFormGroup
                                         name="isGlobal"
                                         label={locale.texts.IS_GLOBAL_FENCE}
                                         errors={errors.isGlobal}
@@ -211,10 +224,12 @@ const EditGeofenceConfig = ({
                                         placeholder=""
                                         component={() => (
                                             <RadioButtonGroup
-                                                value={parseInt(values.isGlobal)}
+                                                value={parseInt(
+                                                    values.isGlobal
+                                                )}
                                             >
                                                 <div className="d-flex justify-content-start form-group my-1">
-                                                    <Field  
+                                                    <Field
                                                         component={RadioButton}
                                                         name="isGlobal"
                                                         id={1}
@@ -226,18 +241,17 @@ const EditGeofenceConfig = ({
                                                         id={0}
                                                         label={locale.texts.NO}
                                                     />
-        
                                                 </div>
-                                            </RadioButtonGroup>  
+                                            </RadioButtonGroup>
                                         )}
-                                    /> 
+                                    />
                                 </Col>
                             </Row>
 
-                            <hr/>
+                            <hr />
                             <Row noGutters>
                                 <Col>
-                                    <FormikFormGroup 
+                                    <FormikFormGroup
                                         type="text"
                                         name="geofenceName"
                                         label={locale.texts.NAME}
@@ -247,22 +261,27 @@ const EditGeofenceConfig = ({
                                     />
                                 </Col>
                                 <Col>
-                                    <FormikFormGroup 
+                                    <FormikFormGroup
                                         label={locale.texts.AREA}
                                         error={errors.area}
                                         touched={touched.area}
                                         placeholder=""
                                         component={() => (
                                             <Select
-                                                placeholder={locale.texts.SELECT_AREA}
-                                                name='area'
+                                                placeholder={
+                                                    locale.texts.SELECT_AREA
+                                                }
+                                                name="area"
                                                 options={areaOptions}
                                                 value={values.area}
                                                 styles={styleConfig.reactSelect}
                                                 isDisabled={isEdited}
-                                                onChange={value => setFieldValue('area', value)} 
+                                                onChange={(value) =>
+                                                    setFieldValue('area', value)
+                                                }
                                                 components={{
-                                                    IndicatorSeparator: () => null,
+                                                    IndicatorSeparator: () =>
+                                                        null,
                                                 }}
                                             />
                                         )}
@@ -271,38 +290,52 @@ const EditGeofenceConfig = ({
                             </Row>
                             <Row noGutters>
                                 <Col>
-                                    <small  className="form-text text-muted">{locale.texts.ENABLE_START_TIME}</small>
+                                    <small className="form-text text-muted">
+                                        {locale.texts.ENABLE_START_TIME}
+                                    </small>
                                     <DateTimePicker
                                         value={values.start_time}
-                                        getValue={value => {
-                                            setFieldValue("start_time", value.value)
-                                        }} 
+                                        getValue={(value) => {
+                                            setFieldValue(
+                                                'start_time',
+                                                value.value
+                                            )
+                                        }}
                                         name="start_time"
                                         start="0"
-                                        end="23" 
-                                        error = {errors.start_time}
-                                        error_tip = {locale.texts.START_TIME_IS_REQUIRED}
+                                        end="23"
+                                        error={errors.start_time}
+                                        error_tip={
+                                            locale.texts.START_TIME_IS_REQUIRED
+                                        }
                                     />
                                 </Col>
                                 <Col>
-                                    <small  className="form-text text-muted">{locale.texts.ENABLE_END_TIME}</small>
+                                    <small className="form-text text-muted">
+                                        {locale.texts.ENABLE_END_TIME}
+                                    </small>
                                     <DateTimePicker
                                         value={values.end_time}
-                                        getValue={value => {
-                                            setFieldValue("end_time", value.value)
+                                        getValue={(value) => {
+                                            setFieldValue(
+                                                'end_time',
+                                                value.value
+                                            )
                                         }}
                                         name="end_time"
                                         start="0"
                                         end="24"
-                                        error = {errors.end_time}
-                                        error_tip = {locale.texts.END_TIME_IS_REQUIRED}
+                                        error={errors.end_time}
+                                        error_tip={
+                                            locale.texts.END_TIME_IS_REQUIRED
+                                        }
                                     />
                                 </Col>
                             </Row>
-                            <hr/>
-                            <TypeGroup 
-                                type='perimeters'
-                                abbr='p'
+                            <hr />
+                            <TypeGroup
+                                type="perimeters"
+                                abbr="p"
                                 title={locale.texts.PERIMETERS_GROUP}
                                 repository={values.p_lbeacon}
                                 values={values}
@@ -310,30 +343,30 @@ const EditGeofenceConfig = ({
                                 setFieldValue={setFieldValue}
                                 parseLbeaconsGroup={parseLbeaconsGroup}
                                 lbeaconsTable={lbeaconsTable}
-                            /> 
+                            />
 
-                            <hr/>
-                            <TypeGroup 
-                                type='fences'
-                                abbr='f'
+                            <hr />
+                            <TypeGroup
+                                type="fences"
+                                abbr="f"
                                 title={locale.texts.FENCES_GROUP}
                                 repository={values.f_lbeacon}
                                 values={values}
                                 error={errors}
                                 setFieldValue={setFieldValue}
                                 parseLbeaconsGroup={parseLbeaconsGroup}
-                                lbeaconsTable={lbeaconsTable} 
+                                lbeaconsTable={lbeaconsTable}
                             />
                             <Modal.Footer>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={handleClose}
                                 >
                                     {locale.texts.CANCEL}
                                 </Button>
-                                <Button 
-                                    type="submit" 
-                                    variant="primary" 
+                                <Button
+                                    type="submit"
+                                    variant="primary"
                                     disabled={isSubmitting}
                                 >
                                     {locale.texts.SAVE}
@@ -344,22 +377,17 @@ const EditGeofenceConfig = ({
                 />
             </Modal.Body>
         </Modal>
-    );
-
+    )
 }
-  
-export default EditGeofenceConfig;
- 
+
+export default EditGeofenceConfig
+
 const parseLbeaconsGroup = (type, index) => {
     return [...type.slice(0, index), ...type.slice(index + 1)]
 }
 
 const transferTypeToString = (typeGroup, rssi) => {
-    return [
-        typeGroup.length,
-        ...typeGroup,
-        rssi
-    ].join(',')+','        
+    return [typeGroup.length, ...typeGroup, rssi].join(',') + ','
 }
 
 const TypeGroup = ({
@@ -371,54 +399,45 @@ const TypeGroup = ({
     error,
     setFieldValue,
     parseLbeaconsGroup,
-    lbeaconsTable
-}) => { 
-    const locale = React.useContext(LocaleContext);
- 
+    lbeaconsTable,
+}) => {
+    const locale = React.useContext(LocaleContext)
 
-
-    let lbeaconOptions_p = lbeaconsTable.filter(item => {  
-
-        let uuid = item.uuid.replace(/-/g, '')
-        return !values.p_lbeacon.includes(uuid) 
-
-    })
-    .reduce((options, item, index) => {
-        let uuid = item.uuid.replace(/-/g, '')
-        options.push({
-            id: item.id,
-            value: uuid,
-            label: `${item.description}[${uuid}]`
+    let lbeaconOptions_p = lbeaconsTable
+        .filter((item) => {
+            let uuid = item.uuid.replace(/-/g, '')
+            return !values.p_lbeacon.includes(uuid)
         })
-        return options
-    }, [])
+        .reduce((options, item, index) => {
+            let uuid = item.uuid.replace(/-/g, '')
+            options.push({
+                id: item.id,
+                value: uuid,
+                label: `${item.description}[${uuid}]`,
+            })
+            return options
+        }, [])
 
-
-    let lbeaconOptions_f = lbeaconsTable.filter(item => {  
-        
-        let uuid = item.uuid.replace(/-/g, '')
-        return !values.f_lbeacon.includes(uuid)
-
-    })
-    .reduce((options, item, index) => {
-        let uuid = item.uuid.replace(/-/g, '')
-        options.push({
-            id: item.id,
-            value: uuid,
-            label: `${item.description}[${uuid}]`
+    let lbeaconOptions_f = lbeaconsTable
+        .filter((item) => {
+            let uuid = item.uuid.replace(/-/g, '')
+            return !values.f_lbeacon.includes(uuid)
         })
-        return options
-    }, [])
+        .reduce((options, item, index) => {
+            let uuid = item.uuid.replace(/-/g, '')
+            options.push({
+                id: item.id,
+                value: uuid,
+                label: `${item.description}[${uuid}]`,
+            })
+            return options
+        }, [])
 
-
-    let typeRssi = `${abbr}_rssi` 
+    let typeRssi = `${abbr}_rssi`
     return (
-        
-        <div className="form-group"> 
-            <small className="form-text">
-                {title}
-            </small>
-            <FormikFormGroup 
+        <div className="form-group">
+            <small className="form-text">{title}</small>
+            <FormikFormGroup
                 type="text"
                 name={typeRssi}
                 label={locale.texts.RSSI}
@@ -427,49 +446,52 @@ const TypeGroup = ({
                 placeholder=""
             />
 
-            <small className="form-text text-muted">
-                UUID
-            </small>
-            {repository.map((item, index) => { 
-                return (
-                    item == 'undefined,' ? null :
-                        <Row noGutters className="py-1" key={index}>
-                            <Col 
-                                lg={1}
-                                className="d-flex align-items-center justify-content-center"
-                            >
-                                <i 
-                                    className="fas fa-minus-circle"
-                                    style={style.icon.minus}
-                                    type={type}
-                                    name='remove'
-                                    value={index}
-                                    onClick={() => {
-                                        let typeGroup = `${abbr}_lbeacon`
-                                        let value = parseLbeaconsGroup(values[typeGroup], index)
-                                        setFieldValue(typeGroup, value)
-                                    }}
-                                ></i>  
-                            </Col>
-                            <Col lg={11} className="pr-1">
-                                <Field  
-                                    name={`p-${index + 1}-uuid`} 
-                                    type="text" 
-                                    className={'form-control' + (error.name ? ' is-invalid' : '')} 
-                                    placeholder={item}
-                                    value={item}
-                                    disabled
-                                />  
-                            </Col> 
-                        </Row>
+            <small className="form-text text-muted">UUID</small>
+            {repository.map((item, index) => {
+                return item == 'undefined,' ? null : (
+                    <Row noGutters className="py-1" key={index}>
+                        <Col
+                            lg={1}
+                            className="d-flex align-items-center justify-content-center"
+                        >
+                            <i
+                                className="fas fa-minus-circle"
+                                style={style.icon.minus}
+                                type={type}
+                                name="remove"
+                                value={index}
+                                onClick={() => {
+                                    let typeGroup = `${abbr}_lbeacon`
+                                    let value = parseLbeaconsGroup(
+                                        values[typeGroup],
+                                        index
+                                    )
+                                    setFieldValue(typeGroup, value)
+                                }}
+                            ></i>
+                        </Col>
+                        <Col lg={11} className="pr-1">
+                            <Field
+                                name={`p-${index + 1}-uuid`}
+                                type="text"
+                                className={
+                                    'form-control' +
+                                    (error.name ? ' is-invalid' : '')
+                                }
+                                placeholder={item}
+                                value={item}
+                                disabled
+                            />
+                        </Col>
+                    </Row>
                 )
             })}
             <Row noGutters className="py-1">
-                <Col 
+                <Col
                     lg={1}
                     className="d-flex align-items-center justify-content-center"
                 >
-                    {/* <i 
+                    {/* <i
                         className='fa fa-plus'
                         name='add'
                         style={style.icon.add}
@@ -477,28 +499,29 @@ const TypeGroup = ({
                         disabled={true}
                         onClick={(e) => {
                             let typeGroup = `${abbr}_lbeacon`
-                            if (!values[`selected_${typeGroup}`]) return 
+                            if (!values[`selected_${typeGroup}`]) return
                             let group = values[typeGroup]
                             group.push(values[`selected_${typeGroup}`].value)
                             setFieldValue(typeGroup, group)
-                            setFieldValue(`selected_${abbr}_lbeacon`, null) 
+                            setFieldValue(`selected_${abbr}_lbeacon`, null)
                         }}
                     >
                     </i> */}
                 </Col>
-                
-                <Col lg={11} className="pr-1">  
+
+                <Col lg={11} className="pr-1">
                     <Select
                         placeholder={locale.texts.SELECT_LBEACON}
                         name={`${abbr}_lbeacon`}
-                        options={abbr == 'f' ? lbeaconOptions_f : lbeaconOptions_p} 
-                        value={values[`selected_${abbr}_lbeacon`]} 
-                        styles={styleConfig.reactSelect} 
-
-                        onChange={value => {  
+                        options={
+                            abbr == 'f' ? lbeaconOptions_f : lbeaconOptions_p
+                        }
+                        value={values[`selected_${abbr}_lbeacon`]}
+                        styles={styleConfig.reactSelect}
+                        onChange={(value) => {
                             setFieldValue(`selected_${abbr}_lbeacon`, value)
 
-                            let typeGroup = `${abbr}_lbeacon` 
+                            let typeGroup = `${abbr}_lbeacon`
                             //  if (!values[`selected_${typeGroup}`]) return
                             let group = values[typeGroup]
                             group.push(value.value)
@@ -506,25 +529,22 @@ const TypeGroup = ({
                             // group.push(values[`selected_${typeGroup}`].value)
                             // console.log(group)
                             setFieldValue(typeGroup, group)
-                            setFieldValue(`selected_${abbr}_lbeacon`, null)  
-                              
+                            setFieldValue(`selected_${abbr}_lbeacon`, null)
                         }}
-
                         components={{
                             IndicatorSeparator: () => null,
                         }}
-                    />   
-                {(`lbeacon_error.${abbr}` )&& 
-                    <small 
-                        className="form-text text-capitaliz"
-                        style={style.error}
-                    >
-                    {abbr == "f" ? lbeacon_error.f  : lbeacon_error.p}
-                    </small>
-                }
-                </Col> 
- 
+                    />
+                    {`lbeacon_error.${abbr}` && (
+                        <small
+                            className="form-text text-capitaliz"
+                            style={style.error}
+                        >
+                            {abbr == 'f' ? lbeacon_error.f : lbeacon_error.p}
+                        </small>
+                    )}
+                </Col>
             </Row>
         </div>
     )
-} 
+}

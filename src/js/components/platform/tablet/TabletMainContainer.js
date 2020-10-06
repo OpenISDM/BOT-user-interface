@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,17 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import React from 'react'
+import SearchResultList from '../../presentational/SearchResultList'
+import SearchContainer from '../../container/SearchContainer'
+import { Row, Col } from 'react-bootstrap'
+import AuthenticationContext from '../../../context/AuthenticationContext'
 
-import React from 'react';
-import SearchResultList from '../../presentational/SearchResultList';
-import SearchContainer from '../../container/SearchContainer';
-import {
-    Row,
-    Col
-} from 'react-bootstrap';
-import AuthenticationContext from '../../../context/AuthenticationContext';
-
-const TabletMainContainer = ({  
+const TabletMainContainer = ({
     handleClearButton,
     getSearchKey,
     setMonitor,
@@ -65,11 +61,10 @@ const TabletMainContainer = ({
     hasSearchKey,
     setShowedObjects,
     pathMacAddress,
-    currentAreaId
+    currentAreaId,
 }) => {
+    let auth = React.useContext(AuthenticationContext)
 
-    let auth = React.useContext(AuthenticationContext);
-    
     const style = {
         noResultDiv: {
             color: 'grey',
@@ -77,18 +72,25 @@ const TabletMainContainer = ({
         },
         titleText: {
             color: 'rgb(80, 80, 80, 0.9)',
-        }, 
-
+        },
     }
 
     return (
-        <div id="page-wrap" className='d-flex flex-column w-100' style={{height: "90vh"}}>
-            <div id="mainContainer" className='d-flex flex-row h-100 w-100'>
-                <div className='d-flex flex-column' style={style.MapAndResult}>
+        <div
+            id="page-wrap"
+            className="d-flex flex-column w-100"
+            style={{ height: '90vh' }}
+        >
+            <div id="mainContainer" className="d-flex flex-row h-100 w-100">
+                <div className="d-flex flex-column" style={style.MapAndResult}>
                     <div className="d-flex" style={style.MapAndQrcode}>
                         <MapContainer
-                            pathMacAddress={pathMacAddress} 
-                            proccessedTrackingData={proccessedTrackingData.length === 0 ? trackingData : proccessedTrackingData}
+                            pathMacAddress={pathMacAddress}
+                            proccessedTrackingData={
+                                proccessedTrackingData.length === 0
+                                    ? trackingData
+                                    : proccessedTrackingData
+                            }
                             hasSearchKey={hasSearchKey}
                             searchResult={searchResult}
                             handleClearButton={handleClearButton}
@@ -108,9 +110,13 @@ const TabletMainContainer = ({
                         />
                     </div>
 
-                    <div id="searchResult" className="d-flex" style={{justifyContent: 'center'}}>
+                    <div
+                        id="searchResult"
+                        className="d-flex"
+                        style={{ justifyContent: 'center' }}
+                    >
                         <SearchResultList
-                            searchResult={searchResult} 
+                            searchResult={searchResult}
                             searchKey={searchKey}
                             highlightSearchPanel={highlightSearchPanel}
                             handleShowPath={handleShowPath}
@@ -118,7 +124,11 @@ const TabletMainContainer = ({
                         />
                     </div>
                 </div>
-                <div id='searchPanel' className="h-100" style={style.searchPanelForTablet}>
+                <div
+                    id="searchPanel"
+                    className="h-100"
+                    style={style.searchPanelForTablet}
+                >
                     <SearchContainer
                         hasSearchKey={hasSearchKey}
                         clearSearchResult={clearSearchResult}

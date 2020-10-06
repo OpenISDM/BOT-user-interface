@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -33,7 +33,7 @@
 */
 
 const getGeofenceConfig = (areaId) => {
-	return `
+    return `
 		SELECT
 			*
 		FROM geo_fence_config
@@ -41,33 +41,29 @@ const getGeofenceConfig = (areaId) => {
 	;`
 }
 
-const deleteMonitorConfig = monitorConfigPackage => {
-	let {
-		type,
-		id
-	} = monitorConfigPackage  
-	return `
+const deleteMonitorConfig = (monitorConfigPackage) => {
+    let { type, id } = monitorConfigPackage
+    return `
 		DELETE FROM geo_fence_config
-		WHERE id IN (${id.map(id => `'${id}'`)})
+		WHERE id IN (${id.map((id) => `'${id}'`)})
 	`
 }
 
+const addGeofenceConfig = (monitorConfigPackage) => {
+    let {
+        type,
+        id,
+        name,
+        start_time,
+        end_time,
+        enable,
+        perimeters,
+        fences,
+        area_id,
+        is_global_fence,
+    } = monitorConfigPackage
 
-const addGeofenceConfig = (monitorConfigPackage) => { 
-	let {
-		type,
-		id,
-		name,
-		start_time,
-		end_time,
-		enable,
-		perimeters,
-		fences,
-		area_id,
-		is_global_fence
-	} = monitorConfigPackage
-
-	let text = `
+    let text = `
 		INSERT INTO ${type}
 			(
 				name,
@@ -79,7 +75,7 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 				area_id,
 				is_global_fence
 			)
-		VALUES 
+		VALUES
 			(
 				$1,
 				$2,
@@ -92,40 +88,40 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 			)
 	`
 
-	let values = [
-		name,
-		start_time,
-		end_time,
-		enable,
-		perimeters,
-		fences,
-		area_id,
-		is_global_fence
-	]
+    let values = [
+        name,
+        start_time,
+        end_time,
+        enable,
+        perimeters,
+        fences,
+        area_id,
+        is_global_fence,
+    ]
 
-	return {
-		text, 
-		values
-	}
+    return {
+        text,
+        values,
+    }
 }
 
 const setGeofenceConfig = (monitorConfigPackage) => {
-	let {
-		type,
-		id,
-		name,
-		start_time,
-		end_time,
-		enable,
-		perimeters,
-		fences,
-		area_id,
-		is_global_fence
-	} = monitorConfigPackage
+    let {
+        type,
+        id,
+        name,
+        start_time,
+        end_time,
+        enable,
+        perimeters,
+        fences,
+        area_id,
+        is_global_fence,
+    } = monitorConfigPackage
 
-	let text = `
+    let text = `
 		UPDATE geo_fence_config
-		SET 
+		SET
 			name = $2,
 			area_id = $3,
 			start_time = $4,
@@ -136,29 +132,29 @@ const setGeofenceConfig = (monitorConfigPackage) => {
 			is_global_fence = $9
 		WHERE id = $1;
 	`
-	let values = [
-		id,
-		name,
-		area_id,
-		start_time,
-		end_time,
-		enable,
-		perimeters,
-		fences,
-		is_global_fence
-	]
+    let values = [
+        id,
+        name,
+        area_id,
+        start_time,
+        end_time,
+        enable,
+        perimeters,
+        fences,
+        is_global_fence,
+    ]
 
-	let query = {
-		text,
-		values
-	}
+    let query = {
+        text,
+        values,
+    }
 
-	return query
+    return query
 }
 
 module.exports = {
     getGeofenceConfig,
     deleteMonitorConfig,
     addGeofenceConfig,
-    setGeofenceConfig
+    setGeofenceConfig,
 }

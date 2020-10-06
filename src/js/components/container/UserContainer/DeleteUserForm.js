@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,72 +32,54 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { 
-    Modal, 
-    Button, 
-} from 'react-bootstrap';
-import { 
-    Formik, 
-    Form, 
-} from 'formik';
-import Select from 'react-select';
-import * as Yup from 'yup';
-import axios from 'axios';
-import dataSrc from '../../../dataSrc';
+import React from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import { Formik, Form } from 'formik'
+import Select from 'react-select'
+import * as Yup from 'yup'
+import axios from 'axios'
+import dataSrc from '../../../dataSrc'
 import FormikFormGroup from '../../presentational/FormikFormGroup'
-import styleConfig from '../../../config/styleConfig';
-import LocaleContext from '../../../context/LocaleContext';
+import styleConfig from '../../../config/styleConfig'
+import LocaleContext from '../../../context/LocaleContext'
 import messageGenerator from '../../../helper/messageGenerator'
-const DeleteUserForm = ({
-    show,
-    title,
-    data,
-    handleClose,
-    handleSubmit
-}) => {
+const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
     let locale = React.useContext(LocaleContext)
 
-    const userOptions = data.map(item => {
+    const userOptions = data.map((item) => {
         return {
             value: item.id,
-            label: item.name
-        };
+            label: item.name,
+        }
     })
 
     return (
-        <Modal 
-            show={show} 
-            size="sm" 
-            onHide={handleClose}
-        >
-            <Modal.Header 
-                closeButton 
-            >
-                {title}
-            </Modal.Header >
+        <Modal show={show} size="sm" onHide={handleClose}>
+            <Modal.Header closeButton>{title}</Modal.Header>
 
             <Modal.Body>
-                <Formik                    
-                    initialValues = {{
-                        name: ''
+                <Formik
+                    initialValues={{
+                        name: '',
                     }}
-
-                    validationSchema = {
-                        Yup.object().shape({
-                            name: Yup.string().required(locale.texts.NAME_IS_REQUIRED)
-                        })
-                    }
-
+                    validationSchema={Yup.object().shape({
+                        name: Yup.string().required(
+                            locale.texts.NAME_IS_REQUIRED
+                        ),
+                    })}
                     onSubmit={(values, { setStatus, setSubmitting }) => {
                         handleSubmit(values)
                     }}
-
-                    render={({ values, errors, status, touched, isSubmitting, setFieldValue }) => (
-                      
+                    render={({
+                        values,
+                        errors,
+                        status,
+                        touched,
+                        isSubmitting,
+                        setFieldValue,
+                    }) => (
                         <Form>
-                            <FormikFormGroup 
+                            <FormikFormGroup
                                 type="text"
                                 name="nameName"
                                 label={locale.texts.DELETE}
@@ -106,29 +88,31 @@ const DeleteUserForm = ({
                                 placeholder={locale.texts.USERNAME}
                                 component={() => (
                                     <Select
-                                        placeholder = {locale.texts.SELECT_USER}
+                                        placeholder={locale.texts.SELECT_USER}
                                         name="name"
-                                        value = {values.name}
-                                        onChange={value => setFieldValue("name", value)}
+                                        value={values.name}
+                                        onChange={(value) =>
+                                            setFieldValue('name', value)
+                                        }
                                         options={userOptions}
                                         styles={styleConfig.reactSelect}
                                         components={{
-                                            IndicatorSeparator: () => null
+                                            IndicatorSeparator: () => null,
                                         }}
                                     />
                                 )}
                             />
 
                             <Modal.Footer>
-                                <Button 
-                                    variant="outline-secondary" 
+                                <Button
+                                    variant="outline-secondary"
                                     onClick={handleClose}
                                 >
                                     {locale.texts.CANCEL}
                                 </Button>
-                                <Button 
-                                    type="submit" 
-                                    variant="primary" 
+                                <Button
+                                    type="submit"
+                                    variant="primary"
                                     disabled={isSubmitting}
                                 >
                                     {locale.texts.DELETE}

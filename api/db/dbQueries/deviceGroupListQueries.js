@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -48,77 +48,67 @@ const addDeviceGroup = (name, area_id) => {
         ) VALUES (
             $1,
             $2
-        ) 
-        
+        )
+
         RETURNING id
     `
 
-    const values = [
-        name,
-        area_id
-    ]
+    const values = [name, area_id]
 
     const query = {
         text,
-        values
+        values,
     }
 
     return query
 }
 
 const modifyDeviceGroup = (groupId, mode, option, item_id) => {
-
     var query = null
 
     if (mode === 0) {
-
         var itemACN = option
         query = `
-            UPDATE device_group_list 
-            SET items = array_append(items, '${itemACN}') 
+            UPDATE device_group_list
+            SET items = array_append(items, '${itemACN}')
             WHERE id = ${groupId};
 
-            UPDATE object_table 
+            UPDATE object_table
             SET list_id = ${groupId}
             WHERE id = ${item_id}
         `
-
-    } else if(mode == 1){
-
+    } else if (mode == 1) {
         var itemACN = option
         query = `
-            UPDATE device_group_list 
-            SET items = array_remove(items, '${itemACN}') 
+            UPDATE device_group_list
+            SET items = array_remove(items, '${itemACN}')
             WHERE id=${groupId};
 
-            UPDATE object_table 
+            UPDATE object_table
             SET list_id = null
             WHERE id = ${item_id}
-            
+
         `
-    }else if(mode == 2){
+    } else if (mode == 2) {
         var newName = option
         query = `UPDATE device_group_list SET name = ${newName} WHERE id=${groupId}`
     }
 
     return query
 }
-const renameDeviceGroup = (groupId,) => {
-
-}
+const renameDeviceGroup = (groupId) => {}
 const removeDeviceGroup = (groupId) => {
     const query = `
         DELETE FROM device_group_list
         WHERE id = ${groupId}
-        
+
         `
     return query
 }
-
 
 module.exports = {
     addDeviceGroup,
     removeDeviceGroup,
     modifyDeviceGroup,
-    getDeviceGroup
+    getDeviceGroup,
 }

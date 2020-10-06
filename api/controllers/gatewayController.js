@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,41 +32,44 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config();
+require('dotenv').config()
 require('moment-timezone')
-const moment = require('moment');
-const dbQueries = require('../db/dbQueries/gatewayQueries');
-const pool = require('../db/dev/connection');
+const moment = require('moment')
+const dbQueries = require('../db/dbQueries/gatewayQueries')
+const pool = require('../db/dev/connection')
 
 module.exports = {
-
     getAllGateway: (request, response) => {
-
         let { locale } = request.query
 
         pool.query(dbQueries.getAllGateway)
-            .then(res => {
+            .then((res) => {
                 console.log(`get gateway table succeed`)
-                res.rows.map(item => {
-                    item.last_report_timestamp = moment.tz(item.last_report_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
-                    item.registered_timestamp = moment.tz(item.registered_timestamp, process.env.TZ).locale(locale).format(process.env.TIMESTAMP_FORMAT);
+                res.rows.map((item) => {
+                    item.last_report_timestamp = moment
+                        .tz(item.last_report_timestamp, process.env.TZ)
+                        .locale(locale)
+                        .format(process.env.TIMESTAMP_FORMAT)
+                    item.registered_timestamp = moment
+                        .tz(item.registered_timestamp, process.env.TZ)
+                        .locale(locale)
+                        .format(process.env.TIMESTAMP_FORMAT)
                 })
                 response.status(200).json(res)
-            })    
-            .catch(err => {
-                console.log(`get gateway table failed ${err}`)                
-
+            })
+            .catch((err) => {
+                console.log(`get gateway table failed ${err}`)
             })
     },
 
     deleteGateway: (request, response) => {
         const { idPackage } = request.body
         pool.query(dbQueries.deleteGateway(idPackage))
-            .then(res => {
+            .then((res) => {
                 console.log('delete Gateway record succeed')
                 response.status(200).json(res)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`delete gateway failed ${err}`)
             })
     },
@@ -74,13 +77,12 @@ module.exports = {
     editGateway: (request, response) => {
         const { formOption } = request.body
         pool.query(dbQueries.editGateway(formOption))
-            .then(res => {
+            .then((res) => {
                 console.log('edit lbeacon succeed')
                 response.status(200).json(res)
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`edit lbeacon failed ${err}`)
             })
-    }
-
+    },
 }

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,23 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import React from 'react'
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+import { AppContext } from '../../context/AppContext'
+import { trackingTableColumn } from '../../config/tables'
+import { toast } from 'react-toastify'
+import messageGenerator from '../../helper/messageGenerator'
+import styleConfig from '../../config/styleConfig'
+import apiHelper from '../../helper/apiHelper'
+import { JSONClone } from '../../helper/utilities'
 
-import React from 'react';
-import ReactTable from 'react-table';
-import 'react-table/react-table.css';
-import { AppContext } from '../../context/AppContext';
-import {
-    trackingTableColumn
-} from '../../config/tables'
-import { toast } from 'react-toastify';
-import messageGenerator from '../../helper/messageGenerator';
-import styleConfig from '../../config/styleConfig';
-import apiHelper from '../../helper/apiHelper';
-import { JSONClone } from '../../helper/utilities';
- 
-
-class TrackingTable extends React.Component{
-
+class TrackingTable extends React.Component {
     static contextType = AppContext
 
     state = {
@@ -58,12 +53,12 @@ class TrackingTable extends React.Component{
         locale: this.context.locale.abbr,
     }
 
-    toastId = null;
+    toastId = null
 
     componentDidUpdate = (prevProps, prevState) => {
         let { locale } = this.context
         if (locale.abbr !== prevState.locale) {
-            this.getTrackingData();
+            this.getTrackingData()
         }
     }
 
@@ -75,81 +70,79 @@ class TrackingTable extends React.Component{
         toast.dismiss(this.toastId)
     }
 
-
     getTrackingData = () => {
         let { locale, auth, stateReducer } = this.context
-        let [{areaId}] = stateReducer
+        let [{ areaId }] = stateReducer
 
-        apiHelper.trackingDataApiAgent.getTrackingData({
-            locale: locale.abbr,
-            user: auth.user,
-            areaId
-        })
-        .then(res => {
-            this.setMessage('clear')
-            let column = JSONClone(trackingTableColumn);
-
-            column.map(field => {
-                field.headerStyle = {
-                    textAlign: 'left',
-                    textTransform: 'capitalize'
-                }
-                if (field.accessor == '_id') {
-                    field.headerStyle = {
-                        textAlign: 'center',
-                    }
-                }
-                field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-            })
-            res.data.map((item, index) => {
-                item.status = locale.texts[item.status.toUpperCase()]
-                item.transferred_location = ''
-                item._id = index + 1;
-                // item.transferred_location 
-                //     ? locale.texts[item.transferred_location.toUpperCase().replace(/ /g, '_')]
-                //     : ''
-            })
-            this.setState({
-                trackingData: res.data,
-                trackingColunm: column,
+        apiHelper.trackingDataApiAgent
+            .getTrackingData({
                 locale: locale.abbr,
+                user: auth.user,
+                areaId,
             })
-        })
-        .catch(err => {
-            this.setMessage(
-                'error',
-                'connect to database failed',
-                true,
-            )
+            .then((res) => {
+                this.setMessage('clear')
+                let column = JSONClone(trackingTableColumn)
 
-            console.log(`get tracking data failed ${err}`);
-        })
+                column.map((field) => {
+                    field.headerStyle = {
+                        textAlign: 'left',
+                        textTransform: 'capitalize',
+                    }
+                    if (field.accessor == '_id') {
+                        field.headerStyle = {
+                            textAlign: 'center',
+                        }
+                    }
+                    field.Header =
+                        locale.texts[
+                            field.Header.toUpperCase().replace(/ /g, '_')
+                        ]
+                })
+                res.data.map((item, index) => {
+                    item.status = locale.texts[item.status.toUpperCase()]
+                    item.transferred_location = ''
+                    item._id = index + 1
+                    // item.transferred_location
+                    //     ? locale.texts[item.transferred_location.toUpperCase().replace(/ /g, '_')]
+                    //     : ''
+                })
+                this.setState({
+                    trackingData: res.data,
+                    trackingColunm: column,
+                    locale: locale.abbr,
+                })
+            })
+            .catch((err) => {
+                this.setMessage('error', 'connect to database failed', true)
+
+                console.log(`get tracking data failed ${err}`)
+            })
     }
 
     setMessage = (type, msg, isSetting) => {
-
-        switch(type) {
+        switch (type) {
             case 'success':
                 this.toastId = messageGenerator.setSuccessMessage(msg)
-                break;
+                break
             case 'error':
                 if (isSetting && !this.toastId) {
                     this.toastId = messageGenerator.setErrorMessage(msg)
-                } 
-                break;
+                }
+                break
             case 'clear':
-                this.toastId = null;
+                this.toastId = null
                 toast.dismiss(this.toastId)
-                break;
+                break
         }
     }
 
-    render(){
-        return  (
-            <ReactTable 
-                style={{maxHeight:'85vh'}}
-                data={this.state.trackingData} 
-                columns={this.state.trackingColunm} 
+    render() {
+        return (
+            <ReactTable
+                style={{ maxHeight: '85vh' }}
+                data={this.state.trackingData}
+                columns={this.state.trackingColunm}
                 resizable={true}
                 freezeWhenExpanded={false}
                 {...styleConfig.reactTable}
@@ -159,4 +152,4 @@ class TrackingTable extends React.Component{
     }
 }
 
-export default TrackingTable;
+export default TrackingTable

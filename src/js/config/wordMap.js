@@ -1,66 +1,65 @@
 module.exports = {
-    
     SWITCH_SEARCH_LIST: 'switch search list',
 
     CLEAR_SEARCH_RESULT: 'clear search result',
 
-    ALL_DEVICES: "all devices",
+    ALL_DEVICES: 'all devices',
 
-    MY_DEVICES: "my devices",
+    MY_DEVICES: 'my devices',
 
-    ALL_DEVICES: "all devices",
+    ALL_DEVICES: 'all devices',
 
-    MY_PATIENTS: "my patients",
+    MY_PATIENTS: 'my patients',
 
-    ALL_PATIENTS: "all patients",
+    ALL_PATIENTS: 'all patients',
 
-    OBJECTS: "objects",
+    OBJECTS: 'objects',
 
-    DEVICE: "device",
+    DEVICE: 'device',
 
-    PERSON: "person",
+    PERSON: 'person',
 
-    OBJECT_TYPE: "object type",
+    OBJECT_TYPE: 'object type',
 
-    SEARCH_HISTORY: "search history",
+    SEARCH_HISTORY: 'search history',
 
-    SEARCH_BAR: "search bar",
+    SEARCH_BAR: 'search bar',
 
-    PIN_SELETION: "pin selection",
+    PIN_SELETION: 'pin selection',
 
-    SHIFT_CHANGE: "shift change",
+    SHIFT_CHANGE: 'shift change',
 
-    SIGN_IN: "signin",
+    SIGN_IN: 'signin',
 
-    NOT_STAY_ROOM_MONITOR: "not stay room monitor",
+    NOT_STAY_ROOM_MONITOR: 'not stay room monitor',
 
-    FOUND: "found",
+    FOUND: 'found',
 
-    NOT_FOUND: "not found",
+    NOT_FOUND: 'not found',
 
-    BIND: "bind",
+    BIND: 'bind',
 
-    UNBIND: "unbind",
+    UNBIND: 'unbind',
 
-    ADD: "add",
+    ADD: 'add',
 
-    DELETE: "delete",
+    DELETE: 'delete',
 
-    SAVE_SUCCESS: "save success",
+    SAVE_SUCCESS: 'save success',
 
-    DISASSOCIATE: "disassociate",
+    DISASSOCIATE: 'disassociate',
 
-    NORMAL: "normal",
+    NORMAL: 'normal',
 
-    RESERVE: "reserve",
+    RESERVE: 'reserve',
 
-    TRANSFERRED: "transferred",
+    TRANSFERRED: 'transferred',
 
-    RETURNED: "returned",
+    RETURNED: 'returned',
 
-    TRACE: "trace",
-    
-    BROKEN: "broken",
-    
-    ASSET_CONTROL_NUMBER: "asset control number"
+    TRACE: 'trace',
+
+    BROKEN: 'broken',
+
+    ASSET_CONTROL_NUMBER: 'asset control number',
 }

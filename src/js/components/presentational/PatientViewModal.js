@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,29 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { 
-    Modal, 
-    Button, 
-    ListGroup
-} from 'react-bootstrap'
-import { 
-    Formik, 
-    Field, 
-    Form, 
-} from 'formik';
-import * as Yup from 'yup';
+import React from 'react'
+import { Modal, Button, ListGroup } from 'react-bootstrap'
+import { Formik, Field, Form } from 'formik'
+import * as Yup from 'yup'
 import moment from 'moment'
-import { AppContext } from '../../context/AppContext';
+import { AppContext } from '../../context/AppContext'
 import ScrollArea from 'react-scrollbar'
 import {
     EditedTime,
     Primary,
     Paragraph,
-    FormFieldName 
+    FormFieldName,
 } from '../BOTComponent/styleComponent'
-import FormikFormGroup from '../presentational/FormikFormGroup';
+import FormikFormGroup from '../presentational/FormikFormGroup'
 
 const style = {
     index: {
@@ -65,13 +56,11 @@ const style = {
     },
 
     blockOne: {
-        minWidth: 'initial'
+        minWidth: 'initial',
     },
-
 }
 
 class PatientViewModal extends React.Component {
-   
     static contextType = AppContext
 
     state = {
@@ -81,59 +70,50 @@ class PatientViewModal extends React.Component {
     handleClose = () => {
         this.props.handleClose(() => {
             this.setState({
-                display: true
+                display: true,
             })
         })
     }
 
     render() {
+        let { show, handleClose, handleSubmit, data, title } = this.props
 
-        let {
-            show, 
-            handleClose,
-            handleSubmit,
-            data,
-            title
-        } = this.props
-
-        let {
-            locale,
-            auth
-        } = this.context
+        let { locale, auth } = this.context
 
         let recordBlock = {
             display: this.state.display ? '' : 'none',
         }
 
         return (
-            <Modal  
+            <Modal
                 show={show}
-                onHide={this.handleClose} 
-                size="md" 
+                onHide={this.handleClose}
+                size="md"
                 enforceFocus={false}
                 style={style.modal}
             >
                 <Modal.Header>
                     {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-                </Modal.Header >
+                </Modal.Header>
                 <Modal.Body>
                     <Formik
-                        initialValues = {{
-                            record: ""
+                        initialValues={{
+                            record: '',
                         }}
-    
-                        validationSchema = {
-                            Yup.object().shape({
-    
-                        })}
-    
+                        validationSchema={Yup.object().shape({})}
                         onSubmit={(values, { setStatus, setSubmitting }) => {
                             handleSubmit(values)
                         }}
-    
-                        render={({ values, errors, status, touched, isSubmitting, setFieldValue }) => (
+                        render={({
+                            values,
+                            errors,
+                            status,
+                            touched,
+                            isSubmitting,
+                            setFieldValue,
+                        }) => (
                             <Form>
-                                <FormikFormGroup 
+                                <FormikFormGroup
                                     type="text"
                                     name="name"
                                     label={locale.texts.NAME}
@@ -143,7 +123,7 @@ class PatientViewModal extends React.Component {
                                     placeholder=""
                                     disabled
                                 />
-                                <FormikFormGroup 
+                                <FormikFormGroup
                                     type="text"
                                     name="name"
                                     label={locale.texts.PATIENT_NUMBER}
@@ -153,18 +133,21 @@ class PatientViewModal extends React.Component {
                                     placeholder=""
                                     disabled
                                 />
-                                <hr/>
-                                <div 
-                                    className="mb-2 text-capitalize"
-                                >
+                                <hr />
+                                <div className="mb-2 text-capitalize">
                                     <FormFieldName>
                                         {locale.texts.ADD_NEW_RECORD}
                                     </FormFieldName>
-                                    <Field 
+                                    <Field
                                         component="textarea"
                                         value={values.record}
                                         name="record"
-                                        className={'form-control' + (errors.record && touched.record ? ' is-invalid' : '')} 
+                                        className={
+                                            'form-control' +
+                                            (errors.record && touched.record
+                                                ? ' is-invalid'
+                                                : '')
+                                        }
                                         rows={3}
                                     />
                                 </div>
@@ -172,51 +155,55 @@ class PatientViewModal extends React.Component {
                                     className="mb-2 cursor-pointer"
                                     onClick={() => {
                                         this.setState({
-                                            display: !this.state.display
+                                            display: !this.state.display,
                                         })
-                                    }}                                    
+                                    }}
                                 >
-                                    {locale.texts.PATIENT_HISTORICAL_RECORD} 
+                                    {locale.texts.PATIENT_HISTORICAL_RECORD}
                                     &nbsp;
-                                    <i 
-                                        className={`fas ${this.state.display ? 'fa-angle-up' : 'fa-angle-down'}`}
+                                    <i
+                                        className={`fas ${
+                                            this.state.display
+                                                ? 'fa-angle-up'
+                                                : 'fa-angle-down'
+                                        }`}
                                     />
                                 </FormFieldName>
-                                
-                                
-                                <div
-                                    style={recordBlock}
-                                >
-                                    {data.record && data.record.length != 0 && <hr style={{margin: 0}}></hr>}
 
-                                    <ListGroup
-                                        className='text-none px-0 max-height-30 custom-scrollbar'
-                                    >
-                                        {data.records && data.records.length != 0 
-                                            &&   (
+                                <div style={recordBlock}>
+                                    {data.record && data.record.length != 0 && (
+                                        <hr style={{ margin: 0 }}></hr>
+                                    )}
+
+                                    <ListGroup className="text-none px-0 max-height-30 custom-scrollbar">
+                                        {data.records &&
+                                            data.records.length != 0 && (
                                                 <div>
-                                                    {data.records.map((item, index) => {
-                                                        return (
-                                                            recordBlockTypeTwo(item, index, locale)
-                                                        )
-                                                    })}
+                                                    {data.records.map(
+                                                        (item, index) => {
+                                                            return recordBlockTypeTwo(
+                                                                item,
+                                                                index,
+                                                                locale
+                                                            )
+                                                        }
+                                                    )}
                                                 </div>
-                                            )
-                                        }
+                                            )}
                                     </ListGroup>
                                 </div>
                                 <Modal.Footer>
-                                    <Button 
-                                        variant="outline-secondary" 
-                                        className="text-capitalize" 
+                                    <Button
+                                        variant="outline-secondary"
+                                        className="text-capitalize"
                                         onClick={this.handleClose}
                                     >
                                         {locale.texts.CANCEL}
                                     </Button>
-                                    <Button 
-                                        type="submit" 
-                                        className="text-capitalize" 
-                                        variant="primary" 
+                                    <Button
+                                        type="submit"
+                                        className="text-capitalize"
+                                        variant="primary"
                                         disabled={isSubmitting}
                                     >
                                         {locale.texts.SAVE}
@@ -227,67 +214,51 @@ class PatientViewModal extends React.Component {
                     />
                 </Modal.Body>
             </Modal>
-        );
+        )
     }
-}    
+}
 
 const recordBlockTypeOne = (item, index, locale) => {
-
     return (
         <ListGroup.Item
             key={index}
             className="d-flex justify-content-start"
             style={style.blockOne}
         >
-            <div 
-                style={style.index}
-            >
-                &bull;
-            </div>
+            <div style={style.index}>&bull;</div>
             &nbsp;
-            <div 
-                key={index} 
-                className="pb-1"
-                style={style.row}
-            >
-                {moment(item.create_timestamp).locale(locale.abbr).format('YYYY/MM/DD hh:mm')},
-                &nbsp;
+            <div key={index} className="pb-1" style={style.row}>
+                {moment(item.create_timestamp)
+                    .locale(locale.abbr)
+                    .format('YYYY/MM/DD hh:mm')}
+                , &nbsp;
                 {item.notes}
             </div>
         </ListGroup.Item>
     )
 }
 
-
 const recordBlockTypeTwo = (item, index, locale) => {
-
     return (
         <ListGroup.Item
             key={index}
             style={style.blockOne}
             className="pl-0 mb-3"
         >
-            <div
-                className="d-flex justify-content-start"
-            >
-                <div
-                    className="color-black d-flex justify-content-start"
-                >
-                    <Primary>
-                        {item.recorded_user}
-                    </Primary>
+            <div className="d-flex justify-content-start">
+                <div className="color-black d-flex justify-content-start">
+                    <Primary>{item.recorded_user}</Primary>
                     &nbsp;
                     <EditedTime>
-                        {moment(item.created_timestamp).locale(locale.abbr).format('lll')}
+                        {moment(item.created_timestamp)
+                            .locale(locale.abbr)
+                            .format('lll')}
                     </EditedTime>
                 </div>
             </div>
-            <Paragraph>
-                {item.record}
-            </Paragraph>
-
+            <Paragraph>{item.record}</Paragraph>
         </ListGroup.Item>
     )
 }
-  
-export default PatientViewModal;
+
+export default PatientViewModal

@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,137 +32,130 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-
-import React from 'react';
-import { 
-    Modal, 
-    Button,
-} from 'react-bootstrap';
-import { 
-    Formik, 
-    Form
-} from 'formik';
-import {
-    ListGroup 
-} from 'react-bootstrap'
-import LocaleContext from '../../../context/LocaleContext';
+import React from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import { Formik, Form } from 'formik'
+import { ListGroup } from 'react-bootstrap'
+import LocaleContext from '../../../context/LocaleContext'
 import config from '../../../config'
-import AuthenticationContext from '../../../context/AuthenticationContext';
-import {
-    Title
-} from '../../BOTComponent/styleComponent';
+import AuthenticationContext from '../../../context/AuthenticationContext'
+import { Title } from '../../BOTComponent/styleComponent'
 
-const EditAreasForm = ({
-    show,
-    handleClose,
-    handleSubmit,
-    areaTable,
-}) => {
-        
+const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
     let locale = React.useContext(LocaleContext)
     let auth = React.useContext(AuthenticationContext)
 
     return (
-        <Modal 
-            show={show} 
-            size="md" 
+        <Modal
+            show={show}
+            size="md"
             onHide={handleClose}
-            className='text-capitalize'
+            className="text-capitalize"
         >
-            <Modal.Header 
-                closeButton
-            >
+            <Modal.Header closeButton>
                 {locale.texts.EDIT_SECONDARY_AREAS}
             </Modal.Header>
             <Modal.Body>
                 <Formik
-                    initialValues = {{
-                        areas_id: Array.from(auth.user.areas_id)
+                    initialValues={{
+                        areas_id: Array.from(auth.user.areas_id),
                     }}
-                
-                    onSubmit={values => {
+                    onSubmit={(values) => {
                         handleSubmit(values)
                     }}
-
-                    render={({ values, errors, status, touched, isSubmitting, setFieldValue}) => (
+                    render={({
+                        values,
+                        errors,
+                        status,
+                        touched,
+                        isSubmitting,
+                        setFieldValue,
+                    }) => (
                         <Form>
-                            <Title sub>
-                                {locale.texts.SELECTED_AREAS}
-                            </Title>
+                            <Title sub>{locale.texts.SELECTED_AREAS}</Title>
                             <ListGroup>
-                                {
-                                    Object.values(areaTable)
-                                        .filter(area => {
-                                            return (
-                                                auth.user.main_area != area.id && 
-                                                values.areas_id.includes(area.id)
-                                            )
-                                        })
-                                        .map((area,index) => {
-                                            let element = 
-                                                <ListGroup.Item
-                                                    as="a"
-                                                    key = {index}
-                                                    action
-                                                    name={area.id}
-                                                    onClick={(e) => {
-                                                        let name = e.target.getAttribute('name')
-                                                        let areasId = values.areas_id.filter(area => {
+                                {Object.values(areaTable)
+                                    .filter((area) => {
+                                        return (
+                                            auth.user.main_area != area.id &&
+                                            values.areas_id.includes(area.id)
+                                        )
+                                    })
+                                    .map((area, index) => {
+                                        let element = (
+                                            <ListGroup.Item
+                                                as="a"
+                                                key={index}
+                                                action
+                                                name={area.id}
+                                                onClick={(e) => {
+                                                    let name = e.target.getAttribute(
+                                                        'name'
+                                                    )
+                                                    let areasId = values.areas_id.filter(
+                                                        (area) => {
                                                             return area != name
-                                                        })
-                                                        setFieldValue('areas_id', areasId)
-                                                    }}
-                                                >
-                                                    {locale.texts[area.name]}
-                                                </ListGroup.Item>
-                                            return element
-                                        })
-                                }
+                                                        }
+                                                    )
+                                                    setFieldValue(
+                                                        'areas_id',
+                                                        areasId
+                                                    )
+                                                }}
+                                            >
+                                                {locale.texts[area.name]}
+                                            </ListGroup.Item>
+                                        )
+                                        return element
+                                    })}
                             </ListGroup>
-                            <Title sub>
-                                {locale.texts.NOT_SELECTED_AREAS}
-                            </Title>
+                            <Title sub>{locale.texts.NOT_SELECTED_AREAS}</Title>
                             <ListGroup>
-                                {
-                                    Object.values(areaTable)
-                                        .filter(area => {
-                                            return (
-                                                auth.user.main_area != area.id && 
-                                                !values.areas_id.includes(area.id)
-                                            )
-                                        })
-                                        .map((area,index) => {
-                                            let element = 
-                                                <ListGroup.Item
-                                                    as="a"
-                                                    key = {index}
-                                                    action
-                                                    name={area.id}
-                                                    onClick={(e) => {
-                                                        let name = e.target.getAttribute('name')
-                                                        let areasId = values.areas_id
-                                                        areasId.push(parseInt(name))
-                                                        setFieldValue('areas_id', areasId)
-                                                    }}
-                                                >
-                                                    {locale.texts[area.name]}
-                                                </ListGroup.Item>
-                                            return element
-                                        })
-                                }
+                                {Object.values(areaTable)
+                                    .filter((area) => {
+                                        return (
+                                            auth.user.main_area != area.id &&
+                                            !values.areas_id.includes(area.id)
+                                        )
+                                    })
+                                    .map((area, index) => {
+                                        let element = (
+                                            <ListGroup.Item
+                                                as="a"
+                                                key={index}
+                                                action
+                                                name={area.id}
+                                                onClick={(e) => {
+                                                    let name = e.target.getAttribute(
+                                                        'name'
+                                                    )
+                                                    let areasId =
+                                                        values.areas_id
+                                                    areasId.push(parseInt(name))
+                                                    setFieldValue(
+                                                        'areas_id',
+                                                        areasId
+                                                    )
+                                                }}
+                                            >
+                                                {locale.texts[area.name]}
+                                            </ListGroup.Item>
+                                        )
+                                        return element
+                                    })}
                             </ListGroup>
-                            
+
                             <Modal.Footer>
-                                <Button 
+                                <Button
                                     type="button"
-                                    variant="outline-secondary" 
-                                    onClick={handleClose} 
+                                    variant="outline-secondary"
+                                    onClick={handleClose}
                                 >
                                     {locale.texts.CANCEL}
                                 </Button>
-                                <Button 
-                                    type="submit" 
-                                    variant="primary" 
+                                <Button
+                                    type="submit"
+                                    variant="primary"
                                     disabled={isSubmitting}
                                 >
                                     {locale.texts.CONFIRM}
