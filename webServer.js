@@ -36,7 +36,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const httpsPort = 443
+const httpsPort = process.env.HTTPS_PORT
 const httpPort = process.env.HTTP_PORT
 const path = require('path')
 const https = require('https')
@@ -54,7 +54,9 @@ const APIRoutes = require('./web_server/routes/APIRoutes')
 const { shouldCompress } = require('./api/config/compression')
 const redirect = require('./api/middlewares/redirect')
 
-app.use(redirect)
+if (process.env.ENABLE_HTTP_REDIRECT == 'true') {
+    app.use(redirect)
+}
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session(sessionOptions))
