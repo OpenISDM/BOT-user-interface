@@ -63,9 +63,9 @@ npm run server
 ### ngrok settings
 
 ``` bash
-ngrok http -hostname=bidae.tech.ngrok.io https://localhost
+ngrok http -subdomain=bidae-tech -bind-tls=true https://localhost
 or
-ngrok http -hostname=bidae.tech.ngrok.io 80
+ngrok http -subdomain=bidae-tech -bind-tls=true 80
 ```
 
 ## Usage Guide
