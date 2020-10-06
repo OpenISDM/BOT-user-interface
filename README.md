@@ -61,11 +61,12 @@ npm run server
 ```
 
 ### ngrok settings
-```bash
+
+``` bash
 ngrok http -hostname=bidae.tech.ngrok.io https://localhost
 or
 ngrok http -hostname=bidae.tech.ngrok.io 80
-``` 
+```
 
 ## Usage Guide
 
