@@ -34,7 +34,7 @@
 
 export default {
     getLocationHistory: (key, startTime, endTime, mode) => {
-        let query = null;
+        let query = null
         switch (mode) {
             case 'nameGroupByArea':
                 query = `
@@ -59,7 +59,7 @@ export default {
 
 							INNER JOIN object_table
 							ON location_history_table.mac_address = object_table.mac_address
-								AND object_table.object_type !== 0
+								AND object_table.object_type != 0
 
 							INNER JOIN user_area
 							ON object_table.area_id = user_area.area_id
@@ -109,8 +109,8 @@ export default {
 						grp,
 						groups.mac_address
 					ORDER by mac_address ASC, start_time DESC
-					`;
-                break;
+					`
+                break
             case 'nameGroupByUUID':
                 query = `
 					WITH ranges AS (
@@ -136,7 +136,7 @@ export default {
 
 							INNER JOIN object_table
 							ON location_history_table.mac_address = object_table.mac_address
-								AND object_table.object_type !== 0
+								AND object_table.object_type != 0
 
 							INNER JOIN user_area
 							ON object_table.area_id = user_area.area_id
@@ -183,8 +183,8 @@ export default {
 
 					GROUP BY grp, groups.mac_address
 					ORDER by mac_address ASC, start_time DESC
-				`;
-                break;
+				`
+                break
             case 'uuid':
                 query = `
 					SELECT
@@ -205,7 +205,7 @@ export default {
 					ON location_history_table.area_id = area_table.id
 
 					WHERE location_history_table.uuid = '${key}'
-						AND object_table.object_type !== 0
+						AND object_table.object_type != 0
 						AND record_timestamp >= '${startTime}'
 						AND record_timestamp <= '${endTime}'
 
@@ -219,8 +219,8 @@ export default {
 
 					ORDER BY object_table.name ASC
 
-				`;
-                break;
+				`
+                break
             case 'area':
                 query = `
 					SELECT
@@ -236,7 +236,7 @@ export default {
 					ON location_history_table.area_id = area_table.id
 
 					WHERE location_history_table.area_id = '${key}'
-						AND object_table.object_type !== 0
+						AND object_table.object_type != 0
 						AND record_timestamp >= '${startTime}'
 						AND record_timestamp <= '${endTime}'
 
@@ -247,11 +247,11 @@ export default {
 						location_history_table.area_id
 
 					ORDER BY object_table.name ASC
-				`;
-                break;
+				`
+                break
         }
 
-        return query;
+        return query
     },
 
     getContactTree: (child, duplicate, startTime, endTime) => {
@@ -278,7 +278,7 @@ export default {
 
 						INNER JOIN object_table
 						ON location_history_table.mac_address = object_table.mac_address
-							AND object_table.object_type !== 0
+							AND object_table.object_type != 0
 
 						INNER JOIN user_area
 						ON object_table.area_id = user_area.area_id
@@ -345,11 +345,11 @@ export default {
 			ON children.area_id = parent.area_id
 			AND children.record_timestamp >= parent.start_time
 			AND children.record_timestamp <= parent.end_time
-			AND children.mac_address::text !== parent.mac_address::text
+			AND children.mac_address::text != parent.mac_address::text
 
 			LEFT JOIN object_table
 			ON children.mac_address = object_table.mac_address
-			AND object_table.object_type !== 0
+			AND object_table.object_type != 0
 
 			WHERE object_table.name NOT IN (${duplicate.map((dup) => `'${dup}'`)})
 
@@ -362,7 +362,7 @@ export default {
 				child ASC,
 				start_time ASC
 
-			`;
-        return query;
+			`
+        return query
     },
-};
+}

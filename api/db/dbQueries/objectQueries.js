@@ -79,9 +79,9 @@ const getObject = (objectType, areas_id) => {
 			object_table.registered_timestamp DESC
 
 			;
-	`;
-    return text;
-};
+	`
+    return text
+}
 
 const addPersona = (formOption) => {
     const text = `
@@ -106,7 +106,7 @@ const addPersona = (formOption) => {
 			'Patient',
 			'returned',
 			now()
-		)`;
+		)`
 
     const values = [
         formOption.name,
@@ -115,15 +115,15 @@ const addPersona = (formOption) => {
         formOption.area_id,
         formOption.monitor_type,
         formOption.object_type,
-    ];
+    ]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 const editPersona = (formOption) => {
     const text = `
@@ -134,7 +134,7 @@ const editPersona = (formOption) => {
 			monitor_type = $5,
 			object_type = $6
 		WHERE asset_control_number = $1
-	`;
+	`
 
     const values = [
         formOption.asset_control_number,
@@ -143,15 +143,15 @@ const editPersona = (formOption) => {
         formOption.area_id,
         formOption.monitor_type,
         formOption.object_type,
-    ];
+    ]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 const editDevice = (formOption) => {
     const text = `
@@ -166,7 +166,7 @@ const editDevice = (formOption) => {
 			nickname = $9,
 			transferred_location = $10
 		WHERE id = $1
-		`;
+		`
     const values = [
         formOption.id,
         formOption.type,
@@ -178,23 +178,23 @@ const editDevice = (formOption) => {
         formOption.mac_address,
         formOption.nickname,
         formOption.transferred_location,
-    ];
+    ]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 const deleteObject = (formOption) => {
     const query = `
 		DELETE FROM object_table
 		WHERE id IN (${formOption.map((item) => `'${item.id}'`)})
-	`;
-    return query;
-};
+	`
+    return query
+}
 
 const disassociate = (formOption) => {
     const text = `
@@ -207,15 +207,15 @@ const disassociate = (formOption) => {
 			FROM object_table
 			WHERE id = $1
 		)
-	`;
+	`
 
-    const values = [formOption.id];
+    const values = [formOption.id]
 
     return {
         text,
         values,
-    };
-};
+    }
+}
 
 const addObject = (formOption) => {
     const text = `
@@ -243,7 +243,7 @@ const addObject = (formOption) => {
 			'normal',
 			now()
 		);
-	`;
+	`
 
     const values = [
         formOption.type,
@@ -253,15 +253,15 @@ const addObject = (formOption) => {
         formOption.area_id,
         formOption.monitor_type,
         formOption.nickname,
-    ];
+    ]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 const editObjectPackage = (
     formOption,
@@ -269,19 +269,19 @@ const editObjectPackage = (
     record_id,
     reservedTimestamp
 ) => {
-    const item = formOption[0];
+    const item = formOption[0]
     const text = `
 		UPDATE object_table
 		SET
 			status = '${item.status}',
 			transferred_location = ${
-                item.status === 'transferred'
+                item.status == 'transferred'
                     ? item.transferred_location.id
                     : null
             },
 			note_id = ${record_id},
 			reserved_timestamp = ${
-                item.status === 'reserve' ? `'${reservedTimestamp}'` : null
+                item.status == 'reserve' ? `'${reservedTimestamp}'` : null
             },
 			reserved_user_id = (SELECT id
 				FROM user_table
@@ -290,16 +290,16 @@ const editObjectPackage = (
 		WHERE asset_control_number IN (${formOption.map(
             (item) => `'${item.asset_control_number}'`
         )});
-	`;
-    return text;
-};
+	`
+    return text
+}
 
 const deleteObjectSummaryRecord = (mac_address_array) => {
     return `
 		DELETE FROM object_summary_table
 		WHERE mac_address IN (${mac_address_array.map((item) => `'${item}'`)});
-	`;
-};
+	`
+}
 
 const getIdleMacaddr = () => {
     return `
@@ -311,8 +311,8 @@ const getIdleMacaddr = () => {
 		ON object_summary_table.mac_address = object_table.mac_address
 
 		WHERE object_table.name IS NULL
-	`;
-};
+	`
+}
 
 const getAlias = () => {
     return `
@@ -320,25 +320,25 @@ const getAlias = () => {
 			DISTINCT type,
 			type_alias
 		FROM object_table
-		WHERE type !== 'Patient'
+		WHERE type != 'Patient'
 		ORDER BY type ASC
-	`;
-};
+	`
+}
 
 const editAlias = (objectType, alias) => {
     const text = `
 		UPDATE object_table
 		SET type_alias = $2
 		WHERE type = $1
-	`;
+	`
 
-    const values = [objectType, alias];
+    const values = [objectType, alias]
 
     return {
         text,
         values,
-    };
-};
+    }
+}
 
 export default {
     getObject,
@@ -353,4 +353,4 @@ export default {
     getIdleMacaddr,
     getAlias,
     editAlias,
-};
+}

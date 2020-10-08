@@ -100,7 +100,7 @@ const get_data = (
 
             INNER JOIN object_table
             ON location_history_table.mac_address = object_table.mac_address
-                AND object_table.object_type !== 0
+                AND object_table.object_type != 0
 
             INNER JOIN user_area
             ON object_table.area_id = user_area.area_id
@@ -114,12 +114,12 @@ const get_data = (
             WHERE
                 record_timestamp > $1
                 AND record_timestamp < $2`
-    if (tag !== undefined) {
+    if (tag != undefined) {
         text += `  AND location_history_table.mac_address IN  (${tag.map(
             (item) => `'${item}'`
         )})`
     }
-    if (Lbeacon !== undefined) {
+    if (Lbeacon != undefined) {
         text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
             (item) => `'${item}'`
         )})`
@@ -160,7 +160,7 @@ const get_data = (
     GROUP BY grp, groups.mac_address
     `
 
-    if (sort_type === 'desc') {
+    if (sort_type == 'desc') {
         text += '  ORDER by mac_address ASC, start_time DESC   '
     } else {
         text += '   ORDER by mac_address ASC, start_time ASC   '
