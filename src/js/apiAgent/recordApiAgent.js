@@ -36,13 +36,13 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getRecord: async function (type, locale) {
+    async getRecord (type, locale) {
         return await axios.post(dataSrc.record[type], {
             locale,
         })
     },
 
-    addShiftChangeRecord: async function ({
+    async addShiftChangeRecord ({
         userInfo,
         pdfPackage,
         shift,
@@ -56,7 +56,7 @@ export default {
         })
     },
 
-    deleteShiftChangeRecord: async function ({ idPackage }) {
+    async deleteShiftChangeRecord ({ idPackage }) {
         return await axios.delete(dataSrc.record.shiftChange, {
             data: {
                 idPackage,
@@ -64,13 +64,13 @@ export default {
         })
     },
 
-    addPatientRecord: async function ({ objectPackage }) {
+    async addPatientRecord ({ objectPackage }) {
         return await axios.post(dataSrc.record.patientRecord, {
             objectPackage,
         })
     },
 
-    delete: async function (configPackage) {
+    async delete (configPackage) {
         return await axios.delete(dataSrc.monitor, {
             data: {
                 configPackage,
@@ -78,13 +78,13 @@ export default {
         })
     },
 
-    add: async function (configPackage) {
+    async add (configPackage) {
         return await axios.patch(dataSrc.monitor, {
             configPackage,
         })
     },
 
-    put: async function (configPackage) {
+    async put (configPackage) {
         return await axios.put(dataSrc.monitor, {
             configPackage,
         })

@@ -38,7 +38,7 @@ import config from '../../config'
 import LocaleContext from '../../context/LocaleContext'
 import AuthContext from '../../context/AuthenticationContext'
 import { Formik, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import {
     CenterContainer,
     JustifyCenterDiv,
@@ -52,11 +52,11 @@ import ImageWebp from '../utils/ImageWebp'
 const imageLength = 80
 
 const SigninPage = () => {
-    let locale = React.useContext(LocaleContext)
-    let auth = React.useContext(AuthContext)
-    let appContext = React.useContext(AppContext)
+    const locale = React.useContext(LocaleContext)
+    const auth = React.useContext(AuthContext)
+    const appContext = React.useContext(AppContext)
 
-    let history = useHistory()
+    const history = useHistory()
 
     return (
         <CenterContainer>
@@ -76,20 +76,20 @@ const SigninPage = () => {
                     username: '',
                     password: '',
                 }}
-                validationSchema={Yup.object().shape({
-                    username: Yup.string().required(
+                validationSchema={object().shape({
+                    username: string().required(
                         locale.texts.USERNAME_IS_REQUIRED
                     ),
-                    password: Yup.string().required(
+                    password: string().required(
                         locale.texts.PASSWORD_IS_REQUIRED
                     ),
                 })}
                 onSubmit={(values, actions) => {
-                    let callback = () => history.push('/')
+                    const callback = () => history.push('/')
 
-                    let { stateReducer, locale } = appContext
+                    const { stateReducer, locale } = appContext
 
-                    let [{}, dispatch] = stateReducer
+                    const [{}, dispatch] = stateReducer
 
                     auth.login(values, { actions, dispatch, callback, locale })
                 }}

@@ -55,13 +55,13 @@ class SystemSetting extends React.Component {
     componentDidMount = () => {
         /** set the scrollability in body disabled */
         if (isMobileOnly || isTablet) {
-            let targetElement = document.querySelector('body')
+            const targetElement = document.querySelector('body')
             enableBodyScroll(targetElement)
         }
     }
 
     componentWillUnmount = () => {
-        let targetElement = document.querySelector('body')
+        const targetElement = document.querySelector('body')
         disableBodyScroll(targetElement)
     }
 
@@ -83,7 +83,7 @@ class SystemSetting extends React.Component {
     }
 
     render() {
-        let { location } = this.props
+        const { location } = this.props
 
         this.containerModule.defaultActiveKey = location.state
             ? location.state.key

@@ -32,19 +32,19 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import dbQueries from '../db/dbQueries/areaQueries.js';
-import pool from '../db/dev/connection.js';
+import 'dotenv/config'
+import dbQueries from '../db/dbQueries/areaQueries'
+import pool from '../db/dev/connection'
 
 export default {
     getAreaTable: (request, response) => {
         pool.query(dbQueries.getAreaTable())
             .then((res) => {
-                console.log('get area table succeed');
-                response.status(200).json(res);
+                console.log('get area table succeed')
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`get area table failed ${err}`);
-            });
+                console.log(`get area table failed ${err}`)
+            })
     },
-};
+}

@@ -55,15 +55,15 @@ const ToastNotification = ({ data, time, type }) => {
             <div>
                 {locale.lang == 'en'
                     ? `${data.name} ${locale.texts.NEAR} ${
-                          data.location_description
-                      } ${moment(time).format(
-                          config.geoFenceViolationTimeFormat
-                      )}`
+                        data.location_description
+                    } ${moment(time).format(
+                        config.geoFenceViolationTimeFormat
+                    )}`
                     : `${data.name} ${locale.texts.NEAR}${
-                          data.location_description
-                      } ${moment(time).format(
-                          config.geoFenceViolationTimeFormat
-                      )}`}
+                        data.location_description
+                    } ${moment(time).format(
+                        config.geoFenceViolationTimeFormat
+                    )}`}
             </div>
         </div>
     )

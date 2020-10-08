@@ -216,9 +216,9 @@ class PatientGroupManager extends React.Component {
                     value={
                         this.state.selectedPatientGroup
                             ? {
-                                  value: this.state.selectedPatientGroup,
-                                  label: this.state.selectedPatientGroup.name,
-                              }
+                                value: this.state.selectedPatientGroup,
+                                label: this.state.selectedPatientGroup.name,
+                            }
                             : null
                     }
                 />

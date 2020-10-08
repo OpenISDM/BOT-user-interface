@@ -60,12 +60,12 @@ class TranferredLocationManagement extends React.Component {
     }
 
     getTransferredLocation = (callback) => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.transferredLocationApiAgent
             .getAllTransferredLocation()
             .then((res) => {
-                let columns = JSONClone(TransferredLocationColumn)
+                const columns = JSONClone(TransferredLocationColumn)
 
                 columns.map((field) => {
                     field.Header =
@@ -74,9 +74,9 @@ class TranferredLocationManagement extends React.Component {
                         ]
                 })
 
-                let branchOptions = []
+                const branchOptions = []
 
-                let data = res.data.reduce((locationsArr, obj) => {
+                const data = res.data.reduce((locationsArr, obj) => {
                     branchOptions.push({
                         label: obj.name,
                         value: obj.name,
@@ -109,7 +109,7 @@ class TranferredLocationManagement extends React.Component {
 
     generateDataRows = () => {
         const { locale } = this.context
-        let rows = []
+        const rows = []
         this.state.transferredLocationOptions.map((branch) => {
             rows.push({
                 fold: (
@@ -162,7 +162,7 @@ class TranferredLocationManagement extends React.Component {
                 ),
             })
             if (this.state.unFoldBranches.includes(branch.id)) {
-                let { department } = branch
+                const { department } = branch
                 department.map((department, index) => {
                     rows.push({
                         fold: null,
@@ -190,7 +190,7 @@ class TranferredLocationManagement extends React.Component {
                                     if (branch.department.length > 1) {
                                         this.removeDepartment(branch.id, index)
                                     } else {
-                                        let callback = () =>
+                                        const callback = () =>
                                             messageGenerator.setErrorMessage(
                                                 'ALEAST_ONE_DEPARTMENT'
                                             )
@@ -241,7 +241,7 @@ class TranferredLocationManagement extends React.Component {
             })
     }
     renameBranchToState = (branch_id, e) => {
-        let newName = e.target.value
+        const newName = e.target.value
         this.state.transferredLocationOptions.map((branch) => {
             if (branch.id == branch_id) {
                 branch.branch_name = newName
@@ -256,7 +256,7 @@ class TranferredLocationManagement extends React.Component {
             .editTransferredLocation({
                 type: 'rename branch',
                 data: {
-                    branch_id: branch_id,
+                    branch_id,
                     name: newName,
                 },
             })
@@ -292,7 +292,7 @@ class TranferredLocationManagement extends React.Component {
             })
     }
     renameDepartmentToState = (branch_id, index, e) => {
-        let newName = e.target.value
+        const newName = e.target.value
         this.state.transferredLocationOptions.map((branch) => {
             if (branch.id == branch_id) {
                 branch.department[index] = newName
@@ -301,7 +301,7 @@ class TranferredLocationManagement extends React.Component {
         this.setState({})
     }
     renameDepartmentToBackend = (branch_id, index, e) => {
-        let newName = e.target.value
+        const newName = e.target.value
 
         apiHelper.transferredLocationApiAgent
             .editTransferredLocation({
@@ -331,7 +331,7 @@ class TranferredLocationManagement extends React.Component {
     }
 
     handleClick = (e) => {
-        let { name } = e.target
+        const { name } = e.target
 
         switch (name) {
             case ADD:
@@ -354,7 +354,7 @@ class TranferredLocationManagement extends React.Component {
                 departmentName: values.department,
             })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                 }
                 this.getTransferredLocation(callback)

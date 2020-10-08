@@ -64,10 +64,10 @@ const SearchResultListGroup = ({
 }) => {
     const { locale, auth, stateReducer } = React.useContext(AppContext)
 
-    let numberSheet = {}
+    const numberSheet = {}
 
     const onMouseOver = (e, value) => {
-        let [{}, dispatch] = stateReducer
+        const [{}, dispatch] = stateReducer
         dispatch({
             type: ASSIGN_OBJECT,
             value,
@@ -75,7 +75,7 @@ const SearchResultListGroup = ({
     }
 
     const onMouseOut = () => {
-        let [{}, dispatch] = stateReducer
+        const [{}, dispatch] = stateReducer
         dispatch({
             type: ASSIGN_OBJECT,
             value: null,
@@ -109,10 +109,10 @@ const SearchResultListGroup = ({
                                     item.keyword
                                 )
                                     ? pinColorArray[
-                                          searchObjectArray.indexOf(
-                                              item.keyword
-                                          )
-                                      ]
+                                        searchObjectArray.indexOf(
+                                            item.keyword
+                                        )
+                                    ]
                                     : null,
                             }}
                         >
@@ -125,12 +125,12 @@ const SearchResultListGroup = ({
         }
     }
 
-    let keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
+    const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
 
     return (
         <ListGroup onSelect={onSelect}>
             {data.map((item, index) => {
-                let element = (
+                const element = (
                     <ListGroup.Item
                         href={'#' + index}
                         eventKey={item.found + ':' + index}

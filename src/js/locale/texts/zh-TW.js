@@ -570,10 +570,10 @@ const tw = {
     TW: '中文',
     EN: '英文',
 
-    DEVICE_FOUND: function (length) {
+    DEVICE_FOUND (length) {
         return '發現' + length.toString() + '個儀器'
     },
-    DEVICE_NOT_FOUND: function (length) {
+    DEVICE_NOT_FOUND (length) {
         return '沒發現' + length.toString() + '個儀器'
     },
 

@@ -38,7 +38,7 @@ export default {
             SELECT
                 name
             FROM roles;
-        `;
-        return query;
+        `
+        return query
     },
-};
+}

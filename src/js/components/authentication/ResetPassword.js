@@ -39,23 +39,23 @@ import LocaleContext from '../../context/LocaleContext'
 import AuthContext from '../../context/AuthenticationContext'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { CenterContainer } from '../BOTComponent/styleComponent'
+import { CenterContainer , PageTitle, Title } from '../BOTComponent/styleComponent'
 import styleConfig from '../../config/styleConfig'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import { Link, useHistory } from 'react-router-dom'
 import { set } from 'js-cookie'
 import apiHelper from '../../helper/apiHelper'
-import { PageTitle, Title } from '../BOTComponent/styleComponent'
+
 import ImageWebp from '../utils/ImageWebp'
 
 const imageLength = 80
 
 const ResetPassword = ({ match }) => {
-    let locale = React.useContext(LocaleContext)
-    let auth = React.useContext(AuthContext)
-    let history = useHistory()
+    const locale = React.useContext(LocaleContext)
+    const auth = React.useContext(AuthContext)
+    const history = useHistory()
 
-    let { token } = match.params
+    const { token } = match.params
 
     return (
         <CenterContainer>

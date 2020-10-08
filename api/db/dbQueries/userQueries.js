@@ -135,7 +135,7 @@ export default {
 			)
 			VALUES
 			${roles.map(
-                (role) => `(
+        (role) => `(
 					(
 						SELECT id
 						FROM user_table
@@ -147,7 +147,7 @@ export default {
 						WHERE name = '${role}'
 					)
 				)`
-            )};
+    )};
 
 			INSERT INTO user_area (
 				user_id,
@@ -186,8 +186,8 @@ export default {
 			)
 				VALUES
 				${user.roles
-                    .map(
-                        (roleName) => `(
+        .map(
+            (roleName) => `(
 						${user.id},
 						(
 							SELECT id
@@ -195,8 +195,8 @@ export default {
 							WHERE name='${roleName}'
 						)
 					)`
-                    )
-                    .join(',')};
+        )
+        .join(',')};
 
 			INSERT INTO user_area (
 				user_id,
@@ -204,13 +204,13 @@ export default {
 			)
 				VALUES
 				${user.areas_id
-                    .map(
-                        (areaId) => `(
+        .map(
+            (areaId) => `(
 						${user.id},
 						${areaId}
 					)`
-                    )
-                    .join(',')};
+        )
+        .join(',')};
 		`
     },
 
@@ -252,11 +252,11 @@ export default {
 			)
 			VALUES
 			${user.areas_id.map(
-                (id) => `(
+        (id) => `(
 				${id},
 				${user.id}
 			)`
-            )};
+    )};
 		`
     },
 

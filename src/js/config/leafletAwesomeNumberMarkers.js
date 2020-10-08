@@ -80,7 +80,7 @@
                     '; font-size: ' +
                     options.numberSize +
                     'px' +
-                    ";' "
+                    ';\' '
             }
 
             numberShiftTop = 'top: ' + options.numberShiftTop + ';'
@@ -93,12 +93,12 @@
             const numberShiftLeft = 'left: ' + options.numberShiftLeft + ';'
 
             return (
-                "<i style='" +
+                '<i style=\'' +
                 numberPosition +
                 numberShiftTop +
                 numberShiftLeft +
                 iconColorStyle +
-                "><strong className='font-weight-bold'>" +
+                '><strong className=\'font-weight-bold\'>' +
                 options.number +
                 '</strong></i>'
             )

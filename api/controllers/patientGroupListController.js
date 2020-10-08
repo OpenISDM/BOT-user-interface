@@ -32,9 +32,9 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js'
-import dbQueries from '../db/dbQueries/patientGroupListQueries.js'
-import pool from '../db/dev/connection.js'
+import 'dotenv/config'
+import dbQueries from '../db/dbQueries/patientGroupListQueries'
+import pool from '../db/dev/connection'
 
 export default {
     getPatientGroupList: (request, response) => {

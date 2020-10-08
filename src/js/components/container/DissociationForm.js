@@ -112,20 +112,20 @@ class DissociationForm extends React.Component {
 
         this.state.showDetail
             ? axios
-                  .post(getImportData, {
-                      formOption: this.state.inputValue,
-                  })
-                  .then((res) => {
-                      res.data.rows.map((item) => {
-                          this.setState({
-                              objectName: item.name,
-                              objectType: item.type,
-                          })
-                      })
-                  })
-                  .catch((error) => {
-                      console.log(error)
-                  })
+                .post(getImportData, {
+                    formOption: this.state.inputValue,
+                })
+                .then((res) => {
+                    res.data.rows.map((item) => {
+                        this.setState({
+                            objectName: item.name,
+                            objectType: item.type,
+                        })
+                    })
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
             : null
     }
 
@@ -160,8 +160,8 @@ class DissociationForm extends React.Component {
                                         if (value == undefined) return false
                                         value != undefined
                                             ? (value = value
-                                                  .toString()
-                                                  .toLowerCase())
+                                                .toString()
+                                                .toLowerCase())
                                             : null
                                         if (this.props.selectedObjectData) {
                                             if (

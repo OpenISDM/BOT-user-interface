@@ -47,7 +47,7 @@ class Auth extends React.Component {
     static contextType = AppContext
 
     state = {
-        authenticated: Cookies.get('authenticated') ? true : false,
+        authenticated: !!Cookies.get('authenticated'),
         user:
             Cookies.get('authenticated') && Cookies.get('user')
                 ? { ...JSON.parse(Cookies.get('user')) }
@@ -55,7 +55,7 @@ class Auth extends React.Component {
     }
 
     login = (userInfo, { actions, dispatch, callback, locale }) => {
-        let { username, password } = userInfo
+        const { username, password } = userInfo
 
         apiHelper.authApiAgent
             .login({
@@ -67,7 +67,7 @@ class Auth extends React.Component {
                     actions.setStatus(res.data.message)
                     actions.setSubmitting(false)
                 } else {
-                    let { userInfo } = res.data
+                    const { userInfo } = res.data
 
                     if (userInfo.roles.includes('dev')) {
                         userInfo.permissions = Object.keys(
@@ -138,7 +138,7 @@ class Auth extends React.Component {
     }
 
     signup = (values, callback) => {
-        let { name, email, password, roles, area } = values
+        const { name, email, password, roles, area } = values
 
         axios
             .post(dataSrc.user, {
@@ -168,7 +168,7 @@ class Auth extends React.Component {
     }
 
     setArea = (areas_id, callback) => {
-        let user = {
+        const user = {
             ...this.state.user,
             areas_id,
         }
@@ -200,7 +200,7 @@ class Auth extends React.Component {
     }
 
     setSearchHistory = (searchHistory) => {
-        let userInfo = {
+        const userInfo = {
             ...this.state.user,
             searchHistory,
         }
@@ -262,7 +262,7 @@ class Auth extends React.Component {
                 keywordTypeId,
             })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     Cookies.set('user', {
                         ...JSON.parse(Cookies.get('user')),
                         keyword_type: keywordTypeId,

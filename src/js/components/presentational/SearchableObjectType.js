@@ -128,7 +128,7 @@ class SearchableObjectType extends React.Component {
     }
 
     getData = () => {
-        let { locale, stateReducer, auth } = this.context
+        const { locale, stateReducer, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -137,13 +137,13 @@ class SearchableObjectType extends React.Component {
                 objectType: [0],
             })
             .then((res) => {
-                let objectTypeList = []
+                const objectTypeList = []
                 res.data.rows.map((item) => {
                     objectTypeList.includes(item.type)
                         ? null
                         : objectTypeList.push(item.type)
                 })
-                let firstLetterMap = this.getObjectIndexList(objectTypeList)
+                const firstLetterMap = this.getObjectIndexList(objectTypeList)
 
                 this.setState({
                     firstLetterMap,
@@ -155,7 +155,7 @@ class SearchableObjectType extends React.Component {
     }
 
     getObjectIndexList = (objectList) => {
-        var firstLetterMap = []
+        const firstLetterMap = []
         if (objectList.length != 0) {
             objectList.map((name) => {
                 firstLetterMap[name[0]]
@@ -214,11 +214,11 @@ class SearchableObjectType extends React.Component {
 
     sectionIndexHTML = () => {
         const { sectionIndexList } = this.state
-        var Data = []
+        const Data = []
         let data = []
         let index = 0
         // the for loop is to screen out the alphabet without any data, output a html format
-        for (var i in sectionIndexList) {
+        for (const i in sectionIndexList) {
             index++
             data = (
                 <Nav.Link
@@ -256,11 +256,11 @@ class SearchableObjectType extends React.Component {
     }
 
     sectionTitleListHTML = () => {
-        var Data = []
+        const Data = []
         let first = []
-        let { searchObjectArray, pinColorArray } = this.props
+        const { searchObjectArray, pinColorArray } = this.props
 
-        for (var titleData in this.state.firstLetterMap) {
+        for (const titleData in this.state.firstLetterMap) {
             first = titleData
             Data.push(
                 <div id={first} key={first} className="text-right text-dark">
@@ -268,10 +268,10 @@ class SearchableObjectType extends React.Component {
                 </div>
             )
 
-            for (let i in this.state.firstLetterMap[first]) {
-                let name = this.state.firstLetterMap[first][i]
+            for (const i in this.state.firstLetterMap[first]) {
+                const name = this.state.firstLetterMap[first][i]
 
-                let pinColorIndex = searchObjectArray.indexOf(name)
+                const pinColorIndex = searchObjectArray.indexOf(name)
 
                 Data.push(
                     <div
@@ -296,7 +296,7 @@ class SearchableObjectType extends React.Component {
     }
 
     handleClick = (e) => {
-        let itemName = e.target.innerText
+        const itemName = e.target.innerText
 
         const searchKey = {
             type: OBJECT_TYPE,
@@ -314,7 +314,7 @@ class SearchableObjectType extends React.Component {
     }
 
     addSearchHistory = (searchKey) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
         if (!auth.authenticated) return
 
@@ -324,16 +324,16 @@ class SearchableObjectType extends React.Component {
 
         const toReturnSearchHistory = searchHistory.map((item) => {
             if (item.name == searchKey.value) {
-                item.value = item.value + 1
+                item.value += 1
                 flag = true
             }
             return item
         })
         flag == false
             ? toReturnSearchHistory.push({
-                  name: searchKey.value,
-                  value: 1,
-              })
+                name: searchKey.value,
+                value: 1,
+            })
             : null
         const sortedSearchHistory = this.sortSearchHistory(
             toReturnSearchHistory
@@ -346,7 +346,7 @@ class SearchableObjectType extends React.Component {
 
     /** Sort the user search history and limit the history number */
     sortSearchHistory = (history) => {
-        let toReturn = history.sort((a, b) => {
+        const toReturn = history.sort((a, b) => {
             return b.value - a.value
         })
         return toReturn
@@ -354,7 +354,7 @@ class SearchableObjectType extends React.Component {
 
     /** Insert search history to database */
     checkInSearchHistory = (itemName) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
         apiHelper.userApiAgent
             .addSearchHistory({
@@ -373,9 +373,9 @@ class SearchableObjectType extends React.Component {
     }
 
     render() {
-        let { locale } = this.context
+        const { locale } = this.context
 
-        let Setting = {
+        const Setting = {
             SectionIndex: {},
             SectionListBackgroundColor: {
                 backgroundColor: 'rgba(240, 240, 240, 0.95)',

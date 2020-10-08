@@ -52,7 +52,7 @@ class DeviceGroupManager extends React.Component {
                 area_id: values.area.id,
             })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                 }
                 this.setState(
@@ -108,7 +108,7 @@ class DeviceGroupManager extends React.Component {
             .modifyDeviceGroupList({
                 groupId: this.state.selectedDeviceGroup.id,
                 mode: 2,
-                newName: newName,
+                newName,
             })
             .then((res) => {
                 this.reload()
@@ -137,7 +137,7 @@ class DeviceGroupManager extends React.Component {
     }
 
     getObjectData = (isMount) => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
         apiHelper.objectApiAgent
             .getObjectTable({
                 locale: locale.abbr,
@@ -152,12 +152,12 @@ class DeviceGroupManager extends React.Component {
     }
 
     getAreaTable = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.areaApiAgent
             .getAreaTable()
             .then((res) => {
-                let areaOptions = res.data.rows.map((area) => {
+                const areaOptions = res.data.rows.map((area) => {
                     return {
                         id: area.id,
                         value: area.name,
@@ -184,7 +184,7 @@ class DeviceGroupManager extends React.Component {
                     }
                 })
 
-                let deviceGroupListOptions = res.data.map((item) => {
+                const deviceGroupListOptions = res.data.map((item) => {
                     return {
                         label: item.name,
                         value: item,
@@ -194,8 +194,8 @@ class DeviceGroupManager extends React.Component {
                 const updatedSelectedDeviceGroup = this.state
                     .selectedDeviceGroup
                     ? data.filter((group) => {
-                          return group.id == this.state.selectedDeviceGroup.id
-                      })[0]
+                        return group.id == this.state.selectedDeviceGroup.id
+                    })[0]
                     : null
 
                 this.setState({
@@ -218,7 +218,7 @@ class DeviceGroupManager extends React.Component {
     render() {
         const { locale } = this.context
 
-        let {
+        const {
             areaOptions,
             deviceGroupListOptions,
             selectedDeviceGroup,

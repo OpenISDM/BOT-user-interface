@@ -35,7 +35,7 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import LocaleContext from '../../../context/LocaleContext'
 import apiHelper from '../../../helper/apiHelper'
 import FormikFormGroup from '../FormikFormGroup'
@@ -55,8 +55,8 @@ const GeneralConfirmForm = ({
     title,
     authenticatedRoles,
 }) => {
-    let locale = React.useContext(LocaleContext)
-    let auth = React.useContext(AuthenticationContext)
+    const locale = React.useContext(LocaleContext)
+    const auth = React.useContext(AuthenticationContext)
 
     return (
         <Modal
@@ -76,9 +76,9 @@ const GeneralConfirmForm = ({
                         username: auth.user.name,
                         password: '',
                     }}
-                    validationSchema={Yup.object().shape({
+                    validationSchema={object().shape({
                         // username: Yup.string().required(locale.texts.USERNAME_IS_REQUIRED),
-                        password: Yup.string().required(
+                        password: string().required(
                             locale.texts.PASSWORD_IS_REQUIRED
                         ),
                     })}

@@ -275,21 +275,21 @@ const editObjectPackage = (
 		SET
 			status = '${item.status}',
 			transferred_location = ${
-                item.status == 'transferred'
-                    ? item.transferred_location.id
-                    : null
-            },
+    item.status == 'transferred'
+        ? item.transferred_location.id
+        : null
+},
 			note_id = ${record_id},
 			reserved_timestamp = ${
-                item.status == 'reserve' ? `'${reservedTimestamp}'` : null
-            },
+    item.status == 'reserve' ? `'${reservedTimestamp}'` : null
+},
 			reserved_user_id = (SELECT id
 				FROM user_table
 				WHERE user_table.name='${username}')
 
 		WHERE asset_control_number IN (${formOption.map(
-            (item) => `'${item.asset_control_number}'`
-        )});
+        (item) => `'${item.asset_control_number}'`
+    )});
 	`
     return text
 }

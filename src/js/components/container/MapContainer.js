@@ -126,7 +126,7 @@ class MapContainer extends React.Component {
             searchResultListRef,
         } = this.props
 
-        let propsGroup = {
+        const propsGroup = {
             proccessedTrackingData,
             hasSearchKey,
             pathData,

@@ -178,18 +178,18 @@ class PatientViewModal extends React.Component {
                                     <ListGroup className="text-none px-0 max-height-30 custom-scrollbar">
                                         {data.records &&
                                             data.records.length != 0 && (
-                                                <div>
-                                                    {data.records.map(
-                                                        (item, index) => {
-                                                            return recordBlockTypeTwo(
-                                                                item,
-                                                                index,
-                                                                locale
-                                                            )
-                                                        }
-                                                    )}
-                                                </div>
-                                            )}
+                                            <div>
+                                                {data.records.map(
+                                                    (item, index) => {
+                                                        return recordBlockTypeTwo(
+                                                            item,
+                                                            index,
+                                                            locale
+                                                        )
+                                                    }
+                                                )}
+                                            </div>
+                                        )}
                                     </ListGroup>
                                 </div>
                                 <Modal.Footer>

@@ -65,7 +65,7 @@ export default class BrowserMapContainer extends React.Component {
             searchResultListRef,
         } = this.props
 
-        let [{ areaId }] = stateReducer
+        const [{ areaId }] = stateReducer
 
         const style = {
             mapForMobile: {
@@ -220,67 +220,67 @@ export default class BrowserMapContainer extends React.Component {
                                 Object.keys(locationMonitorConfig).includes(
                                     areaId.toString()
                                 ) && (
+                                <Nav.Item className="mt-2 bd-highligh">
+                                    <Button
+                                        variant="warning"
+                                        className="mr-1 ml-2"
+                                        onClick={handleClickButton}
+                                        name="location"
+                                        value={
+                                            locationMonitorConfig[areaId]
+                                                .enable
+                                        }
+                                        active={
+                                            !locationMonitorConfig[areaId]
+                                                .enable
+                                        }
+                                    >
+                                        {locationMonitorConfig[areaId]
+                                            .enable
+                                            ? locale.texts
+                                                .LOCATION_MONITOR_ON
+                                            : locale.texts
+                                                .LOCATION_MONITOR_OFF}
+                                    </Button>
+                                </Nav.Item>
+                            )}
+                            {geofenceConfig &&
+                                Object.keys(geofenceConfig).includes(
+                                    areaId.toString()
+                                ) && (
+                                <div className="d-flex">
                                     <Nav.Item className="mt-2 bd-highligh">
                                         <Button
                                             variant="warning"
                                             className="mr-1 ml-2"
                                             onClick={handleClickButton}
-                                            name="location"
+                                            name="geofence"
                                             value={
-                                                locationMonitorConfig[areaId]
+                                                geofenceConfig[areaId]
                                                     .enable
                                             }
                                             active={
-                                                !locationMonitorConfig[areaId]
+                                                !geofenceConfig[areaId]
                                                     .enable
                                             }
                                         >
-                                            {locationMonitorConfig[areaId]
-                                                .enable
-                                                ? locale.texts
-                                                      .LOCATION_MONITOR_ON
-                                                : locale.texts
-                                                      .LOCATION_MONITOR_OFF}
+                                            {geofenceConfig[areaId].enable
+                                                ? locale.texts.FENCE_ON
+                                                : locale.texts.FENCE_OFF}
                                         </Button>
                                     </Nav.Item>
-                                )}
-                            {geofenceConfig &&
-                                Object.keys(geofenceConfig).includes(
-                                    areaId.toString()
-                                ) && (
-                                    <div className="d-flex">
-                                        <Nav.Item className="mt-2 bd-highligh">
-                                            <Button
-                                                variant="warning"
-                                                className="mr-1 ml-2"
-                                                onClick={handleClickButton}
-                                                name="geofence"
-                                                value={
-                                                    geofenceConfig[areaId]
-                                                        .enable
-                                                }
-                                                active={
-                                                    !geofenceConfig[areaId]
-                                                        .enable
-                                                }
-                                            >
-                                                {geofenceConfig[areaId].enable
-                                                    ? locale.texts.FENCE_ON
-                                                    : locale.texts.FENCE_OFF}
-                                            </Button>
-                                        </Nav.Item>
-                                        <Nav.Item className="mt-2">
-                                            <Button
-                                                variant="outline-primary"
-                                                className="mr-1 ml-2"
-                                                onClick={handleClickButton}
-                                                name="clearAlerts"
-                                            >
-                                                {locale.texts.CLEAR_ALERTS}
-                                            </Button>
-                                        </Nav.Item>
-                                    </div>
-                                )}
+                                    <Nav.Item className="mt-2">
+                                        <Button
+                                            variant="outline-primary"
+                                            className="mr-1 ml-2"
+                                            onClick={handleClickButton}
+                                            name="clearAlerts"
+                                        >
+                                            {locale.texts.CLEAR_ALERTS}
+                                        </Button>
+                                    </Nav.Item>
+                                </div>
+                            )}
                         </div>
                     </Nav>
                 </div>

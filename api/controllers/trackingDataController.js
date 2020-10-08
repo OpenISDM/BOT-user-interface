@@ -32,14 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js'
+import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/trackingDataQueries.js'
-import pool from '../db/dev/connection.js'
+import dbQueries from '../db/dbQueries/trackingDataQueries'
+import pool from '../db/dev/connection'
 import {
     MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
     MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
-} from '../config/config.js'
+} from '../config/config'
 
 moment.updateLocale('en', {
     relativeTime: MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
@@ -119,13 +119,13 @@ const getTrackingData = (request, response) => {
                 /** Set the residence time of the object */
                 item.residence_time = item.found
                     ? moment(item.last_seen_timestamp)
-                          .locale(locale)
-                          .from(moment(item.first_seen_timestamp))
+                        .locale(locale)
+                        .from(moment(item.first_seen_timestamp))
                     : item.last_reported_timestamp
-                    ? moment(item.last_reported_timestamp)
-                          .locale(locale)
-                          .fromNow()
-                    : ''
+                        ? moment(item.last_reported_timestamp)
+                            .locale(locale)
+                            .fromNow()
+                        : ''
 
                 /** Flag the object's battery volumn is limiting */
                 if (

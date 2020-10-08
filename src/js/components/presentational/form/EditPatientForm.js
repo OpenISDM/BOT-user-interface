@@ -39,7 +39,7 @@ import config from '../../../config'
 import { AppContext } from '../../../context/AppContext'
 import Creatable, { makeCreatableSelect } from 'react-select/creatable'
 import { Formik, Field, Form } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
 import FormikFormGroup from '../FormikFormGroup'
@@ -47,7 +47,7 @@ import styleConfig from '../../../config/styleConfig'
 import { DISASSOCIATE } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
 
-let monitorTypeMap = {}
+const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
     monitorTypeMap[config.monitorType[key]] = key
 })
@@ -91,7 +91,7 @@ class EditPatientForm extends React.Component {
             }
         )
 
-        let physicianListOptions = physicianList.map((user) => {
+        const physicianListOptions = physicianList.map((user) => {
             return {
                 value: user.id,
                 label: user.name,
@@ -100,10 +100,10 @@ class EditPatientForm extends React.Component {
 
         physicianList.map((user) => {
             selectedRowData.physician_id == user.id
-                ? (selectedRowData['physician'] = {
-                      value: user.id,
-                      label: user.name,
-                  })
+                ? (selectedRowData.physician = {
+                    value: user.id,
+                    label: user.name,
+                })
                 : null
         })
 
@@ -123,9 +123,9 @@ class EditPatientForm extends React.Component {
 
                             mac_address: selectedRowData.isBind
                                 ? {
-                                      label: mac_address,
-                                      value: mac_address,
-                                  }
+                                    label: mac_address,
+                                    value: mac_address,
+                                }
                                 : null,
 
                             asset_control_number: asset_control_number || '',
@@ -139,28 +139,28 @@ class EditPatientForm extends React.Component {
 
                             room: room
                                 ? {
-                                      value: room,
-                                      label: room,
-                                  }
+                                    value: room,
+                                    label: room,
+                                }
                                 : null,
                         }}
-                        validationSchema={Yup.object().shape({
-                            name: Yup.string()
+                        validationSchema={object().shape({
+                            name: string()
                                 .required(locale.texts.NAME_IS_REQUIRED)
                                 .max(
                                     40,
                                     locale.texts.LIMIT_IN_FOURTY_CHARACTER
                                 ),
 
-                            area: Yup.string().required(
+                            area: string().required(
                                 locale.texts.AREA_IS_REQUIRED
                             ),
 
-                            gender: Yup.string().required(
+                            gender: string().required(
                                 locale.texts.GENDER_IS_REQUIRED
                             ),
 
-                            asset_control_number: Yup.string()
+                            asset_control_number: string()
                                 .required(locale.texts.NUMBER_IS_REQUIRED)
                                 .test(
                                     'asset_control_number',
@@ -191,7 +191,7 @@ class EditPatientForm extends React.Component {
                                     locale.texts.LIMIT_IN_FOURTY_CHARACTER
                                 ),
 
-                            mac_address: Yup.object()
+                            mac_address: object()
                                 .nullable()
                                 /** check if there are duplicated mac address in object table */
                                 .test(
@@ -204,18 +204,18 @@ class EditPatientForm extends React.Component {
                                             return true
                                         if (selectedRowData.length == 0)
                                             return true
-                                        else return macaddrValidation(obj.label)
+                                        return macaddrValidation(obj.label)
                                     }
                                 ),
                         })}
                         onSubmit={(values, { setStatus, setSubmitting }) => {
-                            let monitor_type = values.monitorType
+                            const monitor_type = values.monitorType
                                 ? values.monitorType
-                                      .filter((item) => item)
-                                      .reduce((sum, item) => {
-                                          sum += parseInt(monitorTypeMap[item])
-                                          return sum
-                                      }, 0)
+                                    .filter((item) => item)
+                                    .reduce((sum, item) => {
+                                        sum += parseInt(monitorTypeMap[item])
+                                        return sum
+                                    }, 0)
                                 : 0
 
                             physicianList.map((item) => {
@@ -476,14 +476,14 @@ class EditPatientForm extends React.Component {
                                                             id={
                                                                 config
                                                                     .monitorType[
-                                                                    key
-                                                                ]
+                                                                        key
+                                                                    ]
                                                             }
                                                             label={
                                                                 config
                                                                     .monitorType[
-                                                                    key
-                                                                ]
+                                                                        key
+                                                                    ]
                                                             }
                                                         />
                                                     )

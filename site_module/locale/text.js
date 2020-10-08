@@ -34,10 +34,10 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import zhTw from './texts/zh-TW.js';
-import en from './texts/en-US.js';
+import zhTw from './texts/zh-TW'
+import en from './texts/en-US'
 
-export const tw = zhTw;
+export const tw = zhTw
 
 export default {
     tw,
@@ -47,4 +47,4 @@ export default {
     ms: en,
 
     cn: tw,
-};
+}

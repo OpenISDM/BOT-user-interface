@@ -56,7 +56,7 @@ class Searchbar extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        let searchKey = {
+        const searchKey = {
             type: SEARCH_BAR,
             value: this.state.value,
         }

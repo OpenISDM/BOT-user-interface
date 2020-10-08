@@ -9,12 +9,12 @@ import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
 class UserSettingContainer extends React.Component {
     componentDidMount = () => {
         /** set the scrollability in body disabled */
-        let targetElement = document.querySelector('body')
+        const targetElement = document.querySelector('body')
         enableBodyScroll(targetElement)
     }
 
     componentWillUnmount = () => {
-        let targetElement = document.querySelector('body')
+        const targetElement = document.querySelector('body')
         disableBodyScroll(targetElement)
     }
 

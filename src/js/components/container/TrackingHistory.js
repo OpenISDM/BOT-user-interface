@@ -346,8 +346,8 @@ class TrackingHistory extends React.Component {
                                                 values.mode == 'mac'
                                                     ? additionalData.name
                                                     : locale.texts[
-                                                          additionalData.area
-                                                      ]
+                                                        additionalData.area
+                                                    ]
                                             }
                                             label={
                                                 values.mode == 'mac'

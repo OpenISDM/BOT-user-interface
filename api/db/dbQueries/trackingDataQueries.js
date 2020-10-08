@@ -142,10 +142,10 @@ const getTrackingData = (areas_id, key) => {
 			object_table.type,
 			object_table.asset_control_number
 			DESC;
-	`;
-    return query;
-};
+	`
+    return query
+}
 
 export default {
     getTrackingData,
-};
+}

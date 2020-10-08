@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getLbeaconTable: async function ({ locale }) {
+    async getLbeaconTable ({ locale }) {
         return await axios.get(dataSrc.lbeacon, {
             params: {
                 locale,

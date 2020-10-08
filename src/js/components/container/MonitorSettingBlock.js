@@ -33,21 +33,21 @@
 */
 
 import React from 'react'
-import { AppContext } from '../../context/AppContext.js'
+import { AppContext } from '../../context/AppContext'
 import { ButtonToolbar, Button } from 'react-bootstrap'
 import config from '../../config'
 import ReactTable from 'react-table'
-import styleConfig from '../../config/styleConfig.js'
-import EditMonitorConfigForm from '../presentational/form/EditMonitorConfigForm.js'
-import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm.js'
-import { monitorConfigColumn } from '../../config/tables.js'
+import styleConfig from '../../config/styleConfig'
+import EditMonitorConfigForm from '../presentational/form/EditMonitorConfigForm'
+import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
+import { monitorConfigColumn } from '../../config/tables'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
-import messageGenerator from '../../helper/messageGenerator.js'
+import messageGenerator from '../../helper/messageGenerator'
 const SelectTable = selecTableHOC(ReactTable)
-import { PrimaryButton } from '../BOTComponent/styleComponent.js'
-import AccessControl from '../authentication/AccessControl.js'
-import apiHelper from '../../helper/apiHelper.js'
-import { JSONClone } from '../../helper/utilities.js'
+import { PrimaryButton } from '../BOTComponent/styleComponent'
+import AccessControl from '../authentication/AccessControl'
+import apiHelper from '../../helper/apiHelper'
+import { JSONClone } from '../../helper/utilities'
 
 class MonitorSettingBlock extends React.Component {
     static contextType = AppContext

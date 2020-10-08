@@ -34,13 +34,13 @@
 
 /** Email format validation */
 export const emailValidation = (email) => {
-    let req = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/
+    const req = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/
     return req.test(email)
 }
 
 /** Mac address format validation */
 export const macaddrValidation = (macaddr) => {
-    let req = new RegExp(
+    const req = new RegExp(
         '^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
     )
     return macaddr.match(req)
@@ -48,6 +48,6 @@ export const macaddrValidation = (macaddr) => {
 
 /** String is empty test */
 export const isEmpty = (str) => {
-    let req = /^\s*$/
+    const req = /^\s*$/
     return req.test(str)
 }

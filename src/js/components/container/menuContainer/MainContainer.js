@@ -138,9 +138,9 @@ class MainContainer extends React.Component {
             const [{ shouldUpdateTrackingData }] = stateReducer
             this.interval = shouldUpdateTrackingData
                 ? setInterval(
-                      this.getTrackingData,
-                      config.mapConfig.intervalTime
-                  )
+                    this.getTrackingData,
+                    config.mapConfig.intervalTime
+                )
                 : clearInterval(this.interval)
             this.setState({
                 shouldUpdateTrackingData,
@@ -543,21 +543,21 @@ class MainContainer extends React.Component {
                 }
                 break
 
-            // case OBJECT_TYPE:
+                // case OBJECT_TYPE:
 
-            //     if (searchObjectArray.includes(searchKey.value)) {
+                //     if (searchObjectArray.includes(searchKey.value)) {
 
-            //     } else if (searchObjectArray.length < MAX_SEARCH_OBJECT_NUM) {
-            //         searchObjectArray.push(searchKey.value)
-            //     } else {
-            //         searchObjectArray.shift();
-            //         pinColorArray.push(pinColorArray.shift());
-            //         searchObjectArray.push(searchKey.value)
-            //     }
+                //     } else if (searchObjectArray.length < MAX_SEARCH_OBJECT_NUM) {
+                //         searchObjectArray.push(searchKey.value)
+                //     } else {
+                //         searchObjectArray.shift();
+                //         pinColorArray.push(pinColorArray.shift());
+                //         searchObjectArray.push(searchKey.value)
+                //     }
 
-            //     searchResult = proccessedTrackingData.filter(item => {
-            //         return searchObjectArray.includes(item.type)
-            //     })
+                //     searchResult = proccessedTrackingData.filter(item => {
+                //         return searchObjectArray.includes(item.type)
+                //     })
 
             //     break;
             case OBJECT_TYPE:

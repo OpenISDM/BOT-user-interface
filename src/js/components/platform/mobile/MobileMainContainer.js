@@ -70,8 +70,8 @@ const MobileMainContainer = ({
     display,
     handleShowResultListForMobile,
 }) => {
-    let auth = React.useContext(AuthenticationContext)
-    let locale = React.useContext(LocaleContext)
+    const auth = React.useContext(AuthenticationContext)
+    const locale = React.useContext(LocaleContext)
 
     const style = {
         searchPanelForMobile: {

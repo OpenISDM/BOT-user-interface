@@ -1,4 +1,4 @@
-import db from '../api_query.js'
+import db from '../api_query'
 
 export default (app) => {
     /** 給我帳號密碼 給你金鑰 **/

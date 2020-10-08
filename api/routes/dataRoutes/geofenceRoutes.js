@@ -32,16 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import geofenceController from '../../controllers/geofenceController.js';
-import cors from 'cors';
+import geofenceController from '../../controllers/geofenceController'
+import cors from 'cors'
 
 export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/geofence', cors());
+    app.options('/data/geofence', cors())
 
     app.route('/data/geofence')
         .post(geofenceController.getGeofenceConfig)
         .delete(geofenceController.deleteMonitorConfig)
         .patch(geofenceController.addGeofenceConfig)
-        .put(geofenceController.setGeofenceConfig);
-};
+        .put(geofenceController.setGeofenceConfig)
+}

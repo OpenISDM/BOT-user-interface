@@ -53,7 +53,7 @@ const EditBranchForm = ({
     title,
     branchOptions,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     return (
         <Modal show={show} onHide={handleClose}>

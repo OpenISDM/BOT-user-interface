@@ -49,7 +49,7 @@ const SearchResult = ({
     showNotFoundResult,
     onSelect,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     const style = {
         noResultDiv: {

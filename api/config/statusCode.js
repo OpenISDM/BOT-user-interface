@@ -34,4 +34,4 @@
 
 export default {
     LBEACON_STATUS_NOT_AVAILABLE: 9999,
-};
+}

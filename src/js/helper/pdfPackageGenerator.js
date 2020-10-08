@@ -112,8 +112,8 @@ const pdfPackageGenerator = {
             return `
                 <h3 style='text-transform: capitalize;'>
                     ${locale.texts[
-                        pdfPackageGenerator.pdfFormat.pdfTitle[option]
-                    ].toUpperCase()}
+        pdfPackageGenerator.pdfFormat.pdfTitle[option]
+    ].toUpperCase()}
                 </h3>
             `
         },
@@ -387,8 +387,8 @@ const pdfPackageGenerator = {
                             border-bottom: 1px solid black;'
                         >
                             ${locale.texts[
-                                title.toUpperCase().replace(/ /g, '_')
-                            ].toUpperCase()}
+        title.toUpperCase().replace(/ /g, '_')
+    ].toUpperCase()}
                         </h4>
                     `
                     : ''
@@ -403,8 +403,8 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${item.name},
                             ${
-                                locale.texts.LAST_FOUR_DIGITS_IN_ACN
-                            }: ${item.asset_control_number.slice(-4)},
+    locale.texts.LAST_FOUR_DIGITS_IN_ACN
+}: ${item.asset_control_number.slice(-4)},
                             ${locale.texts.NEAR} ${item.location_description},
                             ${item.residence_time}
                         </div>
@@ -422,8 +422,8 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${item.area},
                             ${
-                                locale.texts.LAST_FOUR_DIGITS_IN_ACN
-                            }: ${item.asset_control_number.slice(-4)},
+    locale.texts.LAST_FOUR_DIGITS_IN_ACN
+}: ${item.asset_control_number.slice(-4)},
                             ${locale.texts.NEAR} ${item.location_description},
                             ${item.residence_time}
                         </div>
@@ -458,8 +458,8 @@ const pdfPackageGenerator = {
                     >
                         ${headers}
                         ${data
-                            .map((item, index) => {
-                                return `
+        .map((item, index) => {
+            return `
                                 <tr>
                                     <td>${item.area}</td>
                                     <td>${item.startTime}</td>
@@ -467,8 +467,8 @@ const pdfPackageGenerator = {
                                     <td>${item.residenceTime}</td>
                                 </tr>
                             `
-                            })
-                            .join(' ')}
+        })
+        .join(' ')}
                     </table>
                 `
             },
@@ -502,8 +502,8 @@ const pdfPackageGenerator = {
                     >
                         ${headers}
                         ${data
-                            .map((item, index) => {
-                                return `
+        .map((item, index) => {
+            return `
                                 <tr>
                                     <td>${item.area}</td>
                                     <td>${item.location_description}</td>
@@ -512,8 +512,8 @@ const pdfPackageGenerator = {
                                     <td>${item.residenceTime}</td>
                                 </tr>
                             `
-                            })
-                            .join(' ')}
+        })
+        .join(' ')}
                     </table>
                 `
             },
@@ -545,8 +545,8 @@ const pdfPackageGenerator = {
                     >
                         ${headers}
                         ${data
-                            .map((item, index) => {
-                                return `
+        .map((item, index) => {
+            return `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${item.name}</td>
@@ -554,8 +554,8 @@ const pdfPackageGenerator = {
                                     <td>${item.area}</td>
                                 </tr>
                             `
-                            })
-                            .join(' ')}
+        })
+        .join(' ')}
                     </table>
                 `
             },
@@ -569,8 +569,8 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${item.name},
                             ${
-                                locale.texts.LAST_FOUR_DIGITS_IN_ACN
-                            }: ${item.asset_control_number.slice(-4)},
+    locale.texts.LAST_FOUR_DIGITS_IN_ACN
+}: ${item.asset_control_number.slice(-4)},
                             ${locale.texts.NEAR} ${item.location_description},
                             ${item.residence_time}
                         </div>
@@ -596,8 +596,8 @@ const pdfPackageGenerator = {
                                 &nbsp;
                                 <div style='font-size: 0.8em;display: inline-block;'>
                                     ${moment(item.created_timestamp)
-                                        .locale(locale.abbr)
-                                        .format('lll')}
+        .locale(locale.abbr)
+        .format('lll')}
                                 </div>
                             </div>
                             <div
@@ -686,8 +686,8 @@ const pdfPackageGenerator = {
                             </div>
                             <div>
                                 ${Object.keys(level)
-                                    .map((parent, index) => {
-                                        return `
+        .map((parent, index) => {
+            return `
                                         <div
                                             style='
                                                 display: table;
@@ -716,19 +716,19 @@ const pdfPackageGenerator = {
                                                 '
                                             >
                                                 ${level[parent]
-                                                    .map((child) => {
-                                                        return `
+        .map((child) => {
+            return `
                                                         <div>
                                                             ${child}
                                                         </div>
                                                     `
-                                                    })
-                                                    .join('')}
+        })
+        .join('')}
                                             </div>
                                         </div>
                                     `
-                                    })
-                                    .join('')}
+        })
+        .join('')}
                             </div>
                         </div>
                     `
@@ -761,10 +761,10 @@ const pdfPackageGenerator = {
                     </div>`
                 const confirmedBy = `<div style='text-transform: capitalize;'>
                     ${
-                        locale.abbr == 'en'
-                            ? `${locale.texts.CONFIRMED_BY} ${signature}`
-                            : `${locale.texts.CONFIRMED_BY}: ${signature}`
-                    }
+    locale.abbr == 'en'
+        ? `${locale.texts.CONFIRMED_BY} ${signature}`
+        : `${locale.texts.CONFIRMED_BY}: ${signature}`
+}
                 </div>`
 
                 const checkby = `<div style='text-transform: capitalize;'>
@@ -918,8 +918,8 @@ const pdfPackageGenerator = {
             return `
                 <div style='text-transform: capitalize;'>
                     ${locale.texts.DATE_TIME}: ${moment()
-                .locale(locale.abbr)
-                .format('LLL')}
+    .locale(locale.abbr)
+    .format('LLL')}
                 </div>
             `
         },

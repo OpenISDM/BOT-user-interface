@@ -97,7 +97,7 @@ class BOTSearchbar extends React.Component {
 
         let type
         let searchKey = {}
-        let value = this.state.value
+        const value = this.state.value
 
         if (this.props.suggestData.includes(value)) {
             type = SEARCH_HISTORY
@@ -121,7 +121,7 @@ class BOTSearchbar extends React.Component {
 
     /** Set search history to auth */
     addSearchHistory = (searchKey) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
         if (!auth.authenticated) return
 
@@ -147,7 +147,7 @@ class BOTSearchbar extends React.Component {
 
     /** Insert search history to database */
     checkInSearchHistory = (itemName) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
         apiHelper.userApiAgent
             .addSearchHistory({
@@ -204,7 +204,7 @@ class BOTSearchbar extends React.Component {
             inputLength
         )
 
-        let suggestLimit = []
+        const suggestLimit = []
 
         suggestTemp.map((item, index) => {
             index < config.AUTOSUGGEST_NUMBER_LIMIT

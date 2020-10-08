@@ -82,7 +82,7 @@ class ObjectTypeList extends React.Component {
 
     /** Set search history to auth */
     addSearchHistory = (searchKey) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
         if (!auth.authenticated) return
 
@@ -106,7 +106,7 @@ class ObjectTypeList extends React.Component {
 
     /** Sort the user search history and limit the history number */
     sortSearchHistory(history) {
-        let toReturn = history.sort((a, b) => {
+        const toReturn = history.sort((a, b) => {
             return b.value - a.value
         })
         return toReturn
@@ -114,7 +114,7 @@ class ObjectTypeList extends React.Component {
 
     /** Insert search history to database */
     checkInSearchHistory = (itemName) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
         apiHelper.userApiAgent
             .addSearchHistory({
@@ -145,7 +145,7 @@ class ObjectTypeList extends React.Component {
                 <div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar text-center max-height-30">
                     <div className="text-center">
                         {this.props.objectTypeList.map((item, index) => {
-                            let pinColorIndex = searchObjectArray.indexOf(item)
+                            const pinColorIndex = searchObjectArray.indexOf(item)
 
                             return (
                                 <Button

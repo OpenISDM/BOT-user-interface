@@ -38,16 +38,16 @@ const getGeofenceConfig = (areaId) => {
 			*
 		FROM geo_fence_config
 		ORDER BY id
-	;`;
-};
+	;`
+}
 
 const deleteMonitorConfig = (monitorConfigPackage) => {
-    const { type, id } = monitorConfigPackage;
+    const { type, id } = monitorConfigPackage
     return `
 		DELETE FROM geo_fence_config
 		WHERE id IN (${id.map((id) => `'${id}'`)})
-	`;
-};
+	`
+}
 
 const addGeofenceConfig = (monitorConfigPackage) => {
     const {
@@ -61,7 +61,7 @@ const addGeofenceConfig = (monitorConfigPackage) => {
         fences,
         area_id,
         is_global_fence,
-    } = monitorConfigPackage;
+    } = monitorConfigPackage
 
     const text = `
 		INSERT INTO ${type}
@@ -86,7 +86,7 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 				$7,
 				$8
 			)
-	`;
+	`
 
     const values = [
         name,
@@ -97,13 +97,13 @@ const addGeofenceConfig = (monitorConfigPackage) => {
         fences,
         area_id,
         is_global_fence,
-    ];
+    ]
 
     return {
         text,
         values,
-    };
-};
+    }
+}
 
 const setGeofenceConfig = (monitorConfigPackage) => {
     const {
@@ -117,7 +117,7 @@ const setGeofenceConfig = (monitorConfigPackage) => {
         fences,
         area_id,
         is_global_fence,
-    } = monitorConfigPackage;
+    } = monitorConfigPackage
 
     const text = `
 		UPDATE geo_fence_config
@@ -131,7 +131,7 @@ const setGeofenceConfig = (monitorConfigPackage) => {
 			fences = $8,
 			is_global_fence = $9
 		WHERE id = $1;
-	`;
+	`
     const values = [
         id,
         name,
@@ -142,19 +142,19 @@ const setGeofenceConfig = (monitorConfigPackage) => {
         perimeters,
         fences,
         is_global_fence,
-    ];
+    ]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 export default {
     getGeofenceConfig,
     deleteMonitorConfig,
     addGeofenceConfig,
     setGeofenceConfig,
-};
+}

@@ -36,14 +36,14 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getPDF: async function ({ userInfo, pdfPackage }) {
+    async getPDF ({ userInfo, pdfPackage }) {
         return await axios.post(dataSrc.file.export.pdf, {
             userInfo,
             pdfPackage,
         })
     },
 
-    getFile: async function ({ path }) {
+    async getFile ({ path }) {
         return await window.open(dataSrc.pdfUrl(path))
     },
 }

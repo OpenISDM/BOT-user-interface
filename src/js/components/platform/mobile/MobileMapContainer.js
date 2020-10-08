@@ -65,7 +65,7 @@ export default class TabletMapContainer extends React.Component {
             getSearchKey,
         } = this.props
 
-        let [{ areaId }] = stateReducer
+        const [{ areaId }] = stateReducer
 
         const style = {
             mapForMobile: {

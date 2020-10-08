@@ -47,7 +47,7 @@ const addObjectType = (name) => {
         )
 
 
-    `;
-};
+    `
+}
 
-export default {};
+export default {}

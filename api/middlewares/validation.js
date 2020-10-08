@@ -34,17 +34,17 @@
 
 export const authChecker = (req, res, next) => {
     if (req.session.user) {
-        next();
+        next()
     } else {
-        res.redirect('/login');
+        res.redirect('/login')
     }
-};
+}
 
 export const pageChecker = (req, res, next) => {
-    if (req.session.user) next();
+    if (req.session.user) next()
     else {
-        res.clearCookie('authenticated');
-        res.clearCookie('user');
-        res.redirect('/login');
+        res.clearCookie('authenticated')
+        res.clearCookie('user')
+        res.redirect('/login')
     }
-};
+}

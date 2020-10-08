@@ -67,26 +67,20 @@ const getMonitorConfig = (type) => {
 		ON lbeacon_temp_table.lbeacon_area_id = ${type}.area_id
 
 		ORDER BY id;
-	`;
-    return text;
-};
+	`
+    return text
+}
 
 const deleteMonitorConfig = (monitorConfigPackage) => {
-    const { type, id } = monitorConfigPackage;
+    const { type, id } = monitorConfigPackage
     return `
 		DELETE FROM ${type}
 		WHERE id IN (${id.map((id) => `'${id}'`)})
-	`;
-};
+	`
+}
 
 const addMonitorConfig = (monitorConfigPackage) => {
-    const {
-        type,
-        start_time,
-        end_time,
-        enable,
-        area_id,
-    } = monitorConfigPackage;
+    const { type, start_time, end_time, enable, area_id } = monitorConfigPackage
 
     const text = `
 		INSERT INTO ${type}
@@ -103,15 +97,15 @@ const addMonitorConfig = (monitorConfigPackage) => {
 				$3,
 				$4
 			)
-	`;
+	`
 
-    const values = [start_time, end_time, enable, area_id];
+    const values = [start_time, end_time, enable, area_id]
 
     return {
         text,
         values,
-    };
-};
+    }
+}
 
 const setMonitorConfig = (monitorConfigPackage) => {
     const {
@@ -121,7 +115,7 @@ const setMonitorConfig = (monitorConfigPackage) => {
         end_time,
         enable,
         area_id,
-    } = monitorConfigPackage;
+    } = monitorConfigPackage
 
     const text = `
 		UPDATE ${monitorConfigPackage.type}
@@ -132,20 +126,20 @@ const setMonitorConfig = (monitorConfigPackage) => {
 			enable = $4
 
 		WHERE id = $1;
-	`;
-    const values = [id, start_time, end_time, enable, area_id];
+	`
+    const values = [id, start_time, end_time, enable, area_id]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 export default {
     getMonitorConfig,
     deleteMonitorConfig,
     addMonitorConfig,
     setMonitorConfig,
-};
+}

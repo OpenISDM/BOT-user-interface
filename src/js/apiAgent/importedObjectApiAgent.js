@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getImportedObjectTable: async function ({ locale, type }) {
+    async getImportedObjectTable ({ locale, type }) {
         return await axios.get(dataSrc.importedObject, {
             params: {
                 locale,
@@ -45,14 +45,14 @@ export default {
         })
     },
 
-    addImportedObject: async function ({ locale, newData }) {
+    async addImportedObject ({ locale, newData }) {
         return await axios.post(dataSrc.importedObject, {
             locale,
             newData,
         })
     },
 
-    deleteImportedObject: async function ({ idPackage }) {
+    async deleteImportedObject ({ idPackage }) {
         return await axios.delete(dataSrc.importedObject, {
             data: {
                 idPackage,

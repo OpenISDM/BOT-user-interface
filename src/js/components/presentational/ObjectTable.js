@@ -117,9 +117,9 @@ class ObjectTable extends React.Component {
         this.getAreaTable()
         this.getIdleMacaddrSet()
 
-        let columns = JSONClone(objectTableColumn)
+        const columns = JSONClone(objectTableColumn)
 
-        let { locale } = this.context
+        const { locale } = this.context
 
         columns.map((field) => {
             field.Header =
@@ -154,12 +154,12 @@ class ObjectTable extends React.Component {
     }
 
     getAreaTable = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.areaApiAgent
             .getAreaTable()
             .then((res) => {
-                let areaSelection = res.data.rows.map((area) => {
+                const areaSelection = res.data.rows.map((area) => {
                     return {
                         value: area.name,
                         label: locale.texts[area.name],
@@ -180,7 +180,7 @@ class ObjectTable extends React.Component {
     }
 
     getData = (callback) => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -189,8 +189,8 @@ class ObjectTable extends React.Component {
                 objectType: [0, 1, 2],
             })
             .then((res) => {
-                let columns = JSONClone(objectTableColumn)
-                let typeList = {}
+                const columns = JSONClone(objectTableColumn)
+                const typeList = {}
 
                 columns.map((field) => {
                     field.Header =
@@ -199,7 +199,7 @@ class ObjectTable extends React.Component {
                         ]
                 })
 
-                let data = res.data.rows
+                const data = res.data.rows
                     .filter((item) => item.object_type == 0)
                     .map((item) => {
                         item.monitor_type = transferMonitorTypeToString(
@@ -269,8 +269,8 @@ class ObjectTable extends React.Component {
         await apiHelper.objectApiAgent
             .getIdleMacaddr()
             .then((res) => {
-                let idleMacaddrSet = res.data.rows[0].mac_set
-                let macOptions = idleMacaddrSet.map((mac) => {
+                const idleMacaddrSet = res.data.rows[0].mac_set
+                const macOptions = idleMacaddrSet.map((mac) => {
                     return {
                         label: mac,
                         value: mac.replace(/:/g, ''),
@@ -287,7 +287,7 @@ class ObjectTable extends React.Component {
     }
 
     getImportData = (callback) => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.importedObjectApiAgent
             .getImportedObjectTable({
@@ -326,7 +326,7 @@ class ObjectTable extends React.Component {
                         },
                     })
                     .then((res) => {
-                        let callback = () => {
+                        const callback = () => {
                             messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                         }
                         this.getData(callback)
@@ -337,7 +337,7 @@ class ObjectTable extends React.Component {
                 break
 
             case DELETE:
-                let formOption = []
+                const formOption = []
                 var deleteArray = []
                 var deleteCount = 0
 
@@ -356,11 +356,11 @@ class ObjectTable extends React.Component {
                     this.state.data[item] == undefined
                         ? null
                         : formOption.push({
-                              id: this.state.data[item].id,
-                              mac_address: this.state.data[item].isBind
-                                  ? this.state.data[item].mac_address
-                                  : null,
-                          })
+                            id: this.state.data[item].id,
+                            mac_address: this.state.data[item].isBind
+                                ? this.state.data[item].mac_address
+                                : null,
+                        })
                 })
 
                 apiHelper.objectApiAgent
@@ -368,7 +368,7 @@ class ObjectTable extends React.Component {
                         formOption,
                     })
                     .then((res) => {
-                        let callback = () => {
+                        const callback = () => {
                             messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                         }
                         this.getData(callback)
@@ -384,14 +384,14 @@ class ObjectTable extends React.Component {
     }
 
     handleSubmitForm = (formOption, cb) => {
-        let { apiMethod } = this.state
+        const { apiMethod } = this.state
 
         apiHelper.objectApiAgent[apiMethod]({
             formOption,
             mode: DEVICE,
         })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                 }
                 this.getData(callback)
@@ -419,7 +419,7 @@ class ObjectTable extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
         if (selectAll) {
@@ -451,8 +451,8 @@ class ObjectTable extends React.Component {
     }
 
     handleClickButton = (e) => {
-        let { name } = e.target
-        let { locale } = this.context
+        const { name } = e.target
+        const { locale } = this.context
 
         switch (name) {
             case ADD:
@@ -488,12 +488,12 @@ class ObjectTable extends React.Component {
                 })
                 break
 
-            // case DISASSOCIATE:
-            //     this.setState({
-            //         formTitle: name,
-            //         isShowEditImportTable: true
-            //     })
-            //     break;
+                // case DISASSOCIATE:
+                //     this.setState({
+                //         formTitle: name,
+                //         isShowEditImportTable: true
+                //     })
+                //     break;
 
             case DISASSOCIATE:
                 this.setState({
@@ -508,15 +508,15 @@ class ObjectTable extends React.Component {
     filterData = (data, key, filteredAttribute) => {
         const { locale } = this.context
         key = key.toLowerCase()
-        let filteredData = data.filter((obj) => {
+        const filteredData = data.filter((obj) => {
             if (filteredAttribute.includes('name')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.name.toLowerCase().match(keyRex)) {
                     return true
                 }
             }
             if (filteredAttribute.includes('type')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
 
                 if (obj.type.toLowerCase().match(keyRex)) {
                     return true
@@ -524,13 +524,13 @@ class ObjectTable extends React.Component {
             }
 
             if (filteredAttribute.includes('acn')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.asset_control_number.toLowerCase().match(keyRex))
                     return true
             }
 
             if (filteredAttribute.includes('status')) {
-                let keyRex = new RegExp(key.toLowerCase())
+                const keyRex = new RegExp(key.toLowerCase())
 
                 if (obj.status.label.toLowerCase().match(keyRex)) {
                     return true
@@ -538,7 +538,7 @@ class ObjectTable extends React.Component {
             }
 
             if (filteredAttribute.includes('area')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.area_name.label != undefined) {
                     if (obj.area_name.label.match(keyRex)) {
                         return true
@@ -547,14 +547,14 @@ class ObjectTable extends React.Component {
             }
 
             if (filteredAttribute.includes('monitor')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.monitor_type.toLowerCase().match(keyRex)) {
                     return true
                 }
             }
 
             if (filteredAttribute.includes('macAddress')) {
-                let keyRex = key.replace(/:/g, '')
+                const keyRex = key.replace(/:/g, '')
                 if (
                     obj.mac_address
                         .replace(/:/g, '')
@@ -571,7 +571,7 @@ class ObjectTable extends React.Component {
             }
 
             if (filteredAttribute.includes('physician_name')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
 
                 if (
                     obj.physician_name &&
@@ -608,7 +608,7 @@ class ObjectTable extends React.Component {
     }
 
     filterObjects = () => {
-        let filteredData = this.state.objectFilter.reduce((acc, curr) => {
+        const filteredData = this.state.objectFilter.reduce((acc, curr) => {
             return this.filterData(acc, curr.key, curr.attribute)
         }, this.state.data)
 
@@ -631,7 +631,7 @@ class ObjectTable extends React.Component {
         }
 
         const { locale } = this.context
-        let typeSelection = this.state.filterSelection.typeList
+        const typeSelection = this.state.filterSelection.typeList
             ? Object.values(this.state.filterSelection.typeList)
             : null
 

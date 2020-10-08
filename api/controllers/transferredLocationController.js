@@ -32,10 +32,10 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js'
+import 'dotenv/config'
 
-import dbQueries from '../db/dbQueries/transferredLocationQueries.js'
-import pool from '../db/dev/connection.js'
+import dbQueries from '../db/dbQueries/transferredLocationQueries'
+import pool from '../db/dev/connection'
 
 export default {
     getAllTransferredLocation: (request, response) => {

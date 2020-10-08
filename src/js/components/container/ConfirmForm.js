@@ -82,15 +82,11 @@ class ConfirmForm extends React.Component {
 
         const { locale } = this.context
 
-        let hasSelectedObjectData = selectedObjectData[0] ? true : false
-        let isTransferObject =
-            hasSelectedObjectData && selectedObjectData[0].status == TRANSFERRED
-                ? true
-                : false
-        let isReservedObject =
-            hasSelectedObjectData && selectedObjectData[0].status == RESERVE
-                ? true
-                : false
+        const hasSelectedObjectData = !!selectedObjectData[0]
+        const isTransferObject =
+            !!(hasSelectedObjectData && selectedObjectData[0].status == TRANSFERRED)
+        const isReservedObject =
+            !!(hasSelectedObjectData && selectedObjectData[0].status == RESERVE)
 
         return (
             <Modal
@@ -227,40 +223,40 @@ class ConfirmForm extends React.Component {
                                                     <div className="d-flex justify-content-center">
                                                         {isDelayTime
                                                             ? moment()
-                                                                  .add(
-                                                                      config.reservedDelayTime,
-                                                                      'minutes'
-                                                                  )
-                                                                  .locale(
-                                                                      locale.abbr
-                                                                  )
-                                                                  .format('LT')
+                                                                .add(
+                                                                    config.reservedDelayTime,
+                                                                    'minutes'
+                                                                )
+                                                                .locale(
+                                                                    locale.abbr
+                                                                )
+                                                                .format('LT')
                                                             : moment()
-                                                                  .locale(
-                                                                      locale.abbr
-                                                                  )
-                                                                  .format('LT')}
+                                                                .locale(
+                                                                    locale.abbr
+                                                                )
+                                                                .format('LT')}
                                                         ~
                                                         {isDelayTime
                                                             ? moment()
-                                                                  .add(
-                                                                      config.reservedInterval +
+                                                                .add(
+                                                                    config.reservedInterval +
                                                                           config.reservedDelayTime,
-                                                                      'minutes'
-                                                                  )
-                                                                  .locale(
-                                                                      locale.abbr
-                                                                  )
-                                                                  .format('LT')
+                                                                    'minutes'
+                                                                )
+                                                                .locale(
+                                                                    locale.abbr
+                                                                )
+                                                                .format('LT')
                                                             : moment()
-                                                                  .add(
-                                                                      config.reservedInterval,
-                                                                      'minutes'
-                                                                  )
-                                                                  .locale(
-                                                                      locale.abbr
-                                                                  )
-                                                                  .format('LT')}
+                                                                .add(
+                                                                    config.reservedInterval,
+                                                                    'minutes'
+                                                                )
+                                                                .locale(
+                                                                    locale.abbr
+                                                                )
+                                                                .format('LT')}
                                                     </div>
                                                     <Row className="d-flex justify-content-center">
                                                         <ButtonToolbar>
@@ -276,11 +272,11 @@ class ConfirmForm extends React.Component {
                                                                 {this.state
                                                                     .isDelayTime
                                                                     ? locale
-                                                                          .texts
-                                                                          .RETURN
+                                                                        .texts
+                                                                        .RETURN
                                                                     : locale
-                                                                          .texts
-                                                                          .DELAY_BY}{' '}
+                                                                        .texts
+                                                                        .DELAY_BY}{' '}
                                                                 {
                                                                     config.reservedDelayTime
                                                                 }{' '}

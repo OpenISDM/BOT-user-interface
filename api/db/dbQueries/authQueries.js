@@ -139,16 +139,16 @@ export default {
 
 			LEFT JOIN device_group_list
 			ON device_group_list.id = user_info.list_id
-			`;
+			`
 
-        const values = [username];
+        const values = [username]
 
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     setVisitTimestamp: (username) => {
@@ -156,7 +156,7 @@ export default {
 			UPDATE user_table
 			SET last_visit_timestamp = NOW()
 			WHERE name = '${username}';
-		`;
+		`
     },
 
     validateUsername: (username) => {
@@ -198,15 +198,15 @@ export default {
 			ON user_area.user_id = user_table.id
 
 			WHERE user_table.name = $1;
-		`;
-        const values = [username];
+		`
+        const values = [username]
 
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     resetPassword: (email, hash) => {
@@ -214,14 +214,14 @@ export default {
 			UPDATE user_table
 			SET password = $2
 			WHERE email = $1;
-		`;
-        const values = [email, hash];
+		`
+        const values = [email, hash]
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     validateEmail: (email) => {
@@ -231,11 +231,11 @@ export default {
 				registered_timestamp
 			FROM user_table
 			WHERE email = LOWER($1)
-		`;
-        const values = [email];
+		`
+        const values = [email]
         return {
             text,
             values,
-        };
+        }
     },
-};
+}

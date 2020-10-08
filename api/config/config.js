@@ -47,13 +47,13 @@ export const MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN = {
     MM: '%d months',
     y: '1 year',
     yy: '%d years',
-};
+}
 
 export const MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW = {
     future: '已 %s',
-};
+}
 
 export default {
     MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
     MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
-};
+}

@@ -47,13 +47,13 @@ import 'react-app-polyfill/ie9'
 import 'react-app-polyfill/stable'
 
 /** Import Custom CSS */
-import './js/importSrc.js'
+import './js/importSrc'
 
 /** Container Component */
 import App from './App'
-import * as serviceWorker from './js/serviceWorker/serviceWorker'
+import { register } from './js/serviceWorker/serviceWorker'
 
 const rootElement = document.getElementById('root')
 ReactDOM.render(<App />, rootElement)
 
-serviceWorker.register()
+register()

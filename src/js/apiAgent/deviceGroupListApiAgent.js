@@ -39,18 +39,18 @@ import config from '../config'
 const src = dataSrc.deviceGroupList
 
 const deviceGroupListApis = {
-    addDeviceGroupList: async function ({ name, area_id }) {
+    async addDeviceGroupList ({ name, area_id }) {
         return await axios.post(src, {
             name,
             area_id,
         })
     },
 
-    getDeviceGroupList: async function (groupId) {
+    async getDeviceGroupList (groupId) {
         return await axios.get(src, { groupId })
     },
 
-    modifyDeviceGroupList: async function ({
+    async modifyDeviceGroupList ({
         groupId,
         mode,
         itemACN,
@@ -64,7 +64,7 @@ const deviceGroupListApis = {
         })
     },
 
-    deleteGroup: async function (groupId) {
+    async deleteGroup (groupId) {
         return await axios.delete(src, { data: groupId })
     },
 }

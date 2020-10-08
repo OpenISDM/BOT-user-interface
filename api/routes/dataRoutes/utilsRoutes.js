@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import utilsController from '../../controllers/utilsController.js';
-import cors from 'cors';
+import utilsController from '../../controllers/utilsController'
+import cors from 'cors'
 
 export default (app) => {
     // enable pre-flight request for DELETE request
@@ -41,5 +41,5 @@ export default (app) => {
 
     app.route('/data/utils/searchableKeyword').post(
         utilsController.getSearchableKeywords
-    );
-};
+    )
+}

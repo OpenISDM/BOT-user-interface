@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getTrackingData: async function ({ locale, user, areaId }) {
+    async getTrackingData ({ locale, user, areaId }) {
         return await axios.post(dataSrc.trackingData, {
             locale,
             user,

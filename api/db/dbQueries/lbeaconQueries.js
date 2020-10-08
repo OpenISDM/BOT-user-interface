@@ -49,15 +49,15 @@ const getLbeaconTable = `
         comment
 	FROM lbeacon_table
 	ORDER BY ip_address DESC
-`;
+`
 
 const deleteLBeacon = (idPackage) => {
     const query = `
 		DELETE FROM lbeacon_table
 		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
-	`;
-    return query;
-};
+	`
+    return query
+}
 
 const editLbeacon = (formOption) => {
     const text = `
@@ -68,24 +68,20 @@ const editLbeacon = (formOption) => {
 
 
 		WHERE uuid = $1
-	`;
+	`
 
-    const values = [
-        formOption.uuid,
-        formOption.description,
-        formOption.comment,
-    ];
+    const values = [formOption.uuid, formOption.description, formOption.comment]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 export default {
     getLbeaconTable,
     deleteLBeacon,
     editLbeacon,
-};
+}

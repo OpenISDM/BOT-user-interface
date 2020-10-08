@@ -49,9 +49,9 @@ const EditLbeaconForm = ({
     handleClose,
     handleSubmit,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
-    let { uuid, description, comment } = selectedObjectData
+    const { uuid, description, comment } = selectedObjectData
 
     return (
         <Modal
@@ -67,12 +67,12 @@ const EditLbeaconForm = ({
                 <Formik
                     initialValues={{
                         description: description || '',
-                        uuid: uuid,
-                        comment: comment,
+                        uuid,
+                        comment,
                     }}
                     onSubmit={(values) => {
-                        let { description, comment } = values
-                        let lbeaconSettingPackage = {
+                        const { description, comment } = values
+                        const lbeaconSettingPackage = {
                             ...selectedObjectData,
                             description,
                             comment,

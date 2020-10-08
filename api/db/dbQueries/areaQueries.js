@@ -39,5 +39,5 @@ export default () => {
 			name
 		FROM area_tab;le;
 		;
-	`;
-};
+	`
+}

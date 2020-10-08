@@ -299,11 +299,11 @@ class ImportObjectTable extends React.Component {
                 })
 
                 newData.map((item) => {
-                    item.name.toString().indexOf("'") != -1 ||
+                    item.name.toString().indexOf('\'') != -1 ||
                     item.name.toString().indexOf('"') != -1
                         ? (punctuationFlag = true)
                         : null
-                    item.asset_control_number.toString().indexOf("'") != -1 ||
+                    item.asset_control_number.toString().indexOf('\'') != -1 ||
                     item.asset_control_number.toString().indexOf('"') != -1
                         ? (punctuationFlag = true)
                         : null

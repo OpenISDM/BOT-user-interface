@@ -280,13 +280,13 @@ const BrowseTraceContainerView = React.forwardRef(
                                             onChange={(value) => {
                                                 value != null
                                                     ? setFieldValue(
-                                                          'startTime',
-                                                          moment(value).toDate()
-                                                      )
+                                                        'startTime',
+                                                        moment(value).toDate()
+                                                    )
                                                     : setFieldValue(
-                                                          'startTime',
-                                                          undefined
-                                                      )
+                                                        'startTime',
+                                                        undefined
+                                                    )
                                             }}
                                             defaultCurrentDate={moment()
                                                 .startOf('day')
@@ -328,13 +328,13 @@ const BrowseTraceContainerView = React.forwardRef(
                                             onChange={(value) => {
                                                 value != null
                                                     ? setFieldValue(
-                                                          'endTime',
-                                                          moment(value).toDate()
-                                                      )
+                                                        'endTime',
+                                                        moment(value).toDate()
+                                                    )
                                                     : setFieldValue(
-                                                          'endTime',
-                                                          undefined
-                                                      )
+                                                        'endTime',
+                                                        undefined
+                                                    )
                                             }}
                                             placeholder={locale.texts.END_TIME}
                                         />

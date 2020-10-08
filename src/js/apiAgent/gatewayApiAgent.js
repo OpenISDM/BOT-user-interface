@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getGatewayTable: async function ({ locale }) {
+    async getGatewayTable ({ locale }) {
         return await axios.get(dataSrc.gateway, {
             params: {
                 locale,

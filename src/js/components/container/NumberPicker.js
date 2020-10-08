@@ -43,9 +43,9 @@ class NumberPicker extends React.Component {
     state = {
         value: this.props.value
             ? {
-                  value: this.props.value,
-                  label: this.props.value,
-              }
+                value: this.props.value,
+                label: this.props.value,
+            }
             : null,
     }
 
@@ -57,7 +57,7 @@ class NumberPicker extends React.Component {
     }
 
     render() {
-        let options = Array.from(Array(this.props.length).keys()).map(
+        const options = Array.from(Array(this.props.length).keys()).map(
             (index) => {
                 return {
                     value: `${index + 1}`,
@@ -65,7 +65,7 @@ class NumberPicker extends React.Component {
                 }
             }
         )
-        let { placeholder } = this.props
+        const { placeholder } = this.props
         return (
             <Select
                 value={this.state.value}

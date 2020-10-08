@@ -39,16 +39,16 @@ import config from '../config'
 const src = dataSrc.patientGroupList
 
 const patientGroupListApis = {
-    addPatientGroupList: async function (name) {
+    async addPatientGroupList (name) {
         return await axios.post(src, { name })
     },
-    getPatientGroupList: async function (name) {
+    async getPatientGroupList (name) {
         return await axios.get(src, { name })
     },
-    modifyPatientGroupList: async function (pack) {
+    async modifyPatientGroupList (pack) {
         return await axios.put(src, pack)
     },
-    deleteGroup: async function (groupId) {
+    async deleteGroup (groupId) {
         return await axios.delete(src, { data: groupId })
     },
 }

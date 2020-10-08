@@ -54,12 +54,12 @@ class AddableList extends React.Component {
         this.itemLayout = (item) => {
             if (typeof item == 'string') {
                 return <Fragment>{item}</Fragment>
-            } else {
-                console.error(
-                    'the item is an object so you have to set your own itemLayout'
-                )
-                return
             }
+            console.error(
+                'the item is an object so you have to set your own itemLayout'
+            )
+            return
+
         }
 
         this.API = {
@@ -93,16 +93,16 @@ class AddableList extends React.Component {
                 })
             },
             addItem: () => {
-                var { itemList } = this.state
+                const { itemList } = this.state
                 if (itemList[itemList.length - 1] != 'add') {
                     itemList.push('add')
                     this.setState({})
                 }
             },
             addItemCheck: (item) => {
-                var { itemList } = this.state
+                const { itemList } = this.state
                 if (itemList[itemList.length - 1] == 'add') {
-                    var validationValue = this.validation(item)
+                    const validationValue = this.validation(item)
                     if (validationValue) {
                         itemList.pop()
                         itemList.push(validationValue)
@@ -141,12 +141,12 @@ class AddableList extends React.Component {
     }
     addListByEnter(e) {
         if (event.key == 'Enter') {
-            var newACN = e.target.value
+            const newACN = e.target.value
             this.API.addItemCheck(newACN)
         }
     }
     removeItem(e) {
-        var ACN = e.target.getAttribute('name')
+        const ACN = e.target.getAttribute('name')
         this.API.removeItem(ACN)
     }
     render() {
@@ -163,55 +163,55 @@ class AddableList extends React.Component {
                 >
                     {this.state.itemList != null
                         ? (() => {
-                              var { itemList } = this.state
-                              var Html = []
-                              var acnList = Object.keys(itemList)
+                            const { itemList } = this.state
+                            const Html = []
+                            const acnList = Object.keys(itemList)
 
-                              for (var acn of acnList) {
-                                  var html = []
-                                  var item = itemList[acn],
-                                      index = item.asset_control_number
+                            for (const acn of acnList) {
+                                let html = []
+                                const item = itemList[acn],
+                                    index = item.asset_control_number
 
-                                  if (item == 'add') {
-                                      html = (
-                                          <div
-                                              className="py-1 pr-2"
-                                              key={index}
-                                          >
-                                              <input
-                                                  type="text"
-                                                  className="form-control h5 float-left w-75 border-0"
-                                                  onKeyPress={
-                                                      this.addListByEnter
-                                                  }
-                                              ></input>
-                                              <h4
-                                                  className="float-right"
-                                                  name="add"
-                                                  onClick={this.removeItem}
-                                              >
+                                if (item == 'add') {
+                                    html = (
+                                        <div
+                                            className="py-1 pr-2"
+                                            key={index}
+                                        >
+                                            <input
+                                                type="text"
+                                                className="form-control h5 float-left w-75 border-0"
+                                                onKeyPress={
+                                                    this.addListByEnter
+                                                }
+                                            ></input>
+                                            <h4
+                                                className="float-right"
+                                                name="add"
+                                                onClick={this.removeItem}
+                                            >
                                                   x
-                                              </h4>
-                                          </div>
-                                      )
-                                  } else {
-                                      html = (
-                                          <ListGroup.Item
-                                              key={index}
-                                              onClick={this.onClick}
-                                              name={index}
-                                              action
-                                              className="cursor-pointer"
-                                              style={style.item}
-                                          >
-                                              {this.itemLayout(item, index)}
-                                          </ListGroup.Item>
-                                      )
-                                  }
-                                  Html.push(html)
-                              }
-                              return Html
-                          })()
+                                            </h4>
+                                        </div>
+                                    )
+                                } else {
+                                    html = (
+                                        <ListGroup.Item
+                                            key={index}
+                                            onClick={this.onClick}
+                                            name={index}
+                                            action
+                                            className="cursor-pointer"
+                                            style={style.item}
+                                        >
+                                            {this.itemLayout(item, index)}
+                                        </ListGroup.Item>
+                                    )
+                                }
+                                Html.push(html)
+                            }
+                            return Html
+                        })()
                         : null}
                 </ListGroup>
             </Fragment>

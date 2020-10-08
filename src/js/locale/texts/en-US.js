@@ -146,7 +146,7 @@ const en = {
     MALE: 'male',
     FEMALE: 'female',
     EDIT_ALIAS: 'edit alias',
-    EDIT_DEVICE_ALIAS: "edit device's alias",
+    EDIT_DEVICE_ALIAS: 'edit device\'s alias',
 
     /* buttons */
     CLEAR: 'clear',
@@ -332,7 +332,7 @@ const en = {
     DEVICE_TRANSFER_RECORD: 'Generate device transfer record',
     BROKEN_DEVICE_LIST: 'broken device list',
     TRANSFERRED_DEVICE_LIST: 'transferred device list',
-    WHOSE_DEVICES: "'s devices",
+    WHOSE_DEVICES: '\'s devices',
     TRANSFERRED_TO: 'transferred to',
     CHECKED_BY: 'checked by',
     CONFIRMED_BY: 'confirmed by',
@@ -410,7 +410,7 @@ const en = {
     REQUIRED: 'required',
     ID_IS_NOT_FOUND: 'ID is not found',
     ASN_IS_REPEAT: 'asn is repeat',
-    NOT_ALLOW_PUNCTUATION: "data have not allow's punctuation",
+    NOT_ALLOW_PUNCTUATION: 'data have not allow\'s punctuation',
     OVERLENGTH: 'only allow below 100 chars',
     LIMIT_IN_TWENTY_CHARACTER: 'Limit in 20 characters',
     LIMIT_IN_FOURTY_CHARACTER: 'Limit in 40 characters',
@@ -534,7 +534,7 @@ const en = {
     NOW_YOU_CAN_DO_THE_FOllOWING_ACTION: 'Now you can do the following action',
     USERNAME_OR_PASSWORD_IS_INCORRECT: 'Username or password is incorrect',
     PASSWORD_IS_INCORRECT: 'password is incorrect',
-    PLEASE_ENTER_ID_AND_PASSWORD: "please enter Admin's info",
+    PLEASE_ENTER_ID_AND_PASSWORD: 'please enter Admin\'s info',
     PLEASE_ENTER_PASSWORD: 'please enter password',
     EDIT_LBEACON_SUCCESS: 'edit lbeacon success',
     EDIT_OBJECT_SUCCESS: 'edit object success',
@@ -561,7 +561,7 @@ const en = {
     NOT_AVAILABLE: 'N/A',
     IN: 'in',
     NOT: 'not',
-    WHOSE: "'s",
+    WHOSE: '\'s',
     BELONG_TO: 'belongs to',
     WAS: 'was',
     FROM: 'from',
@@ -575,10 +575,10 @@ const en = {
     TW: 'chinese',
     EN: 'english',
 
-    DEVICE_FOUND: function (length) {
+    DEVICE_FOUND (length) {
         return length.toString() + ' devices are found'
     },
-    DEVICE_NOT_FOUND: function (length) {
+    DEVICE_NOT_FOUND (length) {
         return length.toString() + ' devices are not found'
     },
 

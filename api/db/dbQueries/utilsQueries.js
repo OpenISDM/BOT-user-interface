@@ -67,6 +67,6 @@ export default {
                 FROM lbeacon_table
             ) AS keywords
             WHERE key IS NOT NULL
-        `;
+        `
     },
-};
+}

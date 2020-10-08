@@ -39,7 +39,7 @@ import { RESERVE, RETURNED } from '../config/wordMap'
 import { isEqual } from 'lodash'
 
 export const getDescription = (item, locale, keywordType) => {
-    var foundDeviceDescription = ``
+    let foundDeviceDescription = ''
     switch (item.object_type) {
         case '0':
             foundDeviceDescription += item.found
@@ -54,18 +54,18 @@ export const getDescription = (item, locale, keywordType) => {
                         ${getStatus(item, locale)}
 
                         ${
-                            item.currentPosition
-                                ? isEqual(item.status, RETURNED)
-                                    ? `${item.residence_time} `
-                                    : ''
-                                : ''
-                        }
+    item.currentPosition
+        ? isEqual(item.status, RETURNED)
+            ? `${item.residence_time} `
+            : ''
+        : ''
+}
 
                         ${
-                            item.status == RESERVE
-                                ? `~ ${item.reserved_timestamp_final} ${locale.texts.IS_RESERVED_FOR} ${item.reserved_user_name}`
-                                : ''
-                        }
+    item.status == RESERVE
+        ? `~ ${item.reserved_timestamp_final} ${locale.texts.IS_RESERVED_FOR} ${item.reserved_user_name}`
+        : ''
+}
                     `
                 : `
                         ${getDeviceName(item, locale, keywordType)}
@@ -85,15 +85,15 @@ export const getDescription = (item, locale, keywordType) => {
                 ${getID(item, locale)}
 
                 ${
-                    item.currentPosition
-                        ? `
+    item.currentPosition
+        ? `
 
                     ${getAreaName(item, locale)}-
 
                     ${getPosition(item, locale)}
                 `
-                        : ''
-                }
+        : ''
+}
 
                 ${item.residence_time ? item.residence_time : ''}
 
@@ -117,9 +117,9 @@ export const getSubDescription = (item, locale) => {
                 return item.status
             } else if (item.mac_address) {
                 return `${locale.texts.NOT_AVAILABLE}`
-            } else {
-                return `${locale.texts.NON_BINDING}`
             }
+            return `${locale.texts.NON_BINDING}`
+
 
         case locale.supportedLocale.tw.abbr:
         case locale.supportedLocale.cn.abbr:
@@ -133,9 +133,9 @@ export const getSubDescription = (item, locale) => {
                 return item.status
             } else if (item.mac_address) {
                 return `${locale.texts.NOT_AVAILABLE}`
-            } else {
-                return `${locale.texts.NON_BINDING}`
             }
+            return `${locale.texts.NON_BINDING}`
+
     }
 }
 
@@ -205,10 +205,10 @@ export const getPhysicianName = (item, locale) => {
 export const getStatus = (item, locale) => {
     return `
         ${
-            isEqual(item.status, RETURNED)
-                ? ''
-                : `${locale.texts[item.status.toUpperCase()]}`
-        }
+    isEqual(item.status, RETURNED)
+        ? ''
+        : `${locale.texts[item.status.toUpperCase()]}`
+}
     `
 }
 
@@ -243,8 +243,8 @@ export const getAreaName = (item, locale) => {
 export const getID = (item, locale) => {
     return `
         ${locale.texts.ID}: ${item.asset_control_number}${
-        item.currentPosition ? ',' : ''
-    }
+    item.currentPosition ? ',' : ''
+}
     `
 }
 

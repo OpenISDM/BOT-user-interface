@@ -36,18 +36,18 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getAllTransferredLocation: async function () {
+    async getAllTransferredLocation () {
         return await axios.get(dataSrc.transferredLocation)
     },
 
-    editTransferredLocation: async function ({ type, data }) {
+    async editTransferredLocation ({ type, data }) {
         return await axios.put(dataSrc.transferredLocation, {
             type,
             data,
         })
     },
 
-    editLocation: async function ({ name, departmentName }) {
+    async editLocation ({ name, departmentName }) {
         return await axios.post(dataSrc.transferredLocation, {
             name,
             departmentName,

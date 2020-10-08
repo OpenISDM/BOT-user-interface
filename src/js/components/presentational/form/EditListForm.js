@@ -51,7 +51,7 @@ const EditListForm = ({
     title,
     areaOptions,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     return (
         <Modal show={show} onHide={handleClose}>

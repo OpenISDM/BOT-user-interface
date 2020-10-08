@@ -45,24 +45,24 @@ export default {
 
             LEFT JOIN object_table
             ON object_table.asset_control_number = import_table.asset_control_number
-        `;
+        `
 
-        return text;
+        return text
     },
 
     deleteImporedtObject: (idPackage) => {
-        const controlNumbers = idPackage.map((item) => `'${item}'`);
+        const controlNumbers = idPackage.map((item) => `'${item}'`)
         const query = `
             DELETE FROM import_table
-            WHERE asset_control_number IN (${controlNumbers});`;
+            WHERE asset_control_number IN (${controlNumbers});`
 
-        return query;
+        return query
     },
 
     addImportedObject: (idPackage) => {
         const item = idPackage.map((item) => {
-            return `('${item.name}', '${item.type}', '${item.asset_control_number}')`;
-        });
+            return `('${item.name}', '${item.type}', '${item.asset_control_number}')`
+        })
 
         const text = `
             INSERT INTO import_table (
@@ -70,7 +70,7 @@ export default {
                 type,
                 asset_control_number
             )
-            VALUES ${item}`;
-        return text;
+            VALUES ${item}`
+        return text
     },
-};
+}

@@ -37,7 +37,7 @@ import { Modal, Button, Row, Col, ButtonToolbar } from 'react-bootstrap'
 import Select from 'react-select'
 import { Formik, Field, Form } from 'formik'
 import { FormFieldName } from '../../BOTComponent/styleComponent'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import RadioButton from '../RadioButton'
 import RadioButtonGroup from '../../container/RadioButtonGroup'
 import { AppContext } from '../../../context/AppContext'
@@ -74,12 +74,12 @@ export default class ChangeStatusForm extends React.Component {
                         value: branch.name,
                         options: branch.departments
                             ? branch.departments.map((department, index) => {
-                                  return {
-                                      id: department.id,
-                                      label: `${branch.name}-${department.value}`,
-                                      value: department.value,
-                                  }
-                              })
+                                return {
+                                    id: department.id,
+                                    label: `${branch.name}-${department.value}`,
+                                    value: department.value,
+                                }
+                            })
                             : [],
                     }
                 })
@@ -108,8 +108,8 @@ export default class ChangeStatusForm extends React.Component {
                 //     this.props.handleShowPath(item.mac_address);
                 // }) : null;
                 // this.handleClose();
-                let { selectedObjectData } = this.props
-                let macAddress = selectedObjectData[0].mac_address
+                const { selectedObjectData } = this.props
+                const macAddress = selectedObjectData[0].mac_address
                 this.props.handleShowPath(macAddress, this.handleClose)
 
                 break
@@ -121,7 +121,7 @@ export default class ChangeStatusForm extends React.Component {
 
         selectedObjectData = selectedObjectData.length ? selectedObjectData : []
 
-        let initValues = {
+        const initValues = {
             name:
                 selectedObjectData.length != 0
                     ? selectedObjectData[0].name
@@ -142,11 +142,11 @@ export default class ChangeStatusForm extends React.Component {
                 selectedObjectData.length != 0 &&
                 selectedObjectData[0].status == TRANSFERRED
                     ? {
-                          id: selectedObjectData[0].transferred_location.id,
-                          value:
+                        id: selectedObjectData[0].transferred_location.id,
+                        value:
                               selectedObjectData[0].transferred_location.value,
-                          label: `${selectedObjectData[0].transferred_location.name}-${selectedObjectData[0].transferred_location.department}`,
-                      }
+                        label: `${selectedObjectData[0].transferred_location.name}-${selectedObjectData[0].transferred_location.department}`,
+                    }
                     : '',
             notes:
                 selectedObjectData.length != 0
@@ -180,14 +180,14 @@ export default class ChangeStatusForm extends React.Component {
                     <Formik
                         enableReinitialize={true}
                         initialValues={this.initValues()}
-                        validationSchema={Yup.object().shape({
-                            status: Yup.string().required(
+                        validationSchema={object().shape({
+                            status: string().required(
                                 locale.texts.STATUS_IS_REQUIRED
                             ),
 
-                            transferred_location: Yup.string().when('status', {
+                            transferred_location: string().when('status', {
                                 is: TRANSFERRED,
-                                then: Yup.string().required(
+                                then: string().required(
                                     locale.texts.LOCATION_IS_REQUIRED
                                 ),
                             }),
@@ -217,23 +217,23 @@ export default class ChangeStatusForm extends React.Component {
                                                 >
                                                     {selectedObjectData.length >
                                                     1 ? (
-                                                        <Col
-                                                            xs={1}
-                                                            sm={1}
-                                                            className="d-flex align-items-center"
-                                                        >
-                                                            <i
-                                                                className="fas fa-times cursor-pointer"
-                                                                onClick={
-                                                                    this.props
-                                                                        .handleRemoveButton
-                                                                }
-                                                                name={
-                                                                    item.mac_address
-                                                                }
-                                                            />
-                                                        </Col>
-                                                    ) : null}
+                                                            <Col
+                                                                xs={1}
+                                                                sm={1}
+                                                                className="d-flex align-items-center"
+                                                            >
+                                                                <i
+                                                                    className="fas fa-times cursor-pointer"
+                                                                    onClick={
+                                                                        this.props
+                                                                            .handleRemoveButton
+                                                                    }
+                                                                    name={
+                                                                        item.mac_address
+                                                                    }
+                                                                />
+                                                            </Col>
+                                                        ) : null}
                                                     <Col>
                                                         <Row noGutters>
                                                             <Col>
@@ -270,10 +270,10 @@ export default class ChangeStatusForm extends React.Component {
                                                                     value={
                                                                         locale
                                                                             .texts[
-                                                                            item
-                                                                                .lbeacon_area
-                                                                                .value
-                                                                        ]
+                                                                                item
+                                                                                    .lbeacon_area
+                                                                                    .value
+                                                                            ]
                                                                     }
                                                                     disabled
                                                                 />

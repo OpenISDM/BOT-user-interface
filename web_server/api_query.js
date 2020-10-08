@@ -1,6 +1,6 @@
-import error_code from './api_error_code.js'
+import error_code from './api_error_code'
 import moment from 'moment-timezone'
-import queryType from './api_queryType.js'
+import queryType from './api_queryType'
 import pg from 'pg'
 const config = {
     user: process.env.DB_USER,
@@ -11,8 +11,8 @@ const config = {
 }
 const pool = new pg.Pool(config)
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-import { tw } from '../site_module/locale/text.js'
-import encrypt from '../api/service/encrypt.js'
+import { tw } from '../site_module/locale/text'
+import encrypt from '../api/service/encrypt'
 
 const get_api_key = (request, response) => {
     const { username, password } = request.body

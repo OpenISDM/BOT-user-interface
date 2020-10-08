@@ -70,22 +70,22 @@ class PdfDownloadForm extends React.Component {
 
     componentDidUpdate = (preProps) => {
         if (this.props.show && !this.state.show) {
-            let data = {
+            const data = {
                 foundResult: [],
                 notFoundResult: [],
             }
 
-            for (var item of this.props.data) {
+            for (const item of this.props.data) {
                 item.found
                     ? data.foundResult.push(item)
                     : data.notFoundResult.push(item)
             }
 
-            let { locale, auth, stateReducer } = this.context
-            let [{ areaId }] = stateReducer
+            const { locale, auth, stateReducer } = this.context
+            const [{ areaId }] = stateReducer
             // let pdfPackage = config.getPdfPackage('searchResult', auth.user, data, locale, areaId)
 
-            let pdfPackage = pdfPackageGenerator.getPdfPackage({
+            const pdfPackage = pdfPackageGenerator.getPdfPackage({
                 option: 'searchResult',
                 user: auth.user,
                 data,
@@ -98,7 +98,7 @@ class PdfDownloadForm extends React.Component {
                 // }
             })
 
-            var searResultInfo = {
+            const searResultInfo = {
                 userInfo: auth.user,
                 pdfPackage,
             }

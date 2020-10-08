@@ -577,10 +577,10 @@ const ms = {
     TW: 'cina',
     EN: 'Bahasa Inggeris',
 
-    DEVICE_FOUND: function (length) {
+    DEVICE_FOUND (length) {
         return length.toString() + 'peranti dijumpai'
     },
-    DEVICE_NOT_FOUND: function (length) {
+    DEVICE_NOT_FOUND (length) {
         return length.toString() + 'peranti tidak dijumpai'
     },
 

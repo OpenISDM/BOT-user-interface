@@ -44,8 +44,8 @@ import LocaleContext from '../../../context/LocaleContext'
 import AccessControl from '../../authentication/AccessControl'
 
 const TabletPageComponent = ({ containerModule, setMessage }) => {
-    let locale = React.useContext(LocaleContext)
-    let { tabList, title, defaultActiveKey } = containerModule
+    const locale = React.useContext(LocaleContext)
+    const { tabList, title, defaultActiveKey } = containerModule
     return (
         <BOTContainer>
             <PageTitle>
@@ -79,7 +79,7 @@ const TabletPageComponent = ({ containerModule, setMessage }) => {
                 </BOTNav>
                 <Tab.Content className="my-3">
                     {tabList.map((tab) => {
-                        let props = {
+                        const props = {
                             type: tab.name,
                             setMessage,
                         }

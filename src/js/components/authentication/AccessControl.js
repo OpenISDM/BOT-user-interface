@@ -44,7 +44,7 @@ const AccessControl = ({
 }) => {
     const auth = React.useContext(AuthContext)
 
-    let ownedPermissions = auth.user.permissions
+    const ownedPermissions = auth.user.permissions
 
     const authenticated = auth.authenticated
 

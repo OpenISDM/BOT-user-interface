@@ -36,7 +36,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import Select from 'react-select'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import axios from 'axios'
 import dataSrc from '../../../dataSrc'
 import FormikFormGroup from '../../presentational/FormikFormGroup'
@@ -44,7 +44,7 @@ import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 import messageGenerator from '../../../helper/messageGenerator'
 const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     const userOptions = data.map((item) => {
         return {
@@ -62,8 +62,8 @@ const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
                     initialValues={{
                         name: '',
                     }}
-                    validationSchema={Yup.object().shape({
-                        name: Yup.string().required(
+                    validationSchema={object().shape({
+                        name: string().required(
                             locale.texts.NAME_IS_REQUIRED
                         ),
                     })}

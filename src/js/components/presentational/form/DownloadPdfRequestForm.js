@@ -51,10 +51,10 @@ const style = {
 }
 
 const DownloadPdfRequestForm = ({ handleClose, pdfPath, show }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     const handleClickButton = (e) => {
-        let { name } = e.target
+        const { name } = e.target
         switch (name) {
             case 'view':
                 window.open(dataSrc.pdfUrl(pdfPath))

@@ -77,14 +77,14 @@ class SearchResultList extends React.Component {
     }
 
     onSelect = (eventKey) => {
-        let { stateReducer } = this.context
+        const { stateReducer } = this.context
 
-        let [{}, dispatch] = stateReducer
+        const [{}, dispatch] = stateReducer
 
         const eventItem = eventKey.split(':')
         const isFound = parseInt(eventItem[0])
         const number = parseInt(eventItem[1])
-        let selectItem = isFound
+        const selectItem = isFound
             ? this.props.searchResult.filter((item) => item.found)[number]
             : this.props.searchResult.filter((item) => !item.found)[number]
         if (selectItem.object_type == 0) {
@@ -105,10 +105,10 @@ class SearchResultList extends React.Component {
 
     toggleSelection = (number, isFound) => {
         let selection = [...this.state.selection]
-        let selectItem = isFound
+        const selectItem = isFound
             ? this.props.searchResult.filter((item) => item.found)[number]
             : this.props.searchResult.filter((item) => !item.found)[number]
-        let mac = selectItem.mac_address
+        const mac = selectItem.mac_address
         const index = selection.indexOf(mac)
 
         let selectedObjectData = [...this.state.selectedObjectData]
@@ -139,8 +139,8 @@ class SearchResultList extends React.Component {
     }
 
     handleChangeObjectStatusFormClose = () => {
-        let { stateReducer } = this.context
-        let [{}, dispatch] = stateReducer
+        const { stateReducer } = this.context
+        const [{}, dispatch] = stateReducer
         this.setState({
             showEditObjectForm: false,
             showSignatureForm: false,
@@ -157,19 +157,19 @@ class SearchResultList extends React.Component {
     }
 
     handleChangeObjectStatusFormSubmit = (values) => {
-        let editedObjectPackage = JSONClone(this.state.selectedObjectData).map(
+        const editedObjectPackage = JSONClone(this.state.selectedObjectData).map(
             (item) => {
                 ;(item.status = values.status.toLowerCase()),
-                    (item.transferred_location = values.transferred_location
-                        ? values.transferred_location
-                        : '')
+                (item.transferred_location = values.transferred_location
+                    ? values.transferred_location
+                    : '')
                 item.notes = values.notes
                 return item
             }
         )
         this.setState({
             showEditObjectForm: false,
-            editedObjectPackage: editedObjectPackage,
+            editedObjectPackage,
         })
         if (values.status == TRANSFERRED) {
             this.setState({
@@ -197,21 +197,21 @@ class SearchResultList extends React.Component {
     }
 
     handleConfirmFormSubmit = (isDelayTime) => {
-        let signatureName = this.state.signatureName
-        let { editedObjectPackage } = this.state
-        let { locale, auth, stateReducer } = this.context
-        let [{}, dispatch] = stateReducer
-        let username = auth.user.name
-        let shouldCreatePdf = config.statusToCreatePdf.includes(
+        const signatureName = this.state.signatureName
+        const { editedObjectPackage } = this.state
+        const { locale, auth, stateReducer } = this.context
+        const [{}, dispatch] = stateReducer
+        const username = auth.user.name
+        const shouldCreatePdf = config.statusToCreatePdf.includes(
             editedObjectPackage[0].status
         )
-        let status = editedObjectPackage[0].status
-        let reservedTimestamp = isDelayTime
+        const status = editedObjectPackage[0].status
+        const reservedTimestamp = isDelayTime
             ? moment().add(10, 'minutes').format()
             : moment().format()
 
         /** Create the pdf package, including pdf, pdf setting and path */
-        let pdfPackage =
+        const pdfPackage =
             shouldCreatePdf &&
             pdfPackageGenerator.getPdfPackage({
                 option: status,
@@ -229,7 +229,7 @@ class SearchResultList extends React.Component {
                 reservedTimestamp
             )
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     dispatch({
                         type: SET_ENABLE_REQUEST_TRACKING_DATA,
                         value: true,
@@ -254,8 +254,8 @@ class SearchResultList extends React.Component {
     }
 
     handleAdditionalButton = (text) => {
-        let selection = []
-        let selectedObjectData = []
+        const selection = []
+        const selectedObjectData = []
         if (this.state.showAddDevice) {
             selection.push(this.state.selection[0])
             selectedObjectData.push(this.state.selectedObjectData[0])
@@ -272,10 +272,10 @@ class SearchResultList extends React.Component {
     }
 
     handleRemoveButton = (e) => {
-        let mac = e.target.getAttribute('name')
+        const mac = e.target.getAttribute('name')
         let selection = [...this.state.selection]
         let selectedObjectData = [...this.state.selectedObjectData]
-        let index = selection.indexOf(mac)
+        const index = selection.indexOf(mac)
 
         if (index > -1) {
             selection = [
@@ -312,9 +312,9 @@ class SearchResultList extends React.Component {
     }
 
     handlePatientView = (values) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
-        let objectPackage = {
+        const objectPackage = {
             userId: auth.user.id,
             record: values.record,
             id: this.state.selectedObjectData.id,
@@ -324,7 +324,7 @@ class SearchResultList extends React.Component {
                 objectPackage,
             })
             .then((res) => {
-                let callback = () =>
+                const callback = () =>
                     messageGenerator.setSuccessMessage('save success')
                 this.setState(
                     {
@@ -372,15 +372,15 @@ class SearchResultList extends React.Component {
 
         const { selection } = this.state
 
-        let result = searchResult.filter((item) => {
+        const result = searchResult.filter((item) => {
             return item.found == showFoundResult
         })
 
-        let title = showFoundResult
+        const title = showFoundResult
             ? locale.texts.OBJECTS_FOUND
             : locale.texts.OBJECTS_NOT_FOUND
 
-        let propsGroup = {
+        const propsGroup = {
             searchResult: result,
             title,
 

@@ -35,7 +35,7 @@
 import React from 'react'
 import { Modal, Image, Button } from 'react-bootstrap'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import config from '../../config'
 import LocaleContext from '../../context/LocaleContext'
 import axios from 'axios'
@@ -43,8 +43,8 @@ import dataSrc from '../../dataSrc'
 import AuthenticationContext from '../../context/AuthenticationContext'
 
 const SiginForm = ({ show, handleClose }) => {
-    let locale = React.useContext(LocaleContext)
-    let auth = React.useContext(AuthenticationContext)
+    const locale = React.useContext(LocaleContext)
+    const auth = React.useContext(AuthenticationContext)
 
     return (
         <Modal
@@ -71,11 +71,11 @@ const SiginForm = ({ show, handleClose }) => {
                         username: '',
                         password: '',
                     }}
-                    validationSchema={Yup.object().shape({
-                        username: Yup.string().required(
+                    validationSchema={object().shape({
+                        username: string().required(
                             locale.texts.USERNAME_IS_REQUIRED
                         ),
-                        password: Yup.string().required(
+                        password: string().required(
                             locale.texts.PASSWORD_IS_REQUIRED
                         ),
                     })}

@@ -43,7 +43,7 @@ import FormikFormGroup from '../../presentational/FormikFormGroup'
 import LocaleContext from '../../../context/LocaleContext'
 
 const SignatureForm = ({ show, title, handleClose, handleSubmit }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     return (
         <Modal

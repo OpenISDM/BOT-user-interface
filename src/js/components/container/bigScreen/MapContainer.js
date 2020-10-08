@@ -52,7 +52,7 @@ class MapContainer extends React.Component {
 
         const { stateReducer } = this.context
 
-        let [{ areaId }] = stateReducer
+        const [{ areaId }] = stateReducer
 
         return (
             <div

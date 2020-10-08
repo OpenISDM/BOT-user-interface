@@ -186,11 +186,11 @@ class MonitorSettingBlock extends React.Component {
                                                     item.area_id
                                                 ]
                                                     ? locale.texts[
-                                                          config.mapConfig
-                                                              .areaOptions[
-                                                              item.area_id
-                                                          ]
-                                                      ]
+                                                        config.mapConfig
+                                                            .areaOptions[
+                                                                item.area_id
+                                                            ]
+                                                    ]
                                                     : null}
                                             </div>
                                             <Row className="my-3" noGutters>

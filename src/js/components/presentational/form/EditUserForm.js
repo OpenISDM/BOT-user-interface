@@ -114,7 +114,7 @@ const EditUserForm = ({
                                 (value) => {
                                     let punctuationFlag = true
                                     if (value != undefined) {
-                                        value.indexOf("'") != -1 ||
+                                        value.indexOf('\'') != -1 ||
                                         value.indexOf('"') != -1
                                             ? (punctuationFlag = false)
                                             : null
@@ -129,25 +129,25 @@ const EditUserForm = ({
                         password: selectedUser
                             ? ''
                             : string()
-                                  .required(locale.texts.REQUIRED)
-                                  .test(
-                                      'password',
-                                      locale.texts.NOT_ALLOW_PUNCTUATION,
-                                      (value) => {
-                                          let punctuationFlag = true
-                                          if (value != undefined) {
-                                              value.indexOf("'") != -1 ||
+                                .required(locale.texts.REQUIRED)
+                                .test(
+                                    'password',
+                                    locale.texts.NOT_ALLOW_PUNCTUATION,
+                                    (value) => {
+                                        let punctuationFlag = true
+                                        if (value != undefined) {
+                                            value.indexOf('\'') != -1 ||
                                               value.indexOf('"') != -1
-                                                  ? (punctuationFlag = false)
-                                                  : null
-                                          }
-                                          return punctuationFlag
-                                      }
-                                  )
-                                  .max(
-                                      20,
-                                      locale.texts.LIMIT_IN_TWENTY_CHARACTER
-                                  ),
+                                                ? (punctuationFlag = false)
+                                                : null
+                                        }
+                                        return punctuationFlag
+                                    }
+                                )
+                                .max(
+                                    20,
+                                    locale.texts.LIMIT_IN_TWENTY_CHARACTER
+                                ),
                         roles: string().required(locale.texts.ROLE_IS_REQUIRED),
                         email: string()
                             .required(locale.texts.REQUIRED)

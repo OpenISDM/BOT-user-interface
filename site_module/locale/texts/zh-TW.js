@@ -19,4 +19,4 @@ export default {
     EMERGENCY_ROOM: '急診室',
     NTUH_EMERGENCY_ROOM: 'emergency room',
     WHOLE_SITE: '公共區域;',
-};
+}

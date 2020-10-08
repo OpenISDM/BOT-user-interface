@@ -32,49 +32,49 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import path from 'path';
-import fs from 'fs';
-import pdf from 'html-pdf';
-import pkg from 'json2csv';
-const { Parser } = pkg;
+import 'dotenv/config'
+import path from 'path'
+import fs from 'fs'
+import pdf from 'html-pdf'
+import pkg from 'json2csv'
+const { Parser } = pkg
 
 export default {
     exportCSV: (req, res) => {
-        const { fields, data, filePackage } = req.body;
+        const { fields, data, filePackage } = req.body
 
         const folderPath = path.join(
             process.env.LOCAL_FILE_PATH,
             filePackage.directory
-        );
+        )
 
         if (!fs.existsSync(process.env.LOCAL_FILE_PATH)) {
-            fs.mkdirSync(process.env.LOCAL_FILE_PATH);
+            fs.mkdirSync(process.env.LOCAL_FILE_PATH)
         }
 
         if (!fs.existsSync(folderPath)) {
-            fs.mkdirSync(folderPath);
+            fs.mkdirSync(folderPath)
         }
 
         const filePath = path.join(
             process.env.LOCAL_FILE_PATH,
             filePackage.path
-        );
+        )
 
-        const json2csvParser = new Parser({ fields });
-        const csv = json2csvParser.parse(data);
+        const json2csvParser = new Parser({ fields })
+        const csv = json2csvParser.parse(data)
         const options = {
             encoding: 'utf8',
-        };
+        }
 
         fs.writeFile(filePath, '\ufeff' + csv, options, function (err) {
             if (err) {
-                console.log(err);
+                console.log(err)
             } else {
-                res.status(200).json(data);
-                console.log('the csv file was written successfully');
+                res.status(200).json(data)
+                console.log('the csv file was written successfully')
             }
-        });
+        })
     },
 
     getFile: (req, res) => {
@@ -84,19 +84,19 @@ export default {
                 `${req.params.folder}`,
                 req.params.file
             )
-        );
+        )
     },
 
     exportPDF: (request, response) => {
-        const { pdfPackage } = request.body;
+        const { pdfPackage } = request.body
         pdf.create(pdfPackage.pdf, pdfPackage.options).toFile(
             path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
             function (err, result) {
-                if (err) return console.log(`edit object package error ${err}`);
+                if (err) return console.log(`edit object package error ${err}`)
 
-                console.log('pdf create succeed');
-                response.status(200).json(pdfPackage.path);
+                console.log('pdf create succeed')
+                response.status(200).json(pdfPackage.path)
             }
-        );
+        )
     },
-};
+}

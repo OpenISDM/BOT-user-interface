@@ -66,7 +66,7 @@ class FrequentSearch extends React.Component {
     handleClick = (e) => {
         const { name, value } = e.target
 
-        let searchKey = {
+        const searchKey = {
             type: name,
             value,
         }
@@ -95,7 +95,7 @@ class FrequentSearch extends React.Component {
                                     return index < auth.user.freqSearchCount
                                 })
                                 .map((item, index) => {
-                                    let pinColorIndex = searchObjectArray.indexOf(
+                                    const pinColorIndex = searchObjectArray.indexOf(
                                         item
                                     )
 
@@ -108,8 +108,8 @@ class FrequentSearch extends React.Component {
                                                 color:
                                                     pinColorIndex > -1
                                                         ? pinColorArray[
-                                                              pinColorIndex
-                                                          ]
+                                                            pinColorIndex
+                                                        ]
                                                         : null,
                                             }}
                                             // active={this.state.searchKey == item.name.toLowerCase()}

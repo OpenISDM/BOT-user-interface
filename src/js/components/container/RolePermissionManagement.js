@@ -245,9 +245,9 @@ class RolePermissionManagement extends React.Component {
                                         )[0]
                                         selectedPermission = selectedPermission
                                             ? selectedPermission.permissions.map(
-                                                  (permission) =>
-                                                      permission.name
-                                              )
+                                                (permission) =>
+                                                    permission.name
+                                            )
                                             : []
 
                                         setFieldValue('selectedRole', value)
@@ -272,8 +272,8 @@ class RolePermissionManagement extends React.Component {
                                                                 {
                                                                     locale
                                                                         .texts[
-                                                                        type.toUpperCase()
-                                                                    ]
+                                                                            type.toUpperCase()
+                                                                        ]
                                                                 }
                                                             </h4>
                                                             {this.state.permissionList

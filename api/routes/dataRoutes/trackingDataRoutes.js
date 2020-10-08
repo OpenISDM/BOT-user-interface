@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import trackingController from '../../controllers/trackingDataController.js';
+import trackingController from '../../controllers/trackingDataController'
 
 export default (app) => {
-    app.route('/data/trackingData').post(trackingController.getTrackingData);
-};
+    app.route('/data/trackingData').post(trackingController.getTrackingData)
+}

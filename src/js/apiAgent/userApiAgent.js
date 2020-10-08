@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getAllUser: async function ({ locale }) {
+    async getAllUser ({ locale }) {
         return await axios.get(dataSrc.user, {
             params: {
                 locale,
@@ -44,7 +44,7 @@ export default {
         })
     },
 
-    addSearchHistory: async function ({ username, keyType, keyWord }) {
+    async addSearchHistory ({ username, keyType, keyWord }) {
         return await axios.put(dataSrc.userInfo.searchHistory, {
             username,
             keyType,
@@ -52,7 +52,7 @@ export default {
         })
     },
 
-    editMyDevice: async function ({ username, mode, acn }) {
+    async editMyDevice ({ username, mode, acn }) {
         return await axios.put(dataSrc.userInfo.mydevice, {
             username,
             mode,
@@ -60,28 +60,28 @@ export default {
         })
     },
 
-    editMaxSearchHistoryCount: async function ({ info, username }) {
+    async editMaxSearchHistoryCount ({ info, username }) {
         return await axios.post(dataSrc.userInfo.maxSearchHistoryCount, {
             info,
             username,
         })
     },
 
-    setLocale: async function ({ userId, localeName }) {
+    async setLocale ({ userId, localeName }) {
         return await axios.post(dataSrc.userInfo.locale, {
             userId,
             localeName,
         })
     },
 
-    editKeywordType: async function ({ userId, keywordTypeId }) {
+    async editKeywordType ({ userId, keywordTypeId }) {
         return await axios.put(dataSrc.userInfo.keywordType, {
             userId,
             keywordTypeId,
         })
     },
 
-    editListId: async function ({ userId, listId }) {
+    async editListId ({ userId, listId }) {
         return await axios.put(dataSrc.userInfo.listId, {
             userId,
             listId,

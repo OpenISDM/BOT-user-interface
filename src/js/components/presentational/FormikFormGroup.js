@@ -54,7 +54,7 @@ const FormikFormGroup = ({
     additionalComponent = () => null,
     tabIndex = 1,
 }) => {
-    let style = {
+    const style = {
         container: {
             display: display ? null : 'none',
         },

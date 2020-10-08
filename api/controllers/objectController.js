@@ -32,14 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js'
+import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/objectQueries.js'
-import recordQueries from '../db/dbQueries/recordQueries.js'
-import pool from '../db/dev/connection.js'
+import dbQueries from '../db/dbQueries/objectQueries'
+import recordQueries from '../db/dbQueries/recordQueries'
+import pool from '../db/dev/connection'
 import pdf from 'html-pdf'
 import path from 'path'
-import { reloadGeofenceConfig } from '../service/IPCService.js'
+import { reloadGeofenceConfig } from '../service/IPCService'
 
 export default {
     getObject: (request, response) => {

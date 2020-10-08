@@ -32,9 +32,9 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import child_process from 'child_process';
-const exec = child_process.execFile;
+import 'dotenv/config'
+import child_process from 'child_process'
+const exec = child_process.execFile
 
 export const reloadGeofenceConfig = (area_id) => {
     if (process.env.RELOAD_GEO_CONFIG_PATH) {
@@ -45,19 +45,17 @@ export const reloadGeofenceConfig = (area_id) => {
             ),
             function (err, data) {
                 if (err) {
-                    console.log(
-                        `execute reload geofence setting failed ${err}`
-                    );
+                    console.log(`execute reload geofence setting failed ${err}`)
                 } else {
-                    console.log('execute reload geofence setting succeed');
+                    console.log('execute reload geofence setting succeed')
                 }
             }
-        );
+        )
     } else {
-        console.log('IPC has not set');
+        console.log('IPC has not set')
     }
-};
+}
 
 export default {
     reloadGeofenceConfig,
-};
+}

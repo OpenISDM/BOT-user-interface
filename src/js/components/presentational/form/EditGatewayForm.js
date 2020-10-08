@@ -49,9 +49,9 @@ const EditGatewayForm = ({
     handleClose,
     handleSubmit,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
-    let { uuid, description, comment } = selectedObjectData
+    const { uuid, description, comment } = selectedObjectData
 
     return (
         <Modal
@@ -67,12 +67,12 @@ const EditGatewayForm = ({
                 <Formik
                     initialValues={{
                         description: description || '',
-                        uuid: uuid,
-                        comment: comment,
+                        uuid,
+                        comment,
                     }}
                     onSubmit={(values) => {
-                        let { comment } = values
-                        let settingPackage = {
+                        const { comment } = values
+                        const settingPackage = {
                             ...selectedObjectData,
                             comment,
                         }

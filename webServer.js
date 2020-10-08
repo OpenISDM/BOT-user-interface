@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js'
+import 'dotenv/config'
 import express from 'express'
 import bodyParser from 'body-parser'
 import { fileURLToPath } from 'url'
@@ -43,15 +43,15 @@ import session from 'express-session'
 import compression from 'compression'
 
 // import validation from './api/middlewares/validation.js';
-import sessionOptions from './api/config/session.js'
-import credentials from './api/config/credentials.js'
-import dataRoutes from './api/routes/dataRoutes.js'
-import authRoutes from './api/routes/dataRoutes/authRoutes.js'
-import UIRoutes from './api/routes/UIRoutes.js'
-import UtilRoutes from './api/routes/UtilRoutes.js'
-import shouldCompress from './api/config/compression.js'
-import redirect from './api/middlewares/redirect.js'
-import APIRoutes from './web_server/routes/APIRoutes.js'
+import sessionOptions from './api/config/session'
+import credentials from './api/config/credentials'
+import dataRoutes from './api/routes/dataRoutes'
+import authRoutes from './api/routes/dataRoutes/authRoutes'
+import UIRoutes from './api/routes/UIRoutes'
+import UtilRoutes from './api/routes/UtilRoutes'
+import shouldCompress from './api/config/compression'
+import redirect from './api/middlewares/redirect'
+import APIRoutes from './web_server/routes/APIRoutes'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 

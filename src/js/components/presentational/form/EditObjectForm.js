@@ -45,7 +45,7 @@ import Select from 'react-select'
 import Creatable, { makeCreatableSelect } from 'react-select/creatable'
 import config from '../../../config'
 import { Formik, Field, Form } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
 import RadioButtonGroup from '../../container/RadioButtonGroup'
@@ -65,7 +65,7 @@ import {
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
 import apiHelper from '../../../helper/apiHelper'
 
-let monitorTypeMap = {}
+const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
     monitorTypeMap[config.monitorType[key]] = key
 })
@@ -91,12 +91,12 @@ class EditObjectForm extends React.Component {
                         value: branch.name,
                         options: branch.departments
                             ? branch.departments.map((department, index) => {
-                                  return {
-                                      id: department.id,
-                                      label: `${branch.name}-${department.value}`,
-                                      value: department.value,
-                                  }
-                              })
+                                return {
+                                    id: department.id,
+                                    label: `${branch.name}-${department.value}`,
+                                    value: department.value,
+                                }
+                            })
                             : [],
                     }
                 })
@@ -151,9 +151,9 @@ class EditObjectForm extends React.Component {
                             asset_control_number: asset_control_number || '',
                             mac_address: selectedRowData.isBind
                                 ? {
-                                      label: mac_address,
-                                      value: mac_address,
-                                  }
+                                    label: mac_address,
+                                    value: mac_address,
+                                }
                                 : null,
                             status:
                                 selectedRowData.length != 0
@@ -166,8 +166,8 @@ class EditObjectForm extends React.Component {
                                     ? selectedRowData.monitor_type == 0
                                         ? null
                                         : selectedRowData.monitor_type.split(
-                                              '/'
-                                          )
+                                            '/'
+                                        )
                                     : [],
                             transferred_location:
                                 status.value == TRANSFERRED
@@ -175,16 +175,16 @@ class EditObjectForm extends React.Component {
                                     : ' ',
                             nickname: nickname || '',
                         }}
-                        validationSchema={Yup.object().shape({
-                            name: Yup.string().required(
+                        validationSchema={object().shape({
+                            name: string().required(
                                 locale.texts.NAME_IS_REQUIRED
                             ),
 
-                            type: Yup.string().required(
+                            type: string().required(
                                 locale.texts.TYPE_IS_REQUIRED
                             ),
 
-                            asset_control_number: Yup.string()
+                            asset_control_number: string()
                                 .required(
                                     locale.texts
                                         .ASSET_CONTROL_NUMBER_IS_REQUIRED
@@ -214,7 +214,7 @@ class EditObjectForm extends React.Component {
                                     }
                                 ),
 
-                            mac_address: Yup.object()
+                            mac_address: object()
                                 .nullable()
                                 /** check if there are duplicated mac address in object table */
                                 .test(
@@ -226,7 +226,7 @@ class EditObjectForm extends React.Component {
                                             return true
                                         if (selectedRowData.length == 0)
                                             return true
-                                        else return macaddrValidation(obj.label)
+                                        return macaddrValidation(obj.label)
                                     }
                                 ),
                             // .test(
@@ -239,31 +239,31 @@ class EditObjectForm extends React.Component {
                             //     }
                             // ),
 
-                            status: Yup.string().required(
+                            status: string().required(
                                 locale.texts.STATUS_IS_REQUIRED
                             ),
 
-                            area: Yup.string().required(
+                            area: string().required(
                                 locale.texts.AREA_IS_REQUIRED
                             ),
 
-                            transferred_location: Yup.object()
+                            transferred_location: object()
                                 .nullable()
                                 .when('status', {
                                     is: TRANSFERRED,
-                                    then: Yup.object().required(
+                                    then: object().required(
                                         locale.texts.LOCATION_IS_REQUIRED
                                     ),
                                 }),
                         })}
                         onSubmit={(values, { setStatus, setSubmitting }) => {
-                            let monitor_type = values.monitorType
+                            const monitor_type = values.monitorType
                                 ? values.monitorType
-                                      .filter((item) => item)
-                                      .reduce((sum, item) => {
-                                          sum += parseInt(monitorTypeMap[item])
-                                          return sum
-                                      }, 0)
+                                    .filter((item) => item)
+                                    .reduce((sum, item) => {
+                                        sum += parseInt(monitorTypeMap[item])
+                                        return sum
+                                    }, 0)
                                 : 0
                             const postOption = {
                                 id,
@@ -536,14 +536,14 @@ class EditObjectForm extends React.Component {
                                                             id={
                                                                 config
                                                                     .monitorType[
-                                                                    key
-                                                                ]
+                                                                        key
+                                                                    ]
                                                             }
                                                             label={
                                                                 config
                                                                     .monitorType[
-                                                                    key
-                                                                ]
+                                                                        key
+                                                                    ]
                                                             }
                                                         />
                                                     )

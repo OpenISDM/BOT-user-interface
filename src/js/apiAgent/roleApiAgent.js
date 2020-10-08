@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    getAllRole: async function () {
+    async getAllRole () {
         return await axios.get(dataSrc.role)
     },
 }

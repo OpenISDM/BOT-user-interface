@@ -74,7 +74,7 @@ class NavbarContainer extends React.Component {
 
         const AREA_MODULE = config.mapConfig.AREA_MODULES
 
-        let options = Object.values(AREA_MODULE)
+        const options = Object.values(AREA_MODULE)
             .filter((module) => auth.user.areas_id.includes(module.id))
             .map((module) => {
                 return {
@@ -84,7 +84,7 @@ class NavbarContainer extends React.Component {
                 }
             })
 
-        let selectedArea = options.filter((module) => module.id == areaId)
+        const selectedArea = options.filter((module) => module.id == areaId)
         return (
             <div>
                 <Navbar
@@ -110,8 +110,8 @@ class NavbarContainer extends React.Component {
                                 value={selectedArea}
                                 options={options}
                                 onChange={(value) => {
-                                    let { stateReducer } = this.context
-                                    let [{ areaId }, dispatch] = stateReducer
+                                    const { stateReducer } = this.context
+                                    const [{ areaId }, dispatch] = stateReducer
                                     dispatch({
                                         type: SET_AREA,
                                         value: value.id,
@@ -208,13 +208,13 @@ class NavbarContainer extends React.Component {
                                                                                 {
                                                                                     locale
                                                                                         .texts[
-                                                                                        tab.name
-                                                                                            .toUpperCase()
-                                                                                            .replace(
-                                                                                                / /g,
-                                                                                                '_'
-                                                                                            )
-                                                                                    ]
+                                                                                            tab.name
+                                                                                                .toUpperCase()
+                                                                                                .replace(
+                                                                                                    / /g,
+                                                                                                    '_'
+                                                                                                )
+                                                                                        ]
                                                                                 }
                                                                             </BOTNavLink>
                                                                         </LinkContainer>
@@ -264,7 +264,7 @@ class NavbarContainer extends React.Component {
                             <Dropdown
                                 className="mx-1 font-weight-500"
                                 onSelect={(e) => {
-                                    let callback = () => auth.setLocale(e)
+                                    const callback = () => auth.setLocale(e)
                                     locale.setLocale(e, callback)
                                 }}
                             >

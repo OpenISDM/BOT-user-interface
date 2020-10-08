@@ -73,11 +73,11 @@ class ObjectEditedRecord extends React.Component {
     }
 
     getData = () => {
-        let { locale } = this.context
+        const { locale } = this.context
         apiHelper.record
             .getRecord(config.RECORD_TYPE.EDITED_OBJECT, locale.abbr)
             .then((res) => {
-                let columns = JSONClone(editObjectRecordTableColumn)
+                const columns = JSONClone(editObjectRecordTableColumn)
                 columns.map((field) => {
                     field.Header =
                         locale.texts[
@@ -121,7 +121,7 @@ class ObjectEditedRecord extends React.Component {
           That can then be iterrated to get all the currently visible records and set
           the selection state.
         */
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         const selection = []
         if (selectAll) {
             // we need to get at the internals of ReactTable
@@ -176,7 +176,7 @@ class ObjectEditedRecord extends React.Component {
 
     deleteRecord = () => {
         this.setState({ selectAll: false })
-        let idPackage = []
+        const idPackage = []
         this.state.selection.map((item) => {
             idPackage.push(parseInt(this.state.data[item - 1].id))
         })
@@ -262,7 +262,7 @@ class ObjectEditedRecord extends React.Component {
                     getTrProps={(state, rowInfo, column, instance) => {
                         return {
                             onClick: (e, handleOriginal) => {
-                                let id = rowInfo.original._id
+                                const id = rowInfo.original._id
                                 this.toggleSelection(id)
 
                                 if (handleOriginal) {

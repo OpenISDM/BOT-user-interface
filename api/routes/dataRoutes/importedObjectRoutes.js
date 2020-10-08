@@ -32,15 +32,15 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import importedObjectController from '../../controllers/importedObjectController.js';
-import cors from 'cors';
+import importedObjectController from '../../controllers/importedObjectController'
+import cors from 'cors'
 
 export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/importedObject', cors());
+    app.options('/data/importedObject', cors())
 
     app.route('/data/importedObject')
         .get(importedObjectController.getImportedObject)
         .delete(importedObjectController.deleteImportedObject)
-        .post(importedObjectController.addImportedObject);
-};
+        .post(importedObjectController.addImportedObject)
+}

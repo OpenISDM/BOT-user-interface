@@ -60,9 +60,9 @@ class QRCodeContainer extends React.Component {
     shouldComponentUpdate = (nextProps, nextState) => {
         if (nextProps.show || nextState.show) {
             return true
-        } else {
-            return true
         }
+        return true
+
     }
 
     sendSearchResultToBackend = (searchResultInfo, callBack) => {
@@ -77,20 +77,20 @@ class QRCodeContainer extends React.Component {
     }
     componentWillUpdate = (preProps) => {
         if (this.props.isSearched) {
-            let data = {
+            const data = {
                 foundResult: [],
                 notFoundResult: [],
             }
 
-            for (var item of this.props.data) {
+            for (const item of this.props.data) {
                 item.found
                     ? data.foundResult.push(item)
                     : data.notFoundResult.push(item)
             }
 
-            let { locale, auth, stateReducer } = this.context
-            let [{ areaId }] = stateReducer
-            let pdfPackage = config.getPdfPackage(
+            const { locale, auth, stateReducer } = this.context
+            const [{ areaId }] = stateReducer
+            const pdfPackage = config.getPdfPackage(
                 'searchResult',
                 auth.user,
                 data,
@@ -98,7 +98,7 @@ class QRCodeContainer extends React.Component {
                 areaId
             )
             //console.log(foundResult)
-            var searResultInfo = {
+            const searResultInfo = {
                 userInfo: auth.user,
                 pdfPackage,
             }

@@ -39,7 +39,7 @@ export default {
     /**
      * get object data from object_table
      */
-    getObjectTable: async function ({ locale, areas_id, objectType }) {
+    async getObjectTable ({ locale, areas_id, objectType }) {
         return await axios.get(dataSrc.object.object, {
             params: {
                 locale,
@@ -49,32 +49,32 @@ export default {
         })
     },
 
-    getAlias: async function () {
+    async getAlias () {
         return await axios.get(dataSrc.object.alias)
     },
 
-    editAlias: async function ({ objectType, alias }) {
+    async editAlias ({ objectType, alias }) {
         return await axios.put(dataSrc.object.alias, {
             objectType,
             alias,
         })
     },
 
-    post: async function ({ formOption, mode }) {
+    async post ({ formOption, mode }) {
         return await axios.post(dataSrc.object[mode], {
             formOption,
             mode,
         })
     },
 
-    put: async function ({ formOption, mode }) {
+    async put ({ formOption, mode }) {
         return await axios.put(dataSrc.object[mode], {
             formOption,
             mode,
         })
     },
 
-    editObjectPackage: async function (
+    async editObjectPackage (
         locale,
         formOption,
         username,
@@ -90,7 +90,7 @@ export default {
         })
     },
 
-    deleteObject: async function ({ formOption }) {
+    async deleteObject ({ formOption }) {
         return await axios.delete(dataSrc.object.object, {
             data: {
                 formOption,
@@ -98,13 +98,13 @@ export default {
         })
     },
 
-    disassociate: async function ({ formOption }) {
+    async disassociate ({ formOption }) {
         return await axios.patch(dataSrc.object.object, {
             formOption,
         })
     },
 
-    getIdleMacaddr: async function () {
+    async getIdleMacaddr () {
         return await axios.post(dataSrc.object.idleMacaddr)
     },
 }

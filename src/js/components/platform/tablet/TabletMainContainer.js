@@ -63,7 +63,7 @@ const TabletMainContainer = ({
     pathMacAddress,
     currentAreaId,
 }) => {
-    let auth = React.useContext(AuthenticationContext)
+    const auth = React.useContext(AuthenticationContext)
 
     const style = {
         noResultDiv: {

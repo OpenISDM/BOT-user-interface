@@ -570,10 +570,10 @@ const cn = {
     TW: '中文',
     EN: '英文',
 
-    DEVICE_FOUND: function (length) {
+    DEVICE_FOUND (length) {
         return '发现' + length.toString() + '个仪器'
     },
-    DEVICE_NOT_FOUND: function (length) {
+    DEVICE_NOT_FOUND (length) {
         return '没发现' + length.toString() + '个仪器'
     },
 

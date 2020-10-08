@@ -32,13 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js'
+import 'dotenv/config'
 import 'moment-timezone'
-import dbQueries from '../db/dbQueries/authQueries.js'
-import pool from '../db/dev/connection.js'
-import encrypt from '../service/encrypt.js'
-import mailTransporter from '../service/mailTransporter.js'
-import resetPasswordInstruction from '../config/template.js'
+import dbQueries from '../db/dbQueries/authQueries'
+import pool from '../db/dev/connection'
+import encrypt from '../service/encrypt'
+import mailTransporter from '../service/mailTransporter'
+import resetPasswordInstruction from '../config/template'
 import jwt from 'jsonwebtoken'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'

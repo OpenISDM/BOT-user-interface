@@ -58,7 +58,7 @@ class AreaPicker extends React.Component {
     }
 
     onChange = (value) => {
-        let id = this.props.id
+        const id = this.props.id
         this.props.getValue(value, id)
         this.setState({
             time: value,
@@ -66,9 +66,9 @@ class AreaPicker extends React.Component {
     }
 
     render() {
-        let { locale } = this.context
-        let options = []
-        for (var i in this.state.areaList) {
+        const { locale } = this.context
+        const options = []
+        for (const i in this.state.areaList) {
             options.push({
                 value: i,
                 label: locale.texts[this.state.areaList[i]],

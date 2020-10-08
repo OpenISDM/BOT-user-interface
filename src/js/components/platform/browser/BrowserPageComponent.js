@@ -43,10 +43,10 @@ import LocaleContext from '../../../context/LocaleContext'
 import AccessControl from '../../authentication/AccessControl'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
-    let { tabList, title, defaultActiveKey } = containerModule
+    const { tabList, title, defaultActiveKey } = containerModule
 
-    let locale = React.useContext(LocaleContext)
-    let [key, setKey] = React.useState(defaultActiveKey)
+    const locale = React.useContext(LocaleContext)
+    const [key, setKey] = React.useState(defaultActiveKey)
 
     useEffect(() => {
         setKey(defaultActiveKey)
@@ -92,7 +92,7 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
             <div className="BOTsidemain">
                 <Tab.Content>
                     {tabList.map((tab, index) => {
-                        let props = {
+                        const props = {
                             type: tab.name,
                             setMessage,
                         }

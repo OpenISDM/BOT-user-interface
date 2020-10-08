@@ -59,7 +59,7 @@ class SystemStatus extends React.Component {
     toastId = null
 
     componentDidUpdate = (prevProps, prevState) => {
-        let { locale } = this.context
+        const { locale } = this.context
         if (locale.lang != prevState.locale) {
             this.getTrackingData()
             this.setState({
@@ -77,8 +77,8 @@ class SystemStatus extends React.Component {
     }
 
     getTrackingData = () => {
-        let { locale, auth, stateReducer } = this.context
-        let [{ areaId }] = stateReducer
+        const { locale, auth, stateReducer } = this.context
+        const [{ areaId }] = stateReducer
 
         apiHelper.trackingDataApiAgent
             .getTrackingData({
@@ -88,7 +88,7 @@ class SystemStatus extends React.Component {
             })
             .then((res) => {
                 this.setMessage('clear')
-                let column = JSONClone(trackingTableColumn)
+                const column = JSONClone(trackingTableColumn)
                 column.map((field) => {
                     field.headerStyle = {
                         textAlign: 'left',

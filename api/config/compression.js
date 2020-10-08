@@ -32,12 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import compression from 'compression';
+import compression from 'compression'
 
 export default (req, res) => {
     if (req.headers['x-no-compression']) {
-        return false;
+        return false
     }
 
-    return compression.filter(req, res);
-};
+    return compression.filter(req, res)
+}

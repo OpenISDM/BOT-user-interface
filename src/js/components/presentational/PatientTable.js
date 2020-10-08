@@ -115,9 +115,9 @@ class PatientTable extends React.Component {
     getRefresh = () => {
         this.getAreaTable()
 
-        let columns = JSONClone(patientTableColumn)
+        const columns = JSONClone(patientTableColumn)
 
-        let { locale } = this.context
+        const { locale } = this.context
 
         columns.map((field) => {
             field.Header = this.context.locale.texts[
@@ -156,7 +156,7 @@ class PatientTable extends React.Component {
     }
 
     getData = (callback) => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -165,7 +165,7 @@ class PatientTable extends React.Component {
                 objectType: [0, 1, 2],
             })
             .then((res) => {
-                let columns = JSONClone(patientTableColumn)
+                const columns = JSONClone(patientTableColumn)
 
                 columns.map((field) => {
                     field.Header =
@@ -174,7 +174,7 @@ class PatientTable extends React.Component {
                         ]
                 })
 
-                let data = res.data.rows
+                const data = res.data.rows
                     .filter((item) => item.object_type != 0)
                     .map((item) => {
                         item.area_name = {
@@ -229,8 +229,8 @@ class PatientTable extends React.Component {
         await apiHelper.objectApiAgent
             .getIdleMacaddr()
             .then((res) => {
-                let idleMacaddrSet = res.data.rows[0].mac_set
-                let macOptions = idleMacaddrSet.map((mac) => {
+                const idleMacaddrSet = res.data.rows[0].mac_set
+                const macOptions = idleMacaddrSet.map((mac) => {
                     return {
                         label: mac,
                         value: mac.replace(/:/g, ''),
@@ -247,12 +247,12 @@ class PatientTable extends React.Component {
     }
 
     getAreaTable = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.areaApiAgent
             .getAreaTable()
             .then((res) => {
-                let areaSelection = res.data.rows.map((area) => {
+                const areaSelection = res.data.rows.map((area) => {
                     return {
                         value: area.name,
                         label: locale.texts[area.name],
@@ -283,14 +283,14 @@ class PatientTable extends React.Component {
     }
 
     handleSubmitForm = (formOption, cb) => {
-        let { apiMethod } = this.state
+        const { apiMethod } = this.state
 
         apiHelper.objectApiAgent[apiMethod]({
             formOption,
             mode: PERSON,
         })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                 }
                 this.getData(callback)
@@ -318,7 +318,7 @@ class PatientTable extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
         if (selectAll) {
@@ -351,8 +351,8 @@ class PatientTable extends React.Component {
     }
 
     handleClickButton = (e) => {
-        let { name } = e.target
-        let { locale } = this.context
+        const { name } = e.target
+        const { locale } = this.context
 
         switch (name) {
             case ADD:
@@ -387,12 +387,12 @@ class PatientTable extends React.Component {
                 })
                 break
 
-            // case DISASSOCIATE:
-            //     this.setState({
-            //         formTitle: name,
-            //         isShowEditImportTable: true
-            //     })
-            //     break;
+                // case DISASSOCIATE:
+                //     this.setState({
+                //         formTitle: name,
+                //         isShowEditImportTable: true
+                //     })
+                //     break;
 
             case DISASSOCIATE:
                 this.setState({
@@ -414,7 +414,7 @@ class PatientTable extends React.Component {
                         },
                     })
                     .then((res) => {
-                        let callback = () => {
+                        const callback = () => {
                             messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                         }
                         this.getData(callback)
@@ -425,7 +425,7 @@ class PatientTable extends React.Component {
                 break
 
             case DELETE:
-                let formOption = []
+                const formOption = []
                 var deleteArray = []
                 var deleteCount = 0
 
@@ -444,11 +444,11 @@ class PatientTable extends React.Component {
                     this.state.data[item] == undefined
                         ? null
                         : formOption.push({
-                              id: this.state.data[item].id,
-                              mac_address: this.state.data[item].isBind
-                                  ? this.state.data[item].mac_address
-                                  : null,
-                          })
+                            id: this.state.data[item].id,
+                            mac_address: this.state.data[item].isBind
+                                ? this.state.data[item].mac_address
+                                : null,
+                        })
                 })
 
                 apiHelper.objectApiAgent
@@ -456,7 +456,7 @@ class PatientTable extends React.Component {
                         formOption,
                     })
                     .then((res) => {
-                        let callback = () => {
+                        const callback = () => {
                             messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                         }
                         this.getData(callback)
@@ -474,22 +474,22 @@ class PatientTable extends React.Component {
     filterData = (data, key, filteredAttribute) => {
         const { locale } = this.context
         key = key.toLowerCase()
-        let filteredData = data.filter((obj) => {
+        const filteredData = data.filter((obj) => {
             if (filteredAttribute.includes('name')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.name.toLowerCase().match(keyRex)) {
                     return true
                 }
             }
 
             if (filteredAttribute.includes('acn')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.asset_control_number.toLowerCase().match(keyRex))
                     return true
             }
 
             if (filteredAttribute.includes('area')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.area_name.label != undefined) {
                     if (obj.area_name.label.toLowerCase().match(keyRex)) {
                         return true
@@ -498,7 +498,7 @@ class PatientTable extends React.Component {
             }
 
             if (filteredAttribute.includes('macAddress')) {
-                let keyRex = key.replace(/:/g, '')
+                const keyRex = key.replace(/:/g, '')
                 if (
                     obj.mac_address
                         .replace(/:/g, '')
@@ -534,7 +534,7 @@ class PatientTable extends React.Component {
     }
 
     filterObjects = () => {
-        let filteredData = this.state.objectFilter.reduce((acc, curr) => {
+        const filteredData = this.state.objectFilter.reduce((acc, curr) => {
             return this.filterData(acc, curr.key, curr.attribute)
         }, this.state.data)
 

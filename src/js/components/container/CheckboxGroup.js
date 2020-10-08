@@ -41,7 +41,7 @@ class CheckboxGroup extends React.Component {
 
     handleChange = (event) => {
         const target = event.currentTarget
-        let valueArray = [...this.props.value] || []
+        const valueArray = [...this.props.value] || []
 
         if (target.checked) {
             valueArray.push(target.id)

@@ -42,7 +42,7 @@ import {
     isMobile,
     isTablet,
 } from 'react-device-detect'
-import BrowserContactTree from '../../platform/browser/BrowserContactTree.js'
+import BrowserContactTree from '../../platform/browser/BrowserContactTree'
 
 class ContactTree extends React.Component {
     componentDidMount = () => {

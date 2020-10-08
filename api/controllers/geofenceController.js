@@ -32,57 +32,57 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import child_process from 'child_process';
-import dbQueries from '../db/dbQueries/geofenceQueries.js';
-import pool from '../db/dev/connection.js';
-const exec = child_process.execFile;
+import 'dotenv/config'
+import child_process from 'child_process'
+import dbQueries from '../db/dbQueries/geofenceQueries'
+import pool from '../db/dev/connection'
+const exec = child_process.execFile
 
 export default {
     getGeofenceConfig: (request, response) => {
-        const { areaId } = request.body;
+        const { areaId } = request.body
         pool.query(dbQueries.getGeofenceConfig(areaId))
             .then((res) => {
                 res.rows.map((item) => {
                     item.start_time = item.start_time
                         .split(':')
                         .filter((item, index) => index < 2)
-                        .join(':');
+                        .join(':')
                     item.end_time = item.end_time
                         .split(':')
                         .filter((item, index) => index < 2)
-                        .join(':');
-                    item.parsePerimeters = parseGeoFenceConfig(item.perimeters);
-                    item.parseFences = parseGeoFenceConfig(item.fences);
-                });
-                console.log('get geofence config success');
-                response.status(200).json(res);
+                        .join(':')
+                    item.parsePerimeters = parseGeoFenceConfig(item.perimeters)
+                    item.parseFences = parseGeoFenceConfig(item.fences)
+                })
+                console.log('get geofence config success')
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`get geofence config fail ${err}`);
-            });
+                console.log(`get geofence config fail ${err}`)
+            })
     },
 
     deleteMonitorConfig: (request, response) => {
-        const { configPackage } = request.body;
+        const { configPackage } = request.body
         pool.query(dbQueries.deleteMonitorConfig(configPackage))
             .then((res) => {
-                console.log(`delete ${configPackage.type.replace(/_/g, ' ')}`);
-                response.status(200).json(res);
+                console.log(`delete ${configPackage.type.replace(/_/g, ' ')}`)
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`delete monitor config failed ${err}`);
-            });
+                console.log(`delete monitor config failed ${err}`)
+            })
     },
 
     addGeofenceConfig: (request, response) => {
-        const { configPackage } = request.body;
+        const { configPackage } = request.body
 
-        const area_id = configPackage.area.id;
+        const area_id = configPackage.area.id
 
         pool.query(dbQueries.addGeofenceConfig(configPackage))
             .then((res) => {
-                console.log('add geofence config success');
+                console.log('add geofence config success')
                 if (process.env.RELOAD_GEO_CONFIG_PATH) {
                     exec(
                         process.env.RELOAD_GEO_CONFIG_PATH,
@@ -93,34 +93,34 @@ export default {
                             if (err) {
                                 console.log(
                                     `execute reload geofence setting failed ${err}`
-                                );
-                                response.status(200).json(res);
+                                )
+                                response.status(200).json(res)
                             } else {
                                 console.log(
                                     'execute reload geofence setting success'
-                                );
-                                response.status(200).json(res);
+                                )
+                                response.status(200).json(res)
                             }
                         }
-                    );
+                    )
                 } else {
-                    response.status(200).json(res);
-                    console.log('IPC has not set');
+                    response.status(200).json(res)
+                    console.log('IPC has not set')
                 }
             })
             .catch((err) => {
-                console.log(`add geofence config failed ${err}`);
-            });
+                console.log(`add geofence config failed ${err}`)
+            })
     },
 
     setGeofenceConfig: (request, response) => {
-        const { configPackage } = request.body;
+        const { configPackage } = request.body
 
-        const { area_id } = configPackage;
+        const { area_id } = configPackage
 
         pool.query(dbQueries.setGeofenceConfig(configPackage))
             .then((res) => {
-                console.log('set geofence config success');
+                console.log('set geofence config success')
                 if (process.env.RELOAD_GEO_CONFIG_PATH) {
                     exec(
                         process.env.RELOAD_GEO_CONFIG_PATH,
@@ -131,45 +131,45 @@ export default {
                             if (err) {
                                 console.log(
                                     `execute reload geofence setting failed ${err}`
-                                );
-                                response.status(200).json(res);
+                                )
+                                response.status(200).json(res)
                             } else {
                                 console.log(
                                     'execute reload geofence setting success'
-                                );
-                                response.status(200).json(res);
+                                )
+                                response.status(200).json(res)
                             }
                         }
-                    );
+                    )
                 } else {
-                    response.status(200).json(res);
-                    console.log('IPC has not set');
+                    response.status(200).json(res)
+                    console.log('IPC has not set')
                 }
             })
             .catch((err) => {
-                console.log(`set geofence config failed ${err}`);
-            });
+                console.log(`set geofence config failed ${err}`)
+            })
     },
-};
+}
 
 /** Parse geo fence config */
 const parseGeoFenceConfig = (field = []) => {
-    const fieldParse = field.split(',');
-    const number = parseInt(fieldParse[0]);
+    const fieldParse = field.split(',')
+    const number = parseInt(fieldParse[0])
     const lbeacons = fieldParse.filter(
         (item, index) => index > 0 && index <= number
-    );
-    const rssi = fieldParse[number + 1];
+    )
+    const rssi = fieldParse[number + 1]
     const coordinates = lbeacons.map((item) => {
-        const area_id = parseInt(item.slice(0, 4));
-        const xx = parseInt(item.slice(12, 20));
-        const yy = parseInt(item.slice(-8));
-        return [yy, xx];
-    });
+        const area_id = parseInt(item.slice(0, 4))
+        const xx = parseInt(item.slice(12, 20))
+        const yy = parseInt(item.slice(-8))
+        return [yy, xx]
+    })
     return {
         number,
         lbeacons,
         rssi,
         coordinates,
-    };
-};
+    }
+}

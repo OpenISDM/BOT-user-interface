@@ -201,11 +201,11 @@ class BindForm extends React.Component {
                                             )
                                             findFlag == true && lock
                                                 ? this.setState({
-                                                      showDetail: true,
-                                                  })
+                                                    showDetail: true,
+                                                })
                                                 : this.setState({
-                                                      showDetail: false,
-                                                  })
+                                                    showDetail: false,
+                                                })
                                             return findFlag
                                         }
                                     }
@@ -286,14 +286,14 @@ class BindForm extends React.Component {
                                                 <Col>
                                                     {touched.area &&
                                                         errors.area && (
-                                                            <div
-                                                                style={
-                                                                    style.errorMessage
-                                                                }
-                                                            >
-                                                                {errors.area}
-                                                            </div>
-                                                        )}
+                                                        <div
+                                                            style={
+                                                                style.errorMessage
+                                                            }
+                                                        >
+                                                            {errors.area}
+                                                        </div>
+                                                    )}
                                                 </Col>
                                             </Row>
                                             <ErrorMessage

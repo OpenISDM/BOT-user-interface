@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    confirmValidation: async function ({
+    async confirmValidation ({
         username,
         password,
         authenticatedRoles,
@@ -48,24 +48,24 @@ export default {
         })
     },
 
-    sentResetPwdInstruction: async function ({ email }) {
+    async sentResetPwdInstruction ({ email }) {
         return await axios.post(dataSrc.auth.sentResetPwdInstruction, {
             email,
         })
     },
 
-    resetPassword: async function ({ token, password }) {
+    async resetPassword ({ token, password }) {
         return await axios.post(dataSrc.auth.resetPassword, {
             token,
             password,
         })
     },
 
-    logout: async function () {
+    async logout () {
         return await axios.post(dataSrc.auth.signout)
     },
 
-    login: async function ({ username, password }) {
+    async login ({ username, password }) {
         return await axios.post(dataSrc.auth.signin, {
             username,
             password,

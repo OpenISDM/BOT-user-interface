@@ -39,7 +39,7 @@ import config from '../config'
 const src = dataSrc.geofence
 
 const geofenceApis = {
-    getGeofenceConfig: async function (
+    async getGeofenceConfig (
         type,
         areasId,
         isGetLbeaconPosition = false
@@ -51,7 +51,7 @@ const geofenceApis = {
         })
     },
 
-    delete: async function (configPackage) {
+    async delete (configPackage) {
         return await axios.delete(src, {
             data: {
                 configPackage,
@@ -59,13 +59,13 @@ const geofenceApis = {
         })
     },
 
-    add: async function (configPackage) {
+    async add (configPackage) {
         return await axios.patch(src, {
             configPackage,
         })
     },
 
-    setGeofenceConfig: async function (configPackage) {
+    async setGeofenceConfig (configPackage) {
         return await axios.put(src, {
             configPackage,
         })

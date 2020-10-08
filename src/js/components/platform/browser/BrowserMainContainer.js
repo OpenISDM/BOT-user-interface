@@ -68,9 +68,9 @@ const BrowserMainContainer = ({
     showFoundResult,
     keywords,
 }) => {
-    let auth = React.useContext(AuthenticationContext)
+    const auth = React.useContext(AuthenticationContext)
 
-    let searchResultListRef = React.useRef(null)
+    const searchResultListRef = React.useRef(null)
 
     const style = {
         searchResultDiv: {

@@ -32,40 +32,40 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import trackingDataRoutes from './dataRoutes/trackingDataRoutes.js';
-import lbeaconRoutes from './dataRoutes/lbeaconRoutes.js';
-import gatewayRoutes from './dataRoutes/gatewayRoutes.js';
-import userRoutes from './dataRoutes/userRoutes.js';
-import objectRoutes from './dataRoutes/objectRoutes.js';
-import importedObjectRoutes from './dataRoutes/importedObjectRoutes.js';
-import locationHistoryRoutes from './dataRoutes/locationHistoryRoutes.js';
-import areaRoutes from './dataRoutes/areaRoutes.js';
-import fileRoutes from './dataRoutes/fileRoutes.js';
-import roleRoutes from './dataRoutes/roleRoutes.js';
-import geofenceRoutes from './dataRoutes/geofenceRoutes.js';
-import monitorRoutes from './dataRoutes/monitorRoutes.js';
-import recordRoutes from './dataRoutes/recordRoutes.js';
-import transferredLocationRoutes from './dataRoutes/transferredLocationRoutes.js';
-import groupListRoutes from './dataRoutes/groupListRoutes.js';
-import utilsRoutes from './dataRoutes/utilsRoutes.js';
+import trackingDataRoutes from './dataRoutes/trackingDataRoutes'
+import lbeaconRoutes from './dataRoutes/lbeaconRoutes'
+import gatewayRoutes from './dataRoutes/gatewayRoutes'
+import userRoutes from './dataRoutes/userRoutes'
+import objectRoutes from './dataRoutes/objectRoutes'
+import importedObjectRoutes from './dataRoutes/importedObjectRoutes'
+import locationHistoryRoutes from './dataRoutes/locationHistoryRoutes'
+import areaRoutes from './dataRoutes/areaRoutes'
+import fileRoutes from './dataRoutes/fileRoutes'
+import roleRoutes from './dataRoutes/roleRoutes'
+import geofenceRoutes from './dataRoutes/geofenceRoutes'
+import monitorRoutes from './dataRoutes/monitorRoutes'
+import recordRoutes from './dataRoutes/recordRoutes'
+import transferredLocationRoutes from './dataRoutes/transferredLocationRoutes'
+import groupListRoutes from './dataRoutes/groupListRoutes'
+import utilsRoutes from './dataRoutes/utilsRoutes'
 
 const dataRoutes = (app) => {
-    trackingDataRoutes(app);
-    lbeaconRoutes(app);
-    gatewayRoutes(app);
-    userRoutes(app);
-    objectRoutes(app);
-    importedObjectRoutes(app);
-    locationHistoryRoutes(app);
-    areaRoutes(app);
-    fileRoutes(app);
-    roleRoutes(app);
-    geofenceRoutes(app);
-    monitorRoutes(app);
-    recordRoutes(app);
-    transferredLocationRoutes(app);
-    groupListRoutes(app);
-    utilsRoutes(app);
-};
+    trackingDataRoutes(app)
+    lbeaconRoutes(app)
+    gatewayRoutes(app)
+    userRoutes(app)
+    objectRoutes(app)
+    importedObjectRoutes(app)
+    locationHistoryRoutes(app)
+    areaRoutes(app)
+    fileRoutes(app)
+    roleRoutes(app)
+    geofenceRoutes(app)
+    monitorRoutes(app)
+    recordRoutes(app)
+    transferredLocationRoutes(app)
+    groupListRoutes(app)
+    utilsRoutes(app)
+}
 
-export default dataRoutes;
+export default dataRoutes

@@ -72,16 +72,16 @@ class MyPatientManager extends React.Component {
         },
 
         switchDevice: (acn) => {
-            let { auth } = this.context
+            const { auth } = this.context
             let userInfo = auth.user
             let myDevice = userInfo.myDevice || []
 
-            let { myDevices, notMyDevices } = this.state
+            const { myDevices, notMyDevices } = this.state
 
             if (acn in myDevices) {
                 notMyDevices[acn] = myDevices[acn]
                 delete myDevices[acn]
-                let index = myDevice.indexOf(acn)
+                const index = myDevice.indexOf(acn)
                 myDevice = [
                     ...myDevice.slice(0, index),
                     ...myDevice.slice(index + 1),
@@ -114,14 +114,14 @@ class MyPatientManager extends React.Component {
         },
 
         postMyDeviceChange: (mode, acn) => {
-            let { auth } = this.context
+            const { auth } = this.context
             const username = auth.user.name
 
             apiHelper.userApiAgent
                 .editMyDevice({
                     username,
-                    mode: mode,
-                    acn: acn,
+                    mode,
+                    acn,
                 })
                 .catch((err) => {
                     console.log(err)
@@ -131,22 +131,22 @@ class MyPatientManager extends React.Component {
 
     functionForAddableList = {
         onClick: (e) => {
-            var acn = e.target.getAttribute('name')
+            const acn = e.target.getAttribute('name')
             this.API.switchDevice(acn)
         },
 
         validation: (string) => {
-            var re = /^\s*(?<acn>\d{4}-\d{4}-\d{4})\s*$/
-            var match = string.match(re)
+            const re = /^\s*(?<acn>\d{4}-\d{4}-\d{4})\s*$/
+            const match = string.match(re)
             if (match) {
-                return match.groups['acn']
-            } else {
-                return null
+                return match.groups.acn
             }
+            return null
+
         },
 
         itemLayout: (item, index) => {
-            let { locale } = this.context
+            const { locale } = this.context
             return (
                 <div
                     className="d-flex justify-content-start text-left"
@@ -198,7 +198,7 @@ class MyPatientManager extends React.Component {
     }
 
     getObjectData = () => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -207,8 +207,8 @@ class MyPatientManager extends React.Component {
                 objectType: [1, 2],
             })
             .then((res) => {
-                let myDevices = {}
-                let notMyDevices = {}
+                const myDevices = {}
+                const notMyDevices = {}
 
                 res.data.rows.map((item) => {
                     if (

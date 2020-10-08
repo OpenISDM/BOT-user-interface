@@ -37,7 +37,7 @@ import axios from 'axios'
 import config from '../config'
 
 const monitorApis = {
-    getMonitorConfig: async function (
+    async getMonitorConfig (
         type,
         areasId,
         isGetLbeaconPosition = false
@@ -49,7 +49,7 @@ const monitorApis = {
         })
     },
 
-    delete: async function (configPackage) {
+    async delete (configPackage) {
         return await axios.delete(dataSrc.monitor, {
             data: {
                 configPackage,
@@ -57,13 +57,13 @@ const monitorApis = {
         })
     },
 
-    add: async function (configPackage) {
+    async add (configPackage) {
         return await axios.patch(dataSrc.monitor, {
             configPackage,
         })
     },
 
-    put: async function (configPackage) {
+    async put (configPackage) {
         return await axios.put(dataSrc.monitor, {
             configPackage,
         })

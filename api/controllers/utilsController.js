@@ -32,19 +32,19 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import dbQueries from '../db/dbQueries/utilsQueries.js';
-import pool from '../db/dev/connection.js';
+import 'dotenv/config'
+import dbQueries from '../db/dbQueries/utilsQueries'
+import pool from '../db/dev/connection'
 
 export default {
     getSearchableKeywords: (request, response) => {
         pool.query(dbQueries.getSearchableKeyword())
             .then((res) => {
-                console.log('get searchable keywords succeed');
-                response.status(200).json(res);
+                console.log('get searchable keywords succeed')
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`get searchable keywords failed ${err}`);
-            });
+                console.log(`get searchable keywords failed ${err}`)
+            })
     },
-};
+}
