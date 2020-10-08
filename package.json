@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --config webpack.config.cjs -r esm",
         "start": "webpack-dev-server --open --mode development",
-        "server": "nodemon --experimental-modules --es-module-specifier-resolution=node webServer.js",
+        "server": "nodemon --experimental-modules --es-module-specifier-resolution=node ./server/index.js",
         "fetch": "git fetch --all",
         "reset": "git reset --hard origin/master",
         "git": "npm run fetch && npm run reset",

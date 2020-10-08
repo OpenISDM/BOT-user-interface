@@ -51,7 +51,7 @@ import UIRoutes from './api/routes/UIRoutes'
 import UtilRoutes from './api/routes/UtilRoutes'
 import shouldCompress from './api/config/compression'
 import redirect from './api/middlewares/redirect'
-import APIRoutes from './web_server/routes/APIRoutes'
+import APIRoutes from './routes/APIRoutes'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 

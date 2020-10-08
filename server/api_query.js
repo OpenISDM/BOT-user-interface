@@ -12,7 +12,7 @@ const config = {
 const pool = new pg.Pool(config)
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
-import encrypt from '../api/service/encrypt'
+import encrypt from './api/service/encrypt'
 
 const get_api_key = (request, response) => {
     const { username, password } = request.body

@@ -53,7 +53,7 @@ module.exports = {
     mode: env.NODE_ENV,
     // devtool: 'none',
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, 'server/dist'),
 
         filename: './js/[name].bundle.js',
 
@@ -163,7 +163,7 @@ module.exports = {
 
         new InjectManifest({
             swSrc: path.join(__dirname, 'src', 'js', 'serviceWorker', 'sw.js'),
-            swDest: path.join(__dirname, 'dist', 'sw.js'),
+            swDest: path.join(__dirname, 'server/dist', 'sw.js'),
             maximumFileSizeToCacheInBytes: 5000000000,
         }),
 

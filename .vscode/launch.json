@@ -12,7 +12,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/webServer.js"
+            "program": "${workspaceFolder}/server/index.js",
+            "runtimeArgs": ["--experimental-modules", "--es-module-specifier-resolution=node"]
         }
     ]
 }
