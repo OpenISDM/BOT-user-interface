@@ -32,10 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-const session = require('express-session')
-const pgSession = require('connect-pg-simple')(session)
-const pool = require('../db/dev/connection')
+import 'dotenv/config.js';
+import session from 'express-session';
+import ConnectPgSimple from 'connect-pg-simple';
+import pool from '../db/dev/connection.js';
+
+const pgSession = ConnectPgSimple(session);
 
 const sessionOptions = {
     store: new pgSession({
@@ -48,6 +50,6 @@ const sessionOptions = {
     cookie: {
         // maxAge: 1000
     },
-}
+};
 
-module.exports = sessionOptions
+export default sessionOptions;

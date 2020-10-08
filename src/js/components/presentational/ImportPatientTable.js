@@ -74,21 +74,21 @@ class ImportPatientTable extends React.Component {
     }
 
     getData = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.importedObjectApiAgent
             .getImportedObjectTable({
                 locale: locale.abbr,
             })
             .then((res) => {
-                let columns = JSONClone(importTableColumn)
+                const columns = JSONClone(importTableColumn)
                 columns.map((field) => {
                     field.Header =
                         locale.texts[
                             field.Header.toUpperCase().replace(/ /g, '_')
                         ]
                 })
-                let data = res.data.rows.filter(
+                const data = res.data.rows.filter(
                     (item) => item.type == 'patient'
                 )
                 this.setState({
@@ -110,7 +110,8 @@ class ImportPatientTable extends React.Component {
     }
 
     handleSubmitForm = () => {
-        let callback = () => messageGenerator.setSuccessMessage('save success')
+        const callback = () =>
+            messageGenerator.setSuccessMessage('save success')
         this.getData(callback)
     }
 
@@ -122,7 +123,7 @@ class ImportPatientTable extends React.Component {
 
         let splitKey = ''
         if (key.split('-')[1]) {
-            for (var i = 1; i < key.split('-').length; i++) {
+            for (let i = 1; i < key.split('-').length; i++) {
                 splitKey += key.split('-')[i]
                 i != key.split('-').length - 1 ? (splitKey += '-') : null
             }
@@ -144,7 +145,7 @@ class ImportPatientTable extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
         if (selectAll) {
@@ -196,7 +197,7 @@ class ImportPatientTable extends React.Component {
     }
 
     handleClickButton = (e) => {
-        let { name } = e.target
+        const { name } = e.target
         switch (name) {
             case 'delete':
                 this.setState({
@@ -213,7 +214,7 @@ class ImportPatientTable extends React.Component {
         const fileReader = new FileReader()
         //console.log(fileReader);
 
-        let { locale } = this.context
+        const { locale } = this.context
 
         if (files.length != 0) {
             //避免按下取消後的bug
@@ -261,11 +262,11 @@ class ImportPatientTable extends React.Component {
                 })
 
                 // ＩＭＰＯＲＴ時把ＡＣＮ重複的擋掉
-                let newData = []
+                const newData = []
                 let reapetFlag = false
                 let DataNameIsNull = ''
                 let ReapeName = ''
-                let checkArray = []
+                const checkArray = []
                 let punctuationFlag = false
 
                 data.map((importData) => {
@@ -329,7 +330,7 @@ class ImportPatientTable extends React.Component {
                         })
                         .then((res) => {
                             this.handleSubmitForm()
-                            let callback = () =>
+                            const callback = () =>
                                 messageGenerator.setSuccessMessage(
                                     'save success'
                                 )

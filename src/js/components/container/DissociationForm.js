@@ -39,12 +39,13 @@
  * 2. Add the corresponding terms in handleSubmit and handleChange
  * 3. Modify the query_editObject function in queryType
  */
+
 import React, { Component } from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
 import axios from 'axios'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import { getImportData, editImportData, deleteDevice } from '../../dataSrc'
+import { object, string } from 'yup'
+import { getImportData, deleteDevice } from '../../dataSrc'
 import { AppContext } from '../../context/AppContext'
 import messageGenerator from '../../helper/messageGenerator'
 
@@ -105,7 +106,7 @@ class DissociationForm extends React.Component {
             showDetail: false,
         })
         this.props.data.map((item) => {
-            if (item.asset_control_number == this.state.inputValue)
+            if (item.asset_control_number === this.state.inputValue)
                 this.setState({ showDetail: true })
         })
 
@@ -148,16 +149,16 @@ class DissociationForm extends React.Component {
                             mac: '',
                         }}
                         //C10f0027a1a7
-                        validationSchema={Yup.object().shape({
-                            mac: Yup.string()
+                        validationSchema={object().shape({
+                            mac: string()
                                 .required(locale.texts.MAC_ADDRESS_IS_REQUIRED)
                                 .test(
                                     'mac',
                                     locale.texts.MAC_DO_NOT_MATCH,
 
                                     (value) => {
-                                        if (value == undefined) return false
-                                        value != undefined
+                                        if (value === undefined) return false
+                                        value !== undefined
                                             ? (value = value
                                                   .toString()
                                                   .toLowerCase())
@@ -167,10 +168,10 @@ class DissociationForm extends React.Component {
                                                 this.props.selectedObjectData ==
                                                 'handleAllDelete'
                                             ) {
-                                                if (value != undefined) {
+                                                if (value !== undefined) {
                                                     if (
-                                                        value.length == 17 ||
-                                                        value.length == 12
+                                                        value.length === 17 ||
+                                                        value.length === 12
                                                     ) {
                                                         this.setState({
                                                             returnFlag: false,
@@ -215,12 +216,12 @@ class DissociationForm extends React.Component {
                                                     }
                                                 }
                                             } else {
-                                                if (value == undefined)
+                                                if (value === undefined)
                                                     return false
                                                 if (
                                                     this.props
                                                         .selectedObjectData
-                                                        .mac_address == value
+                                                        .mac_address === value
                                                 ) {
                                                     this.setState({
                                                         returnFlag: true,
@@ -276,7 +277,7 @@ class DissociationForm extends React.Component {
                                             )
                                         }
 
-                                        if (this.state.returnFlag == true) {
+                                        if (this.state.returnFlag === true) {
                                             this.setState({
                                                 objectName:
                                                     data[
@@ -294,20 +295,19 @@ class DissociationForm extends React.Component {
                                             })
 
                                             return true
-                                        } else {
-                                            this.setState({
-                                                objectName: '',
-                                                objectType: '',
-                                                showDetail: false,
-                                                inputValue: '',
-                                            })
-                                            return false
                                         }
+                                        this.setState({
+                                            objectName: '',
+                                            objectType: '',
+                                            showDetail: false,
+                                            inputValue: '',
+                                        })
+                                        return false
                                     }
                                 ),
                         })}
                         onSubmit={(values, { setStatus, setSubmitting }) => {
-                            let callback = () =>
+                            const callback = () =>
                                 messageGenerator.setSuccessMessage(
                                     'save success'
                                 )

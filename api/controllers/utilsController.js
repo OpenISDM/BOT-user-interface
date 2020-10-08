@@ -32,20 +32,19 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-require('moment-timezone')
-const dbQueries = require('../db/dbQueries/utilsQueries')
-const pool = require('../db/dev/connection')
+import 'dotenv/config.js';
+import dbQueries from '../db/dbQueries/utilsQueries.js';
+import pool from '../db/dev/connection.js';
 
-module.exports = {
+export default {
     getSearchableKeywords: (request, response) => {
         pool.query(dbQueries.getSearchableKeyword())
             .then((res) => {
-                console.log('get searchable keywords succeed')
-                response.status(200).json(res)
+                console.log('get searchable keywords succeed');
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`get searchable keywords failed ${err}`)
-            })
+                console.log(`get searchable keywords failed ${err}`);
+            });
     },
-}
+};

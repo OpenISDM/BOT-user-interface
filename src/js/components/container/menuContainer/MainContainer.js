@@ -108,7 +108,7 @@ class MainContainer extends React.Component {
 
     componentDidMount = () => {
         /** set the scrollability in body disabled */
-        let targetElement = document.querySelector('body')
+        const targetElement = document.querySelector('body')
         disableBodyScroll(targetElement)
 
         this.getTrackingData()
@@ -123,19 +123,19 @@ class MainContainer extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        let isTrackingDataChange = !isEqual(
+        const isTrackingDataChange = !isEqual(
             this.state.trackingData,
             prevState.trackingData
         )
 
-        let { stateReducer } = this.context
+        const { stateReducer } = this.context
 
         /** stop getTrackingData when editing object status  */
         if (
             stateReducer[0].shouldUpdateTrackingData !==
             this.state.shouldUpdateTrackingData
         ) {
-            let [{ shouldUpdateTrackingData }] = stateReducer
+            const [{ shouldUpdateTrackingData }] = stateReducer
             this.interval = shouldUpdateTrackingData
                 ? setInterval(
                       this.getTrackingData,
@@ -159,7 +159,9 @@ class MainContainer extends React.Component {
         }
 
         /** send toast if there are latest violated notification */
-        let newViolatedObject = Object.keys(this.state.violatedObjects).filter(
+        const newViolatedObject = Object.keys(
+            this.state.violatedObjects
+        ).filter(
             (item) => !Object.keys(prevState.violatedObjects).includes(item)
         )
         if (newViolatedObject.length !== 0) {
@@ -171,8 +173,8 @@ class MainContainer extends React.Component {
 
     getToastNotification = (item) => {
         item.notification.map((event) => {
-            let toastId = `${item.mac_address}-${event.type}`
-            let toastOptions = {
+            const toastId = `${item.mac_address}-${event.type}`
+            const toastOptions = {
                 hideProgressBar: true,
                 autoClose: false,
                 onClose: this.onCloseToast,
@@ -190,12 +192,12 @@ class MainContainer extends React.Component {
     }
 
     onCloseToast = (toast) => {
-        let mac_address = toast.data
+        const mac_address = toast.data
             ? toast.data.mac_address
             : toast.mac_address
-        let monitor_type = toast.type
-        let toastId = `${mac_address}-${monitor_type}`
-        let violatedObjects = this.state.violatedObjects
+        const monitor_type = toast.type
+        const toastId = `${mac_address}-${monitor_type}`
+        const violatedObjects = this.state.violatedObjects
         delete violatedObjects[toastId]
         axios
             .post(dataSrc.checkoutViolation, {
@@ -216,7 +218,7 @@ class MainContainer extends React.Component {
     clearAlerts = () => {
         Object.values(this.state.violatedObjects).map((item) => {
             item.notification.map((event) => {
-                let dismissedObj = {
+                const dismissedObj = {
                     mac_address: item.mac_address,
                     type: event.type,
                 }
@@ -233,28 +235,28 @@ class MainContainer extends React.Component {
 
     /** get the latest search results */
     handleRefreshSearchResult = () => {
-        let { searchKey, markerClickPackage } = this.state
+        const { searchKey, markerClickPackage } = this.state
 
-        if (searchKey.type != null)
+        if (searchKey.type !== null)
             this.getSearchKey(searchKey, markerClickPackage)
     }
 
     /** set the geofence and location monitor enable */
     setMonitor = (type, callback) => {
-        let { stateReducer } = this.context
+        const { stateReducer } = this.context
 
-        let [{ areaId }] = stateReducer
+        const [{ areaId }] = stateReducer
 
-        let configName = `${config.monitor[type].name}Config`
-        let triggerMonitorFunctionName = `get${configName.replace(
+        const configName = `${config.monitor[type].name}Config`
+        const triggerMonitorFunctionName = `get${configName.replace(
             /^\w/,
             (chr) => {
                 return chr.toUpperCase()
             }
         )}`
-        let cloneConfig = JSONClone(this.state[configName])
+        const cloneConfig = JSONClone(this.state[configName])
 
-        let enable = +!cloneConfig[areaId].enable
+        const enable = +!cloneConfig[areaId].enable
         // retrieveDataHelper.setMonitorEnable(
         //     enable,
         //     areaId,
@@ -272,9 +274,9 @@ class MainContainer extends React.Component {
     /** Get tracking data from database.
      *  Once get the tracking data, violated objects would be collected. */
     getTrackingData = () => {
-        let { auth, locale, stateReducer } = this.context
+        const { auth, locale, stateReducer } = this.context
 
-        let [{ areaId }] = stateReducer
+        const [{ areaId }] = stateReducer
 
         apiHelper.trackingDataApiAgent
             .getTrackingData({
@@ -334,14 +336,14 @@ class MainContainer extends React.Component {
 
     /** Retrieve lbeacon data from database */
     getLbeaconPosition = () => {
-        let { auth, locale } = this.context
+        const { auth, locale } = this.context
 
         apiHelper.lbeaconApiAgent
             .getLbeaconTable({
                 locale: locale.abbr,
             })
             .then((res) => {
-                let lbeaconPosition = res.data.rows.map((item) => {
+                const lbeaconPosition = res.data.rows.map((item) => {
                     item.coordinate = createLbeaconCoordinate(
                         item.uuid
                     ).toString()
@@ -358,13 +360,13 @@ class MainContainer extends React.Component {
 
     /** Retrieve geofence data from database */
     getGeofenceConfig = (callback) => {
-        let { stateReducer } = this.context
-        let [{ areaId }] = stateReducer
+        const { stateReducer } = this.context
+        const [{ areaId }] = stateReducer
 
         apiHelper.geofenceApis
             .getGeofenceConfig(areaId)
             .then((res) => {
-                let geofenceConfig = res.data.rows.reduce((config, rule) => {
+                const geofenceConfig = res.data.rows.reduce((config, rule) => {
                     if (!config[rule.area_id]) {
                         config[rule.area_id] = {
                             enable: rule.enable,
@@ -387,22 +389,27 @@ class MainContainer extends React.Component {
 
     /** Retrieve location monitor data from database */
     getLocationMonitorConfig = (callback) => {
-        let { stateReducer, auth } = this.context
+        const { stateReducer, auth } = this.context
         apiHelper.monitor
             .getMonitorConfig(NOT_STAY_ROOM_MONITOR, auth.user.areas_id, true)
             .then((res) => {
-                let locationMonitorConfig = res.data.reduce((config, rule) => {
-                    config[rule.area_id] = {
-                        enable: rule.enable,
-                        rule: {
-                            ...rule,
-                            lbeacons: rule.lbeacons.map((uuid) => {
-                                return createLbeaconCoordinate(uuid).toString()
-                            }),
-                        },
-                    }
-                    return config
-                }, {})
+                const locationMonitorConfig = res.data.reduce(
+                    (config, rule) => {
+                        config[rule.area_id] = {
+                            enable: rule.enable,
+                            rule: {
+                                ...rule,
+                                lbeacons: rule.lbeacons.map((uuid) => {
+                                    return createLbeaconCoordinate(
+                                        uuid
+                                    ).toString()
+                                }),
+                            },
+                        }
+                        return config
+                    },
+                    {}
+                )
                 this.setState(
                     {
                         locationMonitorConfig,
@@ -433,7 +440,7 @@ class MainContainer extends React.Component {
     getResultBySearchKey = (searchKey, colorPanel, markerClickPackage) => {
         let searchResult = []
 
-        let hasSearchKey = true
+        const hasSearchKey = true
 
         let {
             searchedObjectType,
@@ -443,11 +450,11 @@ class MainContainer extends React.Component {
             pinColorArray,
         } = this.state
 
-        let { auth } = this.context
+        const { auth } = this.context
 
-        let proccessedTrackingData = JSONClone(trackingData)
+        const proccessedTrackingData = JSONClone(trackingData)
 
-        let searchableField = config.SEARCHABLE_FIELD
+        const searchableField = config.SEARCHABLE_FIELD
 
         switch (searchKey.type) {
             case ALL_DEVICES:
@@ -455,7 +462,7 @@ class MainContainer extends React.Component {
 
                 searchResult = proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type == 0
+                        return item.object_type === 0
                     })
                     .map((item) => {
                         item.searchedType = 0
@@ -473,10 +480,10 @@ class MainContainer extends React.Component {
 
                 proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type == 0
+                        return item.object_type === 0
                     })
                     .map((item) => {
-                        if (item.list_id == auth.user.list_id) {
+                        if (item.list_id === auth.user.list_id) {
                             item.searched = true
                             item.searchedType = -1
                             searchResult.push(item)
@@ -494,7 +501,7 @@ class MainContainer extends React.Component {
 
                 searchResult = proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type != 0
+                        return item.object_type !== 0
                     })
                     .map((item) => {
                         item.searchedType = 1
@@ -517,7 +524,7 @@ class MainContainer extends React.Component {
 
                 proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type != 0
+                        return item.object_type !== 0
                     })
                     .map((item) => {
                         if (
@@ -569,19 +576,19 @@ class MainContainer extends React.Component {
                     index >= 0;
                     index--
                 ) {
-                    let singleSearchObjectArray = []
+                    const singleSearchObjectArray = []
 
                     singleSearchObjectArray.push(searchObjectArray[index])
 
-                    let moreSearchResult = proccessedTrackingData.filter(
+                    const moreSearchResult = proccessedTrackingData.filter(
                         (item) => {
                             return singleSearchObjectArray.some((key) => {
                                 return searchableField.some((field) => {
-                                    if (item[field] && item[field] == key) {
+                                    if (item[field] && item[field] === key) {
                                         item.keyword = key
 
                                         item.searched = true
-                                        if (item.object_type == 0) {
+                                        if (item.object_type === 0) {
                                             item.searchedType = -1
                                             if (
                                                 !searchedObjectType.includes(-1)
@@ -589,7 +596,7 @@ class MainContainer extends React.Component {
                                                 searchedObjectType.push(-1)
                                                 showedObjects.push(-1)
                                             }
-                                        } else if (item.object_type != 0) {
+                                        } else if (item.object_type !== 0) {
                                             item.searchedType = -2
                                             if (
                                                 !searchedObjectType.includes(-2)
@@ -632,9 +639,9 @@ class MainContainer extends React.Component {
 
             default:
                 if (/^\s/.test(searchKey.value)) return
-                if (searchKey.value == '') return
+                if (searchKey.value === '') return
 
-                let searchResultMac = []
+                const searchResultMac = []
 
                 searchObjectArray = []
 
@@ -654,7 +661,7 @@ class MainContainer extends React.Component {
                     })
                 })
 
-                // if(this.state.lastsearchKey != searchKey) {
+                // if(this.state.lastsearchKey !== searchKey) {
                 //     axios.post(dataSrc.backendSearch,{
                 //         keyType : 'all attributes',
                 //         keyWord : searchKey,
@@ -708,21 +715,23 @@ class MainContainer extends React.Component {
     }
 
     setShowedObjects = (value) => {
-        let showedObjects = value.split(',').reduce((showedObjects, number) => {
-            number = parseInt(number)
-            if (!this.state.searchedObjectType.includes(number))
+        const showedObjects = value
+            .split(',')
+            .reduce((showedObjects, number) => {
+                number = parseInt(number)
+                if (!this.state.searchedObjectType.includes(number))
+                    return showedObjects
+                else if (this.state.showedObjects.includes(number)) {
+                    const index = showedObjects.indexOf(number)
+                    showedObjects = [
+                        ...showedObjects.slice(0, index),
+                        ...showedObjects.slice(index + 1),
+                    ]
+                } else {
+                    showedObjects.push(number)
+                }
                 return showedObjects
-            else if (this.state.showedObjects.includes(number)) {
-                let index = showedObjects.indexOf(number)
-                showedObjects = [
-                    ...showedObjects.slice(0, index),
-                    ...showedObjects.slice(index + 1),
-                ]
-            } else {
-                showedObjects.push(number)
-            }
-            return showedObjects
-        }, Array.from(this.state.showedObjects))
+            }, Array.from(this.state.showedObjects))
         this.setState({
             showedObjects,
         })
@@ -747,7 +756,7 @@ class MainContainer extends React.Component {
 
                 let searchResult = proccessedTrackingData
                     .filter(item => {
-                        return item.object_type == 0
+                        return item.object_type === 0
                     })
                     .map(item => {
                         item.searchedType = 0
@@ -764,7 +773,7 @@ class MainContainer extends React.Component {
                     searchResult: [],
                     colorPanel: null,
                     clearColorPanel: true,
-                    clearSearchResult: this.state.hasSearchKey ? true : false,
+                    clearSearchResult: !!this.state.hasSearchKey,
                     proccessedTrackingData: [],
                     display: true,
                     searchedObjectType: [],

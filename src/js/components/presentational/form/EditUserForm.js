@@ -36,7 +36,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
 import Select from 'react-select'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import config from '../../../config'
 import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
@@ -55,7 +55,7 @@ const EditUserForm = ({
     data,
     areaTable,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
     const areaOptions = areaTable.map((area) => {
         return {
             value: area.name,
@@ -82,23 +82,23 @@ const EditUserForm = ({
                             : config.DEFAULT_ROLE,
                         area: selectedUser ? selectedUser.main_area : '',
                     }}
-                    validationSchema={Yup.object().shape({
-                        name: Yup.string()
+                    validationSchema={object().shape({
+                        name: string()
                             .required(locale.texts.REQUIRED)
                             .test({
                                 name: 'name',
                                 message:
                                     locale.texts.THE_USERNAME_IS_ALREADY_TAKEN,
                                 test: (value) => {
-                                    var reapeatFlag = true
-                                    if (value != undefined) {
+                                    let reapeatFlag = true
+                                    if (value !== undefined) {
                                         data.map((item) => {
                                             item.name.toUpperCase() ==
                                             value.toUpperCase()
                                                 ? (reapeatFlag = false)
                                                 : null
                                         })
-                                        if (title == 'edit user') {
+                                        if (title === 'edit user') {
                                             selectedUser.name.toUpperCase() ==
                                             value.toUpperCase()
                                                 ? (reapeatFlag = true)
@@ -113,9 +113,9 @@ const EditUserForm = ({
                                 locale.texts.NOT_ALLOW_PUNCTUATION,
                                 (value) => {
                                     let punctuationFlag = true
-                                    if (value != undefined) {
-                                        value.indexOf("'") != -1 ||
-                                        value.indexOf('"') != -1
+                                    if (value !== undefined) {
+                                        value.indexOf("'") !== -1 ||
+                                        value.indexOf('"') !== -1
                                             ? (punctuationFlag = false)
                                             : null
                                     }
@@ -125,19 +125,19 @@ const EditUserForm = ({
                             .max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
                         area: selectedUser
                             ? null
-                            : Yup.object().required(locale.texts.REQUIRED),
+                            : object().required(locale.texts.REQUIRED),
                         password: selectedUser
                             ? ''
-                            : Yup.string()
+                            : string()
                                   .required(locale.texts.REQUIRED)
                                   .test(
                                       'password',
                                       locale.texts.NOT_ALLOW_PUNCTUATION,
                                       (value) => {
                                           let punctuationFlag = true
-                                          if (value != undefined) {
-                                              value.indexOf("'") != -1 ||
-                                              value.indexOf('"') != -1
+                                          if (value !== undefined) {
+                                              value.indexOf("'") !== -1 ||
+                                              value.indexOf('"') !== -1
                                                   ? (punctuationFlag = false)
                                                   : null
                                           }
@@ -148,10 +148,8 @@ const EditUserForm = ({
                                       20,
                                       locale.texts.LIMIT_IN_TWENTY_CHARACTER
                                   ),
-                        roles: Yup.string().required(
-                            locale.texts.ROLE_IS_REQUIRED
-                        ),
-                        email: Yup.string()
+                        roles: string().required(locale.texts.ROLE_IS_REQUIRED),
+                        email: string()
                             .required(locale.texts.REQUIRED)
                             .test(
                                 'email',

@@ -32,25 +32,25 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let recordController = require('../../controllers/recordController')
-let cors = require('cors')
+import recordController from '../../controllers/recordController.js';
+import cors from 'cors';
 
-module.exports = (app) => {
+export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/record', cors())
+    app.options('/data/record', cors());
 
-    app.options('/data/record/shiftChange', cors())
+    app.options('/data/record/shiftChange', cors());
 
     app.route('/data/record/editedObject').post(
         recordController.getEditObjectRecord
-    )
+    );
 
     app.route('/data/record/shiftChange')
         .post(recordController.getShiftChangeRecord)
         .put(recordController.addShiftChangeRecord)
-        .delete(recordController.deleteShiftChangeRecord)
+        .delete(recordController.deleteShiftChangeRecord);
 
     app.route('/data/record/patientRecord').post(
         recordController.addPatientRecord
-    )
-}
+    );
+};

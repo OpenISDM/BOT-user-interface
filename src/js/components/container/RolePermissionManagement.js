@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import { Tabs, Tab } from 'react-bootstrap'
+import { Tabs, Tab, Button, Form as BootstrapForm } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import axios from 'axios'
 import dataSrc from '../../dataSrc'
@@ -41,7 +41,7 @@ import Select from 'react-select'
 
 // import Checkbox from '../../presentational/Checkbox'
 import { Formik, Field, Form } from 'formik'
-import { Button, Form as BootstrapForm } from 'react-bootstrap'
+
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -116,7 +116,7 @@ class RolePermissionManagement extends React.Component {
         axios
             .get(dataSrc.getRolesPermission)
             .then((res) => {
-                let rolesList = res.data.roles_list.map((role) => {
+                const rolesList = res.data.roles_list.map((role) => {
                     return {
                         label: role.name,
                         value: role.name,
@@ -151,7 +151,7 @@ class RolePermissionManagement extends React.Component {
 
     renamePermissionToState = (type, id, e) => {
         this.state.permissionList.map((permission) => {
-            if (permission.id == id) {
+            if (permission.id === id) {
                 permission.name = `${type}:${e.target.value}`
                 return
             }
@@ -241,12 +241,10 @@ class RolePermissionManagement extends React.Component {
                                     value={values.selectedRole}
                                     onChange={(value) => {
                                         let selectedPermission = this.state.rolesPermission.filter(
-                                            (role) => role.role.id == value.id
+                                            (role) => role.role.id === value.id
                                         )[0]
                                         selectedPermission = selectedPermission
-                                            ? selectedPermission[
-                                                  'permissions'
-                                              ].map(
+                                            ? selectedPermission.permissions.map(
                                                   (permission) =>
                                                       permission.name
                                               )
@@ -343,7 +341,7 @@ class RolePermissionManagement extends React.Component {
                                                                                             'selectedPermission',
                                                                                             values.selectedPermission
                                                                                         )
-                                                                                        let roleId =
+                                                                                        const roleId =
                                                                                                 values
                                                                                                     .selectedRole
                                                                                                     .id,
@@ -418,7 +416,7 @@ class RolePermissionManagement extends React.Component {
                                                         (permission) =>
                                                             permission.name.split(
                                                                 ':'
-                                                            )[0] == type
+                                                            )[0] === type
                                                     )
                                                     .map((permission) => {
                                                         return (

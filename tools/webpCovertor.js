@@ -32,21 +32,24 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const imagemin = require('imagemin')
-const webp = require('imagemin-webp')
-const path = require('path')
-const imagePath = path.join(__dirname, '..', 'site_module', 'img', 'map')
+import imagemin from 'imagemin';
+import webp from 'imagemin-webp';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const imagePath = path.join(__dirname, '..', 'site_module', 'img', 'map');
 
 const convertImages = async () => {
-    const files = [`${imagePath}/*.{jpg,png}`]
+    const files = [`${imagePath}/*.{jpg,png}`];
     const config = {
         destination: imagePath,
         plugins: [webp({ quality: 75 })],
-    }
+    };
 
-    console.log('coverting image to webp...')
-    await imagemin(files, config)
-    console.log('webp coverting complete!')
-}
+    console.log('coverting image to webp...');
+    await imagemin(files, config);
+    console.log('webp coverting complete!');
+};
 
-convertImages()
+convertImages();

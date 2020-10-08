@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let trackingController = require('../../controllers/trackingDataController')
+import trackingController from '../../controllers/trackingDataController.js';
 
-module.exports = (app) => {
-    app.route('/data/trackingData').post(trackingController.getTrackingData)
-}
+export default (app) => {
+    app.route('/data/trackingData').post(trackingController.getTrackingData);
+};

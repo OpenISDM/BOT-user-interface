@@ -32,31 +32,37 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-const express = require('express')
-const app = express()
-const bodyParser = require('body-parser')
+import 'dotenv/config.js'
+import express from 'express'
+import bodyParser from 'body-parser'
+import { fileURLToPath } from 'url'
+import path, { dirname } from 'path'
+import https from 'https'
+import http from 'http'
+import session from 'express-session'
+import compression from 'compression'
+
+// import validation from './api/middlewares/validation.js';
+import sessionOptions from './api/config/session.js'
+import credentials from './api/config/credentials.js'
+import dataRoutes from './api/routes/dataRoutes.js'
+import authRoutes from './api/routes/dataRoutes/authRoutes.js'
+import UIRoutes from './api/routes/UIRoutes.js'
+import UtilRoutes from './api/routes/UtilRoutes.js'
+import shouldCompress from './api/config/compression.js'
+import redirect from './api/middlewares/redirect.js'
+import APIRoutes from './web_server/routes/APIRoutes.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 const httpsPort = process.env.HTTPS_PORT
 const httpPort = process.env.HTTP_PORT
-const path = require('path')
-const https = require('https')
-const http = require('http')
-const session = require('express-session')
-const validation = require('./api/middlewares/validation')
-const sessionOptions = require('./api/config/session')
-const credentials = require('./api/config/credentials')
-const compression = require('compression')
-const dataRoutes = require('./api/routes/dataRoutes')
-const authRoutes = require('./api/routes/dataRoutes/authRoutes')
-const UIRoutes = require('./api/routes/UIRoutes')
-const UtilRoutes = require('./api/routes/UtilRoutes')
-const APIRoutes = require('./web_server/routes/APIRoutes')
-const { shouldCompress } = require('./api/config/compression')
-const redirect = require('./api/middlewares/redirect')
+const app = express()
 
-if (process.env.ENABLE_HTTP_REDIRECT == 'true') {
+if (process.env.ENABLE_HTTP_REDIRECT === 'true') {
     app.use(redirect)
 }
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session(sessionOptions))

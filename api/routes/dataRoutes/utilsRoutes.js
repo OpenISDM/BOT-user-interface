@@ -32,14 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let utilsController = require('../../controllers/utilsController')
-let cors = require('cors')
+import utilsController from '../../controllers/utilsController.js';
+import cors from 'cors';
 
-module.exports = (app) => {
+export default (app) => {
     // enable pre-flight request for DELETE request
     // app.options('/data/utils/searchableKeyword', cors())
 
     app.route('/data/utils/searchableKeyword').post(
         utilsController.getSearchableKeywords
-    )
-}
+    );
+};

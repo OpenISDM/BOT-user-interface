@@ -59,7 +59,7 @@ class ToggleSwitch extends React.Component {
                     name={this.props.leftLabel}
                     value={0}
                     onChange={this.toggleState}
-                    checked={this.state.toggle == this.props.leftLabel}
+                    checked={this.state.toggle === this.props.leftLabel}
                 />
                 <label htmlFor="switch_left">
                     {locale[this.props.leftLabel.toUpperCase()]}

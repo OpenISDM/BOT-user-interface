@@ -93,8 +93,8 @@ class ShiftChange extends React.Component {
     }
 
     getTrackingData = () => {
-        let { locale, auth, stateReducer } = this.context
-        let [{ areaId }] = stateReducer
+        const { locale, auth, stateReducer } = this.context
+        const [{ areaId }] = stateReducer
 
         apiHelper.trackingDataApiAgent
             .getTrackingData({
@@ -103,14 +103,14 @@ class ShiftChange extends React.Component {
                 areaId,
             })
             .then((res) => {
-                let foundResult = []
-                let notFoundResult = []
-                let foundPatients = []
-                let notFoundPatients = []
+                const foundResult = []
+                const notFoundResult = []
+                const foundPatients = []
+                const notFoundPatients = []
 
                 res.data
                     .filter((item) => {
-                        return item.list_id == parseInt(auth.user.list_id)
+                        return item.list_id === parseInt(auth.user.list_id)
                     })
                     .map((item) => {
                         switch (item.object_type) {
@@ -148,20 +148,20 @@ class ShiftChange extends React.Component {
     }
 
     handleConfirmFormSubmit = (authentication = '') => {
-        let { values } = this.formikRef.current.state
+        const { values } = this.formikRef.current.state
 
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
-        let { listName } = this.props.listName
+        const { listName } = this.props.listName
 
         authentication = auth.user.name
 
-        let shiftChangeObjectPackage = {
+        const shiftChangeObjectPackage = {
             searchResult: this.state.searchResult,
             patients: this.state.patients,
         }
 
-        let pdfPackage = pdfPackageGenerator.getPdfPackage({
+        const pdfPackage = pdfPackageGenerator.getPdfPackage({
             option: 'shiftChange',
             user: auth.user,
             data: shiftChangeObjectPackage,
@@ -179,7 +179,7 @@ class ShiftChange extends React.Component {
         })
 
         this.state.patients.foundPatients.reduce((pkg, object) => {
-            let temp = pdfPackageGenerator.getPdfPackage({
+            const temp = pdfPackageGenerator.getPdfPackage({
                 option: 'patientRecord',
                 user: auth.user,
                 data: object,
@@ -205,7 +205,7 @@ class ShiftChange extends React.Component {
                 list_id: auth.user.list_id,
             })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     this.props.handleClose(() => {
                         messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                     })
@@ -394,9 +394,9 @@ class ShiftChange extends React.Component {
 export default ShiftChange
 
 const TypeBlock = ({ title, hasType, typeArray }) => {
-    let appContext = React.useContext(AppContext)
+    const appContext = React.useContext(AppContext)
 
-    let { locale, auth, stateReducer } = appContext
+    const { locale, auth, stateReducer } = appContext
 
     return (
         <Fragment>

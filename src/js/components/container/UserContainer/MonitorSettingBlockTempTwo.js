@@ -54,14 +54,14 @@ class MonitorSettingBlock extends React.Component {
     }
 
     getMonitorConfig = () => {
-        let { auth } = this.context
+        const { auth } = this.context
         axios
             .post(dataSrc.getMonitorConfig, {
                 type: config.monitorSettingUrlMap[this.props.type],
                 areasId: auth.user.areas_id,
             })
             .then((res) => {
-                let data = res.data.reduce((toReturn, item) => {
+                const data = res.data.reduce((toReturn, item) => {
                     toReturn[item.id] = item
                     return toReturn
                 }, {})
@@ -75,11 +75,11 @@ class MonitorSettingBlock extends React.Component {
     }
 
     handleTimeChange = (time, name, id) => {
-        let endTime = name == 'end' ? time.value : this.state.data[id].end_time
-        let startTime =
-            name == 'start' ? time.value : this.state.data[id].start_time
+        let endTime = name === 'end' ? time.value : this.state.data[id].end_time
+        const startTime =
+            name === 'start' ? time.value : this.state.data[id].start_time
         if (
-            name == 'start' &&
+            name === 'start' &&
             endTime.split(':')[0] <= startTime.split(':')[0]
         ) {
             endTime = [
@@ -88,7 +88,7 @@ class MonitorSettingBlock extends React.Component {
             ].join(':')
         }
 
-        let monitorConfigPackage = {
+        const monitorConfigPackage = {
             type: config.monitorSettingUrlMap[this.props.type],
             ...this.state.data[id],
             start_time: startTime,
@@ -112,10 +112,10 @@ class MonitorSettingBlock extends React.Component {
     }
 
     handleSwitcherChange = (e) => {
-        let target = e.target
-        let id = target.id.split(':')[1]
+        const target = e.target
+        const id = target.id.split(':')[1]
 
-        let monitorConfigPackage = {
+        const monitorConfigPackage = {
             type: config.monitorSettingUrlMap[this.props.type],
             ...this.state.data[id],
             enable: parseInt(target.value),
@@ -139,7 +139,7 @@ class MonitorSettingBlock extends React.Component {
     }
 
     render() {
-        let style = {
+        const style = {
             container: {
                 minHeight: '100vh',
             },
@@ -155,8 +155,8 @@ class MonitorSettingBlock extends React.Component {
                 width: '95%',
             },
         }
-        let { type } = this.props
-        let { locale } = this.context
+        const { type } = this.props
+        const { locale } = this.context
 
         return (
             <div>

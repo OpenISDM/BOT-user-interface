@@ -73,11 +73,11 @@ class BigScreenContainer extends React.Component {
                     return (
                         item.found &&
                         item.currentPosition &&
-                        item.object_type == 0
+                        item.object_type === 0
                     )
                 })
                 .map((item) => {
-                    if (item.type == queue.key_word) {
+                    if (item.type === queue.key_word) {
                         item.searched = index + 1
                         item.pinColor = queue.pin_color_index
                     }
@@ -97,15 +97,15 @@ class BigScreenContainer extends React.Component {
     }
 
     countItemsInQueue = (data, index) => {
-        var count = data.filter((item) => {
-            return item.searched == index + 1
+        const count = data.filter((item) => {
+            return item.searched === index + 1
         }).length
         return count
     }
 
     getTrackingData = () => {
-        let { auth, locale, stateReducer } = this.context
-        let [{ areaId }] = stateReducer
+        const { auth, locale, stateReducer } = this.context
+        const [{ areaId }] = stateReducer
 
         apiHelper.trackingDataApiAgent
             .getTrackingData({
@@ -119,12 +119,12 @@ class BigScreenContainer extends React.Component {
                     const queue = searchQueue.data.rows
 
                     // used for legend, with text description and image icon
-                    var trackingData = this.addSearchedIndex(
+                    const trackingData = this.addSearchedIndex(
                         rawTrackingData,
                         queue
                     )
 
-                    var legendDescriptor = queue.map((queue1, index) => {
+                    const legendDescriptor = queue.map((queue1, index) => {
                         return {
                             text: queue1.key_word,
                             pinColor:

@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-module.exports = {
+export default {
     getAllUser: () => {
         const query = `
 			SELECT
@@ -90,8 +90,8 @@ module.exports = {
 				area_table.name,
 				areas.area_ids
 			ORDER BY user_table.name DESC
-		`
-        return query
+		`;
+        return query;
     },
 
     addUser: (signupPackage) => {
@@ -111,20 +111,20 @@ module.exports = {
 				$3,
 				$4
 			);
-			`
+			`;
         const values = [
             signupPackage.name,
             signupPackage.password,
             signupPackage.area_id,
             signupPackage.email,
-        ]
+        ];
 
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     insertUserData: (name, roles, area_id) => {
@@ -161,7 +161,7 @@ module.exports = {
 				),
 				${area_id}
 			)
-		`
+		`;
     },
 
     editUserInfo: (user) => {
@@ -211,7 +211,7 @@ module.exports = {
 					)`
                     )
                     .join(',')};
-		`
+		`;
     },
 
     deleteUser: (username) => {
@@ -237,8 +237,8 @@ module.exports = {
 				FROM user_table
 				WHERE name='${username}'
 			);
-		`
-        return query
+		`;
+        return query;
     },
 
     editSecondaryArea: (user) => {
@@ -257,7 +257,7 @@ module.exports = {
 				${user.id}
 			)`
             )};
-		`
+		`;
     },
 
     editPassword: (user_id, password) => {
@@ -266,20 +266,20 @@ module.exports = {
 			SET
 				password = $2
 			WHERE id = $1
-		`
+		`;
 
-        const values = [user_id, password]
+        const values = [user_id, password];
 
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     setLocale: (userId, lang) => {
-        let text = `
+        const text = `
 			UPDATE user_table
 			SET locale_id = (
 				SELECT id
@@ -287,15 +287,15 @@ module.exports = {
 				WHERE name = $1
 			)
 			WHERE id = $2
-			`
-        const values = [lang, userId]
+			`;
+        const values = [lang, userId];
 
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     addSearchHistory: (username, keyType, keyWord) => {
@@ -318,75 +318,75 @@ module.exports = {
 				)
 			)
 
-		`
+		`;
 
-        const values = [keyWord, keyType, username]
+        const values = [keyWord, keyType, username];
 
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     editMyDevice: (username, mode, acn) => {
-        var text = ''
+        let text = '';
         if (mode === 'add') {
             text = `
 				UPDATE user_table
 				SET mydevice = array_append(mydevice, '${acn}')
 				WHERE name = '${username}';
-			`
+			`;
         } else if (mode === 'remove') {
             text = `
 				UPDATE user_table
 				SET mydevice = array_remove(mydevice, '${acn}')
 				WHERE name = '${username}';
-			`
+			`;
         } else {
-            text = ''
+            text = '';
         }
 
-        return text
+        return text;
     },
 
     editMaxSearchHistoryCount: (username, info) => {
-        const { freqSearchCount } = info
+        const { freqSearchCount } = info;
 
         return `
 			UPDATE user_table
 			SET max_search_history_count = ${freqSearchCount}
 			WHERE name='${username}'
-		`
+		`;
     },
 
     editKeywordType: (userId, keywordTypeId) => {
-        let text = `
+        const text = `
 			UPDATE user_table
 			SET keyword_type = $2
 			WHERE id = $1
-		`
-        let values = [userId, keywordTypeId]
+		`;
+        const values = [userId, keywordTypeId];
 
         return {
             text,
             values,
-        }
+        };
     },
 
     editListId: (userId, listId) => {
-        let text = `
+        const text = `
 			UPDATE user_table
 			SET list_id = $2
 			WHERE id = $1
-		`
+		`;
 
-        let values = [userId, listId]
+        const values = [userId, listId];
 
         return {
             text,
             values,
-        }
+        };
     },
-}
+};

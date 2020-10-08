@@ -32,109 +32,95 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-dataSrcIP = process.env.DATASRC_IP
-dataSrcProtocol = parseInt(process.env.ENABLE_HTTP) ? 'http' : 'https'
-domain = `${dataSrcProtocol}://${dataSrcIP}`
+const dataSrcIP = process.env.DATASRC_IP
+const dataSrcProtocol = parseInt(process.env.ENABLE_HTTP) ? 'http' : 'https'
+const domain = `${dataSrcProtocol}://${dataSrcIP}`
 
-const dataSrc = {
-    trackingData: `${domain}/data/trackingData`,
-
-    lbeacon: `${domain}/data/lbeacon`,
-
-    gateway: `${domain}/data/gateway`,
-
-    user: `${domain}/data/user`,
-
-    userInfo: {
-        area: {
-            secondary: `${domain}/data/user/area/secondary`,
-        },
-
-        password: `${domain}/data/user/password`,
-
-        locale: `${domain}/data/user/locale`,
-
-        searchHistory: `${domain}/data/user/searchHistory`,
-
-        mydevice: `${domain}/data/user/mydevice`,
-
-        maxSearchHistoryCount: `${domain}/data/user/maxSearchHistoryCount`,
-
-        keywordType: `${domain}/data/user/keywordType`,
-
-        listId: `${domain}/data/user/listId`,
+export const trackingData = `${domain}/data/trackingData`
+export const lbeacon = `${domain}/data/lbeacon`
+export const gateway = `${domain}/data/gateway`
+export const user = `${domain}/data/user`
+export const userInfo = {
+    area: {
+        secondary: `${domain}/data/user/area/secondary`,
     },
-
-    object: {
-        object: `${domain}/data/object`,
-
-        device: `${domain}/data/object/device`,
-
-        person: `${domain}/data/object/person`,
-
-        idleMacaddr: `${domain}/data/object/mac/idle`,
-
-        alias: `${domain}/data/object/alias`,
-    },
-
-    objectPackage: `${domain}/data/objectPackage`,
-
-    importedObject: `${domain}/data/importedObject`,
-
-    trace: {
-        locationHistory: `${domain}/data/trace/locationHistory`,
-
-        contactTree: `${domain}/data/trace/contactTree`,
-    },
-
-    area: `${domain}/data/area`,
-
-    role: `${domain}/data/role`,
-
-    auth: {
-        signin: `${domain}/data/auth/signin`,
-
-        signout: `${domain}/data/auth/signout`,
-
-        validation: `${domain}/data/auth/validation`,
-
-        resetPassword: `${domain}/data/auth/resetpassword`,
-
-        sentResetPwdInstruction: `${domain}/data/auth/sentResetPwdInstruction`,
-    },
-
-    file: {
-        export: {
-            csv: `${domain}/data/file/export/csv`,
-            pdf: `${domain}/data/file/export/pdf`,
-        },
-    },
-
-    geofence: `${domain}/data/geofence`,
-
-    monitor: `${domain}/data/monitor`,
-
-    record: {
-        editedObject: `${domain}/data/record/editedObject`,
-
-        shiftChange: `${domain}/data/record/shiftChange`,
-
-        patientRecord: `${domain}/data/record/patientRecord`,
-    },
-
-    transferredLocation: `${domain}/data/transferredLocation`,
-
-    deviceGroupList: `${domain}/data/deviceGroupList`,
-
-    patientGroupList: `${domain}/data/patientGroupList`,
-
-    pdfUrl: (path) => {
-        return `${domain}/data/file/${path}`
-    },
-
-    utils: {
-        searchableKeyword: `${domain}/data/utils/searchableKeyword`,
+    password: `${domain}/data/user/password`,
+    locale: `${domain}/data/user/locale`,
+    searchHistory: `${domain}/data/user/searchHistory`,
+    mydevice: `${domain}/data/user/mydevice`,
+    maxSearchHistoryCount: `${domain}/data/user/maxSearchHistoryCount`,
+    keywordType: `${domain}/data/user/keywordType`,
+    listId: `${domain}/data/user/listId`,
+}
+export const object = {
+    object: `${domain}/data/object`,
+    device: `${domain}/data/object/device`,
+    person: `${domain}/data/object/person`,
+    idleMacaddr: `${domain}/data/object/mac/idle`,
+    alias: `${domain}/data/object/alias`,
+}
+export const objectPackage = `${domain}/data/objectPackage`
+export const importedObject = `${domain}/data/importedObject`
+export const trace = {
+    locationHistory: `${domain}/data/trace/locationHistory`,
+    contactTree: `${domain}/data/trace/contactTree`,
+}
+export const area = `${domain}/data/area`
+export const role = `${domain}/data/role`
+export const auth = {
+    signin: `${domain}/data/auth/signin`,
+    signout: `${domain}/data/auth/signout`,
+    validation: `${domain}/data/auth/validation`,
+    resetPassword: `${domain}/data/auth/resetpassword`,
+    sentResetPwdInstruction: `${domain}/data/auth/sentResetPwdInstruction`,
+}
+export const file = {
+    export: {
+        csv: `${domain}/data/file/export/csv`,
+        pdf: `${domain}/data/file/export/pdf`,
     },
 }
+export const geofence = `${domain}/data/geofence`
+export const monitor = `${domain}/data/monitor`
+export const record = {
+    editedObject: `${domain}/data/record/editedObject`,
+    shiftChange: `${domain}/data/record/shiftChange`,
+    patientRecord: `${domain}/data/record/patientRecord`,
+}
+export const transferredLocation = `${domain}/data/transferredLocation`
+export const deviceGroupList = `${domain}/data/deviceGroupList`
+export const patientGroupList = `${domain}/data/patientGroupList`
+export const pdfUrl = (path) => {
+    return `${domain}/data/file/${path}`
+}
+export const utils = {
+    searchableKeyword: `${domain}/data/utils/searchableKeyword`,
+}
+export const deleteDevice = `${domain}/data/deleteDevice`
+export const getImportData = `${domain}/data/getImportData`
 
-module.exports = dataSrc
+export default {
+    trackingData,
+    lbeacon,
+    gateway,
+    user,
+    userInfo,
+    object,
+    objectPackage,
+    importedObject,
+    trace,
+    area,
+    role,
+    auth,
+    file,
+    geofence,
+    monitor,
+    record,
+    transferredLocation,
+    deviceGroupList,
+    patientGroupList,
+    pdfUrl,
+    utils,
+    deleteDevice,
+    getImportData,
+}

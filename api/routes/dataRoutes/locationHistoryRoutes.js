@@ -32,14 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let locationHistoryController = require('../../controllers/locationHistoryController')
+import locationHistoryController from '../../controllers/locationHistoryController.js';
 
-module.exports = (app) => {
+export default (app) => {
     app.route('/data/trace/locationHistory').post(
         locationHistoryController.getLocationHistory
-    )
+    );
 
     app.route('/data/trace/contactTree').post(
         locationHistoryController.getContactTree
-    )
-}
+    );
+};

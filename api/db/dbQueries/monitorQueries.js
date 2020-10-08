@@ -33,7 +33,7 @@
 */
 
 const getMonitorConfig = (type) => {
-    let text = `
+    const text = `
 		SELECT
 			${type}.id,
 			${type}.area_id,
@@ -67,22 +67,28 @@ const getMonitorConfig = (type) => {
 		ON lbeacon_temp_table.lbeacon_area_id = ${type}.area_id
 
 		ORDER BY id;
-	`
-    return text
-}
+	`;
+    return text;
+};
 
 const deleteMonitorConfig = (monitorConfigPackage) => {
-    let { type, id } = monitorConfigPackage
+    const { type, id } = monitorConfigPackage;
     return `
 		DELETE FROM ${type}
 		WHERE id IN (${id.map((id) => `'${id}'`)})
-	`
-}
+	`;
+};
 
 const addMonitorConfig = (monitorConfigPackage) => {
-    let { type, start_time, end_time, enable, area_id } = monitorConfigPackage
+    const {
+        type,
+        start_time,
+        end_time,
+        enable,
+        area_id,
+    } = monitorConfigPackage;
 
-    let text = `
+    const text = `
 		INSERT INTO ${type}
 			(
 				start_time,
@@ -97,27 +103,27 @@ const addMonitorConfig = (monitorConfigPackage) => {
 				$3,
 				$4
 			)
-	`
+	`;
 
-    let values = [start_time, end_time, enable, area_id]
+    const values = [start_time, end_time, enable, area_id];
 
     return {
         text,
         values,
-    }
-}
+    };
+};
 
 const setMonitorConfig = (monitorConfigPackage) => {
-    let {
+    const {
         type,
         id,
         start_time,
         end_time,
         enable,
         area_id,
-    } = monitorConfigPackage
+    } = monitorConfigPackage;
 
-    let text = `
+    const text = `
 		UPDATE ${monitorConfigPackage.type}
 		SET
 			area_id = $5,
@@ -126,20 +132,20 @@ const setMonitorConfig = (monitorConfigPackage) => {
 			enable = $4
 
 		WHERE id = $1;
-	`
-    let values = [id, start_time, end_time, enable, area_id]
+	`;
+    const values = [id, start_time, end_time, enable, area_id];
 
-    let query = {
+    const query = {
         text,
         values,
-    }
+    };
 
-    return query
-}
+    return query;
+};
 
-module.exports = {
+export default {
     getMonitorConfig,
     deleteMonitorConfig,
     addMonitorConfig,
     setMonitorConfig,
-}
+};

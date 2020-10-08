@@ -3,7 +3,7 @@ import dataSrc from '../../dataSrc'
 import axios from 'axios'
 import 'react-table/react-table.css'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import { Button, Row, Col, Nav } from 'react-bootstrap'
 import styleConfig from '../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
@@ -48,7 +48,7 @@ class TrackingHistory extends React.Component {
 
         let key = null
         let columns = null
-        let timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
+        const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
         switch (fields.mode) {
             case 'mac':
                 key = fields.key
@@ -72,7 +72,7 @@ class TrackingHistory extends React.Component {
                 mode: fields.mode,
             })
             .then((res) => {
-                if (res.data.rowCount == 0) {
+                if (res.data.rowCount === 0) {
                     setStatus(locale.texts.NO_DATA_FOUND)
                     setSubmitting(false)
                     return
@@ -83,7 +83,7 @@ class TrackingHistory extends React.Component {
                 switch (fields.mode) {
                     case 'mac':
                         res.data.rows.map((pt) => {
-                            if (pt.uuid != prevUUID) {
+                            if (pt.uuid !== prevUUID) {
                                 data.push({
                                     uuid: pt.uuid,
                                     startTime: moment(pt.record_timestamp)
@@ -101,7 +101,7 @@ class TrackingHistory extends React.Component {
                                 .locale(locale.abbr)
                                 .format(timeValidatedFormat)
                         })
-                        if (res.data.rowCount != 0) {
+                        if (res.data.rowCount !== 0) {
                             additionalData = {
                                 name: res.data.rows[0].name,
                                 area: res.data.rows[0].area,
@@ -113,7 +113,7 @@ class TrackingHistory extends React.Component {
                             item.id = index + 1
                             return item
                         })
-                        if (res.data.rowCount != 0) {
+                        if (res.data.rowCount !== 0) {
                             additionalData = {
                                 description: res.data.rows[0].description,
                                 area: res.data.rows[0].area,
@@ -154,17 +154,17 @@ class TrackingHistory extends React.Component {
                     endTime: '',
                 }}
                 initialStatus={locale.texts.WAIT_FOR_SEARCH}
-                validationSchema={Yup.object().shape({
-                    key: Yup.string()
+                validationSchema={object().shape({
+                    key: string()
                         .required(locale.texts.MAC_ADDRESS_IS_REQUIRED)
                         .when('mode', {
                             is: 'mac',
-                            then: Yup.string().test(
+                            then: string().test(
                                 'mode',
                                 locale.texts.MAC_ADDRESS_FORMAT_IS_NOT_CORRECT,
                                 (value) => {
-                                    if (value == undefined) return false
-                                    let pattern = new RegExp(
+                                    if (value === undefined) return false
+                                    const pattern = new RegExp(
                                         '^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
                                     )
                                     return value.match(pattern)
@@ -173,19 +173,19 @@ class TrackingHistory extends React.Component {
                         })
                         .when('mode', {
                             is: 'uuid',
-                            then: Yup.string().test(
+                            then: string().test(
                                 'uuid',
                                 locale.texts.LBEACON_FORMAT_IS_NOT_CORRECT,
                                 (value) => {
-                                    if (value == undefined) return false
-                                    let pattern = new RegExp(
+                                    if (value === undefined) return false
+                                    const pattern = new RegExp(
                                         '^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
                                     )
                                     return value.match(pattern)
                                 }
                             ),
                         }),
-                    startTime: Yup.string()
+                    startTime: string()
                         .required(locale.texts.START_TIME_IS_REQUIRED)
                         .test(
                             'startTime',
@@ -198,7 +198,7 @@ class TrackingHistory extends React.Component {
                                 ).isValid()
                             }
                         ),
-                    endTime: Yup.string()
+                    endTime: string()
                         .required(locale.texts.END_TIME_IS_REQUIRED)
                         .test(
                             'endTime',
@@ -246,7 +246,7 @@ class TrackingHistory extends React.Component {
                                             additionalData: null,
                                         })
                                     }}
-                                    active={values.mode == 'mac'}
+                                    active={values.mode === 'mac'}
                                 >
                                     {locale.texts.MAC_ADDRESS}
                                 </BOTNavLink>
@@ -267,7 +267,7 @@ class TrackingHistory extends React.Component {
                                             additionalData: null,
                                         })
                                     }}
-                                    active={values.mode == 'uuid'}
+                                    active={values.mode === 'uuid'}
                                 >
                                     {locale.texts.LBEACON}
                                 </BOTNavLink>
@@ -276,7 +276,7 @@ class TrackingHistory extends React.Component {
                         <div className="my-2">
                             <Row>
                                 <Col lg={4}>
-                                    {values.mode == 'mac' && (
+                                    {values.mode === 'mac' && (
                                         <FormikFormGroup
                                             type="text"
                                             name="key"
@@ -289,7 +289,7 @@ class TrackingHistory extends React.Component {
                                             label="mac address"
                                         />
                                     )}
-                                    {values.mode == 'uuid' && (
+                                    {values.mode === 'uuid' && (
                                         <FormikFormGroup
                                             type="text"
                                             name="key"
@@ -343,14 +343,14 @@ class TrackingHistory extends React.Component {
                                         <FormikFormGroup
                                             type="text"
                                             value={
-                                                values.mode == 'mac'
+                                                values.mode === 'mac'
                                                     ? additionalData.name
                                                     : locale.texts[
                                                           additionalData.area
                                                       ]
                                             }
                                             label={
-                                                values.mode == 'mac'
+                                                values.mode === 'mac'
                                                     ? locale.texts.NAME
                                                     : locale.texts.AREA
                                             }
@@ -373,7 +373,7 @@ class TrackingHistory extends React.Component {
                             )}
                             <hr />
                             {isSubmitting && <Loader />}
-                            {this.state.data.length != 0 ? (
+                            {this.state.data.length !== 0 ? (
                                 <ReactTable
                                     keyField="id"
                                     data={this.state.data}

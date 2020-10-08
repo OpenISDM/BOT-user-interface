@@ -75,19 +75,19 @@ const pdfPackageGenerator = {
     },
 
     FOLDER_PATH: {
-        broken: `edit_object_record`,
+        broken: 'edit_object_record',
 
-        transferred: `edit_object_record`,
+        transferred: 'edit_object_record',
 
-        shiftChange: `shift_record`,
+        shiftChange: 'shift_record',
 
-        searchResult: `search_result`,
+        searchResult: 'search_result',
 
-        patientRecord: `patient_record`,
+        patientRecord: 'patient_record',
 
-        trackingRecord: `tracking_record`,
+        trackingRecord: 'tracking_record',
 
-        contactTree: `contact_tree`,
+        contactTree: 'contact_tree',
     },
 
     PDF_FILENAME_TIME_FORMAT: 'YYYY-MM-Do_hh_mm_ss',
@@ -97,8 +97,8 @@ const pdfPackageGenerator = {
     /** Pdf format pdfPackageGenerator */
     pdfFormat: {
         getHeader: (user, locale, option, signature, additional, data) => {
-            let title = pdfPackageGenerator.pdfFormat.getTitle(option, locale)
-            let subTitle = pdfPackageGenerator.pdfFormat.getSubTitle[option](
+            const title = pdfPackageGenerator.pdfFormat.getTitle(option, locale)
+            const subTitle = pdfPackageGenerator.pdfFormat.getSubTitle[option](
                 locale,
                 user,
                 signature,
@@ -129,12 +129,12 @@ const pdfPackageGenerator = {
         },
 
         getPath: (option, additional) => {
-            let directory = pdfPackageGenerator.FOLDER_PATH[option]
-            let name = pdfPackageGenerator.pdfFormat.getFileName[option](
+            const directory = pdfPackageGenerator.FOLDER_PATH[option]
+            const name = pdfPackageGenerator.pdfFormat.getFileName[option](
                 option,
                 additional
             )
-            let path = `${directory}/${name}`
+            const path = `${directory}/${name}`
             return {
                 directory,
                 name,
@@ -182,41 +182,41 @@ const pdfPackageGenerator = {
 
         getBody: {
             broken: (data, locale) => {
-                let title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'broken device list',
                     locale
                 )
-                let list = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+                const list = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data,
                     locale
                 )
-                let notes = pdfPackageGenerator.pdfFormat.getBodyItem.getNotes(
+                const notes = pdfPackageGenerator.pdfFormat.getBodyItem.getNotes(
                     data,
                     locale
                 )
                 return title + list + notes
             },
             transferred: (data, locale, user, location, signature) => {
-                let area = data[0].transferred_location_label
-                let signature_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const area = data[0].transferred_location_label
+                const signature_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'transferred to',
                     locale,
                     area
                 )
-                let list_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const list_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'transferred device list',
                     locale
                 )
-                let signatureName = pdfPackageGenerator.pdfFormat.getBodyItem.getSignature(
+                const signatureName = pdfPackageGenerator.pdfFormat.getBodyItem.getSignature(
                     locale,
                     signature
                 )
-                let list = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+                const list = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data,
                     locale,
                     signature
                 )
-                let notes = pdfPackageGenerator.pdfFormat.getBodyItem.getNotes(
+                const notes = pdfPackageGenerator.pdfFormat.getBodyItem.getNotes(
                     data,
                     locale,
                     signature
@@ -234,47 +234,47 @@ const pdfPackageGenerator = {
                 signature,
                 additional
             ) => {
-                let area = additional.area
-                let foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const area = additional.area
+                const foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'devices found',
                     locale,
                     area,
                     data.searchResult.foundResult.length !== 0
                 )
-                let foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+                const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.searchResult.foundResult,
                     locale
                 )
-                let notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'devices not found',
                     locale,
                     area,
                     data.searchResult.notFoundResult.length !== 0
                 )
-                let notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+                const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.searchResult.notFoundResult,
                     locale
                 )
-                let patientFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const patientFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'patients found',
                     locale,
                     area,
                     data.patients.foundPatients.length !== 0
                 )
 
-                let patientFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
+                const patientFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
                     data.patients.foundPatients,
                     locale
                 )
 
-                let patientNotFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const patientNotFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'patients not found',
                     locale,
                     area,
                     data.patients.notFoundPatients.length !== 0
                 )
 
-                let patientNotFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
+                const patientNotFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
                     data.patients.notFoundPatients,
                     locale
                 )
@@ -292,23 +292,23 @@ const pdfPackageGenerator = {
             },
 
             searchResult: (data, locale, user, location) => {
-                let foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'devices found',
                     locale,
                     null,
                     data.foundResult.length !== 0
                 )
-                let foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+                const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.foundResult,
                     locale
                 )
-                let notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'devices not found',
                     locale,
                     null,
                     data.notFoundResult.length !== 0
                 )
-                let notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+                const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.notFoundResult,
                     locale
                 )
@@ -321,13 +321,13 @@ const pdfPackageGenerator = {
             },
 
             patientRecord: (data, locale, user) => {
-                let title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+                const title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
                     'patient historical record',
                     locale,
                     '',
                     true
                 )
-                let content = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientData(
+                const content = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientData(
                     data,
                     locale
                 )
@@ -391,7 +391,7 @@ const pdfPackageGenerator = {
                             ].toUpperCase()}
                         </h4>
                     `
-                    : ``
+                    : ''
             },
 
             getDataContent: (data, locale) => {
@@ -433,8 +433,8 @@ const pdfPackageGenerator = {
             },
 
             getLocationHistoryByNameAsTable: (dataObject, locale) => {
-                let { columns, data } = dataObject
-                let headers = columns
+                const { columns, data } = dataObject
+                const headers = columns
                     .map((field) => {
                         return `
                         <th
@@ -477,8 +477,8 @@ const pdfPackageGenerator = {
                 dataObject,
                 locale
             ) => {
-                let { columns, data } = dataObject
-                let headers = columns
+                const { columns, data } = dataObject
+                const headers = columns
                     .map((field) => {
                         return `
                         <th
@@ -519,9 +519,9 @@ const pdfPackageGenerator = {
             },
 
             getLocationHistoryByUUIDAsTable: (dataObject, locale) => {
-                let { columns, data } = dataObject
+                const { columns, data } = dataObject
 
-                let headers = columns
+                const headers = columns
                     .map((field) => {
                         return `
                         <th
@@ -739,7 +739,7 @@ const pdfPackageGenerator = {
 
         getSubTitle: {
             shiftChange: (locale, user, signature, additional) => {
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
                 const lastShiftIndex =
@@ -756,10 +756,10 @@ const pdfPackageGenerator = {
                     ]
                 const thisShift = additional.shift.label
 
-                let shift = `<div style='text-transform: capitalize;'>
+                const shift = `<div style='text-transform: capitalize;'>
                         ${locale.texts.SHIFT}: ${lastShift} ${locale.texts.SHIFT_TO} ${thisShift}
                     </div>`
-                let confirmedBy = `<div style='text-transform: capitalize;'>
+                const confirmedBy = `<div style='text-transform: capitalize;'>
                     ${
                         locale.abbr == 'en'
                             ? `${locale.texts.CONFIRMED_BY} ${signature}`
@@ -767,11 +767,11 @@ const pdfPackageGenerator = {
                     }
                 </div>`
 
-                let checkby = `<div style='text-transform: capitalize;'>
+                const checkby = `<div style='text-transform: capitalize;'>
                         ${locale.texts.DEVICE_LOCATION_STATUS_CHECKED_BY}: ${user.name}, ${additional.shift.label}
                     </div>`
 
-                let listName = `<div style='text-transform: capitalize;'>
+                const listName = `<div style='text-transform: capitalize;'>
                     ${locale.texts.LIST_NAME}: ${additional.listName}
                 </div>`
 
@@ -779,30 +779,30 @@ const pdfPackageGenerator = {
             },
 
             searchResult: (locale, user) => {
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
-                let username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
+                const username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
                     locale,
                     user
                 )
                 return timestamp + username
             },
             broken: (locale, user) => {
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
-                let username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
+                const username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
                     locale,
                     user
                 )
                 return timestamp + username
             },
             transferred: (locale, user) => {
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
-                let username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
+                const username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
                     locale,
                     user
                 )
@@ -810,18 +810,18 @@ const pdfPackageGenerator = {
             },
 
             patientRecord: (locale, user, name, additional, data) => {
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
-                let patientName = pdfPackageGenerator.pdfFormat.getSubTitleInfo.patientName(
+                const patientName = pdfPackageGenerator.pdfFormat.getSubTitleInfo.patientName(
                     locale,
                     data
                 )
-                let providerName = pdfPackageGenerator.pdfFormat.getSubTitleInfo.providerName(
+                const providerName = pdfPackageGenerator.pdfFormat.getSubTitleInfo.providerName(
                     locale,
                     data
                 )
-                let patientID = pdfPackageGenerator.pdfFormat.getSubTitleInfo.patientID(
+                const patientID = pdfPackageGenerator.pdfFormat.getSubTitleInfo.patientID(
                     locale,
                     data
                 )
@@ -831,7 +831,7 @@ const pdfPackageGenerator = {
             trackingRecord: (locale, user, name, additional, data) => {
                 let { key, startTime, endTime, mode } = additional
 
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
                 key = pdfPackageGenerator.pdfFormat.getSubTitleInfo.field(
@@ -854,7 +854,7 @@ const pdfPackageGenerator = {
             },
 
             contactTree: (locale, user, name, additional, data) => {
-                let timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
+                const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(
                     locale
                 )
                 return timestamp

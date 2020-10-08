@@ -81,27 +81,27 @@ class AdminManagementContainer extends React.Component {
     }
 
     getUserList = (callback) => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.userApiAgent
             .getAllUser({
                 locale: locale.abbr,
             })
             .then((res) => {
-                let columns = JSONClone(userInfoTableColumn)
+                const columns = JSONClone(userInfoTableColumn)
                 columns.map((field, index) => {
                     field.Header =
                         locale.texts[
                             field.Header.toUpperCase().replace(/ /g, '_')
                         ]
                 })
-                let data = res.data.rows.map((item, index) => {
+                const data = res.data.rows.map((item, index) => {
                     item._id = index + 1
                     item.roles = item.role_type
                         .map((role) => locale.texts[role.toUpperCase()])
                         .join('/')
                     item.area_ids = item.area_ids
-                        .filter((area) => area.id != item.main_area.id)
+                        .filter((area) => area.id !== item.main_area.id)
                         .map((area) => locale.texts[area.value])
                         .join('/')
                     item.main_area.label = locale.texts[item.main_area.value]
@@ -127,7 +127,7 @@ class AdminManagementContainer extends React.Component {
     getAllRole = () => {
         apiHelper.roleApiAgent.getAllRole().then((res) => {
             /** filter system default roles */
-            let roleName = res.data.rows.filter((item) =>
+            const roleName = res.data.rows.filter((item) =>
                 config.ROLES_SELECTION.includes(item.name)
             )
             this.setState({
@@ -150,11 +150,11 @@ class AdminManagementContainer extends React.Component {
     }
 
     handleSubmit = (values) => {
-        let { auth } = this.context
+        const { auth } = this.context
 
-        let { api, selectedUser } = this.state
+        const { api, selectedUser } = this.state
 
-        let user = {
+        const user = {
             ...auth.user,
             ...values,
             id: selectedUser ? selectedUser.id : null,
@@ -162,13 +162,13 @@ class AdminManagementContainer extends React.Component {
             main_area: values.area.id,
         }
 
-        let index = auth.user.areas_id.indexOf(auth.user.main_area)
+        const index = auth.user.areas_id.indexOf(auth.user.main_area)
         user.areas_id.splice(index, 1)
 
         if (!user.areas_id.includes(user.area.id)) {
             user.areas_id.push(user.area.id)
         }
-        let callback = () => {
+        const callback = () => {
             messageGenerator.setSuccessMessage('save success')
         }
         auth[api](user, () => {
@@ -191,7 +191,7 @@ class AdminManagementContainer extends React.Component {
                 },
             })
             .then((res) => {
-                let callback = () =>
+                const callback = () =>
                     messageGenerator.setSuccessMessage('save success')
                 this.getUserList(callback)
             })

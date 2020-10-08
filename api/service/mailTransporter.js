@@ -32,9 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const nodemailer = require('nodemailer')
-require('dotenv')
-
+import nodemailer from 'nodemailer';
+import 'dotenv/config.js';
 // let transport = nodemailer.createTransport({
 //     host: 'smtp.mailtrap.io',
 //     port: 2525,
@@ -44,7 +43,7 @@ require('dotenv')
 //     }
 // });
 
-var transport = nodemailer.createTransport({
+export default nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
 
@@ -52,6 +51,4 @@ var transport = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
     },
-})
-
-module.exports = transport
+});

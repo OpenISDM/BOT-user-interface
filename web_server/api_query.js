@@ -1,8 +1,7 @@
-const error_code = require('./api_error_code')
-require('moment-timezone')
-const moment = require('moment')
-const queryType = require('./api_queryType')
-const pg = require('pg')
+import error_code from './api_error_code.js'
+import moment from 'moment-timezone'
+import queryType from './api_queryType.js'
+import pg from 'pg'
 const config = {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -12,28 +11,28 @@ const config = {
 }
 const pool = new pg.Pool(config)
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-const { tw } = require('../site_module/locale/text')
-const encrypt = require('../api/service/encrypt')
+import { tw } from '../site_module/locale/text.js'
+import encrypt from '../api/service/encrypt.js'
 
 const get_api_key = (request, response) => {
-    let { username, password } = request.body
+    const { username, password } = request.body
 
     let getUserName = ''
     pool.query(queryType.getAllUser()) //verification by sha256
         .then((res) => {
             res.rows.map((item) => {
                 if (
-                    username == item.username_sha256 &&
-                    password == item.password_sha256
+                    username === item.username_sha256 &&
+                    password === item.password_sha256
                 ) {
                     getUserName = item.name
                 }
             })
-            if (getUserName != '') {
+            if (getUserName !== '') {
                 //already match user name
                 pool.query(queryType.confirmValidation(getUserName))
                     .then((res) => {
-                        console.log(`confirm validation succeed`)
+                        console.log('confirm validation succeed')
 
                         const hash = encrypt.createHash(password)
 
@@ -83,20 +82,20 @@ async function get_history_data(request, response) {
         sort_type,
     } = request.body
 
-    var matchRes = Promise.resolve(match_key(key))
+    let matchRes = Promise.resolve(match_key(key))
     await matchRes.then(function (result) {
         matchRes = result
     })
 
-    if (matchRes == 1) {
+    if (matchRes === 1) {
         // matched
 
         //** Time **//
 
-        if (start_time != undefined) {
+        if (start_time !== undefined) {
             // verification by format
             if (
-                moment(start_time, timeDefaultFormat, true).isValid() == false
+                moment(start_time, timeDefaultFormat, true).isValid() === false
             ) {
                 response.json(error_code.start_time_error)
             } else {
@@ -108,8 +107,8 @@ async function get_history_data(request, response) {
             start_time = moment(moment().subtract(1, 'day')).format()
         }
 
-        if (end_time != undefined) {
-            if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
+        if (end_time !== undefined) {
+            if (moment(end_time, timeDefaultFormat, true).isValid() === false) {
                 response.json(error_code.end_time_error)
             } else {
                 end_time = time_format(end_time)
@@ -119,13 +118,13 @@ async function get_history_data(request, response) {
         }
 
         //** TAG **//
-        if (tag != undefined) {
+        if (tag !== undefined) {
             tag = tag.split(',')
-            let pattern = new RegExp(
+            const pattern = new RegExp(
                 '^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
             )
             tag.map((item) => {
-                if (item.match(pattern) == null) {
+                if (item.match(pattern) === null) {
                     //judge format
                     response.json(error_code.mac_address_error)
                 }
@@ -133,13 +132,13 @@ async function get_history_data(request, response) {
         }
 
         //** Lbeacon **//
-        if (Lbeacon != undefined) {
+        if (Lbeacon !== undefined) {
             Lbeacon = Lbeacon.split(',')
-            let pattern = new RegExp(
+            const pattern = new RegExp(
                 '^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
             )
             Lbeacon.map((item) => {
-                if (item.match(pattern) == null) {
+                if (item.match(pattern) === null) {
                     //judge format
                     response.json(error_code.Lbeacon_error)
                 }
@@ -147,19 +146,17 @@ async function get_history_data(request, response) {
         }
 
         //set default when no input
-        if (count_limit == undefined) {
+        if (count_limit === undefined) {
             count_limit = 10
         } else {
             isNaN(count_limit) ? response.json(error_code.count_error) : null
         }
 
         //0=DESC 1=ASC  : default=0
-        if (sort_type == undefined) {
+        if (sort_type === undefined) {
             sort_type = 'desc'
-        } else {
-            if (sort_type != 'desc' && sort_type != 'asc') {
-                response.json(error_code.sort_type_define_error)
-            }
+        } else if (sort_type !== 'desc' && sort_type !== 'asc') {
+            response.json(error_code.sort_type_define_error)
         }
 
         data = Promise.resolve(
@@ -183,7 +180,7 @@ async function get_history_data(request, response) {
         })
 
         response.json(data)
-    } else if (matchRes == 2) {
+    } else if (matchRes === 2) {
         response.json(error_code.key_timeout)
     } else {
         // key fail match with user
@@ -197,12 +194,12 @@ async function match_key(key, response) {
         .query(queryType.getAllKey())
         .then((res) => {
             res.rows.map((item) => {
-                let vaildTime = moment(item.register_time).add(30, 'm')
-                if (moment().isBefore(moment(vaildTime)) && item.key == key) {
+                const vaildTime = moment(item.register_time).add(30, 'm')
+                if (moment().isBefore(moment(vaildTime)) && item.key === key) {
                     matchFlag = 1 //in time & key right
                 } else if (
                     moment().isAfter(moment(vaildTime)) &&
-                    item.key == key
+                    item.key === key
                 ) {
                     matchFlag = 2 // out time & key right
                 }
@@ -236,20 +233,20 @@ async function get_data(
             )
         ) //get area id
         .then((res) => {
-            console.log(`get_data success`)
+            console.log('get_data success')
             res.rows.map((item) => {
                 item.area_name =
                     tw[item.area_name.toUpperCase().replace(/ /g, '_')]
-                item.duration.hours == undefined
+                item.duration.hours === undefined
                     ? (item.duration.hours = 0)
                     : null
-                item.duration.minutes == undefined
+                item.duration.minutes === undefined
                     ? (item.duration.minutes = 0)
                     : null
-                item.duration.seconds == undefined
+                item.duration.seconds === undefined
                     ? (item.duration.seconds = 0)
                     : null
-                item.duration.milliseconds == undefined
+                item.duration.milliseconds === undefined
                     ? (item.duration.milliseconds = 0)
                     : null
             })
@@ -261,12 +258,12 @@ async function get_data(
 }
 
 function time_format(time) {
-    if (time != undefined) {
+    if (time !== undefined) {
         return moment(time, timeDefaultFormat).format()
     }
 }
 
-module.exports = {
+export default {
     get_api_key,
     get_history_data,
 }

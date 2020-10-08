@@ -34,6 +34,6 @@
 
 const en = {
     LICENCE: '© 2020 BiDaE Technology, Incorporated',
-}
+};
 
-module.exports = en
+export default en;

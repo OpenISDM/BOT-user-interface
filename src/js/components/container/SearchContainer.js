@@ -104,10 +104,10 @@ class SearchContainer extends React.Component {
                 objectType: [0],
             })
             .then((res) => {
-                let keywordType =
+                const keywordType =
                     config.KEYWORD_TYPE[auth.user.keyword_type] || 'type'
 
-                let objectTypeList = res.data.rows.reduce(
+                const objectTypeList = res.data.rows.reduce(
                     (objectTypeList, item) => {
                         if (!objectTypeList.includes(item[keywordType])) {
                             objectTypeList.push(item[keywordType])
@@ -151,7 +151,7 @@ class SearchContainer extends React.Component {
 
         return (
             <Fragment>
-                <CustomView condition={isTablet != true && isMobile != true}>
+                <CustomView condition={isTablet !== true && isMobile !== true}>
                     <BrowserSearchContainer {...propsGroup} />
                 </CustomView>
                 <TabletView>

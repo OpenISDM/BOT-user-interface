@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-module.exports = {
+export default {
     signin: (username) => {
         const text = `
 			WITH
@@ -139,16 +139,16 @@ module.exports = {
 
 			LEFT JOIN device_group_list
 			ON device_group_list.id = user_info.list_id
-			`
+			`;
 
-        const values = [username]
+        const values = [username];
 
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     setVisitTimestamp: (username) => {
@@ -156,11 +156,11 @@ module.exports = {
 			UPDATE user_table
 			SET last_visit_timestamp = NOW()
 			WHERE name = '${username}';
-		`
+		`;
     },
 
     validateUsername: (username) => {
-        let text = `
+        const text = `
 			SELECT
 				user_table.name,
 				user_table.password,
@@ -198,49 +198,44 @@ module.exports = {
 			ON user_area.user_id = user_table.id
 
 			WHERE user_table.name = $1;
-		`
-
-        const values = [username]
+		`;
+        const values = [username];
 
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     resetPassword: (email, hash) => {
-        let text = `
+        const text = `
 			UPDATE user_table
 			SET password = $2
 			WHERE email = $1;
-		`
-
-        let values = [email, hash]
-
+		`;
+        const values = [email, hash];
         const query = {
             text,
             values,
-        }
+        };
 
-        return query
+        return query;
     },
 
     validateEmail: (email) => {
-        let text = `
+        const text = `
 			SELECT
 				id,
 				registered_timestamp
 			FROM user_table
 			WHERE email = LOWER($1)
-		`
-
-        let values = [email]
-
+		`;
+        const values = [email];
         return {
             text,
             values,
-        }
+        };
     },
-}
+};

@@ -75,12 +75,12 @@ class GeneralSettings extends React.Component {
     }
 
     getData = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.objectApiAgent
             .getAlias()
             .then((res) => {
-                let columns = [
+                const columns = [
                     {
                         Header: 'object type',
                         accessor: 'type',
@@ -96,7 +96,7 @@ class GeneralSettings extends React.Component {
                                     className="border-none"
                                     value={props.original.type_alias}
                                     onChange={(e) => {
-                                        let data = this.state.data
+                                        const data = this.state.data
                                         data[props.index].type_alias =
                                             e.target.value
                                         this.setState({
@@ -105,11 +105,11 @@ class GeneralSettings extends React.Component {
                                     }}
                                     onKeyPress={(e) => {
                                         if (
-                                            e.key == 'Enter' &&
+                                            e.key === 'Enter' &&
                                             e.target.value !==
                                                 props.original.type_alias
                                         ) {
-                                            let {
+                                            const {
                                                 type,
                                                 type_alias,
                                             } = props.original

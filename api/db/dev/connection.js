@@ -32,10 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const pg = require('pg')
-const { decrypt } = require('../../service/encrypt')
+import pg from 'pg';
+import { decrypt } from '../../service/encrypt.js';
 
-let password = decrypt(process.env.DB_PASS)
+// const password = decrypt(process.env.DB_PASS);
+const password = process.env.DB_PASS;
 
 const config = {
     user: process.env.DB_USER,
@@ -43,8 +44,6 @@ const config = {
     database: process.env.DB_DATABASE,
     password,
     port: process.env.DB_PORT,
-}
+};
 
-const pool = new pg.Pool(config)
-
-module.exports = pool
+export default new pg.Pool(config);

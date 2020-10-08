@@ -1,6 +1,6 @@
-const db = require('../api_query')
+import db from '../api_query.js'
 
-module.exports = (app) => {
+export default (app) => {
     /** 給我帳號密碼 給你金鑰 **/
     app.post('/api/1.0/auth/signin', db.get_api_key)
 

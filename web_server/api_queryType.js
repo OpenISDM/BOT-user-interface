@@ -1,5 +1,5 @@
 const confirmValidation = (username) => {
-    let text = `
+    const text = `
 		SELECT
 			user_table.name,
 			user_table.password,
@@ -50,7 +50,7 @@ const confirmValidation = (username) => {
 }
 
 function setKey(user_id, username, hash) {
-    let text = `
+    const text = `
 			UPDATE  api_key
 			SET
                 name = $2,
@@ -68,13 +68,8 @@ function setKey(user_id, username, hash) {
     return query
 }
 
-const getAllKey = () => {
-    return (query = ` SELECT  * FROM api_key `)
-}
-
-const getAllUser = () => {
-    return (query = ` SELECT  * FROM user_table	`)
-}
+const getAllKeyQuery = ' SELECT  * FROM api_key '
+const getAllUserQuery = ' SELECT  * FROM user_table	'
 
 const get_data = (
     key,
@@ -105,7 +100,7 @@ const get_data = (
 
             INNER JOIN object_table
             ON location_history_table.mac_address = object_table.mac_address
-                AND object_table.object_type != 0
+                AND object_table.object_type !== 0
 
             INNER JOIN user_area
             ON object_table.area_id = user_area.area_id
@@ -119,12 +114,12 @@ const get_data = (
             WHERE
                 record_timestamp > $1
                 AND record_timestamp < $2`
-    if (tag != undefined) {
+    if (tag !== undefined) {
         text += `  AND location_history_table.mac_address IN  (${tag.map(
             (item) => `'${item}'`
         )})`
     }
-    if (Lbeacon != undefined) {
+    if (Lbeacon !== undefined) {
         text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
             (item) => `'${item}'`
         )})`
@@ -165,12 +160,12 @@ const get_data = (
     GROUP BY grp, groups.mac_address
     `
 
-    if (sort_type == 'desc') {
-        text += `  ORDER by mac_address ASC, start_time DESC   `
+    if (sort_type === 'desc') {
+        text += '  ORDER by mac_address ASC, start_time DESC   '
     } else {
-        text += `   ORDER by mac_address ASC, start_time ASC   `
+        text += '   ORDER by mac_address ASC, start_time ASC   '
     }
-    text += ` LIMIT  $4`
+    text += ' LIMIT  $4'
 
     const values = [start_time, end_time, key, count_limit]
     const query = {
@@ -181,10 +176,10 @@ const get_data = (
     return query
 }
 
-module.exports = {
+export default {
     confirmValidation,
     setKey,
-    getAllKey,
-    getAllUser,
+    getAllKeyQuery,
+    getAllUserQuery,
     get_data,
 }

@@ -33,17 +33,17 @@
 */
 
 import React from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, ListGroup } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import { ListGroup } from 'react-bootstrap'
+
 import LocaleContext from '../../../context/LocaleContext'
 import config from '../../../config'
 import AuthenticationContext from '../../../context/AuthenticationContext'
 import { Title } from '../../BOTComponent/styleComponent'
 
 const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
-    let locale = React.useContext(LocaleContext)
-    let auth = React.useContext(AuthenticationContext)
+    const locale = React.useContext(LocaleContext)
+    const auth = React.useContext(AuthenticationContext)
 
     return (
         <Modal
@@ -77,24 +77,24 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
                                 {Object.values(areaTable)
                                     .filter((area) => {
                                         return (
-                                            auth.user.main_area != area.id &&
+                                            auth.user.main_area !== area.id &&
                                             values.areas_id.includes(area.id)
                                         )
                                     })
                                     .map((area, index) => {
-                                        let element = (
+                                        const element = (
                                             <ListGroup.Item
                                                 as="a"
                                                 key={index}
                                                 action
                                                 name={area.id}
                                                 onClick={(e) => {
-                                                    let name = e.target.getAttribute(
+                                                    const name = e.target.getAttribute(
                                                         'name'
                                                     )
-                                                    let areasId = values.areas_id.filter(
+                                                    const areasId = values.areas_id.filter(
                                                         (area) => {
-                                                            return area != name
+                                                            return area !== name
                                                         }
                                                     )
                                                     setFieldValue(
@@ -114,22 +114,22 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
                                 {Object.values(areaTable)
                                     .filter((area) => {
                                         return (
-                                            auth.user.main_area != area.id &&
+                                            auth.user.main_area !== area.id &&
                                             !values.areas_id.includes(area.id)
                                         )
                                     })
                                     .map((area, index) => {
-                                        let element = (
+                                        const element = (
                                             <ListGroup.Item
                                                 as="a"
                                                 key={index}
                                                 action
                                                 name={area.id}
                                                 onClick={(e) => {
-                                                    let name = e.target.getAttribute(
+                                                    const name = e.target.getAttribute(
                                                         'name'
                                                     )
-                                                    let areasId =
+                                                    const areasId =
                                                         values.areas_id
                                                     areasId.push(parseInt(name))
                                                     setFieldValue(

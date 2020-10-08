@@ -32,12 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let fileController = require('../../controllers/fileController')
+import fileController from '../../controllers/fileController.js';
 
-module.exports = (app) => {
-    app.route('/data/file/export/csv').post(fileController.exportCSV)
+export default (app) => {
+    app.route('/data/file/export/csv').post(fileController.exportCSV);
 
-    app.route('/data/file/export/pdf').post(fileController.exportPDF)
+    app.route('/data/file/export/pdf').post(fileController.exportPDF);
 
-    app.route('/data/file/:folder/:file').get(fileController.getFile)
-}
+    app.route('/data/file/:folder/:file').get(fileController.getFile);
+};

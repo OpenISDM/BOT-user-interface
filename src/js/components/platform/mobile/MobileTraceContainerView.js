@@ -37,7 +37,7 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import 'react-table/react-table.css'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
@@ -49,10 +49,11 @@ import {
     NoDataFoundDiv,
     BOTContainer,
     PrimaryButton,
+    PageTitle,
 } from '../../BOTComponent/styleComponent'
 import Loader from '../../presentational/Loader'
 import Select from 'react-select'
-import { PageTitle } from '../../BOTComponent/styleComponent'
+
 import IconButton from '../../BOTComponent/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
@@ -79,7 +80,7 @@ const MobileTraceContainerView = React.forwardRef(
     ) => {
         const locale = React.useContext(LocaleContext)
         const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
-        let initialValues = getInitialValues()
+        const initialValues = getInitialValues()
 
         return (
             <BOTContainer>
@@ -112,19 +113,19 @@ const MobileTraceContainerView = React.forwardRef(
                     initialStatus={config.AJAX_STATUS_MAP.WAIT_FOR_SEARCH}
                     validateOnChange={false}
                     validateOnBlur={false}
-                    validationSchema={Yup.object().shape({
-                        key: Yup.object()
+                    validationSchema={object().shape({
+                        key: object()
                             .nullable()
                             .required(locale.texts.REQUIRED),
 
-                        startTime: Yup.string()
+                        startTime: string()
                             .nullable()
                             .required(locale.texts.START_TIME_IS_REQUIRED)
                             .test(
                                 'startTime',
                                 locale.texts.TIME_FORMAT_IS_INCORRECT,
                                 (value) => {
-                                    let test = moment(value).format(
+                                    const test = moment(value).format(
                                         timeValidatedFormat
                                     )
                                     return moment(
@@ -135,14 +136,14 @@ const MobileTraceContainerView = React.forwardRef(
                                 }
                             ),
 
-                        endTime: Yup.string()
+                        endTime: string()
                             .nullable()
                             .required(locale.texts.END_TIME_IS_REQUIRED)
                             .test(
                                 'endTime',
                                 locale.texts.TIME_FORMAT_IS_INCORRECT,
                                 (value) => {
-                                    let test = moment(value).format(
+                                    const test = moment(value).format(
                                         timeValidatedFormat
                                     )
                                     return moment(
@@ -187,10 +188,12 @@ const MobileTraceContainerView = React.forwardRef(
                                                 }}
                                                 name="bread"
                                                 onClick={(e) => {
-                                                    let data = JSON.stringify({
-                                                        history,
-                                                        index,
-                                                    })
+                                                    const data = JSON.stringify(
+                                                        {
+                                                            history,
+                                                            index,
+                                                        }
+                                                    )
                                                     handleClick(e, data)
                                                 }}
                                             >

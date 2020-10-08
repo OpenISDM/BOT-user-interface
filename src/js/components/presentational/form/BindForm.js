@@ -35,7 +35,7 @@
 import React from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { Formik, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import { AppContext } from '../../../context/AppContext'
 import Select from 'react-select'
 import FormikFormGroup from '../FormikFormGroup'
@@ -57,7 +57,7 @@ class BindForm extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (prevProps.show != this.props.show && this.props.show) {
+        if (prevProps.show !== this.props.show && this.props.show) {
             this.getImportedData()
         }
     }
@@ -91,7 +91,7 @@ class BindForm extends React.Component {
     }
 
     getImportedData = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.importedObjectApiAgent
             .getImportedObjectTable({
@@ -135,7 +135,7 @@ class BindForm extends React.Component {
                 color: '#dc3545',
             },
         }
-        let { data, objectTable, show } = this.props
+        const { data, objectTable, show } = this.props
         let lock = 0
         return (
             <Modal
@@ -154,14 +154,14 @@ class BindForm extends React.Component {
                             mac: '',
                             area: '',
                         }}
-                        validationSchema={Yup.object().shape({
-                            acn: Yup.string()
+                        validationSchema={object().shape({
+                            acn: string()
                                 .required(locale.texts.REQUIRED)
                                 .test(
                                     'acn',
                                     locale.texts.THE_ID_IS_ALREADY_ASSOCIATED,
                                     (value) => {
-                                        if (value != undefined) {
+                                        if (value !== undefined) {
                                             let findFlag = true
                                             this.props.objectTable.map(
                                                 (item) => {
@@ -171,7 +171,7 @@ class BindForm extends React.Component {
                                                         : null
                                                 }
                                             )
-                                            if (findFlag == false) {
+                                            if (findFlag === false) {
                                                 lock = 0
                                             } else {
                                                 lock = 1
@@ -184,7 +184,7 @@ class BindForm extends React.Component {
                                     'acn',
                                     locale.texts.ID_IS_NOT_FOUND,
                                     (value) => {
-                                        if (value != undefined) {
+                                        if (value !== undefined) {
                                             let findFlag = false
                                             this.state.importData.map(
                                                 (item) => {
@@ -199,7 +199,7 @@ class BindForm extends React.Component {
                                                     }
                                                 }
                                             )
-                                            findFlag == true && lock
+                                            findFlag === true && lock
                                                 ? this.setState({
                                                       showDetail: true,
                                                   })
@@ -211,11 +211,11 @@ class BindForm extends React.Component {
                                     }
                                 ),
 
-                            mac: Yup.string().required(
+                            mac: string().required(
                                 locale.texts.MAC_ADDRESS_IS_REQUIRED
                             ),
 
-                            area: Yup.string().required(
+                            area: string().required(
                                 locale.texts.AREA_IS_REQUIRED
                             ),
                         })}

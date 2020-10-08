@@ -75,15 +75,13 @@ export default class Pagination extends React.Component {
     getVisiblePages = (page, total) => {
         if (total < 7) {
             return this.filterPages([1, 2, 3, 4, 5, 6], total)
-        } else {
-            if (page % 5 >= 0 && page > 4 && page + 2 < total) {
-                return [1, page - 1, page, page + 1, total]
-            } else if (page % 5 >= 0 && page > 4 && page + 2 >= total) {
-                return [1, total - 3, total - 2, total - 1, total]
-            } else {
-                return [1, 2, 3, 4, 5, total]
-            }
         }
+        if (page % 5 >= 0 && page > 4 && page + 2 < total) {
+            return [1, page - 1, page, page + 1, total]
+        } else if (page % 5 >= 0 && page > 4 && page + 2 >= total) {
+            return [1, total - 3, total - 2, total - 1, total]
+        }
+        return [1, 2, 3, 4, 5, total]
     }
 
     changePage = (page) => {
@@ -119,13 +117,13 @@ export default class Pagination extends React.Component {
                     &nbsp;
                     {locale.texts.RESULTS}
                 </div>
-                {this.props.data.length != 0 && (
+                {this.props.data.length !== 0 && (
                     <div className="d-flex">
                         <div className="Table__prevPageWrapper">
                             <PageButtonComponent
                                 className={
                                     'cursor-pointer outline-none border-none bg-transparent ' +
-                                    (activePage == 1
+                                    (activePage === 1
                                         ? 'cursor-not-allowed'
                                         : '')
                                 }
@@ -146,7 +144,7 @@ export default class Pagination extends React.Component {
                                         key={page}
                                         className={
                                             'cursor-pointer outline-none border-none bg-transparent ' +
-                                            (activePage == page
+                                            (activePage === page
                                                 ? 'color-blue font-weight-bold'
                                                 : '')
                                         }
@@ -167,7 +165,7 @@ export default class Pagination extends React.Component {
                             <PageButtonComponent
                                 className={
                                     'cursor-pointer outline-none border-none bg-transparent ' +
-                                    (activePage == this.props.pages
+                                    (activePage === this.props.pages
                                         ? 'cursor-not-allowed'
                                         : '')
                                 }
@@ -175,7 +173,7 @@ export default class Pagination extends React.Component {
                                     if (activePage === this.props.pages) return
                                     this.changePage(activePage + 1)
                                 }}
-                                disabled={activePage == this.props.pages}
+                                disabled={activePage === this.props.pages}
                             >
                                 {this.props.nextText}
                             </PageButtonComponent>

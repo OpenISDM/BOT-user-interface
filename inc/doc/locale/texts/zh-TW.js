@@ -34,6 +34,6 @@
 
 const tw = {
     LICENCE: '© 2020 畢迪科技股份有限公司',
-}
+};
 
-module.exports = tw
+export default tw;

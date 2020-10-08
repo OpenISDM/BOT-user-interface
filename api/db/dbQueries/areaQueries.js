@@ -32,16 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const getAreaTable = () => {
+export default () => {
     return `
 		SELECT
 			id,
 			name
-		FROM area_table
+		FROM area_tab;le;
 		;
-	`
-}
-
-module.exports = {
-    getAreaTable,
-}
+	`;
+};

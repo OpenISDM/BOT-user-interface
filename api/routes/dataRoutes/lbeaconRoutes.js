@@ -32,15 +32,15 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let lbeaconController = require('../../controllers/lbeaconController')
-let cors = require('cors')
+import lbeaconController from '../../controllers/lbeaconController.js';
+import cors from 'cors';
 
-module.exports = (app) => {
+export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/lbeacon', cors())
+    app.options('/data/lbeacon', cors());
 
     app.route('/data/lbeacon')
         .get(lbeaconController.getAllLbeacon)
         .delete(lbeaconController.deleteLBeacon)
-        .put(lbeaconController.editLbeacon)
-}
+        .put(lbeaconController.editLbeacon);
+};

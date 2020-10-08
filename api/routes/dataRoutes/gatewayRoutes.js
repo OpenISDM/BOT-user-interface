@@ -32,15 +32,15 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const gatewayController = require('../../controllers/gatewayController')
-const cors = require('cors')
+import gatewayController from '../../controllers/gatewayController.js';
+import cors from 'cors';
 
-module.exports = (app) => {
+export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/gateway', cors())
+    app.options('/data/gateway', cors());
 
     app.route('/data/gateway')
         .get(gatewayController.getAllGateway)
         .delete(gatewayController.deleteGateway)
-        .put(gatewayController.editGateway)
-}
+        .put(gatewayController.editGateway);
+};

@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-module.exports = {
+export default {
     getSearchableKeyword: () => {
         return `
             SELECT
@@ -67,6 +67,6 @@ module.exports = {
                 FROM lbeacon_table
             ) AS keywords
             WHERE key IS NOT NULL
-        `
+        `;
     },
-}
+};

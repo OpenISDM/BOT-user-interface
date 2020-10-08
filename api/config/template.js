@@ -32,10 +32,10 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-let dataSrcIP = process.env.DATASRC_IP
-let dataSrcProtocol = process.env.DATASRC_PROTOCOL || 'https'
-let domain = `${dataSrcProtocol}://${dataSrcIP}`
+import 'dotenv/config.js';
+const dataSrcIP = process.env.DATASRC_IP;
+const dataSrcProtocol = process.env.DATASRC_PROTOCOL || 'https';
+const domain = `${dataSrcProtocol}://${dataSrcIP}`;
 
 const resetPasswordInstruction = {
     subject: 'BiDaE Object Tracker Password Assistance',
@@ -47,10 +47,10 @@ const resetPasswordInstruction = {
         Sincerely,
         The BOT Service Team
 
-        `
+        `;
     },
-}
+};
 
-module.exports = {
+export default {
     resetPasswordInstruction,
-}
+};

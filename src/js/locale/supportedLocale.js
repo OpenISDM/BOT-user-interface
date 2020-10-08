@@ -56,6 +56,6 @@ const supportedLocale = {
         code: 'zh-cn',
         abbr: 'cn',
     },
-}
+};
 
-module.exports = supportedLocale
+export default supportedLocale;

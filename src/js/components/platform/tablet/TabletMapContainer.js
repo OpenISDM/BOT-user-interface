@@ -55,7 +55,7 @@ export default class TabletMapContainer extends React.Component {
             handleClickButton,
             currentAreaId,
         } = this.props
-        let [{ areaId }] = stateReducer
+        const [{ areaId }] = stateReducer
         const style = {
             title: {
                 color: 'grey',
@@ -247,7 +247,7 @@ export default class TabletMapContainer extends React.Component {
                                     </Button>
                                 </Nav.Item>
                             </AccessControl>
-                            {process.env.IS_TRACKING_PATH_ON == 1 && (
+                            {process.env.IS_TRACKING_PATH_ON === 1 && (
                                 <AccessControl
                                     permission={'user:cleanPath'}
                                     renderNoAccess={() => null}

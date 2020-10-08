@@ -34,6 +34,6 @@
 
 const ms = {
     LICENCE: '© 2020 BiDaE Teknologi, Diperbadankan',
-}
+};
 
-module.exports = ms
+export default ms;

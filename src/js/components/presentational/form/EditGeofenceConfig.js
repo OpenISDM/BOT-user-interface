@@ -36,7 +36,7 @@ import React from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
 import Select from 'react-select'
 import { Formik, Field, Form } from 'formik'
-import * as Yup from 'yup'
+import { object, string, array } from 'yup'
 import DateTimePicker from '../../container/DateTimePicker'
 import { AppContext } from '../../../context/AppContext'
 import Switcher from '../../container/Switcher'
@@ -46,7 +46,7 @@ import FormikFormGroup from '../FormikFormGroup'
 import RadioButtonGroup from '../../container/RadioButtonGroup'
 import RadioButton from '../RadioButton'
 
-let style = {
+const style = {
     icon: {
         minus: {
             color: 'red',
@@ -61,7 +61,7 @@ let style = {
         color: '#dc3545',
     },
 }
-let lbeacon_error = {
+const lbeacon_error = {
     f: '',
     p: '',
 }
@@ -77,9 +77,9 @@ const EditGeofenceConfig = ({
     type,
     lbeaconsTable,
 }) => {
-    let appContext = React.useContext(AppContext)
+    const appContext = React.useContext(AppContext)
 
-    let { auth, locale } = appContext
+    const { auth, locale } = appContext
 
     areaOptions = auth.user.areas_id
         .filter((item) => {
@@ -134,11 +134,11 @@ const EditGeofenceConfig = ({
                             ? selectedData.is_global_fence
                             : 1,
                     }}
-                    validationSchema={Yup.object().shape({
-                        geofenceName: Yup.string().required(
+                    validationSchema={object().shape({
+                        geofenceName: string().required(
                             locale.texts.NAME_IS_REQUIRED
                         ),
-                        p_rssi: Yup.string()
+                        p_rssi: string()
                             .required(locale.texts.ENTER_THE_RSSI)
                             .test(
                                 'p_rssi',
@@ -147,7 +147,7 @@ const EditGeofenceConfig = ({
                                     if (value < 0) return true
                                 }
                             ),
-                        f_rssi: Yup.string()
+                        f_rssi: string()
                             .required(locale.texts.ENTER_THE_RSSI)
                             .test(
                                 'f_rssi',
@@ -156,27 +156,25 @@ const EditGeofenceConfig = ({
                                     if (value < 0) return true
                                 }
                             ),
-                        start_time: Yup.string().required(
+                        start_time: string().required(
                             locale.texts.NAME_IS_REQUIRED
                         ),
-                        end_time: Yup.string().required(
+                        end_time: string().required(
                             locale.texts.NAME_IS_REQUIRED
                         ),
-                        area: Yup.string().required(
-                            locale.texts.AREA_IS_REQUIRED
-                        ),
-                        p_lbeacon: Yup.array().required(
+                        area: string().required(locale.texts.AREA_IS_REQUIRED),
+                        p_lbeacon: array().required(
                             locale.texts.ALEAST_CHOOSE_ONE_UUID
                         ),
-                        f_lbeacon: Yup.array().required(
+                        f_lbeacon: array().required(
                             locale.texts.ALEAST_CHOOSE_ONE_UUID
                         ),
                     })}
                     onSubmit={(values, { setStatus, setSubmitting }, error) => {
-                        let monitorConfigPackage = {
+                        const monitorConfigPackage = {
                             ...values,
                             id: isEdited ? selectedData.id : '',
-                            type: type,
+                            type,
                             perimeters: transferTypeToString(
                                 values.p_lbeacon,
                                 values.p_rssi
@@ -208,7 +206,7 @@ const EditGeofenceConfig = ({
                                         leftLabel="on"
                                         rightLabel="off"
                                         onChange={(e) => {
-                                            let { value } = e.target
+                                            const { value } = e.target
                                             setFieldValue('enable', value)
                                         }}
                                         status={values.enable}
@@ -403,13 +401,13 @@ const TypeGroup = ({
 }) => {
     const locale = React.useContext(LocaleContext)
 
-    let lbeaconOptions_p = lbeaconsTable
+    const lbeaconOptions_p = lbeaconsTable
         .filter((item) => {
-            let uuid = item.uuid.replace(/-/g, '')
+            const uuid = item.uuid.replace(/-/g, '')
             return !values.p_lbeacon.includes(uuid)
         })
         .reduce((options, item, index) => {
-            let uuid = item.uuid.replace(/-/g, '')
+            const uuid = item.uuid.replace(/-/g, '')
             options.push({
                 id: item.id,
                 value: uuid,
@@ -418,13 +416,13 @@ const TypeGroup = ({
             return options
         }, [])
 
-    let lbeaconOptions_f = lbeaconsTable
+    const lbeaconOptions_f = lbeaconsTable
         .filter((item) => {
-            let uuid = item.uuid.replace(/-/g, '')
+            const uuid = item.uuid.replace(/-/g, '')
             return !values.f_lbeacon.includes(uuid)
         })
         .reduce((options, item, index) => {
-            let uuid = item.uuid.replace(/-/g, '')
+            const uuid = item.uuid.replace(/-/g, '')
             options.push({
                 id: item.id,
                 value: uuid,
@@ -433,7 +431,7 @@ const TypeGroup = ({
             return options
         }, [])
 
-    let typeRssi = `${abbr}_rssi`
+    const typeRssi = `${abbr}_rssi`
     return (
         <div className="form-group">
             <small className="form-text">{title}</small>
@@ -448,7 +446,7 @@ const TypeGroup = ({
 
             <small className="form-text text-muted">UUID</small>
             {repository.map((item, index) => {
-                return item == 'undefined,' ? null : (
+                return item === 'undefined,' ? null : (
                     <Row noGutters className="py-1" key={index}>
                         <Col
                             lg={1}
@@ -461,8 +459,8 @@ const TypeGroup = ({
                                 name="remove"
                                 value={index}
                                 onClick={() => {
-                                    let typeGroup = `${abbr}_lbeacon`
-                                    let value = parseLbeaconsGroup(
+                                    const typeGroup = `${abbr}_lbeacon`
+                                    const value = parseLbeaconsGroup(
                                         values[typeGroup],
                                         index
                                     )
@@ -514,16 +512,16 @@ const TypeGroup = ({
                         placeholder={locale.texts.SELECT_LBEACON}
                         name={`${abbr}_lbeacon`}
                         options={
-                            abbr == 'f' ? lbeaconOptions_f : lbeaconOptions_p
+                            abbr === 'f' ? lbeaconOptions_f : lbeaconOptions_p
                         }
                         value={values[`selected_${abbr}_lbeacon`]}
                         styles={styleConfig.reactSelect}
                         onChange={(value) => {
                             setFieldValue(`selected_${abbr}_lbeacon`, value)
 
-                            let typeGroup = `${abbr}_lbeacon`
+                            const typeGroup = `${abbr}_lbeacon`
                             //  if (!values[`selected_${typeGroup}`]) return
-                            let group = values[typeGroup]
+                            const group = values[typeGroup]
                             group.push(value.value)
                             // let group = values[typeGroup]
                             // group.push(values[`selected_${typeGroup}`].value)
@@ -540,7 +538,7 @@ const TypeGroup = ({
                             className="form-text text-capitaliz"
                             style={style.error}
                         >
-                            {abbr == 'f' ? lbeacon_error.f : lbeacon_error.p}
+                            {abbr === 'f' ? lbeacon_error.f : lbeacon_error.p}
                         </small>
                     )}
                 </Col>

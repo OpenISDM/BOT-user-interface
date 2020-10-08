@@ -32,21 +32,19 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-module.exports = {
-    authChecker: (req, res, next) => {
-        if (req.session.user) {
-            next()
-        } else {
-            res.redirect('/login')
-        }
-    },
+export const authChecker = (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+};
 
-    pageChecker: (req, res, next) => {
-        if (req.session.user) next()
-        else {
-            res.clearCookie('authenticated')
-            res.clearCookie('user')
-            res.redirect('/login')
-        }
-    },
-}
+export const pageChecker = (req, res, next) => {
+    if (req.session.user) next();
+    else {
+        res.clearCookie('authenticated');
+        res.clearCookie('user');
+        res.redirect('/login');
+    }
+};

@@ -41,25 +41,28 @@
  *  >> openssl req -nodes -new -x509 -keyout private.key -out certificate.cert
  * If it is window os, please refer to https://tecadmin.net/install-openssl-on-windows/ install openssl
  * and set the environment variables*/
-require('dotenv').config()
-const fs = require('fs')
-const path = require('path')
-const sslPath = path.join(__dirname, '..', 'ssl')
+import 'dotenv/config.js';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import path, { dirname } from 'path';
 
-var privateKey =
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const sslPath = path.join(__dirname, '..', 'ssl');
+
+const privateKey =
     process.env.PRIVATE_KEY &&
-    fs.readFileSync(path.join(sslPath, process.env.PRIVATE_KEY))
-var certificate =
+    fs.readFileSync(path.join(sslPath, process.env.PRIVATE_KEY));
+const certificate =
     process.env.CERTIFICATE &&
-    fs.readFileSync(path.join(sslPath, process.env.CERTIFICATE))
-var ca_bundle =
+    fs.readFileSync(path.join(sslPath, process.env.CERTIFICATE));
+const ca_bundle =
     process.env.CA_BUNDLE &&
-    fs.readFileSync(path.join(sslPath, process.env.CA_BUNDLE))
+    fs.readFileSync(path.join(sslPath, process.env.CA_BUNDLE));
 
-var credentials = {
+const credentials = {
     key: privateKey,
     cert: certificate,
     ca: ca_bundle,
-}
+};
 
-module.exports = credentials
+export default credentials;

@@ -32,57 +32,56 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-require('moment-timezone')
-const moment = require('moment')
-const dbQueries = require('../db/dbQueries/gatewayQueries')
-const pool = require('../db/dev/connection')
+import 'dotenv/config.js';
+import moment from 'moment-timezone';
+import dbQueries from '../db/dbQueries/gatewayQueries.js';
+import pool from '../db/dev/connection.js';
 
-module.exports = {
+export default {
     getAllGateway: (request, response) => {
-        let { locale } = request.query
+        const { locale } = request.query;
 
         pool.query(dbQueries.getAllGateway)
             .then((res) => {
-                console.log(`get gateway table succeed`)
+                console.log('get gateway table succeed');
                 res.rows.map((item) => {
                     item.last_report_timestamp = moment
                         .tz(item.last_report_timestamp, process.env.TZ)
                         .locale(locale)
-                        .format(process.env.TIMESTAMP_FORMAT)
+                        .format(process.env.TIMESTAMP_FORMAT);
                     item.registered_timestamp = moment
                         .tz(item.registered_timestamp, process.env.TZ)
                         .locale(locale)
-                        .format(process.env.TIMESTAMP_FORMAT)
-                })
-                response.status(200).json(res)
+                        .format(process.env.TIMESTAMP_FORMAT);
+                });
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`get gateway table failed ${err}`)
-            })
+                console.log(`get gateway table failed ${err}`);
+            });
     },
 
     deleteGateway: (request, response) => {
-        const { idPackage } = request.body
+        const { idPackage } = request.body;
         pool.query(dbQueries.deleteGateway(idPackage))
             .then((res) => {
-                console.log('delete Gateway record succeed')
-                response.status(200).json(res)
+                console.log('delete Gateway record succeed');
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`delete gateway failed ${err}`)
-            })
+                console.log(`delete gateway failed ${err}`);
+            });
     },
 
     editGateway: (request, response) => {
-        const { formOption } = request.body
+        const { formOption } = request.body;
         pool.query(dbQueries.editGateway(formOption))
             .then((res) => {
-                console.log('edit lbeacon succeed')
-                response.status(200).json(res)
+                console.log('edit lbeacon succeed');
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`edit lbeacon failed ${err}`)
-            })
+                console.log(`edit lbeacon failed ${err}`);
+            });
     },
-}
+};

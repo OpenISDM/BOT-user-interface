@@ -60,9 +60,9 @@ const BrowserSearchResultList = ({
     pinColorArray,
     searchKey,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
-    let listMaxHeight = '42vh'
+    const listMaxHeight = '42vh'
 
     return (
         <Fragment>
@@ -70,7 +70,7 @@ const BrowserSearchResultList = ({
                 <Title>{title}</Title>
             </Row>
 
-            {searchResult.length == 0 ? (
+            {searchResult.length === 0 ? (
                 <Col className="d-flex justify-content-center color-grey">
                     {locale.texts.NO_RESULT}
                 </Col>

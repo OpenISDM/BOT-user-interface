@@ -77,7 +77,7 @@ class GeoFenceSettingBlock extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.exIndex != this.props.nowIndex) {
+        if (this.state.exIndex !== this.props.nowIndex) {
             this.setState({
                 selectAll: false,
                 selection: '',
@@ -93,7 +93,7 @@ class GeoFenceSettingBlock extends React.Component {
     }
 
     getLbeaconTable = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.lbeaconApiAgent
             .getLbeaconTable({
@@ -107,11 +107,11 @@ class GeoFenceSettingBlock extends React.Component {
     }
 
     getMonitorConfig = (callback) => {
-        let { auth, locale } = this.context
+        const { auth, locale } = this.context
         apiHelper.geofenceApis
             .getGeofenceConfig(auth.user.areas_id)
             .then((res) => {
-                let columns = JSONClone(geofenceConfigColumn)
+                const columns = JSONClone(geofenceConfigColumn)
 
                 columns.map((field) => {
                     field.Header =
@@ -157,7 +157,7 @@ class GeoFenceSettingBlock extends React.Component {
     }
 
     handleClickButton = (e, value) => {
-        let { name } = e.target
+        const { name } = e.target
         switch (name) {
             case 'add rule':
                 this.setState({
@@ -195,18 +195,18 @@ class GeoFenceSettingBlock extends React.Component {
 
     handleSubmit = (pack) => {
         lock = true
-        let configPackage = pack ? pack : {}
-        let { path, selectedData } = this.state
-        configPackage['type'] = config.monitorSettingUrlMap[this.props.type]
+        const configPackage = pack || {}
+        const { path, selectedData } = this.state
+        configPackage.type = config.monitorSettingUrlMap[this.props.type]
         // configPackage["id"] = selectedData ? selectedData.id : null
         // configPackage["id"] = this.state.selection
-        path == 'setGeofenceConfig'
-            ? (configPackage['id'] = selectedData.id)
-            : (configPackage['id'] = this.state.selection)
+        path === 'setGeofenceConfig'
+            ? (configPackage.id = selectedData.id)
+            : (configPackage.id = this.state.selection)
 
         apiHelper.geofenceApis[path](configPackage)
             .then((res) => {
-                let callback = () =>
+                const callback = () =>
                     messageGenerator.setSuccessMessage('save success')
                 this.getMonitorConfig(callback)
             })
@@ -233,7 +233,7 @@ class GeoFenceSettingBlock extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
 
@@ -278,11 +278,11 @@ class GeoFenceSettingBlock extends React.Component {
             selectType,
         }
 
-        let { type } = this.props
+        const { type } = this.props
 
-        let { lbeaconsTable, isEdited } = this.state
+        const { lbeaconsTable, isEdited } = this.state
 
-        let { locale } = this.context
+        const { locale } = this.context
 
         return (
             <div>

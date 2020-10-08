@@ -51,7 +51,7 @@ const RadioButton = ({
                 type="radio"
                 name={name}
                 value={id}
-                checked={id == value}
+                checked={id === value}
                 onChange={onChange}
                 onBlur={onBlur}
                 {...props}

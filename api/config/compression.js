@@ -32,16 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const compression = require('compression')
+import compression from 'compression';
 
-const shouldCompress = (req, res) => {
+export default (req, res) => {
     if (req.headers['x-no-compression']) {
-        return false
+        return false;
     }
 
-    return compression.filter(req, res)
-}
-
-module.exports = {
-    shouldCompress,
-}
+    return compression.filter(req, res);
+};

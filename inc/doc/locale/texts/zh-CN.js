@@ -34,6 +34,6 @@
 
 const cn = {
     LICENCE: '© 2020 毕迪科技股份有限公司',
-}
+};
 
-module.exports = cn
+export default cn;

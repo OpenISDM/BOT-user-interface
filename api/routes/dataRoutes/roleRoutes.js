@@ -32,12 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let roleController = require('../../controllers/roleController')
-let cors = require('cors')
+import roleController from '../../controllers/roleController.js';
+import cors from 'cors';
 
-module.exports = (app) => {
+export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/role', cors())
+    app.options('/data/role', cors());
 
-    app.route('/data/role').get(roleController.getAllRole)
-}
+    app.route('/data/role').get(roleController.getAllRole);
+};

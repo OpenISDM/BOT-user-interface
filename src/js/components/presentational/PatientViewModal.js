@@ -35,7 +35,7 @@
 import React from 'react'
 import { Modal, Button, ListGroup } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
-import * as Yup from 'yup'
+import { object } from 'yup'
 import moment from 'moment'
 import { AppContext } from '../../context/AppContext'
 import ScrollArea from 'react-scrollbar'
@@ -76,11 +76,11 @@ class PatientViewModal extends React.Component {
     }
 
     render() {
-        let { show, handleClose, handleSubmit, data, title } = this.props
+        const { show, handleClose, handleSubmit, data, title } = this.props
 
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
-        let recordBlock = {
+        const recordBlock = {
             display: this.state.display ? '' : 'none',
         }
 
@@ -100,7 +100,7 @@ class PatientViewModal extends React.Component {
                         initialValues={{
                             record: '',
                         }}
-                        validationSchema={Yup.object().shape({})}
+                        validationSchema={object().shape({})}
                         onSubmit={(values, { setStatus, setSubmitting }) => {
                             handleSubmit(values)
                         }}
@@ -171,13 +171,14 @@ class PatientViewModal extends React.Component {
                                 </FormFieldName>
 
                                 <div style={recordBlock}>
-                                    {data.record && data.record.length != 0 && (
-                                        <hr style={{ margin: 0 }}></hr>
-                                    )}
+                                    {data.record &&
+                                        data.record.length !== 0 && (
+                                            <hr style={{ margin: 0 }}></hr>
+                                        )}
 
                                     <ListGroup className="text-none px-0 max-height-30 custom-scrollbar">
                                         {data.records &&
-                                            data.records.length != 0 && (
+                                            data.records.length !== 0 && (
                                                 <div>
                                                     {data.records.map(
                                                         (item, index) => {

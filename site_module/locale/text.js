@@ -34,10 +34,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const tw = require('./texts/zh-TW')
-const en = require('./texts/en-US')
+import zhTw from './texts/zh-TW.js';
+import en from './texts/en-US.js';
 
-const text = {
+export const tw = zhTw;
+
+export default {
     tw,
 
     en,
@@ -45,6 +47,4 @@ const text = {
     ms: en,
 
     cn: tw,
-}
-
-module.exports = text
+};

@@ -85,12 +85,12 @@ class ObjectManagementContainer extends React.Component {
     }
 
     getAreaTable = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.areaApiAgent
             .getAreaTable()
             .then((res) => {
-                let areaSelection = res.data.rows.map((area) => {
+                const areaSelection = res.data.rows.map((area) => {
                     return {
                         value: area.name,
                         label: locale.texts[area.name],
@@ -110,13 +110,13 @@ class ObjectManagementContainer extends React.Component {
     }
 
     getPhysicianList = () => {
-        let { locale } = this.context
+        const { locale } = this.context
         axios
             .post(getUserList, {
                 locale: locale.abbr,
             })
             .then((res) => {
-                let physicianList = res.data.rows.filter((user) => {
+                const physicianList = res.data.rows.filter((user) => {
                     return user.role_type.includes('care_provider')
                 })
 
@@ -130,13 +130,13 @@ class ObjectManagementContainer extends React.Component {
     }
 
     getDataImport = () => {
-        let { locale } = this.context
+        const { locale } = this.context
         axios
             .post(getImportTable, {
                 locale: locale.abbr,
             })
             .then((res) => {
-                let columnImport = JSONClone(importTableColumn)
+                const columnImport = JSONClone(importTableColumn)
                 columnImport.map((field) => {
                     field.headerStyle = {
                         textAlign: 'left',
@@ -205,7 +205,7 @@ class ObjectManagementContainer extends React.Component {
     }
 
     getTransferredLocation = () => {
-        let { locale } = this.context
+        const { locale } = this.context
         axios.get(getTransferredLocation).then((res) => {
             const transferredLocationOptions = res.data.map((branch) => {
                 return {
@@ -231,7 +231,7 @@ class ObjectManagementContainer extends React.Component {
     }
 
     getData = () => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -240,11 +240,11 @@ class ObjectManagementContainer extends React.Component {
                 objectType: [0, 1, 2],
             })
             .then((res) => {
-                let column = objectTableColumn
-                let columnPatient = patientTableColumn
-                let data = []
-                let dataPatient = []
-                let typeList = {}
+                const column = objectTableColumn
+                const columnPatient = patientTableColumn
+                const data = []
+                const dataPatient = []
+                const typeList = {}
                 column.push({
                     Header: '',
                     accessor: 'Delete Option',
@@ -282,7 +282,7 @@ class ObjectManagementContainer extends React.Component {
                 })
 
                 res.data.rows.map((item) => {
-                    if (item.object_type != 0) {
+                    if (item.object_type !== 0) {
                         item.monitor_type = this.getMonitorTypeArray(
                             item,
                             'patient'
@@ -304,19 +304,19 @@ class ObjectManagementContainer extends React.Component {
                         }
 
                         if (item.transferred_location) {
-                            let ids = item.transferred_location.split(',')
-                            let branchId = ids[0],
+                            const ids = item.transferred_location.split(',')
+                            const branchId = ids[0],
                                 departmentId = ids[1]
                             if (item.transferred_location) {
-                                let branch = this.state.transferredLocationList.filter(
+                                const branch = this.state.transferredLocationList.filter(
                                     (branch) => {
-                                        if (branch.id == branchId) {
+                                        if (branch.id === branchId) {
                                             return true
                                         }
                                         return false
                                     }
                                 )
-                                let department = branch[0]
+                                const department = branch[0]
                                     ? branch[0].options[departmentId]
                                     : null
                                 item.transferred_location = department
@@ -370,14 +370,14 @@ class ObjectManagementContainer extends React.Component {
     }
 
     getLbeaconData = () => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.lbeaconApiAgent
             .getLbeaconTable({
                 locale: locale.abbr,
             })
             .then((res) => {
-                let roomOptions = []
+                const roomOptions = []
                 res.data.rows.map((item) => {
                     if (item.room) {
                         roomOptions.push({
@@ -430,15 +430,15 @@ class ObjectManagementContainer extends React.Component {
     filterData = (data, key, filteredAttribute) => {
         const { locale } = this.context
         key = key.toLowerCase()
-        let filteredData = data.filter((obj) => {
+        const filteredData = data.filter((obj) => {
             if (filteredAttribute.includes('name')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.name.toLowerCase().match(keyRex)) {
                     return true
                 }
             }
             if (filteredAttribute.includes('type')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
 
                 if (obj.type.toLowerCase().match(keyRex)) {
                     return true
@@ -446,13 +446,13 @@ class ObjectManagementContainer extends React.Component {
             }
 
             if (filteredAttribute.includes('acn')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.asset_control_number.toLowerCase().match(keyRex))
                     return true
             }
 
             if (filteredAttribute.includes('status')) {
-                let keyRex = new RegExp(key.toLowerCase())
+                const keyRex = new RegExp(key.toLowerCase())
 
                 if (obj.status.label.toLowerCase().match(keyRex)) {
                     return true
@@ -460,21 +460,21 @@ class ObjectManagementContainer extends React.Component {
             }
 
             if (filteredAttribute.includes('area')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.area_name.label.match(keyRex)) {
                     return true
                 }
             }
 
             if (filteredAttribute.includes('monitor')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
                 if (obj.monitor_type.toLowerCase().match(keyRex)) {
                     return true
                 }
             }
 
             if (filteredAttribute.includes('macAddress')) {
-                let keyRex = key.replace(/:/g, '')
+                const keyRex = key.replace(/:/g, '')
                 if (
                     obj.mac_address
                         .replace(/:/g, '')
@@ -485,13 +485,13 @@ class ObjectManagementContainer extends React.Component {
             }
 
             if (filteredAttribute.includes('sex')) {
-                if (obj.object_type == key) {
+                if (obj.object_type === key) {
                     return true
                 }
             }
 
             if (filteredAttribute.includes('physician_name')) {
-                let keyRex = new RegExp(key)
+                const keyRex = new RegExp(key)
 
                 if (
                     obj.physician_name &&
@@ -509,7 +509,7 @@ class ObjectManagementContainer extends React.Component {
 
     addObjectFilter = (key, attribute, source) => {
         this.state.objectFilter = this.state.objectFilter.filter(
-            (filter) => source != filter.source
+            (filter) => source !== filter.source
         )
 
         this.state.objectFilter.push({
@@ -522,13 +522,13 @@ class ObjectManagementContainer extends React.Component {
 
     removeObjectFilter = (source) => {
         this.state.objectFilter = this.state.objectFilter.filter(
-            (filter) => source != filter.source
+            (filter) => source !== filter.source
         )
         this.filterObjects()
     }
 
     filterObjects = () => {
-        let filteredData = this.state.objectFilter.reduce((acc, curr) => {
+        const filteredData = this.state.objectFilter.reduce((acc, curr) => {
             return this.filterData(acc, curr.key, curr.attribute)
         }, this.state.data)
 
@@ -539,7 +539,7 @@ class ObjectManagementContainer extends React.Component {
 
     addPatientFilter = (key, attribute, source) => {
         this.state.patientFilter = this.state.patientFilter.filter(
-            (filter) => source != filter.source
+            (filter) => source !== filter.source
         )
         this.state.patientFilter.push({
             key,
@@ -552,13 +552,13 @@ class ObjectManagementContainer extends React.Component {
 
     removePatientFilter = (source) => {
         this.state.patientFilter = this.state.patientFilter.filter(
-            (filter) => source != filter.source
+            (filter) => source !== filter.source
         )
         this.filterPatients()
     }
 
     filterPatients = () => {
-        let filteredPatient = this.state.patientFilter.reduce((acc, curr) => {
+        const filteredPatient = this.state.patientFilter.reduce((acc, curr) => {
             return this.filterData(acc, curr.key, curr.attribute)
         }, this.state.dataPatient)
         this.setState({
@@ -605,7 +605,7 @@ class ObjectManagementContainer extends React.Component {
             },
         }
 
-        let typeSelection = filterSelection.typeList
+        const typeSelection = filterSelection.typeList
             ? Object.values(filterSelection.typeList)
             : null
 

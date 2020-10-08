@@ -51,9 +51,9 @@ const getShiftChangeRecord = () => {
 
 		ORDER BY shift_change_record.submit_timestamp DESC;
 
-	`
-    return query
-}
+	`;
+    return query;
+};
 
 const getEditObjectRecord = () => {
     const query = `
@@ -71,9 +71,9 @@ const getEditObjectRecord = () => {
 
 		ORDER BY edit_object_record.edit_time DESC
 
-	`
-    return query
-}
+	`;
+    return query;
+};
 
 const addEditObjectRecord = (formOption, username, filePath) => {
     const text = `
@@ -100,21 +100,21 @@ const addEditObjectRecord = (formOption, username, filePath) => {
 			now()
 		)
 		RETURNING id;
-	`
+	`;
     const values = [
         username,
         formOption[0].notes,
         formOption[0].status,
         formOption[0].transferred_location,
         filePath,
-    ]
+    ];
 
     const query = {
         text,
         values,
-    }
-    return query
-}
+    };
+    return query;
+};
 
 const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
     const text = `
@@ -132,18 +132,18 @@ const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
 			$4,
 			now()
 		);
-	`
+	`;
 
-    const values = [userInfo.id, shift.value, file_path, list_id]
+    const values = [userInfo.id, shift.value, file_path, list_id];
 
     return {
         text,
         values,
-    }
-}
+    };
+};
 
 const addPatientRecord = (objectPackage) => {
-    let text = `
+    const text = `
 		INSERT INTO patient_record (
 			object_id,
 			editing_user_id,
@@ -157,31 +157,35 @@ const addPatientRecord = (objectPackage) => {
 			NOW()
 		)
 
-	`
-    let values = [objectPackage.id, objectPackage.userId, objectPackage.record]
+	`;
+    const values = [
+        objectPackage.id,
+        objectPackage.userId,
+        objectPackage.record,
+    ];
 
-    let query = {
+    const query = {
         text,
         values,
-    }
+    };
 
-    return query
-}
+    return query;
+};
 
 const deleteShiftChangeRecord = (idPackage) => {
     const query = `
 		DELETE FROM shift_change_record
 		WHERE id IN (${idPackage.map((item) => `'${item}'`)})
 		RETURNING *;
-	`
-    return query
-}
+	`;
+    return query;
+};
 
-module.exports = {
+export default {
     getShiftChangeRecord,
     getEditObjectRecord,
     addEditObjectRecord,
     addShiftChangeRecord,
     addPatientRecord,
     deleteShiftChangeRecord,
-}
+};

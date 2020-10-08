@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import React, { Fragment } from 'react';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import {
     BrowserView,
     TabletView,
@@ -41,30 +41,30 @@ import {
     CustomView,
     isMobile,
     isTablet,
-} from 'react-device-detect'
-import BrowserContactTree from '../../platform/browser/BrowserContactTree'
+} from 'react-device-detect';
+import BrowserContactTree from '../../platform/browser/BrowserContactTree.js';
 
 class ContactTree extends React.Component {
     componentDidMount = () => {
         /** set the scrollability in body disabled */
-        let targetElement = document.querySelector('body')
-        enableBodyScroll(targetElement)
-    }
+        const targetElement = document.querySelector('body');
+        enableBodyScroll(targetElement);
+    };
 
     componentWillUnmount = () => {
-        let targetElement = document.querySelector('body')
-        disableBodyScroll(targetElement)
-    }
+        const targetElement = document.querySelector('body');
+        disableBodyScroll(targetElement);
+    };
 
     render() {
         return (
             <Fragment>
-                <CustomView condition={isTablet != true && isMobile != true}>
+                <CustomView condition={isTablet !== true && isMobile !== true}>
                     <BrowserContactTree location={this.props.location} />
                 </CustomView>
             </Fragment>
-        )
+        );
     }
 }
 
-export default ContactTree
+export default ContactTree;

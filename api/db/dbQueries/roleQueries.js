@@ -32,13 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-module.exports = {
+export default {
     getAllRole: () => {
         const query = `
             SELECT
                 name
             FROM roles;
-        `
-        return query
+        `;
+        return query;
     },
-}
+};

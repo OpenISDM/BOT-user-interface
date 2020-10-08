@@ -37,7 +37,7 @@ import dataSrc from '../../../dataSrc'
 import axios from 'axios'
 import 'react-table/react-table.css'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
+import { object, number } from 'yup'
 import styleConfig from '../../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
 import { AppContext } from '../../../context/AppContext'
@@ -46,10 +46,11 @@ import {
     BOTContainer,
     PrimaryButton,
     NoDataFoundDiv,
+    PageTitle,
 } from '../../BOTComponent/styleComponent'
 import Loader from '../../presentational/Loader'
 import Select from 'react-select'
-import { PageTitle } from '../../BOTComponent/styleComponent'
+
 import IconButton from '../../BOTComponent/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
@@ -81,7 +82,7 @@ class BrowserContactTree extends React.Component {
     }
 
     getObjectTable = () => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -90,7 +91,7 @@ class BrowserContactTree extends React.Component {
                 objectType: [1, 2],
             })
             .then((res) => {
-                let options = res.data.rows.map((item) => {
+                const options = res.data.rows.map((item) => {
                     return {
                         value: item.name,
                         label: item.name,
@@ -105,16 +106,16 @@ class BrowserContactTree extends React.Component {
 
     /** Get location history */
     async getLocationHistory(fields) {
-        let { level, key } = fields
-        let duplicate = []
-        let wait = []
-        let collection = []
+        const { level, key } = fields
+        const duplicate = []
+        const wait = []
+        const collection = []
         // let startTime = '2020/05/13 00:00:00';
         // let endTime = '2020/05/14 00:00:00';
         // let startTime = moment().startOf('day');
         // let endTime = moment();
-        let startTime = moment(fields.startTime).format()
-        let endTime = moment(fields.endTime).format()
+        const startTime = moment(fields.startTime).format()
+        const endTime = moment(fields.endTime).format()
 
         wait.push({
             name: key.value,
@@ -130,10 +131,10 @@ class BrowserContactTree extends React.Component {
 
         this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.LOADING)
 
-        while (wait.length != 0) {
-            let parent = wait.shift()
+        while (wait.length !== 0) {
+            const parent = wait.shift()
             if (parent.level > level - 1) break
-            let childrenPromise = this.getChildren(
+            const childrenPromise = this.getChildren(
                 parent.name,
                 duplicate,
                 parent.startTime,
@@ -160,7 +161,7 @@ class BrowserContactTree extends React.Component {
         }
 
         /** set status code of fetching contact tracing data */
-        if (this.state.collection.length == 0) {
+        if (this.state.collection.length === 0) {
             this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.NO_RESULT)
         } else this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.SUCCESS)
     }
@@ -179,7 +180,7 @@ class BrowserContactTree extends React.Component {
     }
 
     filterDuplicated = (data) => {
-        let duplicated = []
+        const duplicated = []
         Object.keys(data).map((level) => {
             Object.keys(data[level]).map((parent) => {
                 data[level][parent] = data[level][parent]
@@ -205,9 +206,9 @@ class BrowserContactTree extends React.Component {
     }
 
     handleClick = (e) => {
-        let name = e.target.name
-        let { auth, locale } = this.context
-        let values = this.formikRef.current.state.values
+        const name = e.target.name
+        const { auth, locale } = this.context
+        const values = this.formikRef.current.state.values
         switch (name) {
             case 'exportPDF':
                 const pdfOptions = {
@@ -217,7 +218,7 @@ class BrowserContactTree extends React.Component {
                     timeout: '12000',
                 }
 
-                let pdfPackage = pdfPackageGenerator.getPdfPackage({
+                const pdfPackage = pdfPackageGenerator.getPdfPackage({
                     option: 'contactTree',
                     user: auth.user,
                     data: this.state.collection,
@@ -272,12 +273,12 @@ class BrowserContactTree extends React.Component {
                     initialStatus={config.AJAX_STATUS_MAP.WAIT_FOR_SEARCH}
                     validateOnChange={false}
                     validateOnBlur={false}
-                    validationSchema={Yup.object().shape({
-                        key: Yup.object()
+                    validationSchema={object().shape({
+                        key: object()
                             .nullable()
                             .required(locale.texts.REQUIRED),
 
-                        level: Yup.number()
+                        level: number()
                             .nullable()
                             .required(locale.texts.REQUIRED),
                     })}
@@ -348,7 +349,7 @@ class BrowserContactTree extends React.Component {
                                             value={values.startTime}
                                             onkeydown="return false"
                                             onChange={(value) => {
-                                                value != null
+                                                value !== null
                                                     ? setFieldValue(
                                                           'startTime',
                                                           moment(value).toDate()
@@ -391,12 +392,12 @@ class BrowserContactTree extends React.Component {
                                             name="endTime"
                                             className="mx-2"
                                             value={
-                                                values.endTime != null
+                                                values.endTime !== null
                                                     ? values.endTime
                                                     : undefined
                                             }
                                             onChange={(value) => {
-                                                value != null
+                                                value !== null
                                                     ? setFieldValue(
                                                           'endTime',
                                                           moment(value).toDate()
@@ -472,7 +473,7 @@ class BrowserContactTree extends React.Component {
                             <Row
                             // className='d-flex justify-content-start'
                             >
-                                {this.state.collection.length != 0 ? (
+                                {this.state.collection.length !== 0 ? (
                                     this.state.collection.map(
                                         (level, index) => {
                                             return (
@@ -571,7 +572,7 @@ class BrowserContactTree extends React.Component {
                                     </NoDataFoundDiv>
                                 )}
                             </Row>
-                            {status == config.AJAX_STATUS_MAP.LOADING && (
+                            {status === config.AJAX_STATUS_MAP.LOADING && (
                                 <Loader backdrop={false} />
                             )}
                         </Fragment>

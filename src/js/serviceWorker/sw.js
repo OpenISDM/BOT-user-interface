@@ -36,16 +36,16 @@ import { precacheAndRoute } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { CacheFirst, NetworkFirst } from 'workbox-strategies'
 
-let VERSION = 'v1.0 b.1965'
+const VERSION = 'v1.0 b.1965'
 
 self.VERSION = VERSION
 self.__WB_MANIFEST
 
-let precacheList = self.__WB_MANIFEST || [
+const precacheList = self.__WB_MANIFEST || [
     { url: '/index.html', revision: VERSION },
     { url: '/manifest.webmanifest', revision: VERSION },
     { url: '/css/main.css', revision: VERSION },
-    { url: '/js/main.bundle.js', revision: VERSION },
+    { url: '/js/main.bundle', revision: VERSION },
 ]
 
 precacheAndRoute(precacheList)
@@ -72,7 +72,7 @@ registerRoute(
 )
 
 self.addEventListener('install', () => {
-    if (process.env.NODE_ENV == 'development') {
+    if (process.env.NODE_ENV === 'development') {
         self.skipWaiting()
     }
 })

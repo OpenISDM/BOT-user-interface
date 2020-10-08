@@ -64,7 +64,7 @@ class UserProfile extends React.Component {
         apiHelper.areaApiAgent
             .getAreaTable()
             .then((res) => {
-                let areaTable = res.data.rows.reduce((table, area) => {
+                const areaTable = res.data.rows.reduce((table, area) => {
                     table[area.id] = area
                     return table
                 }, {})
@@ -82,7 +82,7 @@ class UserProfile extends React.Component {
         const { auth } = this.context
 
         if (value) {
-            let userInfo = auth.user
+            const userInfo = auth.user
 
             userInfo.freqSearchCount = value
 
@@ -93,7 +93,7 @@ class UserProfile extends React.Component {
             apiHelper.userApiAgent
                 .editMaxSearchHistoryCount({
                     info: userInfo,
-                    username: userInfo['name'],
+                    username: userInfo.name,
                 })
                 .then((res) => {
                     auth.setUserInfo('freqSearchCount', value)
@@ -102,7 +102,7 @@ class UserProfile extends React.Component {
     }
 
     handleClick = (e) => {
-        let name = e.target.name
+        const name = e.target.name
         switch (name) {
             case 'secondaryArea':
                 this.setState({
@@ -125,10 +125,12 @@ class UserProfile extends React.Component {
     }
 
     handleSubmit = (values) => {
-        let formIndex = [this.state.show, this.state.showEditPwd].indexOf(true)
+        const formIndex = [this.state.show, this.state.showEditPwd].indexOf(
+            true
+        )
 
-        let callback = () => messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-        var { auth } = this.context
+        const callback = () => messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+        const { auth } = this.context
         switch (formIndex) {
             case 0:
                 auth.setArea(values.areas_id)
@@ -171,12 +173,12 @@ class UserProfile extends React.Component {
         let userKeywordType = {}
 
         const keywordTypeOptions = config.KEYWORD_TYPE.map((item, index) => {
-            let option = {
+            const option = {
                 label: locale.texts[item.toUpperCase()],
                 value: item,
                 id: index,
             }
-            if (auth.user.keyword_type == index) {
+            if (auth.user.keyword_type === index) {
                 userKeywordType = option
             }
             return option
@@ -218,7 +220,7 @@ class UserProfile extends React.Component {
                     </div>
                     <div>
                         {locale.texts.PRIMARY_AREA}:{' '}
-                        {areaTable.length != 0 &&
+                        {areaTable.length !== 0 &&
                             auth.user.main_area &&
                             locale.texts[areaTable[auth.user.main_area].name]}
                     </div>
@@ -227,7 +229,7 @@ class UserProfile extends React.Component {
                         {Object.values(this.state.areaTable)
                             .filter((area) => {
                                 return (
-                                    auth.user.main_area != area.id &&
+                                    auth.user.main_area !== area.id &&
                                     auth.user.areas_id.includes(area.id)
                                 )
                             })

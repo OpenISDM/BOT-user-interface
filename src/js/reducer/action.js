@@ -32,12 +32,9 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let action = {
-    SET_AREA: 'set area',
+export const SET_AREA = 'set area'
 
-    SET_ENABLE_REQUEST_TRACKING_DATA: 'set enable request tracking data',
+export const SET_ENABLE_REQUEST_TRACKING_DATA =
+    'set enable request tracking data'
 
-    ASSIGN_OBJECT: 'assign object',
-}
-
-module.exports = action
+export const ASSIGN_OBJECT = 'assign object'

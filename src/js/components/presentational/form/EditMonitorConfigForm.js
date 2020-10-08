@@ -51,7 +51,7 @@ const EditMonitorConfigForm = ({
     title,
     type,
 }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     return (
         <Modal
@@ -73,10 +73,10 @@ const EditMonitorConfigForm = ({
                         end_time: selectedData ? selectedData.end_time : '',
                     }}
                     onSubmit={(values, { setStatus, setSubmitting }) => {
-                        let monitorConfigPackage = {
+                        const monitorConfigPackage = {
                             ...values,
-                            id: isEdited == true ? selectedData.id : '',
-                            type: type,
+                            id: isEdited === true ? selectedData.id : '',
+                            type,
                             area_id: values.area.id,
                         }
                         handleSubmit(monitorConfigPackage)
@@ -96,7 +96,7 @@ const EditMonitorConfigForm = ({
                                         leftLabel="on"
                                         rightLabel="off"
                                         onChange={(e) => {
-                                            let { value } = e.target
+                                            const { value } = e.target
                                             setFieldValue('enable', value)
                                         }}
                                         status={values.enable}

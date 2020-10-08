@@ -32,69 +32,68 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-require('moment-timezone')
-const dbQueries = require('../db/dbQueries/monitorQueries')
-const pool = require('../db/dev/connection')
+import 'dotenv/config.js';
+import dbQueries from '../db/dbQueries/monitorQueries.js';
+import pool from '../db/dev/connection.js';
 
-module.exports = {
+export default {
     getMonitorConfig: (request, response) => {
-        let { type } = request.body
+        const { type } = request.body;
         pool.query(dbQueries.getMonitorConfig(type))
             .then((res) => {
-                console.log(`get ${type} succeed`)
-                let toReturn = res.rows.map((item) => {
+                console.log(`get ${type} succeed`);
+                const toReturn = res.rows.map((item) => {
                     item.start_time = item.start_time
                         .split(':')
                         .filter((item, index) => index < 2)
-                        .join(':')
+                        .join(':');
                     item.end_time = item.end_time
                         .split(':')
                         .filter((item, index) => index < 2)
-                        .join(':')
-                    return item
-                })
-                response.status(200).json(toReturn)
+                        .join(':');
+                    return item;
+                });
+                response.status(200).json(toReturn);
             })
             .catch((err) => {
-                console.log(`get ${type} failed ${err}`)
-            })
+                console.log(`get ${type} failed ${err}`);
+            });
     },
 
     deleteMonitorConfig: (request, response) => {
-        let { configPackage } = request.body
+        const { configPackage } = request.body;
         pool.query(dbQueries.deleteMonitorConfig(configPackage))
             .then((res) => {
-                console.log(`delete ${configPackage.type.replace(/_/g, ' ')}`)
-                response.status(200).json(res)
+                console.log(`delete ${configPackage.type.replace(/_/g, ' ')}`);
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`delete monitor config failed ${err}`)
-            })
+                console.log(`delete monitor config failed ${err}`);
+            });
     },
 
     addMonitorConfig: (request, response) => {
-        let { configPackage } = request.body
+        const { configPackage } = request.body;
 
         pool.query(dbQueries.addMonitorConfig(configPackage))
             .then((res) => {
-                console.log(`add ${configPackage.type} config success`)
-                response.status(200).json(res)
+                console.log(`add ${configPackage.type} config success`);
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`add ${type} fail ${err}`)
-            })
+                console.log(`add ${type} fail ${err}`);
+            });
     },
 
     setMonitorConfig: (request, response) => {
-        let { configPackage } = request.body
+        const { configPackage } = request.body;
         pool.query(dbQueries.setMonitorConfig(configPackage))
             .then((res) => {
-                console.log(`set ${configPackage.type} config success`)
-                response.status(200).json(res)
+                console.log(`set ${configPackage.type} config success`);
+                response.status(200).json(res);
             })
             .catch((err) => {
-                console.log(`set ${configPackage.type} config failed ${err}`)
-            })
+                console.log(`set ${configPackage.type} config failed ${err}`);
+            });
     },
-}
+};

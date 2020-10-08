@@ -37,7 +37,7 @@ import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import 'react-table/react-table.css'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
@@ -49,10 +49,11 @@ import {
     NoDataFoundDiv,
     BOTContainer,
     PrimaryButton,
+    PageTitle,
 } from '../../BOTComponent/styleComponent'
 import Loader from '../../presentational/Loader'
 import Select from 'react-select'
-import { PageTitle } from '../../BOTComponent/styleComponent'
+
 import IconButton from '../../BOTComponent/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
@@ -79,7 +80,7 @@ const BrowseTraceContainerView = React.forwardRef(
     ) => {
         const locale = React.useContext(LocaleContext)
         const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
-        let initialValues = getInitialValues()
+        const initialValues = getInitialValues()
 
         return (
             <div>
@@ -109,19 +110,19 @@ const BrowseTraceContainerView = React.forwardRef(
                     initialStatus={config.AJAX_STATUS_MAP.WAIT_FOR_SEARCH}
                     validateOnChange={false}
                     validateOnBlur={false}
-                    validationSchema={Yup.object().shape({
-                        key: Yup.object()
+                    validationSchema={object().shape({
+                        key: object()
                             .nullable()
                             .required(locale.texts.REQUIRED),
 
-                        startTime: Yup.string()
+                        startTime: string()
                             .nullable()
                             .required(locale.texts.START_TIME_IS_REQUIRED)
                             .test(
                                 'startTime',
                                 locale.texts.TIME_FORMAT_IS_INCORRECT,
                                 (value) => {
-                                    let test = moment(value).format(
+                                    const test = moment(value).format(
                                         timeValidatedFormat
                                     )
                                     return moment(
@@ -132,14 +133,14 @@ const BrowseTraceContainerView = React.forwardRef(
                                 }
                             ),
 
-                        endTime: Yup.string()
+                        endTime: string()
                             .nullable()
                             .required(locale.texts.END_TIME_IS_REQUIRED)
                             .test(
                                 'endTime',
                                 locale.texts.TIME_FORMAT_IS_INCORRECT,
                                 (value) => {
-                                    let test = moment(value).format(
+                                    const test = moment(value).format(
                                         timeValidatedFormat
                                     )
                                     return moment(
@@ -176,16 +177,18 @@ const BrowseTraceContainerView = React.forwardRef(
                                                 className="d-inline-block"
                                                 style={{
                                                     color:
-                                                        breadIndex == index
+                                                        breadIndex === index
                                                             ? styleSheet.theme
                                                             : styleSheet.black,
                                                 }}
                                                 name="bread"
                                                 onClick={(e) => {
-                                                    let data = JSON.stringify({
-                                                        history,
-                                                        index,
-                                                    })
+                                                    const data = JSON.stringify(
+                                                        {
+                                                            history,
+                                                            index,
+                                                        }
+                                                    )
                                                     handleClick(e, data)
                                                 }}
                                             >
@@ -201,7 +204,9 @@ const BrowseTraceContainerView = React.forwardRef(
                                         <Nav.Item key={index}>
                                             <BOTNavLink
                                                 eventKey={nav.name}
-                                                active={values.mode == nav.name}
+                                                active={
+                                                    values.mode === nav.name
+                                                }
                                                 onClick={handleClick}
                                                 name="nav"
                                             >
@@ -275,7 +280,7 @@ const BrowseTraceContainerView = React.forwardRef(
                                             value={values.startTime}
                                             onkeydown="return false"
                                             onChange={(value) => {
-                                                value != null
+                                                value !== null
                                                     ? setFieldValue(
                                                           'startTime',
                                                           moment(value).toDate()
@@ -318,12 +323,12 @@ const BrowseTraceContainerView = React.forwardRef(
                                             name="endTime"
                                             className="mx-2"
                                             value={
-                                                values.endTime != null
+                                                values.endTime !== null
                                                     ? values.endTime
                                                     : undefined
                                             }
                                             onChange={(value) => {
-                                                value != null
+                                                value !== null
                                                     ? setFieldValue(
                                                           'endTime',
                                                           moment(value).toDate()
@@ -361,12 +366,12 @@ const BrowseTraceContainerView = React.forwardRef(
                                 </div>
                             </div>
 
-                            {status == config.AJAX_STATUS_MAP.LOADING && (
+                            {status === config.AJAX_STATUS_MAP.LOADING && (
                                 <Loader />
                             )}
 
                             <hr />
-                            {data.length != 0 ? (
+                            {data.length !== 0 ? (
                                 <ReactTable
                                     keyField="id"
                                     data={data}

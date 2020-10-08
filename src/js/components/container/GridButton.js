@@ -58,17 +58,17 @@ class GridButton extends React.Component {
             ? config.surveillanceMap.iconColor.pinColorArray.slice()
             : this.state.pinColorArray.slice()
         let colorPanel = clearColorPanel ? {} : this.state.colorPanel
-        let objectType = this.state.objectType
+        const objectType = this.state.objectType
         let selectAll
         if (this.props.clearColorPanel) {
             selectAll = true
         } else {
-            selectAll = this.state.selectAll ? false : true
+            selectAll = !this.state.selectAll
         }
 
-        if (searchKey.toLowerCase() == 'all') {
+        if (searchKey.toLowerCase() === 'all') {
             if (selectAll) {
-                let childrenNodesArray = Array.from(
+                const childrenNodesArray = Array.from(
                     document.getElementsByClassName('gridbutton')
                 ).filter((item) => item.textContent !== 'All')
 
@@ -76,7 +76,7 @@ class GridButton extends React.Component {
                     .filter((item) => item !== 'All')
                     .map((item) => {
                         if (colorPanel[item]) return
-                        let color = pinColorArray.pop()
+                        const color = pinColorArray.pop()
                         colorPanel[item] = color
                         childrenNodesArray.map((node) => {
                             if (item === node.textContent) {
@@ -97,15 +97,13 @@ class GridButton extends React.Component {
             this.setState({
                 selectAll,
             })
+        } else if (e.target.style.background !== '') {
+            pinColorArray.push(e.target.style.background)
+            e.target.style.background = ''
+            delete colorPanel[searchKey]
         } else {
-            if (e.target.style.background !== '') {
-                pinColorArray.push(e.target.style.background)
-                e.target.style.background = ''
-                delete colorPanel[searchKey]
-            } else {
-                pinColor = e.target.style.background = pinColorArray.pop()
-                colorPanel[searchKey] = pinColor
-            }
+            pinColor = e.target.style.background = pinColorArray.pop()
+            colorPanel[searchKey] = pinColor
         }
 
         const searchKeys = Object.keys(colorPanel)
@@ -141,7 +139,7 @@ class GridButton extends React.Component {
     }
 
     checkInSearchHistory() {
-        let username = 'joechou'
+        const username = 'joechou'
         axios
             .post(dataSrc.addUserSearchHistory, {
                 username,
@@ -155,7 +153,7 @@ class GridButton extends React.Component {
 
     /** Sort the user search history and limit the history number */
     sortSearchHistory(history) {
-        let toReturn = history.sort((a, b) => {
+        const toReturn = history.sort((a, b) => {
             return b.value - a.value
         })
         return toReturn

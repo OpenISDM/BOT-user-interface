@@ -56,7 +56,7 @@ class TrackingTable extends React.Component {
     toastId = null
 
     componentDidUpdate = (prevProps, prevState) => {
-        let { locale } = this.context
+        const { locale } = this.context
         if (locale.abbr !== prevState.locale) {
             this.getTrackingData()
         }
@@ -71,8 +71,8 @@ class TrackingTable extends React.Component {
     }
 
     getTrackingData = () => {
-        let { locale, auth, stateReducer } = this.context
-        let [{ areaId }] = stateReducer
+        const { locale, auth, stateReducer } = this.context
+        const [{ areaId }] = stateReducer
 
         apiHelper.trackingDataApiAgent
             .getTrackingData({
@@ -82,14 +82,14 @@ class TrackingTable extends React.Component {
             })
             .then((res) => {
                 this.setMessage('clear')
-                let column = JSONClone(trackingTableColumn)
+                const column = JSONClone(trackingTableColumn)
 
                 column.map((field) => {
                     field.headerStyle = {
                         textAlign: 'left',
                         textTransform: 'capitalize',
                     }
-                    if (field.accessor == '_id') {
+                    if (field.accessor === '_id') {
                         field.headerStyle = {
                             textAlign: 'center',
                         }

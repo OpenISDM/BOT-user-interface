@@ -32,6 +32,6 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-module.exports = {
+export default {
     LBEACON_STATUS_NOT_AVAILABLE: 9999,
-}
+};

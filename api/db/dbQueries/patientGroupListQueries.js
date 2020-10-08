@@ -33,52 +33,52 @@
 */
 
 const modifyPatientGroup = (groupId, mode, option) => {
-    var query = null
+    let query = null;
     if (mode === 0) {
-        var patientACN = option
-        query = `UPDATE patient_group_list SET patients=array_append(patients, '${patientACN}') WHERE id=${groupId}`
-    } else if (mode == 1) {
-        var patientACN = option
-        query = `UPDATE patient_group_list SET patients=array_remove(patients, '${patientACN}') WHERE id=${groupId}`
-    } else if (mode == 2) {
-        var newName = option
-        query = `UPDATE patient_group_list SET name = ${newName} WHERE id=${groupId}`
+        var patientACN = option;
+        query = `UPDATE patient_group_list SET patients=array_append(patients, '${patientACN}') WHERE id=${groupId}`;
+    } else if (mode === 1) {
+        var patientACN = option;
+        query = `UPDATE patient_group_list SET patients=array_remove(patients, '${patientACN}') WHERE id=${groupId}`;
+    } else if (mode === 2) {
+        const newName = option;
+        query = `UPDATE patient_group_list SET name = ${newName} WHERE id=${groupId}`;
     }
 
-    return query
-}
+    return query;
+};
 
 // INPUT pack = {groupId: [int]}
 const getPatientGroup = (pack) => {
     // print('pack', pack)
-    const groupIdSelector = pack.groupId ? `WHERE id = ${pack.groupId}` : ``
+    const groupIdSelector = pack.groupId ? `WHERE id = ${pack.groupId}` : '';
     const query = `
         SELECT  * FROM patient_group_list ${groupIdSelector} ORDER BY id
-    `
-    return query
-}
+    `;
+    return query;
+};
 // INPUT name = {'name': [text]}
 const addPatientGroup = (name) => {
     const query = `
         INSERT INTO patient_group_list (name) VALUES ('${name.name}') RETURNING id
-    `
-    return query
-}
+    `;
+    return query;
+};
 
 const changePatientGroup = (patient_group_id, user_id) => {
-    const query = `UPDATE user_table SET my_patient_index = ${patient_group_id} WHERE id = ${user_id}`
-    return query
-}
+    const query = `UPDATE user_table SET my_patient_index = ${patient_group_id} WHERE id = ${user_id}`;
+    return query;
+};
 
 const removePatientGroup = (groupId) => {
-    const query = `DELETE FROM patient_group_list WHERE Id=${groupId}`
-    return query
-}
+    const query = `DELETE FROM patient_group_list WHERE Id=${groupId}`;
+    return query;
+};
 
-module.exports = {
+export default {
     addPatientGroup,
     changePatientGroup,
     modifyPatientGroup,
     getPatientGroup,
     removePatientGroup,
-}
+};

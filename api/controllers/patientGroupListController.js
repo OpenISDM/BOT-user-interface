@@ -32,79 +32,73 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-require('dotenv').config()
-require('moment-timezone')
-const exec = require('child_process').execFile
-const moment = require('moment')
-const dbQueries = require('../db/dbQueries/patientGroupListQueries')
-const recordQueries = require('../db/dbQueries/recordQueries')
-const pool = require('../db/dev/connection')
-const pdf = require('html-pdf')
-const path = require('path')
+import 'dotenv/config.js';
+import dbQueries from '../db/dbQueries/patientGroupListQueries.js';
+import pool from '../db/dev/connection.js';
 
-module.exports = {
+export default {
     getPatientGroupList: (request, response) => {
-        let query = dbQueries.getPatientGroup(request.body)
+        const query = dbQueries.getPatientGroup(request.body);
         pool.query(query)
             .then((res) => {
-                response.status(200).json(res.rows)
+                response.status(200).json(res.rows);
             })
             .catch((err) => {
-                console.log('addPatientGroup error: ', err)
-            })
+                console.log('addPatientGroup error: ', err);
+            });
     },
     addPatientGroupList: (request, response) => {
-        const { name } = request.body
-        let query = dbQueries.addPatientGroup(name ? name : 'New Group')
+        const { name } = request.body;
+        const query = dbQueries.addPatientGroup(name || 'New Group');
         pool.query(query)
             .then((res) => {
-                response.status(200).json(res.rows[0].id)
+                response.status(200).json(res.rows[0].id);
             })
             .catch((err) => {
-                console.log('addPatientGroup error: ', err)
-            })
+                console.log('addPatientGroup error: ', err);
+            });
     },
     modifyPatientGroupList: (request, response) => {
-        let { groupId, mode, itemACN, newName } = request.body
-        console.log(groupId, mode, itemACN)
-        let query = null
-        if (mode == 0) {
-            query = dbQueries.modifyPatientGroup(groupId, 0, itemACN)
-        } else if (mode == 1) {
-            query = dbQueries.modifyPatientGroup(groupId, 1, itemACN)
-        } else if (mode == 2) {
-            query = dbQueries.modifyPatientGroup(groupId, 2, newName)
+        const { groupId, mode, itemACN, newName } = request.body;
+        console.log(groupId, mode, itemACN);
+        let query = null;
+        if (mode === 0) {
+            query = dbQueries.modifyPatientGroup(groupId, 0, itemACN);
+        } else if (mode === 1) {
+            query = dbQueries.modifyPatientGroup(groupId, 1, itemACN);
+        } else if (mode === 2) {
+            query = dbQueries.modifyPatientGroup(groupId, 2, newName);
         }
         pool.query(query)
             .then((res) => {
-                response.status(200).json('ok')
+                response.status(200).json('ok');
             })
             .catch((err) => {
-                console.log('err when modifyPatientGroup', err)
-            })
+                console.log('err when modifyPatientGroup', err);
+            });
     },
     changePatientList: (request, response) => {
-        const { patient_group_id, user_id } = request.body
-        const query = queryType.changePatientGroup(patient_group_id, user_id)
+        const { patient_group_id, user_id } = request.body;
+        const query = queryType.changePatientGroup(patient_group_id, user_id);
         pool.query(query)
             .then((res) => {
-                console.log('success')
-                response.status(200).json('ok')
+                console.log('success');
+                response.status(200).json('ok');
             })
             .catch((err) => {
-                console.log('error when change patient group,', err)
-            })
+                console.log('error when change patient group,', err);
+            });
     },
     deletePatientGroup: (request, response) => {
-        const { groupId } = request.body
-        const query = dbQueries.removePatientGroup(groupId)
+        const { groupId } = request.body;
+        const query = dbQueries.removePatientGroup(groupId);
         pool.query(query)
             .then((res) => {
-                console.log('success')
-                response.status(200).json('ok')
+                console.log('success');
+                response.status(200).json('ok');
             })
             .catch((err) => {
-                console.log('error when change patient group,', err)
-            })
+                console.log('error when change patient group,', err);
+            });
     },
-}
+};

@@ -70,7 +70,7 @@ class LbeaconTable extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        let { locale } = this.context
+        const { locale } = this.context
         if (locale.abbr !== prevState.locale) {
             this.getData()
         }
@@ -89,7 +89,7 @@ class LbeaconTable extends React.Component {
     }
 
     getData = (callback) => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.lbeaconApiAgent
             .getLbeaconTable({
@@ -97,7 +97,7 @@ class LbeaconTable extends React.Component {
             })
             .then((res) => {
                 this.props.setMessage('clear')
-                let column = JSONClone(lbeaconTableColumn)
+                const column = JSONClone(lbeaconTableColumn)
                 column.map((field) => {
                     field.Header =
                         locale.texts[
@@ -140,7 +140,8 @@ class LbeaconTable extends React.Component {
     }
 
     handleSubmitForm = (formOption) => {
-        let callback = () => messageGenerator.setSuccessMessage('save success')
+        const callback = () =>
+            messageGenerator.setSuccessMessage('save success')
         axios
             .put(dataSrc.lbeacon, {
                 formOption,
@@ -174,7 +175,7 @@ class LbeaconTable extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
         if (selectAll) {
@@ -209,9 +210,9 @@ class LbeaconTable extends React.Component {
     }
 
     deleteRecord = () => {
-        let idPackage = []
-        var deleteArray = []
-        var deleteCount = 0
+        const idPackage = []
+        const deleteArray = []
+        let deleteCount = 0
         this.setState({ selectAll: false })
         this.state.data.map((item) => {
             this.state.selection.map((itemSelect) => {

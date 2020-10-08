@@ -43,7 +43,7 @@ import {
     CustomView,
     isMobile,
 } from 'react-device-detect'
-import { SWITCH_SEARCH_LIST } from '../../config/wordMap'
+import { SWITCH_SEARCH_LIST, FOUND, NOT_FOUND } from '../../config/wordMap'
 import {
     HoverDiv,
     HoverWithUnderlineDiv,
@@ -52,7 +52,7 @@ import {
     ToggleDisplayDiv,
     ReactBootstrapAlert,
 } from '../BOTComponent/styleComponent'
-import wordMap from '../../config/wordMap'
+
 import { searchResultToMap } from '../../helper/dataTransfer'
 
 export default ({ searchKey, searchResult, handleClick }) => {
@@ -61,7 +61,7 @@ export default ({ searchKey, searchResult, handleClick }) => {
 
     const { locale } = appContext
 
-    let searchResultMap = searchResultToMap(searchResult)
+    const searchResultMap = searchResultToMap(searchResult)
 
     const handleShowDetail = () => {
         setShowDetail(!showDetail)
@@ -69,7 +69,7 @@ export default ({ searchKey, searchResult, handleClick }) => {
 
     return (
         <Fragment>
-            <CustomView condition={isTablet != true && isMobile != true}>
+            <CustomView condition={isTablet !== true && isMobile !== true}>
                 <div className="d-flex justify-content-center">
                     <ReactBootstrapAlert
                         variant="secondary"
@@ -86,7 +86,7 @@ export default ({ searchKey, searchResult, handleClick }) => {
                                     data: searchResult.filter(
                                         (item) => item.found
                                     ).length,
-                                    label: wordMap.FOUND,
+                                    label: FOUND,
                                     locale,
                                     onClick: handleClick,
                                 })}
@@ -98,7 +98,7 @@ export default ({ searchKey, searchResult, handleClick }) => {
                                     data: searchResult.filter(
                                         (item) => !item.found
                                     ).length,
-                                    label: wordMap.NOT_FOUND,
+                                    label: NOT_FOUND,
                                     locale,
                                     onClick: handleClick,
                                 })}

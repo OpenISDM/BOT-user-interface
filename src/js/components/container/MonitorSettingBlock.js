@@ -33,21 +33,21 @@
 */
 
 import React from 'react'
-import { AppContext } from '../../context/AppContext'
+import { AppContext } from '../../context/AppContext.js'
 import { ButtonToolbar, Button } from 'react-bootstrap'
 import config from '../../config'
 import ReactTable from 'react-table'
-import styleConfig from '../../config/styleConfig'
-import EditMonitorConfigForm from '../presentational/form/EditMonitorConfigForm'
-import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import { monitorConfigColumn } from '../../config/tables'
+import styleConfig from '../../config/styleConfig.js'
+import EditMonitorConfigForm from '../presentational/form/EditMonitorConfigForm.js'
+import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm.js'
+import { monitorConfigColumn } from '../../config/tables.js'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
-import messageGenerator from '../../helper/messageGenerator'
+import messageGenerator from '../../helper/messageGenerator.js'
 const SelectTable = selecTableHOC(ReactTable)
-import { PrimaryButton } from '../BOTComponent/styleComponent'
-import AccessControl from '../authentication/AccessControl'
-import apiHelper from '../../helper/apiHelper'
-import { JSONClone } from '../../helper/utilities'
+import { PrimaryButton } from '../BOTComponent/styleComponent.js'
+import AccessControl from '../authentication/AccessControl.js'
+import apiHelper from '../../helper/apiHelper.js'
+import { JSONClone } from '../../helper/utilities.js'
 
 class MonitorSettingBlock extends React.Component {
     static contextType = AppContext
@@ -70,11 +70,11 @@ class MonitorSettingBlock extends React.Component {
     }
 
     getMonitorConfig = (callback) => {
-        let { auth, locale } = this.context
+        const { auth, locale } = this.context
         apiHelper.monitor
             .getMonitorConfig(this.props.type, auth.user.areas_id)
             .then((res) => {
-                let columns = JSONClone(monitorConfigColumn)
+                const columns = JSONClone(monitorConfigColumn)
 
                 columns.map((field) => {
                     field.Header =
@@ -111,18 +111,18 @@ class MonitorSettingBlock extends React.Component {
     }
 
     handleSubmit = (pack) => {
-        let configPackage = pack ? pack : {}
-        let { path, selectedData } = this.state
-        configPackage['type'] = config.monitorSettingUrlMap[this.props.type]
+        const configPackage = pack || {}
+        const { path, selectedData } = this.state
+        configPackage.type = config.monitorSettingUrlMap[this.props.type]
         // configPackage["id"] = selectedData ? selectedData.id : null;
-        configPackage['id'] = this.state.selection
-        if (configPackage['id'] == '' && this.state.selectedData != null) {
-            configPackage['id'] = this.state.selectedData.id
+        configPackage.id = this.state.selection
+        if (configPackage.id === '' && this.state.selectedData !== null) {
+            configPackage.id = this.state.selectedData.id
         }
 
         apiHelper.monitor[path](configPackage)
             .then((res) => {
-                let callback = () =>
+                const callback = () =>
                     messageGenerator.setSuccessMessage('save success')
                 this.getMonitorConfig(callback)
             })
@@ -140,7 +140,7 @@ class MonitorSettingBlock extends React.Component {
     }
 
     handleClickButton = (e, value) => {
-        let { name } = e.target
+        const { name } = e.target
         switch (name) {
             case 'add rule':
                 this.setState({
@@ -184,7 +184,7 @@ class MonitorSettingBlock extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
 
@@ -217,7 +217,7 @@ class MonitorSettingBlock extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.exIndex != this.props.nowIndex) {
+        if (this.state.exIndex !== this.props.nowIndex) {
             this.setState({
                 selectAll: false,
                 selection: '',
@@ -245,13 +245,13 @@ class MonitorSettingBlock extends React.Component {
             selectType,
         }
 
-        let { locale } = this.context
+        const { locale } = this.context
 
-        let { type } = this.props
+        const { type } = this.props
 
-        let { isEdited } = this.state
+        const { isEdited } = this.state
 
-        let areaOptions = Object.values(config.mapConfig.AREA_MODULES).map(
+        const areaOptions = Object.values(config.mapConfig.AREA_MODULES).map(
             (area, index) => {
                 return {
                     value: area.name,
@@ -261,7 +261,7 @@ class MonitorSettingBlock extends React.Component {
             }
         )
 
-        let title = `edit ${type}`.toUpperCase().replace(/ /g, '_')
+        const title = `edit ${type}`.toUpperCase().replace(/ /g, '_')
         return (
             <div>
                 <div className="d-flex justify-content-start">

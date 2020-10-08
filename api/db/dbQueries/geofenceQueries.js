@@ -38,19 +38,19 @@ const getGeofenceConfig = (areaId) => {
 			*
 		FROM geo_fence_config
 		ORDER BY id
-	;`
-}
+	;`;
+};
 
 const deleteMonitorConfig = (monitorConfigPackage) => {
-    let { type, id } = monitorConfigPackage
+    const { type, id } = monitorConfigPackage;
     return `
 		DELETE FROM geo_fence_config
 		WHERE id IN (${id.map((id) => `'${id}'`)})
-	`
-}
+	`;
+};
 
 const addGeofenceConfig = (monitorConfigPackage) => {
-    let {
+    const {
         type,
         id,
         name,
@@ -61,9 +61,9 @@ const addGeofenceConfig = (monitorConfigPackage) => {
         fences,
         area_id,
         is_global_fence,
-    } = monitorConfigPackage
+    } = monitorConfigPackage;
 
-    let text = `
+    const text = `
 		INSERT INTO ${type}
 			(
 				name,
@@ -86,9 +86,9 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 				$7,
 				$8
 			)
-	`
+	`;
 
-    let values = [
+    const values = [
         name,
         start_time,
         end_time,
@@ -97,16 +97,16 @@ const addGeofenceConfig = (monitorConfigPackage) => {
         fences,
         area_id,
         is_global_fence,
-    ]
+    ];
 
     return {
         text,
         values,
-    }
-}
+    };
+};
 
 const setGeofenceConfig = (monitorConfigPackage) => {
-    let {
+    const {
         type,
         id,
         name,
@@ -117,9 +117,9 @@ const setGeofenceConfig = (monitorConfigPackage) => {
         fences,
         area_id,
         is_global_fence,
-    } = monitorConfigPackage
+    } = monitorConfigPackage;
 
-    let text = `
+    const text = `
 		UPDATE geo_fence_config
 		SET
 			name = $2,
@@ -131,8 +131,8 @@ const setGeofenceConfig = (monitorConfigPackage) => {
 			fences = $8,
 			is_global_fence = $9
 		WHERE id = $1;
-	`
-    let values = [
+	`;
+    const values = [
         id,
         name,
         area_id,
@@ -142,19 +142,19 @@ const setGeofenceConfig = (monitorConfigPackage) => {
         perimeters,
         fences,
         is_global_fence,
-    ]
+    ];
 
-    let query = {
+    const query = {
         text,
         values,
-    }
+    };
 
-    return query
-}
+    return query;
+};
 
-module.exports = {
+export default {
     getGeofenceConfig,
     deleteMonitorConfig,
     addGeofenceConfig,
     setGeofenceConfig,
-}
+};

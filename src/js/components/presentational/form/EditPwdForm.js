@@ -35,11 +35,11 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { object, string } from 'yup'
 import LocaleContext from '../../../context/LocaleContext'
 
 const EditPwdForm = ({ show, handleClose, handleSubmit }) => {
-    let locale = React.useContext(LocaleContext)
+    const locale = React.useContext(LocaleContext)
 
     let new_password_store = ''
 
@@ -54,8 +54,8 @@ const EditPwdForm = ({ show, handleClose, handleSubmit }) => {
                         new_password: '',
                         check_password: '',
                     }}
-                    validationSchema={Yup.object().shape({
-                        new_password: Yup.string()
+                    validationSchema={object().shape({
+                        new_password: string()
                             .required(locale.texts.ENTER_THE_PASSWORD)
                             .test('new_password', '', (value) => {
                                 new_password_store = value
@@ -63,17 +63,16 @@ const EditPwdForm = ({ show, handleClose, handleSubmit }) => {
                             })
                             .max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
 
-                        check_password: Yup.string()
+                        check_password: string()
                             .required(locale.texts.ENTER_THE_PASSWORD)
                             .test(
                                 'check_password',
                                 locale.texts.PASSWORD_NOT_FIT,
                                 (value) => {
-                                    if (value == new_password_store) {
+                                    if (value === new_password_store) {
                                         return true
-                                    } else {
-                                        return false
                                     }
+                                    return false
                                 }
                             ),
                     })}

@@ -80,12 +80,12 @@ class ShiftChangeRecord extends React.Component {
     }
 
     getData(callback) {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.record
             .getRecord(config.RECORD_TYPE.SHIFT_CHANGE, locale.abbr)
             .then((res) => {
-                let columns = JSONClone(shiftChangeRecordTableColumn)
+                const columns = JSONClone(shiftChangeRecordTableColumn)
 
                 columns.map((field) => {
                     field.Header =
@@ -118,7 +118,7 @@ class ShiftChangeRecord extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         const selection = []
         if (selectAll) {
             const wrappedInstance = this.selectTable.getWrappedInstance()
@@ -134,10 +134,10 @@ class ShiftChangeRecord extends React.Component {
     }
 
     toggleSelection = (key, shift, row) => {
-        if (key != 999) {
+        if (key !== 999) {
             //多的
             let selection = [...this.state.selection]
-            const selectThis = this.state.selectThis ? false : true
+            const selectThis = !this.state.selectThis
 
             key = typeof key === 'number' ? key : parseInt(key.split('-')[1])
             const keyIndex = selection.indexOf(key.toString())
@@ -159,9 +159,9 @@ class ShiftChangeRecord extends React.Component {
     }
 
     deleteRecord = () => {
-        let idPackage = []
-        var deleteArray = []
-        var deleteCount = 0
+        const idPackage = []
+        const deleteArray = []
+        let deleteCount = 0
 
         this.state.data.map((item) => {
             this.state.selection.map((itemSelect) => {
@@ -183,7 +183,7 @@ class ShiftChangeRecord extends React.Component {
                 idPackage,
             })
             .then((res) => {
-                let callback = () => {
+                const callback = () => {
                     messageGenerator.setSuccessMessage(SAVE_SUCCESS)
                 }
                 this.getData(callback)
@@ -206,7 +206,7 @@ class ShiftChangeRecord extends React.Component {
     }
 
     handleClick = (e) => {
-        let name = e.target.getAttribute('name')
+        const name = e.target.getAttribute('name')
 
         switch (name) {
             case SHIFT_CHANGE:
@@ -222,7 +222,7 @@ class ShiftChangeRecord extends React.Component {
         apiHelper.deviceGroupListApis
             .getDeviceGroupList()
             .then((res) => {
-                let listId =
+                const listId =
                     Cookies.get('user') &&
                     JSON.parse(Cookies.get('user')).list_id
                         ? JSON.parse(Cookies.get('user')).list_id
@@ -230,12 +230,12 @@ class ShiftChangeRecord extends React.Component {
 
                 let devicelist = null
 
-                let deviceGroupListOptions = res.data.map((item) => {
-                    let option = {
+                const deviceGroupListOptions = res.data.map((item) => {
+                    const option = {
                         label: item.name,
                         value: item,
                     }
-                    if (item.id == listId) {
+                    if (item.id === listId) {
                         devicelist = option
                     }
                     return option
@@ -252,9 +252,9 @@ class ShiftChangeRecord extends React.Component {
     }
 
     selectDeviceGroup = (devicelist) => {
-        let { auth } = this.context
-        let callback = async () => {
-            let user = {
+        const { auth } = this.context
+        const callback = async () => {
+            const user = {
                 ...JSON.parse(Cookies.get('user')),
                 list_id: devicelist.value.id,
             }
@@ -323,7 +323,7 @@ class ShiftChangeRecord extends React.Component {
                             {locale.texts.VIEW_REPORT}
                         </div>
                         <PrimaryButton
-                            disabled={this.state.selection.length == 0}
+                            disabled={this.state.selection.length === 0}
                             onClick={() => {
                                 this.setState({
                                     showDeleteConfirmation: true,
@@ -352,7 +352,7 @@ class ShiftChangeRecord extends React.Component {
                         getTrProps={(state, rowInfo, column, instance) => {
                             return {
                                 onClick: (e, handleOriginal) => {
-                                    let id = rowInfo.index + 1
+                                    const id = rowInfo.index + 1
                                     this.toggleSelection(id)
                                     if (handleOriginal) {
                                         handleOriginal()

@@ -40,9 +40,9 @@ import AuthContext from '../../context/AuthenticationContext'
 import routes from '../../config/routes/routes'
 
 const PrivateRoutes = () => {
-    let auth = React.useContext(AuthContext)
+    const auth = React.useContext(AuthContext)
 
-    let { pathname } = window.location
+    const { pathname } = window.location
 
     if (auth.authenticated && auth.user) {
         return (
@@ -59,7 +59,7 @@ const PrivateRoutes = () => {
                 })}
             </Fragment>
         )
-    } else if (pathname != routes.HOME && pathname.split('/')[1] != 'page') {
+    } else if (pathname !== routes.HOME && pathname.split('/')[1] !== 'page') {
         return (
             <Redirect to={{ pathname: window.location.pathname, state: {} }} />
         )

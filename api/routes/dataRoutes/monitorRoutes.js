@@ -32,16 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let monitorController = require('../../controllers/monitorController')
-let cors = require('cors')
+import monitorController from '../../controllers/monitorController.js';
+import cors from 'cors';
 
-module.exports = (app) => {
+export default (app) => {
     // enable pre-flight request for DELETE request
-    app.options('/data/monitor', cors())
+    app.options('/data/monitor', cors());
 
     app.route('/data/monitor')
         .post(monitorController.getMonitorConfig)
         .delete(monitorController.deleteMonitorConfig)
         .patch(monitorController.addMonitorConfig)
-        .put(monitorController.setMonitorConfig)
-}
+        .put(monitorController.setMonitorConfig);
+};

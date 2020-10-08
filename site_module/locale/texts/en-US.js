@@ -4,7 +4,7 @@
  * The key must be as same as the field name in area_table in database
  */
 
-const en = {
+export default {
     /**
      * example:
      * AREA_NAME_IN_AREA_TABLE_OF_DATABASE: YOUR_CUSTOMIZED_LOCALE_NAME
@@ -18,7 +18,5 @@ const en = {
     YUANLIN_CHRISTIAN_HOSPITAL: 'Yuanlin Christian Hospital',
     NURSING_HOME: 'nursing home',
     EMERGENCY_ROOM: 'emergency room',
-    WHOLE_SITE: 'public space',
-}
-
-module.exports = en
+    WHOLE_SITE: 'public space;',
+};

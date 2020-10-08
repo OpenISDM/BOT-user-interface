@@ -70,7 +70,7 @@ class GatewayTable extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        let { locale } = this.context
+        const { locale } = this.context
         if (locale.abbr !== prevState.locale) {
             this.getData()
         }
@@ -89,7 +89,7 @@ class GatewayTable extends React.Component {
     }
 
     getData = (callback) => {
-        let { locale } = this.context
+        const { locale } = this.context
 
         apiHelper.gatewayApiAgent
             .getGatewayTable({
@@ -97,7 +97,7 @@ class GatewayTable extends React.Component {
             })
             .then((res) => {
                 this.props.setMessage('clear')
-                let column = JSONClone(gatewayTableColumn)
+                const column = JSONClone(gatewayTableColumn)
                 column.map((field) => {
                     field.Header =
                         locale.texts[
@@ -139,7 +139,8 @@ class GatewayTable extends React.Component {
     }
 
     handleSubmitForm = (formOption) => {
-        let callback = () => messageGenerator.setSuccessMessage('save success')
+        const callback = () =>
+            messageGenerator.setSuccessMessage('save success')
         axios
             .put(dataSrc.gateway, {
                 formOption,
@@ -154,7 +155,7 @@ class GatewayTable extends React.Component {
 
     toggleSelection = (key, shift, row) => {
         let selection = [...this.state.selection]
-        selection != ''
+        selection !== ''
             ? this.setState({ disable: true })
             : this.setState({ disable: false })
         key = key.split('-')[1] ? key.split('-')[1] : key
@@ -173,7 +174,7 @@ class GatewayTable extends React.Component {
     }
 
     toggleAll = () => {
-        const selectAll = this.state.selectAll ? false : true
+        const selectAll = !this.state.selectAll
         let selection = []
         let rowsCount = 0
         if (selectAll) {
@@ -199,7 +200,7 @@ class GatewayTable extends React.Component {
         } else {
             selection = []
         }
-        selection == ''
+        selection === ''
             ? this.setState({ disable: true })
             : this.setState({ disable: false })
         this.setState({ selectAll, selection })
@@ -210,9 +211,9 @@ class GatewayTable extends React.Component {
     }
 
     deleteRecordGateway = () => {
-        let idPackage = []
-        var deleteArray = []
-        var deleteCount = 0
+        const idPackage = []
+        const deleteArray = []
+        let deleteCount = 0
         this.state.data.map((item) => {
             this.state.selection.map((itemSelect) => {
                 itemSelect === item.id
@@ -234,7 +235,7 @@ class GatewayTable extends React.Component {
                 },
             })
             .then((res) => {
-                let callback = () =>
+                const callback = () =>
                     messageGenerator.setSuccessMessage('save success')
                 this.getData(callback)
             })
@@ -275,7 +276,7 @@ class GatewayTable extends React.Component {
                                         showDeleteConfirmation: true,
                                     })
                                 }}
-                                disabled={this.state.selection.length == 0}
+                                disabled={this.state.selection.length === 0}
                             >
                                 {locale.texts.DELETE}
                             </PrimaryButton>

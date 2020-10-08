@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-let areaController = require('../../controllers/areaController')
+import areaController from '../../controllers/areaController.js';
 
-module.exports = (app) => {
-    app.route('/data/area').post(areaController.getAreaTable)
-}
+export default (app) => {
+    app.route('/data/area').post(areaController.getAreaTable);
+};

@@ -46,15 +46,15 @@ const getAllGateway = `
 	FROM
 		gateway_table
 	ORDER BY ip_address DESC
-`
+`;
 
 const deleteGateway = (idPackage) => {
     const query = `
 		DELETE FROM gateway_table
 		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
-	`
-    return query
-}
+	`;
+    return query;
+};
 
 const editGateway = (formOption) => {
     const text = `
@@ -63,20 +63,20 @@ const editGateway = (formOption) => {
             comment = $2
 
 		WHERE id = $1
-	`
+	`;
 
-    const values = [formOption.id, formOption.comment]
+    const values = [formOption.id, formOption.comment];
 
     const query = {
         text,
         values,
-    }
+    };
 
-    return query
-}
+    return query;
+};
 
-module.exports = {
+export default {
     getAllGateway,
     deleteGateway,
     editGateway,
-}
+};

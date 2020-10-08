@@ -33,7 +33,7 @@
 */
 
 const addObjectType = (name) => {
-    let text = `
+    const text = `
         INSERT INTO object_type (
             type_id,
             name
@@ -47,7 +47,7 @@ const addObjectType = (name) => {
         )
 
 
-    `
-}
+    `;
+};
 
-module.exports = {}
+export default {};

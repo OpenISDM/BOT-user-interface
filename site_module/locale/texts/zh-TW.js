@@ -4,7 +4,7 @@
  * The key must be as same as the field name in area_table in database
  */
 
-const tw = {
+export default {
     /**
      * example:
      * AREA_NAME_IN_AREA_TABLE_OF_DATABASE: YOUR_CUSTOMIZED_LOCALE_NAME
@@ -18,7 +18,5 @@ const tw = {
     NURSING_HOME: '護理之家',
     EMERGENCY_ROOM: '急診室',
     NTUH_EMERGENCY_ROOM: 'emergency room',
-    WHOLE_SITE: '公共區域',
-}
-
-module.exports = tw
+    WHOLE_SITE: '公共區域;',
+};

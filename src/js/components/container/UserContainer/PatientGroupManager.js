@@ -85,7 +85,7 @@ class PatientGroupManager extends React.Component {
             .modifyPatientGroupList({
                 groupId: this.state.selectedPatientGroup.id,
                 mode: 2,
-                newName: newName,
+                newName,
             })
             .then((res) => {
                 this.setState({
@@ -111,7 +111,7 @@ class PatientGroupManager extends React.Component {
             .catch((err) => console.log(err))
     }
     getObjectData = () => {
-        let { locale, auth } = this.context
+        const { locale, auth } = this.context
         apiHelper.objectApiAgent
             .getObjectTable({
                 locale: locale.abbr,
@@ -149,14 +149,12 @@ class PatientGroupManager extends React.Component {
                 })
                 const updatedSelectedPatientGroup = data.filter((group) => {
                     if (this.state.selectedPatientGroup) {
-                        if (group.id == this.state.selectedPatientGroup.id) {
+                        if (group.id === this.state.selectedPatientGroup.id) {
                             return true
-                        } else {
-                            return false
                         }
-                    } else {
                         return false
                     }
+                    return false
                 })[0]
 
                 this.setState({
@@ -165,7 +163,7 @@ class PatientGroupManager extends React.Component {
                         data
                     ),
                     selectedPatientGroup:
-                        isMount == 'Mount'
+                        isMount === 'Mount'
                             ? data[0]
                             : updatedSelectedPatientGroup,
                 })

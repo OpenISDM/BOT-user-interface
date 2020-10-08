@@ -75,10 +75,10 @@ const config = {
      *  Default locale for can be tw or en
      */
     DEFAULT_LOCALE: Object.values(supportedLocale).reduce((abbr, locale) => {
-        let navigatorLang = navigator.language.toLocaleUpperCase()
+        const navigatorLang = navigator.language.toLocaleUpperCase()
         if (
-            navigatorLang == locale.code.toLocaleUpperCase() ||
-            navigatorLang == locale.abbr.toUpperCase()
+            navigatorLang === locale.code.toLocaleUpperCase() ||
+            navigatorLang === locale.abbr.toUpperCase()
         ) {
             return locale.abbr
         }
@@ -137,7 +137,7 @@ const config = {
         process.env.GET_GATEWAY_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
 
     FOLDER_PATH: {
-        trackingRecord: `tracking_record`,
+        trackingRecord: 'tracking_record',
     },
 
     AJAX_STATUS_MAP: {
@@ -229,9 +229,8 @@ const config = {
             return config.SHIFT_OPTIONS[0]
         } else if (hour < 24 && hour > 17) {
             return config.SHIFT_OPTIONS[1]
-        } else {
-            return config.SHIFT_OPTIONS[2]
         }
+        return config.SHIFT_OPTIONS[2]
     },
 
     ...viewConfig,
