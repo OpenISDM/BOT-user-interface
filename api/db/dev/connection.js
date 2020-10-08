@@ -35,8 +35,7 @@
 import pg from 'pg';
 import { decrypt } from '../../service/encrypt.js';
 
-// const password = decrypt(process.env.DB_PASS);
-const password = process.env.DB_PASS;
+const password = decrypt(process.env.DB_PASS);
 
 const config = {
     user: process.env.DB_USER,
