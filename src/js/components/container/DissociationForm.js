@@ -106,7 +106,7 @@ class DissociationForm extends React.Component {
             showDetail: false,
         })
         this.props.data.map((item) => {
-            if (item.asset_control_number === this.state.inputValue)
+            if (item.asset_control_number == this.state.inputValue)
                 this.setState({ showDetail: true })
         })
 
@@ -157,8 +157,8 @@ class DissociationForm extends React.Component {
                                     locale.texts.MAC_DO_NOT_MATCH,
 
                                     (value) => {
-                                        if (value === undefined) return false
-                                        value !== undefined
+                                        if (value == undefined) return false
+                                        value != undefined
                                             ? (value = value
                                                   .toString()
                                                   .toLowerCase())
@@ -168,10 +168,10 @@ class DissociationForm extends React.Component {
                                                 this.props.selectedObjectData ==
                                                 'handleAllDelete'
                                             ) {
-                                                if (value !== undefined) {
+                                                if (value != undefined) {
                                                     if (
-                                                        value.length === 17 ||
-                                                        value.length === 12
+                                                        value.length == 17 ||
+                                                        value.length == 12
                                                     ) {
                                                         this.setState({
                                                             returnFlag: false,
@@ -216,12 +216,12 @@ class DissociationForm extends React.Component {
                                                     }
                                                 }
                                             } else {
-                                                if (value === undefined)
+                                                if (value == undefined)
                                                     return false
                                                 if (
                                                     this.props
                                                         .selectedObjectData
-                                                        .mac_address === value
+                                                        .mac_address == value
                                                 ) {
                                                     this.setState({
                                                         returnFlag: true,
@@ -277,7 +277,7 @@ class DissociationForm extends React.Component {
                                             )
                                         }
 
-                                        if (this.state.returnFlag === true) {
+                                        if (this.state.returnFlag == true) {
                                             this.setState({
                                                 objectName:
                                                     data[

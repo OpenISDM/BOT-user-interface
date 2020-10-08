@@ -39,8 +39,8 @@ class DualListBox extends React.Component {
         const unselectedItem = allItems.filter((item) => {
             return (
                 !selectedItemList.items.includes(item.asset_control_number) &&
-                item.list_id === null &&
-                item.area_id === selectedItemList.area_id
+                item.list_id == null &&
+                item.area_id == selectedItemList.area_id
             )
         })
 

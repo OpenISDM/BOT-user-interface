@@ -247,7 +247,7 @@ export default class TabletMapContainer extends React.Component {
                                     </Button>
                                 </Nav.Item>
                             </AccessControl>
-                            {process.env.IS_TRACKING_PATH_ON === 1 && (
+                            {process.env.IS_TRACKING_PATH_ON == 1 && (
                                 <AccessControl
                                     permission={'user:cleanPath'}
                                     renderNoAccess={() => null}
@@ -259,7 +259,7 @@ export default class TabletMapContainer extends React.Component {
                                             onClick={handleClickButton}
                                             name="cleanPath"
                                             disabled={
-                                                this.props.pathMacAddress === ''
+                                                this.props.pathMacAddress == ''
                                             }
                                         >
                                             {locale.texts.CLEAN_PATH}

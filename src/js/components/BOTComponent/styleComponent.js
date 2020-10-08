@@ -275,7 +275,7 @@ export const ToggleDisplayDiv = styled.div`
 
 export const ReactBootstrapAlert = styled(Alert)`
     ${(props) =>
-        props.variant === 'secondary' &&
+        props.variant == 'secondary' &&
         css`
             border: 0;
             background: ${styleSheet.lightGrey};

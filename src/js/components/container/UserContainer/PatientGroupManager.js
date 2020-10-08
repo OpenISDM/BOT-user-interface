@@ -149,7 +149,7 @@ class PatientGroupManager extends React.Component {
                 })
                 const updatedSelectedPatientGroup = data.filter((group) => {
                     if (this.state.selectedPatientGroup) {
-                        if (group.id === this.state.selectedPatientGroup.id) {
+                        if (group.id == this.state.selectedPatientGroup.id) {
                             return true
                         }
                         return false
@@ -163,7 +163,7 @@ class PatientGroupManager extends React.Component {
                         data
                     ),
                     selectedPatientGroup:
-                        isMount === 'Mount'
+                        isMount == 'Mount'
                             ? data[0]
                             : updatedSelectedPatientGroup,
                 })

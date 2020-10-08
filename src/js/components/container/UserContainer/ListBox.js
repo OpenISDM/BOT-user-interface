@@ -14,7 +14,7 @@ class ListBox extends React.Component {
     render() {
         return (
             <ListGroup variant="flush" className="w-100">
-                {this.props.rows.length !== null
+                {this.props.rows.length != null
                     ? this.props.rows.map((row) => {
                           return (
                               <ListGroup.Item

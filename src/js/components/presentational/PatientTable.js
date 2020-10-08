@@ -104,7 +104,7 @@ class PatientTable extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getRefresh()
             this.setState({
                 locale: this.context.locale.abbr,
@@ -431,7 +431,7 @@ class PatientTable extends React.Component {
 
                 this.state.data.map((item) => {
                     this.state.selection.map((itemSelect) => {
-                        itemSelect === item.id
+                        itemSelect == item.id
                             ? deleteArray.push(deleteCount.toString())
                             : null
                     })
@@ -441,7 +441,7 @@ class PatientTable extends React.Component {
                 this.setState({ selectAll: false })
 
                 deleteArray.map((item) => {
-                    this.state.data[item] === undefined
+                    this.state.data[item] == undefined
                         ? null
                         : formOption.push({
                               id: this.state.data[item].id,

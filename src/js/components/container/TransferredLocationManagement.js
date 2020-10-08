@@ -215,7 +215,7 @@ class TranferredLocationManagement extends React.Component {
     fold = (id) => {
         this.setState({
             unFoldBranches: this.state.unFoldBranches.filter(
-                (branch_id) => branch_id !== id
+                (branch_id) => branch_id != id
             ),
         })
     }

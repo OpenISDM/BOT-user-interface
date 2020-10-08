@@ -68,7 +68,7 @@ const SearchResult = ({
                 <Title>{title}</Title>
             </Row>
             <Row>
-                {searchResult.length === 0 ? (
+                {searchResult.length == 0 ? (
                     <Col
                         className="d-flex justify-content-center font-weight-lighter"
                         style={style.noResultDiv}

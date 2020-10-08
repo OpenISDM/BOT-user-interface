@@ -88,7 +88,7 @@ const MobileTraceContainerView = React.forwardRef(
                     <PageTitle>
                         {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
                     </PageTitle>
-                    {data.length !== 0 && (
+                    {data.length != 0 && (
                         <div>
                             <IconButton
                                 iconName="fas fa-download"

@@ -33,12 +33,12 @@
 */
 
 const getDeviceGroup = (pack) => {
-    const groupIdSelector = pack.groupId ? `WHERE id = ${pack.groupId}` : '';
+    const groupIdSelector = pack.groupId ? `WHERE id = ${pack.groupId}` : ''
     const query = `
         SELECT  * FROM device_group_list ${groupIdSelector} ORDER BY id
-    `;
-    return query;
-};
+    `
+    return query
+}
 
 const addDeviceGroup = (name, area_id) => {
     const text = `
@@ -51,23 +51,23 @@ const addDeviceGroup = (name, area_id) => {
         )
 
         RETURNING id
-    `;
+    `
 
-    const values = [name, area_id];
+    const values = [name, area_id]
 
     const query = {
         text,
         values,
-    };
+    }
 
-    return query;
-};
+    return query
+}
 
 const modifyDeviceGroup = (groupId, mode, option, item_id) => {
-    let query = null;
+    let query = null
 
-    if (mode === 0) {
-        var itemACN = option;
+    if (mode == 0) {
+        var itemACN = option
         query = `
             UPDATE device_group_list
             SET items = array_append(items, '${itemACN}')
@@ -76,9 +76,9 @@ const modifyDeviceGroup = (groupId, mode, option, item_id) => {
             UPDATE object_table
             SET list_id = ${groupId}
             WHERE id = ${item_id}
-        `;
-    } else if (mode === 1) {
-        var itemACN = option;
+        `
+    } else if (mode == 1) {
+        var itemACN = option
         query = `
             UPDATE device_group_list
             SET items = array_remove(items, '${itemACN}')
@@ -88,27 +88,27 @@ const modifyDeviceGroup = (groupId, mode, option, item_id) => {
             SET list_id = null
             WHERE id = ${item_id}
 
-        `;
-    } else if (mode === 2) {
-        const newName = option;
-        query = `UPDATE device_group_list SET name = ${newName} WHERE id=${groupId}`;
+        `
+    } else if (mode == 2) {
+        const newName = option
+        query = `UPDATE device_group_list SET name = ${newName} WHERE id=${groupId}`
     }
 
-    return query;
-};
-const renameDeviceGroup = (groupId) => {};
+    return query
+}
+const renameDeviceGroup = (groupId) => {}
 const removeDeviceGroup = (groupId) => {
     const query = `
         DELETE FROM device_group_list
         WHERE id = ${groupId}
 
-        `;
-    return query;
-};
+        `
+    return query
+}
 
 export default {
     addDeviceGroup,
     removeDeviceGroup,
     modifyDeviceGroup,
     getDeviceGroup,
-};
+}

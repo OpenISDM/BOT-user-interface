@@ -60,7 +60,7 @@ export default class Pagination extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (prevProps.pages !== this.props.pages) {
+        if (prevProps.pages != this.props.pages) {
             this.setState({
                 visiblePages: this.getVisiblePages(null, this.props.pages),
             })
@@ -87,7 +87,7 @@ export default class Pagination extends React.Component {
     changePage = (page) => {
         const activePage = this.props.page + 1
 
-        if (page === activePage) {
+        if (page == activePage) {
             return
         }
 
@@ -117,21 +117,21 @@ export default class Pagination extends React.Component {
                     &nbsp;
                     {locale.texts.RESULTS}
                 </div>
-                {this.props.data.length !== 0 && (
+                {this.props.data.length != 0 && (
                     <div className="d-flex">
                         <div className="Table__prevPageWrapper">
                             <PageButtonComponent
                                 className={
                                     'cursor-pointer outline-none border-none bg-transparent ' +
-                                    (activePage === 1
+                                    (activePage == 1
                                         ? 'cursor-not-allowed'
                                         : '')
                                 }
                                 onClick={() => {
-                                    if (activePage === 1) return
+                                    if (activePage == 1) return
                                     this.changePage(activePage - 1)
                                 }}
-                                disabled={activePage === 1}
+                                disabled={activePage == 1}
                             >
                                 {this.props.previousText}
                             </PageButtonComponent>
@@ -144,7 +144,7 @@ export default class Pagination extends React.Component {
                                         key={page}
                                         className={
                                             'cursor-pointer outline-none border-none bg-transparent ' +
-                                            (activePage === page
+                                            (activePage == page
                                                 ? 'color-blue font-weight-bold'
                                                 : '')
                                         }
@@ -165,15 +165,15 @@ export default class Pagination extends React.Component {
                             <PageButtonComponent
                                 className={
                                     'cursor-pointer outline-none border-none bg-transparent ' +
-                                    (activePage === this.props.pages
+                                    (activePage == this.props.pages
                                         ? 'cursor-not-allowed'
                                         : '')
                                 }
                                 onClick={() => {
-                                    if (activePage === this.props.pages) return
+                                    if (activePage == this.props.pages) return
                                     this.changePage(activePage + 1)
                                 }}
-                                disabled={activePage === this.props.pages}
+                                disabled={activePage == this.props.pages}
                             >
                                 {this.props.nextText}
                             </PageButtonComponent>

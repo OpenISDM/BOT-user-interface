@@ -48,7 +48,7 @@ class ObjectTypeList extends React.Component {
 
     componentDidUpdate = (prepProps) => {
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             !prepProps.clearSearchResult
         ) {
             this.setState({
@@ -56,7 +56,7 @@ class ObjectTypeList extends React.Component {
             })
         }
         if (
-            prepProps.hasGridButton !== this.props.hasGridButton &&
+            prepProps.hasGridButton != this.props.hasGridButton &&
             this.props.hasGridButton
         ) {
             this.setState({
@@ -152,7 +152,7 @@ class ObjectTypeList extends React.Component {
                                     variant="outline-custom"
                                     className="text-none"
                                     onClick={this.handleClick}
-                                    // active={this.state.searchKey === item.toLowerCase()}
+                                    // active={this.state.searchKey == item.toLowerCase()}
                                     style={{
                                         color:
                                             pinColorIndex > -1

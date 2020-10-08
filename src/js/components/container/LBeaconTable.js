@@ -71,7 +71,7 @@ class LbeaconTable extends React.Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         const { locale } = this.context
-        if (locale.abbr !== prevState.locale) {
+        if (locale.abbr != prevState.locale) {
             this.getData()
         }
     }
@@ -216,7 +216,7 @@ class LbeaconTable extends React.Component {
         this.setState({ selectAll: false })
         this.state.data.map((item) => {
             this.state.selection.map((itemSelect) => {
-                itemSelect === item.id
+                itemSelect == item.id
                     ? deleteArray.push(deleteCount.toString())
                     : null
             })
@@ -224,7 +224,7 @@ class LbeaconTable extends React.Component {
         })
 
         deleteArray.map((item) => {
-            this.state.data[item] === undefined
+            this.state.data[item] == undefined
                 ? null
                 : idPackage.push(parseInt(this.state.data[item].id))
         })

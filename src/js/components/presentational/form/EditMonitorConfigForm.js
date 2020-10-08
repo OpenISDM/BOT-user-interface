@@ -75,7 +75,7 @@ const EditMonitorConfigForm = ({
                     onSubmit={(values, { setStatus, setSubmitting }) => {
                         const monitorConfigPackage = {
                             ...values,
-                            id: isEdited === true ? selectedData.id : '',
+                            id: isEdited == true ? selectedData.id : '',
                             type,
                             area_id: values.area.id,
                         }

@@ -57,7 +57,7 @@ class TrackingTable extends React.Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         const { locale } = this.context
-        if (locale.abbr !== prevState.locale) {
+        if (locale.abbr != prevState.locale) {
             this.getTrackingData()
         }
     }
@@ -89,7 +89,7 @@ class TrackingTable extends React.Component {
                         textAlign: 'left',
                         textTransform: 'capitalize',
                     }
-                    if (field.accessor === '_id') {
+                    if (field.accessor == '_id') {
                         field.headerStyle = {
                             textAlign: 'center',
                         }

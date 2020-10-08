@@ -52,7 +52,7 @@ class AddableList extends React.Component {
         }
 
         this.itemLayout = (item) => {
-            if (typeof item === 'string') {
+            if (typeof item == 'string') {
                 return <Fragment>{item}</Fragment>
             } else {
                 console.error(
@@ -75,7 +75,7 @@ class AddableList extends React.Component {
                 return this.state.itemList
             },
             setList: (list) => {
-                if (typeof list === 'object') {
+                if (typeof list == 'object') {
                     this.setState({
                         itemList: list,
                     })
@@ -94,14 +94,14 @@ class AddableList extends React.Component {
             },
             addItem: () => {
                 var { itemList } = this.state
-                if (itemList[itemList.length - 1] !== 'add') {
+                if (itemList[itemList.length - 1] != 'add') {
                     itemList.push('add')
                     this.setState({})
                 }
             },
             addItemCheck: (item) => {
                 var { itemList } = this.state
-                if (itemList[itemList.length - 1] === 'add') {
+                if (itemList[itemList.length - 1] == 'add') {
                     var validationValue = this.validation(item)
                     if (validationValue) {
                         itemList.pop()
@@ -140,7 +140,7 @@ class AddableList extends React.Component {
         this.API.addItem()
     }
     addListByEnter(e) {
-        if (event.key === 'Enter') {
+        if (event.key == 'Enter') {
             var newACN = e.target.value
             this.API.addItemCheck(newACN)
         }
@@ -161,7 +161,7 @@ class AddableList extends React.Component {
                     className="overflow-hidden-scroll custom-scrollbar"
                     variant="flush"
                 >
-                    {this.state.itemList !== null
+                    {this.state.itemList != null
                         ? (() => {
                               var { itemList } = this.state
                               var Html = []
@@ -172,7 +172,7 @@ class AddableList extends React.Component {
                                   var item = itemList[acn],
                                       index = item.asset_control_number
 
-                                  if (item === 'add') {
+                                  if (item == 'add') {
                                       html = (
                                           <div
                                               className="py-1 pr-2"

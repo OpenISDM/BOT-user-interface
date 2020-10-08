@@ -50,7 +50,7 @@ class BatteryLevelNotification extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getTrackingData()
         }
     }
@@ -73,7 +73,7 @@ class BatteryLevelNotification extends React.Component {
             .then((res) => {
                 this.setState({
                     data: res.data.filter(
-                        (item) => item.battery_indicator === 2
+                        (item) => item.battery_indicator == 2
                     ),
                     locale: this.context.locale.abbr,
                 })
@@ -138,7 +138,7 @@ class BatteryLevelNotification extends React.Component {
                         className="overflow-hidden-scroll custom-scrollbar"
                         style={style.dropdown}
                     >
-                        {data.length !== 0 ? (
+                        {data.length != 0 ? (
                             data.map((item) => {
                                 return (
                                     <Dropdown.Item

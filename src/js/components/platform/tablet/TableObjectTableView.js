@@ -112,7 +112,7 @@ const MobileObjectTableView = ({
                         className="text-capitalize mr-2 mb-1"
                         name="delete"
                         onClick={handleClickButton}
-                        disabled={selection.length === 0}
+                        disabled={selection.length == 0}
                     >
                         {locale.texts.DELETE}
                     </PrimaryButton>

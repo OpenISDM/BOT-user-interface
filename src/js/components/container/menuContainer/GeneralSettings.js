@@ -105,7 +105,7 @@ class GeneralSettings extends React.Component {
                                     }}
                                     onKeyPress={(e) => {
                                         if (
-                                            e.key === 'Enter' &&
+                                            e.key == 'Enter' &&
                                             e.target.value !==
                                                 props.original.type_alias
                                         ) {

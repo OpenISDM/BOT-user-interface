@@ -58,7 +58,7 @@ const renderInputComponent = (inputProps) => (
 const suggestionFilter = {
     autoComplete: (suggestData, inputValue, inputLength) => {
         return suggestData.filter((term) => {
-            return term.toLowerCase().slice(0, inputLength) === inputValue
+            return term.toLowerCase().slice(0, inputLength) == inputValue
         })
     },
 
@@ -79,7 +79,7 @@ class BOTSearchbar extends React.Component {
 
     componentDidUpdate = (prepProps) => {
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             !prepProps.clearSearchResult
         ) {
             this.setState({
@@ -212,7 +212,7 @@ class BOTSearchbar extends React.Component {
                 : null
         })
 
-        return inputLength === 0 ? [] : suggestLimit
+        return inputLength == 0 ? [] : suggestLimit
     }
 
     render() {

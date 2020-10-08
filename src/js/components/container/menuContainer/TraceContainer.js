@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import React, { Fragment } from 'react'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
     BrowserView,
     TabletView,
@@ -42,29 +42,29 @@ import {
     CustomView,
     isMobile,
     isTablet,
-} from 'react-device-detect';
-import BrowserTraceContainerView from '../../platform/browser/BrowserTraceContainerView';
-import MobileTraceContainerView from '../../platform/mobile/MobileTraceContainerView';
-import TabletTraceContainerView from '../../platform/tablet/TabletTraceContainerView';
-import { AppContext } from '../../../context/AppContext';
-import pdfPackageGenerator from '../../../helper/pdfPackageGenerator';
-import config from '../../../config';
-import moment from 'moment';
+} from 'react-device-detect'
+import BrowserTraceContainerView from '../../platform/browser/BrowserTraceContainerView'
+import MobileTraceContainerView from '../../platform/mobile/MobileTraceContainerView'
+import TabletTraceContainerView from '../../platform/tablet/TabletTraceContainerView'
+import { AppContext } from '../../../context/AppContext'
+import pdfPackageGenerator from '../../../helper/pdfPackageGenerator'
+import config from '../../../config'
+import moment from 'moment'
 import {
     locationHistoryByNameColumns,
     locationHistoryByUUIDColumns,
     locationHistoryByAreaColumns,
     locationHistoryByNameGroupBYUUIDColumns,
-} from '../../../config/tables';
-import axios from 'axios';
-import dataSrc from '../../../dataSrc';
-import apiHelper from '../../../helper/apiHelper';
-import { JSONClone } from '../../../helper/utilities';
+} from '../../../config/tables'
+import axios from 'axios'
+import dataSrc from '../../../dataSrc'
+import apiHelper from '../../../helper/apiHelper'
+import { JSONClone } from '../../../helper/utilities'
 
 class TraceContainer extends React.Component {
-    static contextType = AppContext;
+    static contextType = AppContext
 
-    formikRef = React.createRef();
+    formikRef = React.createRef()
 
     state = {
         columns: [],
@@ -76,12 +76,12 @@ class TraceContainer extends React.Component {
         locale: this.context.locale.abbr,
         histories: [],
         breadIndex: -1,
-    };
-    columns = [];
+    }
+    columns = []
 
-    defaultActiveKey = 'nameGroupByArea';
+    defaultActiveKey = 'nameGroupByArea'
 
-    title = 'trace';
+    title = 'trace'
 
     navList = {
         nameGroupByArea: {
@@ -99,18 +99,18 @@ class TraceContainer extends React.Component {
             name: 'area',
             columns: locationHistoryByAreaColumns,
         },
-    };
+    }
 
     componentDidMount = () => {
         /** disable the scrollability in body*/
         if (!isBrowser) {
-            const targetElement = document.querySelector('body');
-            enableBodyScroll(targetElement);
+            const targetElement = document.querySelector('body')
+            enableBodyScroll(targetElement)
         }
 
-        this.getObjectTable();
-        this.getLbeaconTable();
-        this.getAreaTable();
+        this.getObjectTable()
+        this.getLbeaconTable()
+        this.getAreaTable()
         // if (this.props.location.state) {
         //     let { state } = this.props.location
         //     let endTime = moment();
@@ -124,37 +124,37 @@ class TraceContainer extends React.Component {
         //     }
         //     this.getLocationHistory(field, 0)
         // }
-    };
+    }
 
     componentWillUnmount = () => {
-        const targetElement = document.querySelector('body');
-        disableBodyScroll(targetElement);
-    };
+        const targetElement = document.querySelector('body')
+        disableBodyScroll(targetElement)
+    }
 
     componentDidUpdate = (prevProps, prevState) => {
-        const { locale } = this.context;
-        if (this.context.locale.abbr !== prevState.locale) {
+        const { locale } = this.context
+        if (this.context.locale.abbr != prevState.locale) {
             const columns = JSONClone(this.columns).map((field) => {
-                field.name = field.Header;
+                field.name = field.Header
                 field.Header =
-                    locale.texts[field.Header.toUpperCase().replace(/ /g, '_')];
-                return field;
-            });
+                    locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+                return field
+            })
             this.state.data.map((item) => {
-                item.area = locale.texts[item.area_original];
+                item.area = locale.texts[item.area_original]
                 item.residenceTime = moment(item.startTime)
                     .locale(locale.abbr)
-                    .from(moment(item.endTime), true);
-            });
+                    .from(moment(item.endTime), true)
+            })
             this.setState({
                 locale: locale.abbr,
                 columns,
-            });
+            })
         }
-    };
+    }
 
     getObjectTable = () => {
-        const { locale, auth } = this.context;
+        const { locale, auth } = this.context
 
         apiHelper.objectApiAgent
             .getObjectTable({
@@ -168,20 +168,20 @@ class TraceContainer extends React.Component {
                         value: item.name,
                         label: item.name,
                         description: item.name,
-                    };
-                });
+                    }
+                })
                 this.setState({
                     options: {
                         ...this.state.options,
                         nameGroupByArea: name,
                         nameGroupByUUID: name,
                     },
-                });
-            });
-    };
+                })
+            })
+    }
 
     getLbeaconTable = () => {
-        const { locale } = this.context;
+        const { locale } = this.context
 
         apiHelper.lbeaconApiAgent
             .getLbeaconTable({
@@ -193,20 +193,20 @@ class TraceContainer extends React.Component {
                         value: lbeacon.uuid,
                         label: `${lbeacon.description}[${lbeacon.uuid}]`,
                         description: lbeacon.description,
-                    };
-                });
+                    }
+                })
 
                 this.setState({
                     options: {
                         ...this.state.options,
                         uuid,
                     },
-                });
-            });
-    };
+                })
+            })
+    }
 
     getAreaTable = () => {
-        const { locale } = this.context;
+        const { locale } = this.context
 
         apiHelper.areaApiAgent.getAreaTable().then((res) => {
             const area = res.data.rows.map((area) => {
@@ -214,35 +214,35 @@ class TraceContainer extends React.Component {
                     value: area.id,
                     label: locale.texts[area.name],
                     description: locale.texts[area.name],
-                };
-            });
+                }
+            })
             this.setState({
                 options: {
                     ...this.state.options,
                     area,
                 },
-            });
-        });
-    };
+            })
+        })
+    }
 
     getLocationHistory = (fields, breadIndex) => {
-        const { locale } = this.context;
+        const { locale } = this.context
 
-        const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss';
+        const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
 
         /** Set formik status as 0. Would render loading page */
-        this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.LOADING);
+        this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.LOADING)
 
-        const key = fields.key.value;
+        const key = fields.key.value
 
-        this.columns = this.navList[fields.mode].columns;
+        this.columns = this.navList[fields.mode].columns
 
         const columns = JSONClone(this.columns).map((field) => {
-            field.name = field.Header;
+            field.name = field.Header
             field.Header =
-                locale.texts[field.Header.toUpperCase().replace(/ /g, '_')];
-            return field;
-        });
+                locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+            return field
+        })
 
         axios
             .post(dataSrc.trace.locationHistory, {
@@ -252,14 +252,14 @@ class TraceContainer extends React.Component {
                 mode: fields.mode,
             })
             .then((res) => {
-                let data = [];
-                let ajaxStatus;
-                let histories = this.state.histories;
+                let data = []
+                let ajaxStatus
+                let histories = this.state.histories
 
                 /** Condition handler when no result */
-                if (res.data.rowCount === 0) {
-                    ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT;
-                    breadIndex--;
+                if (res.data.rowCount == 0) {
+                    ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
+                    breadIndex--
                 } else {
                     switch (fields.mode) {
                         case 'nameGroupByArea':
@@ -268,46 +268,46 @@ class TraceContainer extends React.Component {
                                 item.residenceTime = moment
                                     .duration(item.duration)
                                     .locale(locale.abbr)
-                                    .humanize();
+                                    .humanize()
                                 item.startTime = moment(item.start_time).format(
                                     timeValidatedFormat
-                                );
+                                )
                                 item.endTime = moment(item.end_time).format(
                                     timeValidatedFormat
-                                );
-                                item.description = locale.texts[item.area_name];
-                                item.mode = fields.mode;
-                                item.area_original = item.area_name;
-                                item.area = locale.texts[item.area_name];
-                                return item;
-                            });
-                            break;
+                                )
+                                item.description = locale.texts[item.area_name]
+                                item.mode = fields.mode
+                                item.area_original = item.area_name
+                                item.area = locale.texts[item.area_name]
+                                return item
+                            })
+                            break
                         case 'uuid':
                             data = res.data.rows.map((item, index) => {
-                                item.id = index + 1;
-                                item.mode = fields.mode;
-                                item.area_original = item.area;
-                                item.area = locale.texts[item.area];
-                                item.description = item.name;
-                                return item;
-                            });
-                            break;
+                                item.id = index + 1
+                                item.mode = fields.mode
+                                item.area_original = item.area
+                                item.area = locale.texts[item.area]
+                                item.description = item.name
+                                return item
+                            })
+                            break
                         case 'area':
                             data = res.data.rows.map((item, index) => {
-                                item.id = index + 1;
-                                item.mode = fields.mode;
-                                item.area_original = item.area;
-                                item.area = locale.texts[item.area];
-                                item.description = item.name;
-                                return item;
-                            });
-                            break;
+                                item.id = index + 1
+                                item.mode = fields.mode
+                                item.area_original = item.area
+                                item.area = locale.texts[item.area]
+                                item.description = item.name
+                                return item
+                            })
+                            break
                     }
 
-                    ajaxStatus = config.AJAX_STATUS_MAP.SUCCESS;
+                    ajaxStatus = config.AJAX_STATUS_MAP.SUCCESS
 
                     if (breadIndex < this.state.histories.length) {
-                        histories = histories.slice(0, breadIndex);
+                        histories = histories.slice(0, breadIndex)
                     }
                     histories.push({
                         key: fields.key,
@@ -317,7 +317,7 @@ class TraceContainer extends React.Component {
                         data,
                         columns,
                         description: fields.description,
-                    });
+                    })
                 }
 
                 this.setState(
@@ -328,12 +328,12 @@ class TraceContainer extends React.Component {
                         breadIndex,
                     },
                     this.formikRef.current.setStatus(ajaxStatus)
-                );
+                )
             })
             .catch((err) => {
-                console.log(`get location history failed ${err}`);
-            });
-    };
+                console.log(`get location history failed ${err}`)
+            })
+    }
 
     getInitialValues = () => {
         // if (this.props.location.state) {
@@ -351,22 +351,22 @@ class TraceContainer extends React.Component {
             mode: this.defaultActiveKey,
             key: null,
             description: null,
-        };
-    };
+        }
+    }
 
     onRowClick = (state, rowInfo, column, instance) => {
-        const { setFieldValue } = this.formikRef.current;
-        const { locale } = this.context;
-        const values = this.formikRef.current.state.values;
-        let startTime;
-        let endTime;
-        let key;
-        let mode;
-        const breadIndex = Number(this.state.breadIndex);
+        const { setFieldValue } = this.formikRef.current
+        const { locale } = this.context
+        const values = this.formikRef.current.state.values
+        let startTime
+        let endTime
+        let key
+        let mode
+        const breadIndex = Number(this.state.breadIndex)
         return {
             onClick: (e) => {
-                startTime = moment(rowInfo.original.startTime).toDate();
-                endTime = moment(rowInfo.original.endTime).toDate();
+                startTime = moment(rowInfo.original.startTime).toDate()
+                endTime = moment(rowInfo.original.endTime).toDate()
 
                 switch (rowInfo.original.mode) {
                     case 'nameGroupByArea':
@@ -374,17 +374,17 @@ class TraceContainer extends React.Component {
                             value: rowInfo.original.area_id,
                             label: locale.texts[rowInfo.original.area_original],
                             description: rowInfo.original.description,
-                        };
-                        mode = 'area';
-                        break;
+                        }
+                        mode = 'area'
+                        break
                     case 'nameGroupByUUID':
                         key = {
                             value: rowInfo.original.area_id,
                             label: locale.texts[rowInfo.original.area_original],
                             description: rowInfo.original.description,
-                        };
-                        mode = 'area';
-                        break;
+                        }
+                        mode = 'area'
+                        break
 
                     case 'uuid':
                     case 'area':
@@ -392,16 +392,16 @@ class TraceContainer extends React.Component {
                             value: rowInfo.original.name,
                             label: rowInfo.original.name,
                             description: rowInfo.original.description,
-                        };
-                        startTime = moment(values.startTime).toDate();
-                        endTime = moment(values.endTime).toDate();
-                        mode = 'nameGroupByArea';
-                        break;
+                        }
+                        startTime = moment(values.startTime).toDate()
+                        endTime = moment(values.endTime).toDate()
+                        mode = 'nameGroupByArea'
+                        break
                 }
-                setFieldValue('key', key);
-                setFieldValue('mode', mode);
-                setFieldValue('startTime', startTime);
-                setFieldValue('endTime', endTime);
+                setFieldValue('key', key)
+                setFieldValue('mode', mode)
+                setFieldValue('startTime', startTime)
+                setFieldValue('endTime', endTime)
                 this.getLocationHistory(
                     {
                         ...values,
@@ -411,24 +411,24 @@ class TraceContainer extends React.Component {
                         description: rowInfo.original.description,
                     },
                     breadIndex + 1
-                );
+                )
             },
-        };
-    };
+        }
+    }
 
     handleClick = (e, data) => {
-        const name = e.target.name || e.target.getAttribute('name');
+        const name = e.target.name || e.target.getAttribute('name')
 
-        const { auth, locale } = this.context;
+        const { auth, locale } = this.context
 
-        const values = this.formikRef.current.state.values;
+        const values = this.formikRef.current.state.values
 
         const {
             setFieldValue,
             setErrors,
             setTouched,
             setStatus,
-        } = this.formikRef.current;
+        } = this.formikRef.current
 
         switch (name) {
             case 'exportCSV':
@@ -437,7 +437,7 @@ class TraceContainer extends React.Component {
                     {
                         extension: 'csv',
                     }
-                );
+                )
                 const fields = this.state.columns.map((column) => {
                     return {
                         label:
@@ -445,8 +445,8 @@ class TraceContainer extends React.Component {
                                 column.name.replace(/ /g, '_').toUpperCase()
                             ],
                         value: column.accessor,
-                    };
-                });
+                    }
+                })
 
                 axios
                     .post(dataSrc.file.export.csv, {
@@ -455,15 +455,15 @@ class TraceContainer extends React.Component {
                         filePackage,
                     })
                     .then((res) => {
-                        const link = document.createElement('a');
-                        link.href = dataSrc.pdfUrl(filePackage.path);
-                        link.download = '';
-                        link.click();
+                        const link = document.createElement('a')
+                        link.href = dataSrc.pdfUrl(filePackage.path)
+                        link.download = ''
+                        link.click()
                     })
                     .catch((err) => {
-                        console.log(`export CSV failed ${err}`);
-                    });
-                break;
+                        console.log(`export CSV failed ${err}`)
+                    })
+                break
 
             case 'exportPDF':
                 const pdfPackage = pdfPackageGenerator.getPdfPackage({
@@ -471,7 +471,7 @@ class TraceContainer extends React.Component {
                     user: auth.user,
                     data: {
                         columns: this.state.columns.filter(
-                            (column) => column.accessor !== 'uuid'
+                            (column) => column.accessor != 'uuid'
                         ),
                         data: this.state.data,
                     },
@@ -484,7 +484,7 @@ class TraceContainer extends React.Component {
                         endTime: moment(values.endTime).format('lll'),
                         type: values.mode,
                     },
-                });
+                })
 
                 apiHelper.fileApiAgent
                     .getPDF({
@@ -492,45 +492,45 @@ class TraceContainer extends React.Component {
                         pdfPackage,
                     })
                     .then((res) => {
-                        apiHelper.fileApiAgent.getFile(pdfPackage.path);
-                        callBack(res.data);
+                        apiHelper.fileApiAgent.getFile(pdfPackage.path)
+                        callBack(res.data)
                     })
                     .catch((err) => {
-                        console.log(err);
-                    });
+                        console.log(err)
+                    })
 
-                break;
+                break
 
             case 'nav':
-                const mode = e.target.getAttribute('data-rb-event-key');
-                setFieldValue('key', null);
-                setFieldValue('mode', mode);
-                setFieldValue('startTime', null);
-                setFieldValue('endTime', null);
-                setErrors({});
-                setTouched({});
-                setStatus(config.AJAX_STATUS_MAP.WAIT_FOR_SEARCH);
+                const mode = e.target.getAttribute('data-rb-event-key')
+                setFieldValue('key', null)
+                setFieldValue('mode', mode)
+                setFieldValue('startTime', null)
+                setFieldValue('endTime', null)
+                setErrors({})
+                setTouched({})
+                setStatus(config.AJAX_STATUS_MAP.WAIT_FOR_SEARCH)
                 this.setState({
                     data: [],
                     columns: [],
-                });
-                break;
+                })
+                break
             case 'bread':
-                const { history, index } = JSON.parse(data);
-                setFieldValue('mode', history.mode);
-                setFieldValue('key', history.key);
-                setFieldValue('startTime', moment(history.startTime).toDate());
-                setFieldValue('endTime', moment(history.endTime).toDate());
+                const { history, index } = JSON.parse(data)
+                setFieldValue('mode', history.mode)
+                setFieldValue('key', history.key)
+                setFieldValue('startTime', moment(history.startTime).toDate())
+                setFieldValue('endTime', moment(history.endTime).toDate())
                 this.setState({
                     data: history.data,
                     columns: history.columns,
                     breadIndex: parseInt(index),
-                });
+                })
         }
-    };
+    }
 
     render() {
-        const { data, histories, columns, options, breadIndex } = this.state;
+        const { data, histories, columns, options, breadIndex } = this.state
 
         const {
             getInitialValues,
@@ -540,7 +540,7 @@ class TraceContainer extends React.Component {
             getLocationHistory,
             onRowClick,
             title,
-        } = this;
+        } = this
 
         const propsGroup = {
             /** attributes from this.state */
@@ -558,11 +558,11 @@ class TraceContainer extends React.Component {
             getLocationHistory,
             onRowClick,
             title,
-        };
+        }
 
         return (
             <Fragment>
-                <CustomView condition={isTablet !== true && isMobile !== true}>
+                <CustomView condition={isTablet != true && isMobile != true}>
                     <BrowserTraceContainerView
                         {...propsGroup}
                         ref={this.formikRef}
@@ -581,8 +581,8 @@ class TraceContainer extends React.Component {
                     />
                 </MobileOnlyView>
             </Fragment>
-        );
+        )
     }
 }
 
-export default TraceContainer;
+export default TraceContainer

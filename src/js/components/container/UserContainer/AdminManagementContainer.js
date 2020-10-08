@@ -69,7 +69,7 @@ class AdminManagementContainer extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getUserList()
         }
     }
@@ -101,7 +101,7 @@ class AdminManagementContainer extends React.Component {
                         .map((role) => locale.texts[role.toUpperCase()])
                         .join('/')
                     item.area_ids = item.area_ids
-                        .filter((area) => area.id !== item.main_area.id)
+                        .filter((area) => area.id != item.main_area.id)
                         .map((area) => locale.texts[area.value])
                         .join('/')
                     item.main_area.label = locale.texts[item.main_area.value]

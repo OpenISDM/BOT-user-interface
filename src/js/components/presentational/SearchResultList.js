@@ -114,7 +114,7 @@ class SearchResultList extends React.Component {
         let selectedObjectData = [...this.state.selectedObjectData]
         if (this.state.showAddDevice) {
             if (index >= 0) {
-                if (selection.length === 1) return
+                if (selection.length == 1) return
                 selection = [
                     ...selection.slice(0, index),
                     ...selection.slice(index + 1),

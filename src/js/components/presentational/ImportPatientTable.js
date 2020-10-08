@@ -64,7 +64,7 @@ class ImportPatientTable extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getData()
         }
     }

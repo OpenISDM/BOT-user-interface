@@ -116,7 +116,7 @@ class MonitorSettingBlock extends React.Component {
         configPackage.type = config.monitorSettingUrlMap[this.props.type]
         // configPackage["id"] = selectedData ? selectedData.id : null;
         configPackage.id = this.state.selection
-        if (configPackage.id === '' && this.state.selectedData !== null) {
+        if (configPackage.id == '' && this.state.selectedData != null) {
             configPackage.id = this.state.selectedData.id
         }
 
@@ -217,14 +217,14 @@ class MonitorSettingBlock extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.exIndex !== this.props.nowIndex) {
+        if (this.state.exIndex != this.props.nowIndex) {
             this.setState({
                 selectAll: false,
                 selection: '',
                 exIndex: this.props.nowIndex,
             })
         }
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getMonitorConfig()
             this.setState({
                 locale: this.context.locale.abbr,

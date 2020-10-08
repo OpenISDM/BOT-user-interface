@@ -77,7 +77,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
                                 {Object.values(areaTable)
                                     .filter((area) => {
                                         return (
-                                            auth.user.main_area !== area.id &&
+                                            auth.user.main_area != area.id &&
                                             values.areas_id.includes(area.id)
                                         )
                                     })
@@ -94,7 +94,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
                                                     )
                                                     const areasId = values.areas_id.filter(
                                                         (area) => {
-                                                            return area !== name
+                                                            return area != name
                                                         }
                                                     )
                                                     setFieldValue(
@@ -114,7 +114,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
                                 {Object.values(areaTable)
                                     .filter((area) => {
                                         return (
-                                            auth.user.main_area !== area.id &&
+                                            auth.user.main_area != area.id &&
                                             !values.areas_id.includes(area.id)
                                         )
                                     })

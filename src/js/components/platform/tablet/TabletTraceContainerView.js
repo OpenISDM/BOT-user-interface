@@ -88,7 +88,7 @@ const TabletTraceContainerView = React.forwardRef(
                     <PageTitle>
                         {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
                     </PageTitle>
-                    {data.length !== 0 && (
+                    {data.length != 0 && (
                         <div>
                             <IconButton
                                 iconName="fas fa-download"
@@ -182,7 +182,7 @@ const TabletTraceContainerView = React.forwardRef(
                                                 className="d-inline-block"
                                                 style={{
                                                     color:
-                                                        breadIndex === index
+                                                        breadIndex == index
                                                             ? styleSheet.theme
                                                             : styleSheet.black,
                                                 }}
@@ -209,9 +209,7 @@ const TabletTraceContainerView = React.forwardRef(
                                         <Nav.Item key={index}>
                                             <BOTNavLink
                                                 eventKey={nav.mode}
-                                                active={
-                                                    values.mode === nav.mode
-                                                }
+                                                active={values.mode == nav.mode}
                                                 onClick={handleClick}
                                                 name="nav"
                                             >
@@ -303,7 +301,7 @@ const TabletTraceContainerView = React.forwardRef(
                                             value={values.startTime}
                                             onkeydown="return false"
                                             onChange={(value) => {
-                                                value !== null
+                                                value != null
                                                     ? setFieldValue(
                                                           'startTime',
                                                           moment(value).toDate()
@@ -354,12 +352,12 @@ const TabletTraceContainerView = React.forwardRef(
                                             name="endTime"
                                             className="mx-2"
                                             value={
-                                                values.endTime !== null
+                                                values.endTime != null
                                                     ? values.endTime
                                                     : undefined
                                             }
                                             onChange={(value) => {
-                                                value !== null
+                                                value != null
                                                     ? setFieldValue(
                                                           'endTime',
                                                           moment(value).toDate()
@@ -397,12 +395,12 @@ const TabletTraceContainerView = React.forwardRef(
                                 </div>
                             </div>
 
-                            {status === config.AJAX_STATUS_MAP.LOADING && (
+                            {status == config.AJAX_STATUS_MAP.LOADING && (
                                 <Loader />
                             )}
 
                             <hr />
-                            {data.length !== 0 ? (
+                            {data.length != 0 ? (
                                 <ReactTable
                                     keyField="id"
                                     data={data}

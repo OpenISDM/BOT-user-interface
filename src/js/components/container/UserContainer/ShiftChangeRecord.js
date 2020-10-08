@@ -69,7 +69,7 @@ class ShiftChangeRecord extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getData()
         }
     }
@@ -134,12 +134,12 @@ class ShiftChangeRecord extends React.Component {
     }
 
     toggleSelection = (key, shift, row) => {
-        if (key !== 999) {
+        if (key != 999) {
             //多的
             let selection = [...this.state.selection]
             const selectThis = !this.state.selectThis
 
-            key = typeof key === 'number' ? key : parseInt(key.split('-')[1])
+            key = typeof key == 'number' ? key : parseInt(key.split('-')[1])
             const keyIndex = selection.indexOf(key.toString())
             if (keyIndex >= 0) {
                 selection = [
@@ -165,7 +165,7 @@ class ShiftChangeRecord extends React.Component {
 
         this.state.data.map((item) => {
             this.state.selection.map((itemSelect) => {
-                itemSelect === item.id
+                itemSelect == item.id
                     ? deleteArray.push(deleteCount.toString())
                     : null
             })
@@ -173,7 +173,7 @@ class ShiftChangeRecord extends React.Component {
         })
 
         deleteArray.map((item) => {
-            this.state.data[item] === undefined
+            this.state.data[item] == undefined
                 ? null
                 : idPackage.push(parseInt(this.state.data[item].id))
         })
@@ -235,7 +235,7 @@ class ShiftChangeRecord extends React.Component {
                         label: item.name,
                         value: item,
                     }
-                    if (item.id === listId) {
+                    if (item.id == listId) {
                         devicelist = option
                     }
                     return option
@@ -323,7 +323,7 @@ class ShiftChangeRecord extends React.Component {
                             {locale.texts.VIEW_REPORT}
                         </div>
                         <PrimaryButton
-                            disabled={this.state.selection.length === 0}
+                            disabled={this.state.selection.length == 0}
                             onClick={() => {
                                 this.setState({
                                     showDeleteConfirmation: true,

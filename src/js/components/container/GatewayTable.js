@@ -71,7 +71,7 @@ class GatewayTable extends React.Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         const { locale } = this.context
-        if (locale.abbr !== prevState.locale) {
+        if (locale.abbr != prevState.locale) {
             this.getData()
         }
     }
@@ -155,7 +155,7 @@ class GatewayTable extends React.Component {
 
     toggleSelection = (key, shift, row) => {
         let selection = [...this.state.selection]
-        selection !== ''
+        selection != ''
             ? this.setState({ disable: true })
             : this.setState({ disable: false })
         key = key.split('-')[1] ? key.split('-')[1] : key
@@ -200,7 +200,7 @@ class GatewayTable extends React.Component {
         } else {
             selection = []
         }
-        selection === ''
+        selection == ''
             ? this.setState({ disable: true })
             : this.setState({ disable: false })
         this.setState({ selectAll, selection })
@@ -216,7 +216,7 @@ class GatewayTable extends React.Component {
         let deleteCount = 0
         this.state.data.map((item) => {
             this.state.selection.map((itemSelect) => {
-                itemSelect === item.id
+                itemSelect == item.id
                     ? deleteArray.push(deleteCount.toString())
                     : null
             })
@@ -224,7 +224,7 @@ class GatewayTable extends React.Component {
         })
         this.setState({ selectAll: false })
         deleteArray.map((item) => {
-            this.state.data[item] === undefined
+            this.state.data[item] == undefined
                 ? null
                 : idPackage.push(parseInt(this.state.data[item].id))
         })
@@ -276,7 +276,7 @@ class GatewayTable extends React.Component {
                                         showDeleteConfirmation: true,
                                     })
                                 }}
-                                disabled={this.state.selection.length === 0}
+                                disabled={this.state.selection.length == 0}
                             >
                                 {locale.texts.DELETE}
                             </PrimaryButton>

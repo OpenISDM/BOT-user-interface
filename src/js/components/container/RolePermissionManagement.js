@@ -151,7 +151,7 @@ class RolePermissionManagement extends React.Component {
 
     renamePermissionToState = (type, id, e) => {
         this.state.permissionList.map((permission) => {
-            if (permission.id === id) {
+            if (permission.id == id) {
                 permission.name = `${type}:${e.target.value}`
                 return
             }
@@ -241,7 +241,7 @@ class RolePermissionManagement extends React.Component {
                                     value={values.selectedRole}
                                     onChange={(value) => {
                                         let selectedPermission = this.state.rolesPermission.filter(
-                                            (role) => role.role.id === value.id
+                                            (role) => role.role.id == value.id
                                         )[0]
                                         selectedPermission = selectedPermission
                                             ? selectedPermission.permissions.map(
@@ -416,7 +416,7 @@ class RolePermissionManagement extends React.Component {
                                                         (permission) =>
                                                             permission.name.split(
                                                                 ':'
-                                                            )[0] === type
+                                                            )[0] == type
                                                     )
                                                     .map((permission) => {
                                                         return (

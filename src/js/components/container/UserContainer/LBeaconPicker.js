@@ -48,7 +48,7 @@ class LBeaconPicker extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (prevProps.area !== this.props.area) {
+        if (prevProps.area != this.props.area) {
             this.getBeacon()
         }
     }

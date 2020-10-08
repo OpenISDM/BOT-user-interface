@@ -67,7 +67,7 @@ class ObjectManagementContainer extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getData()
             this.getDataImport()
             this.setState({
@@ -282,7 +282,7 @@ class ObjectManagementContainer extends React.Component {
                 })
 
                 res.data.rows.map((item) => {
-                    if (item.object_type !== 0) {
+                    if (item.object_type != 0) {
                         item.monitor_type = this.getMonitorTypeArray(
                             item,
                             'patient'
@@ -310,7 +310,7 @@ class ObjectManagementContainer extends React.Component {
                             if (item.transferred_location) {
                                 const branch = this.state.transferredLocationList.filter(
                                     (branch) => {
-                                        if (branch.id === branchId) {
+                                        if (branch.id == branchId) {
                                             return true
                                         }
                                         return false
@@ -485,7 +485,7 @@ class ObjectManagementContainer extends React.Component {
             }
 
             if (filteredAttribute.includes('sex')) {
-                if (obj.object_type === key) {
+                if (obj.object_type == key) {
                     return true
                 }
             }
@@ -509,7 +509,7 @@ class ObjectManagementContainer extends React.Component {
 
     addObjectFilter = (key, attribute, source) => {
         this.state.objectFilter = this.state.objectFilter.filter(
-            (filter) => source !== filter.source
+            (filter) => source != filter.source
         )
 
         this.state.objectFilter.push({
@@ -522,7 +522,7 @@ class ObjectManagementContainer extends React.Component {
 
     removeObjectFilter = (source) => {
         this.state.objectFilter = this.state.objectFilter.filter(
-            (filter) => source !== filter.source
+            (filter) => source != filter.source
         )
         this.filterObjects()
     }
@@ -539,7 +539,7 @@ class ObjectManagementContainer extends React.Component {
 
     addPatientFilter = (key, attribute, source) => {
         this.state.patientFilter = this.state.patientFilter.filter(
-            (filter) => source !== filter.source
+            (filter) => source != filter.source
         )
         this.state.patientFilter.push({
             key,
@@ -552,7 +552,7 @@ class ObjectManagementContainer extends React.Component {
 
     removePatientFilter = (source) => {
         this.state.patientFilter = this.state.patientFilter.filter(
-            (filter) => source !== filter.source
+            (filter) => source != filter.source
         )
         this.filterPatients()
     }

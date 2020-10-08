@@ -60,7 +60,7 @@ class SystemStatus extends React.Component {
 
     componentDidUpdate = (prevProps, prevState) => {
         let { locale } = this.context
-        if (locale.lang !== prevState.locale) {
+        if (locale.lang != prevState.locale) {
             this.getTrackingData()
             this.setState({
                 locale: locale.lang,

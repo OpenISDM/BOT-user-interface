@@ -51,28 +51,28 @@ const precacheList = self.__WB_MANIFEST || [
 precacheAndRoute(precacheList)
 
 registerRoute(
-    ({ request }) => request.destination === 'image',
+    ({ request }) => request.destination == 'image',
     new CacheFirst({
         cacheName: 'images',
     })
 )
 
 registerRoute(
-    ({ request }) => request.destination === 'style',
+    ({ request }) => request.destination == 'style',
     new CacheFirst({
         cacheName: 'style',
     })
 )
 
 registerRoute(
-    ({ request }) => request.destination === 'script',
+    ({ request }) => request.destination == 'script',
     new CacheFirst({
         cacheName: 'script',
     })
 )
 
 self.addEventListener('install', () => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV == 'development') {
         self.skipWaiting()
     }
 })

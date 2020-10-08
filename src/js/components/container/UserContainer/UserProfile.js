@@ -178,7 +178,7 @@ class UserProfile extends React.Component {
                 value: item,
                 id: index,
             }
-            if (auth.user.keyword_type === index) {
+            if (auth.user.keyword_type == index) {
                 userKeywordType = option
             }
             return option
@@ -220,7 +220,7 @@ class UserProfile extends React.Component {
                     </div>
                     <div>
                         {locale.texts.PRIMARY_AREA}:{' '}
-                        {areaTable.length !== 0 &&
+                        {areaTable.length != 0 &&
                             auth.user.main_area &&
                             locale.texts[areaTable[auth.user.main_area].name]}
                     </div>
@@ -229,7 +229,7 @@ class UserProfile extends React.Component {
                         {Object.values(this.state.areaTable)
                             .filter((area) => {
                                 return (
-                                    auth.user.main_area !== area.id &&
+                                    auth.user.main_area != area.id &&
                                     auth.user.areas_id.includes(area.id)
                                 )
                             })

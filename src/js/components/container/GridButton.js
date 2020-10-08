@@ -66,20 +66,20 @@ class GridButton extends React.Component {
             selectAll = !this.state.selectAll
         }
 
-        if (searchKey.toLowerCase() === 'all') {
+        if (searchKey.toLowerCase() == 'all') {
             if (selectAll) {
                 const childrenNodesArray = Array.from(
                     document.getElementsByClassName('gridbutton')
-                ).filter((item) => item.textContent !== 'All')
+                ).filter((item) => item.textContent != 'All')
 
                 Array.from(objectType)
-                    .filter((item) => item !== 'All')
+                    .filter((item) => item != 'All')
                     .map((item) => {
                         if (colorPanel[item]) return
                         const color = pinColorArray.pop()
                         colorPanel[item] = color
                         childrenNodesArray.map((node) => {
-                            if (item === node.textContent) {
+                            if (item == node.textContent) {
                                 node.style.background = color
                             }
                         })
@@ -97,7 +97,7 @@ class GridButton extends React.Component {
             this.setState({
                 selectAll,
             })
-        } else if (e.target.style.background !== '') {
+        } else if (e.target.style.background != '') {
             pinColorArray.push(e.target.style.background)
             e.target.style.background = ''
             delete colorPanel[searchKey]
@@ -126,13 +126,13 @@ class GridButton extends React.Component {
         // const searchHistory = JSON.parse(Cookies.get('searchHistory'))
         // let flag = false;
         // const toPutSearchHistory = searchHistory.map( item => {
-        //     if (item.name === searchKey) {
+        //     if (item.name == searchKey) {
         //         item.value = item.value + 1;
         //         flag = true;
         //     }
         //     return item
         // })
-        // flag === false ? toPutSearchHistory.push({name: searchKey, value: 1}) : null;
+        // flag == false ? toPutSearchHistory.push({name: searchKey, value: 1}) : null;
         // const sortedSearchHistory = this.sortSearchHistory(toPutSearchHistory)
         // Cookies.set('searchHistory', JSON.stringify(sortedSearchHistory))
         // this.checkInSearchHistory()
@@ -169,7 +169,7 @@ class GridButton extends React.Component {
         }
         return (
             // <div>
-            //     {objectType.length !== 0
+            //     {objectType.length != 0
             //         ?
             //             <Row className='' style={style.row}>
             //                 {Array.from(objectType).map( (item,index) => {
@@ -186,7 +186,7 @@ class GridButton extends React.Component {
             //     }
             // </div>
             <div>
-                {objectType.length !== 0 ? (
+                {objectType.length != 0 ? (
                     <Row className="" style={style.row}>
                         {Array.from(objectType).map((item, index) => {
                             return (

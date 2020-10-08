@@ -32,42 +32,42 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react';
-import { Form, Button } from 'react-bootstrap';
+import React from 'react'
+import { Form, Button } from 'react-bootstrap'
 
 class BOTInput extends React.Component {
     state = {
         value: '',
-    };
+    }
 
     componentDidUpdate = (prepProps) => {
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             !prepProps.clearSearchResult
         ) {
             this.setState({
                 value: '',
-            });
+            })
         }
-    };
+    }
 
     handleChange = (e) => {
         this.setState({
             value: e.target.value,
-        });
-        this.props.getSearchKey(e.target.value);
-    };
+        })
+        this.props.getSearchKey(e.target.value)
+    }
 
     handleKeyPress = (e) => {
         /* Disable key press 'Enter' event */
-        if (e.which === 13) {
-            e.preventDefault();
+        if (e.which == 13) {
+            e.preventDefault()
         }
-    };
+    }
 
     render() {
-        const { value } = this.state;
-        const { placeholder, error, example, name } = this.props;
+        const { value } = this.state
+        const { placeholder, error, example, name } = this.props
 
         return (
             <Form>
@@ -102,8 +102,8 @@ class BOTInput extends React.Component {
                     </small>
                 )}
             </Form>
-        );
+        )
     }
 }
 
-export default BOTInput;
+export default BOTInput

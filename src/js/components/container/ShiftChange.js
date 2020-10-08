@@ -110,7 +110,7 @@ class ShiftChange extends React.Component {
 
                 res.data
                     .filter((item) => {
-                        return item.list_id === parseInt(auth.user.list_id)
+                        return item.list_id == parseInt(auth.user.list_id)
                     })
                     .map((item) => {
                         switch (item.object_type) {
@@ -244,10 +244,10 @@ class ShiftChange extends React.Component {
         const nowTime = moment()
             .locale(locale.abbr)
             .format(config.TIMESTAMP_FORMAT)
-        const hasFoundResult = foundResult.length !== 0
-        const hasNotFoundResult = notFoundResult.length !== 0
-        const hasFoundPatients = foundPatients.length !== 0
-        const hasNotFoundPatients = notFoundPatients.length !== 0
+        const hasFoundResult = foundResult.length != 0
+        const hasNotFoundResult = notFoundResult.length != 0
+        const hasFoundPatients = foundPatients.length != 0
+        const hasNotFoundPatients = notFoundPatients.length != 0
 
         const shiftOptions = Object.values(config.SHIFT_OPTIONS).map(
             (shift) => {

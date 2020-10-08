@@ -164,7 +164,7 @@ class MainContainer extends React.Component {
         ).filter(
             (item) => !Object.keys(prevState.violatedObjects).includes(item)
         )
-        if (newViolatedObject.length !== 0) {
+        if (newViolatedObject.length != 0) {
             newViolatedObject.map((item) => {
                 this.getToastNotification(this.state.violatedObjects[item])
             })
@@ -237,7 +237,7 @@ class MainContainer extends React.Component {
     handleRefreshSearchResult = () => {
         const { searchKey, markerClickPackage } = this.state
 
-        if (searchKey.type !== null)
+        if (searchKey.type != null)
             this.getSearchKey(searchKey, markerClickPackage)
     }
 
@@ -462,7 +462,7 @@ class MainContainer extends React.Component {
 
                 searchResult = proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type === 0
+                        return item.object_type == 0
                     })
                     .map((item) => {
                         item.searchedType = 0
@@ -480,10 +480,10 @@ class MainContainer extends React.Component {
 
                 proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type === 0
+                        return item.object_type == 0
                     })
                     .map((item) => {
-                        if (item.list_id === auth.user.list_id) {
+                        if (item.list_id == auth.user.list_id) {
                             item.searched = true
                             item.searchedType = -1
                             searchResult.push(item)
@@ -501,7 +501,7 @@ class MainContainer extends React.Component {
 
                 searchResult = proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type !== 0
+                        return item.object_type != 0
                     })
                     .map((item) => {
                         item.searchedType = 1
@@ -524,7 +524,7 @@ class MainContainer extends React.Component {
 
                 proccessedTrackingData
                     .filter((item) => {
-                        return item.object_type !== 0
+                        return item.object_type != 0
                     })
                     .map((item) => {
                         if (
@@ -584,11 +584,11 @@ class MainContainer extends React.Component {
                         (item) => {
                             return singleSearchObjectArray.some((key) => {
                                 return searchableField.some((field) => {
-                                    if (item[field] && item[field] === key) {
+                                    if (item[field] && item[field] == key) {
                                         item.keyword = key
 
                                         item.searched = true
-                                        if (item.object_type === 0) {
+                                        if (item.object_type == 0) {
                                             item.searchedType = -1
                                             if (
                                                 !searchedObjectType.includes(-1)
@@ -596,7 +596,7 @@ class MainContainer extends React.Component {
                                                 searchedObjectType.push(-1)
                                                 showedObjects.push(-1)
                                             }
-                                        } else if (item.object_type !== 0) {
+                                        } else if (item.object_type != 0) {
                                             item.searchedType = -2
                                             if (
                                                 !searchedObjectType.includes(-2)
@@ -639,7 +639,7 @@ class MainContainer extends React.Component {
 
             default:
                 if (/^\s/.test(searchKey.value)) return
-                if (searchKey.value === '') return
+                if (searchKey.value == '') return
 
                 const searchResultMac = []
 
@@ -661,7 +661,7 @@ class MainContainer extends React.Component {
                     })
                 })
 
-                // if(this.state.lastsearchKey !== searchKey) {
+                // if(this.state.lastsearchKey != searchKey) {
                 //     axios.post(dataSrc.backendSearch,{
                 //         keyType : 'all attributes',
                 //         keyWord : searchKey,
@@ -756,7 +756,7 @@ class MainContainer extends React.Component {
 
                 let searchResult = proccessedTrackingData
                     .filter(item => {
-                        return item.object_type === 0
+                        return item.object_type == 0
                     })
                     .map(item => {
                         item.searchedType = 0

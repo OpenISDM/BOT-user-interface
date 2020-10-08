@@ -109,7 +109,7 @@ class Map extends React.Component {
             this.drawPolyline()
         }
 
-        if (prevProps.areaId !== this.props.areaId) {
+        if (prevProps.areaId != this.props.areaId) {
             this.setMap()
         }
     }
@@ -256,7 +256,7 @@ class Map extends React.Component {
     /** init path */
     drawPolyline = () => {
         this.pathOfDevice.clearLayers()
-        if (this.props.pathMacAddress !== '') {
+        if (this.props.pathMacAddress != '') {
             const route = []
 
             axios
@@ -434,7 +434,7 @@ class Map extends React.Component {
                 objectList.push(objectInfo[key])
             }
         }
-        if (objectList.length !== 0) {
+        if (objectList.length != 0) {
             const popupContent = this.popupContent(objectList)
             e.target
                 .bindPopup(popupContent, this.props.mapConfig.popupOptions)
@@ -622,7 +622,7 @@ class Map extends React.Component {
         this.filterTrackingData(this.props.proccessedTrackingData).map(
             (item) => {
                 item.lbeacon_coordinate &&
-                item.lbeacon_coordinate.toString() === lbPosition.toString() &&
+                item.lbeacon_coordinate.toString() == lbPosition.toString() &&
                 item.isMatchedObject
                     ? objectList.push(item)
                     : null

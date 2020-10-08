@@ -48,7 +48,7 @@ class TabletObjectTypeList extends React.Component {
 
     componentDidUpdate = (prepProps) => {
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             !prepProps.clearSearchResult
         ) {
             this.setState({
@@ -56,7 +56,7 @@ class TabletObjectTypeList extends React.Component {
             })
         }
         if (
-            prepProps.hasGridButton !== this.props.hasGridButton &&
+            prepProps.hasGridButton != this.props.hasGridButton &&
             this.props.hasGridButton
         ) {
             this.setState({
@@ -137,7 +137,7 @@ class TabletObjectTypeList extends React.Component {
                                             <Button
                                                 variant="outline-custom"
                                                 onClick={this.handleClick}
-                                                // active={this.state.searchKey === item.toLowerCase()}
+                                                // active={this.state.searchKey == item.toLowerCase()}
                                                 key={index}
                                                 name={item}
                                                 className="text-capitalize"
@@ -170,7 +170,7 @@ class TabletObjectTypeList extends React.Component {
                                 <Button
                                     variant="outline-custom"
                                     onClick={this.handleClick}
-                                    // active={this.state.searchKey === 'my devices'}
+                                    // active={this.state.searchKey == 'my devices'}
                                     name="my devices"
                                     className="text-capitalize"
                                 >
@@ -180,7 +180,7 @@ class TabletObjectTypeList extends React.Component {
                             <Button
                                 variant="outline-custom"
                                 onClick={this.handleClick}
-                                // active={this.state.searchKey === 'all devices'}
+                                // active={this.state.searchKey == 'all devices'}
                                 name="all patients"
                                 className="text-capitalize"
                             >
@@ -189,7 +189,7 @@ class TabletObjectTypeList extends React.Component {
                             <Button
                                 variant="outline-custom"
                                 onClick={this.handleClick}
-                                // active={this.state.searchKey === 'all devices'}
+                                // active={this.state.searchKey == 'all devices'}
                                 name="all devices"
                                 className="text-capitalize"
                             >
@@ -221,7 +221,7 @@ class TabletObjectTypeList extends React.Component {
                                 <Button
                                     variant="outline-custom"
                                     onClick={this.handleClick}
-                                    // active={this.state.searchKey === 'my devices'}
+                                    // active={this.state.searchKey == 'my devices'}
                                     name="my devices"
                                     className="text-capitalize"
                                     style={style.textSmall}
@@ -234,7 +234,7 @@ class TabletObjectTypeList extends React.Component {
                             <Button
                                 variant="outline-custom"
                                 onClick={this.handleClick}
-                                // active={this.state.searchKey === 'all devices'}
+                                // active={this.state.searchKey == 'all devices'}
                                 name="all patients"
                                 className="text-capitalize"
                                 style={style.textSmall}
@@ -244,7 +244,7 @@ class TabletObjectTypeList extends React.Component {
                             <Button
                                 variant="outline-custom"
                                 onClick={this.handleClick}
-                                // active={this.state.searchKey === 'all devices'}
+                                // active={this.state.searchKey == 'all devices'}
                                 name="all devices"
                                 className="text-capitalize"
                                 style={style.textSmall}
@@ -272,7 +272,7 @@ class TabletObjectTypeList extends React.Component {
                                             <Button
                                                 variant="outline-custom"
                                                 onClick={this.handleClick}
-                                                // active={this.state.searchKey === item.toLowerCase()}
+                                                // active={this.state.searchKey == item.toLowerCase()}
                                                 key={index}
                                                 name={item}
                                                 className="text-capitalize"

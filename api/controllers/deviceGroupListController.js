@@ -32,60 +32,60 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import dbQueries from '../db/dbQueries/deviceGroupListQueries.js';
-import pool from '../db/dev/connection.js';
+import 'dotenv/config.js'
+import dbQueries from '../db/dbQueries/deviceGroupListQueries.js'
+import pool from '../db/dev/connection.js'
 
 export default {
     getDeviceGroupList: (request, response) => {
-        const query = dbQueries.getDeviceGroup(request.body);
+        const query = dbQueries.getDeviceGroup(request.body)
         pool.query(query)
             .then((res) => {
-                response.status(200).json(res.rows);
+                response.status(200).json(res.rows)
             })
             .catch((err) => {
-                console.log('addPatientGroup error: ', err);
-            });
+                console.log('addPatientGroup error: ', err)
+            })
     },
 
     addDeviceGroupList: (request, response) => {
-        const { name, area_id } = request.body;
-        console.log(request.body);
-        const query = dbQueries.addDeviceGroup(name, area_id);
+        const { name, area_id } = request.body
+        console.log(request.body)
+        const query = dbQueries.addDeviceGroup(name, area_id)
 
         pool.query(query)
             .then((res) => {
-                console.log('add device list succeed');
-                response.status(200).json(res.rows[0].id);
+                console.log('add device list succeed')
+                response.status(200).json(res.rows[0].id)
             })
             .catch((err) => {
-                console.log(`add device list failed ${err}`);
-            });
+                console.log(`add device list failed ${err}`)
+            })
     },
 
     modifyDeviceGroupList: (request, response) => {
-        const { groupId, mode, itemACN, newName, item_id } = request.body;
+        const { groupId, mode, itemACN, newName, item_id } = request.body
 
-        let query = null;
-        if (mode === 0) {
-            query = dbQueries.modifyDeviceGroup(groupId, 0, itemACN, item_id);
-        } else if (mode === 1) {
-            query = dbQueries.modifyDeviceGroup(groupId, 1, itemACN, item_id);
-        } else if (mode === 2) {
-            query = dbQueries.modifyDeviceGroup(groupId, 2, newName);
+        let query = null
+        if (mode == 0) {
+            query = dbQueries.modifyDeviceGroup(groupId, 0, itemACN, item_id)
+        } else if (mode == 1) {
+            query = dbQueries.modifyDeviceGroup(groupId, 1, itemACN, item_id)
+        } else if (mode == 2) {
+            query = dbQueries.modifyDeviceGroup(groupId, 2, newName)
         }
 
         pool.query(query)
             .then((res) => {
-                console.log('modify device list succeed');
-                response.status(200).json('ok');
+                console.log('modify device list succeed')
+                response.status(200).json('ok')
             })
             .catch((err) => {
-                console.log(`modify device list failed ${err}`);
-            });
+                console.log(`modify device list failed ${err}`)
+            })
     },
     changeDeviceList: (request, response) => {
-        const { patient_group_id, user_id } = request.body;
+        const { patient_group_id, user_id } = request.body
         // const query = queryType.changePatientGroup(patient_group_id, user_id)
         // pool.query(query).then(res => {
         //     console.log('success')
@@ -95,15 +95,15 @@ export default {
         // })
     },
     deleteDeviceGroup: (request, response) => {
-        const { groupId } = request.body;
-        const query = dbQueries.removeDeviceGroup(groupId);
+        const { groupId } = request.body
+        const query = dbQueries.removeDeviceGroup(groupId)
         pool.query(query)
             .then((res) => {
-                console.log('success');
-                response.status(200).json('ok');
+                console.log('success')
+                response.status(200).json('ok')
             })
             .catch((err) => {
-                console.log('error when change device group,', err);
-            });
+                console.log('error when change device group,', err)
+            })
     },
-};
+}

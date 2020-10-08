@@ -45,7 +45,7 @@ class Searchbar extends React.Component {
 
     componentDidUpdate = (prepProps) => {
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             !prepProps.clearSearchResult
         ) {
             this.setState({

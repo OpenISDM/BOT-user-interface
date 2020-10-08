@@ -48,7 +48,7 @@ const Switcher = ({ leftLabel, rightLabel, status, type, onChange, subId }) => {
                 name="switch"
                 value={1}
                 onChange={onChange}
-                checked={status === 1}
+                checked={status == 1}
             />
             <label htmlFor={type.replace(/ /g, '_') + '_left' + ':' + subId}>
                 {locale.texts[leftLabel.toUpperCase()]}
@@ -60,7 +60,7 @@ const Switcher = ({ leftLabel, rightLabel, status, type, onChange, subId }) => {
                 name="switch"
                 value={0}
                 onChange={onChange}
-                checked={status === 0}
+                checked={status == 0}
             />
             <label htmlFor={type.replace(/ /g, '_') + '_right' + ':' + subId}>
                 {locale.texts[rightLabel.toUpperCase()]}

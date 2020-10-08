@@ -77,14 +77,14 @@ class GeoFenceSettingBlock extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.exIndex !== this.props.nowIndex) {
+        if (this.state.exIndex != this.props.nowIndex) {
             this.setState({
                 selectAll: false,
                 selection: '',
                 exIndex: this.props.nowIndex,
             })
         }
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getMonitorConfig()
             this.setState({
                 locale: this.context.locale.abbr,
@@ -200,7 +200,7 @@ class GeoFenceSettingBlock extends React.Component {
         configPackage.type = config.monitorSettingUrlMap[this.props.type]
         // configPackage["id"] = selectedData ? selectedData.id : null
         // configPackage["id"] = this.state.selection
-        path === 'setGeofenceConfig'
+        path == 'setGeofenceConfig'
             ? (configPackage.id = selectedData.id)
             : (configPackage.id = this.state.selection)
 

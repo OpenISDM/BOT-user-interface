@@ -131,7 +131,7 @@ class BrowserContactTree extends React.Component {
 
         this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.LOADING)
 
-        while (wait.length !== 0) {
+        while (wait.length != 0) {
             const parent = wait.shift()
             if (parent.level > level - 1) break
             const childrenPromise = this.getChildren(
@@ -161,7 +161,7 @@ class BrowserContactTree extends React.Component {
         }
 
         /** set status code of fetching contact tracing data */
-        if (this.state.collection.length === 0) {
+        if (this.state.collection.length == 0) {
             this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.NO_RESULT)
         } else this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.SUCCESS)
     }
@@ -250,7 +250,7 @@ class BrowserContactTree extends React.Component {
             <BOTContainer>
                 <div className="d-flex justify-content-between">
                     <PageTitle>{locale.texts.CONTACT_TREE}</PageTitle>
-                    {this.state.collection.length !== 0 && (
+                    {this.state.collection.length != 0 && (
                         <div>
                             <IconButton
                                 iconName="fas fa-download"
@@ -349,7 +349,7 @@ class BrowserContactTree extends React.Component {
                                             value={values.startTime}
                                             onkeydown="return false"
                                             onChange={(value) => {
-                                                value !== null
+                                                value != null
                                                     ? setFieldValue(
                                                           'startTime',
                                                           moment(value).toDate()
@@ -392,12 +392,12 @@ class BrowserContactTree extends React.Component {
                                             name="endTime"
                                             className="mx-2"
                                             value={
-                                                values.endTime !== null
+                                                values.endTime != null
                                                     ? values.endTime
                                                     : undefined
                                             }
                                             onChange={(value) => {
-                                                value !== null
+                                                value != null
                                                     ? setFieldValue(
                                                           'endTime',
                                                           moment(value).toDate()
@@ -473,7 +473,7 @@ class BrowserContactTree extends React.Component {
                             <Row
                             // className='d-flex justify-content-start'
                             >
-                                {this.state.collection.length !== 0 ? (
+                                {this.state.collection.length != 0 ? (
                                     this.state.collection.map(
                                         (level, index) => {
                                             return (
@@ -572,7 +572,7 @@ class BrowserContactTree extends React.Component {
                                     </NoDataFoundDiv>
                                 )}
                             </Row>
-                            {status === config.AJAX_STATUS_MAP.LOADING && (
+                            {status == config.AJAX_STATUS_MAP.LOADING && (
                                 <Loader backdrop={false} />
                             )}
                         </Fragment>

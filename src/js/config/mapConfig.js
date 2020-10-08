@@ -357,7 +357,7 @@ const mapConfig = {
                 return mapConfig.iconColor.blackBed
             else if (hasColorPanel) return item.pinColor
             else if (item.searched) return mapConfig.iconColor.searched
-            else if (item.status !== RETURNED)
+            else if (item.status != RETURNED)
                 return mapConfig.iconColor.unNormal
             else return mapConfig.iconColor.normal
         } else if (item.object_type == 1) return mapConfig.iconColor.male

@@ -59,7 +59,7 @@ const PrivateRoutes = () => {
                 })}
             </Fragment>
         )
-    } else if (pathname !== routes.HOME && pathname.split('/')[1] !== 'page') {
+    } else if (pathname != routes.HOME && pathname.split('/')[1] != 'page') {
         return (
             <Redirect to={{ pathname: window.location.pathname, state: {} }} />
         )

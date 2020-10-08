@@ -61,7 +61,7 @@ class Map extends React.Component {
     componentDidUpdate = (prevProps) => {
         this.handleObjectMarkers()
 
-        if (prevProps.areaId !== this.props.areaId) {
+        if (prevProps.areaId != this.props.areaId) {
             this.setMap()
         }
     }
@@ -208,7 +208,7 @@ class Map extends React.Component {
 
         this.props.proccessedTrackingData
             .filter((item) => {
-                return item.searched !== -1
+                return item.searched != -1
             })
             .map((item) => {
                 /** Calculate the position of the object  */

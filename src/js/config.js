@@ -77,8 +77,8 @@ const config = {
     DEFAULT_LOCALE: Object.values(supportedLocale).reduce((abbr, locale) => {
         const navigatorLang = navigator.language.toLocaleUpperCase()
         if (
-            navigatorLang === locale.code.toLocaleUpperCase() ||
-            navigatorLang === locale.abbr.toUpperCase()
+            navigatorLang == locale.code.toLocaleUpperCase() ||
+            navigatorLang == locale.abbr.toUpperCase()
         ) {
             return locale.abbr
         }

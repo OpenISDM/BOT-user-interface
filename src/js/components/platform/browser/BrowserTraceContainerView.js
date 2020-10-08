@@ -85,7 +85,7 @@ const BrowseTraceContainerView = React.forwardRef(
         return (
             <div>
                 <div className="d-flex justify-content-between">
-                    {data.length !== 0 && (
+                    {data.length != 0 && (
                         <div>
                             <IconButton
                                 iconName="fas fa-download"
@@ -177,7 +177,7 @@ const BrowseTraceContainerView = React.forwardRef(
                                                 className="d-inline-block"
                                                 style={{
                                                     color:
-                                                        breadIndex === index
+                                                        breadIndex == index
                                                             ? styleSheet.theme
                                                             : styleSheet.black,
                                                 }}
@@ -204,9 +204,7 @@ const BrowseTraceContainerView = React.forwardRef(
                                         <Nav.Item key={index}>
                                             <BOTNavLink
                                                 eventKey={nav.name}
-                                                active={
-                                                    values.mode === nav.name
-                                                }
+                                                active={values.mode == nav.name}
                                                 onClick={handleClick}
                                                 name="nav"
                                             >
@@ -280,7 +278,7 @@ const BrowseTraceContainerView = React.forwardRef(
                                             value={values.startTime}
                                             onkeydown="return false"
                                             onChange={(value) => {
-                                                value !== null
+                                                value != null
                                                     ? setFieldValue(
                                                           'startTime',
                                                           moment(value).toDate()
@@ -323,12 +321,12 @@ const BrowseTraceContainerView = React.forwardRef(
                                             name="endTime"
                                             className="mx-2"
                                             value={
-                                                values.endTime !== null
+                                                values.endTime != null
                                                     ? values.endTime
                                                     : undefined
                                             }
                                             onChange={(value) => {
-                                                value !== null
+                                                value != null
                                                     ? setFieldValue(
                                                           'endTime',
                                                           moment(value).toDate()
@@ -366,12 +364,12 @@ const BrowseTraceContainerView = React.forwardRef(
                                 </div>
                             </div>
 
-                            {status === config.AJAX_STATUS_MAP.LOADING && (
+                            {status == config.AJAX_STATUS_MAP.LOADING && (
                                 <Loader />
                             )}
 
                             <hr />
-                            {data.length !== 0 ? (
+                            {data.length != 0 ? (
                                 <ReactTable
                                     keyField="id"
                                     data={data}

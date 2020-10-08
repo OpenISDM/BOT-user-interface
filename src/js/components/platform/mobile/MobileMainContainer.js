@@ -118,7 +118,7 @@ const MobileMainContainer = ({
                     <MapContainer
                         pathMacAddress={pathMacAddress}
                         proccessedTrackingData={
-                            proccessedTrackingData.length === 0
+                            proccessedTrackingData.length == 0
                                 ? trackingData
                                 : proccessedTrackingData
                         }

@@ -239,7 +239,7 @@ const pdfPackageGenerator = {
                     'devices found',
                     locale,
                     area,
-                    data.searchResult.foundResult.length !== 0
+                    data.searchResult.foundResult.length != 0
                 )
                 const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.searchResult.foundResult,
@@ -249,7 +249,7 @@ const pdfPackageGenerator = {
                     'devices not found',
                     locale,
                     area,
-                    data.searchResult.notFoundResult.length !== 0
+                    data.searchResult.notFoundResult.length != 0
                 )
                 const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.searchResult.notFoundResult,
@@ -259,7 +259,7 @@ const pdfPackageGenerator = {
                     'patients found',
                     locale,
                     area,
-                    data.patients.foundPatients.length !== 0
+                    data.patients.foundPatients.length != 0
                 )
 
                 const patientFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
@@ -271,7 +271,7 @@ const pdfPackageGenerator = {
                     'patients not found',
                     locale,
                     area,
-                    data.patients.notFoundPatients.length !== 0
+                    data.patients.notFoundPatients.length != 0
                 )
 
                 const patientNotFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
@@ -296,7 +296,7 @@ const pdfPackageGenerator = {
                     'devices found',
                     locale,
                     null,
-                    data.foundResult.length !== 0
+                    data.foundResult.length != 0
                 )
                 const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.foundResult,
@@ -306,7 +306,7 @@ const pdfPackageGenerator = {
                     'devices not found',
                     locale,
                     null,
-                    data.notFoundResult.length !== 0
+                    data.notFoundResult.length != 0
                 )
                 const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
                     data.notFoundResult,

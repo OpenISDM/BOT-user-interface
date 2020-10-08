@@ -73,11 +73,11 @@ class BigScreenContainer extends React.Component {
                     return (
                         item.found &&
                         item.currentPosition &&
-                        item.object_type === 0
+                        item.object_type == 0
                     )
                 })
                 .map((item) => {
-                    if (item.type === queue.key_word) {
+                    if (item.type == queue.key_word) {
                         item.searched = index + 1
                         item.pinColor = queue.pin_color_index
                     }
@@ -86,7 +86,7 @@ class BigScreenContainer extends React.Component {
         })
 
         trackingData = trackingData.map((item) => {
-            if (item.searched === undefined) {
+            if (item.searched == undefined) {
                 item.searched = -1
                 item.pinColor = -1
             }
@@ -98,7 +98,7 @@ class BigScreenContainer extends React.Component {
 
     countItemsInQueue = (data, index) => {
         const count = data.filter((item) => {
-            return item.searched === index + 1
+            return item.searched == index + 1
         }).length
         return count
     }

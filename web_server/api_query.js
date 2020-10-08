@@ -22,13 +22,13 @@ const get_api_key = (request, response) => {
         .then((res) => {
             res.rows.map((item) => {
                 if (
-                    username === item.username_sha256 &&
-                    password === item.password_sha256
+                    username == item.username_sha256 &&
+                    password == item.password_sha256
                 ) {
                     getUserName = item.name
                 }
             })
-            if (getUserName !== '') {
+            if (getUserName != '') {
                 //already match user name
                 pool.query(queryType.confirmValidation(getUserName))
                     .then((res) => {
@@ -87,15 +87,15 @@ async function get_history_data(request, response) {
         matchRes = result
     })
 
-    if (matchRes === 1) {
+    if (matchRes == 1) {
         // matched
 
         //** Time **//
 
-        if (start_time !== undefined) {
+        if (start_time != undefined) {
             // verification by format
             if (
-                moment(start_time, timeDefaultFormat, true).isValid() === false
+                moment(start_time, timeDefaultFormat, true).isValid() == false
             ) {
                 response.json(error_code.start_time_error)
             } else {
@@ -107,8 +107,8 @@ async function get_history_data(request, response) {
             start_time = moment(moment().subtract(1, 'day')).format()
         }
 
-        if (end_time !== undefined) {
-            if (moment(end_time, timeDefaultFormat, true).isValid() === false) {
+        if (end_time != undefined) {
+            if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
                 response.json(error_code.end_time_error)
             } else {
                 end_time = time_format(end_time)
@@ -118,13 +118,13 @@ async function get_history_data(request, response) {
         }
 
         //** TAG **//
-        if (tag !== undefined) {
+        if (tag != undefined) {
             tag = tag.split(',')
             const pattern = new RegExp(
                 '^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
             )
             tag.map((item) => {
-                if (item.match(pattern) === null) {
+                if (item.match(pattern) == null) {
                     //judge format
                     response.json(error_code.mac_address_error)
                 }
@@ -132,13 +132,13 @@ async function get_history_data(request, response) {
         }
 
         //** Lbeacon **//
-        if (Lbeacon !== undefined) {
+        if (Lbeacon != undefined) {
             Lbeacon = Lbeacon.split(',')
             const pattern = new RegExp(
                 '^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
             )
             Lbeacon.map((item) => {
-                if (item.match(pattern) === null) {
+                if (item.match(pattern) == null) {
                     //judge format
                     response.json(error_code.Lbeacon_error)
                 }
@@ -146,16 +146,16 @@ async function get_history_data(request, response) {
         }
 
         //set default when no input
-        if (count_limit === undefined) {
+        if (count_limit == undefined) {
             count_limit = 10
         } else {
             isNaN(count_limit) ? response.json(error_code.count_error) : null
         }
 
         //0=DESC 1=ASC  : default=0
-        if (sort_type === undefined) {
+        if (sort_type == undefined) {
             sort_type = 'desc'
-        } else if (sort_type !== 'desc' && sort_type !== 'asc') {
+        } else if (sort_type != 'desc' && sort_type != 'asc') {
             response.json(error_code.sort_type_define_error)
         }
 
@@ -180,7 +180,7 @@ async function get_history_data(request, response) {
         })
 
         response.json(data)
-    } else if (matchRes === 2) {
+    } else if (matchRes == 2) {
         response.json(error_code.key_timeout)
     } else {
         // key fail match with user
@@ -195,11 +195,11 @@ async function match_key(key, response) {
         .then((res) => {
             res.rows.map((item) => {
                 const vaildTime = moment(item.register_time).add(30, 'm')
-                if (moment().isBefore(moment(vaildTime)) && item.key === key) {
+                if (moment().isBefore(moment(vaildTime)) && item.key == key) {
                     matchFlag = 1 //in time & key right
                 } else if (
                     moment().isAfter(moment(vaildTime)) &&
-                    item.key === key
+                    item.key == key
                 ) {
                     matchFlag = 2 // out time & key right
                 }
@@ -237,16 +237,16 @@ async function get_data(
             res.rows.map((item) => {
                 item.area_name =
                     tw[item.area_name.toUpperCase().replace(/ /g, '_')]
-                item.duration.hours === undefined
+                item.duration.hours == undefined
                     ? (item.duration.hours = 0)
                     : null
-                item.duration.minutes === undefined
+                item.duration.minutes == undefined
                     ? (item.duration.minutes = 0)
                     : null
-                item.duration.seconds === undefined
+                item.duration.seconds == undefined
                     ? (item.duration.seconds = 0)
                     : null
-                item.duration.milliseconds === undefined
+                item.duration.milliseconds == undefined
                     ? (item.duration.milliseconds = 0)
                     : null
             })
@@ -258,7 +258,7 @@ async function get_data(
 }
 
 function time_format(time) {
-    if (time !== undefined) {
+    if (time != undefined) {
         return moment(time, timeDefaultFormat).format()
     }
 }

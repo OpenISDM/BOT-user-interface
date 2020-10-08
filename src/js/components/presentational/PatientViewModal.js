@@ -171,14 +171,13 @@ class PatientViewModal extends React.Component {
                                 </FormFieldName>
 
                                 <div style={recordBlock}>
-                                    {data.record &&
-                                        data.record.length !== 0 && (
-                                            <hr style={{ margin: 0 }}></hr>
-                                        )}
+                                    {data.record && data.record.length != 0 && (
+                                        <hr style={{ margin: 0 }}></hr>
+                                    )}
 
                                     <ListGroup className="text-none px-0 max-height-30 custom-scrollbar">
                                         {data.records &&
-                                            data.records.length !== 0 && (
+                                            data.records.length != 0 && (
                                                 <div>
                                                     {data.records.map(
                                                         (item, index) => {

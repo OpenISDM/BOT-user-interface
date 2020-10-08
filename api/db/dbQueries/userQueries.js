@@ -90,8 +90,8 @@ export default {
 				area_table.name,
 				areas.area_ids
 			ORDER BY user_table.name DESC
-		`;
-        return query;
+		`
+        return query
     },
 
     addUser: (signupPackage) => {
@@ -111,20 +111,20 @@ export default {
 				$3,
 				$4
 			);
-			`;
+			`
         const values = [
             signupPackage.name,
             signupPackage.password,
             signupPackage.area_id,
             signupPackage.email,
-        ];
+        ]
 
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     insertUserData: (name, roles, area_id) => {
@@ -161,7 +161,7 @@ export default {
 				),
 				${area_id}
 			)
-		`;
+		`
     },
 
     editUserInfo: (user) => {
@@ -211,7 +211,7 @@ export default {
 					)`
                     )
                     .join(',')};
-		`;
+		`
     },
 
     deleteUser: (username) => {
@@ -237,8 +237,8 @@ export default {
 				FROM user_table
 				WHERE name='${username}'
 			);
-		`;
-        return query;
+		`
+        return query
     },
 
     editSecondaryArea: (user) => {
@@ -257,7 +257,7 @@ export default {
 				${user.id}
 			)`
             )};
-		`;
+		`
     },
 
     editPassword: (user_id, password) => {
@@ -266,16 +266,16 @@ export default {
 			SET
 				password = $2
 			WHERE id = $1
-		`;
+		`
 
-        const values = [user_id, password];
+        const values = [user_id, password]
 
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     setLocale: (userId, lang) => {
@@ -287,15 +287,15 @@ export default {
 				WHERE name = $1
 			)
 			WHERE id = $2
-			`;
-        const values = [lang, userId];
+			`
+        const values = [lang, userId]
 
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     addSearchHistory: (username, keyType, keyWord) => {
@@ -318,47 +318,47 @@ export default {
 				)
 			)
 
-		`;
+		`
 
-        const values = [keyWord, keyType, username];
+        const values = [keyWord, keyType, username]
 
         const query = {
             text,
             values,
-        };
+        }
 
-        return query;
+        return query
     },
 
     editMyDevice: (username, mode, acn) => {
-        let text = '';
-        if (mode === 'add') {
+        let text = ''
+        if (mode == 'add') {
             text = `
 				UPDATE user_table
 				SET mydevice = array_append(mydevice, '${acn}')
 				WHERE name = '${username}';
-			`;
-        } else if (mode === 'remove') {
+			`
+        } else if (mode == 'remove') {
             text = `
 				UPDATE user_table
 				SET mydevice = array_remove(mydevice, '${acn}')
 				WHERE name = '${username}';
-			`;
+			`
         } else {
-            text = '';
+            text = ''
         }
 
-        return text;
+        return text
     },
 
     editMaxSearchHistoryCount: (username, info) => {
-        const { freqSearchCount } = info;
+        const { freqSearchCount } = info
 
         return `
 			UPDATE user_table
 			SET max_search_history_count = ${freqSearchCount}
 			WHERE name='${username}'
-		`;
+		`
     },
 
     editKeywordType: (userId, keywordTypeId) => {
@@ -366,13 +366,13 @@ export default {
 			UPDATE user_table
 			SET keyword_type = $2
 			WHERE id = $1
-		`;
-        const values = [userId, keywordTypeId];
+		`
+        const values = [userId, keywordTypeId]
 
         return {
             text,
             values,
-        };
+        }
     },
 
     editListId: (userId, listId) => {
@@ -380,13 +380,13 @@ export default {
 			UPDATE user_table
 			SET list_id = $2
 			WHERE id = $1
-		`;
+		`
 
-        const values = [userId, listId];
+        const values = [userId, listId]
 
         return {
             text,
             values,
-        };
+        }
     },
-};
+}

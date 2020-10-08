@@ -69,7 +69,7 @@ export default ({ searchKey, searchResult, handleClick }) => {
 
     return (
         <Fragment>
-            <CustomView condition={isTablet !== true && isMobile !== true}>
+            <CustomView condition={isTablet != true && isMobile != true}>
                 <div className="d-flex justify-content-center">
                     <ReactBootstrapAlert
                         variant="secondary"

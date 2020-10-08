@@ -446,7 +446,7 @@ const TypeGroup = ({
 
             <small className="form-text text-muted">UUID</small>
             {repository.map((item, index) => {
-                return item === 'undefined,' ? null : (
+                return item == 'undefined,' ? null : (
                     <Row noGutters className="py-1" key={index}>
                         <Col
                             lg={1}
@@ -512,7 +512,7 @@ const TypeGroup = ({
                         placeholder={locale.texts.SELECT_LBEACON}
                         name={`${abbr}_lbeacon`}
                         options={
-                            abbr === 'f' ? lbeaconOptions_f : lbeaconOptions_p
+                            abbr == 'f' ? lbeaconOptions_f : lbeaconOptions_p
                         }
                         value={values[`selected_${abbr}_lbeacon`]}
                         styles={styleConfig.reactSelect}
@@ -538,7 +538,7 @@ const TypeGroup = ({
                             className="form-text text-capitaliz"
                             style={style.error}
                         >
-                            {abbr === 'f' ? lbeacon_error.f : lbeacon_error.p}
+                            {abbr == 'f' ? lbeacon_error.f : lbeacon_error.p}
                         </small>
                     )}
                 </Col>

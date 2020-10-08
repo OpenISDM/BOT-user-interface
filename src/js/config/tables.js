@@ -220,19 +220,19 @@ const trackingTableColumn = [
         style: style.column,
         width: 70,
         Cell: (props) =>
-            (props.value === 3 && (
+            (props.value == 3 && (
                 <i
                     className="fas fa-battery-full"
                     style={style.battery.full}
                 ></i>
             )) ||
-            (props.value === 2 && (
+            (props.value == 2 && (
                 <i
                     className="fas fa-battery-half"
                     style={style.battery.half}
                 ></i>
             )) ||
-            (props.value === 1 && (
+            (props.value == 1 && (
                 <i
                     className="fas fa-battery-empty"
                     style={style.battery.empty}

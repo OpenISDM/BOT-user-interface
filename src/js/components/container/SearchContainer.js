@@ -77,7 +77,7 @@ class SearchContainer extends React.Component {
             this.props.getSearchKey(this.state.searchKey)
         }
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             this.props.clearSearchResult
         ) {
             this.setState({
@@ -85,7 +85,7 @@ class SearchContainer extends React.Component {
             })
         }
         if (
-            prepProps.hasSearchKey !== this.props.hasSearchKey &&
+            prepProps.hasSearchKey != this.props.hasSearchKey &&
             prepProps.hasSearchKey
         ) {
             this.setState({
@@ -151,7 +151,7 @@ class SearchContainer extends React.Component {
 
         return (
             <Fragment>
-                <CustomView condition={isTablet !== true && isMobile !== true}>
+                <CustomView condition={isTablet != true && isMobile != true}>
                     <BrowserSearchContainer {...propsGroup} />
                 </CustomView>
                 <TabletView>

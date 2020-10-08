@@ -59,7 +59,7 @@ class ToggleSwitch extends React.Component {
                     name={this.props.leftLabel}
                     value={0}
                     onChange={this.toggleState}
-                    checked={this.state.toggle === this.props.leftLabel}
+                    checked={this.state.toggle == this.props.leftLabel}
                 />
                 <label htmlFor="switch_left">
                     {locale[this.props.leftLabel.toUpperCase()]}
@@ -71,7 +71,7 @@ class ToggleSwitch extends React.Component {
                     name={this.props.defaultLabel}
                     value={1}
                     onChange={this.toggleState}
-                    checked={this.state.toggle === this.props.defaultLabel}
+                    checked={this.state.toggle == this.props.defaultLabel}
                 />
                 <label htmlFor="switch_middle">
                     {locale[this.props.defaultLabel.toUpperCase()]}
@@ -83,7 +83,7 @@ class ToggleSwitch extends React.Component {
                     name={this.props.rightLabel}
                     value={2}
                     onChange={this.toggleState}
-                    checked={this.state.toggle === this.props.rightLabel}
+                    checked={this.state.toggle == this.props.rightLabel}
                 />
                 <label htmlFor="switch_right">
                     {locale[this.props.rightLabel.toUpperCase()]}

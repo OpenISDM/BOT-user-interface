@@ -75,11 +75,11 @@ class MonitorSettingBlock extends React.Component {
     }
 
     handleTimeChange = (time, name, id) => {
-        let endTime = name === 'end' ? time.value : this.state.data[id].end_time
+        let endTime = name == 'end' ? time.value : this.state.data[id].end_time
         const startTime =
-            name === 'start' ? time.value : this.state.data[id].start_time
+            name == 'start' ? time.value : this.state.data[id].start_time
         if (
-            name === 'start' &&
+            name == 'start' &&
             endTime.split(':')[0] <= startTime.split(':')[0]
         ) {
             endTime = [
@@ -160,7 +160,7 @@ class MonitorSettingBlock extends React.Component {
 
         return (
             <div>
-                {Object.keys(this.state.data).length !== 0 ? (
+                {Object.keys(this.state.data).length != 0 ? (
                     <>
                         <Row>
                             <Col>

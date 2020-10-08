@@ -69,7 +69,7 @@ const EditPwdForm = ({ show, handleClose, handleSubmit }) => {
                                 'check_password',
                                 locale.texts.PASSWORD_NOT_FIT,
                                 (value) => {
-                                    if (value === new_password_store) {
+                                    if (value == new_password_store) {
                                         return true
                                     }
                                     return false

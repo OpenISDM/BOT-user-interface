@@ -93,7 +93,7 @@ class SearchableObjectType extends React.Component {
     API = {
         // setObjectList : (objectList) => {
         //     var firstLetterMap = new Array()
-        //     if(objectList.length !== 0){
+        //     if(objectList.length != 0){
         //         objectList.map((name) => {
         //             firstLetterMap[name[0]]
         //                 ? firstLetterMap[name[0]].push(name)
@@ -156,7 +156,7 @@ class SearchableObjectType extends React.Component {
 
     getObjectIndexList = (objectList) => {
         var firstLetterMap = []
-        if (objectList.length !== 0) {
+        if (objectList.length != 0) {
             objectList.map((name) => {
                 firstLetterMap[name[0]]
                     ? firstLetterMap[name[0]].push(name)
@@ -179,7 +179,7 @@ class SearchableObjectType extends React.Component {
         //     this.API.setObjectList(nextProps.objectTypeList)
         //     return true
         // }
-        if (this.props.floatUp !== nextProps.floatUp) {
+        if (this.props.floatUp != nextProps.floatUp) {
             if (nextProps.floatUp) {
                 this.API.floatUp()
             } else {
@@ -323,13 +323,13 @@ class SearchableObjectType extends React.Component {
         let flag = false
 
         const toReturnSearchHistory = searchHistory.map((item) => {
-            if (item.name === searchKey.value) {
+            if (item.name == searchKey.value) {
                 item.value = item.value + 1
                 flag = true
             }
             return item
         })
-        flag === false
+        flag == false
             ? toReturnSearchHistory.push({
                   name: searchKey.value,
                   value: 1,

@@ -54,7 +54,7 @@ class FrequentSearch extends React.Component {
 
     componentDidUpdate = (prepProps) => {
         if (
-            prepProps.clearSearchResult !== this.props.clearSearchResult &&
+            prepProps.clearSearchResult != this.props.clearSearchResult &&
             !prepProps.clearSearchResult
         ) {
             this.setState({
@@ -112,7 +112,7 @@ class FrequentSearch extends React.Component {
                                                           ]
                                                         : null,
                                             }}
-                                            // active={this.state.searchKey === item.name.toLowerCase()}
+                                            // active={this.state.searchKey == item.name.toLowerCase()}
                                             key={index}
                                             name={SEARCH_HISTORY}
                                             value={item}
@@ -127,7 +127,7 @@ class FrequentSearch extends React.Component {
                     <Button
                         variant="outline-custom"
                         onClick={this.handleClick}
-                        // active={this.state.searchKey === 'all devices'}
+                        // active={this.state.searchKey == 'all devices'}
                         name={ALL_DEVICES}
                     >
                         {locale.texts.ALL_DEVICES}
@@ -135,7 +135,7 @@ class FrequentSearch extends React.Component {
                     <Button
                         variant="outline-custom"
                         onClick={this.handleClick}
-                        // active={this.state.searchKey === 'all devices'}
+                        // active={this.state.searchKey == 'all devices'}
                         name={ALL_PATIENTS}
                     >
                         {locale.texts.ALL_PATIENTS}
@@ -147,7 +147,7 @@ class FrequentSearch extends React.Component {
                         <Button
                             variant="outline-custom"
                             onClick={this.handleClick}
-                            // active={this.state.searchKey === 'my devices'}
+                            // active={this.state.searchKey == 'my devices'}
                             name={MY_DEVICES}
                         >
                             {locale.texts.MY_DEVICES}

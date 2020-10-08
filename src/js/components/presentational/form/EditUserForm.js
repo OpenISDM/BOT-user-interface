@@ -91,14 +91,14 @@ const EditUserForm = ({
                                     locale.texts.THE_USERNAME_IS_ALREADY_TAKEN,
                                 test: (value) => {
                                     let reapeatFlag = true
-                                    if (value !== undefined) {
+                                    if (value != undefined) {
                                         data.map((item) => {
                                             item.name.toUpperCase() ==
                                             value.toUpperCase()
                                                 ? (reapeatFlag = false)
                                                 : null
                                         })
-                                        if (title === 'edit user') {
+                                        if (title == 'edit user') {
                                             selectedUser.name.toUpperCase() ==
                                             value.toUpperCase()
                                                 ? (reapeatFlag = true)
@@ -113,9 +113,9 @@ const EditUserForm = ({
                                 locale.texts.NOT_ALLOW_PUNCTUATION,
                                 (value) => {
                                     let punctuationFlag = true
-                                    if (value !== undefined) {
-                                        value.indexOf("'") !== -1 ||
-                                        value.indexOf('"') !== -1
+                                    if (value != undefined) {
+                                        value.indexOf("'") != -1 ||
+                                        value.indexOf('"') != -1
                                             ? (punctuationFlag = false)
                                             : null
                                     }
@@ -135,9 +135,9 @@ const EditUserForm = ({
                                       locale.texts.NOT_ALLOW_PUNCTUATION,
                                       (value) => {
                                           let punctuationFlag = true
-                                          if (value !== undefined) {
-                                              value.indexOf("'") !== -1 ||
-                                              value.indexOf('"') !== -1
+                                          if (value != undefined) {
+                                              value.indexOf("'") != -1 ||
+                                              value.indexOf('"') != -1
                                                   ? (punctuationFlag = false)
                                                   : null
                                           }
@@ -210,7 +210,7 @@ const EditUserForm = ({
                                         {roleName
                                             .filter(
                                                 (roleName) =>
-                                                    roleName.name !== 'guest'
+                                                    roleName.name != 'guest'
                                             )
                                             .map((roleName, index) => {
                                                 return (

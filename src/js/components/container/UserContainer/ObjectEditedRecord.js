@@ -67,7 +67,7 @@ class ObjectEditedRecord extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        if (this.context.locale.abbr !== prevState.locale) {
+        if (this.context.locale.abbr != prevState.locale) {
             this.getData()
         }
     }
@@ -148,7 +148,7 @@ class ObjectEditedRecord extends React.Component {
 
         let selection = [...this.state.selection]
 
-        key = typeof key === 'number' ? key : parseInt(key.split('-')[1])
+        key = typeof key == 'number' ? key : parseInt(key.split('-')[1])
         const keyIndex = selection.indexOf(key)
 
         if (keyIndex >= 0) {

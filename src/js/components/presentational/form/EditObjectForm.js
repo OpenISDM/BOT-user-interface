@@ -162,7 +162,7 @@ class EditObjectForm extends React.Component {
                             area: area_name || '',
 
                             monitorType:
-                                selectedRowData.length !== 0
+                                selectedRowData.length != 0
                                     ? selectedRowData.monitor_type == 0
                                         ? null
                                         : selectedRowData.monitor_type.split(
@@ -170,7 +170,7 @@ class EditObjectForm extends React.Component {
                                           )
                                     : [],
                             transferred_location:
-                                status.value === TRANSFERRED
+                                status.value == TRANSFERRED
                                     ? transferred_location
                                     : ' ',
                             nickname: nickname || '',
@@ -493,7 +493,7 @@ class EditObjectForm extends React.Component {
                                             }
                                             isSearchable={false}
                                             isDisabled={
-                                                values.status !== TRANSFERRED
+                                                values.status != TRANSFERRED
                                             }
                                             styles={styleConfig.reactSelect}
                                             placeholder={

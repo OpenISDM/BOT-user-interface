@@ -32,143 +32,143 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config.js';
-import moment from 'moment-timezone';
-import dbQueries from '../db/dbQueries/objectQueries.js';
-import recordQueries from '../db/dbQueries/recordQueries.js';
-import pool from '../db/dev/connection.js';
-import pdf from 'html-pdf';
-import path from 'path';
-import { reloadGeofenceConfig } from '../service/IPCService.js';
+import 'dotenv/config.js'
+import moment from 'moment-timezone'
+import dbQueries from '../db/dbQueries/objectQueries.js'
+import recordQueries from '../db/dbQueries/recordQueries.js'
+import pool from '../db/dev/connection.js'
+import pdf from 'html-pdf'
+import path from 'path'
+import { reloadGeofenceConfig } from '../service/IPCService.js'
 
 export default {
     getObject: (request, response) => {
-        const { locale, areas_id, objectType } = request.query;
+        const { locale, areas_id, objectType } = request.query
 
         pool.query(dbQueries.getObject(objectType, areas_id))
             .then((res) => {
-                console.log('get object table succeed');
+                console.log('get object table succeed')
                 res.rows.map((item) => {
                     item.registered_timestamp = moment
                         .tz(item.registered_timestamp, process.env.TZ)
                         .locale(locale)
-                        .format(process.env.TIMESTAMP_FORMAT);
-                });
-                response.status(200).json(res);
+                        .format(process.env.TIMESTAMP_FORMAT)
+                })
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`get object table failed ${err}`);
-            });
+                console.log(`get object table failed ${err}`)
+            })
     },
 
     addDevice: (request, response) => {
-        const { formOption, mode } = request.body;
+        const { formOption, mode } = request.body
 
         pool.query(dbQueries.addObject(formOption))
             .then((res) => {
-                console.log('add device succeed');
+                console.log('add device succeed')
 
-                response.status(200).json(res);
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`add device failed ${err}`);
-            });
+                console.log(`add device failed ${err}`)
+            })
     },
 
     addPerson: (request, response) => {
-        const { formOption, mode } = request.body;
+        const { formOption, mode } = request.body
 
         pool.query(dbQueries.addPersona(formOption))
             .then((res) => {
-                console.log('add person succeed');
+                console.log('add person succeed')
 
-                response.status(200).json(res);
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`add person failed ${err}`);
-            });
+                console.log(`add person failed ${err}`)
+            })
     },
 
     /** Controller for editing device
      *  If the
      */
     editDevice: (request, response) => {
-        const { formOption, mode } = request.body;
+        const { formOption, mode } = request.body
 
-        const { area_id } = formOption;
+        const { area_id } = formOption
 
         pool.query(dbQueries.editDevice(formOption))
             .then((res) => {
-                console.log(`edit ${mode} succeed`);
+                console.log(`edit ${mode} succeed`)
 
-                reloadGeofenceConfig(area_id);
+                reloadGeofenceConfig(area_id)
 
-                response.status(200).json(res);
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`edit ${mode} failed ${err}`);
-            });
+                console.log(`edit ${mode} failed ${err}`)
+            })
     },
 
     editPerson: (request, response) => {
-        const { formOption, mode } = request.body;
+        const { formOption, mode } = request.body
 
-        const { area_id } = formOption;
+        const { area_id } = formOption
 
         pool.query(dbQueries.editPersona(formOption))
             .then((res) => {
-                console.log(`edit ${mode} succeed`);
+                console.log(`edit ${mode} succeed`)
 
-                reloadGeofenceConfig(area_id);
+                reloadGeofenceConfig(area_id)
 
-                response.status(200).json(res);
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`edit ${mode} failed ${err}`);
-            });
+                console.log(`edit ${mode} failed ${err}`)
+            })
     },
 
     deleteObject: (request, response) => {
-        const { formOption } = request.body;
+        const { formOption } = request.body
 
         pool.query(dbQueries.deleteObject(formOption))
             .then((res) => {
-                console.log('delete object succeed');
+                console.log('delete object succeed')
 
                 const mac_address_original_arr = formOption
                     .filter((item) => item.mac_address)
-                    .map((item) => item.mac_address);
+                    .map((item) => item.mac_address)
 
-                if (mac_address_original_arr.length !== 0) {
+                if (mac_address_original_arr.length != 0) {
                     pool.query(
                         dbQueries.deleteObjectSummaryRecord(
                             mac_address_original_arr
                         )
                     )
                         .then((res) => {
-                            response.status(200).json(res);
+                            response.status(200).json(res)
                         })
                         .catch((err) => {
                             console.log(
                                 `delete object summary record failed ${err}`
-                            );
-                        });
+                            )
+                        })
                 } else {
-                    response.status(200).json(res);
+                    response.status(200).json(res)
                 }
             })
             .catch((err) => {
-                console.log(`delete object failed ${err}`);
-            });
+                console.log(`delete object failed ${err}`)
+            })
     },
 
     disassociate: (request, response) => {
-        const { formOption } = request.body;
+        const { formOption } = request.body
         pool.query(dbQueries.disassociate(formOption))
             .then((res) => {
                 const mac_address_original_arr = res.rows.map(
                     (item) => item.mac_address
-                );
+                )
 
                 pool.query(
                     dbQueries.deleteObjectSummaryRecord(
@@ -176,18 +176,18 @@ export default {
                     )
                 )
                     .then((res) => {
-                        console.log('disassociate succeed');
-                        response.status(200).json(res);
+                        console.log('disassociate succeed')
+                        response.status(200).json(res)
                     })
                     .catch((err) => {
                         console.log(
                             `delete object summary record failed ${err}`
-                        );
-                    });
+                        )
+                    })
             })
             .catch((err) => {
-                console.log(`disassociate failed ${err}`);
-            });
+                console.log(`disassociate failed ${err}`)
+            })
     },
 
     editObjectPackage: (request, response) => {
@@ -197,8 +197,8 @@ export default {
             pdfPackage,
             reservedTimestamp,
             locale,
-        } = request.body;
-        console.log(formOption);
+        } = request.body
+        console.log(formOption)
         pool.query(
             recordQueries.addEditObjectRecord(
                 formOption,
@@ -207,8 +207,8 @@ export default {
             )
         )
             .then((res) => {
-                const record_id = res.rows[0].id;
-                console.log('add edited object record succeed');
+                const record_id = res.rows[0].id
+                console.log('add edited object record succeed')
 
                 pool.query(
                     dbQueries.editObjectPackage(
@@ -219,7 +219,7 @@ export default {
                     )
                 )
                     .then((res) => {
-                        console.log('edit object package succeed');
+                        console.log('edit object package succeed')
                         if (pdfPackage) {
                             pdf.create(
                                 pdfPackage.pdf,
@@ -233,57 +233,57 @@ export default {
                                     if (err)
                                         return console.log(
                                             `edit object package error ${err}`
-                                        );
+                                        )
 
-                                    console.log('pdf create succeed');
-                                    response.status(200).json(pdfPackage.path);
+                                    console.log('pdf create succeed')
+                                    response.status(200).json(pdfPackage.path)
                                 }
-                            );
+                            )
                         } else {
-                            response.status(200).json();
+                            response.status(200).json()
                         }
                     })
                     .catch((err) => {
-                        console.log(`edit object package failed ${err}`);
-                    });
+                        console.log(`edit object package failed ${err}`)
+                    })
             })
             .catch((err) => {
-                console.log(`edit object package failed ${err}`);
-            });
+                console.log(`edit object package failed ${err}`)
+            })
     },
 
     getIdleMacaddr: (request, response) => {
         pool.query(dbQueries.getIdleMacaddr())
             .then((res) => {
-                console.log('get idle mac address succeed');
-                response.status(200).json(res);
+                console.log('get idle mac address succeed')
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`get idle mac address failed ${err}`);
-            });
+                console.log(`get idle mac address failed ${err}`)
+            })
     },
 
     getAlias: (request, response) => {
         pool.query(dbQueries.getAlias())
             .then((res) => {
-                console.log('get object type alias succeed');
-                response.status(200).json(res);
+                console.log('get object type alias succeed')
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`get object type alias failed ${err}`);
-            });
+                console.log(`get object type alias failed ${err}`)
+            })
     },
 
     editAlias: (request, response) => {
-        const { objectType, alias } = request.body;
+        const { objectType, alias } = request.body
 
         pool.query(dbQueries.editAlias(objectType, alias))
             .then((res) => {
-                console.log('edit object type alias succeed');
-                response.status(200).json(res);
+                console.log('edit object type alias succeed')
+                response.status(200).json(res)
             })
             .catch((err) => {
-                console.log(`edit object type alias failed ${err}`);
-            });
+                console.log(`edit object type alias failed ${err}`)
+            })
     },
-};
+}

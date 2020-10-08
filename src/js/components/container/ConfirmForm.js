@@ -84,12 +84,11 @@ class ConfirmForm extends React.Component {
 
         let hasSelectedObjectData = selectedObjectData[0] ? true : false
         let isTransferObject =
-            hasSelectedObjectData &&
-            selectedObjectData[0].status === TRANSFERRED
+            hasSelectedObjectData && selectedObjectData[0].status == TRANSFERRED
                 ? true
                 : false
         let isReservedObject =
-            hasSelectedObjectData && selectedObjectData[0].status === RESERVE
+            hasSelectedObjectData && selectedObjectData[0].status == RESERVE
                 ? true
                 : false
 
