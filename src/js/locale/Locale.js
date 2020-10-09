@@ -34,7 +34,7 @@
 
 import generalTexts from './text'
 import siteModuleTexts from '../../../site_module/locale/text'
-import incTexts from '../../../inc/doc/locale/text'
+import incTexts from '../../inc/doc/locale/text'
 import React from 'react'
 import LocaleContext from '../context/LocaleContext'
 import config from '../config'
