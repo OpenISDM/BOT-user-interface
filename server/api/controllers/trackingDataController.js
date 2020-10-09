@@ -119,13 +119,13 @@ const getTrackingData = (request, response) => {
                 /** Set the residence time of the object */
                 item.residence_time = item.found
                     ? moment(item.last_seen_timestamp)
-                         locale(locale)
-                         from(moment(item.first_seen_timestamp))
+                          .locale(locale)
+                          .from(moment(item.first_seen_timestamp))
                     : item.last_reported_timestamp
-                          moment(item.last_reported_timestamp)
-                             locale(locale)
-                             fromNow()
-                          ''
+                    ? moment(item.last_reported_timestamp)
+                          .locale(locale)
+                          .fromNow()
+                    : ''
 
                 /** Flag the object's battery volumn is limiting */
                 if (
