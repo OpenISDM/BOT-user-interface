@@ -33,9 +33,9 @@
 */
 
 import siteConfig from '../../../site_module/siteConfig'
-import viewConfig from '../config/viewConfig'
+import viewConfig from './viewConfig'
 import { monitorTypeChecker } from '../helper/dataTransfer'
-import { RETURNED, RESERVE } from '../config/wordMap'
+import { RETURNED, RESERVE } from './wordMap'
 
 /** Map configuration.
  *  Refer leaflet.js for more optional setting https://leafletjs.com/reference-1.5.0.html
@@ -369,7 +369,6 @@ const mapConfig = {
             return mapConfig.iconColor.normal
         }
         return mapConfig.iconColor.pinColorArray[item.pinColor]
-
     },
 
     areaOptions: Object.keys(siteConfig.areaModules).reduce((res, item) => {
@@ -406,70 +405,70 @@ const mapConfig = {
                 <hr/>
                 <div class="popupContent custom-scrollbar max-height-30">
                     ${objectList
-        .map((item, index) => {
-            return `
+                        .map((item, index) => {
+                            return `
                             <div id='${
-    item.mac_address
-}' class="popupItem mb-2">
+                                item.mac_address
+                            }' class="popupItem mb-2">
                                 <div class="d-flex justify-content-start">
                                     <div class="min-width-1-percent">
                                         ${
-    mapConfig.popupOptions.showNumber
-        ? `${index + 1}.`
-        : '&bull;'
-}
+                                            mapConfig.popupOptions.showNumber
+                                                ? `${index + 1}.`
+                                                : '&bull;'
+                                        }
                                     </div>
                                     <div>
                                         ${
-    item.object_type == 0
-        ? `
+                                            item.object_type == 0
+                                                ? `
                                                 ${item.type},
                                                 ${
-    locale.texts
-        .ASSET_CONTROL_NUMBER
-}: ${
-    viewConfig.ACNOmitsymbol
-}${item.asset_control_number.slice(
-    -4
-)},
+                                                    locale.texts
+                                                        .ASSET_CONTROL_NUMBER
+                                                }: ${
+                                                      viewConfig.ACNOmitsymbol
+                                                  }${item.asset_control_number.slice(
+                                                      -4
+                                                  )},
                                                 ${
-    item.status != RETURNED
-        ? `${
-            locale.texts[
-                item.status.toUpperCase()
-            ]
-        }`
-        : `${item.residence_time}`
-}
+                                                    item.status != RETURNED
+                                                        ? `${
+                                                              locale.texts[
+                                                                  item.status.toUpperCase()
+                                                              ]
+                                                          }`
+                                                        : `${item.residence_time}`
+                                                }
                                                 ${
-    item.status == RESERVE
-        ? `~ ${item.reserved_timestamp_final}`
-        : ''
-}
+                                                    item.status == RESERVE
+                                                        ? `~ ${item.reserved_timestamp_final}`
+                                                        : ''
+                                                }
                                                 ${
-    item.status == RESERVE
-        ? ` ${locale.texts.IS_RESERVED_FOR}`
-        : ''
-}
+                                                    item.status == RESERVE
+                                                        ? ` ${locale.texts.IS_RESERVED_FOR}`
+                                                        : ''
+                                                }
 
                                                 ${
-    item.status == RESERVE
-        ? ` ${item.reserved_user_name}`
-        : ''
-}
+                                                    item.status == RESERVE
+                                                        ? ` ${item.reserved_user_name}`
+                                                        : ''
+                                                }
                                             `
-        : `
+                                                : `
                                                 ${item.name},
                                                 ${locale.texts.PHYSICIAN_NAME}: ${item.physician_name},
                                                 ${item.residence_time}
                                             `
-}
+                                        }
                                     </div>
                                 </div>
                             </div>
                         `
-        })
-        .join('')}
+                        })
+                        .join('')}
                 </div>
             </div>
         `

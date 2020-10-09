@@ -49,7 +49,7 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 }, {})
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './client/index.js',
     mode: env.NODE_ENV,
     // devtool: 'none',
     output: {
@@ -132,7 +132,7 @@ module.exports = {
         // }),
 
         new HtmlWebPackPlugin({
-            template: './src/index.html',
+            template: './client/index.html',
             filename: './index.html',
         }),
 
@@ -162,15 +162,21 @@ module.exports = {
         }),
 
         new InjectManifest({
-            swSrc: path.join(__dirname, 'src', 'js', 'serviceWorker', 'sw.js'),
+            swSrc: path.join(
+                __dirname,
+                'client',
+                'js',
+                'serviceWorker',
+                'sw.js'
+            ),
             swDest: path.join(__dirname, 'server/dist', 'sw.js'),
             maximumFileSizeToCacheInBytes: 5000000000,
         }),
 
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'src/img/logo', to: 'imgs/logo' },
-                'src/manifest.webmanifest',
+                { from: 'client/img/logo', to: 'imgs/logo' },
+                'client/manifest.webmanifest',
             ],
         }),
     ],

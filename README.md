@@ -76,4 +76,4 @@ If user would like to modify or add the sql command, query functions used in BOT
 
 ### Data request interface
 
-In ./src/js/dataSrc.js, there are the list of requests used in UI code. The default router is http://localhost:3000. If user would like to modify or create new data retrieving url, one can find the info in this file.
+In ./client/js/dataSrc.js, there are the list of requests used in UI code. The default router is http://localhost:3000. If user would like to modify or create new data retrieving url, one can find the info in this file.
