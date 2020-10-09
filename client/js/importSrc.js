@@ -40,8 +40,6 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 /** react-toastify source */
 import '../../node_modules/react-toastify/dist/ReactToastify.min.css'
 
-import 'react-toastify/dist/ReactToastify.min.css'
-
 /** General customized css */
 import '../scss/App.scss'
 
@@ -66,7 +64,7 @@ import '../scss/leafletMarkers.scss'
 
 /** leaflet source */
 
-import 'leaflet/dist/leaflet.js'
+import 'leaflet/dist/leaflet'
 
 import '../../node_modules/leaflet/dist/leaflet.css'
 
