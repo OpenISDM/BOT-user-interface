@@ -161,7 +161,13 @@ class Map extends React.Component {
         this.mapOptions.maxBounds = bounds.map((latLng, index) =>
             latLng.map((axis) => axis + this.mapOptions.maxBoundsOffset[index])
         )
-        const map = L.map('mapid', this.mapOptions)
+
+        let map
+        if (map !== undefined) {
+            map.remove()
+        } else {
+            map = L.map('mapid', this.mapOptions)
+        }
 
         /** Close popup while mouse leaving out the map */
         map.on('mouseout', () => {
