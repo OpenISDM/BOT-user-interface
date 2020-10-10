@@ -39,6 +39,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { InjectManifest } = require('workbox-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+    .BundleAnalyzerPlugin
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
@@ -54,11 +56,8 @@ module.exports = {
     // devtool: 'none',
     output: {
         path: path.join(__dirname, 'server/dist'),
-
         filename: './js/[name].bundle.js',
-
         chunkFilename: './js/[name].bundle.js',
-
         publicPath: '/',
     },
 
@@ -125,11 +124,11 @@ module.exports = {
         new CleanWebpackPlugin(),
 
         /** Webpack tool for analyzing the package size */
-        // new BundleAnalyzerPlugin({
-        //     analyzerMode: 'static',
-        //     reportFilename: 'BundleReport.html',
-        //     logLevel: 'info'
-        // }),
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            reportFilename: 'BundleReport.html',
+            logLevel: 'info',
+        }),
 
         new HtmlWebPackPlugin({
             template: './client/index.html',
