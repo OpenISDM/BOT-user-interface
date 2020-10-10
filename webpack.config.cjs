@@ -41,6 +41,7 @@ const { InjectManifest } = require('workbox-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
     .BundleAnalyzerPlugin
+const TerserPlugin = require('terser-webpack-plugin')
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
@@ -178,9 +179,16 @@ module.exports = {
                 'client/manifest.webmanifest',
             ],
         }),
-    ],
 
+        new webpack.IgnorePlugin(/\.\/locale/, /moment/),
+    ],
     optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                parallel: true,
+            }),
+        ],
         splitChunks: {
             chunks: 'all',
             cacheGroups: {
