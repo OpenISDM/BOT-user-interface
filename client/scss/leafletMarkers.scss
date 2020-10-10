@@ -5,172 +5,176 @@
     background-position: center; */
     width: 35px;
     height: 46px;
-    position:absolute;
-    left:0;
-    top:0;
+    position: absolute;
+    left: 0;
+    top: 0;
     display: block;
     text-align: center;
 }
 
 .awesome-number-marker i {
-  color: #333;
-  /* margin-top: 10px;
+    color: #333;
+    /* margin-top: 10px;
   margin-left: 10px; */
-  display: inline-block;
-  font-size: 20px;
+    display: inline-block;
+    font-size: 20px;
 }
 
 .awesome-number-marker .icon-white {
-  color: #fff;
+    color: #fff;
 }
 
 /* Colors */
 .awesome-number-marker-icon-red {
-  background: url('../img/colorPin/Red.png') no-repeat center/contain;
-  /* background-position: 0 0; */
+    background: url('../img/colorPin/Red.png') no-repeat center/contain;
+    /* background-position: 0 0; */
 }
 
 .awesome-number-marker-icon-darkred {
-  /* background-position: -180px 0; */
+    /* background-position: -180px 0; */
 }
 
 .awesome-number-marker-icon-lightred {
-  background-position: -360px 0;
+    background-position: -360px 0;
 }
 
 .awesome-number-marker-icon-orange {
-  background: url('../img/colorPin/Orange.png') no-repeat center/contain;
-  /* background-position: -36px 0; */
+    background: url('../img/colorPin/Orange.png') no-repeat center/contain;
+    /* background-position: -36px 0; */
 }
 
 .awesome-number-marker-icon-beige {
-  background-position: -396px 0;
+    background-position: -396px 0;
 }
 
 .awesome-number-marker-icon-green {
-  background-position: -72px 0;
+    background-position: -72px 0;
 }
 
 .awesome-number-marker-icon-darkgreen {
-  background-position: -252px 0;
+    background-position: -252px 0;
 }
 
 .awesome-number-marker-icon-lightgreen {
-  background-position: -432px 0;
+    background-position: -432px 0;
 }
 
 .awesome-number-marker-icon-blue {
-  /* background: url('../img/colorPin/DarkBlue.svg') no-repeat center/contain; */
-  /* background-position: -108px 0; */
-  background: url('../img/colorPin/DarkBlue_Without_Dot.png') no-repeat center/contain;
-
+    /* background: url('../img/colorPin/DarkBlue.svg') no-repeat center/contain; */
+    /* background-position: -108px 0; */
+    background: url('../img/colorPin/DarkBlue_Without_Dot.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-darkblue {
-  background-position: -216px 0;
+    background-position: -216px 0;
 }
 
-
-
 .awesome-number-marker-icon-purple {
-  background-position: -144px 0;
+    background-position: -144px 0;
 }
 
 .awesome-number-marker-icon-darkpurple {
-  background-position: -288px 0;
+    background-position: -288px 0;
 }
 
 .awesome-number-marker-icon-pink {
-  background-position: -504px 0;
+    background-position: -504px 0;
 }
 
 .awesome-number-marker-icon-cadetblue {
-  background-position: -324px 0;
+    background-position: -324px 0;
 }
 
 .awesome-number-marker-icon-white {
-  background-position: -574px 0;
+    background-position: -574px 0;
 }
 
 .awesome-number-marker-icon-grey {
-  background: url('../img/colorPin//DarkGrey.png') no-repeat center/contain;
-  /* background-position: -648px 0; */
+    background: url('../img/colorPin//DarkGrey.png') no-repeat center/contain;
+    /* background-position: -648px 0; */
 }
 
 .awesome-number-marker-icon-lightgray {
-  background-position: -612px 0;
+    background-position: -612px 0;
 }
 
 .awesome-number-marker-icon-black {
-  background: url('../img/colorPin/Black.png') no-repeat center/contain;
-  /* background-position: -682px 0; */
+    background: url('../img/colorPin/Black.png') no-repeat center/contain;
+    /* background-position: -682px 0; */
 }
 
 .awesome-number-marker-icon-sos {
-  background: url('../img/colorPin/sos.png') no-repeat center/contain;
-
+    background: url('../img/colorPin/sos.png') no-repeat center/contain;
 }
-.awesome-number-marker-icon-lavender  {
-  background: url('../img/colorPin/Lavender.png') no-repeat center/contain;
+.awesome-number-marker-icon-lavender {
+    background: url('../img/colorPin/Lavender.png') no-repeat center/contain;
 }
 
-.awesome-number-marker-icon-lightyellow  {
-  background: url('../img/colorPin/LightYellow.png') no-repeat center/contain;
+.awesome-number-marker-icon-lightyellow {
+    background: url('../img/colorPin/LightYellow.png') no-repeat center/contain;
 }
 
 .awesome-number-marker-icon-slateblue {
-  background: url('../img/colorPin/slateblue_without_dot.png') no-repeat center/contain;
-
+    background: url('../img/colorPin/slateblue_without_dot.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-darkseagreen {
-  background: url('../img/colorPin/DarkSeaGreen.png') no-repeat center/contain;
+    background: url('../img/colorPin/DarkSeaGreen.png') no-repeat center/contain;
 }
 
 .awesome-number-marker-icon-lightblue {
-  background: url('../img/colorPin/lightblue_without_dot.png') no-repeat center/contain;
+    background: url('../img/colorPin/lightblue_without_dot.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-tan {
-  background: url('../img/colorPin/tan_without_dot.png') no-repeat center/contain;
+    background: url('../img/colorPin/tan_without_dot.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-mistyrose {
-  background: url('../img/colorPin/MistyRose.png') no-repeat center/contain;
+    background: url('../img/colorPin/MistyRose.png') no-repeat center/contain;
 }
 
 .awesome-number-marker-icon-yellowgreen {
-  background: url('../img/colorPin/yellowgreen_without_dot.png') no-repeat center/contain;
+    background: url('../img/colorPin/yellowgreen_without_dot.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-orange {
-  background: url('../img/colorPin/orange_without_dot.png') no-repeat center/contain;
+    background: url('../img/colorPin/orange_without_dot.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-orchid {
-  background: url('../img/colorPin/Orchid.png') no-repeat center/contain;
+    background: url('../img/colorPin/Orchid.png') no-repeat center/contain;
 }
 
 .awesome-number-marker-icon-female {
-  background: url('../img/peoplePin/female_20200824.png') no-repeat center/contain;
+    background: url('../img/peoplePin/female_20200824.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-female_1 {
-  background: url('../img/peoplePin/FeMale_2.png') no-repeat center/contain;
+    background: url('../img/peoplePin/FeMale_2.png') no-repeat center/contain;
 }
 
 .awesome-number-marker-icon-male {
-  background: url('../img/peoplePin/male_20200826.png') no-repeat center/contain;
+    background: url('../img/peoplePin/male_20200826.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-male_1 {
-  background: url('../img/peoplePin/Male_5.png') no-repeat center/contain;
+    background: url('../img/peoplePin/Male_5.png') no-repeat center/contain;
 }
 
 .awesome-number-marker-icon-blackRound {
-  background: url('../img/colorPin/black_round_20200819.png') no-repeat center/contain;
+    background: url('../img/colorPin/black_round_20200819.png') no-repeat
+        center/contain;
 }
 
 .awesome-number-marker-icon-whiteRound {
-  background: url('../img/colorPin/white_round.png') no-repeat center/contain;
+    background: url('../img/colorPin/white_round.png') no-repeat center/contain;
 }

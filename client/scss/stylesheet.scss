@@ -1,15 +1,13 @@
-@import './core.scss';
-
 .font-size-16 {
     font-size: 16px;
 }
 
 .font-size-90-percent {
-    font-size: .9rem;
+    font-size: 0.9rem;
 }
 
 .font-size-80-percent {
-    font-size: .8rem;
+    font-size: 0.8rem;
 }
 
 .font-size-120-percent {
@@ -137,7 +135,7 @@
 }
 
 .right-20-percent {
-    right: 20%
+    right: 20%;
 }
 
 .overflow-hidden-scroll {
@@ -187,8 +185,8 @@
 }
 
 @media (max-width: $screen-xs) {
-
-    html, body {
+    html,
+    body {
         font-size: 10px;
     }
 
@@ -205,10 +203,9 @@
     }
 }
 
-
 @media (min-width: $screen-xs) and (max-width: $screen-sm) {
-
-    html, body {
+    html,
+    body {
         font-size: 10px;
     }
 
@@ -227,11 +224,10 @@
     .sm\:display-none {
         display: none;
     }
-
 }
 @media (min-width: $screen-sm) and (max-width: $screen-md) {
-
-    html, body {
+    html,
+    body {
         font-size: 10px;
     }
 
@@ -246,11 +242,10 @@
     .md\:display-none {
         display: none;
     }
-
 }
 @media (min-width: $screen-md) and (max-width: $screen-lg) {
-
-    html, body {
+    html,
+    body {
         font-size: 12px;
     }
 
@@ -265,12 +260,11 @@
     .lg\:display-none {
         display: none;
     }
-
 }
 
 @media (min-width: $screen-lg) and (max-width: $screen-xl) {
-
-    html, body {
+    html,
+    body {
         font-size: 12px;
     }
 
@@ -285,12 +279,11 @@
     .xl\:display-none {
         display: none;
     }
-
 }
 
 @media (min-width: $screen-xl) and (max-width: $screen-xxl) {
-
-    html, body {
+    html,
+    body {
         font-size: 14px;
     }
 
@@ -300,8 +293,8 @@
 }
 
 @media (min-width: $screen-xxl) {
-
-    html, body {
+    html,
+    body {
         font-size: 16px;
     }
 

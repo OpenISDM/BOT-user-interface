@@ -1,7 +1,7 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc. 
+    2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
-  
+
     Project Name:
         BiDae Object Tracker (BOT)
 
@@ -17,12 +17,12 @@
     Abstract:
         BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
         their locations to users' devices. Basically, a LBeacon is an inexpensive,
-        Bluetooth device. The 3D coordinates and location description of every 
-        LBeacon are retrieved from BeDIS (Building/environment Data and Information 
-        System) and stored locally during deployment and maintenance times. Once 
-        initialized, each LBeacon broadcasts its coordinates and location 
-        description to Bluetooth enabled user devices within its coverage area. It 
-        also scans Bluetooth low-energy devices that advertise to announced their 
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
         presence and collect their Mac addresses.
 
     Authors:
@@ -32,24 +32,23 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-/** React Library */
-import React from 'react'
-import ReactDOM from 'react-dom'
-
-/** IE 11 */
+/** IE support */
 import 'react-app-polyfill/ie11'
-
-// /** IE 10 */
-// import 'react-app-polyfill/ie10';
-
-/** IE 9 */
 import 'react-app-polyfill/ie9'
 import 'react-app-polyfill/stable'
 
-/** Import Custom CSS */
-import './js/importSrc'
+/** Map view */
+import 'leaflet/dist/leaflet'
 
-/** Container Component */
+/** Import Custom CSS */
+import './js/thirdPartyStyle'
+
+/** Import SASS  */
+import './scss/App.scss'
+
+/** React Library */
+import React from 'react'
+import ReactDOM from 'react-dom'
 import App from './App'
 import { register } from './js/serviceWorker/serviceWorker'
 

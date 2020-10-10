@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        importSrc.js
+        thirdPartyStyle.js
 
     File Description:
         BOT UI component
@@ -32,53 +32,22 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-/** Third party css style sheet */
-
 /** bootstrap source */
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 /** react-toastify source */
-import '../../node_modules/react-toastify/dist/ReactToastify.min.css'
-
-/** General customized css */
-import '../scss/App.scss'
-
-import '../scss/stylesheet.scss'
-
-/** BOTCheckbox */
-import '../scss/BOTCheckbox.scss'
-
-import '../scss/BOTsidenav.scss'
-
-import '../scss/SearchableObjectType.scss'
-
-import '../scss/SearchBar.scss'
-
-/** RWD customized css */
-// import "../scss/RWD.scss"
-
-/** ToggleSwitch customized css */
-import '../scss/ToggleSwitch.scss'
-
-import '../scss/leafletMarkers.scss'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 /** leaflet source */
-
-import 'leaflet/dist/leaflet'
-
-import '../../node_modules/leaflet/dist/leaflet.css'
-
-/** leaflet related source */
-
-import '../../node_modules/leaflet.markercluster/dist/MarkerCluster.css'
-
-import '../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css'
+import 'leaflet/dist/leaflet.css'
+import 'leaflet.markercluster/dist/MarkerCluster.css'
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 
 /** font awesome related source */
-import '../../node_modules/@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 /** react-widget */
 import 'react-widgets/dist/css/react-widgets.css'
 
 /** pretty check box */
-import '../../node_modules/pretty-checkbox/dist/pretty-checkbox.min.css'
+import 'pretty-checkbox/dist/pretty-checkbox.min.css'
