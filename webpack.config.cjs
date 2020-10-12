@@ -57,11 +57,10 @@ module.exports = {
 	// devtool: 'none',
 	output: {
 		path: path.join(__dirname, 'server/dist'),
-		filename: './js/[name].bundle.js',
-		chunkFilename: './js/[name].bundle.js',
+		filename: './js/[name].[chunkhash].js',
+		chunkFilename: './js/[name].[chunkhash].chunk.js',
 		publicPath: '/',
 	},
-
 	module: {
 		rules: [
 			{
@@ -120,7 +119,6 @@ module.exports = {
 	devServer: {
 		historyApiFallback: true,
 	},
-
 	plugins: [
 		new CleanWebpackPlugin(),
 
@@ -156,7 +154,7 @@ module.exports = {
 		}),
 
 		new MiniCssExtractPlugin({
-			filename: './css/[name].css',
+			filename: './css/[name].[contenthash].css',
 		}),
 
 		new InjectManifest({
@@ -209,6 +207,9 @@ module.exports = {
 					name: 'bootstrapVendor',
 				},
 			},
+		},
+		runtimeChunk: {
+			name: 'runtime',
 		},
 	},
 }
