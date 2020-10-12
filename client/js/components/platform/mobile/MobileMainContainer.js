@@ -41,105 +41,103 @@ import LocaleContext from '../../../context/LocaleContext'
 import MapContainer from '../../container/MapContainer'
 
 const MobileMainContainer = ({
-    handleClearButton,
-    getSearchKey,
-    setMonitor,
-    clearAlerts,
-    lbeaconPosition,
-    geofenceConfig,
-    searchedObjectType,
-    showedObjects,
-    highlightSearchPanel,
-    showMobileMap,
-    clearSearchResult,
-    searchKey,
-    searchResult,
-    trackingData,
-    proccessedTrackingData,
-    hasSearchKey,
-    setShowedObjects,
-    pathMacAddress,
-    isHighlightSearchPanel,
-    locationMonitorConfig,
-    currentAreaId,
-    searchObjectArray = [],
-    pinColorArray,
-    handleClick,
-    showFoundResult,
-    keywords,
-    display,
-    handleShowResultListForMobile,
+	handleClearButton,
+	getSearchKey,
+	setMonitor,
+	clearAlerts,
+	lbeaconPosition,
+	geofenceConfig,
+	searchedObjectType,
+	showedObjects,
+	highlightSearchPanel,
+	showMobileMap,
+	clearSearchResult,
+	searchKey,
+	searchResult,
+	trackingData,
+	proccessedTrackingData,
+	hasSearchKey,
+	setShowedObjects,
+	pathMacAddress,
+	isHighlightSearchPanel,
+	locationMonitorConfig,
+	currentAreaId,
+	searchObjectArray = [],
+	pinColorArray,
+	handleClick,
+	showFoundResult,
+	keywords,
+	display,
+	handleShowResultListForMobile,
 }) => {
-    const auth = React.useContext(AuthenticationContext)
-    const locale = React.useContext(LocaleContext)
+	const auth = React.useContext(AuthenticationContext)
+	const locale = React.useContext(LocaleContext)
 
-    const style = {
-        searchPanelForMobile: {
-            // zIndex: isHighlightSearchPanel ? 1060 : 1,
-            display: display ? null : 'none',
-            fontSize: '2rem',
-            background: 'white',
-            borderRadius: 10,
-            //border: 'solid',
-            height: '90vh',
-            // width:'90vw'
-        },
-        mapForMobile: {
-            display: showMobileMap ? null : 'none',
-        },
-    }
+	const style = {
+		searchPanelForMobile: {
+			// zIndex: isHighlightSearchPanel ? 1060 : 1,
+			display: display ? null : 'none',
+			fontSize: '2rem',
+			background: 'white',
+			borderRadius: 10,
+			//border: 'solid',
+			height: '90vh',
+			// width:'90vw'
+		},
+		mapForMobile: {
+			display: showMobileMap ? null : 'none',
+		},
+	}
 
-    return (
-        <div
-            id="page-wrap"
-            className="d-flex flex-column"
-            style={{ height: '90vh' }}
-        >
-            <div className="h-100" style={{ overflow: 'hidden hidden' }}>
-                <div
-                    id="searchPanel"
-                    className="h-100"
-                    style={style.searchPanelForMobile}
-                >
-                    <SearchContainer
-                        hasSearchKey={hasSearchKey}
-                        clearSearchResult={clearSearchResult}
-                        auth={auth}
-                        getSearchKey={getSearchKey}
-                        handleShowResultListForMobile={
-                            handleShowResultListForMobile
-                        }
-                        searchObjectArray={searchObjectArray}
-                        pinColorArray={pinColorArray}
-                        keywords={keywords}
-                    />
-                </div>
-                <div style={style.mapForMobile} className="m-1">
-                    <MapContainer
-                        pathMacAddress={pathMacAddress}
-                        proccessedTrackingData={
-                            proccessedTrackingData.length == 0
-                                ? trackingData
-                                : proccessedTrackingData
-                        }
-                        hasSearchKey={hasSearchKey}
-                        searchKey={searchKey}
-                        searchResult={searchResult}
-                        handleClearButton={handleClick}
-                        handleClick={handleClick}
-                        getSearchKey={getSearchKey}
-                        lbeaconPosition={lbeaconPosition}
-                        geofenceConfig={geofenceConfig}
-                        locationMonitorConfig={locationMonitorConfig}
-                        searchedObjectType={searchedObjectType}
-                        showedObjects={showedObjects}
-                        setShowedObjects={setShowedObjects}
-                        currentAreaId={currentAreaId}
-                        searchObjectArray={searchObjectArray}
-                        pinColorArray={pinColorArray}
-                    />
-                </div>
-                {/* <ButtonGroup style={{marginTop:'5px',marginBottom:'5px'}}>
+	return (
+		<div
+			id="page-wrap"
+			className="d-flex flex-column"
+			style={{ height: '90vh' }}
+		>
+			<div className="h-100" style={{ overflow: 'hidden hidden' }}>
+				<div
+					id="searchPanel"
+					className="h-100"
+					style={style.searchPanelForMobile}
+				>
+					<SearchContainer
+						hasSearchKey={hasSearchKey}
+						clearSearchResult={clearSearchResult}
+						auth={auth}
+						getSearchKey={getSearchKey}
+						handleShowResultListForMobile={handleShowResultListForMobile}
+						searchObjectArray={searchObjectArray}
+						pinColorArray={pinColorArray}
+						keywords={keywords}
+					/>
+				</div>
+				<div style={style.mapForMobile} className="m-1">
+					<MapContainer
+						pathMacAddress={pathMacAddress}
+						proccessedTrackingData={
+							proccessedTrackingData.length == 0
+								? trackingData
+								: proccessedTrackingData
+						}
+						hasSearchKey={hasSearchKey}
+						searchKey={searchKey}
+						searchResult={searchResult}
+						handleClearButton={handleClick}
+						handleClick={handleClick}
+						getSearchKey={getSearchKey}
+						lbeaconPosition={lbeaconPosition}
+						geofenceConfig={geofenceConfig}
+						locationMonitorConfig={locationMonitorConfig}
+						searchedObjectType={searchedObjectType}
+						showedObjects={showedObjects}
+						setShowedObjects={setShowedObjects}
+						currentAreaId={currentAreaId}
+						searchObjectArray={searchObjectArray}
+						pinColorArray={pinColorArray}
+					/>
+				</div>
+				{/* <ButtonGroup style={{marginTop:'5px',marginBottom:'5px'}}>
                     <Button
                         variant='outline-primary'
                         onClick={mapButtonHandler}
@@ -162,9 +160,9 @@ const MobileMainContainer = ({
                         showMobileMap={showMobileMap}
                     />
                 </div> */}
-            </div>
-        </div>
-    )
+			</div>
+		</div>
+	)
 }
 
 export default MobileMainContainer

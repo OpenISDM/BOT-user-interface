@@ -33,7 +33,7 @@
 */
 
 const ms = {
-    LICENCE: '© 2020 BiDaE Teknologi, Diperbadankan',
+	LICENCE: '© 2020 BiDaE Teknologi, Diperbadankan',
 }
 
 export default ms

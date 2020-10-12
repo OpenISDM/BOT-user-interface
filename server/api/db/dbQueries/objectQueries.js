@@ -33,7 +33,7 @@
 */
 
 const getObject = (objectType, areas_id) => {
-    const text = `
+	const text = `
 		SELECT
 			object_table.id,
 			object_table.name,
@@ -80,11 +80,11 @@ const getObject = (objectType, areas_id) => {
 
 			;
 	`
-    return text
+	return text
 }
 
 const addPersona = (formOption) => {
-    const text = `
+	const text = `
 		INSERT INTO object_table (
 			name,
 			mac_address,
@@ -108,25 +108,25 @@ const addPersona = (formOption) => {
 			now()
 		)`
 
-    const values = [
-        formOption.name,
-        formOption.mac_address,
-        formOption.asset_control_number,
-        formOption.area_id,
-        formOption.monitor_type,
-        formOption.object_type,
-    ]
+	const values = [
+		formOption.name,
+		formOption.mac_address,
+		formOption.asset_control_number,
+		formOption.area_id,
+		formOption.monitor_type,
+		formOption.object_type,
+	]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 const editPersona = (formOption) => {
-    const text = `
+	const text = `
 		Update object_table
 		SET name = $2,
 			mac_address = $3,
@@ -136,25 +136,25 @@ const editPersona = (formOption) => {
 		WHERE asset_control_number = $1
 	`
 
-    const values = [
-        formOption.asset_control_number,
-        formOption.name,
-        formOption.mac_address,
-        formOption.area_id,
-        formOption.monitor_type,
-        formOption.object_type,
-    ]
+	const values = [
+		formOption.asset_control_number,
+		formOption.name,
+		formOption.mac_address,
+		formOption.area_id,
+		formOption.monitor_type,
+		formOption.object_type,
+	]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 const editDevice = (formOption) => {
-    const text = `
+	const text = `
 		Update object_table
 		SET type = $2,
 			status = $3,
@@ -167,37 +167,37 @@ const editDevice = (formOption) => {
 			transferred_location = $10
 		WHERE id = $1
 		`
-    const values = [
-        formOption.id,
-        formOption.type,
-        formOption.status,
-        formOption.asset_control_number,
-        formOption.name,
-        formOption.monitor_type,
-        formOption.area_id,
-        formOption.mac_address,
-        formOption.nickname,
-        formOption.transferred_location,
-    ]
+	const values = [
+		formOption.id,
+		formOption.type,
+		formOption.status,
+		formOption.asset_control_number,
+		formOption.name,
+		formOption.monitor_type,
+		formOption.area_id,
+		formOption.mac_address,
+		formOption.nickname,
+		formOption.transferred_location,
+	]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 const deleteObject = (formOption) => {
-    const query = `
+	const query = `
 		DELETE FROM object_table
 		WHERE id IN (${formOption.map((item) => `'${item.id}'`)})
 	`
-    return query
+	return query
 }
 
 const disassociate = (formOption) => {
-    const text = `
+	const text = `
 		UPDATE object_table
 		SET mac_address = null
 		WHERE id = $1
@@ -209,16 +209,16 @@ const disassociate = (formOption) => {
 		)
 	`
 
-    const values = [formOption.id]
+	const values = [formOption.id]
 
-    return {
-        text,
-        values,
-    }
+	return {
+		text,
+		values,
+	}
 }
 
 const addObject = (formOption) => {
-    const text = `
+	const text = `
 		INSERT INTO object_table (
 			type,
 			asset_control_number,
@@ -245,64 +245,62 @@ const addObject = (formOption) => {
 		);
 	`
 
-    const values = [
-        formOption.type,
-        formOption.asset_control_number,
-        formOption.name,
-        formOption.mac_address,
-        formOption.area_id,
-        formOption.monitor_type,
-        formOption.nickname,
-    ]
+	const values = [
+		formOption.type,
+		formOption.asset_control_number,
+		formOption.name,
+		formOption.mac_address,
+		formOption.area_id,
+		formOption.monitor_type,
+		formOption.nickname,
+	]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 const editObjectPackage = (
-    formOption,
-    username,
-    record_id,
-    reservedTimestamp
+	formOption,
+	username,
+	record_id,
+	reservedTimestamp
 ) => {
-    const item = formOption[0]
-    const text = `
+	const item = formOption[0]
+	const text = `
 		UPDATE object_table
 		SET
 			status = '${item.status}',
 			transferred_location = ${
-    item.status == 'transferred'
-        ? item.transferred_location.id
-        : null
-},
+				item.status == 'transferred' ? item.transferred_location.id : null
+			},
 			note_id = ${record_id},
 			reserved_timestamp = ${
-    item.status == 'reserve' ? `'${reservedTimestamp}'` : null
-},
+				item.status == 'reserve' ? `'${reservedTimestamp}'` : null
+			},
 			reserved_user_id = (SELECT id
 				FROM user_table
 				WHERE user_table.name='${username}')
 
 		WHERE asset_control_number IN (${formOption.map(
-        (item) => `'${item.asset_control_number}'`
-    )});
+			(item) => `'${item.asset_control_number}'`
+		)});
 	`
-    return text
+	return text
 }
 
 const deleteObjectSummaryRecord = (mac_address_array) => {
-    return `
+	return `
 		DELETE FROM object_summary_table
 		WHERE mac_address IN (${mac_address_array.map((item) => `'${item}'`)});
 	`
 }
 
 const getIdleMacaddr = () => {
-    return `
+	return `
 		SELECT
 			ARRAY_AGG(object_summary_table.mac_address) AS mac_set
 		FROM object_summary_table
@@ -315,7 +313,7 @@ const getIdleMacaddr = () => {
 }
 
 const getAlias = () => {
-    return `
+	return `
 		SELECT
 			DISTINCT type,
 			type_alias
@@ -326,31 +324,31 @@ const getAlias = () => {
 }
 
 const editAlias = (objectType, alias) => {
-    const text = `
+	const text = `
 		UPDATE object_table
 		SET type_alias = $2
 		WHERE type = $1
 	`
 
-    const values = [objectType, alias]
+	const values = [objectType, alias]
 
-    return {
-        text,
-        values,
-    }
+	return {
+		text,
+		values,
+	}
 }
 
 export default {
-    getObject,
-    addPersona,
-    addObject,
-    editDevice,
-    editPersona,
-    deleteObject,
-    disassociate,
-    editObjectPackage,
-    deleteObjectSummaryRecord,
-    getIdleMacaddr,
-    getAlias,
-    editAlias,
+	getObject,
+	addPersona,
+	addObject,
+	editDevice,
+	editPersona,
+	deleteObject,
+	disassociate,
+	editObjectPackage,
+	deleteObjectSummaryRecord,
+	getIdleMacaddr,
+	getAlias,
+	editAlias,
 }

@@ -37,37 +37,33 @@ import axios from 'axios'
 import config from '../config'
 
 const monitorApis = {
-    async getMonitorConfig (
-        type,
-        areasId,
-        isGetLbeaconPosition = false
-    ) {
-        return await axios.post(dataSrc.monitor, {
-            type: config.monitorSettingUrlMap[type],
-            areasId,
-            isGetLbeaconPosition,
-        })
-    },
+	async getMonitorConfig(type, areasId, isGetLbeaconPosition = false) {
+		return await axios.post(dataSrc.monitor, {
+			type: config.monitorSettingUrlMap[type],
+			areasId,
+			isGetLbeaconPosition,
+		})
+	},
 
-    async delete (configPackage) {
-        return await axios.delete(dataSrc.monitor, {
-            data: {
-                configPackage,
-            },
-        })
-    },
+	async delete(configPackage) {
+		return await axios.delete(dataSrc.monitor, {
+			data: {
+				configPackage,
+			},
+		})
+	},
 
-    async add (configPackage) {
-        return await axios.patch(dataSrc.monitor, {
-            configPackage,
-        })
-    },
+	async add(configPackage) {
+		return await axios.patch(dataSrc.monitor, {
+			configPackage,
+		})
+	},
 
-    async put (configPackage) {
-        return await axios.put(dataSrc.monitor, {
-            configPackage,
-        })
-    },
+	async put(configPackage) {
+		return await axios.put(dataSrc.monitor, {
+			configPackage,
+		})
+	},
 }
 
 export default monitorApis

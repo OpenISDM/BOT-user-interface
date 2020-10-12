@@ -33,8 +33,8 @@
 */
 
 export default {
-    getSearchableKeyword: () => {
-        return `
+	getSearchableKeyword: () => {
+		return `
             SELECT
                 ARRAY_AGG(key) as keys
             FROM (
@@ -68,5 +68,5 @@ export default {
             ) AS keywords
             WHERE key IS NOT NULL
         `
-    },
+	},
 }

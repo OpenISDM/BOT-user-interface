@@ -33,7 +33,7 @@
 */
 
 export default () => {
-    return `
+	return `
 		SELECT
 			id,
 			name

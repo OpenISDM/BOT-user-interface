@@ -40,11 +40,11 @@ import en from './texts/en-US'
 export const tw = zhTw
 
 export default {
-    tw,
+	tw,
 
-    en,
+	en,
 
-    ms: en,
+	ms: en,
 
-    cn: tw,
+	cn: tw,
 }

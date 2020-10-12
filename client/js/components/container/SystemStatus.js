@@ -47,145 +47,143 @@ import messageGenerator from '../../helper/messageGenerator'
 import { JSONClone } from '../../helper/utilities'
 
 class SystemStatus extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        trackingData: [],
-        trackingColunm: [],
-        tabIndex: 0,
-        locale: this.context.locale.lang,
-    }
+	state = {
+		trackingData: [],
+		trackingColunm: [],
+		tabIndex: 0,
+		locale: this.context.locale.lang,
+	}
 
-    toastId = null
+	toastId = null
 
-    componentDidUpdate = (prevProps, prevState) => {
-        const { locale } = this.context
-        if (locale.lang != prevState.locale) {
-            this.getTrackingData()
-            this.setState({
-                locale: locale.lang,
-            })
-        }
-    }
+	componentDidUpdate = (prevProps, prevState) => {
+		const { locale } = this.context
+		if (locale.lang != prevState.locale) {
+			this.getTrackingData()
+			this.setState({
+				locale: locale.lang,
+			})
+		}
+	}
 
-    componentDidMount = () => {
-        this.getTrackingData()
-    }
+	componentDidMount = () => {
+		this.getTrackingData()
+	}
 
-    componentWillUnmount = () => {
-        toast.dismiss(this.toastId)
-    }
+	componentWillUnmount = () => {
+		toast.dismiss(this.toastId)
+	}
 
-    getTrackingData = () => {
-        const { locale, auth, stateReducer } = this.context
-        const [{ areaId }] = stateReducer
+	getTrackingData = () => {
+		const { locale, auth, stateReducer } = this.context
+		const [{ areaId }] = stateReducer
 
-        apiHelper.trackingDataApiAgent
-            .getTrackingData({
-                locale: locale.abbr,
-                user: auth.user,
-                areaId,
-            })
-            .then((res) => {
-                this.setMessage('clear')
-                const column = JSONClone(trackingTableColumn)
-                column.map((field) => {
-                    field.headerStyle = {
-                        textAlign: 'left',
-                    }
-                    field.Header =
-                        locale.texts[
-                            field.Header.toUpperCase().replace(/ /g, '_')
-                        ]
-                })
-                res.data.map((item) => {
-                    item.status = locale.texts[item.status.toUpperCase()]
-                    item.transferred_location = ''
-                    // item.transferred_location
-                    //     ? locale.texts[item.transferred_location.toUpperCase().replace(/ /g, '_')]
-                    //     : ''
-                })
-                this.setState({
-                    trackingData: res.data,
-                    trackingColunm: column,
-                })
-            })
-            .catch((err) => {
-                this.setMessage(true)
-                this.setMessage('error', 'connect to database failed', true)
+		apiHelper.trackingDataApiAgent
+			.getTrackingData({
+				locale: locale.abbr,
+				user: auth.user,
+				areaId,
+			})
+			.then((res) => {
+				this.setMessage('clear')
+				const column = JSONClone(trackingTableColumn)
+				column.map((field) => {
+					field.headerStyle = {
+						textAlign: 'left',
+					}
+					field.Header =
+						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+				})
+				res.data.map((item) => {
+					item.status = locale.texts[item.status.toUpperCase()]
+					item.transferred_location = ''
+					// item.transferred_location
+					//     ? locale.texts[item.transferred_location.toUpperCase().replace(/ /g, '_')]
+					//     : ''
+				})
+				this.setState({
+					trackingData: res.data,
+					trackingColunm: column,
+				})
+			})
+			.catch((err) => {
+				this.setMessage(true)
+				this.setMessage('error', 'connect to database failed', true)
 
-                console.log(`get tracking data failed ${err}`)
-            })
-    }
+				console.log(`get tracking data failed ${err}`)
+			})
+	}
 
-    setMessage = (type, msg, isSetting) => {
-        switch (type) {
-            case 'success':
-                this.toastId = messageGenerator.setSuccessMessage(msg)
-                break
-            case 'error':
-                if (isSetting && !this.toastId) {
-                    this.toastId = messageGenerator.setErrorMessage(msg)
-                }
-                break
-            case 'clear':
-                this.toastId = null
-                toast.dismiss(this.toastId)
-                break
-        }
-    }
+	setMessage = (type, msg, isSetting) => {
+		switch (type) {
+			case 'success':
+				this.toastId = messageGenerator.setSuccessMessage(msg)
+				break
+			case 'error':
+				if (isSetting && !this.toastId) {
+					this.toastId = messageGenerator.setErrorMessage(msg)
+				}
+				break
+			case 'clear':
+				this.toastId = null
+				toast.dismiss(this.toastId)
+				break
+		}
+	}
 
-    render() {
-        const { locale } = this.context
+	render() {
+		const { locale } = this.context
 
-        return (
-            <Container className="py-2 text-capitalize" fluid>
-                <br />
-                <Tabs
-                    variant="pills"
-                    onSelect={(tabIndex) => {
-                        if (!this.toastId) {
-                            toast.dismiss(this.toastId)
-                        }
-                        this.setState({
-                            tabIndex,
-                        })
-                    }}
-                    className="mb-1"
-                >
-                    <TabList>
-                        <Tab>{'LBeacon'}</Tab>
-                        <Tab>{'Gateway'}</Tab>
-                        <Tab>{locale.texts.TRACKING}</Tab>
-                    </TabList>
-                    <TabPanel>
-                        <LBeaconTable
-                            lbeaconData={this.state.lbeaconData}
-                            lbeaconColumn={this.state.lbeaconColumn}
-                            refreshData={this.refreshData}
-                            setMessage={this.setMessage}
-                        />
-                    </TabPanel>
-                    <TabPanel>
-                        <GatewayTable
-                            gatewayData={this.state.gatewayData}
-                            gatewayColunm={this.state.gatewayColunm}
-                            refreshData={this.refreshData}
-                            setMessage={this.setMessage}
-                        />
-                    </TabPanel>
-                    <TabPanel>
-                        <ReactTable
-                            style={{ height: '75vh' }}
-                            data={this.state.trackingData}
-                            columns={this.state.trackingColunm}
-                            pageSizeOptions={[5, 10]}
-                            resizable={true}
-                            freezeWhenExpanded={false}
-                        />
-                    </TabPanel>
-                </Tabs>
-                {/* <EditLbeaconForm
+		return (
+			<Container className="py-2 text-capitalize" fluid>
+				<br />
+				<Tabs
+					variant="pills"
+					onSelect={(tabIndex) => {
+						if (!this.toastId) {
+							toast.dismiss(this.toastId)
+						}
+						this.setState({
+							tabIndex,
+						})
+					}}
+					className="mb-1"
+				>
+					<TabList>
+						<Tab>{'LBeacon'}</Tab>
+						<Tab>{'Gateway'}</Tab>
+						<Tab>{locale.texts.TRACKING}</Tab>
+					</TabList>
+					<TabPanel>
+						<LBeaconTable
+							lbeaconData={this.state.lbeaconData}
+							lbeaconColumn={this.state.lbeaconColumn}
+							refreshData={this.refreshData}
+							setMessage={this.setMessage}
+						/>
+					</TabPanel>
+					<TabPanel>
+						<GatewayTable
+							gatewayData={this.state.gatewayData}
+							gatewayColunm={this.state.gatewayColunm}
+							refreshData={this.refreshData}
+							setMessage={this.setMessage}
+						/>
+					</TabPanel>
+					<TabPanel>
+						<ReactTable
+							style={{ height: '75vh' }}
+							data={this.state.trackingData}
+							columns={this.state.trackingColunm}
+							pageSizeOptions={[5, 10]}
+							resizable={true}
+							freezeWhenExpanded={false}
+						/>
+					</TabPanel>
+				</Tabs>
+				{/* <EditLbeaconForm
                     show= {this.state.showEdit}
                     title={'edit lbeacon'}
                     selectedObjectData={this.state.selectedRowData}
@@ -197,9 +195,9 @@ class SystemStatus extends React.Component {
                     handleClose={this.handleClose}
                     handleSubmit={this.handleSubmitDeleteConfirmForm}
                 /> */}
-            </Container>
-        )
-    }
+			</Container>
+		)
+	}
 }
 
 export default SystemStatus

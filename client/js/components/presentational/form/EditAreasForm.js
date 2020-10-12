@@ -42,131 +42,114 @@ import AuthenticationContext from '../../../context/AuthenticationContext'
 import { Title } from '../../BOTComponent/styleComponent'
 
 const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
-    const locale = React.useContext(LocaleContext)
-    const auth = React.useContext(AuthenticationContext)
+	const locale = React.useContext(LocaleContext)
+	const auth = React.useContext(AuthenticationContext)
 
-    return (
-        <Modal
-            show={show}
-            size="md"
-            onHide={handleClose}
-            className="text-capitalize"
-        >
-            <Modal.Header closeButton>
-                {locale.texts.EDIT_SECONDARY_AREAS}
-            </Modal.Header>
-            <Modal.Body>
-                <Formik
-                    initialValues={{
-                        areas_id: Array.from(auth.user.areas_id),
-                    }}
-                    onSubmit={(values) => {
-                        handleSubmit(values)
-                    }}
-                    render={({
-                        values,
-                        errors,
-                        status,
-                        touched,
-                        isSubmitting,
-                        setFieldValue,
-                    }) => (
-                        <Form>
-                            <Title sub>{locale.texts.SELECTED_AREAS}</Title>
-                            <ListGroup>
-                                {Object.values(areaTable)
-                                    .filter((area) => {
-                                        return (
-                                            auth.user.main_area != area.id &&
-                                            values.areas_id.includes(area.id)
-                                        )
-                                    })
-                                    .map((area, index) => {
-                                        const element = (
-                                            <ListGroup.Item
-                                                as="a"
-                                                key={index}
-                                                action
-                                                name={area.id}
-                                                onClick={(e) => {
-                                                    const name = e.target.getAttribute(
-                                                        'name'
-                                                    )
-                                                    const areasId = values.areas_id.filter(
-                                                        (area) => {
-                                                            return area != name
-                                                        }
-                                                    )
-                                                    setFieldValue(
-                                                        'areas_id',
-                                                        areasId
-                                                    )
-                                                }}
-                                            >
-                                                {locale.texts[area.name]}
-                                            </ListGroup.Item>
-                                        )
-                                        return element
-                                    })}
-                            </ListGroup>
-                            <Title sub>{locale.texts.NOT_SELECTED_AREAS}</Title>
-                            <ListGroup>
-                                {Object.values(areaTable)
-                                    .filter((area) => {
-                                        return (
-                                            auth.user.main_area != area.id &&
-                                            !values.areas_id.includes(area.id)
-                                        )
-                                    })
-                                    .map((area, index) => {
-                                        const element = (
-                                            <ListGroup.Item
-                                                as="a"
-                                                key={index}
-                                                action
-                                                name={area.id}
-                                                onClick={(e) => {
-                                                    const name = e.target.getAttribute(
-                                                        'name'
-                                                    )
-                                                    const areasId =
-                                                        values.areas_id
-                                                    areasId.push(parseInt(name))
-                                                    setFieldValue(
-                                                        'areas_id',
-                                                        areasId
-                                                    )
-                                                }}
-                                            >
-                                                {locale.texts[area.name]}
-                                            </ListGroup.Item>
-                                        )
-                                        return element
-                                    })}
-                            </ListGroup>
+	return (
+		<Modal
+			show={show}
+			size="md"
+			onHide={handleClose}
+			className="text-capitalize"
+		>
+			<Modal.Header closeButton>
+				{locale.texts.EDIT_SECONDARY_AREAS}
+			</Modal.Header>
+			<Modal.Body>
+				<Formik
+					initialValues={{
+						areas_id: Array.from(auth.user.areas_id),
+					}}
+					onSubmit={(values) => {
+						handleSubmit(values)
+					}}
+					render={({
+						values,
+						errors,
+						status,
+						touched,
+						isSubmitting,
+						setFieldValue,
+					}) => (
+						<Form>
+							<Title sub>{locale.texts.SELECTED_AREAS}</Title>
+							<ListGroup>
+								{Object.values(areaTable)
+									.filter((area) => {
+										return (
+											auth.user.main_area != area.id &&
+											values.areas_id.includes(area.id)
+										)
+									})
+									.map((area, index) => {
+										const element = (
+											<ListGroup.Item
+												as="a"
+												key={index}
+												action
+												name={area.id}
+												onClick={(e) => {
+													const name = e.target.getAttribute('name')
+													const areasId = values.areas_id.filter((area) => {
+														return area != name
+													})
+													setFieldValue('areas_id', areasId)
+												}}
+											>
+												{locale.texts[area.name]}
+											</ListGroup.Item>
+										)
+										return element
+									})}
+							</ListGroup>
+							<Title sub>{locale.texts.NOT_SELECTED_AREAS}</Title>
+							<ListGroup>
+								{Object.values(areaTable)
+									.filter((area) => {
+										return (
+											auth.user.main_area != area.id &&
+											!values.areas_id.includes(area.id)
+										)
+									})
+									.map((area, index) => {
+										const element = (
+											<ListGroup.Item
+												as="a"
+												key={index}
+												action
+												name={area.id}
+												onClick={(e) => {
+													const name = e.target.getAttribute('name')
+													const areasId = values.areas_id
+													areasId.push(parseInt(name))
+													setFieldValue('areas_id', areasId)
+												}}
+											>
+												{locale.texts[area.name]}
+											</ListGroup.Item>
+										)
+										return element
+									})}
+							</ListGroup>
 
-                            <Modal.Footer>
-                                <Button
-                                    type="button"
-                                    variant="outline-secondary"
-                                    onClick={handleClose}
-                                >
-                                    {locale.texts.CANCEL}
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    disabled={isSubmitting}
-                                >
-                                    {locale.texts.CONFIRM}
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    )}
-                />
-            </Modal.Body>
-        </Modal>
-    )
+							<Modal.Footer>
+								<Button
+									type="button"
+									variant="outline-secondary"
+									onClick={handleClose}
+								>
+									{locale.texts.CANCEL}
+								</Button>
+								<Button type="submit" variant="primary" disabled={isSubmitting}>
+									{locale.texts.CONFIRM}
+								</Button>
+							</Modal.Footer>
+						</Form>
+					)}
+				/>
+			</Modal.Body>
+		</Modal>
+	)
 }
 
 export default EditAreasForm

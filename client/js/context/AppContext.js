@@ -42,37 +42,35 @@ import StateReducer from '../reducer/StateReducer'
 export const AppContext = React.createContext()
 
 const AppContextProvider = (props) => {
-    const auth = React.useContext(AuthenticationContext)
-    const locale = React.useContext(LocaleContext)
+	const auth = React.useContext(AuthenticationContext)
+	const locale = React.useContext(LocaleContext)
 
-    const initialState = {
-        areaId: parseInt(auth.user.main_area),
-        shouldUpdateTrackingData: true,
-        assignedObject: null,
-    }
+	const initialState = {
+		areaId: parseInt(auth.user.main_area),
+		shouldUpdateTrackingData: true,
+		assignedObject: null,
+	}
 
-    const stateReducer = React.useReducer(StateReducer, initialState)
+	const stateReducer = React.useReducer(StateReducer, initialState)
 
-    const value = {
-        auth,
-        locale,
-        stateReducer,
-    }
-    return (
-        <AppContext.Provider value={value}>
-            {props.children}
-        </AppContext.Provider>
-    )
+	const value = {
+		auth,
+		locale,
+		stateReducer,
+	}
+	return (
+		<AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+	)
 }
 
 const CombinedContext = (props) => {
-    return (
-        <Locale>
-            <Auth>
-                <AppContextProvider>{props.children}</AppContextProvider>
-            </Auth>
-        </Locale>
-    )
+	return (
+		<Locale>
+			<Auth>
+				<AppContextProvider>{props.children}</AppContextProvider>
+			</Auth>
+		</Locale>
+	)
 }
 
 export default CombinedContext

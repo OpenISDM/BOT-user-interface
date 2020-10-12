@@ -40,16 +40,16 @@ import pool from '../db/dev/connection'
 const pgSession = ConnectPgSimple(session)
 
 const sessionOptions = {
-    store: new pgSession({
-        pool,
-        tableName: process.env.SESSION_TABLE_NAME,
-    }),
-    secret: process.env.KEY,
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        // maxAge: 1000
-    },
+	store: new pgSession({
+		pool,
+		tableName: process.env.SESSION_TABLE_NAME,
+	}),
+	secret: process.env.KEY,
+	resave: true,
+	saveUninitialized: true,
+	cookie: {
+		// maxAge: 1000
+	},
 }
 
 export default sessionOptions

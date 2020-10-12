@@ -34,11 +34,11 @@
 
 import React, { Fragment } from 'react'
 import {
-    TabletView,
-    MobileOnlyView,
-    isTablet,
-    CustomView,
-    isMobile,
+	TabletView,
+	MobileOnlyView,
+	isTablet,
+	CustomView,
+	isMobile,
 } from 'react-device-detect'
 import { AppContext } from '../../context/AppContext'
 import TabletSearchContainer from '../platform/tablet/TabletSearchContainer'
@@ -48,121 +48,118 @@ import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
 
 class SearchContainer extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        isShowSectionTitle: false,
-        hasSearchKey: false,
-        isShowSearchOption: false,
-        searchKey: '',
-        sectionTitleList: [],
-        sectionIndex: '',
-        searchResult: [],
-        hasSearchableObjectData: false,
-        objectTypeList: [],
-    }
+	state = {
+		isShowSectionTitle: false,
+		hasSearchKey: false,
+		isShowSearchOption: false,
+		searchKey: '',
+		sectionTitleList: [],
+		sectionIndex: '',
+		searchResult: [],
+		hasSearchableObjectData: false,
+		objectTypeList: [],
+	}
 
-    componentDidMount = () => {
-        this.getData()
-    }
+	componentDidMount = () => {
+		this.getData()
+	}
 
-    componentDidUpdate = (prepProps) => {
-        /** Refresh the search result automatically
-         *  This feature can be adjust by the user by changing the boolean value in config */
-        if (
-            this.state.refreshSearchResult &&
-            this.state.hasSearchKey &&
-            !this.props.hasGridButton
-        ) {
-            this.props.getSearchKey(this.state.searchKey)
-        }
-        if (
-            prepProps.clearSearchResult != this.props.clearSearchResult &&
-            this.props.clearSearchResult
-        ) {
-            this.setState({
-                searchKey: '',
-            })
-        }
-        if (
-            prepProps.hasSearchKey != this.props.hasSearchKey &&
-            prepProps.hasSearchKey
-        ) {
-            this.setState({
-                hasSearchKey: this.props.hasSearchKey,
-            })
-        }
-    }
-    /** Get the searchable object type. */
-    getData = () => {
-        const { locale, auth } = this.context
+	componentDidUpdate = (prepProps) => {
+		/** Refresh the search result automatically
+		 *  This feature can be adjust by the user by changing the boolean value in config */
+		if (
+			this.state.refreshSearchResult &&
+			this.state.hasSearchKey &&
+			!this.props.hasGridButton
+		) {
+			this.props.getSearchKey(this.state.searchKey)
+		}
+		if (
+			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			this.props.clearSearchResult
+		) {
+			this.setState({
+				searchKey: '',
+			})
+		}
+		if (
+			prepProps.hasSearchKey != this.props.hasSearchKey &&
+			prepProps.hasSearchKey
+		) {
+			this.setState({
+				hasSearchKey: this.props.hasSearchKey,
+			})
+		}
+	}
+	/** Get the searchable object type. */
+	getData = () => {
+		const { locale, auth } = this.context
 
-        apiHelper.objectApiAgent
-            .getObjectTable({
-                locale: locale.abbr,
-                areas_id: auth.user.areas_id,
-                objectType: [0],
-            })
-            .then((res) => {
-                const keywordType =
-                    config.KEYWORD_TYPE[auth.user.keyword_type] || 'type'
+		apiHelper.objectApiAgent
+			.getObjectTable({
+				locale: locale.abbr,
+				areas_id: auth.user.areas_id,
+				objectType: [0],
+			})
+			.then((res) => {
+				const keywordType =
+					config.KEYWORD_TYPE[auth.user.keyword_type] || 'type'
 
-                const objectTypeList = res.data.rows.reduce(
-                    (objectTypeList, item) => {
-                        if (!objectTypeList.includes(item[keywordType])) {
-                            objectTypeList.push(item[keywordType])
-                        }
-                        return objectTypeList
-                    },
-                    []
-                )
-                this.setState({
-                    objectTypeList,
-                })
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+				const objectTypeList = res.data.rows.reduce((objectTypeList, item) => {
+					if (!objectTypeList.includes(item[keywordType])) {
+						objectTypeList.push(item[keywordType])
+					}
+					return objectTypeList
+				}, [])
+				this.setState({
+					objectTypeList,
+				})
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
 
-    render() {
-        const {
-            searchKey,
-            getSearchKey,
-            clearSearchResult,
-            handleShowResultListForMobile,
-            searchObjectArray,
-            pinColorArray,
-            keywords,
-        } = this.props
+	render() {
+		const {
+			searchKey,
+			getSearchKey,
+			clearSearchResult,
+			handleShowResultListForMobile,
+			searchObjectArray,
+			pinColorArray,
+			keywords,
+		} = this.props
 
-        const { objectTypeList } = this.state
+		const { objectTypeList } = this.state
 
-        const propsGroup = {
-            searchKey,
-            objectTypeList,
-            getSearchKey,
-            clearSearchResult,
-            handleShowResultListForMobile,
-            searchObjectArray,
-            pinColorArray,
-            keywords,
-        }
+		const propsGroup = {
+			searchKey,
+			objectTypeList,
+			getSearchKey,
+			clearSearchResult,
+			handleShowResultListForMobile,
+			searchObjectArray,
+			pinColorArray,
+			keywords,
+		}
 
-        return (
-            <Fragment>
-                <CustomView condition={isTablet != true && isMobile != true}>
-                    <BrowserSearchContainer {...propsGroup} />
-                </CustomView>
-                <TabletView>
-                    <TabletSearchContainer {...propsGroup} />
-                </TabletView>
-                <MobileOnlyView>
-                    <MobileSearchContainer {...propsGroup} />
-                </MobileOnlyView>
-            </Fragment>
-        )
-    }
+		return (
+			<Fragment>
+				<CustomView condition={isTablet != true && isMobile != true}>
+					<BrowserSearchContainer {...propsGroup} />
+				</CustomView>
+				<TabletView>
+					<TabletSearchContainer {...propsGroup} />
+				</TabletView>
+				<MobileOnlyView>
+					<MobileSearchContainer {...propsGroup} />
+				</MobileOnlyView>
+			</Fragment>
+		)
+	}
 }
 
 export default SearchContainer

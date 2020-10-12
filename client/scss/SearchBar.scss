@@ -1,67 +1,67 @@
 .react-autosuggest__container {
-    position: relative;
+	position: relative;
 }
 
 .react-autosuggest__input {
-    width: 300px;
-    height: 40px;
-    padding: 10px 40px 10px 20px;
-    border: 1px solid rgba(227, 222, 222, 1);
-    border-radius: 30px;
-    letter-spacing: 1.5px;
+	width: 300px;
+	height: 40px;
+	padding: 10px 40px 10px 20px;
+	border: 1px solid rgba(227, 222, 222, 1);
+	border-radius: 30px;
+	letter-spacing: 1.5px;
 }
 
 .react-autosuggest__input--focused {
-    outline: none;
+	outline: none;
 }
 
 .react-autosuggest__input--open {
-    border-radius: 20px 20px 0 0;
-    border-bottom: none;
+	border-radius: 20px 20px 0 0;
+	border-bottom: none;
 }
 
 .react-autosuggest__suggestions-container {
-    display: none;
-    position: absolute;
-    z-index: 20;
+	display: none;
+	position: absolute;
+	z-index: 20;
 }
 
 .react-autosuggest__suggestions-container--open {
-    display: block;
-    top: 40px;
-    width: 300px;
-    border: 1px solid rgba(227, 222, 222, 1);
-    background-color: #ffffff;
-    text-align: justify;
-    border-radius: 0 0 5px 5px;
-    z-index: 20;
+	display: block;
+	top: 40px;
+	width: 300px;
+	border: 1px solid rgba(227, 222, 222, 1);
+	background-color: #ffffff;
+	text-align: justify;
+	border-radius: 0 0 5px 5px;
+	z-index: 20;
 }
 
 .react-autosuggest__suggestions-list {
-    margin: 0;
-    padding: 0;
-    /* list-style-type: none;   */
+	margin: 0;
+	padding: 0;
+	/* list-style-type: none;   */
 }
 
 .react-autosuggest__suggestion {
-    cursor: pointer;
-    padding: 5px 20px;
-    width: 300px;
-    height: 30px;
-    display: flex;
-    align-items: center;
+	cursor: pointer;
+	padding: 5px 20px;
+	width: 300px;
+	height: 30px;
+	display: flex;
+	align-items: center;
 }
 
 .react-autosuggest__suggestion--highlighted {
-    background-color: #ddd;
+	background-color: #ddd;
 }
 
 .icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 24px;
-    height: 24px;
-    background-color: #ffffff;
-    color: black;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 24px;
+	height: 24px;
+	background-color: #ffffff;
+	color: black;
 }

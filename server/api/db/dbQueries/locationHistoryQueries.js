@@ -33,11 +33,11 @@
 */
 
 export default {
-    getLocationHistory: (key, startTime, endTime, mode) => {
-        let query = null
-        switch (mode) {
-            case 'nameGroupByArea':
-                query = `
+	getLocationHistory: (key, startTime, endTime, mode) => {
+		let query = null
+		switch (mode) {
+			case 'nameGroupByArea':
+				query = `
 					WITH ranges AS (
 						SELECT
 							mac_address,
@@ -110,9 +110,9 @@ export default {
 						groups.mac_address
 					ORDER by mac_address ASC, start_time DESC
 					`
-                break
-            case 'nameGroupByUUID':
-                query = `
+				break
+			case 'nameGroupByUUID':
+				query = `
 					WITH ranges AS (
 						SELECT
 							mac_address,
@@ -184,9 +184,9 @@ export default {
 					GROUP BY grp, groups.mac_address
 					ORDER by mac_address ASC, start_time DESC
 				`
-                break
-            case 'uuid':
-                query = `
+				break
+			case 'uuid':
+				query = `
 					SELECT
 						location_history_table.uuid,
 						location_history_table.mac_address,
@@ -220,9 +220,9 @@ export default {
 					ORDER BY object_table.name ASC
 
 				`
-                break
-            case 'area':
-                query = `
+				break
+			case 'area':
+				query = `
 					SELECT
 						object_table.name,
 						location_history_table.mac_address,
@@ -248,14 +248,14 @@ export default {
 
 					ORDER BY object_table.name ASC
 				`
-                break
-        }
+				break
+		}
 
-        return query
-    },
+		return query
+	},
 
-    getContactTree: (child, duplicate, startTime, endTime) => {
-        const query = `
+	getContactTree: (child, duplicate, startTime, endTime) => {
+		const query = `
 			WITH parent AS (
 				WITH ranges AS (
 					SELECT
@@ -363,6 +363,6 @@ export default {
 				start_time ASC
 
 			`
-        return query
-    },
+		return query
+	},
 }

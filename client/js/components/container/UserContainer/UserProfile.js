@@ -47,259 +47,255 @@ import Select from 'react-select'
 import { SAVE_SUCCESS } from '../../../config/wordMap'
 
 class UserProfile extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        show: false,
-        showEditPwd: false,
-        areaTable: [],
-    }
+	state = {
+		show: false,
+		showEditPwd: false,
+		areaTable: [],
+	}
 
-    componentDidMount = () => {
-        this.getAreaTable()
-    }
+	componentDidMount = () => {
+		this.getAreaTable()
+	}
 
-    /** get area table from database */
-    getAreaTable = () => {
-        apiHelper.areaApiAgent
-            .getAreaTable()
-            .then((res) => {
-                const areaTable = res.data.rows.reduce((table, area) => {
-                    table[area.id] = area
-                    return table
-                }, {})
-                this.setState({
-                    areaTable,
-                })
-            })
-            .catch((err) => {
-                console.log(`get area table failed ${err}`)
-            })
-    }
+	/** get area table from database */
+	getAreaTable = () => {
+		apiHelper.areaApiAgent
+			.getAreaTable()
+			.then((res) => {
+				const areaTable = res.data.rows.reduce((table, area) => {
+					table[area.id] = area
+					return table
+				}, {})
+				this.setState({
+					areaTable,
+				})
+			})
+			.catch((err) => {
+				console.log(`get area table failed ${err}`)
+			})
+	}
 
-    /** set user's number of search history */
-    resetFreqSearchCount = (value) => {
-        const { auth } = this.context
+	/** set user's number of search history */
+	resetFreqSearchCount = (value) => {
+		const { auth } = this.context
 
-        if (value) {
-            const userInfo = auth.user
+		if (value) {
+			const userInfo = auth.user
 
-            userInfo.freqSearchCount = value
+			userInfo.freqSearchCount = value
 
-            this.setState({
-                userInfo,
-            })
+			this.setState({
+				userInfo,
+			})
 
-            apiHelper.userApiAgent
-                .editMaxSearchHistoryCount({
-                    info: userInfo,
-                    username: userInfo.name,
-                })
-                .then((res) => {
-                    auth.setUserInfo('freqSearchCount', value)
-                })
-        }
-    }
+			apiHelper.userApiAgent
+				.editMaxSearchHistoryCount({
+					info: userInfo,
+					username: userInfo.name,
+				})
+				.then((res) => {
+					auth.setUserInfo('freqSearchCount', value)
+				})
+		}
+	}
 
-    handleClick = (e) => {
-        const name = e.target.name
-        switch (name) {
-            case 'secondaryArea':
-                this.setState({
-                    show: true,
-                })
-                break
-            case 'password':
-                this.setState({
-                    showEditPwd: true,
-                })
-                break
-        }
-    }
+	handleClick = (e) => {
+		const name = e.target.name
+		switch (name) {
+			case 'secondaryArea':
+				this.setState({
+					show: true,
+				})
+				break
+			case 'password':
+				this.setState({
+					showEditPwd: true,
+				})
+				break
+		}
+	}
 
-    handleClose = () => {
-        this.setState({
-            show: false,
-            showEditPwd: false,
-        })
-    }
+	handleClose = () => {
+		this.setState({
+			show: false,
+			showEditPwd: false,
+		})
+	}
 
-    handleSubmit = (values) => {
-        const formIndex = [this.state.show, this.state.showEditPwd].indexOf(
-            true
-        )
+	handleSubmit = (values) => {
+		const formIndex = [this.state.show, this.state.showEditPwd].indexOf(true)
 
-        const callback = () => messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-        const { auth } = this.context
-        switch (formIndex) {
-            case 0:
-                auth.setArea(values.areas_id)
-                this.setState(
-                    {
-                        show: false,
-                        showEditPwd: false,
-                    },
-                    callback
-                )
-                break
+		const callback = () => messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+		const { auth } = this.context
+		switch (formIndex) {
+			case 0:
+				auth.setArea(values.areas_id)
+				this.setState(
+					{
+						show: false,
+						showEditPwd: false,
+					},
+					callback
+				)
+				break
 
-            case 1:
-                axios
-                    .post(dataSrc.userInfo.password, {
-                        user_id: auth.user.id,
-                        password: values.check_password,
-                    })
-                    .then((res) => {
-                        this.setState(
-                            {
-                                show: false,
-                                showEditPwd: false,
-                            },
-                            callback
-                        )
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
-                break
-        }
-    }
+			case 1:
+				axios
+					.post(dataSrc.userInfo.password, {
+						user_id: auth.user.id,
+						password: values.check_password,
+					})
+					.then((res) => {
+						this.setState(
+							{
+								show: false,
+								showEditPwd: false,
+							},
+							callback
+						)
+					})
+					.catch((err) => {
+						console.log(err)
+					})
+				break
+		}
+	}
 
-    render() {
-        const { locale, auth } = this.context
+	render() {
+		const { locale, auth } = this.context
 
-        const { areaTable } = this.state
+		const { areaTable } = this.state
 
-        let userKeywordType = {}
+		let userKeywordType = {}
 
-        const keywordTypeOptions = config.KEYWORD_TYPE.map((item, index) => {
-            const option = {
-                label: locale.texts[item.toUpperCase()],
-                value: item,
-                id: index,
-            }
-            if (auth.user.keyword_type == index) {
-                userKeywordType = option
-            }
-            return option
-        })
+		const keywordTypeOptions = config.KEYWORD_TYPE.map((item, index) => {
+			const option = {
+				label: locale.texts[item.toUpperCase()],
+				value: item,
+				id: index,
+			}
+			if (auth.user.keyword_type == index) {
+				userKeywordType = option
+			}
+			return option
+		})
 
-        return (
-            <div className="d-flex flex-column">
-                <ButtonToolbar className="mb-2">
-                    <Button
-                        variant="outline-primary"
-                        className="text-capitalize mr-2"
-                        name="secondaryArea"
-                        size="sm"
-                        onClick={this.handleClick}
-                    >
-                        {locale.texts.EDIT_SECONDARY_AREA}
-                    </Button>
-                    <Button
-                        variant="outline-primary"
-                        className="text-capitalize mr-2"
-                        name="password"
-                        size="sm"
-                        onClick={this.handleClick}
-                    >
-                        {locale.texts.EDIT_PASSWORD}
-                    </Button>
-                </ButtonToolbar>
-                <div className="mb-3">
-                    <div className="font-size-120-percent color-black">
-                        {locale.texts.ABOUT_YOU}
-                    </div>
-                    <div>
-                        {locale.texts.NAME}: {auth.user.name}
-                    </div>
-                </div>
-                <div className="mb-3 text-capitalize">
-                    <div className="font-size-120-percent color-black">
-                        {locale.texts.YOUR_SERVICE_AREAS}
-                    </div>
-                    <div>
-                        {locale.texts.PRIMARY_AREA}:{' '}
-                        {areaTable.length != 0 &&
-                            auth.user.main_area &&
-                            locale.texts[areaTable[auth.user.main_area].name]}
-                    </div>
-                    <div>
-                        {locale.texts.SECONDARY_AREAS}:{' '}
-                        {Object.values(this.state.areaTable)
-                            .filter((area) => {
-                                return (
-                                    auth.user.main_area != area.id &&
-                                    auth.user.areas_id.includes(area.id)
-                                )
-                            })
-                            .map((area) => {
-                                return locale.texts[area.name]
-                            })
-                            .join('/')}
-                    </div>
-                </div>
-                <div className="mb-3">
-                    <div className="font-size-120-percent color-black">
-                        {locale.texts.SEARCH_PREFERENCES}
-                    </div>
-                    <div className="py-2">
-                        <div className="mb-3">
-                            <div className="color-black mb-1">
-                                {locale.texts.NUMBER_OF_FREQUENT_SEARCH}
-                            </div>
-                            <NumberPicker
-                                name="numberPicker"
-                                value={auth.user.freqSearchCount}
-                                onChange={this.resetFreqSearchCount}
-                                length={10}
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <div className="color-black mb-1">
-                                {locale.texts.SEARCH_TYPE}
-                            </div>
-                            <Select
-                                value={userKeywordType}
-                                className="text-capitalize w-25"
-                                onChange={(value) => {
-                                    auth.setKeywordType(value.id)
-                                }}
-                                options={keywordTypeOptions}
-                                isSearchable={false}
-                                styles={{
-                                    control: (provided) => ({
-                                        ...provided,
-                                        fontSize: '1rem',
-                                        minHeight: '3rem',
-                                        position: 'none',
-                                        width: '160px',
-                                        borderRadius: 0,
-                                    }),
-                                }}
-                                components={{
-                                    IndicatorSeparator: () => null,
-                                }}
-                                placeholder=""
-                            />
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <EditAreasForm
-                    show={this.state.show}
-                    handleClose={this.handleClose}
-                    handleSubmit={this.handleSubmit}
-                    areaTable={this.state.areaTable}
-                />
-                <EditPwdForm
-                    show={this.state.showEditPwd}
-                    handleClose={this.handleClose}
-                    handleSubmit={this.handleSubmit}
-                />
-            </div>
-        )
-    }
+		return (
+			<div className="d-flex flex-column">
+				<ButtonToolbar className="mb-2">
+					<Button
+						variant="outline-primary"
+						className="text-capitalize mr-2"
+						name="secondaryArea"
+						size="sm"
+						onClick={this.handleClick}
+					>
+						{locale.texts.EDIT_SECONDARY_AREA}
+					</Button>
+					<Button
+						variant="outline-primary"
+						className="text-capitalize mr-2"
+						name="password"
+						size="sm"
+						onClick={this.handleClick}
+					>
+						{locale.texts.EDIT_PASSWORD}
+					</Button>
+				</ButtonToolbar>
+				<div className="mb-3">
+					<div className="font-size-120-percent color-black">
+						{locale.texts.ABOUT_YOU}
+					</div>
+					<div>
+						{locale.texts.NAME}: {auth.user.name}
+					</div>
+				</div>
+				<div className="mb-3 text-capitalize">
+					<div className="font-size-120-percent color-black">
+						{locale.texts.YOUR_SERVICE_AREAS}
+					</div>
+					<div>
+						{locale.texts.PRIMARY_AREA}:{' '}
+						{areaTable.length != 0 &&
+							auth.user.main_area &&
+							locale.texts[areaTable[auth.user.main_area].name]}
+					</div>
+					<div>
+						{locale.texts.SECONDARY_AREAS}:{' '}
+						{Object.values(this.state.areaTable)
+							.filter((area) => {
+								return (
+									auth.user.main_area != area.id &&
+									auth.user.areas_id.includes(area.id)
+								)
+							})
+							.map((area) => {
+								return locale.texts[area.name]
+							})
+							.join('/')}
+					</div>
+				</div>
+				<div className="mb-3">
+					<div className="font-size-120-percent color-black">
+						{locale.texts.SEARCH_PREFERENCES}
+					</div>
+					<div className="py-2">
+						<div className="mb-3">
+							<div className="color-black mb-1">
+								{locale.texts.NUMBER_OF_FREQUENT_SEARCH}
+							</div>
+							<NumberPicker
+								name="numberPicker"
+								value={auth.user.freqSearchCount}
+								onChange={this.resetFreqSearchCount}
+								length={10}
+							/>
+						</div>
+						<div className="mb-3">
+							<div className="color-black mb-1">{locale.texts.SEARCH_TYPE}</div>
+							<Select
+								value={userKeywordType}
+								className="text-capitalize w-25"
+								onChange={(value) => {
+									auth.setKeywordType(value.id)
+								}}
+								options={keywordTypeOptions}
+								isSearchable={false}
+								styles={{
+									control: (provided) => ({
+										...provided,
+										fontSize: '1rem',
+										minHeight: '3rem',
+										position: 'none',
+										width: '160px',
+										borderRadius: 0,
+									}),
+								}}
+								components={{
+									IndicatorSeparator: () => null,
+								}}
+								placeholder=""
+							/>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<EditAreasForm
+					show={this.state.show}
+					handleClose={this.handleClose}
+					handleSubmit={this.handleSubmit}
+					areaTable={this.state.areaTable}
+				/>
+				<EditPwdForm
+					show={this.state.showEditPwd}
+					handleClose={this.handleClose}
+					handleSubmit={this.handleSubmit}
+				/>
+			</div>
+		)
+	}
 }
 
 export default UserProfile

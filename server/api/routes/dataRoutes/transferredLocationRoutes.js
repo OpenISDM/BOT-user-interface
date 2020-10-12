@@ -36,11 +36,12 @@ import transferredLocationController from '../../controllers/transferredLocation
 import cors from 'cors'
 
 export default (app) => {
-    // enable pre-flight request for DELETE request
-    app.options('/data/transferredLocation', cors())
+	// enable pre-flight request for DELETE request
+	app.options('/data/transferredLocation', cors())
 
-    app.route('/data/transferredLocation')
-        .get(transferredLocationController.getAllTransferredLocation)
-        .put(transferredLocationController.editTransferredLocation)
-        .post(transferredLocationController.editLocation)
+	app
+		.route('/data/transferredLocation')
+		.get(transferredLocationController.getAllTransferredLocation)
+		.put(transferredLocationController.editTransferredLocation)
+		.post(transferredLocationController.editLocation)
 }

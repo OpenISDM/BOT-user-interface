@@ -33,7 +33,7 @@
 */
 
 const addObjectType = (name) => {
-    const text = `
+	const text = `
         INSERT INTO object_type (
             type_id,
             name

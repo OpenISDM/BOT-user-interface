@@ -33,13 +33,13 @@
 */
 
 const viewConfig = {
-    ACNOmitsymbol: 'XXXXXX',
+	ACNOmitsymbol: 'XXXXXX',
 
-    MARKER_SIZE_IN_DESKTOP: 40,
+	MARKER_SIZE_IN_DESKTOP: 40,
 
-    MARKER_SIZE_IN_MOBILE: 20,
+	MARKER_SIZE_IN_MOBILE: 20,
 
-    MARKER_SIZE_IN_TABLET: 20,
+	MARKER_SIZE_IN_TABLET: 20,
 }
 
 export default viewConfig

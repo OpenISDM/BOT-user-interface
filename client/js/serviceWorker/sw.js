@@ -42,37 +42,37 @@ self.VERSION = VERSION
 self.__WB_MANIFEST
 
 const precacheList = self.__WB_MANIFEST || [
-    { url: '/index.html', revision: VERSION },
-    { url: '/manifest.webmanifest', revision: VERSION },
-    { url: '/css/main.css', revision: VERSION },
-    { url: '/js/main.bundle', revision: VERSION },
+	{ url: '/index.html', revision: VERSION },
+	{ url: '/manifest.webmanifest', revision: VERSION },
+	{ url: '/css/main.css', revision: VERSION },
+	{ url: '/js/main.bundle', revision: VERSION },
 ]
 
 precacheAndRoute(precacheList)
 
 registerRoute(
-    ({ request }) => request.destination == 'image',
-    new CacheFirst({
-        cacheName: 'images',
-    })
+	({ request }) => request.destination == 'image',
+	new CacheFirst({
+		cacheName: 'images',
+	})
 )
 
 registerRoute(
-    ({ request }) => request.destination == 'style',
-    new CacheFirst({
-        cacheName: 'style',
-    })
+	({ request }) => request.destination == 'style',
+	new CacheFirst({
+		cacheName: 'style',
+	})
 )
 
 registerRoute(
-    ({ request }) => request.destination == 'script',
-    new CacheFirst({
-        cacheName: 'script',
-    })
+	({ request }) => request.destination == 'script',
+	new CacheFirst({
+		cacheName: 'script',
+	})
 )
 
 self.addEventListener('install', () => {
-    if (process.env.NODE_ENV == 'development') {
-        self.skipWaiting()
-    }
+	if (process.env.NODE_ENV == 'development') {
+		self.skipWaiting()
+	}
 })

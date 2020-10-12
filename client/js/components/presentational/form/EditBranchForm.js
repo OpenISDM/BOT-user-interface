@@ -47,87 +47,78 @@ import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 
 const EditBranchForm = ({
-    show,
-    handleClose,
-    handleSubmit,
-    title,
-    branchOptions,
+	show,
+	handleClose,
+	handleSubmit,
+	title,
+	branchOptions,
 }) => {
-    const locale = React.useContext(LocaleContext)
+	const locale = React.useContext(LocaleContext)
 
-    return (
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton className="text-capitalize">
-                {title}
-            </Modal.Header>
-            <Modal.Body>
-                <Formik
-                    initialValues={{
-                        name: '',
-                        department: '',
-                    }}
-                    onSubmit={(values) => {
-                        handleSubmit(values)
-                    }}
-                    render={({
-                        values,
-                        errors,
-                        status,
-                        touched,
-                        isSubmitting,
-                        setFieldValue,
-                    }) => (
-                        <Form>
-                            <FormikFormGroup
-                                type="text"
-                                name="name"
-                                label={locale.texts.TRANSFERRED_LOCATION}
-                                error={errors.name}
-                                touched={touched.name}
-                                placeholder=""
-                                component={() => (
-                                    <Creatable
-                                        placeholder=""
-                                        name="name"
-                                        value={values.area}
-                                        onChange={(value) =>
-                                            setFieldValue('name', value)
-                                        }
-                                        options={branchOptions}
-                                        styles={styleConfig.reactSelect}
-                                        components={{
-                                            IndicatorSeparator: () => null,
-                                        }}
-                                    />
-                                )}
-                            />
-                            <FormikFormGroup
-                                type="text"
-                                name="department"
-                                label={locale.texts.DEPARTMENT}
-                                placeholder=""
-                            />
-                            <Modal.Footer>
-                                <Button
-                                    variant="outline-secondary"
-                                    onClick={handleClose}
-                                >
-                                    {locale.texts.CANCEL}
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    disabled={isSubmitting}
-                                >
-                                    {locale.texts.SAVE}
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    )}
-                />
-            </Modal.Body>
-        </Modal>
-    )
+	return (
+		<Modal show={show} onHide={handleClose}>
+			<Modal.Header closeButton className="text-capitalize">
+				{title}
+			</Modal.Header>
+			<Modal.Body>
+				<Formik
+					initialValues={{
+						name: '',
+						department: '',
+					}}
+					onSubmit={(values) => {
+						handleSubmit(values)
+					}}
+					render={({
+						values,
+						errors,
+						status,
+						touched,
+						isSubmitting,
+						setFieldValue,
+					}) => (
+						<Form>
+							<FormikFormGroup
+								type="text"
+								name="name"
+								label={locale.texts.TRANSFERRED_LOCATION}
+								error={errors.name}
+								touched={touched.name}
+								placeholder=""
+								component={() => (
+									<Creatable
+										placeholder=""
+										name="name"
+										value={values.area}
+										onChange={(value) => setFieldValue('name', value)}
+										options={branchOptions}
+										styles={styleConfig.reactSelect}
+										components={{
+											IndicatorSeparator: () => null,
+										}}
+									/>
+								)}
+							/>
+							<FormikFormGroup
+								type="text"
+								name="department"
+								label={locale.texts.DEPARTMENT}
+								placeholder=""
+							/>
+							<Modal.Footer>
+								<Button variant="outline-secondary" onClick={handleClose}>
+									{locale.texts.CANCEL}
+								</Button>
+								<Button type="submit" variant="primary" disabled={isSubmitting}>
+									{locale.texts.SAVE}
+								</Button>
+							</Modal.Footer>
+						</Form>
+					)}
+				/>
+			</Modal.Body>
+		</Modal>
+	)
 }
 
 export default EditBranchForm

@@ -33,8 +33,8 @@
 */
 
 export default {
-    getAllUser: () => {
-        const query = `
+	getAllUser: () => {
+		const query = `
 			SELECT
 
 				user_table.id,
@@ -91,11 +91,11 @@ export default {
 				areas.area_ids
 			ORDER BY user_table.name DESC
 		`
-        return query
-    },
+		return query
+	},
 
-    addUser: (signupPackage) => {
-        const text = `
+	addUser: (signupPackage) => {
+		const text = `
 			INSERT INTO user_table
 				(
 					name,
@@ -112,30 +112,30 @@ export default {
 				$4
 			);
 			`
-        const values = [
-            signupPackage.name,
-            signupPackage.password,
-            signupPackage.area_id,
-            signupPackage.email,
-        ]
+		const values = [
+			signupPackage.name,
+			signupPackage.password,
+			signupPackage.area_id,
+			signupPackage.email,
+		]
 
-        const query = {
-            text,
-            values,
-        }
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    insertUserData: (name, roles, area_id) => {
-        return `
+	insertUserData: (name, roles, area_id) => {
+		return `
 			INSERT INTO user_role (
 				user_id,
 				role_id
 			)
 			VALUES
 			${roles.map(
-        (role) => `(
+				(role) => `(
 					(
 						SELECT id
 						FROM user_table
@@ -147,7 +147,7 @@ export default {
 						WHERE name = '${role}'
 					)
 				)`
-    )};
+			)};
 
 			INSERT INTO user_area (
 				user_id,
@@ -162,10 +162,10 @@ export default {
 				${area_id}
 			)
 		`
-    },
+	},
 
-    editUserInfo: (user) => {
-        return `
+	editUserInfo: (user) => {
+		return `
 
 			DELETE FROM user_role
 			WHERE user_id = ${user.id};
@@ -186,8 +186,8 @@ export default {
 			)
 				VALUES
 				${user.roles
-        .map(
-            (roleName) => `(
+					.map(
+						(roleName) => `(
 						${user.id},
 						(
 							SELECT id
@@ -195,8 +195,8 @@ export default {
 							WHERE name='${roleName}'
 						)
 					)`
-        )
-        .join(',')};
+					)
+					.join(',')};
 
 			INSERT INTO user_area (
 				user_id,
@@ -204,18 +204,18 @@ export default {
 			)
 				VALUES
 				${user.areas_id
-        .map(
-            (areaId) => `(
+					.map(
+						(areaId) => `(
 						${user.id},
 						${areaId}
 					)`
-        )
-        .join(',')};
+					)
+					.join(',')};
 		`
-    },
+	},
 
-    deleteUser: (username) => {
-        const query = `
+	deleteUser: (username) => {
+		const query = `
 
 			DELETE FROM user_role
 			WHERE user_id = (
@@ -238,11 +238,11 @@ export default {
 				WHERE name='${username}'
 			);
 		`
-        return query
-    },
+		return query
+	},
 
-    editSecondaryArea: (user) => {
-        return `
+	editSecondaryArea: (user) => {
+		return `
 			DELETE FROM user_area
 			WHERE user_id = ${user.id};
 
@@ -252,34 +252,34 @@ export default {
 			)
 			VALUES
 			${user.areas_id.map(
-        (id) => `(
+				(id) => `(
 				${id},
 				${user.id}
 			)`
-    )};
+			)};
 		`
-    },
+	},
 
-    editPassword: (user_id, password) => {
-        const text = `
+	editPassword: (user_id, password) => {
+		const text = `
 			UPDATE user_table
 			SET
 				password = $2
 			WHERE id = $1
 		`
 
-        const values = [user_id, password]
+		const values = [user_id, password]
 
-        const query = {
-            text,
-            values,
-        }
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    setLocale: (userId, lang) => {
-        const text = `
+	setLocale: (userId, lang) => {
+		const text = `
 			UPDATE user_table
 			SET locale_id = (
 				SELECT id
@@ -288,18 +288,18 @@ export default {
 			)
 			WHERE id = $2
 			`
-        const values = [lang, userId]
+		const values = [lang, userId]
 
-        const query = {
-            text,
-            values,
-        }
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    addSearchHistory: (username, keyType, keyWord) => {
-        const text = `
+	addSearchHistory: (username, keyType, keyWord) => {
+		const text = `
 			INSERT INTO search_history (
 				search_time,
 				keyWord,
@@ -320,73 +320,73 @@ export default {
 
 		`
 
-        const values = [keyWord, keyType, username]
+		const values = [keyWord, keyType, username]
 
-        const query = {
-            text,
-            values,
-        }
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    editMyDevice: (username, mode, acn) => {
-        let text = ''
-        if (mode == 'add') {
-            text = `
+	editMyDevice: (username, mode, acn) => {
+		let text = ''
+		if (mode == 'add') {
+			text = `
 				UPDATE user_table
 				SET mydevice = array_append(mydevice, '${acn}')
 				WHERE name = '${username}';
 			`
-        } else if (mode == 'remove') {
-            text = `
+		} else if (mode == 'remove') {
+			text = `
 				UPDATE user_table
 				SET mydevice = array_remove(mydevice, '${acn}')
 				WHERE name = '${username}';
 			`
-        } else {
-            text = ''
-        }
+		} else {
+			text = ''
+		}
 
-        return text
-    },
+		return text
+	},
 
-    editMaxSearchHistoryCount: (username, info) => {
-        const { freqSearchCount } = info
+	editMaxSearchHistoryCount: (username, info) => {
+		const { freqSearchCount } = info
 
-        return `
+		return `
 			UPDATE user_table
 			SET max_search_history_count = ${freqSearchCount}
 			WHERE name='${username}'
 		`
-    },
+	},
 
-    editKeywordType: (userId, keywordTypeId) => {
-        const text = `
+	editKeywordType: (userId, keywordTypeId) => {
+		const text = `
 			UPDATE user_table
 			SET keyword_type = $2
 			WHERE id = $1
 		`
-        const values = [userId, keywordTypeId]
+		const values = [userId, keywordTypeId]
 
-        return {
-            text,
-            values,
-        }
-    },
+		return {
+			text,
+			values,
+		}
+	},
 
-    editListId: (userId, listId) => {
-        const text = `
+	editListId: (userId, listId) => {
+		const text = `
 			UPDATE user_table
 			SET list_id = $2
 			WHERE id = $1
 		`
 
-        const values = [userId, listId]
+		const values = [userId, listId]
 
-        return {
-            text,
-            values,
-        }
-    },
+		return {
+			text,
+			values,
+		}
+	},
 }

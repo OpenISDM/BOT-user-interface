@@ -42,47 +42,47 @@ import Cookies from 'js-cookie'
 import supportedLocale from './supportedLocale'
 
 const localePackage = Object.values(supportedLocale).reduce(
-    (localeMap, locale) => {
-        localeMap[locale.abbr] = locale
-        localeMap[locale.abbr].texts = {
-            ...generalTexts[locale.abbr],
-            ...siteModuleTexts[locale.abbr],
-            ...incTexts[locale.abbr],
-        }
-        return localeMap
-    },
-    {}
+	(localeMap, locale) => {
+		localeMap[locale.abbr] = locale
+		localeMap[locale.abbr].texts = {
+			...generalTexts[locale.abbr],
+			...siteModuleTexts[locale.abbr],
+			...incTexts[locale.abbr],
+		}
+		return localeMap
+	},
+	{}
 )
 
 class Locale extends React.Component {
-    state = Cookies.get('user')
-        ? localePackage[JSON.parse(Cookies.get('user')).locale]
-        : localePackage[config.DEFAULT_LOCALE]
+	state = Cookies.get('user')
+		? localePackage[JSON.parse(Cookies.get('user')).locale]
+		: localePackage[config.DEFAULT_LOCALE]
 
-    setLocale = (abbr, callback) => {
-        if (abbr == this.state.abbr) return
+	setLocale = (abbr, callback) => {
+		if (abbr == this.state.abbr) return
 
-        this.setState(
-            {
-                ...localePackage[abbr],
-            },
-            callback
-        )
-    }
+		this.setState(
+			{
+				...localePackage[abbr],
+			},
+			callback
+		)
+	}
 
-    render() {
-        const localeProviderValue = {
-            ...this.state,
-            supportedLocale,
-            setLocale: this.setLocale,
-        }
+	render() {
+		const localeProviderValue = {
+			...this.state,
+			supportedLocale,
+			setLocale: this.setLocale,
+		}
 
-        return (
-            <LocaleContext.Provider value={localeProviderValue}>
-                {this.props.children}
-            </LocaleContext.Provider>
-        )
-    }
+		return (
+			<LocaleContext.Provider value={localeProviderValue}>
+				{this.props.children}
+			</LocaleContext.Provider>
+		)
+	}
 }
 
 export default Locale

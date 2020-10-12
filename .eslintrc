@@ -1,53 +1,41 @@
 {
-    "extends": ["node", "prettier", "plugin:react/recommended"],
-    "parserOptions": {
-        // Only ESLint 6.2.0 and later support ES2020.
-        "ecmaVersion": 2020
-    },
-    "parser": "babel-eslint",
-    "plugins": ["node", "prettier"],
-    "env": {
-        "node": true,
-        "browser": true
-    },
-    "rules": {
-        "node/exports-style": ["error", "module.exports"],
-        "node/file-extension-in-import": [
-            "error",
-            "always",
-            { ".js": "never" }
-        ],
-        "eqeqeq": ["error", "smart"],
-        "node/prefer-global/buffer": ["error", "always"],
-        "node/prefer-global/console": ["error", "always"],
-        "node/prefer-global/process": ["error", "always"],
-        "node/prefer-global/url-search-params": ["error", "always"],
-        "node/prefer-global/url": ["error", "always"],
-        "node/prefer-promises/dns": "error",
-        "node/prefer-promises/fs": "error",
-        "indent": [
-            "error",
-            "tab",
-            2,
-            {
-                "SwitchCase": 1
-            }
-        ],
-        "no-use-before-define": [
-            "error",
-            {
-                "variables": false,
-                "functions": false
-            }
-        ],
-        "semi": ["error", "never"],
-        "quotes": ["error", "single"],
-        "no-trailing-spaces": [
-            "error",
-            {
-                "skipBlankLines": false,
-                "ignoreComments": true
-            }
-        ]
-    }
+	"extends": ["node", "prettier", "plugin:react/recommended"],
+	"parserOptions": {
+		// Only ESLint 6.2.0 and later support ES2020.
+		"ecmaVersion": 2020
+	},
+	"parser": "babel-eslint",
+	"plugins": ["node", "prettier"],
+	"env": {
+		"node": true,
+		"browser": true
+	},
+	"rules": {
+		"node/exports-style": ["error", "module.exports"],
+		"node/file-extension-in-import": ["error", "always", { ".js": "never" }],
+		"eqeqeq": ["error", "smart"],
+		"node/prefer-global/buffer": ["error", "always"],
+		"node/prefer-global/console": ["error", "always"],
+		"node/prefer-global/process": ["error", "always"],
+		"node/prefer-global/url-search-params": ["error", "always"],
+		"node/prefer-global/url": ["error", "always"],
+		"node/prefer-promises/dns": "error",
+		"node/prefer-promises/fs": "error",
+		"no-use-before-define": [
+			"error",
+			{
+				"variables": false,
+				"functions": false
+			}
+		],
+		"semi": ["error", "never"],
+		"quotes": ["error", "single"],
+		"no-trailing-spaces": [
+			"error",
+			{
+				"skipBlankLines": false,
+				"ignoreComments": true
+			}
+		]
+	}
 }

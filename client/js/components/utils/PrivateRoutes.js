@@ -40,32 +40,24 @@ import AuthContext from '../../context/AuthenticationContext'
 import routes from '../../config/routes/routes'
 
 const PrivateRoutes = () => {
-    const auth = React.useContext(AuthContext)
+	const auth = React.useContext(AuthContext)
 
-    const { pathname } = window.location
+	const { pathname } = window.location
 
-    if (auth.authenticated && auth.user) {
-        return (
-            <Fragment>
-                <NavbarContainer />
-                {privateRoutes.map((route) => {
-                    return (
-                        <Route
-                            path={route.path}
-                            exact
-                            component={route.component}
-                        />
-                    )
-                })}
-            </Fragment>
-        )
-    } else if (pathname != routes.HOME && pathname.split('/')[1] != 'page') {
-        return (
-            <Redirect to={{ pathname: window.location.pathname, state: {} }} />
-        )
-    }
+	if (auth.authenticated && auth.user) {
+		return (
+			<Fragment>
+				<NavbarContainer />
+				{privateRoutes.map((route) => {
+					return <Route path={route.path} exact component={route.component} />
+				})}
+			</Fragment>
+		)
+	} else if (pathname != routes.HOME && pathname.split('/')[1] != 'page') {
+		return <Redirect to={{ pathname: window.location.pathname, state: {} }} />
+	}
 
-    return <Redirect to={{ pathname: routes.LOGIN, state: {} }} />
+	return <Redirect to={{ pathname: routes.LOGIN, state: {} }} />
 }
 
 export default PrivateRoutes

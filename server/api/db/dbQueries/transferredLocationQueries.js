@@ -33,8 +33,8 @@
 */
 
 export default {
-    getAllTransferredLocation: () => {
-        return `
+	getAllTransferredLocation: () => {
+		return `
 			SELECT
 				name,
 				ARRAY_AGG(JSON_BUILD_OBJECT(
@@ -46,38 +46,38 @@ export default {
 				branches.name
 			ORDER BY name
 		`
-    },
+	},
 
-    editTransferredLocation: (type, data) => {
-        const defaultNewDepartment = 'new department'
+	editTransferredLocation: (type, data) => {
+		const defaultNewDepartment = 'new department'
 
-        let query
+		let query
 
-        if (type == 'add branch') {
-            query = `insert into branch_and_department(branch_name, department) values('${data.name}', '{"${data.departmentName}"}')`
-        } else if (type == 'rename branch') {
-            query = `update branch_and_department set branch_name = '${data.name}' where id = ${data.branch_id} `
-        } else if (type == 'remove branch') {
-            query = `delete from branch_and_department where id = ${data.branch_id} `
-        } else if (type == 'add department') {
-            query = `update branch_and_department set department = array_append(department, '${data.name}') where id = ${data.branch_id}`
-        } else if (type == 'rename department') {
-            query = `update branch_and_department set department[${
-                data.departmentIndex + 1
-            }] = '${data.name}' where id = ${data.branch_id}`
-        } else if (type == 'remove department') {
-            query = `update branch_and_department set department = array_remove(department, department[${
-                data.departmentIndex + 1
-            }]) where id = ${data.branch_id}`
-        } else {
-            console.log('modifyTransferredLocation: unrecognized command type')
-        }
+		if (type == 'add branch') {
+			query = `insert into branch_and_department(branch_name, department) values('${data.name}', '{"${data.departmentName}"}')`
+		} else if (type == 'rename branch') {
+			query = `update branch_and_department set branch_name = '${data.name}' where id = ${data.branch_id} `
+		} else if (type == 'remove branch') {
+			query = `delete from branch_and_department where id = ${data.branch_id} `
+		} else if (type == 'add department') {
+			query = `update branch_and_department set department = array_append(department, '${data.name}') where id = ${data.branch_id}`
+		} else if (type == 'rename department') {
+			query = `update branch_and_department set department[${
+				data.departmentIndex + 1
+			}] = '${data.name}' where id = ${data.branch_id}`
+		} else if (type == 'remove department') {
+			query = `update branch_and_department set department = array_remove(department, department[${
+				data.departmentIndex + 1
+			}]) where id = ${data.branch_id}`
+		} else {
+			console.log('modifyTransferredLocation: unrecognized command type')
+		}
 
-        return query
-    },
+		return query
+	},
 
-    editLocation: (name, departmentName) => {
-        const text = `
+	editLocation: (name, departmentName) => {
+		const text = `
 			INSERT INTO branches (
 				name,
 				department
@@ -87,11 +87,11 @@ export default {
 			)
 		`
 
-        const values = [name, departmentName]
+		const values = [name, departmentName]
 
-        return {
-            text,
-            values,
-        }
-    },
+		return {
+			text,
+			values,
+		}
+	},
 }

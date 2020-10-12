@@ -52,15 +52,15 @@ const getLbeaconTable = `
 `
 
 const deleteLBeacon = (idPackage) => {
-    const query = `
+	const query = `
 		DELETE FROM lbeacon_table
 		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
 	`
-    return query
+	return query
 }
 
 const editLbeacon = (formOption) => {
-    const text = `
+	const text = `
 		UPDATE lbeacon_table
 		SET
             description = $2,
@@ -70,18 +70,18 @@ const editLbeacon = (formOption) => {
 		WHERE uuid = $1
 	`
 
-    const values = [formOption.uuid, formOption.description, formOption.comment]
+	const values = [formOption.uuid, formOption.description, formOption.comment]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 export default {
-    getLbeaconTable,
-    deleteLBeacon,
-    editLbeacon,
+	getLbeaconTable,
+	deleteLBeacon,
+	editLbeacon,
 }

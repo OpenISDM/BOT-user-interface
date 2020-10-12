@@ -51,39 +51,39 @@ import fileApiAgent from '../apiAgent/fileApiAgent'
 import utilsApiAgent from '../apiAgent/utilsApiAgent'
 
 const apiHelper = {
-    monitor: monitorApis,
+	monitor: monitorApis,
 
-    geofenceApis,
+	geofenceApis,
 
-    record,
+	record,
 
-    objectApiAgent,
+	objectApiAgent,
 
-    importedObjectApiAgent,
+	importedObjectApiAgent,
 
-    transferredLocationApiAgent,
+	transferredLocationApiAgent,
 
-    authApiAgent,
+	authApiAgent,
 
-    userApiAgent,
+	userApiAgent,
 
-    trackingDataApiAgent,
+	trackingDataApiAgent,
 
-    roleApiAgent,
+	roleApiAgent,
 
-    areaApiAgent,
+	areaApiAgent,
 
-    lbeaconApiAgent,
+	lbeaconApiAgent,
 
-    gatewayApiAgent,
+	gatewayApiAgent,
 
-    deviceGroupListApis,
+	deviceGroupListApis,
 
-    patientGroupListApis,
+	patientGroupListApis,
 
-    fileApiAgent,
+	fileApiAgent,
 
-    utilsApiAgent,
+	utilsApiAgent,
 }
 
 export default apiHelper

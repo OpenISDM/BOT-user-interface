@@ -33,37 +33,37 @@
 */
 
 const routes = {
-    HOME: '/',
+	HOME: '/',
 
-    SETTINGS: '/page/setting',
+	SETTINGS: '/page/setting',
 
-    OBJECT_MANAGEMENT: '/page/objectManagement',
+	OBJECT_MANAGEMENT: '/page/objectManagement',
 
-    USER_SETTINGS: '/page/userSetting',
+	USER_SETTINGS: '/page/userSetting',
 
-    BIG_SCREEN: '/page/bigScreen',
+	BIG_SCREEN: '/page/bigScreen',
 
-    ABOUT: '/page/about',
+	ABOUT: '/page/about',
 
-    TRACE: '/page/trace',
+	TRACE: '/page/trace',
 
-    BOT_ADMIN: '/page/BOTAdmin',
+	BOT_ADMIN: '/page/BOTAdmin',
 
-    CONTACT_TREE: '/page/contactTree',
+	CONTACT_TREE: '/page/contactTree',
 
-    MONITOR_SETTINGS: '/page/monitor',
+	MONITOR_SETTINGS: '/page/monitor',
 
-    RECORDS: '/page/report',
+	RECORDS: '/page/report',
 
-    LOGIN: '/login',
+	LOGIN: '/login',
 
-    FORGET_PASSWORD: '/resetpassword',
+	FORGET_PASSWORD: '/resetpassword',
 
-    RESET_PASSWORD: '/resetpassword/new/:token',
+	RESET_PASSWORD: '/resetpassword/new/:token',
 
-    RESET_PASSWORD_RESULT: '/resetpassword/success',
+	RESET_PASSWORD_RESULT: '/resetpassword/success',
 
-    RESET_PASSWORD_INSTRUCTION: '/resetpassword/instruction',
+	RESET_PASSWORD_INSTRUCTION: '/resetpassword/instruction',
 }
 
 export default routes

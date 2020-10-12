@@ -36,11 +36,12 @@ import importedObjectController from '../../controllers/importedObjectController
 import cors from 'cors'
 
 export default (app) => {
-    // enable pre-flight request for DELETE request
-    app.options('/data/importedObject', cors())
+	// enable pre-flight request for DELETE request
+	app.options('/data/importedObject', cors())
 
-    app.route('/data/importedObject')
-        .get(importedObjectController.getImportedObject)
-        .delete(importedObjectController.deleteImportedObject)
-        .post(importedObjectController.addImportedObject)
+	app
+		.route('/data/importedObject')
+		.get(importedObjectController.getImportedObject)
+		.delete(importedObjectController.deleteImportedObject)
+		.post(importedObjectController.addImportedObject)
 }

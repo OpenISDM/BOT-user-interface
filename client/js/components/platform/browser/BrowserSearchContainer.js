@@ -40,62 +40,59 @@ import FrequentSearch from '../../container/FrequentSearch'
 import ObjectTypeList from '../../container/ObjectTypeList'
 
 const BrowserSearchContainer = ({
-    searchKey,
-    objectTypeList,
-    getSearchKey,
-    handleTouchMove,
-    clearSearchResult,
-    hasGridButton,
-    searchObjectArray,
-    pinColorArray,
-    keywords,
+	searchKey,
+	objectTypeList,
+	getSearchKey,
+	handleTouchMove,
+	clearSearchResult,
+	hasGridButton,
+	searchObjectArray,
+	pinColorArray,
+	keywords,
 }) => {
-    return (
-        <div
-            id="searchContainer"
-            className="py-2 mt-5"
-            onTouchMove={handleTouchMove}
-        >
-            <Row
-                id="searchBar"
-                className="d-flex justify-content-center align-items-center pb-2"
-            >
-                <BOTSearchbar
-                    placeholder={searchKey}
-                    getSearchKey={getSearchKey}
-                    clearSearchResult={clearSearchResult}
-                    width={400}
-                    suggestData={keywords}
-                />
-            </Row>
-            <Row
-                id="searchOption"
-                className="pt-2 d-flex justify-content-center"
-            >
-                <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                    <FrequentSearch
-                        getSearchKey={getSearchKey}
-                        clearSearchResult={clearSearchResult}
-                        hasGridButton={hasGridButton}
-                        maxHeigh={config.searchResultProportion}
-                        searchObjectArray={searchObjectArray}
-                        pinColorArray={pinColorArray}
-                    />
-                </Col>
-                <Col xs={6} sm={6} md={6} lg={6} xl={6}>
-                    <ObjectTypeList
-                        getSearchKey={getSearchKey}
-                        clearSearchResult={clearSearchResult}
-                        hasGridButton={hasGridButton}
-                        objectTypeList={objectTypeList || []}
-                        maxHeigh={config.searchResultProportion}
-                        searchObjectArray={searchObjectArray}
-                        pinColorArray={pinColorArray}
-                    />
-                </Col>
-            </Row>
-        </div>
-    )
+	return (
+		<div
+			id="searchContainer"
+			className="py-2 mt-5"
+			onTouchMove={handleTouchMove}
+		>
+			<Row
+				id="searchBar"
+				className="d-flex justify-content-center align-items-center pb-2"
+			>
+				<BOTSearchbar
+					placeholder={searchKey}
+					getSearchKey={getSearchKey}
+					clearSearchResult={clearSearchResult}
+					width={400}
+					suggestData={keywords}
+				/>
+			</Row>
+			<Row id="searchOption" className="pt-2 d-flex justify-content-center">
+				<Col xs={6} sm={6} md={6} lg={6} xl={6}>
+					<FrequentSearch
+						getSearchKey={getSearchKey}
+						clearSearchResult={clearSearchResult}
+						hasGridButton={hasGridButton}
+						maxHeigh={config.searchResultProportion}
+						searchObjectArray={searchObjectArray}
+						pinColorArray={pinColorArray}
+					/>
+				</Col>
+				<Col xs={6} sm={6} md={6} lg={6} xl={6}>
+					<ObjectTypeList
+						getSearchKey={getSearchKey}
+						clearSearchResult={clearSearchResult}
+						hasGridButton={hasGridButton}
+						objectTypeList={objectTypeList || []}
+						maxHeigh={config.searchResultProportion}
+						searchObjectArray={searchObjectArray}
+						pinColorArray={pinColorArray}
+					/>
+				</Col>
+			</Row>
+		</div>
+	)
 }
 
 export default BrowserSearchContainer

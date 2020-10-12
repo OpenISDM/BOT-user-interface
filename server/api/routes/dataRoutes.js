@@ -50,22 +50,22 @@ import groupListRoutes from './dataRoutes/groupListRoutes'
 import utilsRoutes from './dataRoutes/utilsRoutes'
 
 const dataRoutes = (app) => {
-    trackingDataRoutes(app)
-    lbeaconRoutes(app)
-    gatewayRoutes(app)
-    userRoutes(app)
-    objectRoutes(app)
-    importedObjectRoutes(app)
-    locationHistoryRoutes(app)
-    areaRoutes(app)
-    fileRoutes(app)
-    roleRoutes(app)
-    geofenceRoutes(app)
-    monitorRoutes(app)
-    recordRoutes(app)
-    transferredLocationRoutes(app)
-    groupListRoutes(app)
-    utilsRoutes(app)
+	trackingDataRoutes(app)
+	lbeaconRoutes(app)
+	gatewayRoutes(app)
+	userRoutes(app)
+	objectRoutes(app)
+	importedObjectRoutes(app)
+	locationHistoryRoutes(app)
+	areaRoutes(app)
+	fileRoutes(app)
+	roleRoutes(app)
+	geofenceRoutes(app)
+	monitorRoutes(app)
+	recordRoutes(app)
+	transferredLocationRoutes(app)
+	groupListRoutes(app)
+	utilsRoutes(app)
 }
 
 export default dataRoutes

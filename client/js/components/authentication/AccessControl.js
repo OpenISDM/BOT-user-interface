@@ -37,38 +37,38 @@ import AuthContext from '../../context/AuthenticationContext'
 import { isBrowser, isMobile, isTablet } from 'react-device-detect'
 
 const AccessControl = ({
-    permission,
-    children,
-    renderNoAccess,
-    platform = [true],
+	permission,
+	children,
+	renderNoAccess,
+	platform = [true],
 }) => {
-    const auth = React.useContext(AuthContext)
+	const auth = React.useContext(AuthContext)
 
-    const ownedPermissions = auth.user.permissions
+	const ownedPermissions = auth.user.permissions
 
-    const authenticated = auth.authenticated
+	const authenticated = auth.authenticated
 
-    const permitted = permission ? ownedPermissions.includes(permission) : true
+	const permitted = permission ? ownedPermissions.includes(permission) : true
 
-    const platformSupported = platform
-        .map((item) => {
-            switch (item) {
-                case 'browser':
-                    return isBrowser
-                case 'mobile':
-                    return isMobile
-                case 'tablet':
-                    return isTablet
-                default:
-                    return true
-            }
-        })
-        .includes(true)
+	const platformSupported = platform
+		.map((item) => {
+			switch (item) {
+				case 'browser':
+					return isBrowser
+				case 'mobile':
+					return isMobile
+				case 'tablet':
+					return isTablet
+				default:
+					return true
+			}
+		})
+		.includes(true)
 
-    if (authenticated && permitted && platformSupported) {
-        return children
-    }
-    return renderNoAccess()
+	if (authenticated && permitted && platformSupported) {
+		return children
+	}
+	return renderNoAccess()
 }
 
 export default AccessControl

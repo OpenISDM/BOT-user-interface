@@ -38,52 +38,45 @@ import { Formik, Form } from 'formik'
 import LocaleContext from '../../context/LocaleContext'
 
 const DeleteConfirmationForm = ({
-    handleClose,
-    handleSubmit,
-    show,
-    message,
+	handleClose,
+	handleSubmit,
+	show,
+	message,
 }) => {
-    const locale = React.useContext(LocaleContext)
+	const locale = React.useContext(LocaleContext)
 
-    return (
-        <Modal show={show} centered={true} onHide={handleClose} size="md">
-            <Modal.Header closeButton>{locale.texts.REMINDER}</Modal.Header>
-            <Modal.Body>
-                <Formik
-                    onSubmit={() => {
-                        handleSubmit()
-                    }}
-                    render={({
-                        values,
-                        errors,
-                        status,
-                        touched,
-                        isSubmitting,
-                        setFieldValue,
-                    }) => (
-                        <Form className="text-capitalize">
-                            <div className="mb-5">{message}</div>
-                            <Modal.Footer>
-                                <Button
-                                    variant="outline-secondary"
-                                    onClick={handleClose}
-                                >
-                                    {locale.texts.CANCEL}
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    disabled={isSubmitting}
-                                >
-                                    {locale.texts.YES}
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    )}
-                />
-            </Modal.Body>
-        </Modal>
-    )
+	return (
+		<Modal show={show} centered={true} onHide={handleClose} size="md">
+			<Modal.Header closeButton>{locale.texts.REMINDER}</Modal.Header>
+			<Modal.Body>
+				<Formik
+					onSubmit={() => {
+						handleSubmit()
+					}}
+					render={({
+						values,
+						errors,
+						status,
+						touched,
+						isSubmitting,
+						setFieldValue,
+					}) => (
+						<Form className="text-capitalize">
+							<div className="mb-5">{message}</div>
+							<Modal.Footer>
+								<Button variant="outline-secondary" onClick={handleClose}>
+									{locale.texts.CANCEL}
+								</Button>
+								<Button type="submit" variant="primary" disabled={isSubmitting}>
+									{locale.texts.YES}
+								</Button>
+							</Modal.Footer>
+						</Form>
+					)}
+				/>
+			</Modal.Body>
+		</Modal>
+	)
 }
 
 export default DeleteConfirmationForm

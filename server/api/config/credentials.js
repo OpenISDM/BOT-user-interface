@@ -50,19 +50,19 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const sslPath = path.join(__dirname, '..', 'ssl')
 
 const privateKey =
-    process.env.PRIVATE_KEY &&
-    fs.readFileSync(path.join(sslPath, process.env.PRIVATE_KEY))
+	process.env.PRIVATE_KEY &&
+	fs.readFileSync(path.join(sslPath, process.env.PRIVATE_KEY))
 const certificate =
-    process.env.CERTIFICATE &&
-    fs.readFileSync(path.join(sslPath, process.env.CERTIFICATE))
+	process.env.CERTIFICATE &&
+	fs.readFileSync(path.join(sslPath, process.env.CERTIFICATE))
 const ca_bundle =
-    process.env.CA_BUNDLE &&
-    fs.readFileSync(path.join(sslPath, process.env.CA_BUNDLE))
+	process.env.CA_BUNDLE &&
+	fs.readFileSync(path.join(sslPath, process.env.CA_BUNDLE))
 
 const credentials = {
-    key: privateKey,
-    cert: certificate,
-    ca: ca_bundle,
+	key: privateKey,
+	cert: certificate,
+	ca: ca_bundle,
 }
 
 export default credentials

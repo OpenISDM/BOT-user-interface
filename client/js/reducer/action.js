@@ -35,6 +35,6 @@
 export const SET_AREA = 'set area'
 
 export const SET_ENABLE_REQUEST_TRACKING_DATA =
-    'set enable request tracking data'
+	'set enable request tracking data'
 
 export const ASSIGN_OBJECT = 'assign object'

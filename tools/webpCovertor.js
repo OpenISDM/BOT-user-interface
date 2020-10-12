@@ -41,15 +41,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const imagePath = path.join(__dirname, '..', 'site_module', 'img', 'map')
 
 const convertImages = async () => {
-    const files = [`${imagePath}/*.{jpg,png}`]
-    const config = {
-        destination: imagePath,
-        plugins: [webp({ quality: 75 })],
-    }
+	const files = [`${imagePath}/*.{jpg,png}`]
+	const config = {
+		destination: imagePath,
+		plugins: [webp({ quality: 75 })],
+	}
 
-    console.log('coverting image to webp...')
-    await imagemin(files, config)
-    console.log('webp coverting complete!')
+	console.log('coverting image to webp...')
+	await imagemin(files, config)
+	console.log('webp coverting complete!')
 }
 
 convertImages()

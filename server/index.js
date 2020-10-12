@@ -60,7 +60,7 @@ const httpPort = process.env.HTTP_PORT
 const app = express()
 
 if (process.env.ENABLE_HTTP_REDIRECT === 'true') {
-    app.use(redirect)
+	app.use(redirect)
 }
 
 app.use(bodyParser.json())
@@ -68,19 +68,19 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(session(sessionOptions))
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept'
-    )
-    next()
+	res.header('Access-Control-Allow-Origin', '*')
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin, X-Requested-With, Content-Type, Accept'
+	)
+	next()
 })
 
 /** Compress asset if the browser supports gzip encoding  */
 app.use(
-    compression({
-        filter: shouldCompress,
-    })
+	compression({
+		filter: shouldCompress,
+	})
 )
 
 app.use(express.static(path.join(__dirname, 'dist')))
@@ -104,12 +104,12 @@ const httpsServer = https.createServer(credentials, app)
 
 /** Initiate HTTPS server */
 httpServer.listen(httpPort, () => {
-    console.log(`HTTP Server running on PORT ${httpPort}`)
+	console.log(`HTTP Server running on PORT ${httpPort}`)
 })
 
 /** Initiate HTTPS server */
 httpsServer.listen(httpsPort, () => {
-    console.log(`HTTPS Server running on PORT ${httpsPort}`)
+	console.log(`HTTPS Server running on PORT ${httpsPort}`)
 })
 
 httpServer.timeout = parseInt(process.env.SERVER_TIMEOUT)

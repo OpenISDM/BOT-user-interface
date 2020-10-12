@@ -37,14 +37,15 @@ import dbQueries from '../db/dbQueries/roleQueries'
 import pool from '../db/dev/connection'
 
 export default {
-    getAllRole: (request, response) => {
-        pool.query(dbQueries.getAllRole())
-            .then((res) => {
-                console.log('get all roles succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`get all roles failed ${err}`)
-            })
-    },
+	getAllRole: (request, response) => {
+		pool
+			.query(dbQueries.getAllRole())
+			.then((res) => {
+				console.log('get all roles succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`get all roles failed ${err}`)
+			})
+	},
 }

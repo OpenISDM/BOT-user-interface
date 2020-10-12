@@ -39,34 +39,29 @@ import config from '../config'
 const src = dataSrc.deviceGroupList
 
 const deviceGroupListApis = {
-    async addDeviceGroupList ({ name, area_id }) {
-        return await axios.post(src, {
-            name,
-            area_id,
-        })
-    },
+	async addDeviceGroupList({ name, area_id }) {
+		return await axios.post(src, {
+			name,
+			area_id,
+		})
+	},
 
-    async getDeviceGroupList (groupId) {
-        return await axios.get(src, { groupId })
-    },
+	async getDeviceGroupList(groupId) {
+		return await axios.get(src, { groupId })
+	},
 
-    async modifyDeviceGroupList ({
-        groupId,
-        mode,
-        itemACN,
-        item_id,
-    }) {
-        return await axios.put(src, {
-            groupId,
-            mode,
-            itemACN,
-            item_id,
-        })
-    },
+	async modifyDeviceGroupList({ groupId, mode, itemACN, item_id }) {
+		return await axios.put(src, {
+			groupId,
+			mode,
+			itemACN,
+			item_id,
+		})
+	},
 
-    async deleteGroup (groupId) {
-        return await axios.delete(src, { data: groupId })
-    },
+	async deleteGroup(groupId) {
+		return await axios.delete(src, { data: groupId })
+	},
 }
 
 export default deviceGroupListApis

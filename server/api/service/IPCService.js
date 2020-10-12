@@ -37,25 +37,25 @@ import child_process from 'child_process'
 const exec = child_process.execFile
 
 export const reloadGeofenceConfig = (area_id) => {
-    if (process.env.RELOAD_GEO_CONFIG_PATH) {
-        exec(
-            process.env.RELOAD_GEO_CONFIG_PATH,
-            `-p 9999 -c cmd_reload_geo_fence_setting -r geofence_object -f area_one -a ${area_id}`.split(
-                ' '
-            ),
-            function (err, data) {
-                if (err) {
-                    console.log(`execute reload geofence setting failed ${err}`)
-                } else {
-                    console.log('execute reload geofence setting succeed')
-                }
-            }
-        )
-    } else {
-        console.log('IPC has not set')
-    }
+	if (process.env.RELOAD_GEO_CONFIG_PATH) {
+		exec(
+			process.env.RELOAD_GEO_CONFIG_PATH,
+			`-p 9999 -c cmd_reload_geo_fence_setting -r geofence_object -f area_one -a ${area_id}`.split(
+				' '
+			),
+			function (err, data) {
+				if (err) {
+					console.log(`execute reload geofence setting failed ${err}`)
+				} else {
+					console.log('execute reload geofence setting succeed')
+				}
+			}
+		)
+	} else {
+		console.log('IPC has not set')
+	}
 }
 
 export default {
-    reloadGeofenceConfig,
+	reloadGeofenceConfig,
 }

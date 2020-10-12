@@ -33,7 +33,7 @@
 */
 
 const en = {
-    LICENCE: '© 2020 BiDaE Technology, Incorporated',
+	LICENCE: '© 2020 BiDaE Technology, Incorporated',
 }
 
 export default en

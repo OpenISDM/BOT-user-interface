@@ -33,8 +33,8 @@
 */
 
 export default {
-    signin: (username) => {
-        const text = `
+	signin: (username) => {
+		const text = `
 			WITH
 			user_info
 				AS
@@ -141,26 +141,26 @@ export default {
 			ON device_group_list.id = user_info.list_id
 			`
 
-        const values = [username]
+		const values = [username]
 
-        const query = {
-            text,
-            values,
-        }
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    setVisitTimestamp: (username) => {
-        return `
+	setVisitTimestamp: (username) => {
+		return `
 			UPDATE user_table
 			SET last_visit_timestamp = NOW()
 			WHERE name = '${username}';
 		`
-    },
+	},
 
-    validateUsername: (username) => {
-        const text = `
+	validateUsername: (username) => {
+		const text = `
 			SELECT
 				user_table.name,
 				user_table.password,
@@ -199,43 +199,43 @@ export default {
 
 			WHERE user_table.name = $1;
 		`
-        const values = [username]
+		const values = [username]
 
-        const query = {
-            text,
-            values,
-        }
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    resetPassword: (email, hash) => {
-        const text = `
+	resetPassword: (email, hash) => {
+		const text = `
 			UPDATE user_table
 			SET password = $2
 			WHERE email = $1;
 		`
-        const values = [email, hash]
-        const query = {
-            text,
-            values,
-        }
+		const values = [email, hash]
+		const query = {
+			text,
+			values,
+		}
 
-        return query
-    },
+		return query
+	},
 
-    validateEmail: (email) => {
-        const text = `
+	validateEmail: (email) => {
+		const text = `
 			SELECT
 				id,
 				registered_timestamp
 			FROM user_table
 			WHERE email = LOWER($1)
 		`
-        const values = [email]
-        return {
-            text,
-            values,
-        }
-    },
+		const values = [email]
+		return {
+			text,
+			values,
+		}
+	},
 }

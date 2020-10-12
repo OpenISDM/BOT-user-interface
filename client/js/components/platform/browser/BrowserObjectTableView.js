@@ -41,95 +41,88 @@ import Select from 'react-select'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import {
-    ADD,
-    BIND,
-    UNBIND,
-    DELETE,
-    DEVICE,
-    SAVE_SUCCESS,
-    DISASSOCIATE,
+	ADD,
+	BIND,
+	UNBIND,
+	DELETE,
+	DEVICE,
+	SAVE_SUCCESS,
+	DISASSOCIATE,
 } from '../../../config/wordMap'
 
 const BrowserObjectTableView = ({
-    addObjectFilter,
-    removeObjectFilter,
-    filterSelection,
-    handleClickButton,
-    selection,
-    handleClick,
+	addObjectFilter,
+	removeObjectFilter,
+	filterSelection,
+	handleClickButton,
+	selection,
+	handleClick,
 }) => {
-    const locale = React.useContext(LocaleContext)
-    return (
-        <div className="d-flex justify-content-between my-4">
-            <div className="d-flex justify-content-start">
-                <BOTInput
-                    className="mx-2 w-30-view"
-                    placeholder={locale.texts.SEARCH}
-                    getSearchKey={(key) => {
-                        addObjectFilter(
-                            key,
-                            ['name', 'area', 'macAddress', 'acn'],
-                            'search bar'
-                        )
-                    }}
-                    clearSearchResult={null}
-                />
-                <AccessControl
-                    renderNoAccess={() => null}
-                    platform={['browser']}
-                >
-                    <Select
-                        className="mx-2 text-capitalize w-30-view min-height-regular"
-                        styles={styleConfig.reactSelectFilter}
-                        onChange={(value) => {
-                            if (value) {
-                                addObjectFilter(
-                                    value.label,
-                                    ['area'],
-                                    'area select'
-                                )
-                            } else {
-                                removeObjectFilter('area select')
-                            }
-                        }}
-                        options={filterSelection.areaSelection}
-                        isClearable={true}
-                        isSearchable={true}
-                        placeholder={locale.texts.SELECT_AREA}
-                    />
-                </AccessControl>
-            </div>
-            <AccessControl
-                renderNoAccess={() => null}
-                platform={['browser', 'tablet']}
-            >
-                <ButtonToolbar>
-                    <PrimaryButton
-                        className="text-capitalize mr-2 mb-1"
-                        name={BIND}
-                        onClick={handleClickButton}
-                    >
-                        {locale.texts.BIND}
-                    </PrimaryButton>
-                    <PrimaryButton
-                        className="text-capitalize mr-2 mb-1"
-                        name={ADD}
-                        onClick={handleClickButton}
-                    >
-                        {locale.texts.ADD_PATIENT}
-                    </PrimaryButton>
-                    <PrimaryButton
-                        className="text-capitalize mr-2 mb-1"
-                        name={DELETE}
-                        onClick={handleClickButton}
-                        disabled={selection.length == 0}
-                    >
-                        {locale.texts.DELETE_PATIENT}
-                    </PrimaryButton>
-                </ButtonToolbar>
-            </AccessControl>
-        </div>
-    )
+	const locale = React.useContext(LocaleContext)
+	return (
+		<div className="d-flex justify-content-between my-4">
+			<div className="d-flex justify-content-start">
+				<BOTInput
+					className="mx-2 w-30-view"
+					placeholder={locale.texts.SEARCH}
+					getSearchKey={(key) => {
+						addObjectFilter(
+							key,
+							['name', 'area', 'macAddress', 'acn'],
+							'search bar'
+						)
+					}}
+					clearSearchResult={null}
+				/>
+				<AccessControl renderNoAccess={() => null} platform={['browser']}>
+					<Select
+						className="mx-2 text-capitalize w-30-view min-height-regular"
+						styles={styleConfig.reactSelectFilter}
+						onChange={(value) => {
+							if (value) {
+								addObjectFilter(value.label, ['area'], 'area select')
+							} else {
+								removeObjectFilter('area select')
+							}
+						}}
+						options={filterSelection.areaSelection}
+						isClearable={true}
+						isSearchable={true}
+						placeholder={locale.texts.SELECT_AREA}
+					/>
+				</AccessControl>
+			</div>
+			<AccessControl
+				renderNoAccess={() => null}
+				platform={['browser', 'tablet']}
+			>
+				<ButtonToolbar>
+					<PrimaryButton
+						className="text-capitalize mr-2 mb-1"
+						name={BIND}
+						onClick={handleClickButton}
+					>
+						{locale.texts.BIND}
+					</PrimaryButton>
+					<PrimaryButton
+						className="text-capitalize mr-2 mb-1"
+						name={ADD}
+						onClick={handleClickButton}
+					>
+						{locale.texts.ADD_PATIENT}
+					</PrimaryButton>
+					<PrimaryButton
+						className="text-capitalize mr-2 mb-1"
+						name={DELETE}
+						onClick={handleClickButton}
+						disabled={selection.length == 0}
+					>
+						{locale.texts.DELETE_PATIENT}
+					</PrimaryButton>
+				</ButtonToolbar>
+			</AccessControl>
+		</div>
+	)
 }
 
 export default BrowserObjectTableView

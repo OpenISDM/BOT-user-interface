@@ -43,92 +43,74 @@ import { Title, JustifyCenterDiv } from '../../BOTComponent/styleComponent'
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
 const style = {
-    modal: {
-        top: '10%',
-    },
+	modal: {
+		top: '10%',
+	},
 }
 
 const GeneralConfirmForm = ({
-    show,
-    handleClose,
-    handleSubmit,
-    title,
-    authenticatedRoles,
+	show,
+	handleClose,
+	handleSubmit,
+	title,
+	authenticatedRoles,
 }) => {
-    const locale = React.useContext(LocaleContext)
-    const auth = React.useContext(AuthenticationContext)
+	const locale = React.useContext(LocaleContext)
+	const auth = React.useContext(AuthenticationContext)
 
-    return (
-        <Modal
-            show={show}
-            centered={true}
-            size="sm"
-            onHide={handleClose}
-            style={style.modal}
-        >
-            <Modal.Body>
-                <JustifyCenterDiv>
-                    <Title sub>{title}</Title>
-                </JustifyCenterDiv>
+	return (
+		<Modal
+			show={show}
+			centered={true}
+			size="sm"
+			onHide={handleClose}
+			style={style.modal}
+		>
+			<Modal.Body>
+				<JustifyCenterDiv>
+					<Title sub>{title}</Title>
+				</JustifyCenterDiv>
 
-                <Formik
-                    initialValues={{
-                        username: auth.user.name,
-                        password: '',
-                    }}
-                    validationSchema={object().shape({
-                        // username: Yup.string().required(locale.texts.USERNAME_IS_REQUIRED),
-                        password: string().required(
-                            locale.texts.PASSWORD_IS_REQUIRED
-                        ),
-                    })}
-                    onSubmit={(
-                        { username, password, radioGroup },
-                        { setStatus, setSubmitting }
-                    ) => {
-                        apiHelper.authApiAgent
-                            .confirmValidation({
-                                username,
-                                password,
-                                authenticatedRoles,
-                            })
-                            .then((res) => {
-                                if (!res.data.confirmation) {
-                                    setStatus(res.data.message)
-                                    setSubmitting(false)
-                                } else {
-                                    handleSubmit()
-                                }
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            })
-                    }}
-                    render={({
-                        values,
-                        errors,
-                        status,
-                        touched,
-                        isSubmitting,
-                    }) => (
-                        <Form>
-                            {status && (
-                                <div
-                                    className={
-                                        'alert alert-danger mb-2 warning'
-                                    }
-                                >
-                                    <i className="fas fa-times-circle mr-2" />
-                                    {
-                                        locale.texts[
-                                            status
-                                                .toUpperCase()
-                                                .replace(/ /g, '_')
-                                        ]
-                                    }
-                                </div>
-                            )}
-                            {/* <FormikFormGroup
+				<Formik
+					initialValues={{
+						username: auth.user.name,
+						password: '',
+					}}
+					validationSchema={object().shape({
+						// username: Yup.string().required(locale.texts.USERNAME_IS_REQUIRED),
+						password: string().required(locale.texts.PASSWORD_IS_REQUIRED),
+					})}
+					onSubmit={(
+						{ username, password, radioGroup },
+						{ setStatus, setSubmitting }
+					) => {
+						apiHelper.authApiAgent
+							.confirmValidation({
+								username,
+								password,
+								authenticatedRoles,
+							})
+							.then((res) => {
+								if (!res.data.confirmation) {
+									setStatus(res.data.message)
+									setSubmitting(false)
+								} else {
+									handleSubmit()
+								}
+							})
+							.catch((error) => {
+								console.log(error)
+							})
+					}}
+					render={({ values, errors, status, touched, isSubmitting }) => (
+						<Form>
+							{status && (
+								<div className={'alert alert-danger mb-2 warning'}>
+									<i className="fas fa-times-circle mr-2" />
+									{locale.texts[status.toUpperCase().replace(/ /g, '_')]}
+								</div>
+							)}
+							{/* <FormikFormGroup
                                 type="text"
                                 name="username"
                                 label={locale.texts.NAME}
@@ -136,29 +118,25 @@ const GeneralConfirmForm = ({
                                 touched={touched.username}
                                 autoComplete="off"
                             />   */}
-                            <FormikFormGroup
-                                type="password"
-                                name="password"
-                                label={locale.texts.PASSWORD}
-                                error={errors.password}
-                                touched={touched.password}
-                                autoComplete="off"
-                            />
-                            <Modal.Footer>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    disabled={isSubmitting}
-                                >
-                                    {locale.texts.CONFIRM}
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    )}
-                />
-            </Modal.Body>
-        </Modal>
-    )
+							<FormikFormGroup
+								type="password"
+								name="password"
+								label={locale.texts.PASSWORD}
+								error={errors.password}
+								touched={touched.password}
+								autoComplete="off"
+							/>
+							<Modal.Footer>
+								<Button type="submit" variant="primary" disabled={isSubmitting}>
+									{locale.texts.CONFIRM}
+								</Button>
+							</Modal.Footer>
+						</Form>
+					)}
+				/>
+			</Modal.Body>
+		</Modal>
+	)
 }
 
 export default GeneralConfirmForm

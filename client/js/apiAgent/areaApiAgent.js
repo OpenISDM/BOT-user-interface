@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    async getAreaTable () {
-        return await axios.post(dataSrc.area)
-    },
+	async getAreaTable() {
+		return await axios.post(dataSrc.area)
+	},
 }

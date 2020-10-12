@@ -49,212 +49,206 @@ const getSuggestionValue = (suggestion) => suggestion
 const renderSuggestion = (suggestion) => <div>{suggestion || null}</div>
 
 const renderInputComponent = (inputProps) => (
-    <div className="inputContainer">
-        <i className="fas fa-search icon font-size-120-percent" />
-        <input {...inputProps} />
-    </div>
+	<div className="inputContainer">
+		<i className="fas fa-search icon font-size-120-percent" />
+		<input {...inputProps} />
+	</div>
 )
 
 const suggestionFilter = {
-    autoComplete: (suggestData, inputValue, inputLength) => {
-        return suggestData.filter((term) => {
-            return term.toLowerCase().slice(0, inputLength) == inputValue
-        })
-    },
+	autoComplete: (suggestData, inputValue, inputLength) => {
+		return suggestData.filter((term) => {
+			return term.toLowerCase().slice(0, inputLength) == inputValue
+		})
+	},
 
-    partialMatch: (suggestData, inputValue, inputLength) => {
-        return suggestData.filter((term) => {
-            return term.toLowerCase().indexOf(inputValue) > -1
-        })
-    },
+	partialMatch: (suggestData, inputValue, inputLength) => {
+		return suggestData.filter((term) => {
+			return term.toLowerCase().indexOf(inputValue) > -1
+		})
+	},
 }
 
 class BOTSearchbar extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        value: '',
-        suggestions: [],
-    }
+	state = {
+		value: '',
+		suggestions: [],
+	}
 
-    componentDidUpdate = (prepProps) => {
-        if (
-            prepProps.clearSearchResult != this.props.clearSearchResult &&
-            !prepProps.clearSearchResult
-        ) {
-            this.setState({
-                value: '',
-            })
-        }
-        if (!load_suggest) {
-            suggestData = this.props.keywords
-            load_suggest = true
-        }
-    }
+	componentDidUpdate = (prepProps) => {
+		if (
+			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			!prepProps.clearSearchResult
+		) {
+			this.setState({
+				value: '',
+			})
+		}
+		if (!load_suggest) {
+			suggestData = this.props.keywords
+			load_suggest = true
+		}
+	}
 
-    handleSubmit = (e) => {
-        e.preventDefault()
+	handleSubmit = (e) => {
+		e.preventDefault()
 
-        let type
-        let searchKey = {}
-        const value = this.state.value
+		let type
+		let searchKey = {}
+		const value = this.state.value
 
-        if (this.props.suggestData.includes(value)) {
-            type = SEARCH_HISTORY
-            searchKey = {
-                type,
-                value,
-            }
-            this.addSearchHistory(searchKey)
-        } else {
-            type = SEARCH_BAR
-            searchKey = {
-                type,
-                value,
-            }
-        }
+		if (this.props.suggestData.includes(value)) {
+			type = SEARCH_HISTORY
+			searchKey = {
+				type,
+				value,
+			}
+			this.addSearchHistory(searchKey)
+		} else {
+			type = SEARCH_BAR
+			searchKey = {
+				type,
+				value,
+			}
+		}
 
-        this.props.getSearchKey(searchKey)
+		this.props.getSearchKey(searchKey)
 
-        this.checkInSearchHistory(value)
-    }
+		this.checkInSearchHistory(value)
+	}
 
-    /** Set search history to auth */
-    addSearchHistory = (searchKey) => {
-        const { auth } = this.context
+	/** Set search history to auth */
+	addSearchHistory = (searchKey) => {
+		const { auth } = this.context
 
-        if (!auth.authenticated) return
+		if (!auth.authenticated) return
 
-        if (!this.props.suggestData.includes(searchKey.value)) return
+		if (!this.props.suggestData.includes(searchKey.value)) return
 
-        let searchHistory = [...auth.user.searchHistory] || []
+		let searchHistory = [...auth.user.searchHistory] || []
 
-        const itemIndex = searchHistory.indexOf(searchKey.value)
+		const itemIndex = searchHistory.indexOf(searchKey.value)
 
-        if (itemIndex > -1) {
-            searchHistory = [
-                ...searchHistory.slice(0, itemIndex),
-                ...searchHistory.slice(itemIndex + 1),
-            ]
-        }
+		if (itemIndex > -1) {
+			searchHistory = [
+				...searchHistory.slice(0, itemIndex),
+				...searchHistory.slice(itemIndex + 1),
+			]
+		}
 
-        searchHistory.unshift(searchKey.value)
+		searchHistory.unshift(searchKey.value)
 
-        auth.setSearchHistory(searchHistory)
+		auth.setSearchHistory(searchHistory)
 
-        this.checkInSearchHistory(searchKey.value)
-    }
+		this.checkInSearchHistory(searchKey.value)
+	}
 
-    /** Insert search history to database */
-    checkInSearchHistory = (itemName) => {
-        const { auth } = this.context
+	/** Insert search history to database */
+	checkInSearchHistory = (itemName) => {
+		const { auth } = this.context
 
-        apiHelper.userApiAgent
-            .addSearchHistory({
-                username: auth.user.name,
-                keyType: 'object type search',
-                keyWord: itemName,
-            })
-            .then((res) => {
-                this.setState({
-                    searchKey: itemName,
-                })
-            })
-            .catch((err) => {
-                console.log(`check in search history failed ${err}`)
-            })
-    }
+		apiHelper.userApiAgent
+			.addSearchHistory({
+				username: auth.user.name,
+				keyType: 'object type search',
+				keyWord: itemName,
+			})
+			.then((res) => {
+				this.setState({
+					searchKey: itemName,
+				})
+			})
+			.catch((err) => {
+				console.log(`check in search history failed ${err}`)
+			})
+	}
 
-    handleChange = (e) => {
-        this.setState({
-            value: e.target.value,
-        })
-    }
+	handleChange = (e) => {
+		this.setState({
+			value: e.target.value,
+		})
+	}
 
-    onChange = (event, { newValue }) => {
-        this.setState({
-            value: newValue,
-        })
-    }
+	onChange = (event, { newValue }) => {
+		this.setState({
+			value: newValue,
+		})
+	}
 
-    onSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
-            suggestions: this.getSuggestions(value),
-        })
-    }
+	onSuggestionsFetchRequested = ({ value }) => {
+		this.setState({
+			suggestions: this.getSuggestions(value),
+		})
+	}
 
-    // Autosuggest will call this function every time you need to clear suggestions.
-    onSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: [],
-        })
-    }
+	// Autosuggest will call this function every time you need to clear suggestions.
+	onSuggestionsClearRequested = () => {
+		this.setState({
+			suggestions: [],
+		})
+	}
 
-    // Teach Autosuggest how to calculate suggestions for any given input value.
-    getSuggestions = (value) => {
-        const inputValue = value.trim().toLowerCase()
-        const inputLength = inputValue.length
+	// Teach Autosuggest how to calculate suggestions for any given input value.
+	getSuggestions = (value) => {
+		const inputValue = value.trim().toLowerCase()
+		const inputLength = inputValue.length
 
-        /** limit count by specific number */
-        let suggestTemp = []
+		/** limit count by specific number */
+		let suggestTemp = []
 
-        suggestTemp = suggestionFilter.partialMatch(
-            this.props.suggestData,
-            inputValue,
-            inputLength
-        )
+		suggestTemp = suggestionFilter.partialMatch(
+			this.props.suggestData,
+			inputValue,
+			inputLength
+		)
 
-        const suggestLimit = []
+		const suggestLimit = []
 
-        suggestTemp.map((item, index) => {
-            index < config.AUTOSUGGEST_NUMBER_LIMIT
-                ? suggestLimit.push(item)
-                : null
-        })
+		suggestTemp.map((item, index) => {
+			index < config.AUTOSUGGEST_NUMBER_LIMIT ? suggestLimit.push(item) : null
+		})
 
-        return inputLength == 0 ? [] : suggestLimit
-    }
+		return inputLength == 0 ? [] : suggestLimit
+	}
 
-    render() {
-        const { value, suggestions } = this.state
+	render() {
+		const { value, suggestions } = this.state
 
-        const inputProps = {
-            placeholder: '',
-            value,
-            onChange: this.onChange,
-        }
+		const inputProps = {
+			placeholder: '',
+			value,
+			onChange: this.onChange,
+		}
 
-        return (
-            <Form className="d-flex justify-content-around">
-                <Form.Group
-                    className="d-flex justify-content-center mb-0 mx-1"
-                    // style={{
-                    //     minWidth: parseInt(this.props.width) * 0.9
-                    // }}
-                >
-                    <Autosuggest
-                        suggestions={suggestions}
-                        onSuggestionsFetchRequested={
-                            this.onSuggestionsFetchRequested
-                        }
-                        onSuggestionsClearRequested={
-                            this.onSuggestionsClearRequested
-                        }
-                        getSuggestionValue={getSuggestionValue}
-                        renderSuggestion={renderSuggestion}
-                        inputProps={inputProps}
-                        renderInputComponent={renderInputComponent}
-                    />
-                </Form.Group>
-                <Button
-                    type="submit"
-                    variant="link"
-                    className="btn btn-link btn-sm bd-highlight width-0"
-                    onClick={this.handleSubmit}
-                ></Button>
-            </Form>
-        )
-    }
+		return (
+			<Form className="d-flex justify-content-around">
+				<Form.Group
+					className="d-flex justify-content-center mb-0 mx-1"
+					// style={{
+					//     minWidth: parseInt(this.props.width) * 0.9
+					// }}
+				>
+					<Autosuggest
+						suggestions={suggestions}
+						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+						onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+						getSuggestionValue={getSuggestionValue}
+						renderSuggestion={renderSuggestion}
+						inputProps={inputProps}
+						renderInputComponent={renderInputComponent}
+					/>
+				</Form.Group>
+				<Button
+					type="submit"
+					variant="link"
+					className="btn btn-link btn-sm bd-highlight width-0"
+					onClick={this.handleSubmit}
+				></Button>
+			</Form>
+		)
+	}
 }
 
 export default BOTSearchbar

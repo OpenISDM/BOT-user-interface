@@ -53,313 +53,302 @@ const SelectTable = selecTableHOC(ReactTable)
 let lock = false
 
 class GeoFenceSettingBlock extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        type: config.monitorSettingUrlMap[this.props.type],
-        data: [],
-        columns: [],
-        lbeaconsTable: [],
-        selectedData: null,
-        show: false,
-        showDeleteConfirmation: false,
-        locale: this.context.locale.abbr,
-        isEdited: false,
-        path: '',
-        selection: [],
-        selectAll: false,
-        exIndex: 9999,
-    }
+	state = {
+		type: config.monitorSettingUrlMap[this.props.type],
+		data: [],
+		columns: [],
+		lbeaconsTable: [],
+		selectedData: null,
+		show: false,
+		showDeleteConfirmation: false,
+		locale: this.context.locale.abbr,
+		isEdited: false,
+		path: '',
+		selection: [],
+		selectAll: false,
+		exIndex: 9999,
+	}
 
-    componentDidMount = () => {
-        this.getMonitorConfig()
-        this.getLbeaconTable()
-    }
+	componentDidMount = () => {
+		this.getMonitorConfig()
+		this.getLbeaconTable()
+	}
 
-    componentDidUpdate = (prevProps, prevState) => {
-        if (this.state.exIndex != this.props.nowIndex) {
-            this.setState({
-                selectAll: false,
-                selection: '',
-                exIndex: this.props.nowIndex,
-            })
-        }
-        if (this.context.locale.abbr != prevState.locale) {
-            this.getMonitorConfig()
-            this.setState({
-                locale: this.context.locale.abbr,
-            })
-        }
-    }
+	componentDidUpdate = (prevProps, prevState) => {
+		if (this.state.exIndex != this.props.nowIndex) {
+			this.setState({
+				selectAll: false,
+				selection: '',
+				exIndex: this.props.nowIndex,
+			})
+		}
+		if (this.context.locale.abbr != prevState.locale) {
+			this.getMonitorConfig()
+			this.setState({
+				locale: this.context.locale.abbr,
+			})
+		}
+	}
 
-    getLbeaconTable = () => {
-        const { locale } = this.context
+	getLbeaconTable = () => {
+		const { locale } = this.context
 
-        apiHelper.lbeaconApiAgent
-            .getLbeaconTable({
-                locale: locale.abbr,
-            })
-            .then((res) => {
-                this.setState({
-                    lbeaconsTable: res.data.rows,
-                })
-            })
-    }
+		apiHelper.lbeaconApiAgent
+			.getLbeaconTable({
+				locale: locale.abbr,
+			})
+			.then((res) => {
+				this.setState({
+					lbeaconsTable: res.data.rows,
+				})
+			})
+	}
 
-    getMonitorConfig = (callback) => {
-        const { auth, locale } = this.context
-        apiHelper.geofenceApis
-            .getGeofenceConfig(auth.user.areas_id)
-            .then((res) => {
-                const columns = JSONClone(geofenceConfigColumn)
+	getMonitorConfig = (callback) => {
+		const { auth, locale } = this.context
+		apiHelper.geofenceApis
+			.getGeofenceConfig(auth.user.areas_id)
+			.then((res) => {
+				const columns = JSONClone(geofenceConfigColumn)
 
-                columns.map((field) => {
-                    field.Header =
-                        locale.texts[
-                            field.Header.toUpperCase().replace(/ /g, '_')
-                        ]
-                })
+				columns.map((field) => {
+					field.Header =
+						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+				})
 
-                res.data.rows.map((item, index) => {
-                    item.parsePerimeters.lbeacons[index] += ','
-                    item.key = index + 1
-                    item.area = {
-                        value: config.mapConfig.areaOptions[item.area_id],
-                        label:
-                            locale.texts[
-                                config.mapConfig.areaOptions[item.area_id]
-                            ],
-                        id: item.area_id,
-                    }
-                    item.p_rssi = item.perimeters.split(',')[
-                        item.perimeters.split(',').length - 2
-                    ]
-                    item.f_rssi = item.fences.split(',')[
-                        item.fences.split(',').length - 2
-                    ]
-                })
-                this.setState(
-                    {
-                        data: res.data.rows,
-                        columns,
-                        show: false,
-                        showDeleteConfirmation: false,
-                        selectedData: null,
-                        selection: '',
-                        selectAll: false,
-                    },
-                    callback
-                )
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+				res.data.rows.map((item, index) => {
+					item.parsePerimeters.lbeacons[index] += ','
+					item.key = index + 1
+					item.area = {
+						value: config.mapConfig.areaOptions[item.area_id],
+						label: locale.texts[config.mapConfig.areaOptions[item.area_id]],
+						id: item.area_id,
+					}
+					item.p_rssi = item.perimeters.split(',')[
+						item.perimeters.split(',').length - 2
+					]
+					item.f_rssi = item.fences.split(',')[
+						item.fences.split(',').length - 2
+					]
+				})
+				this.setState(
+					{
+						data: res.data.rows,
+						columns,
+						show: false,
+						showDeleteConfirmation: false,
+						selectedData: null,
+						selection: '',
+						selectAll: false,
+					},
+					callback
+				)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
 
-    handleClickButton = (e, value) => {
-        const { name } = e.target
-        switch (name) {
-            case 'add rule':
-                this.setState({
-                    show: true,
-                    isEdited: false,
-                    path: 'add',
-                })
-                break
-            case 'edit':
-                this.setState({
-                    show: true,
-                    selectedData: value.original,
-                    isEdited: true,
-                    path: 'setGeofenceConfig',
-                })
-                break
-            case 'delete':
-                this.setState({
-                    showDeleteConfirmation: true,
-                    path: 'delete',
-                })
-                lock = true
-                break
-        }
-    }
+	handleClickButton = (e, value) => {
+		const { name } = e.target
+		switch (name) {
+			case 'add rule':
+				this.setState({
+					show: true,
+					isEdited: false,
+					path: 'add',
+				})
+				break
+			case 'edit':
+				this.setState({
+					show: true,
+					selectedData: value.original,
+					isEdited: true,
+					path: 'setGeofenceConfig',
+				})
+				break
+			case 'delete':
+				this.setState({
+					showDeleteConfirmation: true,
+					path: 'delete',
+				})
+				lock = true
+				break
+		}
+	}
 
-    handleClose = () => {
-        this.setState({
-            show: false,
-            showDeleteConfirmation: false,
-            selectedData: null,
-        })
-        lock = false
-    }
+	handleClose = () => {
+		this.setState({
+			show: false,
+			showDeleteConfirmation: false,
+			selectedData: null,
+		})
+		lock = false
+	}
 
-    handleSubmit = (pack) => {
-        lock = true
-        const configPackage = pack || {}
-        const { path, selectedData } = this.state
-        configPackage.type = config.monitorSettingUrlMap[this.props.type]
-        // configPackage["id"] = selectedData ? selectedData.id : null
-        // configPackage["id"] = this.state.selection
-        path == 'setGeofenceConfig'
-            ? (configPackage.id = selectedData.id)
-            : (configPackage.id = this.state.selection)
+	handleSubmit = (pack) => {
+		lock = true
+		const configPackage = pack || {}
+		const { path, selectedData } = this.state
+		configPackage.type = config.monitorSettingUrlMap[this.props.type]
+		// configPackage["id"] = selectedData ? selectedData.id : null
+		// configPackage["id"] = this.state.selection
+		path == 'setGeofenceConfig'
+			? (configPackage.id = selectedData.id)
+			: (configPackage.id = this.state.selection)
 
-        apiHelper.geofenceApis[path](configPackage)
-            .then((res) => {
-                const callback = () =>
-                    messageGenerator.setSuccessMessage('save success')
-                this.getMonitorConfig(callback)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+		apiHelper.geofenceApis[path](configPackage)
+			.then((res) => {
+				const callback = () =>
+					messageGenerator.setSuccessMessage('save success')
+				this.getMonitorConfig(callback)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
 
-    toggleSelection = (key, shift, row) => {
-        let selection = [...this.state.selection]
-        key = key.split('-')[1] ? key.split('-')[1] : key
-        const keyIndex = selection.indexOf(key)
-        if (keyIndex >= 0) {
-            selection = [
-                ...selection.slice(0, keyIndex),
-                ...selection.slice(keyIndex + 1),
-            ]
-        } else {
-            selection.push(key)
-        }
-        this.setState({
-            selection,
-        })
-    }
+	toggleSelection = (key, shift, row) => {
+		let selection = [...this.state.selection]
+		key = key.split('-')[1] ? key.split('-')[1] : key
+		const keyIndex = selection.indexOf(key)
+		if (keyIndex >= 0) {
+			selection = [
+				...selection.slice(0, keyIndex),
+				...selection.slice(keyIndex + 1),
+			]
+		} else {
+			selection.push(key)
+		}
+		this.setState({
+			selection,
+		})
+	}
 
-    toggleAll = () => {
-        const selectAll = !this.state.selectAll
-        let selection = []
-        let rowsCount = 0
+	toggleAll = () => {
+		const selectAll = !this.state.selectAll
+		let selection = []
+		let rowsCount = 0
 
-        if (selectAll) {
-            const wrappedInstance = this.selectTable.getWrappedInstance()
-            // const currentRecords = wrappedInstance.props.data
-            const currentRecords = wrappedInstance.getResolvedState().sortedData
-            currentRecords.forEach((item) => {
-                rowsCount++
-                if (
-                    rowsCount >
-                        wrappedInstance.state.pageSize *
-                            wrappedInstance.state.page &&
-                    rowsCount <=
-                        wrappedInstance.state.pageSize +
-                            wrappedInstance.state.pageSize *
-                                wrappedInstance.state.page
-                ) {
-                    selection.push(item._original.id)
-                }
-            })
-        } else {
-            selection = []
-        }
-        this.setState({ selectAll, selection })
-    }
+		if (selectAll) {
+			const wrappedInstance = this.selectTable.getWrappedInstance()
+			// const currentRecords = wrappedInstance.props.data
+			const currentRecords = wrappedInstance.getResolvedState().sortedData
+			currentRecords.forEach((item) => {
+				rowsCount++
+				if (
+					rowsCount >
+						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
+					rowsCount <=
+						wrappedInstance.state.pageSize +
+							wrappedInstance.state.pageSize * wrappedInstance.state.page
+				) {
+					selection.push(item._original.id)
+				}
+			})
+		} else {
+			selection = []
+		}
+		this.setState({ selectAll, selection })
+	}
 
-    isSelected = (key) => {
-        return this.state.selection.includes(key)
-    }
+	isSelected = (key) => {
+		return this.state.selection.includes(key)
+	}
 
-    render() {
-        const { selectedRowData, selectAll, selectType } = this.state
+	render() {
+		const { selectedRowData, selectAll, selectType } = this.state
 
-        const { toggleSelection, toggleAll, isSelected } = this
+		const { toggleSelection, toggleAll, isSelected } = this
 
-        const extraProps = {
-            selectAll,
-            isSelected,
-            toggleAll,
-            toggleSelection,
-            selectType,
-        }
+		const extraProps = {
+			selectAll,
+			isSelected,
+			toggleAll,
+			toggleSelection,
+			selectType,
+		}
 
-        const { type } = this.props
+		const { type } = this.props
 
-        const { lbeaconsTable, isEdited } = this.state
+		const { lbeaconsTable, isEdited } = this.state
 
-        const { locale } = this.context
+		const { locale } = this.context
 
-        return (
-            <div>
-                <div className="d-flex justify-content-start">
-                    <AccessControl
-                        renderNoAccess={() => null}
-                        platform={['browser', 'tablet']}
-                    >
-                        <ButtonToolbar>
-                            <PrimaryButton
-                                className="text-capitalize mr-2 mb-1"
-                                name="add rule"
-                                onClick={this.handleClickButton}
-                            >
-                                {locale.texts.ADD_RULE}
-                            </PrimaryButton>
-                            <PrimaryButton
-                                className="mr-2 mb-1"
-                                name="delete"
-                                onClick={this.handleClickButton}
-                            >
-                                {locale.texts.DELETE}
-                            </PrimaryButton>
-                        </ButtonToolbar>
-                    </AccessControl>
-                </div>
-                <hr />
-                <SelectTable
-                    keyField="id"
-                    data={this.state.data}
-                    columns={this.state.columns}
-                    ref={(r) => (this.selectTable = r)}
-                    className="-highlight"
-                    minRows={0}
-                    onSortedChange={(e) => {
-                        this.setState({ selectAll: false, selection: '' })
-                    }}
-                    {...extraProps}
-                    {...styleConfig.reactTable}
-                    getTrProps={(state, rowInfo, column, instance) => {
-                        return {
-                            onClick: (e, handleOriginal) => {
-                                this.setState({
-                                    show: true,
-                                    selectedData: rowInfo.row._original,
-                                    isEdited: true,
-                                    path: 'setGeofenceConfig',
-                                })
-                            },
-                        }
-                    }}
-                />
+		return (
+			<div>
+				<div className="d-flex justify-content-start">
+					<AccessControl
+						renderNoAccess={() => null}
+						platform={['browser', 'tablet']}
+					>
+						<ButtonToolbar>
+							<PrimaryButton
+								className="text-capitalize mr-2 mb-1"
+								name="add rule"
+								onClick={this.handleClickButton}
+							>
+								{locale.texts.ADD_RULE}
+							</PrimaryButton>
+							<PrimaryButton
+								className="mr-2 mb-1"
+								name="delete"
+								onClick={this.handleClickButton}
+							>
+								{locale.texts.DELETE}
+							</PrimaryButton>
+						</ButtonToolbar>
+					</AccessControl>
+				</div>
+				<hr />
+				<SelectTable
+					keyField="id"
+					data={this.state.data}
+					columns={this.state.columns}
+					ref={(r) => (this.selectTable = r)}
+					className="-highlight"
+					minRows={0}
+					onSortedChange={(e) => {
+						this.setState({ selectAll: false, selection: '' })
+					}}
+					{...extraProps}
+					{...styleConfig.reactTable}
+					getTrProps={(state, rowInfo, column, instance) => {
+						return {
+							onClick: (e, handleOriginal) => {
+								this.setState({
+									show: true,
+									selectedData: rowInfo.row._original,
+									isEdited: true,
+									path: 'setGeofenceConfig',
+								})
+							},
+						}
+					}}
+				/>
 
-                <EditGeofenceConfig
-                    handleShowPath={this.props.handleShowPath}
-                    selectedData={this.state.selectedData}
-                    show={this.state.show}
-                    handleClose={this.handleClose}
-                    title={
-                        isEdited
-                            ? 'edit geofence config'
-                            : 'add geofence config'
-                    }
-                    type={config.monitorSettingUrlMap[this.props.type]}
-                    handleSubmit={this.handleSubmit}
-                    lbeaconsTable={lbeaconsTable}
-                    areaOptions={config.mapConfig.areaOptions}
-                    isEdited={this.state.isEdited}
-                />
-                <DeleteConfirmationForm
-                    show={this.state.showDeleteConfirmation}
-                    handleClose={this.handleClose}
-                    handleSubmit={this.handleSubmit}
-                />
-            </div>
-        )
-    }
+				<EditGeofenceConfig
+					handleShowPath={this.props.handleShowPath}
+					selectedData={this.state.selectedData}
+					show={this.state.show}
+					handleClose={this.handleClose}
+					title={isEdited ? 'edit geofence config' : 'add geofence config'}
+					type={config.monitorSettingUrlMap[this.props.type]}
+					handleSubmit={this.handleSubmit}
+					lbeaconsTable={lbeaconsTable}
+					areaOptions={config.mapConfig.areaOptions}
+					isEdited={this.state.isEdited}
+				/>
+				<DeleteConfirmationForm
+					show={this.state.showDeleteConfirmation}
+					handleClose={this.handleClose}
+					handleSubmit={this.handleSubmit}
+				/>
+			</div>
+		)
+	}
 }
 
 export default GeoFenceSettingBlock

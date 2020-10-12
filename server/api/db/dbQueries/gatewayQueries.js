@@ -49,15 +49,15 @@ const getAllGateway = `
 `
 
 const deleteGateway = (idPackage) => {
-    const query = `
+	const query = `
 		DELETE FROM gateway_table
 		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
 	`
-    return query
+	return query
 }
 
 const editGateway = (formOption) => {
-    const text = `
+	const text = `
 		UPDATE gateway_table
 		SET
             comment = $2
@@ -65,18 +65,18 @@ const editGateway = (formOption) => {
 		WHERE id = $1
 	`
 
-    const values = [formOption.id, formOption.comment]
+	const values = [formOption.id, formOption.comment]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 export default {
-    getAllGateway,
-    deleteGateway,
-    editGateway,
+	getAllGateway,
+	deleteGateway,
+	editGateway,
 }

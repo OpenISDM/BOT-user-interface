@@ -49,119 +49,112 @@ import { objectAliasColumn } from '../../../config/tables'
 import { JSONClone } from '../../../helper/utilities'
 
 const checkinAlias = (type, type_alias) => {
-    apiHelper.objectApiAgent
-        .editAlias({
-            objectType: type,
-            alias: type_alias,
-        })
-        .then((res) => {
-            console.log(res)
-        })
-        .catch((err) => {
-            console.log(`checkin alias failed ${err}`)
-        })
+	apiHelper.objectApiAgent
+		.editAlias({
+			objectType: type,
+			alias: type_alias,
+		})
+		.then((res) => {
+			console.log(res)
+		})
+		.catch((err) => {
+			console.log(`checkin alias failed ${err}`)
+		})
 }
 
 class GeneralSettings extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        data: [],
-        columns: [],
-    }
+	state = {
+		data: [],
+		columns: [],
+	}
 
-    componentDidMount = () => {
-        this.getData()
-    }
+	componentDidMount = () => {
+		this.getData()
+	}
 
-    getData = () => {
-        const { locale } = this.context
+	getData = () => {
+		const { locale } = this.context
 
-        apiHelper.objectApiAgent
-            .getAlias()
-            .then((res) => {
-                const columns = [
-                    {
-                        Header: 'object type',
-                        accessor: 'type',
-                        width: 200,
-                    },
-                    {
-                        Header: 'alias',
-                        accessor: 'alias',
-                        width: 200,
-                        Cell: (props) => {
-                            return (
-                                <input
-                                    className="border-none"
-                                    value={props.original.type_alias}
-                                    onChange={(e) => {
-                                        const data = this.state.data
-                                        data[props.index].type_alias =
-                                            e.target.value
-                                        this.setState({
-                                            data,
-                                        })
-                                    }}
-                                    onKeyPress={(e) => {
-                                        if (
-                                            e.key == 'Enter' &&
-                                            e.target.value !==
-                                                props.original.type_alias
-                                        ) {
-                                            const {
-                                                type,
-                                                type_alias,
-                                            } = props.original
-                                            this.checkinAlias(type, type_alias)
-                                        }
-                                    }}
-                                />
-                            )
-                        },
-                    },
-                ]
+		apiHelper.objectApiAgent
+			.getAlias()
+			.then((res) => {
+				const columns = [
+					{
+						Header: 'object type',
+						accessor: 'type',
+						width: 200,
+					},
+					{
+						Header: 'alias',
+						accessor: 'alias',
+						width: 200,
+						Cell: (props) => {
+							return (
+								<input
+									className="border-none"
+									value={props.original.type_alias}
+									onChange={(e) => {
+										const data = this.state.data
+										data[props.index].type_alias = e.target.value
+										this.setState({
+											data,
+										})
+									}}
+									onKeyPress={(e) => {
+										if (
+											e.key == 'Enter' &&
+											e.target.value !== props.original.type_alias
+										) {
+											const { type, type_alias } = props.original
+											this.checkinAlias(type, type_alias)
+										}
+									}}
+								/>
+							)
+						},
+					},
+				]
 
-                columns.map((field) => {
-                    field.Header =
-                        locale.texts[
-                            field.Header.toUpperCase().replace(/ /g, '_')
-                        ]
-                })
+				columns.map((field) => {
+					field.Header =
+						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+				})
 
-                this.setState({
-                    data: res.data.rows,
-                    columns,
-                })
-            })
-            .catch((err) => {
-                console.log(`get object alias failed ${err}`)
-            })
-    }
+				this.setState({
+					data: res.data.rows,
+					columns,
+				})
+			})
+			.catch((err) => {
+				console.log(`get object alias failed ${err}`)
+			})
+	}
 
-    render() {
-        const { locale, auth } = this.context
+	render() {
+		const { locale, auth } = this.context
 
-        const { areaTable } = this.state
+		const { areaTable } = this.state
 
-        return (
-            <div className="d-flex flex-column">
-                <div className="mb-">
-                    <div className="color-black mb-2 font-size-120-percent">
-                        {locale.texts.EDIT_DEVICE_ALIAS}
-                    </div>
-                    <ReactTable
-                        data={this.state.data}
-                        columns={this.state.columns}
-                        resizable={true}
-                        freezeWhenExpanded={false}
-                        {...styleConfig.reactTable}
-                        pageSize={10}
-                    />
-                </div>
-            </div>
-        )
-    }
+		return (
+			<div className="d-flex flex-column">
+				<div className="mb-">
+					<div className="color-black mb-2 font-size-120-percent">
+						{locale.texts.EDIT_DEVICE_ALIAS}
+					</div>
+					<ReactTable
+						data={this.state.data}
+						columns={this.state.columns}
+						resizable={true}
+						freezeWhenExpanded={false}
+						{...styleConfig.reactTable}
+						pageSize={10}
+					/>
+				</div>
+			</div>
+		)
+	}
 }
 
 export default GeneralSettings

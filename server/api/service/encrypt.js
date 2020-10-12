@@ -39,31 +39,31 @@ import 'dotenv/config'
 const secret = process.env.KEY
 
 const createHash = (password) => {
-    const algorithm = 'sha256'
+	const algorithm = 'sha256'
 
-    return crypto.createHash(algorithm, secret).update(password).digest('hex')
+	return crypto.createHash(algorithm, secret).update(password).digest('hex')
 }
 
 export const decrypt = (encrypted) => {
-    const algorithm = 'aes-192-cbc'
+	const algorithm = 'aes-192-cbc'
 
-    const password = process.env.KEY
+	const password = process.env.KEY
 
-    const key = crypto.scryptSync(password, 'salt', 24)
+	const key = crypto.scryptSync(password, 'salt', 24)
 
-    const iv = Buffer.alloc(16, 0) // Initialization vector.
+	const iv = Buffer.alloc(16, 0) // Initialization vector.
 
-    const decipher = crypto.createDecipheriv(algorithm, key, iv)
+	const decipher = crypto.createDecipheriv(algorithm, key, iv)
 
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+	let decrypted = decipher.update(encrypted, 'hex', 'utf8')
 
-    decrypted += decipher.final('utf8')
+	decrypted += decipher.final('utf8')
 
-    return decrypted
+	return decrypted
 }
 
 export default {
-    createHash,
-    decrypt,
-    secret,
+	createHash,
+	decrypt,
+	secret,
 }

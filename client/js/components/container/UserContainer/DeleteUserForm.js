@@ -44,86 +44,75 @@ import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 import messageGenerator from '../../../helper/messageGenerator'
 const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
-    const locale = React.useContext(LocaleContext)
+	const locale = React.useContext(LocaleContext)
 
-    const userOptions = data.map((item) => {
-        return {
-            value: item.id,
-            label: item.name,
-        }
-    })
+	const userOptions = data.map((item) => {
+		return {
+			value: item.id,
+			label: item.name,
+		}
+	})
 
-    return (
-        <Modal show={show} size="sm" onHide={handleClose}>
-            <Modal.Header closeButton>{title}</Modal.Header>
+	return (
+		<Modal show={show} size="sm" onHide={handleClose}>
+			<Modal.Header closeButton>{title}</Modal.Header>
 
-            <Modal.Body>
-                <Formik
-                    initialValues={{
-                        name: '',
-                    }}
-                    validationSchema={object().shape({
-                        name: string().required(
-                            locale.texts.NAME_IS_REQUIRED
-                        ),
-                    })}
-                    onSubmit={(values, { setStatus, setSubmitting }) => {
-                        handleSubmit(values)
-                    }}
-                    render={({
-                        values,
-                        errors,
-                        status,
-                        touched,
-                        isSubmitting,
-                        setFieldValue,
-                    }) => (
-                        <Form>
-                            <FormikFormGroup
-                                type="text"
-                                name="nameName"
-                                label={locale.texts.DELETE}
-                                error={errors.nameName}
-                                touched={touched.nameName}
-                                placeholder={locale.texts.USERNAME}
-                                component={() => (
-                                    <Select
-                                        placeholder={locale.texts.SELECT_USER}
-                                        name="name"
-                                        value={values.name}
-                                        onChange={(value) =>
-                                            setFieldValue('name', value)
-                                        }
-                                        options={userOptions}
-                                        styles={styleConfig.reactSelect}
-                                        components={{
-                                            IndicatorSeparator: () => null,
-                                        }}
-                                    />
-                                )}
-                            />
+			<Modal.Body>
+				<Formik
+					initialValues={{
+						name: '',
+					}}
+					validationSchema={object().shape({
+						name: string().required(locale.texts.NAME_IS_REQUIRED),
+					})}
+					onSubmit={(values, { setStatus, setSubmitting }) => {
+						handleSubmit(values)
+					}}
+					render={({
+						values,
+						errors,
+						status,
+						touched,
+						isSubmitting,
+						setFieldValue,
+					}) => (
+						<Form>
+							<FormikFormGroup
+								type="text"
+								name="nameName"
+								label={locale.texts.DELETE}
+								error={errors.nameName}
+								touched={touched.nameName}
+								placeholder={locale.texts.USERNAME}
+								component={() => (
+									<Select
+										placeholder={locale.texts.SELECT_USER}
+										name="name"
+										value={values.name}
+										onChange={(value) => setFieldValue('name', value)}
+										options={userOptions}
+										styles={styleConfig.reactSelect}
+										components={{
+											IndicatorSeparator: () => null,
+										}}
+									/>
+								)}
+							/>
 
-                            <Modal.Footer>
-                                <Button
-                                    variant="outline-secondary"
-                                    onClick={handleClose}
-                                >
-                                    {locale.texts.CANCEL}
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    disabled={isSubmitting}
-                                >
-                                    {locale.texts.DELETE}
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    )}
-                />
-            </Modal.Body>
-        </Modal>
-    )
+							<Modal.Footer>
+								<Button variant="outline-secondary" onClick={handleClose}>
+									{locale.texts.CANCEL}
+								</Button>
+								<Button type="submit" variant="primary" disabled={isSubmitting}>
+									{locale.texts.DELETE}
+								</Button>
+							</Modal.Footer>
+						</Form>
+					)}
+				/>
+			</Modal.Body>
+		</Modal>
+	)
 }
 
 export default DeleteUserForm

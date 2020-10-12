@@ -15,56 +15,56 @@ import NURSING_HOME_MAP from '../site_module/img/map/nursing_home.png'
 import NURSING_HOME_MAP_WEBP from '../site_module/img/map/nursing_home.webp'
 
 const siteConfig = {
-    areaModules: {
-        /** The key must be as same as the field name in area_table in database */
-        IIS_SINICA_FOURTH_FLOOR: {
-            /** The id would be the field id in area_table */
-            id: 2,
+	areaModules: {
+		/** The key must be as same as the field name in area_table in database */
+		IIS_SINICA_FOURTH_FLOOR: {
+			/** The id would be the field id in area_table */
+			id: 2,
 
-            /** The name would be the field name in area_table  */
-            name: 'IIS_SINICA_FOURTH_FLOOR',
+			/** The name would be the field name in area_table  */
+			name: 'IIS_SINICA_FOURTH_FLOOR',
 
-            /** Flag the area if there is map image of this area in the map folder
-             *  Set false if the mag image is not ready
-             */
-            hasMap: false,
+			/** Flag the area if there is map image of this area in the map folder
+			 *  Set false if the mag image is not ready
+			 */
+			hasMap: false,
 
-            /** The source of the area map. It can put NULL if the map image is not ready */
-            url: IIS_SINICA_FOURTH_FLOORTH_MAP,
+			/** The source of the area map. It can put NULL if the map image is not ready */
+			url: IIS_SINICA_FOURTH_FLOORTH_MAP,
 
-            urlWebp: IIS_SINICA_FOURTH_FLOORTH_MAP_WEBP,
+			urlWebp: IIS_SINICA_FOURTH_FLOORTH_MAP_WEBP,
 
-            /** The relative value of latitude and longitude of the area
-             *  The elements would be the points of left-bottom and right-upper, respectively. */
-            bounds: [
-                [0, 0],
-                [21130, 35710],
-            ],
-        },
+			/** The relative value of latitude and longitude of the area
+			 *  The elements would be the points of left-bottom and right-upper, respectively. */
+			bounds: [
+				[0, 0],
+				[21130, 35710],
+			],
+		},
 
-        NTUH_YUNLIN_WARD_FIVE_B: {
-            id: 3,
-            name: 'NTUH_YUNLIN_WARD_FIVE_B',
-            hasMap: 1,
-            url: NTUH_YUNLIN_WARD_FIVE_B_MAP,
-            urlWebp: NTUH_YUNLIN_WARD_FIVE_B_MAP_WEBP,
-            bounds: [
-                [0, 0],
-                [26067, 36928],
-            ],
-        },
-        NURSING_HOME: {
-            id: 4,
-            name: 'NURSING_HOME',
-            hasMap: 1,
-            url: NURSING_HOME_MAP,
-            urlWebp: NURSING_HOME_MAP_WEBP,
-            bounds: [
-                [0, 0],
-                [20000, 45000],
-            ],
-        },
-    },
+		NTUH_YUNLIN_WARD_FIVE_B: {
+			id: 3,
+			name: 'NTUH_YUNLIN_WARD_FIVE_B',
+			hasMap: 1,
+			url: NTUH_YUNLIN_WARD_FIVE_B_MAP,
+			urlWebp: NTUH_YUNLIN_WARD_FIVE_B_MAP_WEBP,
+			bounds: [
+				[0, 0],
+				[26067, 36928],
+			],
+		},
+		NURSING_HOME: {
+			id: 4,
+			name: 'NURSING_HOME',
+			hasMap: 1,
+			url: NURSING_HOME_MAP,
+			urlWebp: NURSING_HOME_MAP_WEBP,
+			bounds: [
+				[0, 0],
+				[20000, 45000],
+			],
+		},
+	},
 }
 
 export default siteConfig

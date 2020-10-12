@@ -38,49 +38,49 @@ import { toast, Slide, Zoom, Flip } from 'react-toastify'
 import { SAVE_SUCCESS } from '../config/wordMap'
 
 const setSuccessMessage = (msg) => {
-    return toast.success(<ToastMessage msg={msg} />, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1500,
-        className: 'color-black bg-green',
-        bodyClassName: 'd-flex justify-content-center',
-        hideProgressBar: true,
-        closeButton: false,
-        draggable: false,
-        closeOnClick: true,
-        transition: Slide,
-    })
+	return toast.success(<ToastMessage msg={msg} />, {
+		position: toast.POSITION.TOP_CENTER,
+		autoClose: 1500,
+		className: 'color-black bg-green',
+		bodyClassName: 'd-flex justify-content-center',
+		hideProgressBar: true,
+		closeButton: false,
+		draggable: false,
+		closeOnClick: true,
+		transition: Slide,
+	})
 }
 
 const setErrorMessage = (msg) => {
-    return toast.success(<ToastMessage msg={'connect to database failed'} />, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: false,
-        className: 'color-red bg-pink',
-        bodyClassName: 'd-flex justify-content-center',
-        hideProgressBar: true,
-        closeButton: false,
-        draggable: false,
-        closeOnClick: false,
-        transition: Slide,
-    })
+	return toast.success(<ToastMessage msg={'connect to database failed'} />, {
+		position: toast.POSITION.TOP_CENTER,
+		autoClose: false,
+		className: 'color-red bg-pink',
+		bodyClassName: 'd-flex justify-content-center',
+		hideProgressBar: true,
+		closeButton: false,
+		draggable: false,
+		closeOnClick: false,
+		transition: Slide,
+	})
 }
 
 const importErrorMessage = (msg, hint) => {
-    return toast.success(<ToastMessage msg={msg} hint={hint} />, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 3000,
-        className: 'toast-error-notice-container',
-        bodyClassName: 'toast-notice-body',
-        hideProgressBar: true,
-        closeButton: false,
-        draggable: false,
-        closeOnClick: false,
-        transition: Slide,
-    })
+	return toast.success(<ToastMessage msg={msg} hint={hint} />, {
+		position: toast.POSITION.TOP_CENTER,
+		autoClose: 3000,
+		className: 'toast-error-notice-container',
+		bodyClassName: 'toast-notice-body',
+		hideProgressBar: true,
+		closeButton: false,
+		draggable: false,
+		closeOnClick: false,
+		transition: Slide,
+	})
 }
 
 export default {
-    setSuccessMessage,
-    setErrorMessage,
-    importErrorMessage,
+	setSuccessMessage,
+	setErrorMessage,
+	importErrorMessage,
 }

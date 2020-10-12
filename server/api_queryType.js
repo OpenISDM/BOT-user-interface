@@ -1,5 +1,5 @@
 const confirmValidation = (username) => {
-    const text = `
+	const text = `
 		SELECT
 			user_table.name,
 			user_table.password,
@@ -39,18 +39,18 @@ const confirmValidation = (username) => {
 		WHERE user_table.name = $1;
 	`
 
-    const values = [username]
+	const values = [username]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 function setKey(user_id, username, hash) {
-    const text = `
+	const text = `
 			UPDATE  api_key
 			SET
                 name = $2,
@@ -58,29 +58,29 @@ function setKey(user_id, username, hash) {
                 register_time = now()
 	    	WHERE id = $1
 		`
-    const values = [user_id, username, hash]
+	const values = [user_id, username, hash]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 const getAllKeyQuery = ' SELECT  * FROM api_key '
 const getAllUserQuery = ' SELECT  * FROM user_table	'
 
 const get_data = (
-    key,
-    start_time,
-    end_time,
-    tag,
-    Lbeacon,
-    count_limit,
-    sort_type
+	key,
+	start_time,
+	end_time,
+	tag,
+	Lbeacon,
+	count_limit,
+	sort_type
 ) => {
-    let text = `
+	let text = `
     WITH ranges AS (
         SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi,
             CASE WHEN LAG(uuid) OVER
@@ -114,17 +114,17 @@ const get_data = (
             WHERE
                 record_timestamp > $1
                 AND record_timestamp < $2`
-    if (tag != undefined) {
-        text += `  AND location_history_table.mac_address IN  (${tag.map(
-            (item) => `'${item}'`
-        )})`
-    }
-    if (Lbeacon != undefined) {
-        text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
-            (item) => `'${item}'`
-        )})`
-    }
-    text += `) AS raw_data
+	if (tag != undefined) {
+		text += `  AND location_history_table.mac_address IN  (${tag.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	if (Lbeacon != undefined) {
+		text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	text += `) AS raw_data
     )
 
     , groups AS (
@@ -160,26 +160,26 @@ const get_data = (
     GROUP BY grp, groups.mac_address
     `
 
-    if (sort_type == 'desc') {
-        text += '  ORDER by mac_address ASC, start_time DESC   '
-    } else {
-        text += '   ORDER by mac_address ASC, start_time ASC   '
-    }
-    text += ' LIMIT  $4'
+	if (sort_type == 'desc') {
+		text += '  ORDER by mac_address ASC, start_time DESC   '
+	} else {
+		text += '   ORDER by mac_address ASC, start_time ASC   '
+	}
+	text += ' LIMIT  $4'
 
-    const values = [start_time, end_time, key, count_limit]
-    const query = {
-        text,
-        values,
-    }
+	const values = [start_time, end_time, key, count_limit]
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 export default {
-    confirmValidation,
-    setKey,
-    getAllKeyQuery,
-    getAllUserQuery,
-    get_data,
+	confirmValidation,
+	setKey,
+	getAllKeyQuery,
+	getAllUserQuery,
+	get_data,
 }

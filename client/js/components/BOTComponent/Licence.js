@@ -37,9 +37,9 @@ import LocaleContext from '../../context/LocaleContext'
 import { Title } from '../BOTComponent/styleComponent'
 
 const Licence = () => {
-    const locale = React.useContext(LocaleContext)
+	const locale = React.useContext(LocaleContext)
 
-    return <div>{locale.texts.LICENCE}</div>
+	return <div>{locale.texts.LICENCE}</div>
 }
 
 export default Licence

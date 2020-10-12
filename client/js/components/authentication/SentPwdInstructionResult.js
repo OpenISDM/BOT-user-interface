@@ -39,7 +39,11 @@ import LocaleContext from '../../context/LocaleContext'
 import AuthContext from '../../context/AuthenticationContext'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { CenterContainer , PageTitle, Title } from '../BOTComponent/styleComponent'
+import {
+	CenterContainer,
+	PageTitle,
+	Title,
+} from '../BOTComponent/styleComponent'
 import styleConfig from '../../config/styleConfig'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import { Link, useHistory } from 'react-router-dom'
@@ -51,30 +55,30 @@ import styleSheet from '../../config/styleSheet'
 const imageLength = 160
 
 const SentPwdInstructionResult = ({ match }) => {
-    const locale = React.useContext(LocaleContext)
-    const auth = React.useContext(AuthContext)
-    const history = useHistory()
-    return (
-        <CenterContainer
-            style={{
-                textAlign: 'center',
-            }}
-        >
-            <div className="mb-2">
-                <i
-                    className="fa fa-check-circle"
-                    aria-hidden="true"
-                    style={{
-                        fontSize: imageLength,
-                        color: styleSheet.theme,
-                    }}
-                />
-            </div>
-            <div className="mb-2">
-                {locale.texts.PASSWORD_RESET_INSTRUCTION_SUCCESSFUL}
-            </div>
-        </CenterContainer>
-    )
+	const locale = React.useContext(LocaleContext)
+	const auth = React.useContext(AuthContext)
+	const history = useHistory()
+	return (
+		<CenterContainer
+			style={{
+				textAlign: 'center',
+			}}
+		>
+			<div className="mb-2">
+				<i
+					className="fa fa-check-circle"
+					aria-hidden="true"
+					style={{
+						fontSize: imageLength,
+						color: styleSheet.theme,
+					}}
+				/>
+			</div>
+			<div className="mb-2">
+				{locale.texts.PASSWORD_RESET_INSTRUCTION_SUCCESSFUL}
+			</div>
+		</CenterContainer>
+	)
 }
 
 export default SentPwdInstructionResult

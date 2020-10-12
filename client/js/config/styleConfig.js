@@ -39,219 +39,219 @@ import React from 'react'
 import styleSheet from './styleSheet'
 
 const ValueContainer = ({ children, ...props }) => {
-    return (
-        components.ValueContainer && (
-            <components.ValueContainer {...props}>
-                {!!children && (
-                    <i
-                        className="fa fa-search"
-                        aria-hidden="true"
-                        style={{
-                            position: 'absolute',
-                            left: 10,
-                            color: styleSheet.iconColor,
-                        }}
-                    />
-                )}
-                {children}
-            </components.ValueContainer>
-        )
-    )
+	return (
+		components.ValueContainer && (
+			<components.ValueContainer {...props}>
+				{!!children && (
+					<i
+						className="fa fa-search"
+						aria-hidden="true"
+						style={{
+							position: 'absolute',
+							left: 10,
+							color: styleSheet.iconColor,
+						}}
+					/>
+				)}
+				{children}
+			</components.ValueContainer>
+		)
+	)
 }
 
 const styleConfig = {
-    reactSelect: {
-        option: (provided, state) => ({
-            ...provided,
-            padding: '0.5rem',
-            fontSize: '1rem',
-        }),
-        valueContainer: (provided) => ({
-            ...provided,
-            position: 'static',
-            color: 'red',
-        }),
-        indicatorsContainer: (provided) => ({
-            ...provided,
-            height: 40,
-        }),
-        menu: (provided) => ({
-            ...provided,
-            padding: 0,
-        }),
-        control: (provided) => ({
-            ...provided,
-            fontSize: '1rem',
-            minHeight: '2.5rem',
-            height: 'calc(2rem + 2px)',
-            position: 'none',
-            // width: '250px',
-            // borderRadius: 0
-        }),
-        singleValue: (provided) => ({
-            ...provided,
+	reactSelect: {
+		option: (provided, state) => ({
+			...provided,
+			padding: '0.5rem',
+			fontSize: '1rem',
+		}),
+		valueContainer: (provided) => ({
+			...provided,
+			position: 'static',
+			color: 'red',
+		}),
+		indicatorsContainer: (provided) => ({
+			...provided,
+			height: 40,
+		}),
+		menu: (provided) => ({
+			...provided,
+			padding: 0,
+		}),
+		control: (provided) => ({
+			...provided,
+			fontSize: '1rem',
+			minHeight: '2.5rem',
+			height: 'calc(2rem + 2px)',
+			position: 'none',
+			// width: '250px',
+			// borderRadius: 0
+		}),
+		singleValue: (provided) => ({
+			...provided,
 
-            // maxWidth: 'calc(90% - 8px)'
-        }),
-    },
-    reactSelectSearch: {
-        control: (provided) => ({
-            ...provided,
-            fontSize: '1rem',
-            minHeight: '2rem',
-            position: 'none',
-            width: '550px',
-            borderRadius: 0,
-        }),
+			// maxWidth: 'calc(90% - 8px)'
+		}),
+	},
+	reactSelectSearch: {
+		control: (provided) => ({
+			...provided,
+			fontSize: '1rem',
+			minHeight: '2rem',
+			position: 'none',
+			width: '550px',
+			borderRadius: 0,
+		}),
 
-        valueContainer: (base) => ({
-            ...base,
-            paddingLeft: 35,
-        }),
+		valueContainer: (base) => ({
+			...base,
+			paddingLeft: 35,
+		}),
 
-        placeholder: (provided) => ({
-            ...provided,
-            textTransform: 'capitalize',
-        }),
-    },
+		placeholder: (provided) => ({
+			...provided,
+			textTransform: 'capitalize',
+		}),
+	},
 
-    reactSelectFilter: {
-        control: (provided) => ({
-            ...provided,
-            fontSize: '1rem',
-            minHeight: '3rem',
-            position: 'none',
-            // width: '300px',
-            borderRadius: 0,
-        }),
+	reactSelectFilter: {
+		control: (provided) => ({
+			...provided,
+			fontSize: '1rem',
+			minHeight: '3rem',
+			position: 'none',
+			// width: '300px',
+			borderRadius: 0,
+		}),
 
-        // valueContainer: base => ({
-        //     ...base,
-        //     paddingLeft: 35
-        // }),
-    },
+		// valueContainer: base => ({
+		//     ...base,
+		//     paddingLeft: 35
+		// }),
+	},
 
-    reactSelectSearchComponent: {
-        IndicatorSeparator: () => null,
-        DropdownIndicator: () => null,
-        ValueContainer,
-    },
+	reactSelectSearchComponent: {
+		IndicatorSeparator: () => null,
+		DropdownIndicator: () => null,
+		ValueContainer,
+	},
 
-    reactSelectNavbar: {
-        option: (provided, state) => ({
-            ...provided,
-            padding: '0.5rem',
-            fontSize: '0.8rem',
-            cursor: 'pointer',
-        }),
+	reactSelectNavbar: {
+		option: (provided, state) => ({
+			...provided,
+			padding: '0.5rem',
+			fontSize: '0.8rem',
+			cursor: 'pointer',
+		}),
 
-        control: (provided) => ({
-            ...provided,
-            border: 'none',
-            width: 200,
-            outline: 0,
-            boxShadow: 'none',
-        }),
+		control: (provided) => ({
+			...provided,
+			border: 'none',
+			width: 200,
+			outline: 0,
+			boxShadow: 'none',
+		}),
 
-        singleValue: (provided, state) => ({
-            opacity: state.isDisabled ? 0.5 : 1,
-            transition: 'opacity 300ms',
-            cursor: 'pointer',
-        }),
-    },
-    reactTable: {
-        getTdProps: () => {
-            return {
-                style: {
-                    borderRight: 'none',
-                    fontSize: '0.9rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'black',
-                    minHeight: '3rem',
-                    height: '3rem',
-                },
-            }
-        },
+		singleValue: (provided, state) => ({
+			opacity: state.isDisabled ? 0.5 : 1,
+			transition: 'opacity 300ms',
+			cursor: 'pointer',
+		}),
+	},
+	reactTable: {
+		getTdProps: () => {
+			return {
+				style: {
+					borderRight: 'none',
+					fontSize: '0.9rem',
+					display: 'flex',
+					alignItems: 'center',
+					color: 'black',
+					minHeight: '3rem',
+					height: '3rem',
+				},
+			}
+		},
 
-        getTheadThProps: () => {
-            return {
-                style: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    borderRight: 'none',
-                    textAlign: 'left',
-                    fontSize: '0.8rem',
-                    minHeight: '2.5rem',
-                    fontWeight: 500,
-                    color: 'black',
-                    // backgroundColor: '#80808014',
-                    // boxShadow: 'rgba(32, 33, 36, 0.28) 0px 0px 0px 0px',
-                },
-            }
-        },
+		getTheadThProps: () => {
+			return {
+				style: {
+					display: 'flex',
+					alignItems: 'center',
+					borderRight: 'none',
+					textAlign: 'left',
+					fontSize: '0.8rem',
+					minHeight: '2.5rem',
+					fontWeight: 500,
+					color: 'black',
+					// backgroundColor: '#80808014',
+					// boxShadow: 'rgba(32, 33, 36, 0.28) 0px 0px 0px 0px',
+				},
+			}
+		},
 
-        getProps: () => {
-            return {
-                style: {
-                    border: 'none',
-                    // borderTop: '1px solid #cec7c7',
-                },
-            }
-        },
+		getProps: () => {
+			return {
+				style: {
+					border: 'none',
+					// borderTop: '1px solid #cec7c7',
+				},
+			}
+		},
 
-        getTheadProps: () => {
-            return {
-                style: {
-                    boxShadow: 'rgba(32, 33, 36, 0.28) 0px 0px 0px 0px',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-                    // height: '1rem'
-                    textTransform: 'capitalize',
-                },
-            }
-        },
+		getTheadProps: () => {
+			return {
+				style: {
+					boxShadow: 'rgba(32, 33, 36, 0.28) 0px 0px 0px 0px',
+					borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+					// height: '1rem'
+					textTransform: 'capitalize',
+				},
+			}
+		},
 
-        getTableProps: () => {
-            return {
-                style: {
-                    padding: '10px 20px',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    // borderRadius: '5px',
-                    background: 'white',
-                },
-            }
-        },
+		getTableProps: () => {
+			return {
+				style: {
+					padding: '10px 20px',
+					border: '1px solid rgba(0, 0, 0, 0.1)',
+					// borderRadius: '5px',
+					background: 'white',
+				},
+			}
+		},
 
-        defaultPageSize: 15,
+		defaultPageSize: 15,
 
-        SelectAllInputComponent: BOTCheckbox,
+		SelectAllInputComponent: BOTCheckbox,
 
-        SelectInputComponent: BOTCheckbox,
+		SelectInputComponent: BOTCheckbox,
 
-        PaginationComponent: BOTPagination,
+		PaginationComponent: BOTPagination,
 
-        showPaginationTop: true,
+		showPaginationTop: true,
 
-        showPaginationBottom: false,
+		showPaginationBottom: false,
 
-        showPagination: true,
+		showPagination: true,
 
-        previousText: <i className="fas fa-chevron-left"></i>,
+		previousText: <i className="fas fa-chevron-left"></i>,
 
-        nextText: <i className="fas fa-chevron-right"></i>,
+		nextText: <i className="fas fa-chevron-right"></i>,
 
-        NoDataComponent: () => null,
-    },
-    checkbox: {
-        fontSize: '0.9rem',
-        margin: '.5rem .2rem',
-    },
-    radioButton: {
-        fontSize: '0.9rem',
-    },
-    link: {
-        color: '#1890ff',
-    },
+		NoDataComponent: () => null,
+	},
+	checkbox: {
+		fontSize: '0.9rem',
+		margin: '.5rem .2rem',
+	},
+	radioButton: {
+		fontSize: '0.9rem',
+	},
+	link: {
+		color: '#1890ff',
+	},
 }
 
 export default styleConfig

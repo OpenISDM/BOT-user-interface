@@ -33,8 +33,8 @@
 */
 
 export default {
-    getImportedObject: () => {
-        const text = `
+	getImportedObject: () => {
+		const text = `
             SELECT
                 import_table.id,
                 import_table.name,
@@ -47,30 +47,30 @@ export default {
             ON object_table.asset_control_number = import_table.asset_control_number
         `
 
-        return text
-    },
+		return text
+	},
 
-    deleteImporedtObject: (idPackage) => {
-        const controlNumbers = idPackage.map((item) => `'${item}'`)
-        const query = `
+	deleteImporedtObject: (idPackage) => {
+		const controlNumbers = idPackage.map((item) => `'${item}'`)
+		const query = `
             DELETE FROM import_table
             WHERE asset_control_number IN (${controlNumbers});`
 
-        return query
-    },
+		return query
+	},
 
-    addImportedObject: (idPackage) => {
-        const item = idPackage.map((item) => {
-            return `('${item.name}', '${item.type}', '${item.asset_control_number}')`
-        })
+	addImportedObject: (idPackage) => {
+		const item = idPackage.map((item) => {
+			return `('${item.name}', '${item.type}', '${item.asset_control_number}')`
+		})
 
-        const text = `
+		const text = `
             INSERT INTO import_table (
                 name,
                 type,
                 asset_control_number
             )
             VALUES ${item}`
-        return text
-    },
+		return text
+	},
 }

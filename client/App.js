@@ -41,25 +41,19 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import publicRoutes from './js/config/routes/publicRoutesConfig'
 
 const App = () => {
-    return (
-        <AppContext>
-            <BrowserRouter>
-                <Switch>
-                    {publicRoutes.map((route) => {
-                        return (
-                            <Route
-                                path={route.path}
-                                exact
-                                component={route.component}
-                            />
-                        )
-                    })}
-                    <PrivateRoutes />
-                </Switch>
-            </BrowserRouter>
-            <ToastContainer {...config.TOAST_PROPS} />
-        </AppContext>
-    )
+	return (
+		<AppContext>
+			<BrowserRouter>
+				<Switch>
+					{publicRoutes.map((route) => {
+						return <Route path={route.path} exact component={route.component} />
+					})}
+					<PrivateRoutes />
+				</Switch>
+			</BrowserRouter>
+			<ToastContainer {...config.TOAST_PROPS} />
+		</AppContext>
+	)
 }
 
 export default App

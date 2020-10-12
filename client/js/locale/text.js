@@ -38,13 +38,13 @@ import ms from './texts/ms-MY'
 import cn from './texts/zh-CN'
 
 const text = {
-    tw,
+	tw,
 
-    en,
+	en,
 
-    ms,
+	ms,
 
-    cn,
+	cn,
 }
 
 export default text

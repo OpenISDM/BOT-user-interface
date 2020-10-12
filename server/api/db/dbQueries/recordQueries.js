@@ -33,7 +33,7 @@
 */
 
 const getShiftChangeRecord = () => {
-    const query = `
+	const query = `
 		SELECT
 			shift_change_record.id,
 			shift_change_record.file_path,
@@ -52,11 +52,11 @@ const getShiftChangeRecord = () => {
 		ORDER BY shift_change_record.submit_timestamp DESC;
 
 	`
-    return query
+	return query
 }
 
 const getEditObjectRecord = () => {
-    const query = `
+	const query = `
 		SELECT
 			user_table.name,
 			edit_object_record.id,
@@ -72,11 +72,11 @@ const getEditObjectRecord = () => {
 		ORDER BY edit_object_record.edit_time DESC
 
 	`
-    return query
+	return query
 }
 
 const addEditObjectRecord = (formOption, username, filePath) => {
-    const text = `
+	const text = `
 		INSERT INTO edit_object_record (
 			edit_user_id,
 			notes,
@@ -101,23 +101,23 @@ const addEditObjectRecord = (formOption, username, filePath) => {
 		)
 		RETURNING id;
 	`
-    const values = [
-        username,
-        formOption[0].notes,
-        formOption[0].status,
-        formOption[0].transferred_location,
-        filePath,
-    ]
+	const values = [
+		username,
+		formOption[0].notes,
+		formOption[0].status,
+		formOption[0].transferred_location,
+		filePath,
+	]
 
-    const query = {
-        text,
-        values,
-    }
-    return query
+	const query = {
+		text,
+		values,
+	}
+	return query
 }
 
 const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
-    const text = `
+	const text = `
 		INSERT INTO shift_change_record (
 			user_id,
 			shift,
@@ -134,16 +134,16 @@ const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
 		);
 	`
 
-    const values = [userInfo.id, shift.value, file_path, list_id]
+	const values = [userInfo.id, shift.value, file_path, list_id]
 
-    return {
-        text,
-        values,
-    }
+	return {
+		text,
+		values,
+	}
 }
 
 const addPatientRecord = (objectPackage) => {
-    const text = `
+	const text = `
 		INSERT INTO patient_record (
 			object_id,
 			editing_user_id,
@@ -158,34 +158,30 @@ const addPatientRecord = (objectPackage) => {
 		)
 
 	`
-    const values = [
-        objectPackage.id,
-        objectPackage.userId,
-        objectPackage.record,
-    ]
+	const values = [objectPackage.id, objectPackage.userId, objectPackage.record]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 const deleteShiftChangeRecord = (idPackage) => {
-    const query = `
+	const query = `
 		DELETE FROM shift_change_record
 		WHERE id IN (${idPackage.map((item) => `'${item}'`)})
 		RETURNING *;
 	`
-    return query
+	return query
 }
 
 export default {
-    getShiftChangeRecord,
-    getEditObjectRecord,
-    addEditObjectRecord,
-    addShiftChangeRecord,
-    addPatientRecord,
-    deleteShiftChangeRecord,
+	getShiftChangeRecord,
+	getEditObjectRecord,
+	addEditObjectRecord,
+	addShiftChangeRecord,
+	addPatientRecord,
+	deleteShiftChangeRecord,
 }

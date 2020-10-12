@@ -37,138 +37,134 @@ import { Button } from 'react-bootstrap'
 import AccessControl from '../authentication/AccessControl'
 import { AppContext } from '../../context/AppContext'
 import {
-    SEARCH_HISTORY,
-    ALL_DEVICES,
-    ALL_PATIENTS,
-    MY_DEVICES,
-    MY_PATIENTS,
+	SEARCH_HISTORY,
+	ALL_DEVICES,
+	ALL_PATIENTS,
+	MY_DEVICES,
+	MY_PATIENTS,
 } from '../../config/wordMap'
 import { Title } from '../BOTComponent/styleComponent'
 
 class FrequentSearch extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        searchKey: '',
-    }
+	state = {
+		searchKey: '',
+	}
 
-    componentDidUpdate = (prepProps) => {
-        if (
-            prepProps.clearSearchResult != this.props.clearSearchResult &&
-            !prepProps.clearSearchResult
-        ) {
-            this.setState({
-                searchKey: '',
-            })
-        }
-    }
+	componentDidUpdate = (prepProps) => {
+		if (
+			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			!prepProps.clearSearchResult
+		) {
+			this.setState({
+				searchKey: '',
+			})
+		}
+	}
 
-    handleClick = (e) => {
-        const { name, value } = e.target
+	handleClick = (e) => {
+		const { name, value } = e.target
 
-        const searchKey = {
-            type: name,
-            value,
-        }
-        this.props.getSearchKey(searchKey)
-        this.setState({
-            searchKey,
-        })
-    }
+		const searchKey = {
+			type: name,
+			value,
+		}
+		this.props.getSearchKey(searchKey)
+		this.setState({
+			searchKey,
+		})
+	}
 
-    render() {
-        const { locale, auth } = this.context
+	render() {
+		const { locale, auth } = this.context
 
-        const { searchObjectArray, pinColorArray } = this.props
+		const { searchObjectArray, pinColorArray } = this.props
 
-        return (
-            <div>
-                <Title list className="text-center">
-                    {locale.texts.FREQUENT_SEARCH}
-                </Title>
-                <div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar max-height-30">
-                    <div className="text-center">
-                        {auth.authenticated &&
-                            auth.user.searchHistory &&
-                            auth.user.searchHistory
-                                .filter((item, index) => {
-                                    return index < auth.user.freqSearchCount
-                                })
-                                .map((item, index) => {
-                                    const pinColorIndex = searchObjectArray.indexOf(
-                                        item
-                                    )
+		return (
+			<div>
+				<Title list className="text-center">
+					{locale.texts.FREQUENT_SEARCH}
+				</Title>
+				<div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar max-height-30">
+					<div className="text-center">
+						{auth.authenticated &&
+							auth.user.searchHistory &&
+							auth.user.searchHistory
+								.filter((item, index) => {
+									return index < auth.user.freqSearchCount
+								})
+								.map((item, index) => {
+									const pinColorIndex = searchObjectArray.indexOf(item)
 
-                                    return (
-                                        <Button
-                                            variant="outline-custom"
-                                            className="text-none"
-                                            onClick={this.handleClick}
-                                            style={{
-                                                color:
-                                                    pinColorIndex > -1
-                                                        ? pinColorArray[
-                                                            pinColorIndex
-                                                        ]
-                                                        : null,
-                                            }}
-                                            // active={this.state.searchKey == item.name.toLowerCase()}
-                                            key={index}
-                                            name={SEARCH_HISTORY}
-                                            value={item}
-                                        >
-                                            {item}
-                                        </Button>
-                                    )
-                                })}
-                    </div>
+									return (
+										<Button
+											variant="outline-custom"
+											className="text-none"
+											onClick={this.handleClick}
+											style={{
+												color:
+													pinColorIndex > -1
+														? pinColorArray[pinColorIndex]
+														: null,
+											}}
+											// active={this.state.searchKey == item.name.toLowerCase()}
+											key={index}
+											name={SEARCH_HISTORY}
+											value={item}
+										>
+											{item}
+										</Button>
+									)
+								})}
+					</div>
 
-                    <hr />
-                    <Button
-                        variant="outline-custom"
-                        onClick={this.handleClick}
-                        // active={this.state.searchKey == 'all devices'}
-                        name={ALL_DEVICES}
-                    >
-                        {locale.texts.ALL_DEVICES}
-                    </Button>
-                    <Button
-                        variant="outline-custom"
-                        onClick={this.handleClick}
-                        // active={this.state.searchKey == 'all devices'}
-                        name={ALL_PATIENTS}
-                    >
-                        {locale.texts.ALL_PATIENTS}
-                    </Button>
-                    <AccessControl
-                        permission={'user:mydevice'}
-                        renderNoAccess={() => null}
-                    >
-                        <Button
-                            variant="outline-custom"
-                            onClick={this.handleClick}
-                            // active={this.state.searchKey == 'my devices'}
-                            name={MY_DEVICES}
-                        >
-                            {locale.texts.MY_DEVICES}
-                        </Button>
-                    </AccessControl>
-                    <AccessControl
-                        permission={'user:mypatient'}
-                        renderNoAccess={() => null}
-                    >
-                        <Button
-                            variant="outline-custom"
-                            onClick={this.handleClick}
-                            name={MY_PATIENTS}
-                        >
-                            {locale.texts.MY_PATIENTS}
-                        </Button>
-                    </AccessControl>
-                </div>
-            </div>
-        )
-    }
+					<hr />
+					<Button
+						variant="outline-custom"
+						onClick={this.handleClick}
+						// active={this.state.searchKey == 'all devices'}
+						name={ALL_DEVICES}
+					>
+						{locale.texts.ALL_DEVICES}
+					</Button>
+					<Button
+						variant="outline-custom"
+						onClick={this.handleClick}
+						// active={this.state.searchKey == 'all devices'}
+						name={ALL_PATIENTS}
+					>
+						{locale.texts.ALL_PATIENTS}
+					</Button>
+					<AccessControl
+						permission={'user:mydevice'}
+						renderNoAccess={() => null}
+					>
+						<Button
+							variant="outline-custom"
+							onClick={this.handleClick}
+							// active={this.state.searchKey == 'my devices'}
+							name={MY_DEVICES}
+						>
+							{locale.texts.MY_DEVICES}
+						</Button>
+					</AccessControl>
+					<AccessControl
+						permission={'user:mypatient'}
+						renderNoAccess={() => null}
+					>
+						<Button
+							variant="outline-custom"
+							onClick={this.handleClick}
+							name={MY_PATIENTS}
+						>
+							{locale.texts.MY_PATIENTS}
+						</Button>
+					</AccessControl>
+				</div>
+			</div>
+		)
+	}
 }
 
 export default FrequentSearch

@@ -38,19 +38,19 @@ const dataSrcProtocol = process.env.DATASRC_PROTOCOL || 'https'
 const domain = `${dataSrcProtocol}://${dataSrcIP}`
 
 const resetPasswordInstruction = {
-    subject: 'BiDaE Object Tracker Password Assistance',
+	subject: 'BiDaE Object Tracker Password Assistance',
 
-    content: (token) => {
-        return `Greetings from BiDaE Object Tracker Service. We received a request to reset the password for the BOT account associated with this e-mail address. Click the link below to reset your password using our secure server:
+	content: (token) => {
+		return `Greetings from BiDaE Object Tracker Service. We received a request to reset the password for the BOT account associated with this e-mail address. Click the link below to reset your password using our secure server:
 		${domain}/resetpassword/new/${token}
 
         Sincerely,
         The BOT Service Team
 
         `
-    },
+	},
 }
 
 export default {
-    resetPasswordInstruction,
+	resetPasswordInstruction,
 }

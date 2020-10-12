@@ -37,40 +37,43 @@ import dbQueries from '../db/dbQueries/importedObjectQueries'
 import pool from '../db/dev/connection'
 
 export default {
-    getImportedObject: (request, response) => {
-        const { locale, areaId } = request.body
+	getImportedObject: (request, response) => {
+		const { locale, areaId } = request.body
 
-        pool.query(dbQueries.getImportedObject())
-            .then((res) => {
-                console.log('get imported object')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`get imported object failed ${err}`)
-            })
-    },
+		pool
+			.query(dbQueries.getImportedObject())
+			.then((res) => {
+				console.log('get imported object')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`get imported object failed ${err}`)
+			})
+	},
 
-    deleteImportedObject: (request, response) => {
-        const { idPackage } = request.body
-        pool.query(dbQueries.deleteImporedtObject(idPackage))
-            .then((res) => {
-                console.log('delete imported object succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`delete imported object failed ${err}`)
-            })
-    },
+	deleteImportedObject: (request, response) => {
+		const { idPackage } = request.body
+		pool
+			.query(dbQueries.deleteImporedtObject(idPackage))
+			.then((res) => {
+				console.log('delete imported object succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`delete imported object failed ${err}`)
+			})
+	},
 
-    addImportedObject: (request, response) => {
-        const idPackage = request.body.newData
-        pool.query(dbQueries.addImportedObject(idPackage))
-            .then((res) => {
-                console.log('add imported objects succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(` ${err}`)
-            })
-    },
+	addImportedObject: (request, response) => {
+		const idPackage = request.body.newData
+		pool
+			.query(dbQueries.addImportedObject(idPackage))
+			.then((res) => {
+				console.log('add imported objects succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(` ${err}`)
+			})
+	},
 }

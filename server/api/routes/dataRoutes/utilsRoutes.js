@@ -36,10 +36,10 @@ import utilsController from '../../controllers/utilsController'
 import cors from 'cors'
 
 export default (app) => {
-    // enable pre-flight request for DELETE request
-    // app.options('/data/utils/searchableKeyword', cors())
+	// enable pre-flight request for DELETE request
+	// app.options('/data/utils/searchableKeyword', cors())
 
-    app.route('/data/utils/searchableKeyword').post(
-        utilsController.getSearchableKeywords
-    )
+	app
+		.route('/data/utils/searchableKeyword')
+		.post(utilsController.getSearchableKeywords)
 }

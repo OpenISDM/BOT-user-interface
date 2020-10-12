@@ -35,41 +35,41 @@
 import React from 'react'
 
 class CheckboxGroup extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+	constructor(props) {
+		super(props)
+	}
 
-    handleChange = (event) => {
-        const target = event.currentTarget
-        const valueArray = [...this.props.value] || []
+	handleChange = (event) => {
+		const target = event.currentTarget
+		const valueArray = [...this.props.value] || []
 
-        if (target.checked) {
-            valueArray.push(target.id)
-        } else {
-            valueArray.splice(valueArray.indexOf(target.id), 1)
-        }
-        this.props.onChange(this.props.id, valueArray)
-    }
+		if (target.checked) {
+			valueArray.push(target.id)
+		} else {
+			valueArray.splice(valueArray.indexOf(target.id), 1)
+		}
+		this.props.onChange(this.props.id, valueArray)
+	}
 
-    handleBlur = () => {
-        this.props.onBlur(this.props.id, true)
-    }
+	handleBlur = () => {
+		this.props.onBlur(this.props.id, true)
+	}
 
-    render() {
-        const { value, error, touched, label, className, children } = this.props
-        return (
-            <div className="d-flex flex-column">
-                {React.Children.map(children, (child) => {
-                    return React.cloneElement(child, {
-                        field: {
-                            value: value.includes(child.props.id),
-                            onChange: this.handleChange,
-                        },
-                    })
-                })}
-            </div>
-        )
-    }
+	render() {
+		const { value, error, touched, label, className, children } = this.props
+		return (
+			<div className="d-flex flex-column">
+				{React.Children.map(children, (child) => {
+					return React.cloneElement(child, {
+						field: {
+							value: value.includes(child.props.id),
+							onChange: this.handleChange,
+						},
+					})
+				})}
+			</div>
+		)
+	}
 }
 
 export default CheckboxGroup

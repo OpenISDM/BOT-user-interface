@@ -39,56 +39,57 @@ import pool from '../db/dev/connection'
 import statusCode from '../config/statusCode'
 
 export default {
-    getAllLbeacon: (request, response) => {
-        const { locale } = request.query
+	getAllLbeacon: (request, response) => {
+		const { locale } = request.query
 
-        pool.query(dbQueries.getLbeaconTable)
-            .then((res) => {
-                console.log('get lbeacon table data succeed')
-                res.rows.map((item) => {
-                    /** Set the value that distinguish lbeacon is normal */
+		pool
+			.query(dbQueries.getLbeaconTable)
+			.then((res) => {
+				console.log('get lbeacon table data succeed')
+				res.rows.map((item) => {
+					/** Set the value that distinguish lbeacon is normal */
 
-                    item.isInHealthInterval =
-                        (item.health_status ==
-                            process.env.IS_LBEACON_HEALTH_STATUS_CODE ||
-                            item.health_status ==
-                                statusCode.LBEACON_STATUS_NOT_AVAILABLE) &&
-                        moment().diff(item.last_report_timestamp, 'minutes') <
-                            process.env.LBEACON_HEALTH_TIME_INTERVAL_IN_MIN
+					item.isInHealthInterval =
+						(item.health_status == process.env.IS_LBEACON_HEALTH_STATUS_CODE ||
+							item.health_status == statusCode.LBEACON_STATUS_NOT_AVAILABLE) &&
+						moment().diff(item.last_report_timestamp, 'minutes') <
+							process.env.LBEACON_HEALTH_TIME_INTERVAL_IN_MIN
 
-                    item.last_report_timestamp = moment
-                        .tz(item.last_report_timestamp, process.env.TZ)
-                        .locale(locale)
-                        .format(process.env.TIMESTAMP_FORMAT)
-                })
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`get lbeacon table failed ${err}`)
-            })
-    },
+					item.last_report_timestamp = moment
+						.tz(item.last_report_timestamp, process.env.TZ)
+						.locale(locale)
+						.format(process.env.TIMESTAMP_FORMAT)
+				})
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`get lbeacon table failed ${err}`)
+			})
+	},
 
-    deleteLBeacon: (request, response) => {
-        const { idPackage } = request.body
-        pool.query(dbQueries.deleteLBeacon(idPackage))
-            .then((res) => {
-                console.log('delete LBeacon record succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`delete LBeacon failed ${err}`)
-            })
-    },
+	deleteLBeacon: (request, response) => {
+		const { idPackage } = request.body
+		pool
+			.query(dbQueries.deleteLBeacon(idPackage))
+			.then((res) => {
+				console.log('delete LBeacon record succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`delete LBeacon failed ${err}`)
+			})
+	},
 
-    editLbeacon: (request, response) => {
-        const { formOption } = request.body
-        pool.query(dbQueries.editLbeacon(formOption))
-            .then((res) => {
-                console.log('edit lbeacon succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`edit lbeacon failed ${err}`)
-            })
-    },
+	editLbeacon: (request, response) => {
+		const { formOption } = request.body
+		pool
+			.query(dbQueries.editLbeacon(formOption))
+			.then((res) => {
+				console.log('edit lbeacon succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`edit lbeacon failed ${err}`)
+			})
+	},
 }

@@ -43,76 +43,63 @@ import FormikFormGroup from '../FormikFormGroup'
  */
 
 const EditGatewayForm = ({
-    title,
-    selectedObjectData,
-    show,
-    handleClose,
-    handleSubmit,
+	title,
+	selectedObjectData,
+	show,
+	handleClose,
+	handleSubmit,
 }) => {
-    const locale = React.useContext(LocaleContext)
+	const locale = React.useContext(LocaleContext)
 
-    const { uuid, description, comment } = selectedObjectData
+	const { uuid, description, comment } = selectedObjectData
 
-    return (
-        <Modal
-            show={show}
-            onHide={handleClose}
-            size="md"
-            className="text-capitalize"
-        >
-            <Modal.Header closeButton>
-                {locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-            </Modal.Header>
-            <Modal.Body>
-                <Formik
-                    initialValues={{
-                        description: description || '',
-                        uuid,
-                        comment,
-                    }}
-                    onSubmit={(values) => {
-                        const { comment } = values
-                        const settingPackage = {
-                            ...selectedObjectData,
-                            comment,
-                        }
-                        handleSubmit(settingPackage)
-                    }}
-                    render={({
-                        values,
-                        errors,
-                        status,
-                        touched,
-                        isSubmitting,
-                    }) => (
-                        <Form>
-                            <FormikFormGroup
-                                type="text"
-                                name="comment"
-                                label={locale.texts.COMMENT}
-                                placeholder=""
-                            />
-                            <Modal.Footer>
-                                <Button
-                                    variant="outline-secondary"
-                                    onClick={handleClose}
-                                >
-                                    {locale.texts.CANCEL}
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    variant="primary"
-                                    disabled={isSubmitting}
-                                >
-                                    {locale.texts.SEND}
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    )}
-                />
-            </Modal.Body>
-        </Modal>
-    )
+	return (
+		<Modal
+			show={show}
+			onHide={handleClose}
+			size="md"
+			className="text-capitalize"
+		>
+			<Modal.Header closeButton>
+				{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
+			</Modal.Header>
+			<Modal.Body>
+				<Formik
+					initialValues={{
+						description: description || '',
+						uuid,
+						comment,
+					}}
+					onSubmit={(values) => {
+						const { comment } = values
+						const settingPackage = {
+							...selectedObjectData,
+							comment,
+						}
+						handleSubmit(settingPackage)
+					}}
+					render={({ values, errors, status, touched, isSubmitting }) => (
+						<Form>
+							<FormikFormGroup
+								type="text"
+								name="comment"
+								label={locale.texts.COMMENT}
+								placeholder=""
+							/>
+							<Modal.Footer>
+								<Button variant="outline-secondary" onClick={handleClose}>
+									{locale.texts.CANCEL}
+								</Button>
+								<Button type="submit" variant="primary" disabled={isSubmitting}>
+									{locale.texts.SEND}
+								</Button>
+							</Modal.Footer>
+						</Form>
+					)}
+				/>
+			</Modal.Body>
+		</Modal>
+	)
 }
 
 export default EditGatewayForm

@@ -36,57 +36,52 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    async getRecord (type, locale) {
-        return await axios.post(dataSrc.record[type], {
-            locale,
-        })
-    },
+	async getRecord(type, locale) {
+		return await axios.post(dataSrc.record[type], {
+			locale,
+		})
+	},
 
-    async addShiftChangeRecord ({
-        userInfo,
-        pdfPackage,
-        shift,
-        list_id,
-    }) {
-        return await axios.put(dataSrc.record.shiftChange, {
-            userInfo,
-            pdfPackage,
-            shift,
-            list_id,
-        })
-    },
+	async addShiftChangeRecord({ userInfo, pdfPackage, shift, list_id }) {
+		return await axios.put(dataSrc.record.shiftChange, {
+			userInfo,
+			pdfPackage,
+			shift,
+			list_id,
+		})
+	},
 
-    async deleteShiftChangeRecord ({ idPackage }) {
-        return await axios.delete(dataSrc.record.shiftChange, {
-            data: {
-                idPackage,
-            },
-        })
-    },
+	async deleteShiftChangeRecord({ idPackage }) {
+		return await axios.delete(dataSrc.record.shiftChange, {
+			data: {
+				idPackage,
+			},
+		})
+	},
 
-    async addPatientRecord ({ objectPackage }) {
-        return await axios.post(dataSrc.record.patientRecord, {
-            objectPackage,
-        })
-    },
+	async addPatientRecord({ objectPackage }) {
+		return await axios.post(dataSrc.record.patientRecord, {
+			objectPackage,
+		})
+	},
 
-    async delete (configPackage) {
-        return await axios.delete(dataSrc.monitor, {
-            data: {
-                configPackage,
-            },
-        })
-    },
+	async delete(configPackage) {
+		return await axios.delete(dataSrc.monitor, {
+			data: {
+				configPackage,
+			},
+		})
+	},
 
-    async add (configPackage) {
-        return await axios.patch(dataSrc.monitor, {
-            configPackage,
-        })
-    },
+	async add(configPackage) {
+		return await axios.patch(dataSrc.monitor, {
+			configPackage,
+		})
+	},
 
-    async put (configPackage) {
-        return await axios.put(dataSrc.monitor, {
-            configPackage,
-        })
-    },
+	async put(configPackage) {
+		return await axios.put(dataSrc.monitor, {
+			configPackage,
+		})
+	},
 }

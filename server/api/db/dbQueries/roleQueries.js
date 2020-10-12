@@ -33,12 +33,12 @@
 */
 
 export default {
-    getAllRole: () => {
-        const query = `
+	getAllRole: () => {
+		const query = `
             SELECT
                 name
             FROM roles;
         `
-        return query
-    },
+		return query
+	},
 }

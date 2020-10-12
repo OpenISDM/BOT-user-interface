@@ -36,11 +36,11 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    async getLbeaconTable ({ locale }) {
-        return await axios.get(dataSrc.lbeacon, {
-            params: {
-                locale,
-            },
-        })
-    },
+	async getLbeaconTable({ locale }) {
+		return await axios.get(dataSrc.lbeacon, {
+			params: {
+				locale,
+			},
+		})
+	},
 }

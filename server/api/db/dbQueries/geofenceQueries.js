@@ -33,7 +33,7 @@
 */
 
 const getGeofenceConfig = (areaId) => {
-    return `
+	return `
 		SELECT
 			*
 		FROM geo_fence_config
@@ -42,28 +42,28 @@ const getGeofenceConfig = (areaId) => {
 }
 
 const deleteMonitorConfig = (monitorConfigPackage) => {
-    const { type, id } = monitorConfigPackage
-    return `
+	const { type, id } = monitorConfigPackage
+	return `
 		DELETE FROM geo_fence_config
 		WHERE id IN (${id.map((id) => `'${id}'`)})
 	`
 }
 
 const addGeofenceConfig = (monitorConfigPackage) => {
-    const {
-        type,
-        id,
-        name,
-        start_time,
-        end_time,
-        enable,
-        perimeters,
-        fences,
-        area_id,
-        is_global_fence,
-    } = monitorConfigPackage
+	const {
+		type,
+		id,
+		name,
+		start_time,
+		end_time,
+		enable,
+		perimeters,
+		fences,
+		area_id,
+		is_global_fence,
+	} = monitorConfigPackage
 
-    const text = `
+	const text = `
 		INSERT INTO ${type}
 			(
 				name,
@@ -88,38 +88,38 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 			)
 	`
 
-    const values = [
-        name,
-        start_time,
-        end_time,
-        enable,
-        perimeters,
-        fences,
-        area_id,
-        is_global_fence,
-    ]
+	const values = [
+		name,
+		start_time,
+		end_time,
+		enable,
+		perimeters,
+		fences,
+		area_id,
+		is_global_fence,
+	]
 
-    return {
-        text,
-        values,
-    }
+	return {
+		text,
+		values,
+	}
 }
 
 const setGeofenceConfig = (monitorConfigPackage) => {
-    const {
-        type,
-        id,
-        name,
-        start_time,
-        end_time,
-        enable,
-        perimeters,
-        fences,
-        area_id,
-        is_global_fence,
-    } = monitorConfigPackage
+	const {
+		type,
+		id,
+		name,
+		start_time,
+		end_time,
+		enable,
+		perimeters,
+		fences,
+		area_id,
+		is_global_fence,
+	} = monitorConfigPackage
 
-    const text = `
+	const text = `
 		UPDATE geo_fence_config
 		SET
 			name = $2,
@@ -132,29 +132,29 @@ const setGeofenceConfig = (monitorConfigPackage) => {
 			is_global_fence = $9
 		WHERE id = $1;
 	`
-    const values = [
-        id,
-        name,
-        area_id,
-        start_time,
-        end_time,
-        enable,
-        perimeters,
-        fences,
-        is_global_fence,
-    ]
+	const values = [
+		id,
+		name,
+		area_id,
+		start_time,
+		end_time,
+		enable,
+		perimeters,
+		fences,
+		is_global_fence,
+	]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 export default {
-    getGeofenceConfig,
-    deleteMonitorConfig,
-    addGeofenceConfig,
-    setGeofenceConfig,
+	getGeofenceConfig,
+	deleteMonitorConfig,
+	addGeofenceConfig,
+	setGeofenceConfig,
 }

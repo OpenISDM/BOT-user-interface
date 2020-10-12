@@ -41,69 +41,69 @@ import LocaleContext from '../../../context/LocaleContext'
 import { Title } from '../../BOTComponent/styleComponent'
 
 const style = {
-    noResultDiv: {
-        color: 'grey',
-        fontSize: '1rem',
-    },
-    list: {
-        maxHeight: '60vh',
-        overflow: 'hidden scroll',
-    },
+	noResultDiv: {
+		color: 'grey',
+		fontSize: '1rem',
+	},
+	list: {
+		maxHeight: '60vh',
+		overflow: 'hidden scroll',
+	},
 }
 
 const BrowserSearchResultList = ({
-    searchResult,
-    title,
-    selection,
-    onSelect,
-    searchObjectArray,
-    pinColorArray,
-    searchKey,
+	searchResult,
+	title,
+	selection,
+	onSelect,
+	searchObjectArray,
+	pinColorArray,
+	searchKey,
 }) => {
-    const locale = React.useContext(LocaleContext)
+	const locale = React.useContext(LocaleContext)
 
-    const listMaxHeight = '42vh'
+	const listMaxHeight = '42vh'
 
-    return (
-        <Fragment>
-            <Row className="d-flex justify-content-center">
-                <Title>{title}</Title>
-            </Row>
+	return (
+		<Fragment>
+			<Row className="d-flex justify-content-center">
+				<Title>{title}</Title>
+			</Row>
 
-            {searchResult.length == 0 ? (
-                <Col className="d-flex justify-content-center color-grey">
-                    {locale.texts.NO_RESULT}
-                </Col>
-            ) : (
-                <div
-                    className="d-flex justify-content-center overflow-hidden-scroll custom-scrollbar"
-                    style={{
-                        maxHeight: listMaxHeight,
-                    }}
-                >
-                    <AccessControl
-                        permission={'form:edit'}
-                        renderNoAccess={() => (
-                            <SearchResultListGroup
-                                data={searchResult}
-                                selection={selection}
-                            />
-                        )}
-                    >
-                        <SearchResultListGroup
-                            data={searchResult}
-                            onSelect={onSelect}
-                            selection={selection}
-                            action
-                            searchObjectArray={searchObjectArray}
-                            pinColorArray={pinColorArray}
-                            searchKey={searchKey}
-                        />
-                    </AccessControl>
-                </div>
-            )}
-        </Fragment>
-    )
+			{searchResult.length == 0 ? (
+				<Col className="d-flex justify-content-center color-grey">
+					{locale.texts.NO_RESULT}
+				</Col>
+			) : (
+				<div
+					className="d-flex justify-content-center overflow-hidden-scroll custom-scrollbar"
+					style={{
+						maxHeight: listMaxHeight,
+					}}
+				>
+					<AccessControl
+						permission={'form:edit'}
+						renderNoAccess={() => (
+							<SearchResultListGroup
+								data={searchResult}
+								selection={selection}
+							/>
+						)}
+					>
+						<SearchResultListGroup
+							data={searchResult}
+							onSelect={onSelect}
+							selection={selection}
+							action
+							searchObjectArray={searchObjectArray}
+							pinColorArray={pinColorArray}
+							searchKey={searchKey}
+						/>
+					</AccessControl>
+				</div>
+			)}
+		</Fragment>
+	)
 }
 
 export default BrowserSearchResultList

@@ -46,147 +46,131 @@ import messageGenerator from '../../helper/messageGenerator'
 import { isEqual } from '../../helper/utilities'
 
 class EditImportTable extends React.Component {
-    state = {
-        show: this.props.show,
-        inputValue: '',
-        scanValue: '',
-    }
+	state = {
+		show: this.props.show,
+		inputValue: '',
+		scanValue: '',
+	}
 
-    componentDidUpdate = (prevProps) => {
-        if (!isEqual(prevProps, this.props)) {
-            this.setState({
-                show: this.props.show,
-            })
-        }
-    }
+	componentDidUpdate = (prevProps) => {
+		if (!isEqual(prevProps, this.props)) {
+			this.setState({
+				show: this.props.show,
+			})
+		}
+	}
 
-    handleClose = () => {
-        this.setState({
-            inputValue: '',
-            scanValue: '',
-        })
-        this.props.handleCloseForm()
-    }
+	handleClose = () => {
+		this.setState({
+			inputValue: '',
+			scanValue: '',
+		})
+		this.props.handleCloseForm()
+	}
 
-    handleSubmit = (postOption) => {
-        if (
-            this.state.scanValue ==
-            this.props.selectedObjectData.asset_control_number
-        ) {
-            axios
-                .post(deleteImportData, {
-                    idPackage: this.props.selectedObjectData.id,
-                })
-                .then((res) => {
-                    toast.success('Edit Import Table Success', {
-                        position: toast.POSITION.TOP_RIGHT,
-                        autoClose: 5000,
-                        hideProgressBar: true,
-                    })
-                    setTimeout(this.props.handleSubmitForm(), 500)
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-        } else {
-            alert('ＴＡＧ與產品編號不符')
-            this.setState({
-                scanValue: '',
-            })
-        }
+	handleSubmit = (postOption) => {
+		if (
+			this.state.scanValue == this.props.selectedObjectData.asset_control_number
+		) {
+			axios
+				.post(deleteImportData, {
+					idPackage: this.props.selectedObjectData.id,
+				})
+				.then((res) => {
+					toast.success('Edit Import Table Success', {
+						position: toast.POSITION.TOP_RIGHT,
+						autoClose: 5000,
+						hideProgressBar: true,
+					})
+					setTimeout(this.props.handleSubmitForm(), 500)
+				})
+				.catch((error) => {
+					console.log(error)
+				})
+		} else {
+			alert('ＴＡＧ與產品編號不符')
+			this.setState({
+				scanValue: '',
+			})
+		}
 
-        this.props.handleCloseForm()
-    }
+		this.props.handleCloseForm()
+	}
 
-    updateInput = (event) => {
-        this.setState({ scanValue: event.target.value })
-    }
+	updateInput = (event) => {
+		this.setState({ scanValue: event.target.value })
+	}
 
-    render() {
-        const locale = this.context
+	render() {
+		const locale = this.context
 
-        const { title, selectedObjectData } = this.props
-        const {
-            name,
-            type,
-            asset_control_number,
-            mac_address,
-        } = selectedObjectData
+		const { title, selectedObjectData } = this.props
+		const { name, type, asset_control_number, mac_address } = selectedObjectData
 
-        return (
-            <Modal show={this.state.show} onHide={this.handleClose} size="md">
-                <Modal.Header
-                    closeButton
-                    className="font-weight-bold text-capitalize"
-                >
-                    {locale.texts.BINDING_SETTING}
-                </Modal.Header>
-                <Modal.Body>
-                    <Formik
-                        initialValues={{}}
-                        validationSchema={null}
-                        onSubmit={(values, { setStatus, setSubmitting }) => {
-                            this.handleSubmit()
-                        }}
-                        render={({
-                            values,
-                            errors,
-                            status,
-                            touched,
-                            isSubmitting,
-                            setFieldValue,
-                            submitForm,
-                        }) => (
-                            <Form className="text-capitalize">
-                                <div className="form-group">
-                                    <Field
-                                        type="text"
-                                        name="ASN"
-                                        placeholder="Asset control number"
-                                        className={
-                                            'form-control' +
-                                            (errors.ASN && touched.ASN
-                                                ? ' is-invalid'
-                                                : '')
-                                        }
-                                        value={
-                                            selectedObjectData.asset_control_number
-                                        }
-                                    />
-                                    <ErrorMessage
-                                        name="ASN"
-                                        component="div"
-                                        className="invalid-feedback"
-                                    />
-                                </div>
+		return (
+			<Modal show={this.state.show} onHide={this.handleClose} size="md">
+				<Modal.Header closeButton className="font-weight-bold text-capitalize">
+					{locale.texts.BINDING_SETTING}
+				</Modal.Header>
+				<Modal.Body>
+					<Formik
+						initialValues={{}}
+						validationSchema={null}
+						onSubmit={(values, { setStatus, setSubmitting }) => {
+							this.handleSubmit()
+						}}
+						render={({
+							values,
+							errors,
+							status,
+							touched,
+							isSubmitting,
+							setFieldValue,
+							submitForm,
+						}) => (
+							<Form className="text-capitalize">
+								<div className="form-group">
+									<Field
+										type="text"
+										name="ASN"
+										placeholder="Asset control number"
+										className={
+											'form-control' +
+											(errors.ASN && touched.ASN ? ' is-invalid' : '')
+										}
+										value={selectedObjectData.asset_control_number}
+									/>
+									<ErrorMessage
+										name="ASN"
+										component="div"
+										className="invalid-feedback"
+									/>
+								</div>
 
-                                <div className="form-group">
-                                    <Field
-                                        type="text"
-                                        name="MAC_Address"
-                                        placeholder="MAC_Address"
-                                        className={
-                                            'form-control' +
-                                            (errors.MAC_Address &&
-                                            touched.MAC_Address
-                                                ? ' is-invalid'
-                                                : '')
-                                        }
-                                        value={
-                                            selectedObjectData.mac_address || ''
-                                        }
-                                        disabled={true}
-                                    />
-                                    <ErrorMessage
-                                        name="MAC_Address"
-                                        component="div"
-                                        className="invalid-feedback"
-                                    />
-                                </div>
+								<div className="form-group">
+									<Field
+										type="text"
+										name="MAC_Address"
+										placeholder="MAC_Address"
+										className={
+											'form-control' +
+											(errors.MAC_Address && touched.MAC_Address
+												? ' is-invalid'
+												: '')
+										}
+										value={selectedObjectData.mac_address || ''}
+										disabled={true}
+									/>
+									<ErrorMessage
+										name="MAC_Address"
+										component="div"
+										className="invalid-feedback"
+									/>
+								</div>
 
-                                <hr />
+								<hr />
 
-                                {/* <div className="form-group">
+								{/* <div className="form-group">
                                    <Field
                                     type="text"
                                     name="MAC_Address_Check"
@@ -198,31 +182,31 @@ class EditImportTable extends React.Component {
                                       <ErrorMessage name="MAC_Address_Check" component="div" className="invalid-feedback" />
                         </div> */}
 
-                                <Modal.Footer>
-                                    <Button
-                                        variant="outline-secondary"
-                                        className="text-capitalize"
-                                        onClick={this.handleClose}
-                                    >
-                                        {locale.texts.CANCEL}
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        className="text-capitalize"
-                                        variant="primary"
-                                        disabled={isSubmitting}
-                                        onClick={this.handleSubmit}
-                                    >
-                                        {locale.texts.BINDING_DELETE}
-                                    </Button>
-                                </Modal.Footer>
-                            </Form>
-                        )}
-                    />
-                </Modal.Body>
-            </Modal>
-        )
-    }
+								<Modal.Footer>
+									<Button
+										variant="outline-secondary"
+										className="text-capitalize"
+										onClick={this.handleClose}
+									>
+										{locale.texts.CANCEL}
+									</Button>
+									<Button
+										type="button"
+										className="text-capitalize"
+										variant="primary"
+										disabled={isSubmitting}
+										onClick={this.handleSubmit}
+									>
+										{locale.texts.BINDING_DELETE}
+									</Button>
+								</Modal.Footer>
+							</Form>
+						)}
+					/>
+				</Modal.Body>
+			</Modal>
+		)
+	}
 }
 
 EditImportTable.contextType = LocaleContext

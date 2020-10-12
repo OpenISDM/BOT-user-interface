@@ -35,5 +35,5 @@
 import areaController from '../../controllers/areaController'
 
 export default (app) => {
-    app.route('/data/area').post(areaController.getAreaTable)
+	app.route('/data/area').post(areaController.getAreaTable)
 }

@@ -33,7 +33,7 @@
 */
 
 const tw = {
-    LICENCE: '© 2020 畢迪科技股份有限公司',
+	LICENCE: '© 2020 畢迪科技股份有限公司',
 }
 
 export default tw

@@ -36,7 +36,7 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    async getSearchableKeywords () {
-        return await axios.post(dataSrc.utils.searchableKeyword)
-    },
+	async getSearchableKeywords() {
+		return await axios.post(dataSrc.utils.searchableKeyword)
+	},
 }

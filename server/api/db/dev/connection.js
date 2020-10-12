@@ -38,11 +38,11 @@ import { decrypt } from '../../service/encrypt'
 const password = decrypt(process.env.DB_PASS)
 
 const config = {
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    password,
-    port: process.env.DB_PORT,
+	user: process.env.DB_USER,
+	host: process.env.DB_HOST,
+	database: process.env.DB_DATABASE,
+	password,
+	port: process.env.DB_PORT,
 }
 
 export default new pg.Pool(config)

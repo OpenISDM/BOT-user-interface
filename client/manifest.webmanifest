@@ -1,24 +1,24 @@
 {
-    "short_name": "Real-Time BOT",
-    "name": "Real-Time BiDaE Object Tracker",
-    "description": "Indoor location-based positioning service",
-    "icons": [
-        {
-            "src": "/imgs/logo/maskable_logo.png",
-            "sizes": "196x196",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "/imgs/logo/maskable_logo.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        }
-    ],
-    "start_url": "/",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "scope": "/",
-    "theme_color": "#ffffff"
+	"short_name": "Real-Time BOT",
+	"name": "Real-Time BiDaE Object Tracker",
+	"description": "Indoor location-based positioning service",
+	"icons": [
+		{
+			"src": "/imgs/logo/maskable_logo.png",
+			"sizes": "196x196",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/imgs/logo/maskable_logo.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	],
+	"start_url": "/",
+	"background_color": "#ffffff",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#ffffff"
 }

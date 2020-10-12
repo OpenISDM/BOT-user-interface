@@ -36,39 +36,35 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    async confirmValidation ({
-        username,
-        password,
-        authenticatedRoles,
-    }) {
-        return await axios.post(dataSrc.auth.validation, {
-            username,
-            password,
-            authenticatedRoles,
-        })
-    },
+	async confirmValidation({ username, password, authenticatedRoles }) {
+		return await axios.post(dataSrc.auth.validation, {
+			username,
+			password,
+			authenticatedRoles,
+		})
+	},
 
-    async sentResetPwdInstruction ({ email }) {
-        return await axios.post(dataSrc.auth.sentResetPwdInstruction, {
-            email,
-        })
-    },
+	async sentResetPwdInstruction({ email }) {
+		return await axios.post(dataSrc.auth.sentResetPwdInstruction, {
+			email,
+		})
+	},
 
-    async resetPassword ({ token, password }) {
-        return await axios.post(dataSrc.auth.resetPassword, {
-            token,
-            password,
-        })
-    },
+	async resetPassword({ token, password }) {
+		return await axios.post(dataSrc.auth.resetPassword, {
+			token,
+			password,
+		})
+	},
 
-    async logout () {
-        return await axios.post(dataSrc.auth.signout)
-    },
+	async logout() {
+		return await axios.post(dataSrc.auth.signout)
+	},
 
-    async login ({ username, password }) {
-        return await axios.post(dataSrc.auth.signin, {
-            username,
-            password,
-        })
-    },
+	async login({ username, password }) {
+		return await axios.post(dataSrc.auth.signin, {
+			username,
+			password,
+		})
+	},
 }

@@ -35,9 +35,9 @@
 import compression from 'compression'
 
 export default (req, res) => {
-    if (req.headers['x-no-compression']) {
-        return false
-    }
+	if (req.headers['x-no-compression']) {
+		return false
+	}
 
-    return compression.filter(req, res)
+	return compression.filter(req, res)
 }

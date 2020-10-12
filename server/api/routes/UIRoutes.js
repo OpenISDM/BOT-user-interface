@@ -40,13 +40,13 @@ import { pageChecker } from '../middlewares/validation'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default (app) => {
-    app.get('/login', (req, res) => {
-        res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
-    })
+	app.get('/login', (req, res) => {
+		res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
+	})
 
-    app.get(/^\/page\/(.*)/, pageChecker, (req, res) => {
-        res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
-    })
+	app.get(/^\/page\/(.*)/, pageChecker, (req, res) => {
+		res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
+	})
 
-    app.get('/resetpassword/new/:token', authController.verifyResetPwdToken)
+	app.get('/resetpassword/new/:token', authController.verifyResetPwdToken)
 }

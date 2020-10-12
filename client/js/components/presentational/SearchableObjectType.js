@@ -45,405 +45,400 @@ import { Title } from '../BOTComponent/styleComponent'
         2. sectionTitleList : when you hover a section Index List letter, the section title list will show a row of object types of same first letter (i.e. bed, bladder scanner, ...)
 */
 class SearchableObjectType extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    state = {
-        sectionIndexList: [
-            'A',
-            'B',
-            'C',
-            'D',
-            'E',
-            'F',
-            'G',
-            'H',
-            'I',
-            'J',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'Q',
-            'R',
-            'S',
-            'T',
-            'U',
-            'V',
-            'W',
-            'X',
-            'Y',
-            'Z',
-        ],
-        IsShowSection: false,
-        changeState: 0,
-        firstLetterMap: [],
-    }
+	state = {
+		sectionIndexList: [
+			'A',
+			'B',
+			'C',
+			'D',
+			'E',
+			'F',
+			'G',
+			'H',
+			'I',
+			'J',
+			'K',
+			'L',
+			'M',
+			'N',
+			'O',
+			'P',
+			'Q',
+			'R',
+			'S',
+			'T',
+			'U',
+			'V',
+			'W',
+			'X',
+			'Y',
+			'Z',
+		],
+		IsShowSection: false,
+		changeState: 0,
+		firstLetterMap: [],
+	}
 
-    data = {
-        sectionTitleData: [],
-        floatUp: false,
-    }
+	data = {
+		sectionTitleData: [],
+		floatUp: false,
+	}
 
-    shouldUpdate = false
+	shouldUpdate = false
 
-    onSubmit = null
+	onSubmit = null
 
-    API = {
-        // setObjectList : (objectList) => {
-        //     var firstLetterMap = new Array()
-        //     if(objectList.length != 0){
-        //         objectList.map((name) => {
-        //             firstLetterMap[name[0]]
-        //                 ? firstLetterMap[name[0]].push(name)
-        //                 : firstLetterMap[name[0]] = [name]
-        //         })
-        //     }
-        //     this.shouldUpdate = true
+	API = {
+		// setObjectList : (objectList) => {
+		//     var firstLetterMap = new Array()
+		//     if(objectList.length != 0){
+		//         objectList.map((name) => {
+		//             firstLetterMap[name[0]]
+		//                 ? firstLetterMap[name[0]].push(name)
+		//                 : firstLetterMap[name[0]] = [name]
+		//         })
+		//     }
+		//     this.shouldUpdate = true
 
-        //     this.data.sectionTitleData = firstLetterMap
-        //     this.setState({})
+		//     this.data.sectionTitleData = firstLetterMap
+		//     this.setState({})
 
-        // },
-        setOnSubmit: (func) => {
-            this.onSubmit = func
-        },
+		// },
+		setOnSubmit: (func) => {
+			this.onSubmit = func
+		},
 
-        floatUp: () => {
-            this.shouldUpdate = true
-            this.data.floatUp = true
-            this.setState({})
-        },
+		floatUp: () => {
+			this.shouldUpdate = true
+			this.data.floatUp = true
+			this.setState({})
+		},
 
-        floatDown: () => {
-            this.shouldUpdate = true
-            this.data.floatUp = false
-            this.setState({})
-        },
-    }
+		floatDown: () => {
+			this.shouldUpdate = true
+			this.data.floatUp = false
+			this.setState({})
+		},
+	}
 
-    componentDidMount = () => {
-        this.getData()
-    }
+	componentDidMount = () => {
+		this.getData()
+	}
 
-    getData = () => {
-        const { locale, stateReducer, auth } = this.context
+	getData = () => {
+		const { locale, stateReducer, auth } = this.context
 
-        apiHelper.objectApiAgent
-            .getObjectTable({
-                locale: locale.abbr,
-                areas_id: auth.user.areas_id,
-                objectType: [0],
-            })
-            .then((res) => {
-                const objectTypeList = []
-                res.data.rows.map((item) => {
-                    objectTypeList.includes(item.type)
-                        ? null
-                        : objectTypeList.push(item.type)
-                })
-                const firstLetterMap = this.getObjectIndexList(objectTypeList)
+		apiHelper.objectApiAgent
+			.getObjectTable({
+				locale: locale.abbr,
+				areas_id: auth.user.areas_id,
+				objectType: [0],
+			})
+			.then((res) => {
+				const objectTypeList = []
+				res.data.rows.map((item) => {
+					objectTypeList.includes(item.type)
+						? null
+						: objectTypeList.push(item.type)
+				})
+				const firstLetterMap = this.getObjectIndexList(objectTypeList)
 
-                this.setState({
-                    firstLetterMap,
-                })
-            })
-            .catch((err) => {
-                console.log(`get object table failed ${err}  `)
-            })
-    }
+				this.setState({
+					firstLetterMap,
+				})
+			})
+			.catch((err) => {
+				console.log(`get object table failed ${err}  `)
+			})
+	}
 
-    getObjectIndexList = (objectList) => {
-        const firstLetterMap = []
-        if (objectList.length != 0) {
-            objectList.map((name) => {
-                firstLetterMap[name[0]]
-                    ? firstLetterMap[name[0]].push(name)
-                    : (firstLetterMap[name[0]] = [name])
-            })
-        }
-        this.shouldUpdate = true
-        return firstLetterMap
-        // this.data.sectionTitleData = firstLetterMap
-        // console.log(firstLetterMap)
-        // this.setState({})
-    }
+	getObjectIndexList = (objectList) => {
+		const firstLetterMap = []
+		if (objectList.length != 0) {
+			objectList.map((name) => {
+				firstLetterMap[name[0]]
+					? firstLetterMap[name[0]].push(name)
+					: (firstLetterMap[name[0]] = [name])
+			})
+		}
+		this.shouldUpdate = true
+		return firstLetterMap
+		// this.data.sectionTitleData = firstLetterMap
+		// console.log(firstLetterMap)
+		// this.setState({})
+	}
 
-    shouldComponentUpdate = (nextProps, nexState) => {
-        if (this.shouldUpdate) {
-            this.shouldUpdate = false
-            return true
-        }
-        // if(!_.isEqual(this.props.objectTypeList, nextProps.objectTypeList) ){
-        //     this.API.setObjectList(nextProps.objectTypeList)
-        //     return true
-        // }
-        if (this.props.floatUp != nextProps.floatUp) {
-            if (nextProps.floatUp) {
-                this.API.floatUp()
-            } else {
-                this.API.floatDown()
-            }
-        }
-        return false
-    }
+	shouldComponentUpdate = (nextProps, nexState) => {
+		if (this.shouldUpdate) {
+			this.shouldUpdate = false
+			return true
+		}
+		// if(!_.isEqual(this.props.objectTypeList, nextProps.objectTypeList) ){
+		//     this.API.setObjectList(nextProps.objectTypeList)
+		//     return true
+		// }
+		if (this.props.floatUp != nextProps.floatUp) {
+			if (nextProps.floatUp) {
+				this.API.floatUp()
+			} else {
+				this.API.floatDown()
+			}
+		}
+		return false
+	}
 
-    handleHoverEvent = (e) => {
-        location.href = '#' + e.target.parentNode.getAttribute('name')
-        this.shouldUpdate = true
-        this.setState({
-            IsShowSection: true,
-        })
-    }
+	handleHoverEvent = (e) => {
+		location.href = '#' + e.target.parentNode.getAttribute('name')
+		this.shouldUpdate = true
+		this.setState({
+			IsShowSection: true,
+		})
+	}
 
-    mouseClick = (e) => {
-        this.onSubmit(e.target.innerHTML)
-        this.shouldUpdate = true
-        this.setState({
-            IsShowSection: false,
-        })
-    }
+	mouseClick = (e) => {
+		this.onSubmit(e.target.innerHTML)
+		this.shouldUpdate = true
+		this.setState({
+			IsShowSection: false,
+		})
+	}
 
-    mouseLeave = () => {
-        this.shouldUpdate = true
-        this.setState({
-            IsShowSection: false,
-        })
-    }
+	mouseLeave = () => {
+		this.shouldUpdate = true
+		this.setState({
+			IsShowSection: false,
+		})
+	}
 
-    sectionIndexHTML = () => {
-        const { sectionIndexList } = this.state
-        const Data = []
-        let data = []
-        let index = 0
-        // the for loop is to screen out the alphabet without any data, output a html format
-        for (const i in sectionIndexList) {
-            index++
-            data = (
-                <Nav.Link
-                    key={i}
-                    active={false}
-                    href={'#' + sectionIndexList[i]}
-                    className="py-0 pr-0"
-                    name={sectionIndexList[i]}
-                    onMouseOver={this.handleHoverEvent}
-                    style={{ fontSize: '1rem' }}
-                >
-                    {index % 2 ? (
-                        <div
-                            style={{
-                                height: 15,
-                            }}
-                        >
-                            {sectionIndexList[i]}
-                        </div>
-                    ) : (
-                        <div
-                            style={{
-                                height: 15,
-                            }}
-                        >
-                            &bull;
-                        </div>
-                    )}
-                </Nav.Link>
-            )
+	sectionIndexHTML = () => {
+		const { sectionIndexList } = this.state
+		const Data = []
+		let data = []
+		let index = 0
+		// the for loop is to screen out the alphabet without any data, output a html format
+		for (const i in sectionIndexList) {
+			index++
+			data = (
+				<Nav.Link
+					key={i}
+					active={false}
+					href={'#' + sectionIndexList[i]}
+					className="py-0 pr-0"
+					name={sectionIndexList[i]}
+					onMouseOver={this.handleHoverEvent}
+					style={{ fontSize: '1rem' }}
+				>
+					{index % 2 ? (
+						<div
+							style={{
+								height: 15,
+							}}
+						>
+							{sectionIndexList[i]}
+						</div>
+					) : (
+						<div
+							style={{
+								height: 15,
+							}}
+						>
+							&bull;
+						</div>
+					)}
+				</Nav.Link>
+			)
 
-            Data.push(data)
-        }
-        return Data
-    }
+			Data.push(data)
+		}
+		return Data
+	}
 
-    sectionTitleListHTML = () => {
-        const Data = []
-        let first = []
-        const { searchObjectArray, pinColorArray } = this.props
+	sectionTitleListHTML = () => {
+		const Data = []
+		let first = []
+		const { searchObjectArray, pinColorArray } = this.props
 
-        for (const titleData in this.state.firstLetterMap) {
-            first = titleData
-            Data.push(
-                <div id={first} key={first} className="text-right text-dark">
-                    <h5 className="my-2">{first}</h5>
-                </div>
-            )
+		for (const titleData in this.state.firstLetterMap) {
+			first = titleData
+			Data.push(
+				<div id={first} key={first} className="text-right text-dark">
+					<h5 className="my-2">{first}</h5>
+				</div>
+			)
 
-            for (const i in this.state.firstLetterMap[first]) {
-                const name = this.state.firstLetterMap[first][i]
+			for (const i in this.state.firstLetterMap[first]) {
+				const name = this.state.firstLetterMap[first][i]
 
-                const pinColorIndex = searchObjectArray.indexOf(name)
+				const pinColorIndex = searchObjectArray.indexOf(name)
 
-                Data.push(
-                    <div
-                        key={name}
-                        name={name}
-                        className="my-0 py-0 w-100 text-right"
-                        style={{
-                            cursor: 'pointer',
-                            color:
-                                pinColorIndex > -1
-                                    ? pinColorArray[pinColorIndex]
-                                    : null,
-                        }}
-                        onClick={this.handleClick}
-                    >
-                        {name}
-                    </div>
-                )
-            }
-        }
-        return Data
-    }
+				Data.push(
+					<div
+						key={name}
+						name={name}
+						className="my-0 py-0 w-100 text-right"
+						style={{
+							cursor: 'pointer',
+							color: pinColorIndex > -1 ? pinColorArray[pinColorIndex] : null,
+						}}
+						onClick={this.handleClick}
+					>
+						{name}
+					</div>
+				)
+			}
+		}
+		return Data
+	}
 
-    handleClick = (e) => {
-        const itemName = e.target.innerText
+	handleClick = (e) => {
+		const itemName = e.target.innerText
 
-        const searchKey = {
-            type: OBJECT_TYPE,
-            value: itemName,
-        }
-        this.props.getSearchKey(searchKey)
+		const searchKey = {
+			type: OBJECT_TYPE,
+			value: itemName,
+		}
+		this.props.getSearchKey(searchKey)
 
-        this.addSearchHistory(searchKey)
+		this.addSearchHistory(searchKey)
 
-        this.shouldUpdate = true
+		this.shouldUpdate = true
 
-        this.setState({
-            IsShowSection: false,
-        })
-    }
+		this.setState({
+			IsShowSection: false,
+		})
+	}
 
-    addSearchHistory = (searchKey) => {
-        const { auth } = this.context
+	addSearchHistory = (searchKey) => {
+		const { auth } = this.context
 
-        if (!auth.authenticated) return
+		if (!auth.authenticated) return
 
-        const searchHistory = auth.user.searchHistory || []
+		const searchHistory = auth.user.searchHistory || []
 
-        let flag = false
+		let flag = false
 
-        const toReturnSearchHistory = searchHistory.map((item) => {
-            if (item.name == searchKey.value) {
-                item.value += 1
-                flag = true
-            }
-            return item
-        })
-        flag == false
-            ? toReturnSearchHistory.push({
-                name: searchKey.value,
-                value: 1,
-            })
-            : null
-        const sortedSearchHistory = this.sortSearchHistory(
-            toReturnSearchHistory
-        )
+		const toReturnSearchHistory = searchHistory.map((item) => {
+			if (item.name == searchKey.value) {
+				item.value += 1
+				flag = true
+			}
+			return item
+		})
+		flag == false
+			? toReturnSearchHistory.push({
+					name: searchKey.value,
+					value: 1,
+			  })
+			: null
+		const sortedSearchHistory = this.sortSearchHistory(toReturnSearchHistory)
 
-        auth.setSearchHistory(sortedSearchHistory)
+		auth.setSearchHistory(sortedSearchHistory)
 
-        this.checkInSearchHistory(searchKey.value)
-    }
+		this.checkInSearchHistory(searchKey.value)
+	}
 
-    /** Sort the user search history and limit the history number */
-    sortSearchHistory = (history) => {
-        const toReturn = history.sort((a, b) => {
-            return b.value - a.value
-        })
-        return toReturn
-    }
+	/** Sort the user search history and limit the history number */
+	sortSearchHistory = (history) => {
+		const toReturn = history.sort((a, b) => {
+			return b.value - a.value
+		})
+		return toReturn
+	}
 
-    /** Insert search history to database */
-    checkInSearchHistory = (itemName) => {
-        const { auth } = this.context
+	/** Insert search history to database */
+	checkInSearchHistory = (itemName) => {
+		const { auth } = this.context
 
-        apiHelper.userApiAgent
-            .addSearchHistory({
-                username: auth.user.name,
-                keyType: 'object type search',
-                keyWord: itemName,
-            })
-            .then((res) => {
-                this.setState({
-                    searchKey: itemName,
-                })
-            })
-            .catch((err) => {
-                console.log(`check in search history failed ${err}`)
-            })
-    }
+		apiHelper.userApiAgent
+			.addSearchHistory({
+				username: auth.user.name,
+				keyType: 'object type search',
+				keyWord: itemName,
+			})
+			.then((res) => {
+				this.setState({
+					searchKey: itemName,
+				})
+			})
+			.catch((err) => {
+				console.log(`check in search history failed ${err}`)
+			})
+	}
 
-    render() {
-        const { locale } = this.context
+	render() {
+		const { locale } = this.context
 
-        const Setting = {
-            SectionIndex: {},
-            SectionListBackgroundColor: {
-                backgroundColor: 'rgba(240, 240, 240, 0.95)',
-            },
-            SectionList: {
-                borderRadius: '10px',
-                overflowY: 'scroll',
-                height: '70vh',
-                // width: '30vw',
-                // zIndex: 1500,
-                display: this.state.IsShowSection ? 'block' : 'none',
-            },
-            // SearchableObjectType:{
-            //     position: 'relative',
-            //     top: '-25vh',
-            //     right: '1%'
+		const Setting = {
+			SectionIndex: {},
+			SectionListBackgroundColor: {
+				backgroundColor: 'rgba(240, 240, 240, 0.95)',
+			},
+			SectionList: {
+				borderRadius: '10px',
+				overflowY: 'scroll',
+				height: '70vh',
+				// width: '30vw',
+				// zIndex: 1500,
+				display: this.state.IsShowSection ? 'block' : 'none',
+			},
+			// SearchableObjectType:{
+			//     position: 'relative',
+			//     top: '-25vh',
+			//     right: '1%'
 
-            // }
-        }
+			// }
+		}
 
-        const style = {
-            cross: {
-                cursor: 'pointer',
-                fontSize: '1.3rem',
-            },
-        }
+		const style = {
+			cross: {
+				cursor: 'pointer',
+				fontSize: '1.3rem',
+			},
+		}
 
-        return (
-            <div
-                id="searchableObjectType"
-                onMouseLeave={this.mouseLeave}
-                className="hideScrollBar mx-2 float-right"
-            >
-                <Title list>{locale.texts.OBJECT}</Title>
-                <Title list>{locale.texts.TYPES}</Title>
-                {/** this section shows the layout of sectionIndexList (Alphabet List)*/}
-                <Col
-                    id="SectionIndex"
-                    className="float-right d-flex flex-column align-items-center"
-                    style={{
-                        zIndex: this.data.floatUp ? 1080 : 1,
-                        right: '20%',
-                    }}
-                >
-                    {this.sectionIndexHTML()}
-                </Col>
+		return (
+			<div
+				id="searchableObjectType"
+				onMouseLeave={this.mouseLeave}
+				className="hideScrollBar mx-2 float-right"
+			>
+				<Title list>{locale.texts.OBJECT}</Title>
+				<Title list>{locale.texts.TYPES}</Title>
+				{/** this section shows the layout of sectionIndexList (Alphabet List)*/}
+				<Col
+					id="SectionIndex"
+					className="float-right d-flex flex-column align-items-center"
+					style={{
+						zIndex: this.data.floatUp ? 1080 : 1,
+						right: '20%',
+					}}
+				>
+					{this.sectionIndexHTML()}
+				</Col>
 
-                {/** this section shows the layout of sectionTitleList (the search results when you hover the section Index List */}
-                <div
-                    id="SectionList"
-                    className="hideScrollBar shadow border border-primary float-right mx-0 px-3 py-2 border-secondary"
-                    style={{
-                        ...Setting.SectionListBackgroundColor,
-                        ...Setting.SectionList,
-                    }}
-                >
-                    <div
-                        className="d-flex justify-content-start"
-                        style={style.cross}
-                        onClick={this.mouseLeave}
-                    >
-                        &#10005;
-                    </div>
-                    {this.sectionTitleListHTML(Setting)}
-                </div>
-            </div>
-        )
-    }
+				{/** this section shows the layout of sectionTitleList (the search results when you hover the section Index List */}
+				<div
+					id="SectionList"
+					className="hideScrollBar shadow border border-primary float-right mx-0 px-3 py-2 border-secondary"
+					style={{
+						...Setting.SectionListBackgroundColor,
+						...Setting.SectionList,
+					}}
+				>
+					<div
+						className="d-flex justify-content-start"
+						style={style.cross}
+						onClick={this.mouseLeave}
+					>
+						&#10005;
+					</div>
+					{this.sectionTitleListHTML(Setting)}
+				</div>
+			</div>
+		)
+	}
 }
 
 export default SearchableObjectType

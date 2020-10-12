@@ -33,31 +33,31 @@
 */
 
 import {
-    SET_AREA,
-    SET_ENABLE_REQUEST_TRACKING_DATA,
-    ASSIGN_OBJECT,
+	SET_AREA,
+	SET_ENABLE_REQUEST_TRACKING_DATA,
+	ASSIGN_OBJECT,
 } from './action'
 
 const StateReducer = (state, action) => {
-    switch (action.type) {
-        case SET_AREA:
-            return {
-                ...state,
-                areaId: action.value,
-            }
-        case SET_ENABLE_REQUEST_TRACKING_DATA:
-            return {
-                ...state,
-                shouldUpdateTrackingData: action.value,
-            }
-        case ASSIGN_OBJECT:
-            return {
-                ...state,
-                assignedObject: action.value,
-            }
-        default:
-            return state
-    }
+	switch (action.type) {
+		case SET_AREA:
+			return {
+				...state,
+				areaId: action.value,
+			}
+		case SET_ENABLE_REQUEST_TRACKING_DATA:
+			return {
+				...state,
+				shouldUpdateTrackingData: action.value,
+			}
+		case ASSIGN_OBJECT:
+			return {
+				...state,
+				assignedObject: action.value,
+			}
+		default:
+			return state
+	}
 }
 
 export default StateReducer

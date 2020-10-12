@@ -36,75 +36,75 @@ import dataSrc from '../dataSrc'
 import axios from 'axios'
 
 export default {
-    /**
-     * get object data from object_table
-     */
-    async getObjectTable ({ locale, areas_id, objectType }) {
-        return await axios.get(dataSrc.object.object, {
-            params: {
-                locale,
-                areas_id,
-                objectType,
-            },
-        })
-    },
+	/**
+	 * get object data from object_table
+	 */
+	async getObjectTable({ locale, areas_id, objectType }) {
+		return await axios.get(dataSrc.object.object, {
+			params: {
+				locale,
+				areas_id,
+				objectType,
+			},
+		})
+	},
 
-    async getAlias () {
-        return await axios.get(dataSrc.object.alias)
-    },
+	async getAlias() {
+		return await axios.get(dataSrc.object.alias)
+	},
 
-    async editAlias ({ objectType, alias }) {
-        return await axios.put(dataSrc.object.alias, {
-            objectType,
-            alias,
-        })
-    },
+	async editAlias({ objectType, alias }) {
+		return await axios.put(dataSrc.object.alias, {
+			objectType,
+			alias,
+		})
+	},
 
-    async post ({ formOption, mode }) {
-        return await axios.post(dataSrc.object[mode], {
-            formOption,
-            mode,
-        })
-    },
+	async post({ formOption, mode }) {
+		return await axios.post(dataSrc.object[mode], {
+			formOption,
+			mode,
+		})
+	},
 
-    async put ({ formOption, mode }) {
-        return await axios.put(dataSrc.object[mode], {
-            formOption,
-            mode,
-        })
-    },
+	async put({ formOption, mode }) {
+		return await axios.put(dataSrc.object[mode], {
+			formOption,
+			mode,
+		})
+	},
 
-    async editObjectPackage (
-        locale,
-        formOption,
-        username,
-        pdfPackage,
-        reservedTimestamp
-    ) {
-        return await axios.put(dataSrc.objectPackage, {
-            locale,
-            formOption,
-            username,
-            pdfPackage,
-            reservedTimestamp,
-        })
-    },
+	async editObjectPackage(
+		locale,
+		formOption,
+		username,
+		pdfPackage,
+		reservedTimestamp
+	) {
+		return await axios.put(dataSrc.objectPackage, {
+			locale,
+			formOption,
+			username,
+			pdfPackage,
+			reservedTimestamp,
+		})
+	},
 
-    async deleteObject ({ formOption }) {
-        return await axios.delete(dataSrc.object.object, {
-            data: {
-                formOption,
-            },
-        })
-    },
+	async deleteObject({ formOption }) {
+		return await axios.delete(dataSrc.object.object, {
+			data: {
+				formOption,
+			},
+		})
+	},
 
-    async disassociate ({ formOption }) {
-        return await axios.patch(dataSrc.object.object, {
-            formOption,
-        })
-    },
+	async disassociate({ formOption }) {
+		return await axios.patch(dataSrc.object.object, {
+			formOption,
+		})
+	},
 
-    async getIdleMacaddr () {
-        return await axios.post(dataSrc.object.idleMacaddr)
-    },
+	async getIdleMacaddr() {
+		return await axios.post(dataSrc.object.idleMacaddr)
+	},
 }

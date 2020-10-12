@@ -38,50 +38,53 @@ import dbQueries from '../db/dbQueries/gatewayQueries'
 import pool from '../db/dev/connection'
 
 export default {
-    getAllGateway: (request, response) => {
-        const { locale } = request.query
+	getAllGateway: (request, response) => {
+		const { locale } = request.query
 
-        pool.query(dbQueries.getAllGateway)
-            .then((res) => {
-                console.log('get gateway table succeed')
-                res.rows.map((item) => {
-                    item.last_report_timestamp = moment
-                        .tz(item.last_report_timestamp, process.env.TZ)
-                        .locale(locale)
-                        .format(process.env.TIMESTAMP_FORMAT)
-                    item.registered_timestamp = moment
-                        .tz(item.registered_timestamp, process.env.TZ)
-                        .locale(locale)
-                        .format(process.env.TIMESTAMP_FORMAT)
-                })
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`get gateway table failed ${err}`)
-            })
-    },
+		pool
+			.query(dbQueries.getAllGateway)
+			.then((res) => {
+				console.log('get gateway table succeed')
+				res.rows.map((item) => {
+					item.last_report_timestamp = moment
+						.tz(item.last_report_timestamp, process.env.TZ)
+						.locale(locale)
+						.format(process.env.TIMESTAMP_FORMAT)
+					item.registered_timestamp = moment
+						.tz(item.registered_timestamp, process.env.TZ)
+						.locale(locale)
+						.format(process.env.TIMESTAMP_FORMAT)
+				})
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`get gateway table failed ${err}`)
+			})
+	},
 
-    deleteGateway: (request, response) => {
-        const { idPackage } = request.body
-        pool.query(dbQueries.deleteGateway(idPackage))
-            .then((res) => {
-                console.log('delete Gateway record succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`delete gateway failed ${err}`)
-            })
-    },
+	deleteGateway: (request, response) => {
+		const { idPackage } = request.body
+		pool
+			.query(dbQueries.deleteGateway(idPackage))
+			.then((res) => {
+				console.log('delete Gateway record succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`delete gateway failed ${err}`)
+			})
+	},
 
-    editGateway: (request, response) => {
-        const { formOption } = request.body
-        pool.query(dbQueries.editGateway(formOption))
-            .then((res) => {
-                console.log('edit lbeacon succeed')
-                response.status(200).json(res)
-            })
-            .catch((err) => {
-                console.log(`edit lbeacon failed ${err}`)
-            })
-    },
+	editGateway: (request, response) => {
+		const { formOption } = request.body
+		pool
+			.query(dbQueries.editGateway(formOption))
+			.then((res) => {
+				console.log('edit lbeacon succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`edit lbeacon failed ${err}`)
+			})
+	},
 }

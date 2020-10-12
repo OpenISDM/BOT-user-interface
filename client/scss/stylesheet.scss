@@ -1,320 +1,320 @@
 .font-size-16 {
-    font-size: 16px;
+	font-size: 16px;
 }
 
 .font-size-90-percent {
-    font-size: 0.9rem;
+	font-size: 0.9rem;
 }
 
 .font-size-80-percent {
-    font-size: 0.8rem;
+	font-size: 0.8rem;
 }
 
 .font-size-120-percent {
-    font-size: 1.2rem;
+	font-size: 1.2rem;
 }
 
 .font-size-140-percent {
-    font-size: 1.4rem;
+	font-size: 1.4rem;
 }
 
 .font-weight-bold {
-    font-weight: $font-weight-bold;
+	font-weight: $font-weight-bold;
 }
 
 .letter-spacing-1 {
-    letter-spacing: 1px;
+	letter-spacing: 1px;
 }
 
 .white-space-nowrap {
-    white-space: nowrap;
+	white-space: nowrap;
 }
 
 .color-blue {
-    color: $color-blue;
+	color: $color-blue;
 }
 
 .color-white {
-    color: $color-white;
+	color: $color-white;
 }
 
 .color-black {
-    color: $color-black;
+	color: $color-black;
 }
 
 .color-grey {
-    color: $color-grey;
+	color: $color-grey;
 }
 
 .color-red {
-    color: $color-red;
+	color: $color-red;
 }
 
 .bg-green {
-    background-color: $color-green;
+	background-color: $color-green;
 }
 
 .bg-white {
-    background-color: $color-white;
+	background-color: $color-white;
 }
 
 .bg-pink {
-    background-color: $color-pink;
+	background-color: $color-pink;
 }
 
 .bg-transparent {
-    background-color: transparent;
+	background-color: transparent;
 }
 
 .bg-unset {
-    background-color: unset;
+	background-color: unset;
 }
 
 .border-grey {
-    border: $border-grey;
+	border: $border-grey;
 }
 
 .border-radius-30 {
-    border-radius: 30px;
+	border-radius: 30px;
 }
 
 .width-0 {
-    width: 0;
+	width: 0;
 }
 
 .w-30-view {
-    width: 30vh;
+	width: 30vh;
 }
 
 .min-width-25 {
-    min-width: 25px;
+	min-width: 25px;
 }
 
 .min-width-1-percent {
-    min-width: 1rem;
+	min-width: 1rem;
 }
 
 .min-width-30-view {
-    min-width: 30vh;
+	min-width: 30vh;
 }
 
 .height-40 {
-    height: 40px;
+	height: 40px;
 }
 
 .height-regular {
-    height: $box-regular-height;
+	height: $box-regular-height;
 }
 
 .min-height-regular {
-    min-height: $box-regular-height;
+	min-height: $box-regular-height;
 }
 
 .max-height-30 {
-    max-height: 30vh;
+	max-height: 30vh;
 }
 
 .position-absolute {
-    position: absolute;
+	position: absolute;
 }
 
 .position-fixed {
-    position: fixed;
+	position: fixed;
 }
 
 .position-relative {
-    position: relative;
+	position: relative;
 }
 
 .bottom-0 {
-    bottom: 0;
+	bottom: 0;
 }
 
 .right-0 {
-    right: 0;
+	right: 0;
 }
 
 .right-20-percent {
-    right: 20%;
+	right: 20%;
 }
 
 .overflow-hidden-scroll {
-    overflow: hidden scroll;
+	overflow: hidden scroll;
 }
 
 .custom-scrollbar {
-    overflow: hidden scroll;
+	overflow: hidden scroll;
 
-    &::-webkit-scrollbar {
-        -webkit-appearance: none;
-        width: $webkit-scrollbar-width;
-    }
-    &::-webkit-scrollbar-thumb {
-        border-radius: $webkit-scrollbar-border-radius;
-        background-color: $webkit-scrollbar-background;
-        -webkit-box-shadow: $webkit-scrollbar-box-shadow;
-    }
+	&::-webkit-scrollbar {
+		-webkit-appearance: none;
+		width: $webkit-scrollbar-width;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: $webkit-scrollbar-border-radius;
+		background-color: $webkit-scrollbar-background;
+		-webkit-box-shadow: $webkit-scrollbar-box-shadow;
+	}
 }
 
 .cursor-pointer {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .cursor-not-allowed {
-    cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 .outline-none {
-    outline: none;
+	outline: none;
 }
 
 .border-none {
-    border: none;
+	border: none;
 }
 
 .text-none {
-    text-transform: none;
+	text-transform: none;
 }
 
 .text-underline {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 .display-none {
-    display: none;
+	display: none;
 }
 
 @media (max-width: $screen-xs) {
-    html,
-    body {
-        font-size: 10px;
-    }
+	html,
+	body {
+		font-size: 10px;
+	}
 
-    .xs\:font-size-16 {
-        font-size: 100px;
-    }
+	.xs\:font-size-16 {
+		font-size: 100px;
+	}
 
-    .xs\:height-85 {
-        height: 85vh;
-    }
+	.xs\:height-85 {
+		height: 85vh;
+	}
 
-    .xs\:display-none {
-        display: none;
-    }
+	.xs\:display-none {
+		display: none;
+	}
 }
 
 @media (min-width: $screen-xs) and (max-width: $screen-sm) {
-    html,
-    body {
-        font-size: 10px;
-    }
+	html,
+	body {
+		font-size: 10px;
+	}
 
-    .sm\:font-size-16 {
-        font-size: 100px;
-    }
+	.sm\:font-size-16 {
+		font-size: 100px;
+	}
 
-    .sm\:font-size-16 {
-        font-size: 100px;
-    }
+	.sm\:font-size-16 {
+		font-size: 100px;
+	}
 
-    .sm\:height-25 {
-        height: 25vh;
-    }
+	.sm\:height-25 {
+		height: 25vh;
+	}
 
-    .sm\:display-none {
-        display: none;
-    }
+	.sm\:display-none {
+		display: none;
+	}
 }
 @media (min-width: $screen-sm) and (max-width: $screen-md) {
-    html,
-    body {
-        font-size: 10px;
-    }
+	html,
+	body {
+		font-size: 10px;
+	}
 
-    .md\:font-size-16 {
-        font-size: 100px;
-    }
+	.md\:font-size-16 {
+		font-size: 100px;
+	}
 
-    .md\:height-40 {
-        height: 65vh;
-    }
+	.md\:height-40 {
+		height: 65vh;
+	}
 
-    .md\:display-none {
-        display: none;
-    }
+	.md\:display-none {
+		display: none;
+	}
 }
 @media (min-width: $screen-md) and (max-width: $screen-lg) {
-    html,
-    body {
-        font-size: 12px;
-    }
+	html,
+	body {
+		font-size: 12px;
+	}
 
-    .lg\:font-size-16 {
-        font-size: 100px;
-    }
+	.lg\:font-size-16 {
+		font-size: 100px;
+	}
 
-    .lg\:height-60 {
-        height: 85vh;
-    }
+	.lg\:height-60 {
+		height: 85vh;
+	}
 
-    .lg\:display-none {
-        display: none;
-    }
+	.lg\:display-none {
+		display: none;
+	}
 }
 
 @media (min-width: $screen-lg) and (max-width: $screen-xl) {
-    html,
-    body {
-        font-size: 12px;
-    }
+	html,
+	body {
+		font-size: 12px;
+	}
 
-    .xl\:font-size-16 {
-        font-size: 100px;
-    }
+	.xl\:font-size-16 {
+		font-size: 100px;
+	}
 
-    .xl\:height-84 {
-        height: 84vh;
-    }
+	.xl\:height-84 {
+		height: 84vh;
+	}
 
-    .xl\:display-none {
-        display: none;
-    }
+	.xl\:display-none {
+		display: none;
+	}
 }
 
 @media (min-width: $screen-xl) and (max-width: $screen-xxl) {
-    html,
-    body {
-        font-size: 14px;
-    }
+	html,
+	body {
+		font-size: 14px;
+	}
 
-    .xxl\:height-85 {
-        height: 80vh;
-    }
+	.xxl\:height-85 {
+		height: 80vh;
+	}
 }
 
 @media (min-width: $screen-xxl) {
-    html,
-    body {
-        font-size: 16px;
-    }
+	html,
+	body {
+		font-size: 16px;
+	}
 
-    .xxxl\:height-90 {
-        height: 90vh;
-    }
+	.xxxl\:height-90 {
+		height: 90vh;
+	}
 }
 
 .customPopup .leaflet-popup-scrolled {
-    overflow: hidden hidden;
+	overflow: hidden hidden;
 }
 
 .Toastify__toast {
-    min-height: 6vh;
+	min-height: 6vh;
 }
 
 .Toastify__toast-container--top-center {
-    padding: 0px;
-    width: 100%;
-    left: 0;
-    margin-left: 0;
-    top: 0%;
+	padding: 0px;
+	width: 100%;
+	left: 0;
+	margin-left: 0;
+	top: 0%;
 }

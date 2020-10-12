@@ -39,83 +39,80 @@ import { isMobileOnly } from 'react-device-detect'
 import { SEARCH_BAR } from '../../config/wordMap'
 
 class Searchbar extends React.Component {
-    state = {
-        value: '',
-    }
+	state = {
+		value: '',
+	}
 
-    componentDidUpdate = (prepProps) => {
-        if (
-            prepProps.clearSearchResult != this.props.clearSearchResult &&
-            !prepProps.clearSearchResult
-        ) {
-            this.setState({
-                value: '',
-            })
-        }
-    }
+	componentDidUpdate = (prepProps) => {
+		if (
+			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			!prepProps.clearSearchResult
+		) {
+			this.setState({
+				value: '',
+			})
+		}
+	}
 
-    handleSubmit = (e) => {
-        e.preventDefault()
-        const searchKey = {
-            type: SEARCH_BAR,
-            value: this.state.value,
-        }
-        this.props.getSearchKey(searchKey)
-        if (isMobileOnly) this.props.handleShowResultListForMobile()
-    }
+	handleSubmit = (e) => {
+		e.preventDefault()
+		const searchKey = {
+			type: SEARCH_BAR,
+			value: this.state.value,
+		}
+		this.props.getSearchKey(searchKey)
+		if (isMobileOnly) this.props.handleShowResultListForMobile()
+	}
 
-    handleChange = (e) => {
-        this.setState({
-            value: e.target.value,
-        })
-    }
+	handleChange = (e) => {
+		this.setState({
+			value: e.target.value,
+		})
+	}
 
-    render() {
-        const style = {
-            form: {
-                border: '2px solid rgba(227, 222, 222, 0.447)',
-                borderRadius: '25px',
-                fontSize: '0.8rem',
-                width: 450,
-                minHeight: '1.2rem',
-                position: 'relative',
-            },
-            input: {
-                background: 'rgba(0,0,0,0)',
-                fontSize: '1rem',
-            },
-        }
+	render() {
+		const style = {
+			form: {
+				border: '2px solid rgba(227, 222, 222, 0.447)',
+				borderRadius: '25px',
+				fontSize: '0.8rem',
+				width: 450,
+				minHeight: '1.2rem',
+				position: 'relative',
+			},
+			input: {
+				background: 'rgba(0,0,0,0)',
+				fontSize: '1rem',
+			},
+		}
 
-        const { value } = this.state
-        return (
-            <Form className="d-flex justify-content-around" style={style.form}>
-                <Form.Group
-                    className="flex-grow-1 mb-0"
-                    style={{ maxWidth: 250 }}
-                >
-                    <Form.Control
-                        id="searchbarText"
-                        type="text"
-                        style={style.input}
-                        className="border-0 pl-3 w-90 pb-0"
-                        value={value}
-                        onChange={this.handleChange}
-                    />
-                </Form.Group>
-                <Button
-                    type="submit"
-                    variant="link"
-                    className="btn btn-link btn-sm bd-highlight"
-                    onClick={this.handleSubmit}
-                    style={{
-                        left: '100px',
-                    }}
-                >
-                    <img src={searchIcon} width="23px" />
-                </Button>
-            </Form>
-        )
-    }
+		const { value } = this.state
+		return (
+			<Form className="d-flex justify-content-around" style={style.form}>
+				<Form.Group className="flex-grow-1 mb-0" style={{ maxWidth: 250 }}>
+					<Form.Control
+						id="searchbarText"
+						type="text"
+						style={style.input}
+						className="border-0 pl-3 w-90 pb-0"
+						value={value}
+						onChange={this.handleChange}
+					/>
+				</Form.Group>
+				<Button
+					type="submit"
+					variant="link"
+					className="btn btn-link btn-sm bd-highlight"
+					onClick={this.handleSubmit}
+					style={{
+						left: '100px',
+					}}
+				>
+					<img src={searchIcon} width="23px" />
+				</Button>
+			</Form>
+		)
+	}
 }
 
 export default Searchbar

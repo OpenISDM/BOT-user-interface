@@ -42,67 +42,67 @@ import AccessControl from '../../authentication/AccessControl'
 import Map from '../../presentational/Map'
 
 export default class TabletMapContainer extends React.Component {
-    static contextType = AppContext
+	static contextType = AppContext
 
-    render() {
-        const { locale, stateReducer, auth } = this.context
+	render() {
+		const { locale, stateReducer, auth } = this.context
 
-        const {
-            hasSearchKey,
-            geofenceConfig,
-            locationMonitorConfig,
-            searchedObjectType,
-            proccessedTrackingData,
-            showedObjects,
-            showPdfDownloadForm,
-            handleClickButton,
-            currentAreaId,
-            authenticated,
-            searchObjectArray,
-            pinColorArray,
-            searchKey,
-            handleClick,
-            getSearchKey,
-        } = this.props
+		const {
+			hasSearchKey,
+			geofenceConfig,
+			locationMonitorConfig,
+			searchedObjectType,
+			proccessedTrackingData,
+			showedObjects,
+			showPdfDownloadForm,
+			handleClickButton,
+			currentAreaId,
+			authenticated,
+			searchObjectArray,
+			pinColorArray,
+			searchKey,
+			handleClick,
+			getSearchKey,
+		} = this.props
 
-        const [{ areaId }] = stateReducer
+		const [{ areaId }] = stateReducer
 
-        const style = {
-            mapForMobile: {
-                // width: '90vw',
-                border: 'solid 2px rgba(227, 222, 222, 0.619)',
-                padding: '5px',
-            },
-            mapBlock: {
-                border: 'solid 2px rgba(227, 222, 222, 0.619)',
-                padding: '5px',
-            },
-        }
+		const style = {
+			mapForMobile: {
+				// width: '90vw',
+				border: 'solid 2px rgba(227, 222, 222, 0.619)',
+				padding: '5px',
+			},
+			mapBlock: {
+				border: 'solid 2px rgba(227, 222, 222, 0.619)',
+				padding: '5px',
+			},
+		}
 
-        return (
-            <div style={style.mapForMobile}>
-                <Map
-                    pathMacAddress={this.props.pathMacAddress}
-                    hasSearchKey={hasSearchKey}
-                    colorPanel={this.props.colorPanel}
-                    proccessedTrackingData={proccessedTrackingData}
-                    lbeaconPosition={this.props.lbeaconPosition}
-                    geofenceConfig={this.props.geofenceConfig}
-                    locationMonitorConfig={this.props.locationMonitorConfig}
-                    getSearchKey={this.props.getSearchKey}
-                    areaId={areaId}
-                    searchedObjectType={this.props.showedObjects}
-                    mapConfig={config.mapConfig}
-                    handleClosePath={this.props.handleClosePath}
-                    handleShowPath={this.props.handleShowPath}
-                    showPath={this.props.showPath}
-                    currentAreaId={currentAreaId}
-                    searchObjectArray={searchObjectArray}
-                    pinColorArray={pinColorArray}
-                    searchKey={searchKey}
-                    getSearchKey={getSearchKey}
-                />
-            </div>
-        )
-    }
+		return (
+			<div style={style.mapForMobile}>
+				<Map
+					pathMacAddress={this.props.pathMacAddress}
+					hasSearchKey={hasSearchKey}
+					colorPanel={this.props.colorPanel}
+					proccessedTrackingData={proccessedTrackingData}
+					lbeaconPosition={this.props.lbeaconPosition}
+					geofenceConfig={this.props.geofenceConfig}
+					locationMonitorConfig={this.props.locationMonitorConfig}
+					getSearchKey={this.props.getSearchKey}
+					areaId={areaId}
+					searchedObjectType={this.props.showedObjects}
+					mapConfig={config.mapConfig}
+					handleClosePath={this.props.handleClosePath}
+					handleShowPath={this.props.handleShowPath}
+					showPath={this.props.showPath}
+					currentAreaId={currentAreaId}
+					searchObjectArray={searchObjectArray}
+					pinColorArray={pinColorArray}
+					searchKey={searchKey}
+					getSearchKey={getSearchKey}
+				/>
+			</div>
+		)
+	}
 }

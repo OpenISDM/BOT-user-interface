@@ -33,23 +33,23 @@
 */
 
 const styleSheet = {
-    theme: 'rgb(0, 123, 255)',
+	theme: 'rgb(0, 123, 255)',
 
-    lightGrey: 'rgba(242, 240, 240, 1)',
+	lightGrey: 'rgba(242, 240, 240, 1)',
 
-    bodyBackGround: '#f0edf240',
+	bodyBackGround: '#f0edf240',
 
-    inActive: 'rgba(0, 0, 0, 0.33)',
+	inActive: 'rgba(0, 0, 0, 0.33)',
 
-    iconColor: 'black',
+	iconColor: 'black',
 
-    grey: 'rgba(0, 0, 0, 0.33)',
+	grey: 'rgba(0, 0, 0, 0.33)',
 
-    warning: 'red',
+	warning: 'red',
 
-    black: 'black',
+	black: 'black',
 
-    fontWeight: 700,
+	fontWeight: 700,
 }
 
 export default styleSheet

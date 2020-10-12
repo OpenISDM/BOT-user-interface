@@ -33,7 +33,7 @@
 */
 
 const getMonitorConfig = (type) => {
-    const text = `
+	const text = `
 		SELECT
 			${type}.id,
 			${type}.area_id,
@@ -68,21 +68,21 @@ const getMonitorConfig = (type) => {
 
 		ORDER BY id;
 	`
-    return text
+	return text
 }
 
 const deleteMonitorConfig = (monitorConfigPackage) => {
-    const { type, id } = monitorConfigPackage
-    return `
+	const { type, id } = monitorConfigPackage
+	return `
 		DELETE FROM ${type}
 		WHERE id IN (${id.map((id) => `'${id}'`)})
 	`
 }
 
 const addMonitorConfig = (monitorConfigPackage) => {
-    const { type, start_time, end_time, enable, area_id } = monitorConfigPackage
+	const { type, start_time, end_time, enable, area_id } = monitorConfigPackage
 
-    const text = `
+	const text = `
 		INSERT INTO ${type}
 			(
 				start_time,
@@ -99,25 +99,25 @@ const addMonitorConfig = (monitorConfigPackage) => {
 			)
 	`
 
-    const values = [start_time, end_time, enable, area_id]
+	const values = [start_time, end_time, enable, area_id]
 
-    return {
-        text,
-        values,
-    }
+	return {
+		text,
+		values,
+	}
 }
 
 const setMonitorConfig = (monitorConfigPackage) => {
-    const {
-        type,
-        id,
-        start_time,
-        end_time,
-        enable,
-        area_id,
-    } = monitorConfigPackage
+	const {
+		type,
+		id,
+		start_time,
+		end_time,
+		enable,
+		area_id,
+	} = monitorConfigPackage
 
-    const text = `
+	const text = `
 		UPDATE ${monitorConfigPackage.type}
 		SET
 			area_id = $5,
@@ -127,19 +127,19 @@ const setMonitorConfig = (monitorConfigPackage) => {
 
 		WHERE id = $1;
 	`
-    const values = [id, start_time, end_time, enable, area_id]
+	const values = [id, start_time, end_time, enable, area_id]
 
-    const query = {
-        text,
-        values,
-    }
+	const query = {
+		text,
+		values,
+	}
 
-    return query
+	return query
 }
 
 export default {
-    getMonitorConfig,
-    deleteMonitorConfig,
-    addMonitorConfig,
-    setMonitorConfig,
+	getMonitorConfig,
+	deleteMonitorConfig,
+	addMonitorConfig,
+	setMonitorConfig,
 }

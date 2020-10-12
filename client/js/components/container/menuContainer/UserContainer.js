@@ -7,40 +7,34 @@ import BrowserPageComponent from '../../platform/browser/BrowserPageComponent'
 import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
 
 class UserSettingContainer extends React.Component {
-    componentDidMount = () => {
-        /** set the scrollability in body disabled */
-        const targetElement = document.querySelector('body')
-        enableBodyScroll(targetElement)
-    }
+	componentDidMount = () => {
+		/** set the scrollability in body disabled */
+		const targetElement = document.querySelector('body')
+		enableBodyScroll(targetElement)
+	}
 
-    componentWillUnmount = () => {
-        const targetElement = document.querySelector('body')
-        disableBodyScroll(targetElement)
-    }
+	componentWillUnmount = () => {
+		const targetElement = document.querySelector('body')
+		disableBodyScroll(targetElement)
+	}
 
-    containerModule = userContainerModule
+	containerModule = userContainerModule
 
-    render() {
-        return (
-            <Fragment>
-                <BrowserView>
-                    <BrowserPageComponent
-                        containerModule={this.containerModule}
-                    />
-                </BrowserView>
-                <TabletView>
-                    <TabletPageComponent
-                        containerModule={this.containerModule}
-                    />
-                </TabletView>
-                <MobileOnlyView>
-                    <MobilePageComponent
-                        containerModule={this.containerModule}
-                    />
-                </MobileOnlyView>
-            </Fragment>
-        )
-    }
+	render() {
+		return (
+			<Fragment>
+				<BrowserView>
+					<BrowserPageComponent containerModule={this.containerModule} />
+				</BrowserView>
+				<TabletView>
+					<TabletPageComponent containerModule={this.containerModule} />
+				</TabletView>
+				<MobileOnlyView>
+					<MobilePageComponent containerModule={this.containerModule} />
+				</MobileOnlyView>
+			</Fragment>
+		)
+	}
 }
 
 export default UserSettingContainer

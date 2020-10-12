@@ -35,15 +35,15 @@
 import authController from '../../controllers/authController'
 
 export default (app) => {
-    app.route('/data/auth/signin').post(authController.signin)
+	app.route('/data/auth/signin').post(authController.signin)
 
-    app.route('/data/auth/signout').post(authController.signout)
+	app.route('/data/auth/signout').post(authController.signout)
 
-    app.route('/data/auth/validation').post(authController.validation)
+	app.route('/data/auth/validation').post(authController.validation)
 
-    app.route('/data/auth/sentResetPwdInstruction').post(
-        authController.sentResetPwdInstruction
-    )
+	app
+		.route('/data/auth/sentResetPwdInstruction')
+		.post(authController.sentResetPwdInstruction)
 
-    app.route('/data/auth/resetpassword').post(authController.resetPassword)
+	app.route('/data/auth/resetpassword').post(authController.resetPassword)
 }
