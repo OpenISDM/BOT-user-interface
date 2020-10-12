@@ -33,13 +33,14 @@
 */
 
 const getTrackingData = (areas_id, key) => {
-    const query = `
+	const query = `
 		SELECT
 			object_table.mac_address,
 			object_summary_table.uuid as lbeacon_uuid,
 			object_summary_table.first_seen_timestamp,
 			object_summary_table.last_seen_timestamp,
 			object_summary_table.last_reported_timestamp,
+			object_summary_table.panic_violation_timestamp,
 			object_summary_table.rssi,
 			object_summary_table.battery_voltage,
 			object_summary_table.base_x,
@@ -143,9 +144,9 @@ const getTrackingData = (areas_id, key) => {
 			object_table.asset_control_number
 			DESC;
 	`
-    return query
+	return query
 }
 
 export default {
-    getTrackingData,
+	getTrackingData,
 }
