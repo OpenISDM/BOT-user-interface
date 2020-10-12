@@ -27,7 +27,8 @@
         "node/prefer-promises/fs": "error",
         "indent": [
             "error",
-            4,
+            "tab",
+            2,
             {
                 "SwitchCase": 1
             }
