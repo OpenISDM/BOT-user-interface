@@ -18,5 +18,5 @@ export default {
 	NURSING_HOME: '護理之家',
 	EMERGENCY_ROOM: '急診室',
 	NTUH_EMERGENCY_ROOM: 'emergency room',
-	WHOLE_SITE: '公共區域;',
+	WHOLE_SITE: '公共區域',
 }

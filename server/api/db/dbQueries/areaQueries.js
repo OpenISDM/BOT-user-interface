@@ -32,12 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-export default () => {
-	return `
-		SELECT
-			id,
-			name
-		FROM area_tab;le;
-		;
-	`
+export const getAreaTable = 'SELECT id, name FROM area_table'
+
+export default {
+	getAreaTable,
 }
