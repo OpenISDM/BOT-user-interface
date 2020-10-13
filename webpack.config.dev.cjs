@@ -35,8 +35,6 @@
 /* eslint-disable import/no-commonjs */
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { InjectManifest } = require('workbox-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const webpack = require('webpack')
 const dotenv = require('dotenv')
@@ -56,6 +54,11 @@ module.exports = {
 		filename: './js/[name].[chunkhash].js',
 		chunkFilename: './js/[name].[chunkhash].chunk.js',
 		publicPath: '/',
+	},
+	devServer: {
+		historyApiFallback: true,
+		port: 3002,
+		open: true,
 	},
 	module: {
 		rules: [
@@ -115,19 +118,6 @@ module.exports = {
 
 		new MiniCssExtractPlugin({
 			filename: './css/[name].[contenthash].css',
-		}),
-
-		new InjectManifest({
-			swSrc: path.join(__dirname, 'client', 'js', 'serviceWorker', 'sw.js'),
-			swDest: path.join(__dirname, 'server/dist', 'sw.js'),
-			maximumFileSizeToCacheInBytes: 5000000000,
-		}),
-
-		new CopyWebpackPlugin({
-			patterns: [
-				{ from: 'client/img/logo', to: 'imgs/logo' },
-				'client/manifest.webmanifest',
-			],
 		}),
 	],
 	optimization: {
