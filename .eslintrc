@@ -5,7 +5,7 @@
 		"ecmaVersion": 2020
 	},
 	"parser": "babel-eslint",
-	"plugins": ["node", "prettier"],
+	"plugins": ["babel", "node", "prettier"],
 	"env": {
 		"node": true,
 		"browser": true
@@ -36,6 +36,8 @@
 				"skipBlankLines": false,
 				"ignoreComments": true
 			}
-		]
+		],
+		"no-invalid-this": 0,
+		"babel/no-invalid-this": 1
 	}
 }
