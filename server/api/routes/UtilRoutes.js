@@ -32,11 +32,6 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { fileURLToPath } from 'url'
-import path, { dirname } from 'path'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-
 export default (app) => {
 	/** Replace with br file if the browser support br encoding */
 	app.get(/\.(js)$/, (req, res, next) => {
@@ -45,10 +40,5 @@ export default (app) => {
 			res.set('Content-Encoding', 'br')
 		}
 		next()
-	})
-
-	/** Response source of service worker */
-	app.get('/sw.js', (req, res, next) => {
-		res.sendFile(path.join(__dirname, '..', '..', 'dist', 'sw.js'))
 	})
 }

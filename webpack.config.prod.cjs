@@ -37,7 +37,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { InjectManifest } = require('workbox-webpack-plugin')
+const { GenerateSW } = require('workbox-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 	.BundleAnalyzerPlugin
@@ -153,11 +153,7 @@ module.exports = {
 			filename: './css/[name].[contenthash].css',
 		}),
 
-		new InjectManifest({
-			swSrc: path.join(__dirname, 'client', 'js', 'serviceWorker', 'sw.js'),
-			swDest: path.join(__dirname, 'server/dist', 'sw.js'),
-			maximumFileSizeToCacheInBytes: 5000000000,
-		}),
+		new GenerateSW(),
 
 		new CopyWebpackPlugin({
 			patterns: [
