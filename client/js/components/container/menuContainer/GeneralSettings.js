@@ -33,34 +33,18 @@
 */
 
 import React from 'react'
-import { Button, ButtonToolbar } from 'react-bootstrap'
 import { AppContext } from '../../../context/AppContext'
-import axios from 'axios'
-import EditAreasForm from '../../presentational/form/EditAreasForm'
-import EditPwdForm from '../../presentational/form/EditPwdForm'
-import messageGenerator from '../../../helper/messageGenerator'
-import dataSrc from '../../../dataSrc'
-import { Title } from '../../BOTComponent/styleComponent'
-import NumberPicker from '../NumberPicker'
 import apiHelper from '../../../helper/apiHelper'
 import ReactTable from 'react-table'
 import styleConfig from '../../../config/styleConfig'
-import { objectAliasColumn } from '../../../config/tables'
-import { JSONClone } from '../../../helper/utilities'
-
-const checkinAlias = (type, type_alias) => {
-	apiHelper.objectApiAgent
-		.editAlias({
-			objectType: type,
-			alias: type_alias,
-		})
-		.then((res) => {
-			console.log(res)
-		})
-		.catch((err) => {
-			console.log(`checkin alias failed ${err}`)
-		})
-}
+// import { Button, ButtonToolbar } from 'react-bootstrap'
+// import axios from 'axios'
+// import EditAreasForm from '../../presentational/form/EditAreasForm'
+// import EditPwdForm from '../../presentational/form/EditPwdForm'
+// import messageGenerator from '../../../helper/messageGenerator'
+// import { Title } from '../../BOTComponent/styleComponent'
+// import NumberPicker from '../NumberPicker'
+// import { JSONClone } from '../../../helper/utilities'
 
 class GeneralSettings extends React.Component {
 	static contextType = AppContext
@@ -72,6 +56,20 @@ class GeneralSettings extends React.Component {
 
 	componentDidMount = () => {
 		this.getData()
+	}
+
+	checkinAlias = (type, type_alias) => {
+		apiHelper.objectApiAgent
+			.editAlias({
+				objectType: type,
+				alias: type_alias,
+			})
+			.then((res) => {
+				console.log(res)
+			})
+			.catch((err) => {
+				console.log(`checkin alias failed ${err}`)
+			})
 	}
 
 	getData = () => {
@@ -103,10 +101,7 @@ class GeneralSettings extends React.Component {
 										})
 									}}
 									onKeyPress={(e) => {
-										if (
-											e.key == 'Enter' &&
-											e.target.value !== props.original.type_alias
-										) {
+										if (e.key === 'Enter') {
 											const { type, type_alias } = props.original
 											this.checkinAlias(type, type_alias)
 										}
@@ -117,7 +112,7 @@ class GeneralSettings extends React.Component {
 					},
 				]
 
-				columns.map((field) => {
+				columns.forEach((field) => {
 					field.Header =
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
@@ -133,9 +128,7 @@ class GeneralSettings extends React.Component {
 	}
 
 	render() {
-		const { locale, auth } = this.context
-
-		const { areaTable } = this.state
+		const { locale } = this.context
 
 		return (
 			<div className="d-flex flex-column">

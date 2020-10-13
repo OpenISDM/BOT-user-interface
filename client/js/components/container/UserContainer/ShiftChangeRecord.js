@@ -69,7 +69,7 @@ class ShiftChangeRecord extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getData()
 		}
 	}
@@ -87,11 +87,11 @@ class ShiftChangeRecord extends React.Component {
 			.then((res) => {
 				const columns = JSONClone(shiftChangeRecordTableColumn)
 
-				columns.map((field) => {
+				columns.forEach((field) => {
 					field.Header =
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
-				res.data.rows.map((item) => {
+				res.data.rows.forEach((item) => {
 					item.shift =
 						item.shift &&
 						locale.texts[item.shift.toUpperCase().replace(/ /g, '_')]
@@ -129,8 +129,8 @@ class ShiftChangeRecord extends React.Component {
 		this.setState({ selectAll, selection })
 	}
 
-	toggleSelection = (key, shift, row) => {
-		if (key != 999) {
+	toggleSelection = (key) => {
+		if (key !== 999) {
 			//多的
 			let selection = [...this.state.selection]
 			const selectThis = !this.state.selectThis
@@ -159,17 +159,19 @@ class ShiftChangeRecord extends React.Component {
 		const deleteArray = []
 		let deleteCount = 0
 
-		this.state.data.map((item) => {
-			this.state.selection.map((itemSelect) => {
-				itemSelect == item.id ? deleteArray.push(deleteCount.toString()) : null
+		this.state.data.forEach((item) => {
+			this.state.selection.forEach((itemSelect) => {
+				if (itemSelect === item.id) {
+					deleteArray.push(deleteCount.toString())
+				}
 			})
 			deleteCount += 1
 		})
 
-		deleteArray.map((item) => {
-			this.state.data[item] == undefined
-				? null
-				: idPackage.push(parseInt(this.state.data[item].id))
+		deleteArray.forEach((item) => {
+			if (this.state.data[item] !== undefined) {
+				idPackage.push(parseInt(this.state.data[item].id))
+			}
 		})
 
 		apiHelper.record
@@ -177,6 +179,7 @@ class ShiftChangeRecord extends React.Component {
 				idPackage,
 			})
 			.then((res) => {
+				console.log(res)
 				const callback = () => {
 					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 				}
@@ -203,7 +206,7 @@ class ShiftChangeRecord extends React.Component {
 		const name = e.target.getAttribute('name')
 
 		switch (name) {
-			case SHIFT_CHANGE:
+			case config.RECORD_TYPE.SHIFT_CHANGE:
 				e.preventDefault()
 				this.setState({
 					showShiftChange: true,
@@ -228,7 +231,7 @@ class ShiftChangeRecord extends React.Component {
 						label: item.name,
 						value: item,
 					}
-					if (item.id == listId) {
+					if (item.id === listId) {
 						devicelist = option
 					}
 					return option
@@ -314,7 +317,7 @@ class ShiftChangeRecord extends React.Component {
 					<div className="d-flex justify-content-between mb-2">
 						<div className="color-black mb-2">{locale.texts.VIEW_REPORT}</div>
 						<PrimaryButton
-							disabled={this.state.selection.length == 0}
+							disabled={this.state.selection.length === 0}
 							onClick={() => {
 								this.setState({
 									showDeleteConfirmation: true,
@@ -330,17 +333,17 @@ class ShiftChangeRecord extends React.Component {
 						columns={this.state.columns}
 						ref={(r) => (this.selectTable = r)}
 						className="-highlight text-none"
-						onPageChange={(e) => {
+						onPageChange={() => {
 							this.setState({ selectAll: false, selection: '' })
 						}}
-						onSortedChange={(e) => {
+						onSortedChange={() => {
 							this.setState({ selectAll: false, selection: '' })
 						}}
 						style={{ maxHeight: '75vh' }}
 						{...extraProps}
 						{...styleConfig.reactTable}
 						NoDataComponent={() => null}
-						getTrProps={(state, rowInfo, column, instance) => {
+						getTrProps={(state, rowInfo) => {
 							return {
 								onClick: (e, handleOriginal) => {
 									const id = rowInfo.index + 1
