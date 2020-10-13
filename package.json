@@ -6,8 +6,8 @@
 	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "webpack --config webpack.config.cjs -r esm",
-		"start": "webpack-dev-server --config webpack.config.cjs -r esm --open --mode development",
+		"build": "webpack --config webpack.config.prod.cjs -r esm",
+		"start": "webpack-dev-server --config webpack.config.dev.cjs -r esm --open --mode development",
 		"server": "nodemon --experimental-modules --es-module-specifier-resolution=node ./server/index.js",
 		"fetch": "git fetch --all",
 		"reset": "git reset --hard origin/master",
@@ -17,7 +17,7 @@
 		"webp": "node ./tools/webpCovertor.js",
 		"lint": "eslint .",
 		"lint-fix": "eslint . --fix && prettier --write .",
-		"analyze": "npm_config_report=true webpack --mode production --config webpack.config.cjs -r esm"
+		"analyze": "npm_config_report=true webpack --mode production --config webpack.config.prod.cjs -r esm"
 	},
 	"keywords": [],
 	"author": "",
