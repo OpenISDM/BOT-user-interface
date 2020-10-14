@@ -34,8 +34,8 @@
 
 import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/gatewayQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/gatewayQueries'
+import pool from '../db/connection'
 
 export default {
 	getAllGateway: (request, response) => {

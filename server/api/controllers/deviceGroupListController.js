@@ -33,8 +33,8 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/dbQueries/deviceGroupListQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/deviceGroupListQueries'
+import pool from '../db/connection'
 
 export default {
 	getDeviceGroupList: (request, response) => {

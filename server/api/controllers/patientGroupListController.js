@@ -33,8 +33,8 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/dbQueries/patientGroupListQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/patientGroupListQueries'
+import pool from '../db/connection'
 
 export default {
 	getPatientGroupList: (request, response) => {

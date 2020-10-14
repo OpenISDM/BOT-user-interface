@@ -34,8 +34,8 @@
 
 import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/trackingDataQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/trackingDataQueries'
+import pool from '../db/connection'
 import {
 	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
 	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,

@@ -33,8 +33,8 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/dbQueries/monitorQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/monitorQueries'
+import pool from '../db/connection'
 
 export default {
 	getMonitorConfig: (request, response) => {

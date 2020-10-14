@@ -34,8 +34,8 @@
 
 import 'dotenv/config'
 import 'moment-timezone'
-import dbQueries from '../db/dbQueries/authQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/authQueries'
+import pool from '../db/connection'
 import encrypt from '../service/encrypt'
 import mailTransporter from '../service/mailTransporter'
 import resetPasswordInstruction from '../config/template'

@@ -33,8 +33,8 @@
 */
 
 import 'dotenv/config'
-import { getAreaTable } from '../db/dbQueries/areaQueries'
-import pool from '../db/dev/connection'
+import { getAreaTable } from '../db/areaQueries'
+import pool from '../db/connection'
 
 export default {
 	getAreaTable: (request, response) => {

@@ -34,9 +34,9 @@
 
 import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/objectQueries'
-import recordQueries from '../db/dbQueries/recordQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/objectQueries'
+import recordQueries from '../db/recordQueries'
+import pool from '../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
 import { reloadGeofenceConfig } from '../service/IPCService'

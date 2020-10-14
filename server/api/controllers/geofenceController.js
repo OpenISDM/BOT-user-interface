@@ -34,8 +34,8 @@
 
 import 'dotenv/config'
 import child_process from 'child_process'
-import dbQueries from '../db/dbQueries/geofenceQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/geofenceQueries'
+import pool from '../db/connection'
 const exec = child_process.execFile
 
 export default {

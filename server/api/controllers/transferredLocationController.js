@@ -34,8 +34,8 @@
 
 import 'dotenv/config'
 
-import dbQueries from '../db/dbQueries/transferredLocationQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/transferredLocationQueries'
+import pool from '../db/connection'
 
 export default {
 	getAllTransferredLocation: (request, response) => {

@@ -33,8 +33,8 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/dbQueries/importedObjectQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/importedObjectQueries'
+import pool from '../db/connection'
 
 export default {
 	getImportedObject: (request, response) => {

@@ -35,7 +35,7 @@
 import 'dotenv/config'
 import session from 'express-session'
 import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/dev/connection'
+import pool from '../db/connection'
 
 const pgSession = ConnectPgSimple(session)
 

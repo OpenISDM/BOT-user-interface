@@ -33,8 +33,8 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/dbQueries/utilsQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/utilsQueries'
+import pool from '../db/connection'
 
 export default {
 	getSearchableKeywords: (request, response) => {

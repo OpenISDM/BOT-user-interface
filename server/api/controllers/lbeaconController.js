@@ -34,8 +34,8 @@
 
 import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/lbeaconQueries'
-import pool from '../db/dev/connection'
+import dbQueries from '../db/lbeaconQueries'
+import pool from '../db/connection'
 import statusCode from '../config/statusCode'
 
 export default {

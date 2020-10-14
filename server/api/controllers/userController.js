@@ -34,9 +34,9 @@
 
 import 'dotenv/config'
 import moment from 'moment-timezone'
-import dbQueries from '../db/dbQueries/userQueries'
-import pool from '../db/dev/connection'
-import authQueries from '../db/dbQueries/authQueries'
+import dbQueries from '../db/userQueries'
+import pool from '../db/connection'
+import authQueries from '../db/authQueries'
 import encrypt from '../service/encrypt'
 
 export default {
