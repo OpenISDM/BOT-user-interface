@@ -60,7 +60,7 @@ class Locale extends React.Component {
 		: localePackage[config.DEFAULT_LOCALE]
 
 	setLocale = (abbr, callback) => {
-		if (abbr == this.state.abbr) return
+		if (abbr === this.state.abbr) return
 
 		this.setState(
 			{

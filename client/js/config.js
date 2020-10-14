@@ -32,6 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import { version } from '../../package.json'
 import BOT_LOGO from '../img/logo/BOT_LOGO_GREEN.png'
 import BOT_LOGO_WEBP from '../img/logo/BOT_LOGO_GREEN.webp'
 import mapConfig from './config/mapConfig'
@@ -40,7 +41,7 @@ import moment from 'moment'
 import supportedLocale from './locale/supportedLocale'
 
 const config = {
-	VERSION: 'v1.0 b.1965',
+	VERSION: `v${version} b.1966`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 
@@ -77,8 +78,8 @@ const config = {
 	DEFAULT_LOCALE: Object.values(supportedLocale).reduce((abbr, locale) => {
 		const navigatorLang = navigator.language.toLocaleUpperCase()
 		if (
-			navigatorLang == locale.code.toLocaleUpperCase() ||
-			navigatorLang == locale.abbr.toUpperCase()
+			navigatorLang === locale.code.toLocaleUpperCase() ||
+			navigatorLang === locale.abbr.toUpperCase()
 		) {
 			return locale.abbr
 		}
@@ -191,27 +192,6 @@ const config = {
 		4: 'movement',
 		8: 'location',
 		16: 'bed',
-	},
-
-	monitorSettingType: {
-		MOVEMENT_MONITOR: 'movement monitor',
-		LONG_STAY_IN_DANGER_MONITOR: 'long stay in danger monitor',
-		NOT_STAY_ROOM_MONITOR: 'not stay room monitor',
-		GEOFENCE_MONITOR: 'geofence monitor',
-	},
-
-	monitorSettingUrlMap: {
-		'movement monitor': 'movement_config',
-		'long stay in danger monitor': 'location_long_stay_in_danger_config',
-		'not stay room monitor': 'location_not_stay_room_config',
-		'geofence monitor': 'geo_fence_config',
-	},
-
-	monitorSetting: {
-		'movement monitor': 'movement_config',
-		'long stay in danger monitor': 'location_long_stay_in_danger_config',
-		location: 'location_not_stay_room_config',
-		geo: 'geo_fence_config',
 	},
 
 	toastMonitorMap: {
