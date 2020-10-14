@@ -62,7 +62,6 @@ const en = {
 	SETTINGS: 'settings',
 	GENERAL_SETTINGS: 'Custom settings',
 	ASSET_USAGE: 'Record asset usage data',
-	DEVICE_TRANSFER_RECORD: 'Generate device transfer record',
 	NOTES_ON_PATIENTS: 'Generate and view notes on patients',
 	GENERATE_AND_VIEW_SHIFT_CHANGE_RECORD:
 		'Generate and view shift change records',
@@ -72,7 +71,6 @@ const en = {
 	MONITOR_SETTINGS: 'monitor settings',
 	REPORT: 'Operation Supports',
 	RECORD: 'Operation Supports',
-	LBEACON: 'lbeacon',
 	GATEWAY: 'gateway',
 	SEARCH_RESULT: 'search results',
 	NO_RESULT: 'no result',
@@ -101,10 +99,7 @@ const en = {
 	TAGS: 'tags',
 	PATIENT_GENDER: 'Gender',
 	CHOOSE_GENDER: 'Choose gender',
-	MALE: 'Male',
-	FEMALE: 'Female',
 	PATIENT: 'patient',
-	DEVICES: 'devices',
 	SCAN_TAG: 'Please Scan TAG',
 	ALREADY_CHOOSE: 'Already choose',
 	MAIN_AREA: 'Main area',
@@ -127,7 +122,7 @@ const en = {
 	OBJECTS: 'objects',
 	ITEM: 'items',
 	DEVICES_FOUND: 'devices found',
-	PATIENTS_FOUND: 'patient found',
+	PATIENTS_FOUND: 'patients found',
 	DEVICES_NOT_FOUND: 'devices not found',
 	PATIENTS_NOT_FOUND: 'patient not found',
 	SEARCH_RESULTS_FOUND: 'search results founds',
@@ -146,7 +141,7 @@ const en = {
 	MALE: 'male',
 	FEMALE: 'female',
 	EDIT_ALIAS: 'edit alias',
-	EDIT_DEVICE_ALIAS: "edit device's alias",
+	EDIT_DEVICE_ALIAS: 'edit device alias',
 
 	/* buttons */
 	CLEAR: 'clear',
@@ -170,7 +165,6 @@ const en = {
 	DEVICES: 'devices',
 	DOWNLOAD: 'download',
 	DELETE: 'delete',
-	REMOVE: 'remove',
 	DELETE_LBEACON: 'delete LBeacon',
 	DELETE_GATEWAY: 'delete Gateway',
 	ADD_USER: 'add user',
@@ -242,7 +236,6 @@ const en = {
 	OBJECT_IDENTITY_NUMBER: 'object ID',
 	MAC_ADDRESS: 'mac address',
 	LBEACON: 'lbeacon',
-	STATUS: 'status',
 	MONITOR_TYPE: 'monitor type',
 	ACN: 'ACN',
 	LOCATION: 'location',
@@ -332,6 +325,8 @@ const en = {
 	DEVICE_TRANSFER_RECORD: 'Generate device transfer record',
 	BROKEN_DEVICE_LIST: 'broken device list',
 	TRANSFERRED_DEVICE_LIST: 'transferred device list',
+
+	// eslint-disable-next-line quotes
 	WHOSE_DEVICES: "'s devices",
 	TRANSFERRED_TO: 'transferred to',
 	CHECKED_BY: 'checked by',
@@ -349,9 +344,9 @@ const en = {
 	EDIT_MOVEMENT_MONITOR: 'edit movement monitor',
 	EDIT_LONG_STAY_IN_DANGER_MONITOR: 'edit long stay in dangen monitor',
 	EDIT_NOT_STAY_ROOM_MONITOR: 'edit not stay room monitor',
-	MOVEMENT: 'movement alert',
-	LOCATION: 'location alert',
-	GEOFENCE: 'geofence alert',
+	MOVEMENT_ALERT: 'movement alert',
+	LOCATION_ALERT: 'location alert',
+	GEOFENCE_ALERT: 'geofence alert',
 	PANIC: 'emergency',
 	EDIT_SECONDARY_AREAS: 'edit secondary areas',
 	NEW_PASSWORD: 'New password',
@@ -410,6 +405,8 @@ const en = {
 	REQUIRED: 'required',
 	ID_IS_NOT_FOUND: 'ID is not found',
 	ASN_IS_REPEAT: 'asn is repeat',
+
+	// eslint-disable-next-line quotes
 	NOT_ALLOW_PUNCTUATION: "data have not allow's punctuation",
 	OVERLENGTH: 'only allow below 100 chars',
 	LIMIT_IN_TWENTY_CHARACTER: 'Limit in 20 characters',
@@ -441,7 +438,7 @@ const en = {
 	TRANSFERRED: 'transferred',
 	RESERVE: 'reserved',
 	RETURNED: 'returned',
-	TRACE: 'traced',
+	TRACED: 'traced',
 
 	/** User Setting */
 	USER_SETTING: 'User Setting',
@@ -450,12 +447,10 @@ const en = {
 	USER_PROFILE: 'User Profile',
 	TRANSFERRED_LOCATION_MANAGEMENT: 'Add/Delete Transfer Locations',
 	ROLE_PERMISSION_MANAGEMENT: 'role permission',
-	SHIFT_CHANGE_RECORD: 'shift change record',
 	OBJECT_EDITED_RECORD: 'object edited record',
 	PATIENT_RECORD: 'Notes on patient',
 	PATIENT_HISTORIAL_RECORD: 'historical record',
 	ACCESS_RIGHT: 'Access Right',
-	MY_DEVICES: 'My Devices',
 	OTHER_DEVICES: 'Other Devices',
 	USER_MANAGER: 'Add/Delete User Accounts',
 	ADMIN: 'Admin',
@@ -489,7 +484,6 @@ const en = {
 	BATTERY_INDICATOR: 'batter indicator',
 	REMAINING_BATTERY_VOLTAGE: 'remaining battery voltage',
 	BATTERY: 'battery',
-	PANIC: 'emergency',
 	GEOFENCE_TYPE: 'geofence type',
 	ALERT: 'alert',
 	TRANSFERRED_LOCATION: 'transferred location',
@@ -506,10 +500,7 @@ const en = {
 	NO_NOTIFICATION: 'no notification',
 	USER_NAME: 'user name',
 	DEVICES_FOUND_IN: 'devices found in',
-	DEVICES_FOUND: 'devices found',
-	PATIENTS_FOUND: 'patients found',
 	DEVICES_NOT_FOUND_IN: 'devices not found in',
-	DEVICES_NOT_FOUND: 'devices not found',
 	CONFIRM_BY: 'confirm by',
 	NEW_STATUS: 'new status',
 	PHYSICIAN_NAME: 'physician name',
@@ -534,6 +525,8 @@ const en = {
 	NOW_YOU_CAN_DO_THE_FOllOWING_ACTION: 'Now you can do the following action',
 	USERNAME_OR_PASSWORD_IS_INCORRECT: 'Username or password is incorrect',
 	PASSWORD_IS_INCORRECT: 'password is incorrect',
+
+	// eslint-disable-next-line quotes
 	PLEASE_ENTER_ID_AND_PASSWORD: "please enter Admin's info",
 	PLEASE_ENTER_PASSWORD: 'please enter password',
 	EDIT_LBEACON_SUCCESS: 'edit lbeacon success',
@@ -561,6 +554,7 @@ const en = {
 	NOT_AVAILABLE: 'N/A',
 	IN: 'in',
 	NOT: 'not',
+	// eslint-disable-next-line quotes
 	WHOSE: "'s",
 	BELONG_TO: 'belongs to',
 	WAS: 'was',
@@ -590,7 +584,6 @@ const en = {
 	CREATE_LIST: 'create list',
 	LIST_NAME: 'list name',
 	SELECT_DEVICE_LIST: 'select device list',
-	VIEW_REPORT: 'view report',
 	RENAME: 'rename',
 }
 
