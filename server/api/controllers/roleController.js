@@ -33,19 +33,15 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/roleQueries'
-import pool from '../db/connection'
+import Roles from '../db/model/roles'
 
 export default {
-	getAllRole: (request, response) => {
-		pool
-			.query(dbQueries.getAllRole())
-			.then((res) => {
-				console.log('get all roles succeed')
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`get all roles failed ${err}`)
-			})
+	getAllRole: async (request, response) => {
+		try {
+			const roles = await Roles.findAll()
+			response.status(200).json(roles)
+		} catch (e) {
+			console.log(e)
+		}
 	},
 }

@@ -32,8 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import pkg from 'sequelize'
 import pg from 'pg'
 import { decrypt } from '../service/encrypt'
+
+const { Sequelize } = pkg
+export const sequelize = new Sequelize(
+	process.env.DB_DATABASE,
+	process.env.DB_USER,
+	decrypt(process.env.DB_PASS),
+	{
+		host: process.env.DB_HOST,
+		dialect: 'postgres',
+	}
+)
 
 const config = {
 	user: process.env.DB_USER,
