@@ -247,6 +247,7 @@ export default class ChangeStatusForm extends React.Component {
 																	type="text"
 																	name="nickname"
 																	label={locale.texts.NICKNAME}
+																	value={item.type_alias}
 																	error={errors.nickname}
 																	touched={touched.nickname}
 																	placeholder=""
