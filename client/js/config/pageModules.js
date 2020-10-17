@@ -211,6 +211,11 @@ export const reportContainerModule = {
 
 	tabList: [
 		{
+			name: 'Get Assignments',
+			component: (props) => <ShiftChangeRecord {...props} />,
+			platform: ['browser', 'tablet', 'mobile'],
+		},
+		{
 			name: 'Generate and View Shift Change Record',
 			component: (props) => <ShiftChangeRecord {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
@@ -220,8 +225,13 @@ export const reportContainerModule = {
 			component: (props) => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
+		// {
+		// 	name: 'device transfer record',
+		// 	component: (props) => <ObjectEditedRecord {...props} />,
+		// 	platform: ['browser', 'tablet', 'mobile'],
+		// },
 		{
-			name: 'device transfer record',
+			name: 'Report And Change Device Status',
 			component: (props) => <ObjectEditedRecord {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
 		},

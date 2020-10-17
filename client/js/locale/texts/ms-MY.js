@@ -108,6 +108,8 @@ const ms = {
 	SECONDARY_AREAS: 'kawasan sekunder',
 	PERSONA_LIST: 'senarai persona',
 	IMPORT_PERSONA: 'import persona',
+	GET_ASSIGNMENTS: 'Get Assignments',
+	REPORT_AND_CHANGE_DEVICE_STATUS: 'Report And Change Device Status',
 
 	/* Location accuracy */
 	LOCATION_ACCURACY: 'Ketepatan Lokasi',

@@ -108,6 +108,8 @@ const tw = {
 	SECONDARY_AREAS: '次要區域',
 	PERSONA_LIST: '人員列表',
 	IMPORT_PERSONA: '匯入人員',
+	GET_ASSIGNMENTS: '取得負責物件清單',
+	REPORT_AND_CHANGE_DEVICE_STATUS: '回報與更改裝置狀態',
 
 	/* Location accuracy */
 	LOCATION_ACCURACY: '位置精準度',

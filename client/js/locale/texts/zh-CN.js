@@ -108,6 +108,8 @@ const cn = {
 	SECONDARY_AREAS: '次要区域',
 	PERSONA_LIST: '人员列表',
 	IMPORT_PERSONA: '汇入人员',
+	GET_ASSIGNMENTS: '获取负责物件清单',
+	REPORT_AND_CHANGE_DEVICE_STATUS: '回报与更改装置状态',
 
 	/* Location accuracy */
 	LOCATION_ACCURACY: '位置精准度',
