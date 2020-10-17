@@ -104,12 +104,12 @@ class SearchContainer extends React.Component {
 				objectType: [0],
 			})
 			.then((res) => {
-				const keywordType =
-					config.KEYWORD_TYPE[auth.user.keyword_type] || 'type'
-
+				const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
 				const objectTypeList = res.data.rows.reduce((objectTypeList, item) => {
-					if (!objectTypeList.includes(item[keywordType])) {
-						objectTypeList.push(item[keywordType])
+					const name = item[keywordType] ? item[keywordType] : item.type
+					const addToList = !objectTypeList.includes(name)
+					if (addToList) {
+						objectTypeList.push(name)
 					}
 					return objectTypeList
 				}, [])
