@@ -77,7 +77,6 @@ class PatientViewModal extends React.Component {
 
 	render() {
 		const { show, handleClose, handleSubmit, data, title } = this.props
-
 		const { locale, auth } = this.context
 
 		const recordBlock = {
@@ -126,8 +125,32 @@ class PatientViewModal extends React.Component {
 								<FormikFormGroup
 									type="text"
 									name="name"
+									label={locale.texts.ALIAS}
+									value={data.type_alias}
+									error={errors.name}
+									touched={touched.name}
+									placeholder=""
+									disabled
+								/>
+								<FormikFormGroup
+									type="text"
+									name="name"
 									label={locale.texts.PATIENT_NUMBER}
 									value={data.asset_control_number}
+									error={errors.name}
+									touched={touched.name}
+									placeholder=""
+									disabled
+								/>
+								<FormikFormGroup
+									type="text"
+									name="name"
+									label={locale.texts.LOCATION}
+									value={
+										data.lbeacon_area !== undefined
+											? data.lbeacon_area.value
+											: null
+									}
 									error={errors.name}
 									touched={touched.name}
 									placeholder=""
