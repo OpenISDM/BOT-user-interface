@@ -33,18 +33,14 @@
 */
 
 import React from 'react'
+import { debounce } from 'lodash'
+import { ButtonToolbar } from 'react-bootstrap'
 import { AppContext } from '../../../context/AppContext'
 import apiHelper from '../../../helper/apiHelper'
 import ReactTable from 'react-table'
 import styleConfig from '../../../config/styleConfig'
-// import { Button, ButtonToolbar } from 'react-bootstrap'
-// import axios from 'axios'
-// import EditAreasForm from '../../presentational/form/EditAreasForm'
-// import EditPwdForm from '../../presentational/form/EditPwdForm'
-// import messageGenerator from '../../../helper/messageGenerator'
-// import { Title } from '../../BOTComponent/styleComponent'
-// import NumberPicker from '../NumberPicker'
-// import { JSONClone } from '../../../helper/utilities'
+import { PrimaryButton } from '../../BOTComponent/styleComponent'
+import messageGenerator from '../../../helper/messageGenerator'
 
 class GeneralSettings extends React.Component {
 	static contextType = AppContext
@@ -52,79 +48,89 @@ class GeneralSettings extends React.Component {
 	state = {
 		data: [],
 		columns: [],
+		changedIndex: [],
 	}
 
 	componentDidMount = () => {
 		this.getData()
 	}
 
-	checkinAlias = (type, type_alias) => {
-		apiHelper.objectApiAgent
-			.editAlias({
-				objectType: type,
-				alias: type_alias,
+	showMessage = debounce(
+		() => {
+			messageGenerator.setSuccessMessage('save success')
+		},
+		1500,
+		{
+			leading: true,
+			trailing: false,
+		}
+	)
+
+	chekcinAliases = async () => {
+		const objectTypeList = this.state.changedIndex.map((index) => {
+			return this.state.data[index]
+		})
+		try {
+			await apiHelper.objectApiAgent.editAliases({
+				objectTypeList,
 			})
-			.then((res) => {
-				console.log(res)
-			})
-			.catch((err) => {
-				console.log(`checkin alias failed ${err}`)
-			})
+			const changedIndex = []
+			this.setState({ changedIndex })
+			this.showMessage()
+		} catch (e) {
+			console.log(`checkin aliases failed ${e}`)
+		}
 	}
 
-	getData = () => {
+	getData = async () => {
 		const { locale } = this.context
-
-		apiHelper.objectApiAgent
-			.getAlias()
-			.then((res) => {
-				const columns = [
-					{
-						Header: 'object type',
-						accessor: 'type',
-						width: 200,
+		try {
+			const res = await apiHelper.objectApiAgent.getAlias()
+			const columns = [
+				{
+					Header: 'object type',
+					accessor: 'type',
+					width: 200,
+				},
+				{
+					Header: 'alias',
+					accessor: 'alias',
+					width: 200,
+					Cell: (props) => {
+						return (
+							<input
+								className="border"
+								value={props.original.type_alias}
+								onChange={(e) => {
+									const data = this.state.data
+									const changedIndex = this.state.changedIndex
+									data[props.index].type_alias = e.target.value
+									if (!changedIndex.includes(props.index)) {
+										changedIndex.push(props.index)
+									}
+									this.setState({
+										data,
+										changedIndex,
+									})
+								}}
+							/>
+						)
 					},
-					{
-						Header: 'alias',
-						accessor: 'alias',
-						width: 200,
-						Cell: (props) => {
-							return (
-								<input
-									className="border-none"
-									value={props.original.type_alias}
-									onChange={(e) => {
-										const data = this.state.data
-										data[props.index].type_alias = e.target.value
-										this.setState({
-											data,
-										})
-									}}
-									onKeyPress={(e) => {
-										if (e.key === 'Enter') {
-											const { type, type_alias } = props.original
-											this.checkinAlias(type, type_alias)
-										}
-									}}
-								/>
-							)
-						},
-					},
-				]
+				},
+			]
 
-				columns.forEach((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			})
 
-				this.setState({
-					data: res.data.rows,
-					columns,
-				})
+			this.setState({
+				data: res.data,
+				columns,
 			})
-			.catch((err) => {
-				console.log(`get object alias failed ${err}`)
-			})
+		} catch (e) {
+			console.log(`get object alias failed ${e}`)
+		}
 	}
 
 	render() {
@@ -135,6 +141,13 @@ class GeneralSettings extends React.Component {
 				<div className="mb-">
 					<div className="color-black mb-2 font-size-120-percent">
 						{locale.texts.EDIT_DEVICE_ALIAS}
+					</div>
+					<div className="color-black mb-2 font-size-120-percent">
+						<ButtonToolbar>
+							<PrimaryButton name={'SAVE'} onClick={this.chekcinAliases}>
+								{locale.texts.SAVE}
+							</PrimaryButton>
+						</ButtonToolbar>
 					</div>
 					<ReactTable
 						data={this.state.data}

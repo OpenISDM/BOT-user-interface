@@ -36,10 +36,11 @@ import 'dotenv/config'
 import moment from 'moment-timezone'
 import dbQueries from '../db/objectQueries'
 import recordQueries from '../db/recordQueries'
-import pool from '../db/connection'
+import pool, { sequelize, Op } from '../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
 import { reloadGeofenceConfig } from '../service/IPCService'
+import ObjectTable from '../db/model/objectTable'
 
 export default {
 	getObject: (request, response) => {
@@ -255,29 +256,65 @@ export default {
 			})
 	},
 
-	getAlias: (request, response) => {
-		pool
-			.query(dbQueries.getAlias())
-			.then((res) => {
-				console.log('get object type alias succeed')
-				response.status(200).json(res)
+	getAlias: async (request, response) => {
+		try {
+			const alias = await ObjectTable.findAll({
+				attributes: [
+					[sequelize.fn('DISTINCT', sequelize.col('type')), 'type'],
+					'type_alias',
+				],
+				where: {
+					type: {
+						[Op.ne]: 'Patient',
+					},
+				},
+				order: [['type', 'ASC']],
 			})
-			.catch((err) => {
-				console.log(`get object type alias failed ${err}`)
-			})
+			console.log('get object type alias succeed')
+			response.status(200).json(alias)
+		} catch (e) {
+			console.log(`get object type alias failed ${e}`)
+		}
 	},
 
-	editAlias: (request, response) => {
+	editAlias: async (request, response) => {
 		const { objectType, alias } = request.body
+		try {
+			const res = ObjectTable.update(
+				{ type_alias: alias },
+				{
+					where: {
+						type: objectType,
+					},
+				}
+			)
+			console.log('edit object type alias succeed')
 
-		pool
-			.query(dbQueries.editAlias(objectType, alias))
-			.then((res) => {
-				console.log('edit object type alias succeed')
-				response.status(200).json(res)
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`edit object type alias failed ${e}`)
+		}
+	},
+
+	editAliases: async (request, response) => {
+		const { objectTypeList } = request.body
+		try {
+			const promises = objectTypeList.map((item) => {
+				const { type, type_alias } = item
+				return ObjectTable.update(
+					{ type_alias },
+					{
+						where: {
+							type,
+						},
+					}
+				)
 			})
-			.catch((err) => {
-				console.log(`edit object type alias failed ${err}`)
-			})
+			await Promise.all(promises)
+			console.log('edit object type alias succeed')
+			response.status(200).send('OK')
+		} catch (e) {
+			console.log(`edit object type alias failed ${e}`)
+		}
 	},
 }

@@ -58,6 +58,7 @@ export const object = {
 	person: `${domain}/data/object/person`,
 	idleMacaddr: `${domain}/data/object/mac/idle`,
 	alias: `${domain}/data/object/alias`,
+	aliases: `${domain}/data/object/aliases`,
 }
 export const objectPackage = `${domain}/data/objectPackage`
 export const importedObject = `${domain}/data/importedObject`

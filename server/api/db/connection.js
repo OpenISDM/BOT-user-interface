@@ -37,6 +37,9 @@ import pg from 'pg'
 import { decrypt } from '../service/encrypt'
 
 const { Sequelize } = pkg
+
+export const { Op } = pkg
+
 export const sequelize = new Sequelize(
 	process.env.DB_DATABASE,
 	process.env.DB_USER,

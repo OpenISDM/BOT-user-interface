@@ -65,4 +65,6 @@ export default (app) => {
 		.route('/data/object/alias')
 		.get(objectController.getAlias)
 		.put(objectController.editAlias)
+
+	app.route('/data/object/aliases').put(objectController.editAliases)
 }

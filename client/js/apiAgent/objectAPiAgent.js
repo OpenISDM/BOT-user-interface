@@ -60,6 +60,12 @@ export default {
 		})
 	},
 
+	async editAliases({ objectTypeList }) {
+		return await axios.put(dataSrc.object.aliases, {
+			objectTypeList,
+		})
+	},
+
 	async post({ formOption, mode }) {
 		return await axios.post(dataSrc.object[mode], {
 			formOption,

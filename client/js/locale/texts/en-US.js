@@ -146,8 +146,8 @@ const en = {
 	EDIT_DEVICE_ALIAS: 'edit device alias',
 
 	/* buttons */
-	CLEAR: 'clear',
-	SAVE: 'save',
+	CLEAR: 'Clear',
+	SAVE: 'Save',
 	EDIT_SECONDARY_AREA: 'edit secondary area',
 	EDIT_PASSWORD: 'edit password',
 	CANCEL: 'cancel',
@@ -536,7 +536,7 @@ const en = {
 	DELETE_LBEACON_SUCCESS: 'delete lbeacon success',
 	DELETE_GATEWAY_SUCCESS: 'delete gateway success',
 	SAVE_SHIFT_CHANGE_SUCCESS: 'save shift change success',
-	SAVE_SUCCESS: 'save success',
+	SAVE_SUCCESS: 'Save Success',
 	SELECT_ROLE: 'select role',
 	SIGNUP_FAIL: 'this username already exist',
 	PASSWORD_RESET_SUCCESSFUL: 'password reset successful',
