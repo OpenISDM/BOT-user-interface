@@ -33,7 +33,7 @@
 */
 
 const viewConfig = {
-	ACNOmitsymbol: 'XXXXXX',
+	ACNOmitsymbol: '...',
 
 	MARKER_SIZE_IN_DESKTOP: 40,
 
