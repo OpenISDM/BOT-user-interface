@@ -158,16 +158,16 @@ class Map extends React.Component {
 			latLng.map((axis) => axis + this.mapOptions.maxBoundsOffset[index])
 		)
 
-		let map
-		if (map !== undefined) {
-			map.remove()
+		if (this.map !== null) {
+			this.map.remove && this.map.remove()
 		} else {
-			map = L.map('mapid', this.mapOptions)
+			const node = this.node
+			this.map = L.map(node, this.mapOptions)
 		}
 
 		/** Close popup while mouse leaving out the map */
-		map.on('mouseout', () => {
-			map.closePopup()
+		this.map.on('mouseout', () => {
+			this.map.closePopup()
 			this.setState({
 				shouldUpdateTrackingData: true,
 			})
@@ -175,15 +175,13 @@ class Map extends React.Component {
 
 		if (hasMap) {
 			const image = L.imageOverlay(url, bounds)
-			map.addLayer(image)
-			map.fitBounds(bounds)
+			this.map.addLayer(image)
+			this.map.fitBounds(bounds)
 			this.image = image
-			this.map = map
 		} else {
 			const image = L.imageOverlay(null, null)
 			this.image = image
-			map.addLayer(image)
-			this.map = map
+			this.map.addLayer(image)
 		}
 	}
 
@@ -636,7 +634,9 @@ class Map extends React.Component {
 	render() {
 		return (
 			<div
-				id="mapid"
+				ref={(node) => {
+					this.node = node
+				}}
 				className="w-100 bg-white sm:height-25 md:height-40 lg:height-60 xl:height-84 xxl:height-85 xxxl:height-90"
 			/>
 		)
