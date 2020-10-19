@@ -544,9 +544,9 @@ const en = {
 		'password reset instruction has been send to your email. Follow the instuction to reset the password.',
 
 	/** user roles */
-	CARE_PROVIDER: 'care provider',
-	SYSTEM_ADMIN: 'BOT administrator',
-	DEV: 'deverloper',
+	CARE_PROVIDER: 'Care Provider',
+	SYSTEM_ADMIN: 'BOT Administrator',
+	DEV: 'Deverloper',
 
 	TO: 'to',
 	SHIFT_TO: 'to',
@@ -586,8 +586,8 @@ const en = {
 	CREATE_LIST: 'create list',
 	LIST_NAME: 'list name',
 	SELECT_DEVICE_LIST: 'select device list',
-    RENAME: 'rename',
-    LICENCE: '© 2020 BiDaE Technology, Incorporated',
+	RENAME: 'rename',
+	LICENCE: '© 2020 BiDaE Technology, Incorporated',
 }
 
 export default en

@@ -18,5 +18,5 @@ export default {
 	YUANLIN_CHRISTIAN_HOSPITAL: 'Yuanlin Christian Hospital',
 	NURSING_HOME: 'nursing home',
 	EMERGENCY_ROOM: 'emergency room',
-	WHOLE_SITE: 'public space;',
+	WHOLE_SITE: 'public space',
 }
