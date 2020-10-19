@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, Nav, Dropdown } from 'react-bootstrap'
@@ -70,8 +70,6 @@ class NavbarContainer extends React.Component {
 
 		const [{ areaId }, dispatch] = stateReducer
 
-		const { showShiftChange } = this.state
-
 		const AREA_MODULE = config.mapConfig.AREA_MODULES
 
 		const options = Object.values(AREA_MODULE)
@@ -84,7 +82,7 @@ class NavbarContainer extends React.Component {
 				}
 			})
 
-		const selectedArea = options.filter((module) => module.id == areaId)
+		const selectedArea = options.filter((module) => module.id === areaId)
 		return (
 			<div>
 				<Navbar
@@ -110,8 +108,6 @@ class NavbarContainer extends React.Component {
 								value={selectedArea}
 								options={options}
 								onChange={(value) => {
-									const { stateReducer } = this.context
-									const [{ areaId }, dispatch] = stateReducer
 									dispatch({
 										type: SET_AREA,
 										value: value.id,
