@@ -42,10 +42,14 @@ const LocaleContext = React.createContext({
 	texts: {},
 
 	/** to change the current locale */
-	changeLocale: () => {},
+	changeLocale: () => {
+		// change locale
+	},
 
 	/** to toggle the current locale when there area only two locale options */
-	toggleLang: () => {},
+	toggleLang: () => {
+		// toggle lang
+	},
 })
 
 export default LocaleContext

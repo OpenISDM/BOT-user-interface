@@ -45,19 +45,24 @@ const AuthenticationContext = React.createContext({
 	accessToken: '',
 
 	/** to start the signin process */
-	signin: () => {},
+	signin: () => {
+		// do sign in
+	},
 
 	/** to start the signup process */
-	signout: () => {},
+	signout: () => {
+		// do sign out
+	},
 
-	/** signout the user */
-	signout: () => {}, // logout the user
-
-	/** handle Auth0 login process */
-	handleAuthentication: () => {},
+	/** handle Auth login process */
+	handleAuthentication: () => {
+		// to handle authentication
+	},
 
 	/** set the user's search history */
-	setSearchHistory: () => {},
+	setSearchHistory: () => {
+		// set search history
+	},
 })
 
 export default AuthenticationContext
