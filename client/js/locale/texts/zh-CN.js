@@ -574,7 +574,8 @@ const cn = {
 	CREATE_LIST: '新增列表',
 	LIST_NAME: '清单名称',
 	SELECT_DEVICE_LIST: '选择清单',
-	RENAME: '重新命名',
+    RENAME: '重新命名',
+    LICENCE: '© 2020 毕迪科技股份有限公司',
 }
 
 export default cn

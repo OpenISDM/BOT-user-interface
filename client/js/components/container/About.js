@@ -35,12 +35,16 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import config from '../../config'
+import LocaleContext from '../../context/LocaleContext'
 
 const About = () => {
+	const locale = React.useContext(LocaleContext)
+
 	return (
 		<Container fluid className="mt-5">
 			Build &nbsp;
 			{config.VERSION}
+			<div>{locale.texts.LICENCE}</div>
 		</Container>
 	)
 }

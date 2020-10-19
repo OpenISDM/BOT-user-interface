@@ -34,7 +34,6 @@
 
 import generalTexts from './text'
 import siteModuleTexts from '../../../site_module/locale/text'
-import incTexts from '../../inc/doc/locale/text'
 import React from 'react'
 import LocaleContext from '../context/LocaleContext'
 import config from '../config'
@@ -47,7 +46,6 @@ const localePackage = Object.values(supportedLocale).reduce(
 		localeMap[locale.abbr].texts = {
 			...generalTexts[locale.abbr],
 			...siteModuleTexts[locale.abbr],
-			...incTexts[locale.abbr],
 		}
 		return localeMap
 	},

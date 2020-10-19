@@ -586,7 +586,8 @@ const en = {
 	CREATE_LIST: 'create list',
 	LIST_NAME: 'list name',
 	SELECT_DEVICE_LIST: 'select device list',
-	RENAME: 'rename',
+    RENAME: 'rename',
+    LICENCE: '© 2020 BiDaE Technology, Incorporated',
 }
 
 export default en

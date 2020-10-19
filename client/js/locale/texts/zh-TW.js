@@ -575,6 +575,7 @@ const tw = {
 	LIST_NAME: '清單名稱',
 	SELECT_DEVICE_LIST: '選擇清單',
 	RENAME: '重新命名',
+	LICENCE: '© 2020 畢迪科技股份有限公司',
 }
 
 export default tw

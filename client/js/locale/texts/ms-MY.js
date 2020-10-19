@@ -579,7 +579,8 @@ const ms = {
 	CREATE_LIST: 'buat senarai',
 	LIST_NAME: 'nama senarai',
 	SELECT_DEVICE_LIST: 'pilih senarai peranti',
-	RENAME: 'ganti nama',
+    RENAME: 'ganti nama',
+    LICENCE: '© 2020 BiDaE Teknologi, Diperbadankan',
 }
 
 export default ms
