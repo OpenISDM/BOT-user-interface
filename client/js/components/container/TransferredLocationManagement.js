@@ -41,8 +41,11 @@ import ReactTable from 'react-table'
 import styleConfig from '../../config/styleConfig'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import EditBranchForm from '../presentational/form/EditBranchForm'
-import { ADD, SAVE_SUCCESS } from '../../config/wordMap'
+import DeleteBranchForm from '../presentational/form/DeleteBranchForm'
+import { ADD, DELETE, SAVE_SUCCESS } from '../../config/wordMap'
+import selecTableHOC from 'react-table/lib/hoc/selectTable'
 
+const SelectTable = selecTableHOC(ReactTable)
 class TranferredLocationManagement extends React.Component {
 	static contextType = AppContext
 
@@ -52,335 +55,231 @@ class TranferredLocationManagement extends React.Component {
 		data: [],
 		columns: [],
 		branchOptions: [],
-		showForm: false,
+		showAddForm: false,
+		showDeleteModal: false,
+		selectAll: false,
+		selection: [],
 	}
 
 	componentDidMount = () => {
 		this.getTransferredLocation()
 	}
 
-	getTransferredLocation = (callback) => {
+	getTransferredLocation = async (callback) => {
 		const { locale } = this.context
 
-		apiHelper.transferredLocationApiAgent
-			.getAllTransferredLocation()
-			.then((res) => {
-				const columns = JSONClone(TransferredLocationColumn)
+		try {
+			const res = await apiHelper.transferredLocationApiAgent.getAll()
+			const columns = JSONClone(TransferredLocationColumn)
+			const branchOptionsMap = {}
+			const data = []
 
-				columns.map((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			})
+
+			res.data.forEach((obj) => {
+				branchOptionsMap[obj.name] = {
+					label: obj.name,
+					value: obj.name,
+				}
+
+				data.push({
+					id: obj.id,
+					name: obj.name,
+					department: obj.department,
 				})
-
-				const branchOptions = []
-
-				const data = res.data.reduce((locationsArr, obj) => {
-					branchOptions.push({
-						label: obj.name,
-						value: obj.name,
-					})
-
-					obj.departments.map((item) => {
-						locationsArr.push({
-							id: item.id,
-							name: obj.name,
-							department: item.value,
-						})
-					})
-					return locationsArr
-				}, [])
-
-				this.setState(
-					{
-						data,
-						columns,
-						branchOptions,
-						showForm: false,
-					},
-					callback
-				)
 			})
-			.catch((err) => {
-				console.log(err)
-			})
-	}
 
-	generateDataRows = () => {
-		const { locale } = this.context
-		const rows = []
-		this.state.transferredLocationOptions.map((branch) => {
-			rows.push({
-				fold: (
-					<i
-						className={
-							this.state.unFoldBranches.includes(branch.id)
-								? 'fas fa-caret-down d-flex justify-content-center'
-								: 'fas fa-caret-right d-flex justify-content-center'
-						}
-						style={{ lineHeight: '100%', fontSize: '30px' }}
-						onClick={this.changeFold.bind(this, branch.id)}
-					></i>
-				),
-				level: (
-					<h6>
-						{locale.texts.BRANCH}
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					</h6>
-				),
-				name: (
-					<input
-						type="text"
-						value={branch.branch_name}
-						onBlur={this.renameBranchToBackend.bind(this, branch.id)}
-						onChange={this.renameBranchToState.bind(this, branch.id)}
-					/>
-				),
-				remove: (
-					<i
-						className="fas fa-minus d-flex justify-content-center"
-						onClick={() => {
-							this.removeBranch(branch.id)
-						}}
-					/>
-				),
-				add: (
-					<i
-						className="fas fa-plus d-flex justify-content-center"
-						onClick={() => {
-							this.addDepartment(branch.id)
-							this.unfold(branch.id)
-						}}
-					></i>
-				),
-			})
-			if (this.state.unFoldBranches.includes(branch.id)) {
-				const { department } = branch
-				department.map((department, index) => {
-					rows.push({
-						fold: null,
-						level: <h6>{locale.texts.DEPARTMENT}</h6>,
-						name: (
-							<input
-								type="text"
-								value={department}
-								onBlur={this.renameDepartmentToBackend.bind(
-									this,
-									branch.id,
-									index
-								)}
-								onChange={this.renameDepartmentToState.bind(
-									this,
-									branch.id,
-									index
-								)}
-							/>
-						),
-						remove: (
-							<i
-								className="fas fa-minus d-flex justify-content-center"
-								onClick={() => {
-									if (branch.department.length > 1) {
-										this.removeDepartment(branch.id, index)
-									} else {
-										const callback = () =>
-											messageGenerator.setErrorMessage('ALEAST_ONE_DEPARTMENT')
-										callback()
-									}
-								}}
-							/>
-						),
-						add: null,
-					})
-				})
-			}
-		})
-		return rows
-	}
-	unfold = (id) => {
-		if (!this.state.unFoldBranches.includes(id)) {
-			this.state.unFoldBranches.push(id)
-			this.setState({})
+			this.setState(
+				{
+					data,
+					columns,
+					branchOptions: Object.values(branchOptionsMap),
+					showAddForm: false,
+					showDeleteModal: false,
+					selection: [],
+				},
+				callback
+			)
+		} catch (e) {
+			console.log(e)
 		}
 	}
-	fold = (id) => {
-		this.setState({
-			unFoldBranches: this.state.unFoldBranches.filter(
-				(branch_id) => branch_id != id
-			),
-		})
-	}
-	changeFold = (id) => {
-		if (this.state.unFoldBranches.includes(id)) {
-			this.fold(id)
-		} else {
-			this.unfold(id)
-		}
-	}
-	addBranch = (e) => {
-		const { locale } = this.context
-		apiHelper.transferredLocationApiAgent
-			.editTransferredLocation({
-				type: 'add branch',
-				data: {
-					name: locale.texts.NEW_BRANCH,
-					departmentName: locale.texts.NEW_DEPARTMENT,
-				},
-			})
-			.then((res) => {
-				this.getTransferredLocation()
-			})
-	}
-	renameBranchToState = (branch_id, e) => {
-		const newName = e.target.value
-		this.state.transferredLocationOptions.map((branch) => {
-			if (branch.id == branch_id) {
-				branch.branch_name = newName
-			}
-		})
-		this.setState({})
-	}
-	renameBranchToBackend = (branch_id, e) => {
-		const newName = e.target.value
 
-		apiHelper.transferredLocationApiAgent
-			.editTransferredLocation({
-				type: 'rename branch',
-				data: {
-					branch_id,
-					name: newName,
-				},
-			})
-			.then((res) => {
-				this.getTransferredLocation()
-			})
-	}
-	removeBranch = (branch_id) => {
-		apiHelper.transferredLocationApiAgent
-			.editTransferredLocation({
-				type: 'remove branch',
-				data: {
-					branch_id,
-				},
-			})
-			.then((res) => {
-				this.getTransferredLocation()
-			})
-	}
-	addDepartment = (branch_id) => {
-		const { locale } = this.context
-
-		apiHelper.transferredLocationApiAgent
-			.editTransferredLocation({
-				type: 'add department',
-				data: {
-					branch_id,
-					name: locale.texts.NEW_DEPARTMENT,
-				},
-			})
-			.then((res) => {
-				this.getTransferredLocation()
-			})
-	}
-	renameDepartmentToState = (branch_id, index, e) => {
-		const newName = e.target.value
-		this.state.transferredLocationOptions.map((branch) => {
-			if (branch.id == branch_id) {
-				branch.department[index] = newName
-			}
-		})
-		this.setState({})
-	}
-	renameDepartmentToBackend = (branch_id, index, e) => {
-		const newName = e.target.value
-
-		apiHelper.transferredLocationApiAgent
-			.editTransferredLocation({
-				type: 'rename department',
-				data: {
-					branch_id,
-					departmentIndex: index,
-					name: newName,
-				},
-			})
-			.then((res) => {
-				this.getTransferredLocation()
-			})
-	}
-	removeDepartment = (branch_id, departmentIndex) => {
-		apiHelper.transferredLocationApiAgent
-			.editTransferredLocation({
-				type: 'remove department',
-				data: {
-					branch_id,
-					departmentIndex,
-				},
-			})
-			.then((res) => {
-				this.getTransferredLocation()
-			})
-	}
-
-	handleClick = (e) => {
+	handleButtonClick = (e) => {
 		const { name } = e.target
-
 		switch (name) {
 			case ADD:
 				this.setState({
-					showForm: true,
+					showAddForm: true,
 				})
+				break
+			case DELETE:
+				this.setState({
+					showDeleteModal: true,
+				})
+				break
 		}
 	}
 
-	handleClose = () => {
+	handleClose = (e) => {
+		const { name } = e.target
+		switch (name) {
+			case ADD:
+				this.setState({
+					showAddForm: false,
+				})
+				break
+			case DELETE:
+				this.setState({
+					showDeleteModal: false,
+				})
+				break
+		}
+	}
+
+	handleAddSubmit = async (values) => {
+		try {
+			await apiHelper.transferredLocationApiAgent.addOne({
+				name: values.name.value,
+				department: values.department,
+			})
+			const callback = () => {
+				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			}
+			this.getTransferredLocation(callback)
+		} catch (e) {
+			console.log(`add location failed ${e}`)
+		}
+	}
+
+	handleRemoveSubmit = async () => {
+		const branchIds = this.state.selection
+		try {
+			await apiHelper.transferredLocationApiAgent.removeByIds({
+				branchIds,
+			})
+			const callback = () => {
+				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			}
+			this.getTransferredLocation(callback)
+		} catch (e) {
+			console.log(`remove locations failed ${e}`)
+		}
+	}
+
+	toggleSelection = (key) => {
+		let selection = [...this.state.selection]
+		key = parseInt(key.split('-')[1] ? key.split('-')[1] : key)
+		const keyIndex = selection.indexOf(key)
+		if (keyIndex >= 0) {
+			selection = [
+				...selection.slice(0, keyIndex),
+				...selection.slice(keyIndex + 1),
+			]
+		} else {
+			selection.push(key)
+		}
 		this.setState({
-			showForm: false,
+			selection,
 		})
 	}
 
-	handleSubmit = (values) => {
-		apiHelper.transferredLocationApiAgent
-			.editLocation({
-				name: values.name.value,
-				departmentName: values.department,
-			})
-			.then((res) => {
-				const callback = () => {
-					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+	toggleAll = () => {
+		const selectAll = !this.state.selectAll
+		let selection = []
+		let rowsCount = 0
+		if (selectAll) {
+			const wrappedInstance = this.selectTable.getWrappedInstance()
+			const currentRecords = wrappedInstance.getResolvedState().sortedData
+			currentRecords.forEach((item) => {
+				rowsCount++
+				if (
+					rowsCount >
+						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
+					rowsCount <=
+						wrappedInstance.state.pageSize +
+							wrappedInstance.state.pageSize * wrappedInstance.state.page
+				) {
+					selection.push(item._original.id)
 				}
-				this.getTransferredLocation(callback)
 			})
-			.catch((err) => {
-				console.log(`add location failed ${err}`)
-			})
+		} else {
+			selection = []
+		}
+		this.setState({ selectAll, selection })
+	}
+
+	isSelected = (key) => {
+		return this.state.selection.includes(parseInt(key))
 	}
 
 	render() {
 		const { locale } = this.context
-
-		const { branchOptions, data, columns } = this.state
+		const { branchOptions, selectAll, data, columns } = this.state
+		const { toggleSelection, toggleAll, isSelected } = this
+		const extraProps = {
+			selectAll,
+			isSelected,
+			toggleAll,
+			toggleSelection,
+		}
 
 		return (
 			<div>
-				<div className="d-flex justify-content-end">
-					<PrimaryButton onClick={this.handleClick} name={ADD}>
+				<div className="d-flex justify-content-start">
+					<PrimaryButton
+						onClick={this.handleButtonClick}
+						name={ADD}
+						disabled={this.state.selection.length > 0}
+					>
 						{locale.texts.ADD}
+					</PrimaryButton>
+					<PrimaryButton
+						onClick={this.handleButtonClick}
+						name={DELETE}
+						disabled={this.state.selection.length === 0}
+					>
+						{locale.texts.REMOVE}
 					</PrimaryButton>
 				</div>
 				<hr />
-
-				<ReactTable
+				<SelectTable
+					keyField="id"
 					data={data}
 					columns={columns}
+					ref={(r) => (this.selectTable = r)}
+					className="-highlight text-none"
+					style={{ maxHeight: '70vh' }}
+					onPageChange={() => {
+						this.setState({ selectAll: false, selection: [] })
+					}}
+					onSortedChange={() => {
+						this.setState({ selectAll: false, selection: [] })
+					}}
+					{...extraProps}
+					{...styleConfig.reactTable}
 					resizable={true}
 					freezeWhenExpanded={false}
-					{...styleConfig.reactTable}
+					pageSize={10}
+					NoDataComponent={() => null}
 				/>
 				<EditBranchForm
-					show={this.state.showForm}
+					show={this.state.showAddForm}
+					actionName={ADD}
 					handleClose={this.handleClose}
-					handleSubmit={this.handleSubmit}
+					handleSubmit={this.handleAddSubmit}
 					title={locale.texts.CREATE_LOCATION}
 					branchOptions={branchOptions}
+				/>
+				<DeleteBranchForm
+					show={this.state.showDeleteModal}
+					actionName={DELETE}
+					handleClose={this.handleClose}
+					handleSubmit={this.handleRemoveSubmit}
+					title={locale.texts.ARE_YOU_SURE_TO_DELETE}
 				/>
 			</div>
 		)

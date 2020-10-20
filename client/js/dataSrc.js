@@ -88,7 +88,11 @@ export const record = {
 	shiftChange: `${domain}/data/record/shiftChange`,
 	patientRecord: `${domain}/data/record/patientRecord`,
 }
-export const transferredLocation = `${domain}/data/transferredLocation`
+export const transferredLocation = {
+	getAll: `${domain}/data/transferredLocation/getAll`,
+	addOne: `${domain}/data/transferredLocation/addOne`,
+	removeByIds: `${domain}/data/transferredLocation/removeByIds`,
+}
 export const deviceGroupList = `${domain}/data/deviceGroupList`
 export const patientGroupList = `${domain}/data/patientGroupList`
 export const pdfUrl = (path) => {

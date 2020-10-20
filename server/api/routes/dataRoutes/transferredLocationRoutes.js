@@ -40,8 +40,14 @@ export default (app) => {
 	app.options('/data/transferredLocation', cors())
 
 	app
-		.route('/data/transferredLocation')
-		.get(transferredLocationController.getAllTransferredLocation)
-		.put(transferredLocationController.editTransferredLocation)
-		.post(transferredLocationController.editLocation)
+		.route('/data/transferredLocation/getAll')
+		.get(transferredLocationController.getAll)
+
+	app
+		.route('/data/transferredLocation/addOne')
+		.post(transferredLocationController.addOne)
+
+	app
+		.route('/data/transferredLocation/removeByIds')
+		.post(transferredLocationController.removeByIds)
 }

@@ -32,25 +32,24 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
+import { transferredLocation } from '../dataSrc'
 import axios from 'axios'
 
 export default {
-	async getAllTransferredLocation() {
-		return await axios.get(dataSrc.transferredLocation)
+	async getAll() {
+		return await axios.get(transferredLocation.getAll)
 	},
 
-	async editTransferredLocation({ type, data }) {
-		return await axios.put(dataSrc.transferredLocation, {
-			type,
-			data,
+	async addOne({ name, department }) {
+		return await axios.post(transferredLocation.addOne, {
+			name,
+			department,
 		})
 	},
 
-	async editLocation({ name, departmentName }) {
-		return await axios.post(dataSrc.transferredLocation, {
-			name,
-			departmentName,
+	async removeByIds({ branchIds }) {
+		return await axios.post(transferredLocation.removeByIds, {
+			branchIds,
 		})
 	},
 }

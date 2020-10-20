@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        transferredLocationController.js
+        EditBranchForm.js
 
     File Description:
         BOT UI component
@@ -32,42 +32,41 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import Branches from '../db/model/branches'
+import React from 'react'
+import { Modal, Button } from 'react-bootstrap'
+import LocaleContext from '../../../context/LocaleContext'
+import PropTypes from 'prop-types'
 
-export default {
-	getAll: async (request, response) => {
-		try {
-			const branches = await Branches.findAll()
-			response.status(200).json(branches)
-		} catch (e) {
-			console.log(`get all transferred Location failed: ${e}`)
-		}
-	},
+const DeleteBranchForm = ({
+	show,
+	actionName,
+	handleClose,
+	handleSubmit,
+	title,
+}) => {
+	const locale = React.useContext(LocaleContext)
 
-	addOne: async (request, response) => {
-		const { name, department } = request.body
-		try {
-			const branches = await Branches.upsert(
-				{ name, department }, // Record to upsert
-				{ returning: true } // Return upserted record
-			)
-			response.status(200).json(branches)
-		} catch (e) {
-			console.log(`add transferred Location failed: ${e}`)
-		}
-	},
-
-	removeByIds: async (request, response) => {
-		const { branchIds } = request.body
-		try {
-			const res = await Branches.destroy({
-				where: {
-					id: branchIds,
-				},
-			})
-			response.status(200).json(res)
-		} catch (e) {
-			console.log(`remove transferred Locations failed: ${e}`)
-		}
-	},
+	return (
+		<Modal show={show} onHide={handleClose}>
+			<Modal.Header>{title}</Modal.Header>
+			<Modal.Footer>
+				<Button variant="primary" name={actionName} onClick={handleClose}>
+					{locale.texts.CANCEL}
+				</Button>
+				<Button variant="secondary" onClick={handleSubmit}>
+					{locale.texts.DELETE}
+				</Button>
+			</Modal.Footer>
+		</Modal>
+	)
 }
+
+DeleteBranchForm.propTypes = {
+	show: PropTypes.bool,
+	actionName: PropTypes.string,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
+	title: PropTypes.string,
+}
+
+export default DeleteBranchForm

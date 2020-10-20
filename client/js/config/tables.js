@@ -186,7 +186,7 @@ const gatewayTableColumn = [
 
 const TransferredLocationColumn = [
 	{
-		Header: 'branch',
+		Header: 'transferred location',
 		accessor: 'name',
 	},
 	{

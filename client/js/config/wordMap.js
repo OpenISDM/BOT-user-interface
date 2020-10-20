@@ -44,6 +44,8 @@ export const DELETE = 'delete'
 
 export const SAVE_SUCCESS = 'save success'
 
+export const SAVE = 'save'
+
 export const DISASSOCIATE = 'disassociate'
 
 export const NORMAL = 'normal'

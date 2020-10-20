@@ -33,21 +33,27 @@
 */
 
 import React from 'react'
-import { Modal, Button, Row, Col } from 'react-bootstrap'
-import { Formik, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import { AppContext } from '../../../context/AppContext'
-import Select from 'react-select'
+import { Modal, Button } from 'react-bootstrap'
+import { Formik, Form } from 'formik'
+import { object, string } from 'yup'
 import FormikFormGroup from '../FormikFormGroup'
-import Creatable, { makeCreatableSelect } from 'react-select/creatable'
-
-import { FormFieldName } from '../../BOTComponent/styleComponent'
-import apiHelper from '../../../helper/apiHelper'
+import Creatable from 'react-select/creatable'
 import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
+import PropTypes from 'prop-types'
+
+const validationSchema = object().shape({
+	name: string()
+		.min(1, 'Must be at least 1 characters')
+		.required('Field is required'),
+	department: string()
+		.min(1, 'Must be at least 1 characters')
+		.required('Field is required'),
+})
 
 const EditBranchForm = ({
 	show,
+	actionName,
 	handleClose,
 	handleSubmit,
 	title,
@@ -57,22 +63,20 @@ const EditBranchForm = ({
 
 	return (
 		<Modal show={show} onHide={handleClose}>
-			<Modal.Header closeButton className="text-capitalize">
-				{title}
-			</Modal.Header>
+			<Modal.Header className="text-capitalize">{title}</Modal.Header>
 			<Modal.Body>
 				<Formik
 					initialValues={{
 						name: '',
 						department: '',
 					}}
+					validationSchema={validationSchema}
 					onSubmit={(values) => {
 						handleSubmit(values)
 					}}
 					render={({
 						values,
 						errors,
-						status,
 						touched,
 						isSubmitting,
 						setFieldValue,
@@ -104,9 +108,15 @@ const EditBranchForm = ({
 								name="department"
 								label={locale.texts.DEPARTMENT}
 								placeholder=""
+								error={errors.department}
+								touched={touched.department}
 							/>
 							<Modal.Footer>
-								<Button variant="outline-secondary" onClick={handleClose}>
+								<Button
+									variant="outline-secondary"
+									name={actionName}
+									onClick={handleClose}
+								>
 									{locale.texts.CANCEL}
 								</Button>
 								<Button type="submit" variant="primary" disabled={isSubmitting}>
@@ -119,6 +129,15 @@ const EditBranchForm = ({
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+EditBranchForm.propTypes = {
+	show: PropTypes.bool,
+	actionName: PropTypes.string,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
+	title: PropTypes.string,
+	branchOptions: PropTypes.object,
 }
 
 export default EditBranchForm

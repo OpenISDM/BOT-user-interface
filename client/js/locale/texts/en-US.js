@@ -522,7 +522,7 @@ const en = {
 	TYPE_ALIAS: 'alias',
 
 	/** message */
-	ARE_YOU_SURE_TO_DELETE: 'are you sure to delete ?',
+	ARE_YOU_SURE_TO_DELETE: 'Are you sure to delete ?',
 	ARE_YOU_SURE_TO_DISASSOCIATE: 'are you sure to disassociate',
 	NOW_YOU_CAN_DO_THE_FOllOWING_ACTION: 'Now you can do the following action',
 	USERNAME_OR_PASSWORD_IS_INCORRECT: 'Username or password is incorrect',
