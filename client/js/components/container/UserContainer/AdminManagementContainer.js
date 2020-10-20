@@ -125,7 +125,7 @@ class AdminManagementContainer extends React.Component {
 	getAllRole = () => {
 		apiHelper.roleApiAgent.getAllRole().then((res) => {
 			/** filter system default roles */
-			const roleName = res.data.rows.filter((item) =>
+			const roleName = res.data.filter((item) =>
 				config.ROLES_SELECTION.includes(item.name)
 			)
 			this.setState({

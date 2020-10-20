@@ -43,10 +43,8 @@ import BindForm from '../presentational/form/BindForm'
 import DissociationForm from '../container/DissociationForm'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import Select from 'react-select'
-import axios from 'axios'
 import BOTInput from '../presentational/BOTInput'
 import dataSrc from '../../dataSrc'
-const SelectTable = selecTableHOC(ReactTable)
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import messageGenerator from '../../helper/messageGenerator'
@@ -66,6 +64,8 @@ import {
 } from '../../config/wordMap'
 import { JSONClone } from '../../helper/utilities'
 
+const SelectTable = selecTableHOC(ReactTable)
+
 class ObjectTable extends React.Component {
 	static contextType = AppContext
 
@@ -82,7 +82,6 @@ class ObjectTable extends React.Component {
 		isShowEditImportTable: false,
 		bindCase: 0,
 		warningSelect: 0,
-		selectAll: false,
 		formPath: '',
 		formTitle: '',
 		disableASN: false,
@@ -711,7 +710,7 @@ class ObjectTable extends React.Component {
 							<PrimaryButton
 								name={DELETE}
 								onClick={this.handleClickButton}
-								disabled={this.state.selection.length == 0}
+								disabled={this.state.selection.length === 0}
 							>
 								{locale.texts.DELETE_DEVICE}
 							</PrimaryButton>
