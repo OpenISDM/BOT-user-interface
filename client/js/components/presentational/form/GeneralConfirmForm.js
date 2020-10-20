@@ -39,7 +39,8 @@ import { object, string } from 'yup'
 import LocaleContext from '../../../context/LocaleContext'
 import apiHelper from '../../../helper/apiHelper'
 import FormikFormGroup from '../FormikFormGroup'
-import { Title, JustifyCenterDiv } from '../../BOTComponent/styleComponent'
+import PropTypes from 'prop-types'
+import { Paragraph } from '../../BOTComponent/styleComponent'
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
 const style = {
@@ -48,13 +49,7 @@ const style = {
 	},
 }
 
-const GeneralConfirmForm = ({
-	show,
-	handleClose,
-	handleSubmit,
-	title,
-	authenticatedRoles,
-}) => {
+const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 	const locale = React.useContext(LocaleContext)
 	const auth = React.useContext(AuthenticationContext)
 
@@ -67,42 +62,35 @@ const GeneralConfirmForm = ({
 			style={style.modal}
 		>
 			<Modal.Body>
-				<JustifyCenterDiv>
-					<Title sub>{title}</Title>
-				</JustifyCenterDiv>
-
+				<Paragraph sub>{title}</Paragraph>
 				<Formik
 					initialValues={{
 						username: auth.user.name,
 						password: '',
 					}}
 					validationSchema={object().shape({
-						// username: Yup.string().required(locale.texts.USERNAME_IS_REQUIRED),
 						password: string().required(locale.texts.PASSWORD_IS_REQUIRED),
 					})}
-					onSubmit={(
-						{ username, password, radioGroup },
+					onSubmit={async (
+						{ username, password },
 						{ setStatus, setSubmitting }
 					) => {
-						apiHelper.authApiAgent
-							.confirmValidation({
+						try {
+							const res = await apiHelper.authApiAgent.confirmValidation({
 								username,
 								password,
-								authenticatedRoles,
 							})
-							.then((res) => {
-								if (!res.data.confirmation) {
-									setStatus(res.data.message)
-									setSubmitting(false)
-								} else {
-									handleSubmit()
-								}
-							})
-							.catch((error) => {
-								console.log(error)
-							})
+							if (!res.data.confirmation) {
+								setStatus(res.data.message)
+								setSubmitting(false)
+							} else {
+								handleSubmit()
+							}
+						} catch (e) {
+							console.log(e)
+						}
 					}}
-					render={({ values, errors, status, touched, isSubmitting }) => (
+					render={({ errors, status, touched, isSubmitting }) => (
 						<Form>
 							{status && (
 								<div className={'alert alert-danger mb-2 warning'}>
@@ -110,18 +98,9 @@ const GeneralConfirmForm = ({
 									{locale.texts[status.toUpperCase().replace(/ /g, '_')]}
 								</div>
 							)}
-							{/* <FormikFormGroup
-                                type="text"
-                                name="username"
-                                label={locale.texts.NAME}
-                                error={errors.username}
-                                touched={touched.username}
-                                autoComplete="off"
-                            />   */}
 							<FormikFormGroup
 								type="password"
 								name="password"
-								label={locale.texts.PASSWORD}
 								error={errors.password}
 								touched={touched.password}
 								autoComplete="off"
@@ -137,6 +116,14 @@ const GeneralConfirmForm = ({
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+GeneralConfirmForm.propTypes = {
+	show: PropTypes.bool,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
+	title: PropTypes.string,
+	authenticatedRoles: PropTypes.string,
 }
 
 export default GeneralConfirmForm

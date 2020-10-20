@@ -520,7 +520,7 @@ const cn = {
 	USERNAME_OR_PASSWORD_IS_INCORRECT: '使用者名称或是密码错误',
 	PASSWORD_IS_INCORRECT: '密码错误',
 	PLEASE_ENTER_ID_AND_PASSWORD: '请输入管理者的ID及密码',
-	PLEASE_ENTER_PASSWORD: '请输入密码',
+	PLEASE_ENTER_PASSWORD_TO_CONFIRM: '请输入密码确认交班',
 	EDIT_LBEACON_SUCCESS: '编辑Lbeacon成功',
 	EDIT_OBJECT_SUCCESS: '编辑物件成功',
 	DELETE_LBEACON_SUCCESS: '删除Lbeacon成功',
@@ -574,8 +574,8 @@ const cn = {
 	CREATE_LIST: '新增列表',
 	LIST_NAME: '清单名称',
 	SELECT_DEVICE_LIST: '选择清单',
-    RENAME: '重新命名',
-    LICENCE: '© 2020 毕迪科技股份有限公司',
+	RENAME: '重新命名',
+	LICENCE: '© 2020 毕迪科技股份有限公司',
 }
 
 export default cn

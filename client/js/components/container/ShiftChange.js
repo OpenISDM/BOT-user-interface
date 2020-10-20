@@ -41,12 +41,13 @@ import GeneralConfirmForm from '../presentational/form/GeneralConfirmForm'
 import DownloadPdfRequestForm from '../presentational/form/DownloadPdfRequestForm'
 import Select from 'react-select'
 import messageGenerator from '../../helper/messageGenerator'
-import { Formik, Field, Form } from 'formik'
+import { Formik, Form } from 'formik'
 import { getDescription } from '../../helper/descriptionGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import apiHelper from '../../helper/apiHelper'
 import { Title } from '../BOTComponent/styleComponent'
 import { SAVE_SUCCESS } from '../../config/wordMap'
+import PropTypes from 'prop-types'
 
 const style = {
 	modalBody: {
@@ -110,9 +111,9 @@ class ShiftChange extends React.Component {
 
 				res.data
 					.filter((item) => {
-						return item.list_id == parseInt(auth.user.list_id)
+						return parseInt(item.list_id) === parseInt(auth.user.list_id)
 					})
-					.map((item) => {
+					.forEach((item) => {
 						switch (item.object_type) {
 							case '0':
 								if (item.found) foundResult.push(item)
@@ -141,18 +142,18 @@ class ShiftChange extends React.Component {
 			})
 	}
 
-	confirmShift = (values) => {
+	confirmShift = () => {
 		this.setState({
 			showConfirmForm: true,
 		})
 	}
 
-	handleConfirmFormSubmit = (authentication = '') => {
+	handleConfirmFormSubmit = async (authentication = '') => {
 		const { values } = this.formikRef.current.state
 
 		const { locale, auth } = this.context
 
-		const { listName } = this.props.listName
+		const listName = this.props.listName
 
 		authentication = auth.user.name
 
@@ -194,32 +195,32 @@ class ShiftChange extends React.Component {
 			}
 			return pkg
 		}, pdfPackage)
-		apiHelper.record
-			.addShiftChangeRecord({
+
+		try {
+			await apiHelper.record.addShiftChangeRecord({
 				userInfo: auth.user,
 				pdfPackage,
 				shift: values.shift,
 				list_id: auth.user.list_id,
 			})
-			.then((res) => {
-				const callback = () => {
-					this.props.handleClose(() => {
-						messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-					})
-				}
 
-				this.setState(
-					{
-						fileUrl: pdfPackage.path,
-						showConfirmForm: false,
-						showDownloadPdfRequest: true,
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(`add shift change record failed ${err}`)
-			})
+			const callback = () => {
+				this.props.handleClose(() => {
+					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+				})
+			}
+
+			this.setState(
+				{
+					fileUrl: pdfPackage.path,
+					showConfirmForm: false,
+					showDownloadPdfRequest: true,
+				},
+				callback
+			)
+		} catch (e) {
+			console.log(`add shift change record failed ${e}`)
+		}
 	}
 
 	handleClose = () => {
@@ -239,10 +240,10 @@ class ShiftChange extends React.Component {
 		const { foundPatients, notFoundPatients } = this.state.patients
 
 		const nowTime = moment().locale(locale.abbr).format(config.TIMESTAMP_FORMAT)
-		const hasFoundResult = foundResult.length != 0
-		const hasNotFoundResult = notFoundResult.length != 0
-		const hasFoundPatients = foundPatients.length != 0
-		const hasNotFoundPatients = notFoundPatients.length != 0
+		const hasFoundResult = foundResult.length !== 0
+		const hasNotFoundResult = notFoundResult.length !== 0
+		const hasFoundPatients = foundPatients.length !== 0
+		const hasNotFoundPatients = notFoundPatients.length !== 0
 
 		const shiftOptions = Object.values(config.SHIFT_OPTIONS).map((shift) => {
 			return {
@@ -264,9 +265,8 @@ class ShiftChange extends React.Component {
 							shift: defaultShiftOption,
 						}}
 						ref={this.formikRef}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
+						onSubmit={(values) => {
 							this.confirmShift(values)
-							// this.handleConfirmFormSubmit("", values)
 						}}
 						render={({ values, setFieldValue, submitForm }) => (
 							<Fragment>
@@ -346,7 +346,7 @@ class ShiftChange extends React.Component {
 				</Modal>
 				<GeneralConfirmForm
 					show={this.state.showConfirmForm}
-					title={locale.texts.PLEASE_ENTER_PASSWORD}
+					title={`${locale.texts.PLEASE_ENTER_PASSWORD_TO_CONFIRM}${locale.texts.SHIFT_CHANGE_RECORD}`}
 					handleSubmit={this.handleConfirmFormSubmit}
 					handleClose={this.handleClose}
 					authenticatedRoles={null}
@@ -366,7 +366,7 @@ export default ShiftChange
 const TypeBlock = ({ title, hasType, typeArray }) => {
 	const appContext = React.useContext(AppContext)
 
-	const { locale, auth, stateReducer } = appContext
+	const { locale } = appContext
 
 	return (
 		<Fragment>
@@ -386,4 +386,16 @@ const TypeBlock = ({ title, hasType, typeArray }) => {
 				})}
 		</Fragment>
 	)
+}
+
+ShiftChange.propTypes = {
+	listName: PropTypes.string,
+	show: PropTypes.bool,
+	handleClose: PropTypes.func,
+}
+
+TypeBlock.propTypes = {
+	title: PropTypes.string,
+	hasType: PropTypes.bool,
+	typeArray: PropTypes.array,
 }
