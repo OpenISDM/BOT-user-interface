@@ -64,29 +64,34 @@ export default class ChangeStatusForm extends React.Component {
 		this.getTransferredLocation()
 	}
 
-	getTransferredLocation = () => {
-		apiHelper.transferredLocationApiAgent
-			.getAllTransferredLocation()
-			.then((res) => {
-				const transferredLocationOptions = res.data.map((branch) => {
-					return {
-						label: branch.name,
-						value: branch.name,
-						options: branch.departments
-							? branch.departments.map((department, index) => {
-									return {
-										id: department.id,
-										label: `${branch.name}-${department.value}`,
-										value: department.value,
-									}
-							  })
-							: [],
-					}
-				})
-				this.setState({
-					transferredLocationOptions,
-				})
+	getTransferredLocation = async () => {
+		try {
+			const res = await apiHelper.transferredLocationApiAgent.getAll()
+			const optionsMap = {}
+			res.data.forEach(({ id, name, department }) => {
+				const option = {
+					id,
+					label: `${name}-${department}`,
+					value: department,
+				}
+				if (!optionsMap[name]) {
+					optionsMap[name] = []
+				}
+				optionsMap[name].push(option)
 			})
+			const transferredLocationOptions = Object.keys(optionsMap).map((key) => {
+				return {
+					label: key,
+					value: key,
+					options: [...optionsMap[key]],
+				}
+			})
+			this.setState({
+				transferredLocationOptions,
+			})
+		} catch (e) {
+			console.log(e)
+		}
 	}
 
 	handleClose = (e) => {

@@ -388,9 +388,11 @@ class MainContainer extends React.Component {
 						enable: rule.enable,
 						rule: {
 							...rule,
-							lbeacons: rule.lbeacons.map((uuid) => {
-								return createLbeaconCoordinate(uuid).toString()
-							}),
+							lbeacons:
+								rule.lbeacons &&
+								rule.lbeacons.map((uuid) => {
+									return createLbeaconCoordinate(uuid).toString()
+								}),
 						},
 					}
 					return config
