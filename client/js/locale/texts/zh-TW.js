@@ -576,6 +576,8 @@ const tw = {
 	SELECT_DEVICE_LIST: '選擇清單',
 	RENAME: '重新命名',
 	LICENCE: '© 2020 畢迪科技股份有限公司',
+	SELECTED_DEVICES: '已選取裝置',
+	UNSELECTED_DEVICES: '未選取裝置',
 }
 
 export default tw

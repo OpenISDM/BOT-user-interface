@@ -588,6 +588,8 @@ const en = {
 	SELECT_DEVICE_LIST: 'select device list',
 	RENAME: 'rename',
 	LICENCE: '© 2020 BiDaE Technology, Incorporated',
+	SELECTED_DEVICES: 'Selected Devices',
+	UNSELECTED_DEVICES: 'Unselected Devices',
 }
 
 export default en

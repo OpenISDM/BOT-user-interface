@@ -1,24 +1,22 @@
 import React from 'react'
 import ListBox from './ListBox'
 import { Col, Row } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
-const Fragment = React.Fragment
 class DualListBox extends React.Component {
 	generateSelectedRowsForListBox = () => {
-		let { allItems, selectedItemList } = this.props
-
-		allItems = allItems || []
-		selectedItemList.items = selectedItemList.items || []
+		const { allItems = [], selectedItemList = {} } = this.props
+		const items = (selectedItemList && selectedItemList.items) || []
 
 		const selectedItem = allItems.filter((item) => {
-			return selectedItemList.items.includes(item.asset_control_number)
+			return items.includes(item.asset_control_number)
 		})
 
-		const HTMLForSelecteItem = selectedItem.map((item) => {
+		return selectedItem.map((item) => {
 			return {
 				acn: item.asset_control_number,
 				onClick: () => {
-					this.onUnselect(item)
+					this.props.onUnselect(item)
 				},
 				label: (
 					<div className="cursor-pointer">
@@ -27,20 +25,18 @@ class DualListBox extends React.Component {
 				),
 			}
 		})
-		return HTMLForSelecteItem
 	}
 
 	generateUnselectedRowsForListBox = () => {
-		let { allItems, selectedItemList } = this.props
-
-		allItems = allItems || []
-		selectedItemList.items = selectedItemList.items || []
+		const { allItems = [], selectedItemList = {} } = this.props
+		const items = (selectedItemList && selectedItemList.items) || []
+		const areaId = selectedItemList && selectedItemList.area_id
 
 		const unselectedItem = allItems.filter((item) => {
 			return (
-				!selectedItemList.items.includes(item.asset_control_number) &&
+				!items.includes(item.asset_control_number) &&
 				item.list_id == null &&
-				item.area_id == selectedItemList.area_id
+				parseInt(item.area_id) === parseInt(areaId)
 			)
 		})
 
@@ -48,7 +44,7 @@ class DualListBox extends React.Component {
 			return {
 				acn: item.asset_control_number,
 				onClick: () => {
-					this.onSelect(item)
+					this.props.onSelect(item)
 				},
 				label: (
 					<div className="cursor-pointer">
@@ -59,44 +55,51 @@ class DualListBox extends React.Component {
 		})
 		return HTMLForUnselecteItem
 	}
-	onSelect = (item) => {
-		if (this.props.onSelect) {
-			this.props.onSelect(item)
-		}
-	}
-	onUnselect = (item) => {
-		if (this.props.onUnselect) {
-			this.props.onUnselect(item)
-		}
-	}
 
 	render() {
 		const style = {
 			listBox: {
-				height: '33vh',
+				height: '70vh',
 				overflowY: 'scroll',
 			},
 		}
 		return (
-			<Col>
-				<Row className="d-flex justify-content-center m-3">
-					<h5>{this.props.selectedTitle}</h5>
-				</Row>
-				<Row className="d-flex justify-content-center" style={style.listBox}>
-					<ListBox
-						className="cursor-pointer"
-						rows={this.generateSelectedRowsForListBox()}
-					/>
-				</Row>
-				<Row className="d-flex justify-content-center m-3">
-					<h5>{this.props.unselectedTitle}</h5>
-				</Row>
-				<Row className="d-flex justify-content-center" style={style.listBox}>
-					<ListBox rows={this.generateUnselectedRowsForListBox()} />
-				</Row>
-			</Col>
+			<div style={{ marginTop: '10px' }}>
+				<Col>
+					<Row>
+						<Col sm>
+							<h5 style={{ margin: '10px' }} className="text-center">
+								{this.props.selectedTitle}
+							</h5>
+							<Row style={style.listBox} className="justify-content-md-center">
+								<ListBox
+									className="cursor-pointer"
+									rows={this.generateSelectedRowsForListBox()}
+								/>
+							</Row>
+						</Col>
+						<Col sm>
+							<h5 style={{ margin: '10px' }} className="text-center">
+								{this.props.unselectedTitle}
+							</h5>
+							<Row style={style.listBox} className="justify-content-md-center">
+								<ListBox rows={this.generateUnselectedRowsForListBox()} />
+							</Row>
+						</Col>
+					</Row>
+				</Col>
+			</div>
 		)
 	}
+}
+
+DualListBox.propTypes = {
+	allItems: PropTypes.array.isRequired,
+	selectedItemList: PropTypes.array.isRequired,
+	selectedTitle: PropTypes.string.isRequired,
+	unselectedTitle: PropTypes.string.isRequired,
+	onSelect: PropTypes.func.isRequired,
+	onUnselect: PropTypes.func.isRequired,
 }
 
 export default DualListBox
