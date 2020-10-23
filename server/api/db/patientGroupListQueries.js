@@ -32,53 +32,84 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const modifyPatientGroup = (groupId, mode, option) => {
-	let query = null
-	if (mode == 0) {
-		var patientACN = option
-		query = `UPDATE patient_group_list SET patients=array_append(patients, '${patientACN}') WHERE id=${groupId}`
-	} else if (mode == 1) {
-		var patientACN = option
-		query = `UPDATE patient_group_list SET patients=array_remove(patients, '${patientACN}') WHERE id=${groupId}`
-	} else if (mode == 2) {
-		const newName = option
-		query = `UPDATE patient_group_list SET name = ${newName} WHERE id=${groupId}`
-	}
-
-	return query
-}
-
-// INPUT pack = {groupId: [int]}
 const getPatientGroup = (pack) => {
-	// print('pack', pack)
 	const groupIdSelector = pack.groupId ? `WHERE id = ${pack.groupId}` : ''
 	const query = `
         SELECT  * FROM patient_group_list ${groupIdSelector} ORDER BY id
     `
 	return query
 }
-// INPUT name = {'name': [text]}
-const addPatientGroup = (name) => {
-	const query = `
-        INSERT INTO patient_group_list (name) VALUES ('${name.name}') RETURNING id
+
+const addPatientGroup = (name, areaId) => {
+	const text = `
+        INSERT INTO patient_group_list (
+            name,
+            area_id
+        ) VALUES (
+            $1,
+            $2
+        )
+        RETURNING id
     `
+	const values = [name, areaId]
+	const query = {
+		text,
+		values,
+	}
 	return query
 }
 
-const changePatientGroup = (patient_group_id, user_id) => {
-	const query = `UPDATE user_table SET my_patient_index = ${patient_group_id} WHERE id = ${user_id}`
+const modifyPatientGroup = ({ groupId, mode, itemId, newName }) => {
+	let query = null
+	mode = parseInt(mode)
+	if (mode === 0) {
+		query = `
+            UPDATE patient_group_list
+            SET patients = array_append(patients, '${itemId}')
+            WHERE id = ${groupId};
+
+            UPDATE object_table
+            SET list_id = ${groupId}
+            WHERE id = ${itemId}
+            `
+	} else if (mode === 1) {
+		query = `
+            UPDATE patient_group_list
+            SET patients = array_remove(patients, '${itemId}')
+            WHERE id = ${groupId};
+
+            UPDATE object_table
+            SET list_id = null
+            WHERE id = ${itemId}
+        `
+	} else if (mode === 2) {
+		query = `UPDATE patient_group_list SET name = ${newName} WHERE id=${groupId}`
+	}
+
 	return query
 }
 
 const removePatientGroup = (groupId) => {
-	const query = `DELETE FROM patient_group_list WHERE Id=${groupId}`
+	const query = `
+        UPDATE object_table
+        SET list_id = null
+        WHERE id = ANY(
+            ARRAY (
+                SELECT items
+                FROM patient_group_list
+                WHERE id = ${groupId}
+            )::INT[]
+        );
+
+        DELETE FROM patient_group_list
+        WHERE Id = ${groupId}
+    `
 	return query
 }
 
 export default {
-	addPatientGroup,
-	changePatientGroup,
-	modifyPatientGroup,
 	getPatientGroup,
+	addPatientGroup,
 	removePatientGroup,
+	modifyPatientGroup,
 }

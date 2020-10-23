@@ -578,6 +578,8 @@ const cn = {
 	LICENCE: '© 2020 毕迪科技股份有限公司',
 	SELECTED_DEVICES: '已选取装置',
 	UNSELECTED_DEVICES: '未选取装置',
+	SELECTED_PATIENTS: '已选取病人',
+	UNSELECTED_PATIENTS: '未选取病人',
 }
 
 export default cn

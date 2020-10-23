@@ -35,22 +35,27 @@
 import 'dotenv/config'
 import dbQueries from '../db/patientGroupListQueries'
 import pool from '../db/connection'
+import PatientGroupList from '../db/model/patientGroupList'
+import ObjectTable from '../db/model/objectTable'
 
 export default {
-	getPatientGroupList: (request, response) => {
-		const query = dbQueries.getPatientGroup(request.body)
-		pool
-			.query(query)
-			.then((res) => {
-				response.status(200).json(res.rows)
-			})
-			.catch((err) => {
-				console.log('addPatientGroup error: ', err)
-			})
+	getPatientGroupList: async (request, response) => {
+		const { groupId } = request.body
+		try {
+			let res
+			if (groupId) {
+				res = await PatientGroupList.findByPk(groupId)
+			} else {
+				res = await PatientGroupList.findAll()
+			}
+			response.status(200).json(res)
+		} catch (e) {
+			console.log('getPatientGroupList error: ', e)
+		}
 	},
 	addPatientGroupList: (request, response) => {
-		const { name } = request.body
-		const query = dbQueries.addPatientGroup(name || 'New Group')
+		const { name, areaId } = request.body
+		const query = dbQueries.addPatientGroup(name, areaId)
 		pool
 			.query(query)
 			.then((res) => {
@@ -61,15 +66,23 @@ export default {
 			})
 	},
 	modifyPatientGroupList: (request, response) => {
-		const { groupId, mode, itemACN, newName } = request.body
-		console.log(groupId, mode, itemACN)
+		const { groupId, mode, newName, itemId } = request.body
+
 		let query = null
 		if (mode == 0) {
-			query = dbQueries.modifyPatientGroup(groupId, 0, itemACN)
+			query = dbQueries.modifyPatientGroup({
+				groupId,
+				mode,
+				itemId,
+			})
 		} else if (mode == 1) {
-			query = dbQueries.modifyPatientGroup(groupId, 1, itemACN)
+			query = dbQueries.modifyPatientGroup({
+				groupId,
+				mode,
+				itemId,
+			})
 		} else if (mode == 2) {
-			query = dbQueries.modifyPatientGroup(groupId, 2, newName)
+			query = dbQueries.modifyPatientGroup({ groupId, mode, newName })
 		}
 		pool
 			.query(query)
@@ -80,30 +93,27 @@ export default {
 				console.log('err when modifyPatientGroup', err)
 			})
 	},
-	changePatientList: (request, response) => {
-		const { patient_group_id, user_id } = request.body
-		const query = queryType.changePatientGroup(patient_group_id, user_id)
-		pool
-			.query(query)
-			.then((res) => {
-				console.log('success')
-				response.status(200).json('ok')
-			})
-			.catch((err) => {
-				console.log('error when change patient group,', err)
-			})
-	},
-	deletePatientGroup: (request, response) => {
+	deletePatientGroup: async (request, response) => {
 		const { groupId } = request.body
-		const query = dbQueries.removePatientGroup(groupId)
-		pool
-			.query(query)
-			.then((res) => {
-				console.log('success')
-				response.status(200).json('ok')
-			})
-			.catch((err) => {
-				console.log('error when change patient group,', err)
-			})
+		const { patients = [] } = await PatientGroupList.findByPk(groupId)
+
+		if (patients) {
+			await ObjectTable.update(
+				{ list_id: null },
+				{
+					where: {
+						id: patients,
+					},
+				}
+			)
+		}
+
+		await PatientGroupList.destroy({
+			where: {
+				id: groupId,
+			},
+		})
+
+		response.status(200).json('ok')
 	},
 }

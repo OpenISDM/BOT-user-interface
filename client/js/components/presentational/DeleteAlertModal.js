@@ -34,23 +34,17 @@
 
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import LocaleContext from '../../../context/LocaleContext'
+import LocaleContext from '../../context/LocaleContext'
 import PropTypes from 'prop-types'
 
-const DeleteBranchForm = ({
-	show,
-	actionName,
-	handleClose,
-	handleSubmit,
-	title,
-}) => {
+const DeleteAlertModal = ({ show, handleClose, handleSubmit, title }) => {
 	const locale = React.useContext(LocaleContext)
 
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header>{title}</Modal.Header>
 			<Modal.Footer>
-				<Button variant="primary" name={actionName} onClick={handleClose}>
+				<Button variant="primary" name={'DELETE'} onClick={handleClose}>
 					{locale.texts.CANCEL}
 				</Button>
 				<Button variant="secondary" onClick={handleSubmit}>
@@ -61,12 +55,11 @@ const DeleteBranchForm = ({
 	)
 }
 
-DeleteBranchForm.propTypes = {
+DeleteAlertModal.propTypes = {
 	show: PropTypes.bool,
-	actionName: PropTypes.string,
 	handleClose: PropTypes.func,
 	handleSubmit: PropTypes.func,
 	title: PropTypes.string,
 }
 
-export default DeleteBranchForm
+export default DeleteAlertModal

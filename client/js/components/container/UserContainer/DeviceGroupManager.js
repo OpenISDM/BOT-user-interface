@@ -7,13 +7,18 @@ import DualListBox from './DualListBox'
 import messageGenerator from '../../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../../config/wordMap'
 import EditListForm from '../../presentational/form/EditListForm'
+import DeleteAlertModal from '../../presentational/DeleteAlertModal'
 
 class DeviceGroupManager extends React.Component {
 	static contextType = AppContext
 	state = {
 		selectedOption: null,
 		selectedDeviceGroup: null,
-		showRenameGroupForm: false,
+		showAddGroupForm: false,
+		showDeleteModal: false,
+		areaOptions: null,
+		deviceGroupListOptions: null,
+		allDevices: [],
 	}
 
 	componentDidMount = () => {
@@ -25,25 +30,19 @@ class DeviceGroupManager extends React.Component {
 	reload = () => {
 		this.getObjectData()
 		this.getDeviceGroup()
+		this.setState({
+			showAddGroupForm: false,
+			showDeleteModal: false,
+		})
 	}
 
 	newDeviceGroup = async (values) => {
 		try {
 			await apiHelper.deviceGroupListApis.addDeviceGroupList({
 				name: values.name,
-				area_id: values.area.id,
+				areaId: values.area.id,
 			})
-
-			const callback = () => {
-				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-			}
-			this.setState(
-				{
-					// selectedDeviceGroup: {id:res.data}
-					showRenameGroupForm: false,
-				},
-				callback
-			)
+			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 			this.reload()
 		} catch (e) {
 			console.log(`add list failed ${e}`)
@@ -55,11 +54,9 @@ class DeviceGroupManager extends React.Component {
 			await apiHelper.deviceGroupListApis.deleteGroup({
 				groupId: this.state.selectedDeviceGroup.id,
 			})
+			this.setState({ selectedOption: null, selectedPatientGroup: null })
+			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 			this.reload()
-			const callback = () => {
-				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-			}
-			this.setState({ selectedOption: null }, callback)
 		} catch (e) {
 			console.log(`delete group failed ${e}`)
 		}
@@ -70,8 +67,7 @@ class DeviceGroupManager extends React.Component {
 			await apiHelper.deviceGroupListApis.modifyDeviceGroupList({
 				groupId: this.state.selectedDeviceGroup.id,
 				mode: 0,
-				itemACN: item.asset_control_number,
-				item_id: item.id,
+				itemId: item.id,
 			})
 			this.reload()
 		} catch (e) {
@@ -84,8 +80,7 @@ class DeviceGroupManager extends React.Component {
 			await apiHelper.deviceGroupListApis.modifyDeviceGroupList({
 				groupId: this.state.selectedDeviceGroup.id,
 				mode: 1,
-				itemACN: item.asset_control_number,
-				item_id: item.id,
+				itemId: item.id,
 			})
 			this.reload()
 		} catch (e) {
@@ -93,7 +88,7 @@ class DeviceGroupManager extends React.Component {
 		}
 	}
 
-	showRenameGroupForm = async (newName) => {
+	showAddGroupForm = async (newName) => {
 		try {
 			await apiHelper.deviceGroupListApis.modifyDeviceGroupList({
 				groupId: this.state.selectedDeviceGroup.id,
@@ -102,7 +97,7 @@ class DeviceGroupManager extends React.Component {
 			})
 			this.reload()
 			this.setState({
-				showRenameGroupForm: false,
+				showAddGroupForm: false,
 			})
 		} catch (e) {
 			console.log(`rename group failed ${e}`)
@@ -128,7 +123,7 @@ class DeviceGroupManager extends React.Component {
 				allDevices: res.data.rows,
 			})
 		} catch (e) {
-			console.log(`get object data failed ${e}`)
+			console.log(`get object data of device failed ${e}`)
 		}
 	}
 
@@ -181,13 +176,14 @@ class DeviceGroupManager extends React.Component {
 				selectedDeviceGroup,
 			})
 		} catch (e) {
-			console.log('err when get device group ', e)
+			console.log('get device group failed', e)
 		}
 	}
 
 	handleClose = () => {
 		this.setState({
-			showRenameGroupForm: false,
+			showAddGroupForm: false,
+			showDeleteModal: false,
 		})
 	}
 
@@ -199,9 +195,12 @@ class DeviceGroupManager extends React.Component {
 			deviceGroupListOptions,
 			selectedDeviceGroup,
 			allDevices = [],
-			showRenameGroupForm,
+			showAddGroupForm,
 			selectedOption,
 		} = this.state
+
+		const areaId = selectedDeviceGroup && selectedDeviceGroup.area_id
+		const items = selectedDeviceGroup && selectedDeviceGroup.items
 
 		return (
 			<div className="text-capitalize">
@@ -212,7 +211,7 @@ class DeviceGroupManager extends React.Component {
 						name="add"
 						onClick={() => {
 							this.setState({
-								showRenameGroupForm: true,
+								showAddGroupForm: true,
 							})
 						}}
 					>
@@ -221,8 +220,13 @@ class DeviceGroupManager extends React.Component {
 					<PrimaryButton
 						variant="primary"
 						className="text-capitalize mr-2"
-						name="password"
-						onClick={this.deleteDeviceGroup}
+						name="remove"
+						disabled={!selectedOption}
+						onClick={() => {
+							this.setState({
+								showDeleteModal: true,
+							})
+						}}
 					>
 						{locale.texts.REMOVE}
 					</PrimaryButton>
@@ -236,18 +240,25 @@ class DeviceGroupManager extends React.Component {
 				</div>
 				<DualListBox
 					allItems={allDevices}
-					selectedItemList={selectedDeviceGroup}
+					selectedItemList={items}
+					selectedGroupAreaId={areaId}
 					selectedTitle={locale.texts.SELECTED_DEVICES}
 					unselectedTitle={locale.texts.UNSELECTED_DEVICES}
 					onSelect={this.addDeviceToGroup}
 					onUnselect={this.removeDeviceFromGroup}
 				/>
 				<EditListForm
-					show={showRenameGroupForm}
+					show={showAddGroupForm}
 					handleClose={this.handleClose}
 					handleSubmit={this.newDeviceGroup}
 					title={locale.texts.CREATE_LIST}
 					areaOptions={areaOptions}
+				/>
+				<DeleteAlertModal
+					show={this.state.showDeleteModal}
+					handleClose={this.handleClose}
+					handleSubmit={this.deleteDeviceGroup}
+					title={locale.texts.ARE_YOU_SURE_TO_DELETE}
 				/>
 			</div>
 		)

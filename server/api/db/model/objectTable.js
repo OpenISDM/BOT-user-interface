@@ -5,6 +5,10 @@ const { DataTypes } = pkg
 const ObjectTable = sequelize.define(
 	'object_table',
 	{
+		id: {
+			type: DataTypes.INTEGER,
+			primaryKey: true,
+		},
 		mac_address: {
 			type: DataTypes.MACADDR,
 		},

@@ -578,6 +578,8 @@ const tw = {
 	LICENCE: '© 2020 畢迪科技股份有限公司',
 	SELECTED_DEVICES: '已選取裝置',
 	UNSELECTED_DEVICES: '未選取裝置',
+	SELECTED_PATIENTS: '已選取病人',
+	UNSELECTED_PATIENTS: '未選取病人',
 }
 
 export default tw

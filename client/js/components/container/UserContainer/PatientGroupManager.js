@@ -1,261 +1,265 @@
 import React from 'react'
-import { Col, Row, Button, ButtonToolbar, Modal, Form } from 'react-bootstrap'
-import axios from 'axios'
-import dataSrc from '../../../dataSrc'
-// import AddableList from './AddableList'
 import { AppContext } from '../../../context/AppContext'
-
 import Select from 'react-select'
-import CreatableSelect from 'react-select/creatable'
-import { getName, getType, getACN } from '../../../helper/descriptionGenerator'
-
-import DualListBox from './DualListBox'
 import apiHelper from '../../../helper/apiHelper'
-
-const style = {
-	list: {
-		// wordBreak: 'keep-all',
-		zIndex: 1,
-	},
-	item: {
-		minWidth: 35,
-	},
-}
+import { PrimaryButton } from '../../BOTComponent/styleComponent'
+import DualListBox from './DualListBox'
+import messageGenerator from '../../../helper/messageGenerator'
+import { SAVE_SUCCESS } from '../../../config/wordMap'
+import EditListForm from '../../presentational/form/EditListForm'
+import DeleteAlertModal from '../../presentational/DeleteAlertModal'
 
 class PatientGroupManager extends React.Component {
 	static contextType = AppContext
-	reNameRef = React.createRef()
 	state = {
+		selectedOption: null,
 		selectedPatientGroup: null,
+		showAddGroupForm: false,
+		showDeleteModal: false,
+		areaOptions: null,
+		patientGroupListOptions: null,
+		allPatients: [],
 	}
+
 	componentDidMount = () => {
 		this.getObjectData()
-		this.getPatientGroup('Mount')
+		this.getPatientGroup()
+		this.getAreaTable()
 	}
+
 	reload = () => {
 		this.getObjectData()
 		this.getPatientGroup()
+		this.setState({
+			showAddGroupForm: false,
+			showDeleteModal: false,
+		})
 	}
-	newPatientGroup = (name) => {
-		apiHelper.patientGroupListApis
-			.addPatientGroupList({
-				name,
+
+	newPatientGroup = async (values) => {
+		try {
+			await apiHelper.patientGroupListApis.addPatientGroupList({
+				name: values.name,
+				areaId: values.area.id,
 			})
-			.then((res) => {
-				this.setState({
-					selectedPatientGroup: { id: res.data },
-				})
-				this.reload()
-			})
-			.catch((err) => {
-				console.log('err when add patient group ', err)
-			})
+			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			this.reload()
+		} catch (e) {
+			console.log(`err when add patient group ${e}`)
+		}
 	}
-	addPatientToGroup = (item) => {
-		const groupId = this.state.selectedPatientGroup.id
-		apiHelper.patientGroupListApis
-			.modifyPatientGroupList({
+
+	deletePatientGroup = async () => {
+		try {
+			await apiHelper.patientGroupListApis.deleteGroup({
+				groupId: this.state.selectedPatientGroup.id,
+			})
+			this.setState({ selectedOption: null, selectedPatientGroup: null })
+			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			this.reload()
+		} catch (e) {
+			console.log(`delete group failed ${e}`)
+		}
+	}
+
+	addPatientToGroup = async (item) => {
+		try {
+			await apiHelper.patientGroupListApis.modifyPatientGroupList({
 				groupId: this.state.selectedPatientGroup.id,
 				mode: 0,
-				itemACN: item.asset_control_number,
+				itemId: item.id,
 			})
-			.then((res) => {
-				this.reload()
-			})
-			.catch((err) => console.log(err))
+			this.reload()
+		} catch (e) {
+			console.log(`add patient to group failed ${e}`)
+		}
 	}
-	removePatientFromGroup = (item) => {
-		const groupId = this.state.selectedPatientGroup.id
 
-		apiHelper.patientGroupListApis
-			.modifyPatientGroupList({
+	removePatientFromGroup = async (item) => {
+		try {
+			await apiHelper.patientGroupListApis.modifyPatientGroupList({
 				groupId: this.state.selectedPatientGroup.id,
 				mode: 1,
-				itemACN: item.asset_control_number,
+				itemId: item.id,
 			})
-			.then((res) => {
-				this.reload()
-			})
-			.catch((err) => console.log(err))
+			this.reload()
+		} catch (e) {
+			console.log(`remove patient to group failed ${e}`)
+		}
 	}
-	renameGroup = (newName) => {
-		const groupId = this.state.selectedPatientGroup.id
 
-		apiHelper.patientGroupListApis
-			.modifyPatientGroupList({
+	showAddGroupForm = async (newName) => {
+		try {
+			await apiHelper.patientGroupListApis.modifyPatientGroupList({
 				groupId: this.state.selectedPatientGroup.id,
 				mode: 2,
 				newName,
 			})
-			.then((res) => {
-				this.setState({
-					renameGroup: false,
-				})
-				this.reload()
+			this.reload()
+			this.setState({
+				showAddGroupForm: false,
 			})
-			.catch((err) => console.log(err))
+		} catch (e) {
+			console.log(`rename group failed ${e}`)
+		}
 	}
+
 	selectPatientGroup = (patientGroup) => {
 		this.setState({
+			selectedOption: patientGroup,
 			selectedPatientGroup: patientGroup ? patientGroup.value : null,
 		})
 	}
-	deleteGroup = () => {
-		apiHelper.patientGroupListApis
-			.deleteGroup({
-				groupId: this.state.selectedPatientGroup.id,
-			})
-			.then((res) => {
-				this.reload()
-			})
-			.catch((err) => console.log(err))
-	}
-	getObjectData = () => {
+
+	getObjectData = async () => {
 		const { locale, auth } = this.context
-		apiHelper.objectApiAgent
-			.getObjectTable({
+		try {
+			const res = await apiHelper.objectApiAgent.getObjectTable({
 				locale: locale.abbr,
 				areas_id: auth.user.areas_id,
 				objectType: [1, 2],
 			})
-			.then((res) => {
-				this.setState({
-					allPatients: res.data.rows,
-				})
+			this.setState({
+				allPatients: res.data.rows,
 			})
-			.catch(function (error) {
-				console.log(error)
-			})
+		} catch (e) {
+			console.log(`get object data of patient failed ${e}`)
+		}
 	}
-	patientGroupListToSelectOptions = (data) => {
-		const options = data.map((option) => {
-			return {
-				label: option.name,
-				value: option,
+
+	getAreaTable = async () => {
+		const { locale } = this.context
+		try {
+			const res = await apiHelper.areaApiAgent.getAreaTable()
+			const areaOptions = res.data.rows.map((area) => {
+				return {
+					id: area.id,
+					value: area.name,
+					label: locale.texts[area.name],
+				}
+			})
+			this.setState({
+				areaOptions,
+			})
+		} catch (e) {
+			console.log(`get area table failed ${e}`)
+		}
+	}
+
+	getPatientGroup = async () => {
+		try {
+			const res = await apiHelper.patientGroupListApis.getPatientGroupList()
+			const data = res.data.map((group) => {
+				return {
+					...group,
+					patients: group.patients || [],
+				}
+			})
+
+			const patientGroupListOptions = res.data.map((item) => {
+				return {
+					label: item.name,
+					value: item,
+				}
+			})
+
+			let { selectedPatientGroup } = this.state
+			if (selectedPatientGroup) {
+				selectedPatientGroup = data.find(
+					(group) =>
+						parseInt(group.id) === parseInt(this.state.selectedPatientGroup.id)
+				)
 			}
-		})
 
-		return options
+			this.setState({
+				patientGroupListOptions,
+				selectedPatientGroup,
+			})
+		} catch (e) {
+			console.log('get patient group failed', e)
+		}
 	}
-	getPatientGroup = (isMount) => {
-		apiHelper.patientGroupListApis
-			.getPatientGroupList()
-			.then((res) => {
-				const data = res.data.map((group) => {
-					return {
-						...group,
-						patients: group.patients || [],
-					}
-				})
-				const updatedSelectedPatientGroup = data.filter((group) => {
-					if (this.state.selectedPatientGroup) {
-						if (group.id == this.state.selectedPatientGroup.id) {
-							return true
-						}
-						return false
-					}
-					return false
-				})[0]
 
-				this.setState({
-					patientGroupList: data,
-					patientGroupListOptions: this.patientGroupListToSelectOptions(data),
-					selectedPatientGroup:
-						isMount == 'Mount' ? data[0] : updatedSelectedPatientGroup,
-				})
-			})
-			.catch((err) => {
-				console.log('err when get patient group ', err)
-			})
+	handleClose = () => {
+		this.setState({
+			showAddGroupForm: false,
+			showDeleteModal: false,
+		})
 	}
 
 	render() {
 		const { locale } = this.context
+
+		const {
+			areaOptions,
+			patientGroupListOptions,
+			selectedPatientGroup,
+			allPatients,
+			showAddGroupForm,
+			selectedOption,
+		} = this.state
+
+		const areaId = selectedPatientGroup && selectedPatientGroup.area_id
+		const patients = selectedPatientGroup && selectedPatientGroup.patients
+
 		return (
-			<div
-				className="text-capitalize"
-				style={{
-					height: this.state.selectedPatientGroup ? '80vh' : '10vh',
-				}}
-			>
-				<Modal
-					show={this.state.renameGroup}
-					onHide={() => {
-						this.setState({ renameGroup: false })
-					}}
-				>
-					<Modal.Header closeButton>
-						<Modal.Title>{locale.texts.RENAME}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<Form.Group as={Col}>
-							<Form.Control type="text" ref={this.reNameRef} />
-						</Form.Group>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button
-							variant="primary"
-							onClick={() => {
-								console.log(this.reNameRef.current.value)
-								this.renameGroup(this.reNameRef.current.value)
-							}}
-						>
-							Save Changes
-						</Button>
-					</Modal.Footer>
-				</Modal>
-				<CreatableSelect
-					isClearable
-					onChange={this.selectPatientGroup}
-					onCreateOption={this.newPatientGroup}
-					options={this.state.patientGroupListOptions}
-					value={
-						this.state.selectedPatientGroup
-							? {
-									value: this.state.selectedPatientGroup,
-									label: this.state.selectedPatientGroup.name,
-							  }
-							: null
-					}
+			<div className="text-capitalize">
+				<div className="d-flex">
+					<PrimaryButton
+						variant="primary"
+						className="text-capitalize ml-2"
+						name="add"
+						onClick={() => {
+							this.setState({
+								showAddGroupForm: true,
+							})
+						}}
+					>
+						{locale.texts.ADD}
+					</PrimaryButton>
+					<PrimaryButton
+						variant="primary"
+						className="text-capitalize mr-2"
+						name="remove"
+						disabled={!selectedOption}
+						onClick={() => {
+							this.setState({
+								showDeleteModal: true,
+							})
+						}}
+					>
+						{locale.texts.REMOVE}
+					</PrimaryButton>
+					<Select
+						className="flex-grow-1"
+						isClearable
+						value={selectedOption}
+						onChange={this.selectPatientGroup}
+						options={patientGroupListOptions}
+					/>
+				</div>
+				<DualListBox
+					allItems={allPatients}
+					selectedItemList={patients}
+					selectedGroupAreaId={areaId}
+					selectedTitle={locale.texts.SELECTED_PATIENTS}
+					unselectedTitle={locale.texts.UNSELECTED_PATIENTS}
+					onSelect={this.addPatientToGroup}
+					onUnselect={this.removePatientFromGroup}
 				/>
-				{this.state.selectedPatientGroup ? (
-					<>
-						<ButtonToolbar className="my-2">
-							<Button
-								variant="outline-primary"
-								className="text-capitalize mr-2"
-								name="secondaryArea"
-								size="sm"
-								onClick={() => {
-									this.setState({ renameGroup: true })
-								}}
-							>
-								{locale.texts.EDIT_DEVICE_GROUP_NAME}
-							</Button>
-							<Button
-								variant="outline-primary"
-								className="text-capitalize mr-2"
-								name="password"
-								size="sm"
-								onClick={this.deleteGroup}
-							>
-								{locale.texts.REMOVE_DEVICE_GROUP}
-							</Button>
-						</ButtonToolbar>
-						<DualListBox
-							allItems={this.state.allPatients || []}
-							selectedItemList={
-								this.state.selectedPatientGroup
-									? this.state.selectedPatientGroup.patients
-									: []
-							}
-							selectedTitle="Patients In List"
-							unselectedTitle="Other Patients"
-							onSelect={this.addPatientToGroup}
-							onUnselect={this.removePatientFromGroup}
-						/>
-					</>
-				) : null}
+				<EditListForm
+					show={showAddGroupForm}
+					handleClose={this.handleClose}
+					handleSubmit={this.newPatientGroup}
+					title={locale.texts.CREATE_LIST}
+					areaOptions={areaOptions}
+				/>
+				<DeleteAlertModal
+					show={this.state.showDeleteModal}
+					handleClose={this.handleClose}
+					handleSubmit={this.deletePatientGroup}
+					title={locale.texts.ARE_YOU_SURE_TO_DELETE}
+				/>
 			</div>
 		)
 	}

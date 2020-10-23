@@ -590,6 +590,8 @@ const en = {
 	LICENCE: '© 2020 BiDaE Technology, Incorporated',
 	SELECTED_DEVICES: 'Selected Devices',
 	UNSELECTED_DEVICES: 'Unselected Devices',
+	SELECTED_PATIENTS: 'Selected Patients',
+	UNSELECTED_PATIENTS: 'Unselected Patients',
 }
 
 export default en

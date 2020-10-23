@@ -40,7 +40,7 @@ const getDeviceGroup = (pack) => {
 	return query
 }
 
-const addDeviceGroup = (name, area_id) => {
+const addDeviceGroup = (name, areaId) => {
 	const text = `
         INSERT INTO device_group_list (
             name,
@@ -49,12 +49,10 @@ const addDeviceGroup = (name, area_id) => {
             $1,
             $2
         )
-
         RETURNING id
     `
 
-	const values = [name, area_id]
-
+	const values = [name, areaId]
 	const query = {
 		text,
 		values,
@@ -63,52 +61,56 @@ const addDeviceGroup = (name, area_id) => {
 	return query
 }
 
-const modifyDeviceGroup = (groupId, mode, option, item_id) => {
+const modifyDeviceGroup = ({ groupId, mode, itemId, newName }) => {
 	let query = null
-
-	if (mode == 0) {
-		var itemACN = option
+	mode = parseInt(mode)
+	if (mode === 0) {
 		query = `
             UPDATE device_group_list
-            SET items = array_append(items, '${itemACN}')
+            SET items = array_append(items, '${itemId}')
             WHERE id = ${groupId};
 
             UPDATE object_table
             SET list_id = ${groupId}
-            WHERE id = ${item_id}
+            WHERE id = ${itemId}
         `
-	} else if (mode == 1) {
-		var itemACN = option
+	} else if (mode === 1) {
 		query = `
             UPDATE device_group_list
-            SET items = array_remove(items, '${itemACN}')
+            SET items = array_remove(items, '${itemId}')
             WHERE id=${groupId};
 
             UPDATE object_table
             SET list_id = null
-            WHERE id = ${item_id}
-
+            WHERE id = ${itemId}
         `
-	} else if (mode == 2) {
-		const newName = option
+	} else if (mode === 2) {
 		query = `UPDATE device_group_list SET name = ${newName} WHERE id=${groupId}`
 	}
 
 	return query
 }
-const renameDeviceGroup = (groupId) => {}
 const removeDeviceGroup = (groupId) => {
 	const query = `
+        UPDATE object_table
+        SET list_id = null
+        WHERE id = ANY(
+            ARRAY (
+                SELECT items
+                FROM device_group_list
+                WHERE id = ${groupId}
+            )::INT[]
+        );
+
         DELETE FROM device_group_list
         WHERE id = ${groupId}
-
         `
 	return query
 }
 
 export default {
+	getDeviceGroup,
 	addDeviceGroup,
 	removeDeviceGroup,
 	modifyDeviceGroup,
-	getDeviceGroup,
 }

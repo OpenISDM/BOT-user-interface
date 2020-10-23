@@ -581,8 +581,10 @@ const ms = {
 	SELECT_DEVICE_LIST: 'pilih senarai peranti',
 	RENAME: 'ganti nama',
 	LICENCE: '© 2020 BiDaE Teknologi, Diperbadankan',
-    SELECTED_DEVICES: 'Selected Devices',
-    UNSELECTED_DEVICES: 'Unselected Devices',
+	SELECTED_DEVICES: 'Selected Devices',
+	UNSELECTED_DEVICES: 'Unselected Devices',
+	SELECTED_PATIENTS: 'Selected Patients',
+	UNSELECTED_PATIENTS: 'Unselected Patients',
 }
 
 export default ms

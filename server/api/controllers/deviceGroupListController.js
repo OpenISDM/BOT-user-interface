@@ -35,24 +35,27 @@
 import 'dotenv/config'
 import dbQueries from '../db/deviceGroupListQueries'
 import pool from '../db/connection'
+import DeviceGroupList from '../db/model/deviceGroupList'
+import ObjectTable from '../db/model/objectTable'
 
 export default {
-	getDeviceGroupList: (request, response) => {
-		const query = dbQueries.getDeviceGroup(request.body)
-		pool
-			.query(query)
-			.then((res) => {
-				response.status(200).json(res.rows)
-			})
-			.catch((err) => {
-				console.log('addPatientGroup error: ', err)
-			})
+	getDeviceGroupList: async (request, response) => {
+		const { groupId } = request.body
+		try {
+			let res
+			if (groupId) {
+				res = await DeviceGroupList.findByPk(groupId)
+			} else {
+				res = await DeviceGroupList.findAll()
+			}
+			response.status(200).json(res)
+		} catch (e) {
+			console.log('getDeviceGroupList error: ', e)
+		}
 	},
-
 	addDeviceGroupList: (request, response) => {
-		const { name, area_id } = request.body
-		console.log(request.body)
-		const query = dbQueries.addDeviceGroup(name, area_id)
+		const { name, areaId } = request.body
+		const query = dbQueries.addDeviceGroup(name, areaId)
 
 		pool
 			.query(query)
@@ -64,50 +67,48 @@ export default {
 				console.log(`add device list failed ${err}`)
 			})
 	},
-
 	modifyDeviceGroupList: (request, response) => {
-		const { groupId, mode, itemACN, newName, item_id } = request.body
+		const { groupId, mode, newName, itemId } = request.body
 
 		let query = null
 		if (mode == 0) {
-			query = dbQueries.modifyDeviceGroup(groupId, 0, itemACN, item_id)
+			query = dbQueries.modifyDeviceGroup({ groupId, mode, itemId })
 		} else if (mode == 1) {
-			query = dbQueries.modifyDeviceGroup(groupId, 1, itemACN, item_id)
+			query = dbQueries.modifyDeviceGroup({ groupId, mode, itemId })
 		} else if (mode == 2) {
-			query = dbQueries.modifyDeviceGroup(groupId, 2, newName)
+			query = dbQueries.modifyDeviceGroup({ groupId, mode, newName })
 		}
 
 		pool
 			.query(query)
 			.then((res) => {
-				console.log('modify device list succeed')
 				response.status(200).json('ok')
 			})
 			.catch((err) => {
 				console.log(`modify device list failed ${err}`)
 			})
 	},
-	changeDeviceList: (request, response) => {
-		const { patient_group_id, user_id } = request.body
-		// const query = queryType.changePatientGroup(patient_group_id, user_id)
-		// pool.query(query).then(res => {
-		//     console.log('success')
-		//     response.status(200).json('ok')
-		// }).catch(err => {
-		//     console.log('error when change patient group,', err)
-		// })
-	},
-	deleteDeviceGroup: (request, response) => {
+	deleteDeviceGroup: async (request, response) => {
 		const { groupId } = request.body
-		const query = dbQueries.removeDeviceGroup(groupId)
-		pool
-			.query(query)
-			.then((res) => {
-				console.log('success')
-				response.status(200).json('ok')
-			})
-			.catch((err) => {
-				console.log('error when change device group,', err)
-			})
+		const { items = [] } = await DeviceGroupList.findByPk(groupId)
+
+		if (items) {
+			await ObjectTable.update(
+				{ list_id: null },
+				{
+					where: {
+						id: items,
+					},
+				}
+			)
+		}
+
+		await DeviceGroupList.destroy({
+			where: {
+				id: groupId,
+			},
+		})
+
+		response.status(200).json('ok')
 	},
 }

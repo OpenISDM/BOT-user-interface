@@ -32,24 +32,25 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
+import { patientGroupList } from '../dataSrc'
 import axios from 'axios'
-import config from '../config'
-
-const src = dataSrc.patientGroupList
 
 const patientGroupListApis = {
-	async addPatientGroupList(name) {
-		return await axios.post(src, { name })
+	async addPatientGroupList({ name, areaId }) {
+		return await axios.post(patientGroupList, { name, areaId })
 	},
-	async getPatientGroupList(name) {
-		return await axios.get(src, { name })
+	async getPatientGroupList(groupId) {
+		return await axios.get(patientGroupList, { groupId })
 	},
-	async modifyPatientGroupList(pack) {
-		return await axios.put(src, pack)
+	async modifyPatientGroupList({ groupId, mode, itemId }) {
+		return await axios.put(patientGroupList, {
+			groupId,
+			mode,
+			itemId,
+		})
 	},
 	async deleteGroup(groupId) {
-		return await axios.delete(src, { data: groupId })
+		return await axios.delete(patientGroupList, { data: groupId })
 	},
 }
 

@@ -41,7 +41,7 @@ import ReactTable from 'react-table'
 import styleConfig from '../../config/styleConfig'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import EditBranchForm from '../presentational/form/EditBranchForm'
-import DeleteBranchForm from '../presentational/form/DeleteBranchForm'
+import DeleteAlertModal from '../presentational/DeleteAlertModal'
 import { ADD, DELETE, SAVE_SUCCESS } from '../../config/wordMap'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
 
@@ -274,9 +274,8 @@ class TranferredLocationManagement extends React.Component {
 					title={locale.texts.CREATE_LOCATION}
 					branchOptions={branchOptions}
 				/>
-				<DeleteBranchForm
+				<DeleteAlertModal
 					show={this.state.showDeleteModal}
-					actionName={DELETE}
 					handleClose={this.handleClose}
 					handleSubmit={this.handleRemoveSubmit}
 					title={locale.texts.ARE_YOU_SURE_TO_DELETE}

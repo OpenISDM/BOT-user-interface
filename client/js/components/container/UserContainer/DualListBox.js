@@ -5,11 +5,10 @@ import PropTypes from 'prop-types'
 
 class DualListBox extends React.Component {
 	generateSelectedRowsForListBox = () => {
-		const { allItems = [], selectedItemList = {} } = this.props
-		const items = (selectedItemList && selectedItemList.items) || []
+		const { allItems, selectedItemList } = this.props
 
 		const selectedItem = allItems.filter((item) => {
-			return items.includes(item.asset_control_number)
+			return selectedItemList && selectedItemList.includes(item.id)
 		})
 
 		return selectedItem.map((item) => {
@@ -28,19 +27,22 @@ class DualListBox extends React.Component {
 	}
 
 	generateUnselectedRowsForListBox = () => {
-		const { allItems = [], selectedItemList = {} } = this.props
-		const items = (selectedItemList && selectedItemList.items) || []
-		const areaId = selectedItemList && selectedItemList.area_id
+		const { allItems, selectedItemList, selectedGroupAreaId } = this.props
 
-		const unselectedItem = allItems.filter((item) => {
+		let unselectedItems = allItems.filter((item) => {
 			return (
-				!items.includes(item.asset_control_number) &&
-				item.list_id == null &&
-				parseInt(item.area_id) === parseInt(areaId)
+				parseInt(item.area_id) === parseInt(selectedGroupAreaId) &&
+				item.list_id == null
 			)
 		})
 
-		const HTMLForUnselecteItem = unselectedItem.map((item) => {
+		if (selectedItemList) {
+			unselectedItems = unselectedItems.filter((item) => {
+				return !selectedItemList.includes(item.id)
+			})
+		}
+
+		return unselectedItems.map((item) => {
 			return {
 				acn: item.asset_control_number,
 				onClick: () => {
@@ -53,7 +55,6 @@ class DualListBox extends React.Component {
 				),
 			}
 		})
-		return HTMLForUnselecteItem
 	}
 
 	render() {
@@ -96,10 +97,25 @@ class DualListBox extends React.Component {
 DualListBox.propTypes = {
 	allItems: PropTypes.array.isRequired,
 	selectedItemList: PropTypes.array.isRequired,
+	selectedGroupAreaId: PropTypes.number.isRequired,
 	selectedTitle: PropTypes.string.isRequired,
 	unselectedTitle: PropTypes.string.isRequired,
 	onSelect: PropTypes.func.isRequired,
 	onUnselect: PropTypes.func.isRequired,
+}
+
+DualListBox.defaultProps = {
+	allItems: [],
+	selectedItemList: [],
+	selectedGroupAreaId: 0,
+	selectedTitle: '',
+	unselectedTitle: '',
+	onSelect: () => {
+		//onSelect
+	},
+	onUnselect: () => {
+		//onUnselect
+	},
 }
 
 export default DualListBox

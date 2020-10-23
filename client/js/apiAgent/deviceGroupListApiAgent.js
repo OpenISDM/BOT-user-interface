@@ -32,35 +32,28 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
+import { deviceGroupList } from '../dataSrc'
 import axios from 'axios'
-import config from '../config'
-
-const src = dataSrc.deviceGroupList
 
 const deviceGroupListApis = {
-	async addDeviceGroupList({ name, area_id }) {
-		return await axios.post(src, {
+	async addDeviceGroupList({ name, areaId }) {
+		return await axios.post(deviceGroupList, {
 			name,
-			area_id,
+			areaId,
 		})
 	},
-
 	async getDeviceGroupList(groupId) {
-		return await axios.get(src, { groupId })
+		return await axios.get(deviceGroupList, { groupId })
 	},
-
-	async modifyDeviceGroupList({ groupId, mode, itemACN, item_id }) {
-		return await axios.put(src, {
+	async modifyDeviceGroupList({ groupId, mode, itemId }) {
+		return await axios.put(deviceGroupList, {
 			groupId,
 			mode,
-			itemACN,
-			item_id,
+			itemId,
 		})
 	},
-
 	async deleteGroup(groupId) {
-		return await axios.delete(src, { data: groupId })
+		return await axios.delete(deviceGroupList, { data: groupId })
 	},
 }
 
