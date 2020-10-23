@@ -44,6 +44,7 @@ import {
 	MY_PATIENTS,
 } from '../../config/wordMap'
 import { Title } from '../BOTComponent/styleComponent'
+import PropTypes from 'prop-types'
 
 class FrequentSearch extends React.Component {
 	static contextType = AppContext
@@ -54,7 +55,7 @@ class FrequentSearch extends React.Component {
 
 	componentDidUpdate = (prepProps) => {
 		if (
-			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			!prepProps.clearSearchResult
 		) {
 			this.setState({
@@ -76,10 +77,42 @@ class FrequentSearch extends React.Component {
 		})
 	}
 
-	render() {
-		const { locale, auth } = this.context
-
+	generateFrequentItems = () => {
+		let items = null
+		const { auth } = this.context
 		const { searchObjectArray, pinColorArray } = this.props
+		const doGenerate = auth.authenticated && auth.user.searchHistory
+		if (doGenerate) {
+			items = auth.user.searchHistory
+				.filter((item, index) => {
+					return item !== '' && index < auth.user.freqSearchCount
+				})
+				.map((item, index) => {
+					const pinColorIndex = searchObjectArray.indexOf(item)
+
+					return (
+						<Button
+							variant="outline-custom"
+							className="text-none"
+							onClick={this.handleClick}
+							style={{
+								color: pinColorIndex > -1 ? pinColorArray[pinColorIndex] : null,
+							}}
+							// active={this.state.searchKey == item.name.toLowerCase()}
+							key={index}
+							name={SEARCH_HISTORY}
+							value={item}
+						>
+							{item}
+						</Button>
+					)
+				})
+		}
+		return items
+	}
+
+	render() {
+		const { locale } = this.context
 
 		return (
 			<div>
@@ -87,37 +120,7 @@ class FrequentSearch extends React.Component {
 					{locale.texts.FREQUENT_SEARCH}
 				</Title>
 				<div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar max-height-30">
-					<div className="text-center">
-						{auth.authenticated &&
-							auth.user.searchHistory &&
-							auth.user.searchHistory
-								.filter((item, index) => {
-									return index < auth.user.freqSearchCount
-								})
-								.map((item, index) => {
-									const pinColorIndex = searchObjectArray.indexOf(item)
-
-									return (
-										<Button
-											variant="outline-custom"
-											className="text-none"
-											onClick={this.handleClick}
-											style={{
-												color:
-													pinColorIndex > -1
-														? pinColorArray[pinColorIndex]
-														: null,
-											}}
-											// active={this.state.searchKey == item.name.toLowerCase()}
-											key={index}
-											name={SEARCH_HISTORY}
-											value={item}
-										>
-											{item}
-										</Button>
-									)
-								})}
-					</div>
+					<div className="text-center">{this.generateFrequentItems()}</div>
 
 					<hr />
 					<Button
@@ -165,6 +168,13 @@ class FrequentSearch extends React.Component {
 			</div>
 		)
 	}
+}
+
+FrequentSearch.propTypes = {
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
+	clearSearchResult: PropTypes.bool.isRequired,
 }
 
 export default FrequentSearch
