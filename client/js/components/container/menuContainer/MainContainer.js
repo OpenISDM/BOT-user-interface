@@ -48,7 +48,6 @@ import BrowserMainContainer from '../../platform/browser/BrowserMainContainer'
 import apiHelper from '../../../helper/apiHelper'
 import { createLbeaconCoordinate } from '../../../helper/dataTransfer'
 import { isEqual, JSONClone } from '../../../helper/utilities'
-import Cookies from 'js-cookie'
 import {
 	SWITCH_SEARCH_LIST,
 	CLEAR_SEARCH_RESULT,
@@ -56,7 +55,6 @@ import {
 	MY_DEVICES,
 	ALL_PATIENTS,
 	MY_PATIENTS,
-	OBJECTS,
 	OBJECT_TYPE,
 	NOT_STAY_ROOM_MONITOR,
 	SEARCH_HISTORY,
@@ -159,15 +157,15 @@ class MainContainer extends React.Component {
 		const newViolatedObject = Object.keys(this.state.violatedObjects).filter(
 			(item) => !Object.keys(prevState.violatedObjects).includes(item)
 		)
-		if (newViolatedObject.length != 0) {
-			newViolatedObject.map((item) => {
+		if (newViolatedObject.length !== 0) {
+			newViolatedObject.forEach((item) => {
 				this.getToastNotification(this.state.violatedObjects[item])
 			})
 		}
 	}
 
 	getToastNotification = (item) => {
-		item.notification.map((event) => {
+		item.notification.forEach((event) => {
 			const toastId = `${item.mac_address}-${event.type}`
 			const toastOptions = {
 				hideProgressBar: true,
@@ -197,7 +195,7 @@ class MainContainer extends React.Component {
 				mac_address,
 				monitor_type,
 			})
-			.then((res) => {
+			.then(() => {
 				this.setState({
 					violatedObjects,
 				})
@@ -209,8 +207,8 @@ class MainContainer extends React.Component {
 
 	/** Clear the recorded violated object */
 	clearAlerts = () => {
-		Object.values(this.state.violatedObjects).map((item) => {
-			item.notification.map((event) => {
+		Object.values(this.state.violatedObjects).forEach((item) => {
+			item.notification.forEach((event) => {
 				const dismissedObj = {
 					mac_address: item.mac_address,
 					type: event.type,
@@ -235,20 +233,17 @@ class MainContainer extends React.Component {
 
 	/** set the geofence and location monitor enable */
 	setMonitor = (type, callback) => {
-		const { stateReducer } = this.context
-
-		const [{ areaId }] = stateReducer
-
-		const configName = `${config.monitor[type].name}Config`
-		const triggerMonitorFunctionName = `get${configName.replace(
-			/^\w/,
-			(chr) => {
-				return chr.toUpperCase()
-			}
-		)}`
-		const cloneConfig = JSONClone(this.state[configName])
-
-		const enable = +!cloneConfig[areaId].enable
+		// const { stateReducer } = this.context
+		// const [{ areaId }] = stateReducer
+		// const configName = `${config.monitor[type].name}Config`
+		// const triggerMonitorFunctionName = `get${configName.replace(
+		// 	/^\w/,
+		// 	(chr) => {
+		// 		return chr.toUpperCase()
+		// 	}
+		// )}`
+		// const cloneConfig = JSONClone(this.state[configName])
+		// const enable = +!cloneConfig[areaId].enable
 		// retrieveDataHelper.setMonitorEnable(
 		//     enable,
 		//     areaId,
@@ -328,7 +323,7 @@ class MainContainer extends React.Component {
 
 	/** Retrieve lbeacon data from database */
 	getLbeaconPosition = () => {
-		const { auth, locale } = this.context
+		const { locale } = this.context
 
 		apiHelper.lbeaconApiAgent
 			.getLbeaconTable({
@@ -379,7 +374,7 @@ class MainContainer extends React.Component {
 
 	/** Retrieve location monitor data from database */
 	getLocationMonitorConfig = (callback) => {
-		const { stateReducer, auth } = this.context
+		const { auth } = this.context
 		apiHelper.monitor
 			.getMonitorConfig(NOT_STAY_ROOM_MONITOR, auth.user.areas_id, true)
 			.then((res) => {
@@ -429,13 +424,14 @@ class MainContainer extends React.Component {
 
 		const hasSearchKey = true
 
-		let {
+		const {
 			searchedObjectType,
 			showedObjects,
 			trackingData,
-			searchObjectArray,
 			pinColorArray,
 		} = this.state
+
+		let { searchObjectArray } = this.state
 
 		const { auth } = this.context
 
@@ -449,7 +445,7 @@ class MainContainer extends React.Component {
 
 				searchResult = proccessedTrackingData
 					.filter((item) => {
-						return item.object_type == 0
+						return parseInt(item.object_type) === 0
 					})
 					.map((item) => {
 						item.searchedType = 0
@@ -467,10 +463,10 @@ class MainContainer extends React.Component {
 
 				proccessedTrackingData
 					.filter((item) => {
-						return item.object_type == 0
+						return parseInt(item.object_type) === 0
 					})
-					.map((item) => {
-						if (item.list_id == auth.user.list_id) {
+					.forEach((item) => {
+						if (parseInt(item.list_id) === parseInt(auth.user.list_id)) {
 							item.searched = true
 							item.searchedType = -1
 							searchResult.push(item)
@@ -488,7 +484,7 @@ class MainContainer extends React.Component {
 
 				searchResult = proccessedTrackingData
 					.filter((item) => {
-						return item.object_type != 0
+						return parseInt(item.object_type) !== 0
 					})
 					.map((item) => {
 						item.searchedType = 1
@@ -511,9 +507,9 @@ class MainContainer extends React.Component {
 
 				proccessedTrackingData
 					.filter((item) => {
-						return item.object_type != 0
+						return parseInt(item.object_type) !== 0
 					})
-					.map((item) => {
+					.forEach((item) => {
 						if (
 							devicesAccessControlNumber.includes(item.asset_control_number)
 						) {
@@ -527,24 +523,6 @@ class MainContainer extends React.Component {
 					showedObjects.push(-2)
 				}
 				break
-
-			// case OBJECT_TYPE:
-
-			//     if (searchObjectArray.includes(searchKey.value)) {
-
-			//     } else if (searchObjectArray.length < MAX_SEARCH_OBJECT_NUM) {
-			//         searchObjectArray.push(searchKey.value)
-			//     } else {
-			//         searchObjectArray.shift();
-			//         pinColorArray.push(pinColorArray.shift());
-			//         searchObjectArray.push(searchKey.value)
-			//     }
-
-			//     searchResult = proccessedTrackingData.filter(item => {
-			//         return searchObjectArray.includes(item.type)
-			//     })
-
-			//     break;
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
 				if (searchObjectArray.includes(searchKey.value)) {
@@ -568,13 +546,13 @@ class MainContainer extends React.Component {
 									item.keyword = key
 
 									item.searched = true
-									if (item.object_type == 0) {
+									if (parseInt(item.object_type) === 0) {
 										item.searchedType = -1
 										if (!searchedObjectType.includes(-1)) {
 											searchedObjectType.push(-1)
 											showedObjects.push(-1)
 										}
-									} else if (item.object_type != 0) {
+									} else if (parseInt(item.object_type) !== 0) {
 										item.searchedType = -2
 										if (!searchedObjectType.includes(-2)) {
 											searchedObjectType.push(-2)
@@ -597,7 +575,7 @@ class MainContainer extends React.Component {
 			case PIN_SELETION:
 				searchObjectArray = []
 
-				proccessedTrackingData.map((item) => {
+				proccessedTrackingData.forEach((item) => {
 					if (searchKey.value.includes(item.mac_address)) {
 						item.searched = true
 						item.searchedType = -1
@@ -620,8 +598,8 @@ class MainContainer extends React.Component {
 
 				searchObjectArray = []
 
-				proccessedTrackingData.map((item) => {
-					searchableField.map((field) => {
+				proccessedTrackingData.forEach((item) => {
+					searchableField.forEach((field) => {
 						if (
 							item[field] &&
 							item[field]
@@ -711,10 +689,10 @@ class MainContainer extends React.Component {
 
 	handleClick = (e) => {
 		const name = e.target.name || e.target.getAttribute('name')
+		const value = e.target.getAttribute('value')
 
 		switch (name) {
 			case SWITCH_SEARCH_LIST:
-				const value = e.target.getAttribute('value')
 				this.setState({
 					showFoundResult: JSON.parse(value),
 				})
@@ -827,7 +805,9 @@ class MainContainer extends React.Component {
 		return (
 			/** "page-wrap" the default id named by react-burget-menu */
 			<Fragment>
-				<BrowserMainContainer {...propsGroup} />
+				<BrowserView>
+					<BrowserMainContainer {...propsGroup} />
+				</BrowserView>
 				<TabletView>
 					<TabletMainContainer {...propsGroup} />
 				</TabletView>
