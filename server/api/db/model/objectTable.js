@@ -8,6 +8,7 @@ const ObjectTable = sequelize.define(
 		id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
+			autoIncrement: true,
 		},
 		mac_address: {
 			type: DataTypes.MACADDR,

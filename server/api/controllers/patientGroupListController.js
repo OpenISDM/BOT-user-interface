@@ -33,8 +33,7 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/patientGroupListQueries'
-import pool from '../db/connection'
+import { sequelize } from '../db/connection'
 import PatientGroupList from '../db/model/patientGroupList'
 import ObjectTable from '../db/model/objectTable'
 
@@ -53,45 +52,71 @@ export default {
 			console.log('getPatientGroupList error: ', e)
 		}
 	},
-	addPatientGroupList: (request, response) => {
+	addPatientGroupList: async (request, response) => {
 		const { name, areaId } = request.body
-		const query = dbQueries.addPatientGroup(name, areaId)
-		pool
-			.query(query)
-			.then((res) => {
-				response.status(200).json(res.rows[0].id)
-			})
-			.catch((err) => {
-				console.log('addPatientGroup error: ', err)
-			})
-	},
-	modifyPatientGroupList: (request, response) => {
-		const { groupId, mode, newName, itemId } = request.body
-
-		let query = null
-		if (mode == 0) {
-			query = dbQueries.modifyPatientGroup({
-				groupId,
-				mode,
-				itemId,
-			})
-		} else if (mode == 1) {
-			query = dbQueries.modifyPatientGroup({
-				groupId,
-				mode,
-				itemId,
-			})
-		} else if (mode == 2) {
-			query = dbQueries.modifyPatientGroup({ groupId, mode, newName })
+		try {
+			const res = await PatientGroupList.create({ name, area_id: areaId })
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`add device group list failed ${e}`)
 		}
-		pool
-			.query(query)
-			.then((res) => {
-				response.status(200).json('ok')
-			})
-			.catch((err) => {
-				console.log('err when modifyPatientGroup', err)
-			})
+	},
+	modifyPatientGroupList: async (request, response) => {
+		const { groupId, mode, newName, itemId } = request.body
+		try {
+			const modeIntType = parseInt(mode)
+			if (modeIntType === 0) {
+				await PatientGroupList.update(
+					{
+						patients: sequelize.fn(
+							'array_append',
+							sequelize.col('patients'),
+							itemId
+						),
+					},
+					{ where: { id: groupId } }
+				)
+				await ObjectTable.update(
+					{ list_id: groupId },
+					{
+						where: {
+							id: itemId,
+						},
+					}
+				)
+			} else if (modeIntType === 1) {
+				await PatientGroupList.update(
+					{
+						patients: sequelize.fn(
+							'array_remove',
+							sequelize.col('patients'),
+							itemId
+						),
+					},
+					{ where: { id: groupId } }
+				)
+				await ObjectTable.update(
+					{ list_id: null },
+					{
+						where: {
+							id: itemId,
+						},
+					}
+				)
+			} else if (modeIntType === 2) {
+				// not used for now
+				await PatientGroupList.update(
+					{
+						name: newName,
+					},
+					{ where: { id: groupId } }
+				)
+			}
+
+			response.status(200).json('ok')
+		} catch (err) {
+			console.log(`modify device list failed ${err}`)
+		}
 	},
 	deletePatientGroup: async (request, response) => {
 		const { groupId } = request.body

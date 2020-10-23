@@ -88,22 +88,6 @@ class PatientGroupManager extends React.Component {
 		}
 	}
 
-	showAddGroupForm = async (newName) => {
-		try {
-			await apiHelper.patientGroupListApis.modifyPatientGroupList({
-				groupId: this.state.selectedPatientGroup.id,
-				mode: 2,
-				newName,
-			})
-			this.reload()
-			this.setState({
-				showAddGroupForm: false,
-			})
-		} catch (e) {
-			console.log(`rename group failed ${e}`)
-		}
-	}
-
 	selectPatientGroup = (patientGroup) => {
 		this.setState({
 			selectedOption: patientGroup,

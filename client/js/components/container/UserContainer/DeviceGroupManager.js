@@ -88,22 +88,6 @@ class DeviceGroupManager extends React.Component {
 		}
 	}
 
-	showAddGroupForm = async (newName) => {
-		try {
-			await apiHelper.deviceGroupListApis.modifyDeviceGroupList({
-				groupId: this.state.selectedDeviceGroup.id,
-				mode: 2,
-				newName,
-			})
-			this.reload()
-			this.setState({
-				showAddGroupForm: false,
-			})
-		} catch (e) {
-			console.log(`rename group failed ${e}`)
-		}
-	}
-
 	selectDeviceGroup = (deviceGroup) => {
 		this.setState({
 			selectedOption: deviceGroup,

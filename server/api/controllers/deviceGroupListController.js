@@ -33,8 +33,7 @@
 */
 
 import 'dotenv/config'
-import dbQueries from '../db/deviceGroupListQueries'
-import pool from '../db/connection'
+import { sequelize } from '../db/connection'
 import DeviceGroupList from '../db/model/deviceGroupList'
 import ObjectTable from '../db/model/objectTable'
 
@@ -53,40 +52,63 @@ export default {
 			console.log('getDeviceGroupList error: ', e)
 		}
 	},
-	addDeviceGroupList: (request, response) => {
+	addDeviceGroupList: async (request, response) => {
 		const { name, areaId } = request.body
-		const query = dbQueries.addDeviceGroup(name, areaId)
-
-		pool
-			.query(query)
-			.then((res) => {
-				console.log('add device list succeed')
-				response.status(200).json(res.rows[0].id)
-			})
-			.catch((err) => {
-				console.log(`add device list failed ${err}`)
-			})
-	},
-	modifyDeviceGroupList: (request, response) => {
-		const { groupId, mode, newName, itemId } = request.body
-
-		let query = null
-		if (mode == 0) {
-			query = dbQueries.modifyDeviceGroup({ groupId, mode, itemId })
-		} else if (mode == 1) {
-			query = dbQueries.modifyDeviceGroup({ groupId, mode, itemId })
-		} else if (mode == 2) {
-			query = dbQueries.modifyDeviceGroup({ groupId, mode, newName })
+		try {
+			const res = await DeviceGroupList.create({ name, area_id: areaId })
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`add device group list failed ${e}`)
 		}
+	},
+	modifyDeviceGroupList: async (request, response) => {
+		const { groupId, mode, newName, itemId } = request.body
+		try {
+			const modeIntType = parseInt(mode)
+			if (modeIntType === 0) {
+				await DeviceGroupList.update(
+					{
+						items: sequelize.fn('array_append', sequelize.col('items'), itemId),
+					},
+					{ where: { id: groupId } }
+				)
+				await ObjectTable.update(
+					{ list_id: groupId },
+					{
+						where: {
+							id: itemId,
+						},
+					}
+				)
+			} else if (modeIntType === 1) {
+				await DeviceGroupList.update(
+					{
+						items: sequelize.fn('array_remove', sequelize.col('items'), itemId),
+					},
+					{ where: { id: groupId } }
+				)
+				await ObjectTable.update(
+					{ list_id: null },
+					{
+						where: {
+							id: itemId,
+						},
+					}
+				)
+			} else if (modeIntType === 2) {
+				// not used for now
+				await DeviceGroupList.update(
+					{
+						name: newName,
+					},
+					{ where: { id: groupId } }
+				)
+			}
 
-		pool
-			.query(query)
-			.then((res) => {
-				response.status(200).json('ok')
-			})
-			.catch((err) => {
-				console.log(`modify device list failed ${err}`)
-			})
+			response.status(200).json('ok')
+		} catch (err) {
+			console.log(`modify device list failed ${err}`)
+		}
 	},
 	deleteDeviceGroup: async (request, response) => {
 		const { groupId } = request.body
