@@ -40,7 +40,8 @@ export default (app) => {
 	// enable pre-flight request for DELETE request
 	app.options('/data/deviceGroupList', cors())
 	app.options('/data/patientGroupList', cors())
-	// app.options('/data/objectPackage', cors())
+	app.options('/data/deviceGruopDetailByAreaId', cors())
+	app.options('/data/patientGruopDetailByAreaId', cors())
 
 	app
 		.route('/data/deviceGroupList')
@@ -50,9 +51,17 @@ export default (app) => {
 		.delete(deviceGroupListController.deleteDeviceGroup)
 
 	app
+		.route('/data/deviceGruopDetailByAreaId')
+		.get(deviceGroupListController.getDetailByAreaId)
+
+	app
 		.route('/data/patientGroupList')
 		.get(patientGroupListController.getPatientGroupList)
 		.post(patientGroupListController.addPatientGroupList)
 		.put(patientGroupListController.modifyPatientGroupList)
 		.delete(patientGroupListController.deletePatientGroup)
+
+	app
+		.route('/data/patientGruopDetailByAreaId')
+		.get(patientGroupListController.getDetailByAreaId)
 }

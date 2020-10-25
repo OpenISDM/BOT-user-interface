@@ -33,32 +33,64 @@
 */
 
 import React from 'react'
-import styleConfig from '../../config/styleConfig'
 import PropTypes from 'prop-types'
+import { Popover, OverlayTrigger } from 'react-bootstrap'
+import styleConfig from '../../config/styleConfig'
 
-const Checkbox = ({ name, onChange, id, label, disabled }) => {
+const CheckboxOverlayTrigger = ({
+	popoverTitle,
+	popoverBody,
+	name,
+	onChange,
+	id,
+	label,
+	disabled,
+	placement,
+	trigger,
+	checked,
+}) => {
 	return (
-		<div className="pretty p-default p-round" style={styleConfig.checkbox}>
-			<input
-				name={name}
-				id={id}
-				type="checkbox"
-				onChange={onChange}
-				disabled={disabled}
-			/>
-			<div className="state p-primary">
-				<label>{label}</label>
+		<OverlayTrigger
+			trigger={trigger}
+			key={id}
+			placement={placement}
+			overlay={
+				<Popover id={`popover-positioned-${placement}`}>
+					{/* <Popover.Content> */}
+					<textarea disabled>{popoverBody}</textarea>
+					{/* </Popover.Content> */}
+					<Popover.Title as="h3">{popoverTitle}</Popover.Title>
+				</Popover>
+			}
+		>
+			<div className="pretty p-default p-round" style={styleConfig.checkbox}>
+				<input
+					name={name}
+					id={id}
+					type="checkbox"
+					checked={checked}
+					onChange={onChange}
+					disabled={disabled}
+				/>
+				<div className="state p-primary" style={{ marginLeft: '20px' }}>
+					<label>{name}</label>
+				</div>
 			</div>
-		</div>
+		</OverlayTrigger>
 	)
 }
 
-Checkbox.propTypes = {
+CheckboxOverlayTrigger.propTypes = {
+	popoverTitle: PropTypes.string.isRequired,
+	popoverBody: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	id: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
+	trigger: PropTypes.string.isRequired,
 	disabled: PropTypes.bool,
+	checked: PropTypes.bool,
+	placement: PropTypes.string.isRequired,
 }
 
-export default Checkbox
+export default CheckboxOverlayTrigger

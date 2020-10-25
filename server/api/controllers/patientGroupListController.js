@@ -39,14 +39,8 @@ import ObjectTable from '../db/model/objectTable'
 
 export default {
 	getPatientGroupList: async (request, response) => {
-		const { groupId } = request.body
 		try {
-			let res
-			if (groupId) {
-				res = await PatientGroupList.findByPk(groupId)
-			} else {
-				res = await PatientGroupList.findAll()
-			}
+			const res = await PatientGroupList.findAll()
 			response.status(200).json(res)
 		} catch (e) {
 			console.log('getPatientGroupList error: ', e)
@@ -140,5 +134,32 @@ export default {
 		})
 
 		response.status(200).json('ok')
+	},
+	getDetailByAreaId: async (request, response) => {
+		const { areaId } = request.query
+		try {
+			const gruopList = await PatientGroupList.findAll({
+				where: { area_id: areaId },
+				attributes: [
+					'id',
+					'name',
+					'patients', // Add this column to correctly do Object Destructuring
+					['patients', 'items'],
+					'area_id',
+				],
+			})
+			let objectIds = []
+			gruopList.forEach(({ patients }) => {
+				if (patients) {
+					objectIds = [...objectIds, ...patients]
+				}
+			})
+			const objectList = await ObjectTable.findAll({
+				where: { id: objectIds },
+			})
+			response.status(200).json({ gruopList, objectList })
+		} catch (e) {
+			console.log('get patients group details error: ', e)
+		}
 	},
 }

@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        deviceGroupListApiAgent.js
+        userAssignmentsApiAgent.js
 
     File Description:
         BOT UI component
@@ -32,33 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { patientGroupList, patientGruopDetailByAreaId } from '../dataSrc'
+import { userAssignments } from '../dataSrc'
 import axios from 'axios'
 
-const patientGroupListApis = {
-	async addPatientGroupList({ name, areaId }) {
-		return await axios.post(patientGroupList, { name, areaId })
-	},
-	async getPatientGroupList() {
-		return await axios.get(patientGroupList)
-	},
-	async modifyPatientGroupList({ groupId, mode, itemId }) {
-		return await axios.put(patientGroupList, {
-			groupId,
-			mode,
-			itemId,
+export default {
+	async getByUserId({ areaId, userId }) {
+		return await axios.get(userAssignments.getByUserId, {
+			params: { areaId, userId },
 		})
 	},
-	async deleteGroup(groupId) {
-		return await axios.delete(patientGroupList, { data: groupId })
-	},
-	async getDetailByAreaId(areaId) {
-		return await axios.get(patientGruopDetailByAreaId, {
-			params: {
-				areaId,
-			},
+	async accept({ userId, groupListIds, assignmentType }) {
+		return await axios.post(userAssignments.accept, {
+			userId,
+			groupListIds,
+			assignmentType,
 		})
 	},
 }
-
-export default patientGroupListApis

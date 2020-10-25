@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { deviceGroupList } from '../dataSrc'
+import { deviceGroupList, deviceGruopDetailByAreaId } from '../dataSrc'
 import axios from 'axios'
 
 const deviceGroupListApis = {
@@ -42,8 +42,8 @@ const deviceGroupListApis = {
 			areaId,
 		})
 	},
-	async getDeviceGroupList(groupId) {
-		return await axios.get(deviceGroupList, { groupId })
+	async getDeviceGroupList() {
+		return await axios.get(deviceGroupList)
 	},
 	async modifyDeviceGroupList({ groupId, mode, itemId }) {
 		return await axios.put(deviceGroupList, {
@@ -54,6 +54,13 @@ const deviceGroupListApis = {
 	},
 	async deleteGroup(groupId) {
 		return await axios.delete(deviceGroupList, { data: groupId })
+	},
+	async getDetailByAreaId(areaId) {
+		return await axios.get(deviceGruopDetailByAreaId, {
+			params: {
+				areaId,
+			},
+		})
 	},
 }
 

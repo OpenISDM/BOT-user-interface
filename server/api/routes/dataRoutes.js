@@ -48,6 +48,7 @@ import recordRoutes from './dataRoutes/recordRoutes'
 import transferredLocationRoutes from './dataRoutes/transferredLocationRoutes'
 import groupListRoutes from './dataRoutes/groupListRoutes'
 import utilsRoutes from './dataRoutes/utilsRoutes'
+import userAssignments from './dataRoutes/userAssignmentsRoutes'
 
 const dataRoutes = (app) => {
 	trackingDataRoutes(app)
@@ -66,6 +67,7 @@ const dataRoutes = (app) => {
 	transferredLocationRoutes(app)
 	groupListRoutes(app)
 	utilsRoutes(app)
+	userAssignments(app)
 }
 
 export default dataRoutes

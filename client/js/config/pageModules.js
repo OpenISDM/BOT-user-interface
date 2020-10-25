@@ -32,6 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+/* eslint-disable react/display-name */
 import React from 'react'
 import UserProfile from '../components/container/UserContainer/UserProfile'
 import LBeaconTable from '../components/container/LBeaconTable'
@@ -44,17 +45,18 @@ import MyDeviceManager from '../components/container/UserContainer/MyDeviceManag
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
 import MyPatientManager from '../components/container/UserContainer/MyPatientManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
-import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
+// import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
 import GeoFenceSettingBlock from '../components/container/GeoFenceSettingBlock'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
 import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
 import TrackingTable from '../components/container/TrackingTable'
 import TraceContainer from '../components/container/menuContainer/TraceContainer'
-import BOTAdmin from '../components/container/menuContainer/BOTAdminContainer'
+// import BOTAdmin from '../components/container/menuContainer/BOTAdminContainer'
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
 import Loader from '../components/presentational/Loader'
 import GeneralSettings from '../components/container/menuContainer/GeneralSettings'
+import GetAssignments from '../components/container/GetAssignments'
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
@@ -75,19 +77,19 @@ export const userContainerModule = {
 			name: 'user profile',
 			path: 'userProfile',
 			href: '#UserProfile',
-			component: (props) => <UserProfile />,
+			component: (props) => <UserProfile {...props} />,
 		},
 		{
 			name: 'devices management',
 			path: 'devicesManagement',
 			href: '#DevicesManagement',
-			component: (props) => <MyDeviceManager />,
+			component: (props) => <MyDeviceManager {...props} />,
 		},
 		{
 			name: 'patient management',
 			path: 'patientManagement',
 			href: '#PatientManagement',
-			component: (props) => <MyPatientManager />,
+			component: (props) => <MyPatientManager {...props} />,
 		},
 	],
 }
@@ -102,11 +104,11 @@ export const settingModule = {
 	tabList: [
 		{
 			name: 'user profile',
-			component: (props) => <UserProfile />,
+			component: (props) => <UserProfile {...props} />,
 		},
 		{
 			name: 'general settings',
-			component: (props) => <GeneralSettings />,
+			component: (props) => <GeneralSettings {...props} />,
 			permission: 'route:generalSettings',
 		},
 		{
@@ -212,7 +214,7 @@ export const reportContainerModule = {
 	tabList: [
 		{
 			name: 'Get Assignments',
-			component: (props) => <ShiftChangeRecord {...props} />,
+			component: (props) => <GetAssignments {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{

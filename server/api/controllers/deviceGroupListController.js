@@ -33,20 +33,15 @@
 */
 
 import 'dotenv/config'
+import _ from 'lodash'
 import { sequelize } from '../db/connection'
 import DeviceGroupList from '../db/model/deviceGroupList'
 import ObjectTable from '../db/model/objectTable'
 
 export default {
 	getDeviceGroupList: async (request, response) => {
-		const { groupId } = request.body
 		try {
-			let res
-			if (groupId) {
-				res = await DeviceGroupList.findByPk(groupId)
-			} else {
-				res = await DeviceGroupList.findAll()
-			}
+			const res = await DeviceGroupList.findAll()
 			response.status(200).json(res)
 		} catch (e) {
 			console.log('getDeviceGroupList error: ', e)
@@ -132,5 +127,25 @@ export default {
 		})
 
 		response.status(200).json('ok')
+	},
+	getDetailByAreaId: async (request, response) => {
+		const { areaId } = request.query
+		try {
+			const gruopList = await DeviceGroupList.findAll({
+				where: { area_id: areaId },
+			})
+			let objectIds = []
+			gruopList.forEach(({ items }) => {
+				if (items) {
+					objectIds = [...objectIds, ...items]
+				}
+			})
+			const objectList = await ObjectTable.findAll({
+				where: { id: objectIds },
+			})
+			response.status(200).json({ gruopList, objectList })
+		} catch (e) {
+			console.log('get devices group details error: ', e)
+		}
 	},
 }

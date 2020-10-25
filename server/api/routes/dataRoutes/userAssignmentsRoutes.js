@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        deviceGroupListApiAgent.js
+        userAssignmentsRoutes.js
 
     File Description:
         BOT UI component
@@ -32,33 +32,22 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { patientGroupList, patientGruopDetailByAreaId } from '../dataSrc'
-import axios from 'axios'
+import userAssignmentsController from '../../controllers/userAssignmentsController'
+import cors from 'cors'
 
-const patientGroupListApis = {
-	async addPatientGroupList({ name, areaId }) {
-		return await axios.post(patientGroupList, { name, areaId })
-	},
-	async getPatientGroupList() {
-		return await axios.get(patientGroupList)
-	},
-	async modifyPatientGroupList({ groupId, mode, itemId }) {
-		return await axios.put(patientGroupList, {
-			groupId,
-			mode,
-			itemId,
-		})
-	},
-	async deleteGroup(groupId) {
-		return await axios.delete(patientGroupList, { data: groupId })
-	},
-	async getDetailByAreaId(areaId) {
-		return await axios.get(patientGruopDetailByAreaId, {
-			params: {
-				areaId,
-			},
-		})
-	},
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/userAssignments/*', cors())
+
+	app
+		.route('/data/userAssignments/getByUserId')
+		.get(userAssignmentsController.getByUserId)
+
+	app
+		.route('/data/userAssignments/accept')
+		.post(userAssignmentsController.accept)
+
+	app
+		.route('/data/userAssignments/finish')
+		.post(userAssignmentsController.finish)
 }
-
-export default patientGroupListApis

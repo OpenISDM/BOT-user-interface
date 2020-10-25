@@ -243,7 +243,7 @@ const styleConfig = {
 		NoDataComponent: () => null,
 	},
 	checkbox: {
-		fontSize: '0.9rem',
+		fontSize: '1.3rem',
 		margin: '.5rem .2rem',
 	},
 	radioButton: {

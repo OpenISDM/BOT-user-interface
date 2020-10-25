@@ -60,6 +60,11 @@ export const object = {
 	alias: `${domain}/data/object/alias`,
 	aliases: `${domain}/data/object/aliases`,
 }
+export const userAssignments = {
+	getByUserId: `${domain}/data/userAssignments/getByUserId`,
+	accept: `${domain}/data/userAssignments/accept`,
+	finish: `${domain}/data/userAssignments/finish`,
+}
 export const objectPackage = `${domain}/data/objectPackage`
 export const importedObject = `${domain}/data/importedObject`
 export const trace = {
@@ -94,7 +99,9 @@ export const transferredLocation = {
 	removeByIds: `${domain}/data/transferredLocation/removeByIds`,
 }
 export const deviceGroupList = `${domain}/data/deviceGroupList`
+export const deviceGruopDetailByAreaId = `${domain}/data/deviceGruopDetailByAreaId`
 export const patientGroupList = `${domain}/data/patientGroupList`
+export const patientGruopDetailByAreaId = `${domain}/data/patientGruopDetailByAreaId`
 export const pdfUrl = (path) => {
 	return `${domain}/data/file/${path}`
 }
@@ -128,4 +135,5 @@ export default {
 	utils,
 	deleteDevice,
 	getImportData,
+	deviceGruopDetailByAreaId,
 }

@@ -1,5 +1,6 @@
 import pkg from 'sequelize'
 import { sequelize } from '../connection'
+import UserAssignments from './userAssignments'
 const { DataTypes } = pkg
 
 const DeviceGroupList = sequelize.define(
@@ -25,5 +26,7 @@ const DeviceGroupList = sequelize.define(
 		timestamps: false,
 	}
 )
+
+UserAssignments.belongsTo(DeviceGroupList, { foreignKey: 'group_list_id' })
 
 export default DeviceGroupList

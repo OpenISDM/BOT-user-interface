@@ -48,6 +48,3 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 /** react-widget */
 import 'react-widgets/dist/css/react-widgets.css'
-
-/** pretty check box */
-import 'pretty-checkbox/dist/pretty-checkbox.min.css'
