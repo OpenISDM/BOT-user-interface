@@ -61,17 +61,7 @@ export default class ChangeStatusForm extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.getAllUserAssignments()
 		this.getTransferredLocation()
-	}
-
-	getAllUserAssignments = async () => {
-		try {
-			const res = await apiHelper.userAssignmentsApiAgent.getAll()
-			console.log(res)
-		} catch (e) {
-			console.log(e)
-		}
 	}
 
 	getTransferredLocation = async () => {
