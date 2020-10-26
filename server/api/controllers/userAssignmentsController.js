@@ -38,6 +38,7 @@ import UserAssignments, {
 	UserAssignmentEnum,
 } from '../db/model/userAssignments'
 import DeviceGroupList from '../db/model/deviceGroupList'
+import PatientGroupList from '../db/model/patientGroupList'
 
 export default {
 	getByUserId: async (request, response) => {
@@ -45,10 +46,18 @@ export default {
 		try {
 			const res = await UserAssignments.findAll({
 				where: { user_id: userId },
-				include: {
-					model: DeviceGroupList,
-					where: { area_id: areaId },
-				},
+				include: [
+					{
+						model: DeviceGroupList,
+						where: { area_id: areaId },
+						required: false, // left join
+					},
+					{
+						model: PatientGroupList,
+						where: { area_id: areaId },
+						required: false, // left join
+					},
+				],
 			})
 			response.status(200).json(res)
 		} catch (e) {

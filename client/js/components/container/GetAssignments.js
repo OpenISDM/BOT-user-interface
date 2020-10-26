@@ -61,7 +61,8 @@ class GetAssignments extends React.Component {
 		patientGroupMap: {},
 		objectMap: {},
 		submitGroupListIds: [],
-		assignedGroupListids: [],
+		assignedDeviceGroupListids: [],
+		assignedPatientGroupListids: [],
 	}
 
 	componentDidMount = () => {
@@ -84,10 +85,25 @@ class GetAssignments extends React.Component {
 				areaId,
 				userId,
 			})
+
+			const assignedDeviceGroupListids = []
+			const assignedPatientGroupListids = []
+			res.data
+				.filter((item) => item.status === ASSIGNMENT_STATUS.ON_GOING)
+				.forEach((item) => {
+					switch (item.assignment_type) {
+						case ASSIGNMENT_TYPE.DEVICE:
+							assignedDeviceGroupListids.push(parseInt(item.group_list_id))
+							break
+						case ASSIGNMENT_TYPE.PATIENT:
+							assignedPatientGroupListids.push(parseInt(item.group_list_id))
+							break
+					}
+				})
+
 			this.setState({
-				assignedGroupListids: res.data
-					.filter((item) => item.status === ASSIGNMENT_STATUS.ON_GOING)
-					.map((item) => parseInt(item.group_list_id)),
+				assignedDeviceGroupListids,
+				assignedPatientGroupListids,
 			})
 		} catch (e) {
 			console.log('get patient group failed', e)
@@ -177,10 +193,15 @@ class GetAssignments extends React.Component {
 				? this.state.deviceGroupMap
 				: this.state.patientGroupMap
 
+		const assignedGroupListids =
+			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
+				? this.state.assignedDeviceGroupListids
+				: this.state.assignedPatientGroupListids
+
 		return Object.values(gruopMap).map(({ id, name }) => {
 			const checked =
 				this.state.submitGroupListIds.includes(id) ||
-				this.state.assignedGroupListids.includes(id)
+				assignedGroupListids.includes(id)
 			return (
 				<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
 					<CheckboxOverlayTrigger
@@ -192,7 +213,7 @@ class GetAssignments extends React.Component {
 						placement={'right'}
 						onChange={this.handleChange}
 						label={name}
-						disabled={this.state.assignedGroupListids.includes(id)}
+						disabled={assignedGroupListids.includes(id)}
 						trigger={'hover'}
 					/>
 				</Row>
