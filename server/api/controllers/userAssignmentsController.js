@@ -34,7 +34,9 @@
 
 import 'dotenv/config'
 import { sequelize } from '../db/connection'
-import UserAssignments from '../db/model/userAssignments'
+import UserAssignments, {
+	UserAssignmentEnum,
+} from '../db/model/userAssignments'
 import DeviceGroupList from '../db/model/deviceGroupList'
 
 export default {
@@ -55,17 +57,51 @@ export default {
 	},
 	accept: async (request, response) => {
 		const { userId, groupListIds, assignmentType } = request.body
-		const insertRows = groupListIds.map((id) => {
-			return {
-				user_id: userId,
-				assignment_type: assignmentType,
-				group_list_id: id,
-				assigned_time: sequelize.literal('CURRENT_TIMESTAMP'),
-			}
-		})
 		try {
-			const res = await UserAssignments.bulkCreate(insertRows)
-			response.status(200).json(res)
+			const findResult = await UserAssignments.findAll({
+				attributes: ['id', 'group_list_id'],
+				where: {
+					user_id: userId,
+					group_list_id: groupListIds,
+					assignment_type: assignmentType,
+				},
+				raw: true,
+			})
+			const foundIds = findResult.map((obj) => parseInt(obj.id))
+			await UserAssignments.update(
+				{
+					assigned_time: sequelize.literal('CURRENT_TIMESTAMP'),
+					completed_time: null,
+					status: UserAssignmentEnum.STATUS.ON_GOING,
+				},
+				{
+					where: {
+						user_id: userId,
+						id: foundIds,
+						assignment_type: assignmentType,
+					},
+				}
+			)
+			const foundGroupListIds = findResult.map((obj) =>
+				parseInt(obj.group_list_id)
+			)
+			const restGroupListIds = groupListIds.filter(
+				(f) => !foundGroupListIds.includes(f)
+			)
+			if (restGroupListIds.length > 0) {
+				const insertRows = restGroupListIds.map((id) => {
+					return {
+						user_id: userId,
+						assignment_type: assignmentType,
+						group_list_id: id,
+						assigned_time: sequelize.literal('CURRENT_TIMESTAMP'),
+						completed_time: null,
+						status: UserAssignmentEnum.STATUS.ON_GOING,
+					}
+				})
+				await UserAssignments.bulkCreate(insertRows)
+			}
+			response.status(200).json('ok')
 		} catch (e) {
 			console.log(e)
 		}
@@ -73,7 +109,19 @@ export default {
 	finish: async (request, response) => {
 		const { userId, groupListIds, assignmentType } = request.body
 		try {
-			const res = await UserAssignments.update({ where: {} })
+			const res = await UserAssignments.update(
+				{
+					completed_time: sequelize.literal('CURRENT_TIMESTAMP'),
+					status: UserAssignmentEnum.STATUS.COMPLETED,
+				},
+				{
+					where: {
+						user_id: userId,
+						group_list_id: groupListIds,
+						assignment_type: assignmentType,
+					},
+				}
+			)
 			response.status(200).json(res)
 		} catch (e) {
 			console.log(e)
