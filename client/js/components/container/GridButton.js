@@ -119,7 +119,7 @@ class GridButton extends React.Component {
 			searchKeys,
 		})
 
-		this.props.getSearchKey(searchKeys, colorPanel)
+		this.props.getSearchKey(searchKeys)
 	}
 
 	putSearchHistory(searchKey) {

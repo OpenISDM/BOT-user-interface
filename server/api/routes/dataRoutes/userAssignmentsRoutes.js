@@ -44,6 +44,10 @@ export default (app) => {
 		.get(userAssignmentsController.getByUserId)
 
 	app
+		.route('/data/userAssignments/getGroupIdListByUserId')
+		.get(userAssignmentsController.getGroupIdListByUserId)
+
+	app
 		.route('/data/userAssignments/accept')
 		.post(userAssignmentsController.accept)
 

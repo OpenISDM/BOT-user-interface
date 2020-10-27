@@ -78,17 +78,11 @@ class MainContainer extends React.Component {
 			type: null,
 			value: null,
 		},
-		lastsearchKey: '',
 		showFoundResult: true,
 		searchResult: [],
-		colorPanel: null,
-		clearColorPanel: false,
 		clearSearchResult: false,
-		hasGridButton: false,
 		isHighlightSearchPanel: false,
-		authenticated: this.context.auth.authenticated,
 		shouldUpdateTrackingData: true,
-		markerClickPackage: {},
 		showPath: false,
 		pathMacAddress: '',
 		display: true,
@@ -100,15 +94,14 @@ class MainContainer extends React.Component {
 		pinColorArray: config.mapConfig.iconColor.pinColorArray.filter(
 			(item, index) => index < MAX_SEARCH_OBJECT_NUM
 		),
+		groupIds: [],
 	}
 
 	errorToast = null
 
 	componentDidMount = () => {
 		/** set the scrollability in body disabled */
-		const targetElement = document.querySelector('body')
-		disableBodyScroll(targetElement)
-
+		disableBodyScroll(document.querySelector('body'))
 		this.getTrackingData()
 		this.getKeywords()
 		this.getLbeaconPosition()
@@ -226,86 +219,83 @@ class MainContainer extends React.Component {
 
 	/** get the latest search results */
 	handleRefreshSearchResult = () => {
-		const { searchKey, markerClickPackage } = this.state
+		const { searchKey } = this.state
 
-		if (searchKey.type != null) this.getSearchKey(searchKey, markerClickPackage)
+		if (searchKey.type != null) {
+			this.getSearchKey(searchKey)
+		}
 	}
 
 	/** set the geofence and location monitor enable */
-	setMonitor = (type, callback) => {
-		// const { stateReducer } = this.context
-		// const [{ areaId }] = stateReducer
-		// const configName = `${config.monitor[type].name}Config`
-		// const triggerMonitorFunctionName = `get${configName.replace(
-		// 	/^\w/,
-		// 	(chr) => {
-		// 		return chr.toUpperCase()
-		// 	}
-		// )}`
-		// const cloneConfig = JSONClone(this.state[configName])
-		// const enable = +!cloneConfig[areaId].enable
-		// retrieveDataHelper.setMonitorEnable(
-		//     enable,
-		//     areaId,
-		//     config.monitor[type].api
-		// )
-		// .then(res => {
-		//     console.log(`set ${type} enable succeed`)
-		//     setTimeout(() => this[triggerMonitorFunctionName](callback), 1000)
-		// })
-		// .catch(err => {
-		//     console.log(`set ${type} enable failed ${err}`)
-		// })
+	setMonitor = () => {
+		// comment
 	}
+	// setMonitor = (type, callback) => {
+	// 	const { stateReducer } = this.context
+	// 	const [{ areaId }] = stateReducer
+	// 	const configName = `${config.monitor[type].name}Config`
+	// 	const triggerMonitorFunctionName = `get${configName.replace(
+	// 		/^\w/,
+	// 		(chr) => {
+	// 			return chr.toUpperCase()
+	// 		}
+	// 	)}`
+	// 	const cloneConfig = JSONClone(this.state[configName])
+	// 	const enable = +!cloneConfig[areaId].enable
+	// 	retrieveDataHelper.setMonitorEnable(
+	// 	    enable,
+	// 	    areaId,
+	// 	    config.monitor[type].api
+	// 	)
+	// 	.then(res => {
+	// 	    console.log(`set ${type} enable succeed`)
+	// 	    setTimeout(() => this[triggerMonitorFunctionName](callback), 1000)
+	// 	})
+	// 	.catch(err => {
+	// 	    console.log(`set ${type} enable failed ${err}`)
+	// 	})
+	// }
 
 	/** Get tracking data from database.
 	 *  Once get the tracking data, violated objects would be collected. */
-	getTrackingData = () => {
+	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
-
 		const [{ areaId }] = stateReducer
+		const userId = auth.user.id
 
-		apiHelper.trackingDataApiAgent
-			.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId,
-			})
-			.then((res) => {
-				/** dismiss error message when the database is connected */
-				if (this.errorToast) {
-					this.errorToast = null
-					toast.dismiss(this.errorToast)
+		try {
+			const groupIdsPromise = apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId(
+				{ areaId, userId }
+			)
+			const trackingDataPromise = apiHelper.trackingDataApiAgent.getTrackingData(
+				{
+					locale: locale.abbr,
+					user: auth.user,
+					areaId,
 				}
+			)
+			const [{ data: groupIds }, { data: trackingData }] = await Promise.all([
+				groupIdsPromise,
+				trackingDataPromise,
+			])
 
-				// let violatedObjects = JSONClone(this.state.violatedObjects)
-				/** collect violated objects as violatedObjects */
-				// res.data.map((item, index) => {
-
-				//     if (item.isViolated) {
-				//         item.notification.map(notice => {
-				//             let toastId = `${item.mac_address}-${notice.type}`
-				//             if (!(toastId in violatedObjects)) {
-				//                 violatedObjects[toastId] = item
-				//             }
-				//         })
-				//     }
-
-				// })
-
-				this.setState({
-					trackingData: res.data,
-					// violatedObjects,
-				})
+			this.setState({
+				groupIds,
+				trackingData,
 			})
-			.catch((err) => {
-				console.log(`get tracking data failed ${err}`)
+			/** dismiss error message when the database is connected */
+			if (this.errorToast) {
+				this.errorToast = null
+				toast.dismiss(this.errorToast)
+			}
+		} catch (e) {
+			console.log(`get tracking data failed ${e}`)
 
-				/** sent error message when database is not connected */
-				if (!this.errorToast) {
-					this.errorToast = messageGenerator.setErrorMessage()
-				}
-			})
+			/** sent error message when database is not connected */
+			if (!this.errorToast) {
+				this.errorToast = messageGenerator.setErrorMessage()
+			}
+		}
 	}
 
 	getKeywords = () => {
@@ -405,8 +395,8 @@ class MainContainer extends React.Component {
 	}
 
 	/** Fired once the user click the item in object type list or in frequent seaerch */
-	getSearchKey = (searchKey, colorPanel = null, markerClickPackage = {}) => {
-		this.getResultBySearchKey(searchKey, colorPanel, markerClickPackage)
+	getSearchKey = (searchKey) => {
+		this.getResultBySearchKey(searchKey)
 	}
 
 	/** Process the search result by the search key.
@@ -419,7 +409,7 @@ class MainContainer extends React.Component {
 	 *  6. coordinate(disable now)
 	 *  7. multiple selected object(gridbutton)(disable now)
 	 */
-	getResultBySearchKey = (searchKey, colorPanel, markerClickPackage) => {
+	getResultBySearchKey = (searchKey) => {
 		let searchResult = []
 
 		const hasSearchKey = true
@@ -429,11 +419,10 @@ class MainContainer extends React.Component {
 			showedObjects,
 			trackingData,
 			pinColorArray,
+			groupIds,
 		} = this.state
 
 		let { searchObjectArray } = this.state
-
-		const { auth } = this.context
 
 		const proccessedTrackingData = JSONClone(trackingData)
 
@@ -442,15 +431,13 @@ class MainContainer extends React.Component {
 		switch (searchKey.type) {
 			case ALL_DEVICES:
 				searchObjectArray = []
-
-				searchResult = proccessedTrackingData
-					.filter((item) => {
-						return parseInt(item.object_type) === 0
-					})
-					.map((item) => {
+				searchResult = []
+				proccessedTrackingData.forEach((item) => {
+					if (parseInt(item.object_type) === 0) {
 						item.searchedType = 0
-						return item
-					})
+						searchResult.push(item)
+					}
+				})
 
 				if (!searchedObjectType.includes(0)) {
 					searchedObjectType.push(0)
@@ -458,38 +445,16 @@ class MainContainer extends React.Component {
 				}
 				break
 
-			case MY_DEVICES:
-				searchObjectArray = []
-
-				proccessedTrackingData
-					.filter((item) => {
-						return parseInt(item.object_type) === 0
-					})
-					.forEach((item) => {
-						if (parseInt(item.list_id) === parseInt(auth.user.list_id)) {
-							item.searched = true
-							item.searchedType = -1
-							searchResult.push(item)
-						}
-					})
-				if (!searchedObjectType.includes(-1)) {
-					searchedObjectType.push(-1)
-					showedObjects.push(-1)
-				}
-
-				break
-
 			case ALL_PATIENTS:
 				searchObjectArray = []
-
-				searchResult = proccessedTrackingData
-					.filter((item) => {
-						return parseInt(item.object_type) !== 0
-					})
-					.map((item) => {
+				searchResult = []
+				proccessedTrackingData.forEach((item) => {
+					if (parseInt(item.object_type) !== 0) {
 						item.searchedType = 1
-						return item
-					})
+						searchResult.push(item)
+					}
+				})
+
 				if (
 					!searchedObjectType.includes(1) ||
 					!searchedObjectType.includes(2)
@@ -499,40 +464,60 @@ class MainContainer extends React.Component {
 					showedObjects.push(1)
 					showedObjects.push(2)
 				}
+				break
 
+			case MY_DEVICES:
+				searchObjectArray = []
+				proccessedTrackingData.forEach((item) => {
+					const isMyDevice =
+						parseInt(item.object_type) === 0 &&
+						groupIds &&
+						groupIds.includes(parseInt(item.list_id))
+
+					if (isMyDevice) {
+						item.searched = true
+						item.searchedType = -1
+						searchResult.push(item)
+					}
+				})
+
+				if (!searchedObjectType.includes(-1)) {
+					searchedObjectType.push(-1)
+					showedObjects.push(-1)
+				}
 				break
 
 			case MY_PATIENTS:
 				searchObjectArray = []
+				proccessedTrackingData.forEach((item) => {
+					const isMyPatient =
+						parseInt(item.object_type) !== 0 &&
+						groupIds &&
+						groupIds.includes(parseInt(item.list_id))
 
-				proccessedTrackingData
-					.filter((item) => {
-						return parseInt(item.object_type) !== 0
-					})
-					.forEach((item) => {
-						if (
-							devicesAccessControlNumber.includes(item.asset_control_number)
-						) {
-							item.searched = true
-							item.searchedType = -2
-							searchResult.push(item)
-						}
-					})
+					if (isMyPatient) {
+						item.searched = true
+						item.searchedType = -2
+						searchResult.push(item)
+					}
+				})
+
 				if (!searchedObjectType.includes(-2)) {
 					searchedObjectType.push(-2)
 					showedObjects.push(-2)
 				}
 				break
+
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
-				if (searchObjectArray.includes(searchKey.value)) {
-				} else if (searchObjectArray.length < MAX_SEARCH_OBJECT_NUM) {
+				if (!searchObjectArray.includes(searchKey.value)) {
 					searchObjectArray.push(searchKey.value)
-				} else {
-					searchObjectArray.shift()
-					pinColorArray.push(pinColorArray.shift())
-					searchObjectArray.push(searchKey.value)
+					if (searchObjectArray.length > MAX_SEARCH_OBJECT_NUM) {
+						searchObjectArray.shift()
+						pinColorArray.push(pinColorArray.shift())
+					}
 				}
+				console.log(searchObjectArray)
 
 				for (let index = searchObjectArray.length - 1; index >= 0; index--) {
 					const singleSearchObjectArray = []
@@ -542,7 +527,7 @@ class MainContainer extends React.Component {
 					const moreSearchResult = proccessedTrackingData.filter((item) => {
 						return singleSearchObjectArray.some((key) => {
 							return searchableField.some((field) => {
-								if (item[field] && item[field] == key) {
+								if (item[field] && item[field] === key) {
 									item.keyword = key
 
 									item.searched = true
@@ -559,7 +544,6 @@ class MainContainer extends React.Component {
 											showedObjects.push(-2)
 										}
 									}
-
 									return true
 								}
 								return false
@@ -569,12 +553,10 @@ class MainContainer extends React.Component {
 
 					searchResult = searchResult.concat(moreSearchResult)
 				}
-
 				break
 
 			case PIN_SELETION:
 				searchObjectArray = []
-
 				proccessedTrackingData.forEach((item) => {
 					if (searchKey.value.includes(item.mac_address)) {
 						item.searched = true
@@ -587,17 +569,17 @@ class MainContainer extends React.Component {
 					searchedObjectType.push(-1)
 					showedObjects.push(-1)
 				}
-
 				break
 
 			default:
-				if (/^\s/.test(searchKey.value)) return
-				if (searchKey.value == '') return
-
-				const searchResultMac = []
+				if (/^\s/.test(searchKey.value)) {
+					return
+				}
+				if (searchKey.value === '') {
+					return
+				}
 
 				searchObjectArray = []
-
 				proccessedTrackingData.forEach((item) => {
 					searchableField.forEach((field) => {
 						if (
@@ -609,27 +591,9 @@ class MainContainer extends React.Component {
 							item.searched = true
 							item.searchedType = -1
 							searchResult.push(item)
-							searchResultMac.push(item.mac_address)
 						}
 					})
 				})
-
-				// if(this.state.lastsearchKey != searchKey) {
-				//     axios.post(dataSrc.backendSearch,{
-				//         keyType : 'all attributes',
-				//         keyWord : searchKey,
-				//         mac_address : searchResultMac
-				//     })
-				//     .then(res => {
-				//         this.setState({
-				//             lastsearchKey: searchKey
-				//         })
-				//     })
-				//     .catch(err =>{
-				//         console.log(err)
-				//     })
-
-				// }
 
 				if (!searchedObjectType.includes(-1)) {
 					searchedObjectType.push(-1)
@@ -670,8 +634,9 @@ class MainContainer extends React.Component {
 	setShowedObjects = (value) => {
 		const showedObjects = value.split(',').reduce((showedObjects, number) => {
 			number = parseInt(number)
-			if (!this.state.searchedObjectType.includes(number)) return showedObjects
-			else if (this.state.showedObjects.includes(number)) {
+			if (!this.state.searchedObjectType.includes(number)) {
+				return showedObjects
+			} else if (this.state.showedObjects.includes(number)) {
 				const index = showedObjects.indexOf(number)
 				showedObjects = [
 					...showedObjects.slice(0, index),
@@ -699,30 +664,14 @@ class MainContainer extends React.Component {
 				break
 
 			case CLEAR_SEARCH_RESULT:
-				/*
-                let {
-                    proccessedTrackingData
-                } = this.state
-
-                let searchResult = proccessedTrackingData
-                    .filter(item => {
-                        return item.object_type == 0
-                    })
-                    .map(item => {
-                        item.searchedType = 0
-                        return item
-                    })
-        */
 				this.setState({
 					hasSearchKey: false,
 					searchKey: {
 						type: null,
 						value: null,
 					},
-					lastsearchKey: '',
 					searchResult: [],
 					colorPanel: null,
-					clearColorPanel: true,
 					clearSearchResult: !!this.state.hasSearchKey,
 					proccessedTrackingData: [],
 					display: true,
@@ -731,6 +680,7 @@ class MainContainer extends React.Component {
 					searchObjectArray: [],
 					showMobileMap: true,
 				})
+				break
 		}
 	}
 

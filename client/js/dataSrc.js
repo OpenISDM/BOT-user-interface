@@ -62,6 +62,7 @@ export const object = {
 }
 export const userAssignments = {
 	getByUserId: `${domain}/data/userAssignments/getByUserId`,
+	getGroupIdListByUserId: `${domain}/data/userAssignments/getGroupIdListByUserId`,
 	accept: `${domain}/data/userAssignments/accept`,
 	finish: `${domain}/data/userAssignments/finish`,
 }

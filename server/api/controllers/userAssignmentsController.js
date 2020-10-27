@@ -64,6 +64,33 @@ export default {
 			console.log(e)
 		}
 	},
+	getGroupIdListByUserId: async (request, response) => {
+		const { userId, areaId } = request.query
+		try {
+			const res = await UserAssignments.findAll({
+				where: {
+					user_id: userId,
+					status: UserAssignmentEnum.STATUS.ON_GOING,
+				},
+				include: [
+					{
+						model: DeviceGroupList,
+						where: { area_id: areaId },
+						required: false, // left join
+					},
+					{
+						model: PatientGroupList,
+						where: { area_id: areaId },
+						required: false, // left join
+					},
+				],
+			})
+			const data = res.map(({ group_list_id }) => parseInt(group_list_id))
+			response.status(200).json(data)
+		} catch (e) {
+			console.log(e)
+		}
+	},
 	accept: async (request, response) => {
 		const { userId, groupListIds, assignmentType } = request.body
 		try {

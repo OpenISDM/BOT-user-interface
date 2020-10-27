@@ -41,6 +41,11 @@ export default {
 			params: { areaId, userId },
 		})
 	},
+	async getGroupIdListByUserId({ areaId, userId }) {
+		return await axios.get(userAssignments.getGroupIdListByUserId, {
+			params: { areaId, userId },
+		})
+	},
 	async accept({ userId, groupListIds, assignmentType }) {
 		return await axios.post(userAssignments.accept, {
 			userId,

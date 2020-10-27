@@ -578,12 +578,6 @@ class Map extends React.Component {
 		this.errorCircle.addTo(this.map)
 	}
 
-	/** Fire when clicing marker */
-	handleMarkerClick = (e) => {
-		const lbPosition = e.target.options.icon.options.lbeacon_coordinate
-		this.props.getSearchKey('objects', null, lbPosition)
-	}
-
 	/** Filter out undesired tracking data */
 	filterTrackingData = (proccessedTrackingData) => {
 		return proccessedTrackingData.filter((item) => {
