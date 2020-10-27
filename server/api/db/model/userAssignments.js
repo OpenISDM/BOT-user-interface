@@ -10,6 +10,7 @@ export const UserAssignmentEnum = {
 	STATUS: {
 		ON_GOING: 0,
 		COMPLETED: 1,
+		CANCEL: 2,
 	},
 }
 

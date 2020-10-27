@@ -104,20 +104,38 @@ class GetAssignments extends React.Component {
 			this.setState({
 				assignedDeviceGroupListids,
 				assignedPatientGroupListids,
+				submitGroupListIds: [],
 			})
 		} catch (e) {
 			console.log('get patient group failed', e)
 		}
 	}
 
-	acceptAssignments = async () => {
+	acceptAssignments = async (submitGroupListIds) => {
 		const { auth } = this.context
 		const userId = auth.user.id
 
 		try {
 			await apiHelper.userAssignmentsApiAgent.accept({
 				userId,
-				groupListIds: this.state.submitGroupListIds,
+				groupListIds: submitGroupListIds,
+				assignmentType: this.state.currentAssignmentType,
+			})
+			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			this.reload()
+		} catch (e) {
+			console.log('get patient group failed', e)
+		}
+	}
+
+	cancelAssignments = async (assignedGroupListids) => {
+		const { auth } = this.context
+		const userId = auth.user.id
+
+		try {
+			await apiHelper.userAssignmentsApiAgent.cancel({
+				userId,
+				groupListIds: assignedGroupListids,
 				assignmentType: this.state.currentAssignmentType,
 			})
 			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
@@ -187,18 +205,9 @@ class GetAssignments extends React.Component {
 		})
 	}
 
-	generateAssisments = () => {
-		const gruopMap =
-			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
-				? this.state.deviceGroupMap
-				: this.state.patientGroupMap
-
-		const assignedGroupListids =
-			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
-				? this.state.assignedDeviceGroupListids
-				: this.state.assignedPatientGroupListids
-
-		return Object.values(gruopMap).map(({ id, name }) => {
+	generateAssisments = (groupMap, assignedGroupListids) => {
+		return Object.values(groupMap).map((group) => {
+			const { id, name } = group
 			const checked =
 				this.state.submitGroupListIds.includes(id) ||
 				assignedGroupListids.includes(id)
@@ -206,7 +215,7 @@ class GetAssignments extends React.Component {
 				<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
 					<CheckboxOverlayTrigger
 						popoverTitle={name}
-						popoverBody={this.generateAssismentsDetails(gruopMap, id)}
+						popoverBody={this.generateAssismentsDetails(group)}
 						id={id}
 						name={name}
 						checked={checked}
@@ -221,9 +230,9 @@ class GetAssignments extends React.Component {
 		})
 	}
 
-	generateAssismentsDetails = (gruopMap, groupId) => {
+	generateAssismentsDetails = (gruop) => {
 		// TODO: Johnson will implement Jane's requirement
-		const { items } = gruopMap[groupId]
+		const { items } = gruop
 		let itemsNameString = ''
 		if (items) {
 			items.forEach((id) => {
@@ -242,8 +251,58 @@ class GetAssignments extends React.Component {
 		this.setState({ currentAssignmentType: type })
 	}
 
+	generateActionButtons = (locale, assignedGroupListids) => {
+		const { submitGroupListIds } = this.state
+		let buttons = null
+
+		if (submitGroupListIds.length > 0) {
+			buttons = (
+				<ButtonToolbar>
+					<PrimaryButton
+						onClick={() => {
+							this.acceptAssignments(submitGroupListIds)
+						}}
+					>
+						{locale.texts.CONFIRM}
+					</PrimaryButton>
+					<PrimaryButton
+						onClick={() => {
+							this.setState({ submitGroupListIds: [] })
+						}}
+					>
+						{locale.texts.CANCEL}
+					</PrimaryButton>
+				</ButtonToolbar>
+			)
+		} else if (assignedGroupListids.length > 0) {
+			buttons = (
+				<ButtonToolbar>
+					<PrimaryButton
+						onClick={() => {
+							this.cancelAssignments(assignedGroupListids)
+						}}
+					>
+						{locale.texts.CANCEL_ALL}
+					</PrimaryButton>
+				</ButtonToolbar>
+			)
+		}
+
+		return buttons
+	}
+
 	render() {
 		const { locale } = this.context
+
+		const gruopMap =
+			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
+				? this.state.deviceGroupMap
+				: this.state.patientGroupMap
+
+		const assignedGroupListids =
+			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
+				? this.state.assignedDeviceGroupListids
+				: this.state.assignedPatientGroupListids
 
 		return (
 			<>
@@ -268,26 +327,9 @@ class GetAssignments extends React.Component {
 					</PrimaryButton>
 				</ButtonToolbar>
 				<hr />
-				<Col>{this.generateAssisments()}</Col>
+				<Col>{this.generateAssisments(gruopMap, assignedGroupListids)}</Col>
 				<hr />
-				<ButtonToolbar>
-					<PrimaryButton
-						disabled={this.state.submitGroupListIds.length === 0}
-						onClick={() => {
-							this.acceptAssignments()
-						}}
-					>
-						{locale.texts.CONFIRM}
-					</PrimaryButton>
-					<PrimaryButton
-						disabled={this.state.submitGroupListIds.length === 0}
-						onClick={() => {
-							this.setState({ submitGroupListIds: [] })
-						}}
-					>
-						{locale.texts.CANCEL}
-					</PrimaryButton>
-				</ButtonToolbar>
+				{this.generateActionButtons(locale, assignedGroupListids)}
 			</>
 		)
 	}

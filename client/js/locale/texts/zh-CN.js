@@ -150,6 +150,7 @@ const cn = {
 	EDIT_SECONDARY_AREA: '编辑次要区域',
 	EDIT_PASSWORD: '更改密码',
 	CANCEL: '取消',
+	CANCEL_ALL: '取消全部',
 	SEND: '送出',
 	SIGN_IN: '登入',
 	SIGN_UP: '注册',

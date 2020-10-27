@@ -150,6 +150,7 @@ const tw = {
 	EDIT_SECONDARY_AREA: '編輯次要區域',
 	EDIT_PASSWORD: '更改密碼',
 	CANCEL: '取消',
+	CANCEL_ALL: '取消全部',
 	SEND: '送出',
 	SIGN_IN: '登入',
 	SIGN_UP: '註冊',

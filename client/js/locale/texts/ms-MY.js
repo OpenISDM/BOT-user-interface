@@ -152,6 +152,7 @@ const ms = {
 	EDIT_SECONDARY_AREA: 'edit kawasan sekunder',
 	EDIT_PASSWORD: 'edit kata laluan',
 	CANCEL: 'batal',
+	CANCEL_ALL: 'cancel',
 	SEND: 'hantar',
 	SIGN_IN: 'log masuk',
 	SIGN_UP: 'daftar',

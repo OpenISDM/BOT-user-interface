@@ -54,4 +54,8 @@ export default (app) => {
 	app
 		.route('/data/userAssignments/finish')
 		.post(userAssignmentsController.finish)
+
+	app
+		.route('/data/userAssignments/cancel')
+		.post(userAssignmentsController.cancel)
 }

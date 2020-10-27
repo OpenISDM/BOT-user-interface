@@ -163,4 +163,25 @@ export default {
 			console.log(e)
 		}
 	},
+	cancel: async (request, response) => {
+		const { userId, groupListIds, assignmentType } = request.body
+		try {
+			const res = await UserAssignments.update(
+				{
+					completed_time: null,
+					status: UserAssignmentEnum.STATUS.CANCEL,
+				},
+				{
+					where: {
+						user_id: userId,
+						group_list_id: groupListIds,
+						assignment_type: assignmentType,
+					},
+				}
+			)
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(e)
+		}
+	},
 }

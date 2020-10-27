@@ -53,4 +53,11 @@ export default {
 			assignmentType,
 		})
 	},
+	async cancel({ userId, groupListIds, assignmentType }) {
+		return await axios.post(userAssignments.cancel, {
+			userId,
+			groupListIds,
+			assignmentType,
+		})
+	},
 }

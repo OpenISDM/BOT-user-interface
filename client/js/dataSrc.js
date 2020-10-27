@@ -65,6 +65,7 @@ export const userAssignments = {
 	getGroupIdListByUserId: `${domain}/data/userAssignments/getGroupIdListByUserId`,
 	accept: `${domain}/data/userAssignments/accept`,
 	finish: `${domain}/data/userAssignments/finish`,
+	cancel: `${domain}/data/userAssignments/cancel`,
 }
 export const objectPackage = `${domain}/data/objectPackage`
 export const importedObject = `${domain}/data/importedObject`

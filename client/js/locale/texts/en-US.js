@@ -151,6 +151,7 @@ const en = {
 	EDIT_SECONDARY_AREA: 'edit secondary area',
 	EDIT_PASSWORD: 'edit password',
 	CANCEL: 'cancel',
+	CANCEL_ALL: 'cancel',
 	SEND: 'send',
 	SIGN_IN: 'sign in',
 	SIGN_UP: 'sign up',
