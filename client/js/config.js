@@ -216,6 +216,11 @@ const config = {
 	...viewConfig,
 
 	mapConfig,
+
+	ACTION_BUTTONS: {
+		DEVICE: 'DEVICE',
+		PATIENT: 'PATIENT',
+	},
 }
 
 export default config

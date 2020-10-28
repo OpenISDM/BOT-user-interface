@@ -61,7 +61,7 @@ import {
 	PIN_SELETION,
 } from '../../../config/wordMap'
 
-const { MAX_SEARCH_OBJECT_NUM } = config
+const { MAX_SEARCH_OBJECT_NUM, ACTION_BUTTONS } = config
 
 class MainContainer extends React.Component {
 	static contextType = AppContext
@@ -95,6 +95,7 @@ class MainContainer extends React.Component {
 			(item, index) => index < MAX_SEARCH_OBJECT_NUM
 		),
 		groupIds: [],
+		activeActionButtons: [],
 	}
 
 	errorToast = null
@@ -428,8 +429,11 @@ class MainContainer extends React.Component {
 
 		const searchableField = config.SEARCHABLE_FIELD
 
+		const activeActionButtons = []
+
 		switch (searchKey.type) {
 			case ALL_DEVICES:
+				activeActionButtons.push(ACTION_BUTTONS.DEVICE)
 				searchObjectArray = []
 				searchResult = []
 				proccessedTrackingData.forEach((item) => {
@@ -446,6 +450,7 @@ class MainContainer extends React.Component {
 				break
 
 			case ALL_PATIENTS:
+				activeActionButtons.push(ACTION_BUTTONS.PATIENT)
 				searchObjectArray = []
 				searchResult = []
 				proccessedTrackingData.forEach((item) => {
@@ -510,6 +515,8 @@ class MainContainer extends React.Component {
 
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
+				searchedObjectType.length = 0
+				showedObjects.length = 0
 				if (!searchObjectArray.includes(searchKey.value)) {
 					searchObjectArray.push(searchKey.value)
 					if (searchObjectArray.length > MAX_SEARCH_OBJECT_NUM) {
@@ -517,7 +524,6 @@ class MainContainer extends React.Component {
 						pinColorArray.push(pinColorArray.shift())
 					}
 				}
-				console.log(searchObjectArray)
 
 				for (let index = searchObjectArray.length - 1; index >= 0; index--) {
 					const singleSearchObjectArray = []
@@ -610,6 +616,7 @@ class MainContainer extends React.Component {
 			searchKey,
 			searchObjectArray,
 			pinColorArray,
+			activeActionButtons,
 		})
 	}
 
@@ -679,6 +686,7 @@ class MainContainer extends React.Component {
 					showedObjects: [],
 					searchObjectArray: [],
 					showMobileMap: true,
+					activeActionButtons: [],
 				})
 				break
 		}
@@ -707,6 +715,7 @@ class MainContainer extends React.Component {
 			pinColorArray,
 			showFoundResult,
 			keywords,
+			activeActionButtons,
 		} = this.state
 
 		const {
@@ -750,6 +759,7 @@ class MainContainer extends React.Component {
 			handleClick,
 			showFoundResult,
 			keywords,
+			activeActionButtons,
 		}
 
 		return (

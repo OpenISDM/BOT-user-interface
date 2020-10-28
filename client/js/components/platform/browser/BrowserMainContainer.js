@@ -67,6 +67,7 @@ const BrowserMainContainer = ({
 	handleClick,
 	showFoundResult,
 	keywords,
+	activeActionButtons,
 }) => {
 	const auth = React.useContext(AuthenticationContext)
 
@@ -125,6 +126,7 @@ const BrowserMainContainer = ({
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						searchResultListRef={searchResultListRef}
+						activeActionButtons={activeActionButtons}
 					/>
 				</Col>
 

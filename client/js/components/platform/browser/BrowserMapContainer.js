@@ -40,6 +40,8 @@ import AccessControl from '../../authentication/AccessControl'
 import Map from '../../presentational/Map'
 import { CLEAR_SEARCH_RESULT } from '../../../config/wordMap'
 
+const { ACTION_BUTTONS } = config
+
 export default class BrowserMapContainer extends React.Component {
 	static contextType = AppContext
 
@@ -63,6 +65,8 @@ export default class BrowserMapContainer extends React.Component {
 			handleClick,
 			getSearchKey,
 			searchResultListRef,
+			searchResult,
+			activeActionButtons,
 		} = this.props
 
 		const [{ areaId }] = stateReducer
@@ -118,6 +122,7 @@ export default class BrowserMapContainer extends React.Component {
 						getSearchKey={getSearchKey}
 						searchResultListRef={searchResultListRef}
 						showedObjects={showedObjects}
+						searchResult={searchResult}
 					/>
 				</div>
 				<div>
@@ -168,10 +173,7 @@ export default class BrowserMapContainer extends React.Component {
 										this.props.showedObjects.includes(-1)
 									}
 									disabled={
-										!(
-											searchedObjectType.includes(-1) ||
-											searchedObjectType.includes(0)
-										)
+										!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
 									}
 								>
 									{!(showedObjects.includes(0) || showedObjects.includes(-1))
@@ -196,10 +198,7 @@ export default class BrowserMapContainer extends React.Component {
 										this.props.showedObjects.includes(2)
 									}
 									disabled={
-										!(
-											searchedObjectType.includes(1) ||
-											searchedObjectType.includes(2)
-										)
+										!activeActionButtons.includes(ACTION_BUTTONS.PATIENT)
 									}
 								>
 									{!(showedObjects.includes(1) || showedObjects.includes(2))

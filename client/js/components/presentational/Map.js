@@ -446,6 +446,7 @@ class Map extends React.Component {
 			searchKey,
 			proccessedTrackingData,
 			showedObjects,
+			searchResult,
 		} = this.props
 
 		const [{ assignedObject }] = stateReducer
@@ -462,117 +463,113 @@ class Map extends React.Component {
 
 		const numberSheet = {}
 
-		this.filterTrackingData(JSONClone(this.props.proccessedTrackingData)).map(
-			(item, index) => {
-				/** Calculate the position of the object  */
-				const position = macAddressToCoordinate(
-					item.mac_address,
+		this.filterTrackingData(JSONClone(searchResult)).map((item, index) => {
+			/** Calculate the position of the object  */
+			const position = macAddressToCoordinate(
+				item.mac_address,
+				item.currentPosition,
+				item.updated_by_n_lbeacons,
+				this.props.mapConfig.iconOptions.markerDispersity
+			)
+
+			/** Set the Marker's popup
+			 * popupContent (objectName, objectImg, objectImgWidth)
+			 * More Style sheet include in Map.css */
+			const popupContent = this.props.mapConfig.getPopupContent(
+				[item],
+				this.collectObjectsByPosition(
+					proccessedTrackingData,
 					item.currentPosition,
-					item.updated_by_n_lbeacons,
-					this.props.mapConfig.iconOptions.markerDispersity
-				)
+					showedObjects
+				),
+				locale
+			)
 
-				/** Set the Marker's popup
-				 * popupContent (objectName, objectImg, objectImgWidth)
-				 * More Style sheet include in Map.css */
-				const popupContent = this.props.mapConfig.getPopupContent(
-					[item],
-					this.collectObjectsByPosition(
-						proccessedTrackingData,
-						item.currentPosition,
-						showedObjects
-					),
-					locale
-				)
+			const pinColorIndex = searchObjectArray.indexOf(item.keyword)
 
-				const pinColorIndex = searchObjectArray.indexOf(item.keyword)
-
-				if (pinColorIndex > -1) {
-					item.searched = true
-					item.pinColor = pinColorArray[pinColorIndex]
-				}
-				const iconSize = this.iconOptions.iconSize
-
-				/** Set the attribute if the object in search result list is on hover */
-				if (item.mac_address == assignedObject) {
-					// iconSize = iconSize.map(item => item * 5)
-
-					const errorCircleOptions = this.iconOptions.errorCircleOptions
-
-					const errorCircle = L.circleMarker(position, errorCircleOptions)
-
-					errorCircle.addTo(this.markersLayer)
-				}
-
-				/** Set the icon option*/
-				item.iconOption = {
-					...this.iconOptions,
-
-					/** Set the pin color */
-					markerColor: this.props.mapConfig.getIconColor(
-						item,
-						pinColorIndex > -1
-					),
-
-					/** Set the pin size */
-					// iconSize,
-
-					/** Insert the object's mac_address to be the data when clicking the object's marker */
-					macAddress: item.mac_address,
-
-					lbeacon_coordinate: item.lbeacon_coordinate,
-
-					currentPosition: item.currentPosition,
-
-					/** Set the ordered number on location pin */
-					number: item.searched
-						? countNumber(searchKey, item, numberSheet)
-						: '',
-
-					/** Set the color of the ordered number */
-					numberColor: this.props.mapConfig.iconColor.number,
-				}
-
-				const option = new L.AwesomeNumberMarkers(item.iconOption)
-
-				const marker = L.marker(position, { icon: option })
-					.bindPopup(popupContent, this.props.mapConfig.popupOptions)
-					.openPopup()
-
-				marker.addTo(this.markersLayer)
-
-				/** Set the z-index offset of the searhed object so that
-				 * the searched object icon will be on top of all others */
-				if (item.searched || item.panic) marker.setZIndexOffset(1000)
-
-				/** Set the marker's event. */
-				marker.on('mouseover', () => {
-					marker.openPopup()
-					this.setState({
-						shouldUpdateTrackingData: false,
-					})
-				})
-
-				marker.getPopup().on('remove', () => {
-					this.setState({
-						shouldUpdateTrackingData: true,
-					})
-				})
-
-				marker.on('click', async () => {
-					const objectList = this.collectObjectsByPosition(
-						proccessedTrackingData,
-						item.currentPosition,
-						showedObjects
-					)
-					await this.props.getSearchKey({
-						type: PIN_SELETION,
-						value: objectList.map((item) => item.mac_address),
-					})
-					this.props.searchResultListRef.current.handleClick()
-				})
+			if (pinColorIndex > -1) {
+				item.searched = true
+				item.pinColor = pinColorArray[pinColorIndex]
 			}
-		)
+			const iconSize = this.iconOptions.iconSize
+
+			/** Set the attribute if the object in search result list is on hover */
+			if (item.mac_address == assignedObject) {
+				// iconSize = iconSize.map(item => item * 5)
+
+				const errorCircleOptions = this.iconOptions.errorCircleOptions
+
+				const errorCircle = L.circleMarker(position, errorCircleOptions)
+
+				errorCircle.addTo(this.markersLayer)
+			}
+
+			/** Set the icon option*/
+			item.iconOption = {
+				...this.iconOptions,
+
+				/** Set the pin color */
+				markerColor: this.props.mapConfig.getIconColor(
+					item,
+					pinColorIndex > -1
+				),
+
+				/** Set the pin size */
+				// iconSize,
+
+				/** Insert the object's mac_address to be the data when clicking the object's marker */
+				macAddress: item.mac_address,
+
+				lbeacon_coordinate: item.lbeacon_coordinate,
+
+				currentPosition: item.currentPosition,
+
+				/** Set the ordered number on location pin */
+				number: item.searched ? countNumber(searchKey, item, numberSheet) : '',
+
+				/** Set the color of the ordered number */
+				numberColor: this.props.mapConfig.iconColor.number,
+			}
+
+			const option = new L.AwesomeNumberMarkers(item.iconOption)
+
+			const marker = L.marker(position, { icon: option })
+				.bindPopup(popupContent, this.props.mapConfig.popupOptions)
+				.openPopup()
+
+			marker.addTo(this.markersLayer)
+
+			/** Set the z-index offset of the searhed object so that
+			 * the searched object icon will be on top of all others */
+			if (item.searched || item.panic) marker.setZIndexOffset(1000)
+
+			/** Set the marker's event. */
+			marker.on('mouseover', () => {
+				marker.openPopup()
+				this.setState({
+					shouldUpdateTrackingData: false,
+				})
+			})
+
+			marker.getPopup().on('remove', () => {
+				this.setState({
+					shouldUpdateTrackingData: true,
+				})
+			})
+
+			marker.on('click', async () => {
+				const objectList = this.collectObjectsByPosition(
+					proccessedTrackingData,
+					item.currentPosition,
+					showedObjects
+				)
+				await this.props.getSearchKey({
+					type: PIN_SELETION,
+					value: objectList.map((item) => item.mac_address),
+				})
+				this.props.searchResultListRef.current.handleClick()
+			})
+		})
 		/** Add the new markerslayers to the map */
 		this.markersLayer.addTo(this.map)
 		this.errorCircle.addTo(this.map)

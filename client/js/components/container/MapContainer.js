@@ -124,6 +124,7 @@ class MapContainer extends React.Component {
 			searchKey,
 			getSearchKey,
 			searchResultListRef,
+			activeActionButtons,
 		} = this.props
 
 		const propsGroup = {
@@ -135,6 +136,7 @@ class MapContainer extends React.Component {
 			showPdfDownloadForm,
 			handleClickButton,
 			pathMacAddress,
+			searchResult,
 			handleClearButton,
 			geofenceConfig,
 			setMonitor,
@@ -146,7 +148,9 @@ class MapContainer extends React.Component {
 			searchKey,
 			getSearchKey,
 			searchResultListRef,
+			activeActionButtons,
 		}
+
 		return (
 			<Fragment>
 				<BrowserView>
@@ -160,7 +164,7 @@ class MapContainer extends React.Component {
 				</MobileOnlyView>
 				<PdfDownloadForm
 					show={this.state.showPdfDownloadForm}
-					data={this.props.searchResult}
+					data={searchResult}
 					handleClose={this.handleCloseModal}
 				/>
 				<GeneralConfirmForm
