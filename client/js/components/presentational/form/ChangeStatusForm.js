@@ -45,15 +45,10 @@ import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
 import AccessControl from '../../authentication/AccessControl'
 import apiHelper from '../../../helper/apiHelper'
-import {
-	RETURNED,
-	RESERVE,
-	BROKEN,
-	TRANSFERRED,
-	TRACE,
-} from '../../../config/wordMap'
+import { RETURNED, BROKEN, TRANSFERRED, TRACE } from '../../../config/wordMap'
+import PropTypes from 'prop-types'
 
-export default class ChangeStatusForm extends React.Component {
+class ChangeStatusForm extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -94,12 +89,14 @@ export default class ChangeStatusForm extends React.Component {
 		}
 	}
 
-	handleClose = (e) => {
+	handleClose = () => {
 		this.props.handleChangeObjectStatusFormClose()
 	}
 
 	handleClick = (e) => {
 		const item = e.target.name
+		const { selectedObjectData } = this.props
+		const macAddress = selectedObjectData[0].mac_address
 		switch (item) {
 			case 'add device':
 				this.props.handleAdditionalButton(item)
@@ -113,8 +110,6 @@ export default class ChangeStatusForm extends React.Component {
 				//     this.props.handleShowPath(item.mac_address);
 				// }) : null;
 				// this.handleClose();
-				const { selectedObjectData } = this.props
-				const macAddress = selectedObjectData[0].mac_address
 				this.props.handleShowPath(macAddress, this.handleClose)
 
 				break
@@ -127,34 +122,34 @@ export default class ChangeStatusForm extends React.Component {
 		selectedObjectData = selectedObjectData.length ? selectedObjectData : []
 
 		const initValues = {
-			name: selectedObjectData.length != 0 ? selectedObjectData[0].name : '',
-			type: selectedObjectData.length != 0 ? selectedObjectData[0].type : '',
+			name: selectedObjectData.length !== 0 ? selectedObjectData[0].name : '',
+			type: selectedObjectData.length !== 0 ? selectedObjectData[0].type : '',
 			asset_control_number:
-				selectedObjectData.length != 0
+				selectedObjectData.length !== 0
 					? selectedObjectData[0].asset_control_number
 					: '',
 			status:
-				selectedObjectData.length != 0 ? selectedObjectData[0].status : '',
+				selectedObjectData.length !== 0 ? selectedObjectData[0].status : '',
 			transferred_location:
-				selectedObjectData.length != 0 &&
-				selectedObjectData[0].status == TRANSFERRED
+				selectedObjectData.length !== 0 &&
+				selectedObjectData[0].status === TRANSFERRED
 					? {
 							id: selectedObjectData[0].transferred_location.id,
 							value: selectedObjectData[0].transferred_location.value,
 							label: `${selectedObjectData[0].transferred_location.name}-${selectedObjectData[0].transferred_location.department}`,
 					  }
 					: '',
-			notes: selectedObjectData.length != 0 ? selectedObjectData[0].notes : '',
+			notes: selectedObjectData.length !== 0 ? selectedObjectData[0].notes : '',
 			nickname:
-				selectedObjectData.length != 0 ? selectedObjectData[0].nickname : '',
+				selectedObjectData.length !== 0 ? selectedObjectData[0].nickname : '',
 		}
 
 		return initValues
 	}
 	render() {
 		const { locale } = this.context
-
-		let { title, selectedObjectData } = this.props
+		const { title } = this.props
+		let { selectedObjectData } = this.props
 
 		selectedObjectData = selectedObjectData.length ? selectedObjectData : []
 
@@ -173,19 +168,17 @@ export default class ChangeStatusForm extends React.Component {
 						initialValues={this.initValues()}
 						validationSchema={object().shape({
 							status: string().required(locale.texts.STATUS_IS_REQUIRED),
-
 							transferred_location: string().when('status', {
 								is: TRANSFERRED,
 								then: string().required(locale.texts.LOCATION_IS_REQUIRED),
 							}),
 						})}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
+						onSubmit={(values) => {
 							this.props.handleChangeObjectStatusFormSubmit(values)
 						}}
 						render={({
 							values,
 							errors,
-							status,
 							touched,
 							isSubmitting,
 							setFieldValue,
@@ -302,12 +295,6 @@ export default class ChangeStatusForm extends React.Component {
 												<Field
 													component={RadioButton}
 													name="status"
-													id={RESERVE}
-													label={locale.texts.RESERVE}
-												/>
-												<Field
-													component={RadioButton}
-													name="status"
 													id={RETURNED}
 													label={locale.texts.RETURNED}
 												/>
@@ -327,7 +314,7 @@ export default class ChangeStatusForm extends React.Component {
 									label={locale.texts.TRANSFERRED_LOCATION}
 									error={errors.transferred_location}
 									touched={touched.transferred_location}
-									display={values.status == 'transferred'}
+									display={values.status === 'transferred'}
 									component={() => (
 										<Select
 											name="transferred_location"
@@ -399,3 +386,17 @@ export default class ChangeStatusForm extends React.Component {
 		)
 	}
 }
+
+ChangeStatusForm.propTypes = {
+	title: PropTypes.string.isRequired,
+	show: PropTypes.bool.isRequired,
+	showAddDevice: PropTypes.bool.isRequired,
+	handleRemoveButton: PropTypes.func.isRequired,
+	selectedObjectData: PropTypes.array.isRequired,
+	handleChangeObjectStatusFormSubmit: PropTypes.func.isRequired,
+	handleShowPath: PropTypes.func.isRequired,
+	handleAdditionalButton: PropTypes.func.isRequired,
+	handleChangeObjectStatusFormClose: PropTypes.func.isRequired,
+}
+
+export default ChangeStatusForm
