@@ -39,8 +39,9 @@ import config from '../../config'
 import { SEARCH_BAR, SEARCH_HISTORY } from '../../config/wordMap'
 import apiHelper from '../../helper/apiHelper'
 import { AppContext } from '../../context/AppContext'
+import PropTypes from 'prop-types'
 
-let suggestData = []
+const { AUTOSUGGEST_NUMBER_LIMIT } = config
 let load_suggest = false
 
 const getSuggestionValue = (suggestion) => suggestion
@@ -48,21 +49,14 @@ const getSuggestionValue = (suggestion) => suggestion
 // Use your imagination to render suggestions.
 const renderSuggestion = (suggestion) => <div>{suggestion || null}</div>
 
-const renderInputComponent = (inputProps) => (
-	<div className="inputContainer">
-		<i className="fas fa-search icon font-size-120-percent" />
-		<input {...inputProps} />
-	</div>
-)
-
 const suggestionFilter = {
 	autoComplete: (suggestData, inputValue, inputLength) => {
 		return suggestData.filter((term) => {
-			return term.toLowerCase().slice(0, inputLength) == inputValue
+			return `${term.toLowerCase().slice(0, inputLength)}` === `${inputValue}`
 		})
 	},
 
-	partialMatch: (suggestData, inputValue, inputLength) => {
+	partialMatch: (suggestData, inputValue) => {
 		return suggestData.filter((term) => {
 			return term.toLowerCase().indexOf(inputValue) > -1
 		})
@@ -79,7 +73,7 @@ class BOTSearchbar extends React.Component {
 
 	componentDidUpdate = (prepProps) => {
 		if (
-			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			!prepProps.clearSearchResult
 		) {
 			this.setState({
@@ -87,7 +81,6 @@ class BOTSearchbar extends React.Component {
 			})
 		}
 		if (!load_suggest) {
-			suggestData = this.props.keywords
 			load_suggest = true
 		}
 	}
@@ -115,7 +108,6 @@ class BOTSearchbar extends React.Component {
 		}
 
 		this.props.getSearchKey(searchKey)
-
 		this.checkInSearchHistory(value)
 	}
 
@@ -123,9 +115,13 @@ class BOTSearchbar extends React.Component {
 	addSearchHistory = (searchKey) => {
 		const { auth } = this.context
 
-		if (!auth.authenticated) return
+		if (!auth.authenticated) {
+			return
+		}
 
-		if (!this.props.suggestData.includes(searchKey.value)) return
+		if (!this.props.suggestData.includes(searchKey.value)) {
+			return
+		}
 
 		let searchHistory = [...auth.user.searchHistory] || []
 
@@ -139,30 +135,25 @@ class BOTSearchbar extends React.Component {
 		}
 
 		searchHistory.unshift(searchKey.value)
-
 		auth.setSearchHistory(searchHistory)
-
 		this.checkInSearchHistory(searchKey.value)
 	}
 
 	/** Insert search history to database */
-	checkInSearchHistory = (itemName) => {
+	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
-
-		apiHelper.userApiAgent
-			.addSearchHistory({
+		try {
+			await apiHelper.userApiAgent.addSearchHistory({
 				username: auth.user.name,
 				keyType: 'object type search',
 				keyWord: itemName,
 			})
-			.then((res) => {
-				this.setState({
-					searchKey: itemName,
-				})
+			this.setState({
+				searchKey: itemName,
 			})
-			.catch((err) => {
-				console.log(`check in search history failed ${err}`)
-			})
+		} catch (e) {
+			console.log(`check in search history failed ${e}`)
+		}
 	}
 
 	handleChange = (e) => {
@@ -197,6 +188,9 @@ class BOTSearchbar extends React.Component {
 
 		/** limit count by specific number */
 		let suggestTemp = []
+		if (inputLength === 0) {
+			return suggestTemp
+		}
 
 		suggestTemp = suggestionFilter.partialMatch(
 			this.props.suggestData,
@@ -204,13 +198,9 @@ class BOTSearchbar extends React.Component {
 			inputLength
 		)
 
-		const suggestLimit = []
-
-		suggestTemp.map((item, index) => {
-			index < config.AUTOSUGGEST_NUMBER_LIMIT ? suggestLimit.push(item) : null
-		})
-
-		return inputLength == 0 ? [] : suggestLimit
+		return suggestTemp.length <= AUTOSUGGEST_NUMBER_LIMIT
+			? suggestTemp
+			: suggestTemp.slice(0, AUTOSUGGEST_NUMBER_LIMIT + 1)
 	}
 
 	render() {
@@ -224,12 +214,7 @@ class BOTSearchbar extends React.Component {
 
 		return (
 			<Form className="d-flex justify-content-around">
-				<Form.Group
-					className="d-flex justify-content-center mb-0 mx-1"
-					// style={{
-					//     minWidth: parseInt(this.props.width) * 0.9
-					// }}
-				>
+				<Form.Group className="d-flex justify-content-center mb-0 mx-1">
 					<Autosuggest
 						suggestions={suggestions}
 						onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -237,7 +222,15 @@ class BOTSearchbar extends React.Component {
 						getSuggestionValue={getSuggestionValue}
 						renderSuggestion={renderSuggestion}
 						inputProps={inputProps}
-						renderInputComponent={renderInputComponent}
+						renderInputComponent={(inputProps) => (
+							<div className="inputContainer">
+								<i
+									className="fas fa-search icon font-size-120-percent cursor-pointer"
+									onClick={this.handleSubmit}
+								/>
+								<input {...inputProps} />
+							</div>
+						)}
 					/>
 				</Form.Group>
 				<Button
@@ -245,10 +238,17 @@ class BOTSearchbar extends React.Component {
 					variant="link"
 					className="btn btn-link btn-sm bd-highlight width-0"
 					onClick={this.handleSubmit}
-				></Button>
+				/>
 			</Form>
 		)
 	}
+}
+
+BOTSearchbar.propTypes = {
+	suggestData: PropTypes.array.isRequired,
+	clearSearchResult: PropTypes.bool.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
 }
 
 export default BOTSearchbar
