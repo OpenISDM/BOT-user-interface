@@ -231,15 +231,23 @@ class GetAssignments extends React.Component {
 	}
 
 	generateAssismentsDetails = (gruop) => {
-		// TODO: Johnson will implement Jane's requirement
-		const { items } = gruop
 		let itemsNameString = ''
+
+		const { items } = gruop
 		if (items) {
+			const itemMap = {}
 			items.forEach((id) => {
-				itemsNameString =
-					itemsNameString +
-					this.state.objectMap[id].name +
-					String.fromCharCode(13, 10)
+				const name = this.state.objectMap[id].name
+				if (itemMap[name]) {
+					itemMap[name] += 1
+				} else {
+					itemMap[name] = 1
+				}
+			})
+			Object.keys(itemMap).forEach((itemKey) => {
+				itemsNameString = `${itemsNameString}${itemKey} : ${
+					itemMap[itemKey]
+				} ${String.fromCharCode(13, 10)}`
 			})
 		}
 

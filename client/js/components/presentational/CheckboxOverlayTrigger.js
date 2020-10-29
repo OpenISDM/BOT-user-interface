@@ -56,11 +56,9 @@ const CheckboxOverlayTrigger = ({
 			placement={placement}
 			overlay={
 				<Popover id={`popover-positioned-${placement}`}>
-					{/* <Popover.Content> */}
-					<textarea disabled style={{ height: '300px', width: '200px' }}>
+					<Popover.Content className="popover-content">
 						{popoverBody}
-					</textarea>
-					{/* </Popover.Content> */}
+					</Popover.Content>
 					<Popover.Title as="h3">{popoverTitle}</Popover.Title>
 				</Popover>
 			}
