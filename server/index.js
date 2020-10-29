@@ -63,8 +63,8 @@ if (process.env.ENABLE_HTTP_REDIRECT === 'true') {
 	app.use(redirect)
 }
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json({ limit: '50mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use(session(sessionOptions))
 
 app.use((req, res, next) => {
