@@ -190,58 +190,43 @@ export default {
 			})
 	},
 
-	editObjectPackage: (request, response) => {
-		const {
-			formOption,
-			username,
-			pdfPackage,
-			reservedTimestamp,
-			locale,
-		} = request.body
-		console.log(formOption)
-		pool
-			.query(
+	editObjectPackage: async (request, response) => {
+		const { formOption, username, pdfPackage, reservedTimestamp } = request.body
+		try {
+			let getPdfFailed = false
+			pdf
+				.create(pdfPackage.pdf, pdfPackage.options)
+				.toFile(
+					path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
+					function (err) {
+						if (err) {
+							getPdfFailed = true
+						}
+					}
+				)
+
+			const res = await pool.query(
 				recordQueries.addEditObjectRecord(formOption, username, pdfPackage.path)
 			)
-			.then((res) => {
-				const record_id = res.rows[0].id
-				console.log('add edited object record succeed')
+			const record_id = res.rows[0].id
+			pool.query(
+				dbQueries.editObjectPackage(
+					formOption,
+					username,
+					record_id,
+					reservedTimestamp
+				)
+			)
 
-				pool
-					.query(
-						dbQueries.editObjectPackage(
-							formOption,
-							username,
-							record_id,
-							reservedTimestamp
-						)
-					)
-					.then((res) => {
-						console.log('edit object package succeed')
-						if (pdfPackage) {
-							pdf
-								.create(pdfPackage.pdf, pdfPackage.options)
-								.toFile(
-									path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
-									function (err, result) {
-										if (err)
-											return console.log(`edit object package error ${err}`)
-
-										console.log('pdf create succeed')
-										response.status(200).json(pdfPackage.path)
-									}
-								)
-						} else {
-							response.status(200).json()
-						}
-					})
-					.catch((err) => {
-						console.log(`edit object package failed ${err}`)
-					})
-			})
-			.catch((err) => {
-				console.log(`edit object package failed ${err}`)
-			})
+			if (getPdfFailed) {
+				response.status(500).send('Something broke!')
+			} else {
+				console.log('edit object package succeed')
+				response.status(200).json()
+			}
+		} catch (e) {
+			console.log(`edit object package failed ${e}`)
+		}
 	},
 
 	getIdleMacaddr: (request, response) => {
