@@ -157,7 +157,6 @@ class GetAssignments extends React.Component {
 				patientGroupMap,
 				objectMap: { ...this.state.objectMap, ...patientObjectMap },
 			})
-			console.log(patientObjectMap)
 		} catch (e) {
 			console.log('get patient group failed', e)
 		}
@@ -175,7 +174,6 @@ class GetAssignments extends React.Component {
 				deviceGroupMap,
 				objectMap: { ...this.state.objectMap, ...deviceObjectMap },
 			})
-			console.log(deviceObjectMap)
 		} catch (e) {
 			console.log('get device group failed', e)
 		}
@@ -199,7 +197,6 @@ class GetAssignments extends React.Component {
 			// add id
 			submitGroupListIds = [...this.state.submitGroupListIds, groupId]
 		}
-		console.log(submitGroupListIds)
 		this.setState({
 			submitGroupListIds: [...new Set(submitGroupListIds)],
 		})
