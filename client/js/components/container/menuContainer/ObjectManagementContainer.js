@@ -38,6 +38,21 @@ class ObjectManagementContainer extends React.Component {
 								{locale.texts.PATIENT_FORM}
 							</BOTNavLink>
 						</Nav.Item>
+						<Nav.Item>
+							<BOTNavLink secondary eventKey="">
+								{locale.texts.STAFF_FORM}
+							</BOTNavLink>
+						</Nav.Item>
+						<Nav.Item>
+							<BOTNavLink secondary eventKey="''">
+								{locale.texts.VISTOR_FORM}
+							</BOTNavLink>
+						</Nav.Item>
+						<Nav.Item>
+							<BOTNavLink secondary eventKey="''">
+								{locale.texts.BATTERY_FORM}
+							</BOTNavLink>
+						</Nav.Item>
 						<AccessControl
 							permission={'user:importTable'}
 							renderNoAccess={() => null}

@@ -39,24 +39,24 @@ import LBeaconTable from '../components/container/LBeaconTable'
 import GatewayTable from '../components/container/GatewayTable'
 import AdminManagementContainer from '../components/container/UserContainer/AdminManagementContainer'
 import config from '../config'
-// import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
-import RolePermissionManagement from '../components/container/RolePermissionManagement'
 import MyDeviceManager from '../components/container/UserContainer/MyDeviceManager'
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
 import MyPatientManager from '../components/container/UserContainer/MyPatientManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
-// import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
 import GeoFenceSettingBlock from '../components/container/GeoFenceSettingBlock'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
 import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
 import TrackingTable from '../components/container/TrackingTable'
 import TraceContainer from '../components/container/menuContainer/TraceContainer'
-// import BOTAdmin from '../components/container/menuContainer/BOTAdminContainer'
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
 import Loader from '../components/presentational/Loader'
 import GeneralSettings from '../components/container/menuContainer/GeneralSettings'
 import GetAssignments from '../components/container/GetAssignments'
+// import RolePermissionManagement from '../components/container/RolePermissionManagement'
+// import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
+// import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
+// import BOTAdmin from '../components/container/menuContainer/BOTAdminContainer'
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
@@ -94,66 +94,6 @@ export const userContainerModule = {
 	],
 }
 
-export const settingModule = {
-	title: 'settings',
-
-	defaultActiveKey: 'user_profile',
-
-	path: routes.SETTINGS,
-
-	tabList: [
-		{
-			name: 'user profile',
-			component: (props) => <UserProfile {...props} />,
-		},
-		{
-			name: 'general settings',
-			component: (props) => <GeneralSettings {...props} />,
-			permission: 'route:generalSettings',
-		},
-		{
-			name: 'lbeacon',
-			component: (props) => <LBeaconTable {...props} />,
-			platform: ['browser', 'tablet', 'mobile'],
-			permission: 'route:lbeacon',
-		},
-		{
-			name: 'gateway',
-			component: (props) => <GatewayTable {...props} />,
-			platform: ['browser', 'tablet', 'mobile'],
-			permission: 'route:gateway',
-		},
-		{
-			name: 'monitor settings',
-			alias: 'monitor',
-			path: '/page/monitor',
-			module: monitorSettingModule,
-			permission: 'route:monitor',
-			platform: ['browser', 'tablet'],
-			component: (props) => <GeoFenceSettingBlock {...props} />,
-		},
-		// {
-		//     name: "transferred location management",
-		//     component: (props) => <TransferredLocationManagement {...props}/>,
-		//     platform: ['browser'],
-		// },
-		// {
-		//     name: "Role Permission Management",
-		//     permission: "rolePermissionManagement",
-		//     component: (props) => <RolePermissionManagement {...props}/>,
-		//     platform: ['browser']
-		// },
-		// {
-		//     name: "monitor setting",
-		//     alias: "monitor",
-		//     path: "/page/monitor",
-		//     module: monitorSettingModule,
-		//     permission: "route:monitor",
-		//     platform: ['browser', 'tablet']
-		// },
-	],
-}
-
 export const monitorSettingModule = {
 	title: 'monitor setting',
 
@@ -177,6 +117,57 @@ export const monitorSettingModule = {
 		{
 			name: config.monitorSettingType.GEOFENCE_MONITOR,
 			component: (props) => <GeoFenceSettingBlock {...props} />,
+		},
+	],
+}
+
+export const settingModule = {
+	title: 'settings',
+
+	defaultActiveKey: 'user_profile',
+
+	path: routes.SETTINGS,
+
+	tabList: [
+		{
+			name: 'user profile',
+			component: (props) => <UserProfile {...props} />,
+		},
+		{
+			name: 'custom settings',
+			component: (props) => <GeneralSettings {...props} />,
+			permission: 'route:generalSettings',
+		},
+		{
+			name: 'search settings',
+			component: () => null,
+			permission: 'route:generalSettings',
+		},
+		{
+			name: 'monitor settings',
+			alias: 'monitor',
+			path: '/page/monitor',
+			module: monitorSettingModule,
+			permission: 'route:monitor',
+			platform: ['browser', 'tablet'],
+			component: (props) => <GeoFenceSettingBlock {...props} />,
+		},
+		{
+			name: 'notification settings',
+			component: () => null,
+			permission: 'route:generalSettings',
+		},
+		{
+			name: 'lbeacon',
+			component: (props) => <LBeaconTable {...props} />,
+			platform: ['browser', 'tablet', 'mobile'],
+			permission: 'route:lbeacon',
+		},
+		{
+			name: 'gateway',
+			component: (props) => <GatewayTable {...props} />,
+			platform: ['browser', 'tablet', 'mobile'],
+			permission: 'route:gateway',
 		},
 	],
 }
@@ -223,38 +214,38 @@ export const reportContainerModule = {
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
-			name: 'notes on patients',
-			component: (props) => null,
+			name: 'Report and Change Notes On Patients',
+			component: () => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
-		// {
-		// 	name: 'device transfer record',
-		// 	component: (props) => <ObjectEditedRecord {...props} />,
-		// 	platform: ['browser', 'tablet', 'mobile'],
-		// },
 		{
 			name: 'Report And Change Device Status',
 			component: (props) => <ObjectEditedRecord {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
-		// {
-		//     name: 'device service request',
-		//     component: (props) => null,
-		//     platform: ['browser', 'tablet', 'mobile'],
-		// },
 		{
-			name: 'object tracking',
+			name: 'Report Of Historical Notes On Patients',
+			component: () => null,
+			platform: ['browser', 'tablet', 'mobile'],
+		},
+		{
+			name: 'Report Of Historical Device Status Changed Records',
+			component: (props) => <ObjectEditedRecord {...props} />,
+			platform: ['browser', 'tablet', 'mobile'],
+		},
+		{
+			name: 'Request Object Trace',
 			component: (props) => <TrackingTable {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
-		// {
-		//     name: 'object edited record',
-		//     component: (props) => <ObjectEditedRecord {...props} />,
-		//     platform: ['browser', 'tablet', 'mobile'],
-		// },
 		{
-			name: 'asset usage',
-			component: (props) => null,
+			name: 'Request Asset Usage Data',
+			component: () => null,
+			platform: ['browser', 'tablet', 'mobile'],
+		},
+		{
+			name: 'Report Of Historical Notifications',
+			component: () => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 	],
@@ -263,50 +254,41 @@ export const reportContainerModule = {
 export const BOTAdminModule = {
 	title: 'BOT admin',
 
-	defaultActiveKey: 'user_manager',
+	defaultActiveKey: 'Add Delete User Accounts',
 
 	path: routes.BOT_ADMIN,
 
 	tabList: [
 		{
-			name: 'user manager',
+			name: 'Add Delete User Accounts',
 			permission: 'route:bigScreen',
 			component: (props) => <AdminManagementContainer {...props} />,
 			platform: ['browser', 'tablet'],
 		},
 		{
-			name: 'devices management',
+			name: 'Edit User Roles And Permissions',
+			// permission: 'rolePermissionManagement',
+			// component: (props) => <RolePermissionManagement {...props} />, // temporary hide
+			component: () => null,
+			platform: ['browser'],
+		},
+		{
+			name: 'Generate Revise Device Assignments',
 			path: 'devicesManagement',
 			href: '#DevicesManagement',
-			component: (props) => <DeviceGroupManager />,
+			component: (props) => <DeviceGroupManager {...props} />,
 		},
 		{
-			name: 'patient management',
+			name: 'Generate Revise Patient Assignments',
 			path: 'patientManagement',
 			href: '#PatientManagement',
-			component: (props) => <PatientGroupManager />,
+			component: (props) => <PatientGroupManager {...props} />,
 		},
 		{
-			name: 'transferred location management',
+			name: 'Add Delete Transfer Locations',
 			component: (props) => <TransferredLocationManagement {...props} />,
 			platform: ['browser'],
 		},
-		{
-			name: 'Role Permission Management',
-			permission: 'rolePermissionManagement',
-			component: (props) => <RolePermissionManagement {...props} />,
-			platform: ['browser'],
-		},
-		// {
-		//     name: "lbeacon",
-		//     component: (props) => <LBeaconTable {...props}/>,
-		//     platform: ['browser', 'tablet', 'mobile']
-		// },
-		// {
-		//     name: "gateway",
-		//     component: (props) => <GatewayTable {...props}/>,
-		//     platform: ['browser', 'tablet', 'mobile']
-		// }
 	],
 }
 
@@ -317,14 +299,6 @@ export const navbarNavList = [
 		path: routes.HOME,
 		hasEvent: true,
 	},
-	// {
-	//     name: "shift change",
-	//     alias: "shift change",
-	//     // path: "/",
-	//     permission: "user:shiftChange",
-	//     platform: ['browser', 'tablet'],
-	//     hasEvent: true
-	// },
 	{
 		name: 'object management',
 		alias: 'objectManagement',
