@@ -290,20 +290,17 @@ class SearchResultList extends React.Component {
 		})
 	}
 
-	handleClose = (callback) => {
-		this.setState(
-			{
-				showDownloadPdfRequest: false,
-				showConfirmForm: false,
-				showPatientView: false,
-				showSignatureForm: false,
-				showAddDevice: false,
-				selectedObjectData: [],
-				selection: [],
-				editedObjectPackage: [],
-			},
-			callback
-		)
+	handleClose = () => {
+		this.setState({
+			showDownloadPdfRequest: false,
+			showConfirmForm: false,
+			showPatientView: false,
+			showSignatureForm: false,
+			showAddDevice: false,
+			selectedObjectData: [],
+			selection: [],
+			editedObjectPackage: [],
+		})
 	}
 
 	handlePatientView = (values) => {
