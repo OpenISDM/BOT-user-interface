@@ -47,7 +47,7 @@ import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
-import { JSONClone } from '../../../helper/utilities'
+import { JSONClone, formatTime } from '../../../helper/utilities'
 
 class ObjectEditedRecord extends React.Component {
 	static contextType = AppContext
@@ -78,17 +78,20 @@ class ObjectEditedRecord extends React.Component {
 			.getRecord(config.RECORD_TYPE.EDITED_OBJECT, locale.abbr)
 			.then((res) => {
 				const columns = JSONClone(editObjectRecordTableColumn)
-				columns.map((field) => {
+				columns.forEach((field) => {
 					field.Header =
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
-				res.data.rows.map((item, index) => {
+				const data = res.data.rows.map((item, index) => {
 					item._id = index + 1
 					item.new_status =
 						locale.texts[item.new_status.toUpperCase().replace(/ /g, '_')]
+					item.edit_time = formatTime(item.edit_time)
+					return item
 				})
+
 				this.setState({
-					data: res.data.rows,
+					data,
 					columns,
 					locale: locale.abbr,
 				})

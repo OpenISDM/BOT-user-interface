@@ -33,7 +33,6 @@
 */
 
 import 'dotenv/config'
-import moment from 'moment-timezone'
 import dbQueries from '../db/userQueries'
 import pool from '../db/connection'
 import authQueries from '../db/authQueries'
@@ -41,23 +40,10 @@ import encrypt from '../service/encrypt'
 
 export default {
 	getAllUser: (request, response) => {
-		const { locale } = request.query
 		pool
 			.query(dbQueries.getAllUser())
 			.then((res) => {
 				console.log('get all user succeed')
-				res.rows.map((item) => {
-					item.last_visit_timestamp =
-						item.last_visit_timestamp &&
-						moment
-							.tz(item.last_visit_timestamp, process.env.TZ)
-							.locale(locale)
-							.format(process.env.TIMESTAMP_FORMAT)
-					item.registered_timestamp = moment
-						.tz(item.registered_timestamp, process.env.TZ)
-						.locale(locale)
-						.format(process.env.TIMESTAMP_FORMAT)
-				})
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -67,9 +53,7 @@ export default {
 
 	addUser: (request, response) => {
 		const { name, password, email, roles, area_id } = request.body
-
 		const hash = encrypt.createHash(password)
-
 		const signupPackage = {
 			name: name.toLowerCase(),
 			password: hash,
@@ -84,7 +68,7 @@ export default {
 			if (ress.rowCount < 1) {
 				pool
 					.query(dbQueries.addUser(signupPackage))
-					.then((res) => {
+					.then(() => {
 						pool
 							.query(
 								dbQueries.insertUserData(name.toLowerCase(), roles, area_id)
@@ -108,6 +92,7 @@ export default {
 
 	editUserInfo: (request, response) => {
 		const { user } = request.body
+
 		pool
 			.query(dbQueries.editUserInfo(user))
 			.then((res) => {
@@ -121,6 +106,7 @@ export default {
 
 	deleteUser: (request, response) => {
 		const username = request.body.username
+
 		pool
 			.query(dbQueries.deleteUser(username))
 			.then((res) => {
@@ -134,6 +120,7 @@ export default {
 
 	editSecondaryArea: (request, response) => {
 		const { user } = request.body
+
 		pool
 			.query(dbQueries.editSecondaryArea(user))
 			.then((res) => {
@@ -147,7 +134,6 @@ export default {
 
 	editPassword: (request, response) => {
 		const { user_id, password } = request.body
-
 		const hash = encrypt.createHash(password)
 
 		pool
@@ -194,7 +180,7 @@ export default {
 
 		pool
 			.query(dbQueries.editMyDevice(username, mode, acn))
-			.then((res) => {
+			.then(() => {
 				console.log('edit mydevice succeed')
 				response.status(200).json()
 			})
@@ -205,9 +191,10 @@ export default {
 
 	editMaxSearchHistoryCount: (request, response) => {
 		const { username, info } = request.body
+
 		pool
 			.query(dbQueries.editMaxSearchHistoryCount(username, info))
-			.then((res) => {
+			.then(() => {
 				console.log('modify user info success')
 				response.status(200).send('ok')
 			})
@@ -235,7 +222,7 @@ export default {
 
 		pool
 			.query(dbQueries.editListId(userId, listId))
-			.then((res) => {
+			.then(() => {
 				console.log('edit list id succeed')
 				response.status(200).json(200)
 			})

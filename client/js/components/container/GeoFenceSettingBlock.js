@@ -118,7 +118,7 @@ class GeoFenceSettingBlock extends React.Component {
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
 
-				res.data.rows.map((item, index) => {
+				const data = res.data.rows.map((item, index) => {
 					item.parsePerimeters.lbeacons[index] += ','
 					item.key = index + 1
 					item.area = {
@@ -132,10 +132,13 @@ class GeoFenceSettingBlock extends React.Component {
 					item.f_rssi = item.fences.split(',')[
 						item.fences.split(',').length - 2
 					]
+
+					return item
 				})
+
 				this.setState(
 					{
-						data: res.data.rows,
+						data,
 						columns,
 						show: false,
 						showDeleteConfirmation: false,

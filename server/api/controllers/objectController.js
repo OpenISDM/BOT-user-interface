@@ -33,7 +33,6 @@
 */
 
 import 'dotenv/config'
-import moment from 'moment-timezone'
 import dbQueries from '../db/objectQueries'
 import recordQueries from '../db/recordQueries'
 import pool, { sequelize, Op } from '../db/connection'
@@ -44,18 +43,12 @@ import ObjectTable from '../db/model/objectTable'
 
 export default {
 	getObject: (request, response) => {
-		const { locale, areas_id, objectType } = request.query
+		const { areas_id, objectType } = request.query
 
 		pool
 			.query(dbQueries.getObject(objectType, areas_id))
 			.then((res) => {
 				console.log('get object table succeed')
-				res.rows.map((item) => {
-					item.registered_timestamp = moment
-						.tz(item.registered_timestamp, process.env.TZ)
-						.locale(locale)
-						.format(process.env.TIMESTAMP_FORMAT)
-				})
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -64,13 +57,12 @@ export default {
 	},
 
 	addDevice: (request, response) => {
-		const { formOption, mode } = request.body
+		const { formOption } = request.body
 
 		pool
 			.query(dbQueries.addObject(formOption))
 			.then((res) => {
 				console.log('add device succeed')
-
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -79,13 +71,12 @@ export default {
 	},
 
 	addPerson: (request, response) => {
-		const { formOption, mode } = request.body
+		const { formOption } = request.body
 
 		pool
 			.query(dbQueries.addPersona(formOption))
 			.then((res) => {
 				console.log('add person succeed')
-
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -98,16 +89,13 @@ export default {
 	 */
 	editDevice: (request, response) => {
 		const { formOption, mode } = request.body
-
 		const { area_id } = formOption
 
 		pool
 			.query(dbQueries.editDevice(formOption))
 			.then((res) => {
 				console.log(`edit ${mode} succeed`)
-
 				reloadGeofenceConfig(area_id)
-
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -117,16 +105,13 @@ export default {
 
 	editPerson: (request, response) => {
 		const { formOption, mode } = request.body
-
 		const { area_id } = formOption
 
 		pool
 			.query(dbQueries.editPersona(formOption))
 			.then((res) => {
 				console.log(`edit ${mode} succeed`)
-
 				reloadGeofenceConfig(area_id)
-
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -146,7 +131,7 @@ export default {
 					.filter((item) => item.mac_address)
 					.map((item) => item.mac_address)
 
-				if (mac_address_original_arr.length != 0) {
+				if (mac_address_original_arr.length !== 0) {
 					pool
 						.query(
 							dbQueries.deleteObjectSummaryRecord(mac_address_original_arr)
@@ -168,6 +153,7 @@ export default {
 
 	disassociate: (request, response) => {
 		const { formOption } = request.body
+
 		pool
 			.query(dbQueries.disassociate(formOption))
 			.then((res) => {

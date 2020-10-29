@@ -32,13 +32,17 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import moment from 'moment'
+
 /** Compare two objects, including strings, deep objects  */
 export const isEqual = (obj1, obj2) => {
-	if (typeof obj1 != typeof obj2) return false
-	if (typeof obj1 == 'string') {
-		return obj1.toUpperCase() == obj2.toUpperCase()
+	if (typeof obj1 != typeof obj2) {
+		return false
 	}
-	return JSON.stringify(obj1) == JSON.stringify(obj2)
+	if (typeof obj1 == 'string') {
+		return obj1.toUpperCase() === obj2.toUpperCase()
+	}
+	return JSON.stringify(obj1) === JSON.stringify(obj2)
 }
 
 /** Deep clone for json format */
@@ -55,9 +59,13 @@ export const isWebpSupported = () => {
 
 	if (elem.getContext && elem.getContext('2d')) {
 		// was able or not to get WebP representation
-		return elem.toDataURL('image/webp').indexOf('data:image/webp') == 0
+		return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0
 	}
 
 	// very old browser like IE 8, canvas not supported
 	return false
+}
+
+export const formatTime = (timeString) => {
+	return moment(timeString).format('YYYY-MM-DD HH:mm:ss')
 }

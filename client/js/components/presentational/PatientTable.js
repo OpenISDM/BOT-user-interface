@@ -45,11 +45,9 @@ import messageGenerator from '../../helper/messageGenerator'
 const SelectTable = selecTableHOC(ReactTable)
 import { patientTableColumn } from '../../config/tables'
 import config from '../../config'
-import dataSrc from '../../dataSrc'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone } from '../../helper/utilities'
+import { JSONClone, formatTime } from '../../helper/utilities'
 import {
-	BrowserView,
 	MobileOnlyView,
 	TabletView,
 	CustomView,
@@ -65,7 +63,6 @@ import {
 	BIND,
 	UNBIND,
 	DELETE,
-	DEVICE,
 	PERSON,
 	SAVE_SUCCESS,
 	DISASSOCIATE,
@@ -192,6 +189,8 @@ class PatientTable extends React.Component {
 						item.mac_address = item.mac_address
 							? item.mac_address
 							: locale.texts.NON_BINDING
+
+						item.registered_timestamp = formatTime(item.registered_timestamp)
 
 						return item
 					})

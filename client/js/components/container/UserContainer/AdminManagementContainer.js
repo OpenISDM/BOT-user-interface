@@ -49,7 +49,7 @@ import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import config from '../../../config'
 import apiHelper from '../../../helper/apiHelper'
-import { JSONClone } from '../../../helper/utilities'
+import { JSONClone, formatTime } from '../../../helper/utilities'
 
 class AdminManagementContainer extends React.Component {
 	static contextType = AppContext
@@ -93,6 +93,7 @@ class AdminManagementContainer extends React.Component {
 					field.Header =
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
+
 				const data = res.data.rows.map((item, index) => {
 					item._id = index + 1
 					item.roles = item.role_type
@@ -103,6 +104,9 @@ class AdminManagementContainer extends React.Component {
 						.map((area) => locale.texts[area.value])
 						.join('/')
 					item.main_area.label = locale.texts[item.main_area.value]
+					item.last_visit_timestamp = formatTime(item.last_visit_timestamp)
+					item.registered_timestamp = formatTime(item.registered_timestamp)
+
 					return item
 				})
 				this.setState(

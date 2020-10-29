@@ -33,7 +33,6 @@
 */
 
 import 'dotenv/config'
-import moment from 'moment-timezone'
 import dbQueries from '../db/recordQueries'
 import pool from '../db/connection'
 import pdf from 'html-pdf'
@@ -42,20 +41,10 @@ import fs from 'fs'
 
 export default {
 	getEditObjectRecord: (request, response) => {
-		const { locale } = request.body
-
 		pool
 			.query(dbQueries.getEditObjectRecord())
 			.then((res) => {
 				console.log('get object edited record succeed')
-
-				res.rows.map((item) => {
-					item.edit_time = moment
-						.tz(item.edit_time, process.env.TZ)
-						.locale(locale)
-						.format(process.env.TIMESTAMP_FORMAT)
-					return item
-				})
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -63,24 +52,13 @@ export default {
 			})
 	},
 
-	getShiftChangeRecord: (request, response) => {
-		const { locale } = request.body
-		pool
-			.query(dbQueries.getShiftChangeRecord())
-			.then((res) => {
-				console.log('get shift change record succeed')
-				res.rows.map((item) => {
-					item.submit_timestamp = moment
-						.tz(item.submit_timestamp, process.env.TZ)
-						.locale(locale)
-						.format(process.env.TIMESTAMP_FORMAT)
-					return item
-				})
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`get shift change record failed ${err}`)
-			})
+	getShiftChangeRecord: async (request, response) => {
+		try {
+			const res = await pool.query(dbQueries.getShiftChangeRecord())
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get shift change record failed ${e}`)
+		}
 	},
 
 	addShiftChangeRecord: (request, response) => {
@@ -95,13 +73,13 @@ export default {
 					list_id
 				)
 			)
-			.then((res) => {
+			.then(() => {
 				/** If there are some trouble when download pdf, try npm rebuild phantomjs-prebuilt */
 				pdf
 					.create(pdfPackage.pdf, pdfPackage.options)
 					.toFile(
 						path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
-						function (err, result) {
+						function (err) {
 							if (err)
 								return console.log(`add shift change record failed ${err}`)
 
@@ -136,7 +114,7 @@ export default {
 			.query(dbQueries.deleteShiftChangeRecord(idPackage))
 			.then((res) => {
 				console.log('delete shift change record success')
-				fs.unlink(
+				fs.promises.unlink(
 					path.join(process.env.LOCAL_FILE_PATH, res.rows[0].file_path),
 					(err) => {
 						if (err) {

@@ -44,7 +44,7 @@ export default {
 		pool
 			.query(dbQueries.getGeofenceConfig(areaId))
 			.then((res) => {
-				res.rows.map((item) => {
+				res.rows.forEach((item) => {
 					item.start_time = item.start_time
 						.split(':')
 						.filter((item, index) => index < 2)

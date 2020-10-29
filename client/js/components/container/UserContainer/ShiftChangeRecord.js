@@ -45,7 +45,7 @@ import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
-import { JSONClone } from '../../../helper/utilities'
+import { JSONClone, formatTime } from '../../../helper/utilities'
 import ShiftChange from '../ShiftChange'
 import Select from 'react-select'
 import Cookies from 'js-cookie'
@@ -79,38 +79,41 @@ class ShiftChangeRecord extends React.Component {
 		this.getDeviceGroup()
 	}
 
-	getData(callback) {
+	getData = async (callback) => {
 		const { locale } = this.context
 
-		apiHelper.record
-			.getRecord(config.RECORD_TYPE.SHIFT_CHANGE, locale.abbr)
-			.then((res) => {
-				const columns = JSONClone(shiftChangeRecordTableColumn)
+		try {
+			const res = await apiHelper.record.getRecord(
+				config.RECORD_TYPE.SHIFT_CHANGE,
+				locale.abbr
+			)
+			const columns = JSONClone(shiftChangeRecordTableColumn)
 
-				columns.forEach((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
-				res.data.rows.forEach((item) => {
-					item.shift =
-						item.shift &&
-						locale.texts[item.shift.toUpperCase().replace(/ /g, '_')]
-				})
-				this.setState(
-					{
-						data: res.data.rows,
-						columns,
-						locale: locale.abbr,
-						selection: [],
-						selectAll: false,
-						showDeleteConfirmation: false,
-					},
-					callback
-				)
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
-			.catch((err) => {
-				console.log(`get shift change record failed ${err}`)
+			res.data.rows.forEach((item) => {
+				item.shift =
+					item.shift &&
+					locale.texts[item.shift.toUpperCase().replace(/ /g, '_')]
+				item.submit_timestamp =
+					item.submit_timestamp && formatTime(item.submit_timestamp)
 			})
+			this.setState(
+				{
+					data: res.data.rows,
+					columns,
+					locale: locale.abbr,
+					selection: [],
+					selectAll: false,
+					showDeleteConfirmation: false,
+				},
+				callback
+			)
+		} catch (e) {
+			console.log(`get shift change record failed ${e}`)
+		}
 	}
 
 	toggleAll = () => {
@@ -270,7 +273,14 @@ class ShiftChangeRecord extends React.Component {
 
 		const { toggleSelection, toggleAll, isSelected } = this
 
-		const { selectAll, selectType, devicelist } = this.state
+		const {
+			selectAll,
+			selectType,
+			devicelist,
+			data,
+			columns,
+			selection,
+		} = this.state
 
 		const extraProps = {
 			selectAll,
@@ -317,7 +327,7 @@ class ShiftChangeRecord extends React.Component {
 					<div className="d-flex justify-content-between mb-2">
 						<div className="color-black mb-2">{locale.texts.VIEW_REPORT}</div>
 						<PrimaryButton
-							disabled={this.state.selection.length === 0}
+							disabled={selection.length === 0}
 							onClick={() => {
 								this.setState({
 									showDeleteConfirmation: true,
@@ -329,8 +339,8 @@ class ShiftChangeRecord extends React.Component {
 					</div>
 					<SelectTable
 						keyField="id"
-						data={this.state.data}
-						columns={this.state.columns}
+						data={data}
+						columns={columns}
 						ref={(r) => (this.selectTable = r)}
 						className="-highlight text-none"
 						onPageChange={() => {

@@ -49,7 +49,7 @@ import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import messageGenerator from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone } from '../../helper/utilities'
+import { JSONClone, formatTime } from '../../helper/utilities'
 
 const SelectTable = selecTableHOC(ReactTable)
 
@@ -98,13 +98,17 @@ class LbeaconTable extends React.Component {
 			.then((res) => {
 				this.props.setMessage('clear')
 				const column = JSONClone(lbeaconTableColumn)
-				column.map((field) => {
+				column.forEach((field) => {
 					field.Header =
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
+				const data = res.data.rows.map((row) => {
+					row.last_report_timestamp = formatTime(row.last_report_timestamp)
+					return row
+				})
 				this.setState(
 					{
-						data: res.data.rows,
+						data,
 						columns: column,
 						showEdit: false,
 						showDeleteConfirmation: false,

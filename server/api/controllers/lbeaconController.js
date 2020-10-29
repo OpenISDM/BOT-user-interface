@@ -39,57 +39,52 @@ import pool from '../db/connection'
 import statusCode from '../config/statusCode'
 
 export default {
-	getAllLbeacon: (request, response) => {
-		const { locale } = request.query
+	getAllLbeacon: async (request, response) => {
+		const isLbeaconHealthStatusCode = parseInt(
+			process.env.IS_LBEACON_HEALTH_STATUS_CODE
+		)
+		const isLbeaconStatusNotAvailable = parseInt(
+			statusCode.LBEACON_STATUS_NOT_AVAILABLE
+		)
+		const isLbeaconHealthTimeIntervalInMin = parseInt(
+			process.env.LBEACON_HEALTH_TIME_INTERVAL_IN_MIN
+		)
 
-		pool
-			.query(dbQueries.getLbeaconTable)
-			.then((res) => {
-				console.log('get lbeacon table data succeed')
-				res.rows.map((item) => {
-					/** Set the value that distinguish lbeacon is normal */
-
-					item.isInHealthInterval =
-						(item.health_status == process.env.IS_LBEACON_HEALTH_STATUS_CODE ||
-							item.health_status == statusCode.LBEACON_STATUS_NOT_AVAILABLE) &&
-						moment().diff(item.last_report_timestamp, 'minutes') <
-							process.env.LBEACON_HEALTH_TIME_INTERVAL_IN_MIN
-
-					item.last_report_timestamp = moment
-						.tz(item.last_report_timestamp, process.env.TZ)
-						.locale(locale)
-						.format(process.env.TIMESTAMP_FORMAT)
-				})
-				response.status(200).json(res)
+		try {
+			const res = await pool.query(dbQueries.getLbeaconTable)
+			console.log('get lbeacon table data succeed')
+			res.rows.forEach((item) => {
+				item.isInHealthInterval =
+					(parseInt(item.health_status) === isLbeaconHealthStatusCode ||
+						parseInt(item.health_status) === isLbeaconStatusNotAvailable) &&
+					moment().diff(item.last_report_timestamp, 'minutes') <
+						isLbeaconHealthTimeIntervalInMin
 			})
-			.catch((err) => {
-				console.log(`get lbeacon table failed ${err}`)
-			})
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get lbeacon table failed ${e}`)
+		}
 	},
 
-	deleteLBeacon: (request, response) => {
+	deleteLBeacon: async (request, response) => {
 		const { idPackage } = request.body
-		pool
-			.query(dbQueries.deleteLBeacon(idPackage))
-			.then((res) => {
-				console.log('delete LBeacon record succeed')
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`delete LBeacon failed ${err}`)
-			})
+		try {
+			const res = pool.query(dbQueries.deleteLBeacon(idPackage))
+			console.log('delete LBeacon record succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`delete LBeacon failed ${e}`)
+		}
 	},
 
-	editLbeacon: (request, response) => {
+	editLbeacon: async (request, response) => {
 		const { formOption } = request.body
-		pool
-			.query(dbQueries.editLbeacon(formOption))
-			.then((res) => {
-				console.log('edit lbeacon succeed')
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`edit lbeacon failed ${err}`)
-			})
+		try {
+			const res = await pool.query(dbQueries.editLbeacon(formOption))
+			console.log('edit lbeacon succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`edit lbeacon failed ${e}`)
+		}
 	},
 }

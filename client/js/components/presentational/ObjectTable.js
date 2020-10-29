@@ -62,7 +62,7 @@ import {
 	SAVE_SUCCESS,
 	DISASSOCIATE,
 } from '../../config/wordMap'
-import { JSONClone } from '../../helper/utilities'
+import { JSONClone, formatTime } from '../../helper/utilities'
 
 const SelectTable = selecTableHOC(ReactTable)
 
@@ -228,6 +228,8 @@ class ObjectTable extends React.Component {
 							label: locale.texts[item.area_name],
 							id: item.area_id,
 						}
+
+						item.registered_timestamp = formatTime(item.registered_timestamp)
 
 						return item
 					})
