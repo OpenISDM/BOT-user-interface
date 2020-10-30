@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        Checkbox.js
+        CheckboxOverlayTrigger.js
 
     File Description:
         BOT UI component
