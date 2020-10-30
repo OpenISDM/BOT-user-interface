@@ -155,8 +155,10 @@ export default ({ searchKey, searchResult, handleClick }) => {
 
 const stringBlock = ({ name, value, data, label, locale, onClick }) => {
 	switch (locale.abbr) {
+		// case locale.supportedLocale.ms.abbr:
+		// case locale.supportedLocale.cn.abbr:
+
 		case locale.supportedLocale.en.abbr:
-		case locale.supportedLocale.ms.abbr:
 			return (
 				<div
 					className="d-flex justify-content-start mr-2"
@@ -174,7 +176,6 @@ const stringBlock = ({ name, value, data, label, locale, onClick }) => {
 				</div>
 			)
 		case locale.supportedLocale.tw.abbr:
-		case locale.supportedLocale.cn.abbr:
 			return (
 				<div
 					className="d-flex justify-content-start mr-2"

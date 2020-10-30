@@ -139,15 +139,16 @@ export const getSubDescription = (item, locale) => {
 
 export const getBatteryVolumn = (item, locale, config) => {
 	switch (locale.abbr) {
+		// case locale.supportedLocale.ms.abbr:
+		// case locale.supportedLocale.cn.abbr:
+
 		case locale.supportedLocale.en.abbr:
-		case locale.supportedLocale.ms.abbr:
 			return item.currentPosition
 				? isEqual(item.status, RETURNED)
 					? `, ${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
 					: ''
 				: `, ${locale.texts.NOT_AVAILABLE}`
 		case locale.supportedLocale.tw.abbr:
-		case locale.supportedLocale.cn.abbr:
 			return item.currentPosition
 				? isEqual(item.status, RETURNED)
 					? `, ${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${item.location_description}`
