@@ -40,64 +40,40 @@ import { isEqual } from 'lodash'
 
 export const getDescription = (item, locale, keywordType) => {
 	let foundDeviceDescription = ''
+	const reserveText =
+		item.status === RESERVE
+			? `~ ${item.reserved_timestamp_final} ${locale.texts.IS_RESERVED_FOR} ${item.reserved_user_name}`
+			: ''
+	const returnedText = item.currentPosition
+		? isEqual(item.status, RETURNED)
+			? `${item.residence_time} `
+			: ''
+		: ''
+	const areaPositionText = `${getAreaName(item, locale)}-${getPosition(
+		item,
+		locale
+	)}`
+
 	switch (item.object_type) {
 		case '0':
 			foundDeviceDescription += item.found
-				? `
-
-                        ${getDeviceName(item, locale, keywordType)}
-
-                        ${getACN(item, locale)}
-
-                        ${getPosition(item, locale)}
-
-                        ${getStatus(item, locale)}
-
-                        ${
-													item.currentPosition
-														? isEqual(item.status, RETURNED)
-															? `${item.residence_time} `
-															: ''
-														: ''
-												}
-
-                        ${
-													item.status == RESERVE
-														? `~ ${item.reserved_timestamp_final} ${locale.texts.IS_RESERVED_FOR} ${item.reserved_user_name}`
-														: ''
-												}
-                    `
-				: `
-                        ${getDeviceName(item, locale, keywordType)}
-
-                        ${getACN(item, locale)}
-
-                        ${getSubDescription(item, locale)}
-
-                    `
+				? ` ${getDeviceName(item, locale, keywordType)}
+                    ${getACN(item, locale)}
+                    ${getPosition(item, locale)}
+                    ${getStatus(item, locale)}
+                    ${returnedText}
+                    ${reserveText}`
+				: ` ${getDeviceName(item, locale, keywordType)}
+                    ${getACN(item, locale)}
+                    ${getSubDescription(item, locale)}`
 			break
 		case '1':
 		case '2':
 			foundDeviceDescription += `
-
                 ${getName(item, locale)}
-
                 ${getID(item, locale)}
-
-                ${
-									item.currentPosition
-										? `
-
-                    ${getAreaName(item, locale)}-
-
-                    ${getPosition(item, locale)}
-                `
-										: ''
-								}
-
-                ${item.residence_time ? item.residence_time : ''}
-
-            `
+                ${item.currentPosition ? areaPositionText : ''}
+                ${item.residence_time ? item.residence_time : ''}`
 			break
 	}
 	return foundDeviceDescription
@@ -105,8 +81,9 @@ export const getDescription = (item, locale, keywordType) => {
 
 export const getSubDescription = (item, locale) => {
 	switch (locale.abbr) {
+		// case locale.supportedLocale.cn.abbr:
+		// case locale.supportedLocale.ms.abbr:
 		case locale.supportedLocale.en.abbr:
-		case locale.supportedLocale.ms.abbr:
 			if (
 				item.mac_address &&
 				item.currentPosition &&
@@ -121,7 +98,6 @@ export const getSubDescription = (item, locale) => {
 			return `${locale.texts.NON_BINDING}`
 
 		case locale.supportedLocale.tw.abbr:
-		case locale.supportedLocale.cn.abbr:
 			if (
 				item.mac_address &&
 				item.currentPosition &&
@@ -137,7 +113,7 @@ export const getSubDescription = (item, locale) => {
 	}
 }
 
-export const getBatteryVolumn = (item, locale, config) => {
+export const getBatteryVolumn = (item, locale) => {
 	switch (locale.abbr) {
 		// case locale.supportedLocale.ms.abbr:
 		// case locale.supportedLocale.cn.abbr:
@@ -158,27 +134,19 @@ export const getBatteryVolumn = (item, locale, config) => {
 }
 
 export const getDeviceName = (item, locale, keywordType) => {
-	return `
-        ${item[keywordType] || item.type}
-    `
+	return `${item[keywordType] || item.type}`
 }
 
-export const getName = (item, locale) => {
-	return `
-        ${item.name},
-    `
+export const getName = (item) => {
+	return `${item.name},`
 }
 
-export const getType = (item, locale) => {
-	return `
-        ${item.type},
-    `
+export const getType = (item) => {
+	return `${item.type},`
 }
 
-export const getNickname = (item, locale) => {
-	return `
-        ${item.nickname},
-    `
+export const getNickname = (item) => {
+	return `${item.nickname},`
 }
 
 export const getACN = (item, locale) => {
@@ -202,19 +170,13 @@ export const getPhysicianName = (item, locale) => {
 }
 
 export const getStatus = (item, locale) => {
-	return `
-        ${
-					isEqual(item.status, RETURNED)
-						? ''
-						: `${locale.texts[item.status.toUpperCase()]}`
-				}
-    `
+	return isEqual(item.status, RETURNED)
+		? ''
+		: `${locale.texts[item.status.toUpperCase()]}`
 }
 
-export const getPosition = (item, locale) => {
-	return `
-        ${item.location_description},
-    `
+export const getPosition = (item) => {
+	return `${item.location_description},`
 }
 
 export const getMacaddress = (item, locale) => {
@@ -234,17 +196,12 @@ export const getRSSI = (item, locale) => {
 }
 
 export const getAreaName = (item, locale) => {
-	return `
-        ${locale.texts.NEAR} ${locale.texts[item.lbeacon_area.value]}
-    `
+	return `${locale.texts.NEAR} ${locale.texts[item.lbeacon_area.value]}`
 }
 
 export const getID = (item, locale) => {
-	return `
-        ${locale.texts.ID}: ${item.asset_control_number}${
-		item.currentPosition ? ',' : ''
-	}
-    `
+	const comma = item.currentPosition ? ',' : ''
+	return `${locale.texts.ID}: ${item.asset_control_number}${comma}`
 }
 
 export const getUpdatedByNLbeacons = (item, locale) => {
