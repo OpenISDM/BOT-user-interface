@@ -42,28 +42,17 @@
 import React from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
 import Select from 'react-select'
-import Creatable, { makeCreatableSelect } from 'react-select/creatable'
+import Creatable from 'react-select/creatable'
 import config from '../../../config'
-import { Formik, Field, Form } from 'formik'
+import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import CheckboxGroup from '../../container/CheckboxGroup'
-import Checkbox from '../Checkbox'
-import RadioButtonGroup from '../../container/RadioButtonGroup'
-import RadioButton from '../RadioButton'
 import { AppContext } from '../../../context/AppContext'
 import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
-import {
-	DISASSOCIATE,
-	NORMAL,
-	RETURNED,
-	RESERVE,
-	BROKEN,
-	TRANSFERRED,
-	TRACE,
-} from '../../../config/wordMap'
+import { DISASSOCIATE, NORMAL, TRANSFERRED } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
 import apiHelper from '../../../helper/apiHelper'
+import PropTypes from 'prop-types'
 
 const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
@@ -127,6 +116,7 @@ class EditObjectForm extends React.Component {
 			objectTable,
 			show,
 			handleClose,
+			disableASN,
 		} = this.props
 
 		const {
@@ -159,17 +149,17 @@ class EditObjectForm extends React.Component {
 										value: mac_address,
 								  }
 								: null,
-							status: selectedRowData.length != 0 ? status.value : NORMAL,
+							status: selectedRowData.length !== 0 ? status.value : NORMAL,
 							area: area_name || '',
 
 							monitorType:
-								selectedRowData.length != 0
-									? selectedRowData.monitor_type == 0
+								selectedRowData.length !== 0
+									? selectedRowData.monitor_type === 0
 										? null
 										: selectedRowData.monitor_type.split('/')
 									: [],
 							transferred_location:
-								status.value == TRANSFERRED ? transferred_location : ' ',
+								status.value === TRANSFERRED ? transferred_location : ' ',
 							nickname: nickname || '',
 						}}
 						validationSchema={object().shape({
@@ -183,11 +173,13 @@ class EditObjectForm extends React.Component {
 									'asset_control_number',
 									locale.texts.THE_ASSET_CONTROL_NUMBER_IS_ALREADY_USED,
 									(value) => {
-										if (value == undefined) return false
-										if (!this.props.disableASN) {
+										if (value === undefined) {
+											return false
+										}
+										if (!disableASN) {
 											if (value != null) {
 												if (
-													this.props.objectTable
+													objectTable
 														.map((item) =>
 															item.asset_control_number.toUpperCase()
 														)
@@ -208,9 +200,9 @@ class EditObjectForm extends React.Component {
 									'mac_address',
 									locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
 									(obj) => {
-										if (obj == undefined) return true
+										if (obj === undefined) return true
 										if (obj == null || isEmpty(obj)) return true
-										if (selectedRowData.length == 0) return true
+										if (selectedRowData.length === 0) return true
 										return macaddrValidation(obj.label)
 									}
 								),
@@ -235,7 +227,7 @@ class EditObjectForm extends React.Component {
 									then: object().required(locale.texts.LOCATION_IS_REQUIRED),
 								}),
 						})}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
+						onSubmit={(values) => {
 							const monitor_type = values.monitorType
 								? values.monitorType
 										.filter((item) => item)
@@ -252,7 +244,7 @@ class EditObjectForm extends React.Component {
 								nickname: values.nickname.trim(),
 								status: values.status,
 								transferred_location:
-									values.status == TRANSFERRED
+									values.status === TRANSFERRED
 										? values.transferred_location.id
 										: null,
 								monitor_type,
@@ -268,7 +260,6 @@ class EditObjectForm extends React.Component {
 						render={({
 							values,
 							errors,
-							status,
 							touched,
 							isSubmitting,
 							setFieldValue,
@@ -372,62 +363,13 @@ class EditObjectForm extends React.Component {
 										/>
 									</Col>
 								</Row>
-
-								<hr />
-								<FormikFormGroup
-									name="status"
-									label={locale.texts.STATUS}
-									error={errors.status}
-									touched={touched.status}
-									placeholder=""
-									component={() => (
-										<RadioButtonGroup
-											value={values.status}
-											error={errors.status}
-											touched={touched.status}
-										>
-											<div className="d-flex justify-content-between form-group my-1">
-												<Field
-													component={RadioButton}
-													name="status"
-													id={BROKEN}
-													label={locale.texts.BROKEN}
-												/>
-												<Field
-													component={RadioButton}
-													name="status"
-													id={TRANSFERRED}
-													label={locale.texts.TRANSFERRED}
-												/>
-												<Field
-													component={RadioButton}
-													name="status"
-													id={RETURNED}
-													label={locale.texts.RETURNED}
-												/>
-												<Field
-													component={RadioButton}
-													name="status"
-													id={RESERVE}
-													label={locale.texts.RESERVE}
-												/>
-												<Field
-													component={RadioButton}
-													name="status"
-													id={TRACE}
-													label={locale.texts.TRACE}
-												/>
-											</div>
-										</RadioButtonGroup>
-									)}
-								/>
 								<FormikFormGroup
 									name="transferred_location"
 									label={locale.texts.AREA}
 									error={errors.transferred_location}
 									touched={touched.transferred_location}
 									placeholder=""
-									display={values.status == TRANSFERRED}
+									display={values.status === TRANSFERRED}
 									component={() => (
 										<Select
 											name="transferred_location"
@@ -438,47 +380,13 @@ class EditObjectForm extends React.Component {
 											}
 											options={this.state.transferredLocationOptions}
 											isSearchable={false}
-											isDisabled={values.status != TRANSFERRED}
+											isDisabled={values.status !== TRANSFERRED}
 											styles={styleConfig.reactSelect}
 											placeholder={locale.texts.SELECT_LOCATION}
 											components={{
 												IndicatorSeparator: () => null,
 											}}
 										/>
-									)}
-								/>
-								<hr />
-								<FormikFormGroup
-									name="asset_control_number"
-									label={locale.texts.MONITOR_TYPE}
-									error={errors.monitorType}
-									touched={touched.monitorType}
-									placeholder=""
-									component={() => (
-										<CheckboxGroup
-											id="monitorType"
-											label={locale.texts.MONITOR_TYPE}
-											value={values.monitorType || ''}
-											error={errors.monitorType}
-											touched={touched.monitorType}
-											onChange={setFieldValue}
-										>
-											{Object.keys(config.monitorType)
-												.filter((key) =>
-													config.monitorTypeMap.object.includes(parseInt(key))
-												)
-												.map((key, index) => {
-													return (
-														<Field
-															key={index}
-															component={Checkbox}
-															name="monitorType"
-															id={config.monitorType[key]}
-															label={config.monitorType[key]}
-														/>
-													)
-												})}
-										</CheckboxGroup>
 									)}
 								/>
 								<Modal.Footer>
@@ -513,6 +421,19 @@ class EditObjectForm extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+EditObjectForm.propTypes = {
+	selectedRowData: PropTypes.object.isRequired,
+	macOptions: PropTypes.object.isRequired,
+	handleClick: PropTypes.func.isRequired,
+	handleSubmit: PropTypes.func.isRequired,
+	disableASN: PropTypes.bool.isRequired,
+	objectTable: PropTypes.array.isRequired,
+	areaTable: PropTypes.array.isRequired,
+	title: PropTypes.string.isRequired,
+	handleClose: PropTypes.func.isRequired,
+	show: PropTypes.bool.isRequired,
 }
 
 export default EditObjectForm
