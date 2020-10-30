@@ -37,13 +37,13 @@ import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
 import Select from 'react-select'
 import { object, string } from 'yup'
-import config from '../../../config'
 import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
 import FormikFormGroup from '../FormikFormGroup'
 import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 import { emailValidation } from '../../../helper/validation'
+import PropTypes from 'prop-types'
 
 const EditUserForm = ({
 	show,
@@ -77,7 +77,7 @@ const EditUserForm = ({
 						name: selectedUser ? selectedUser.name : '',
 						password: '',
 						email: selectedUser ? selectedUser.email : '',
-						roles: selectedUser ? selectedUser.role_type : config.DEFAULT_ROLE,
+						roles: selectedUser ? selectedUser.role_type : '',
 						area: selectedUser ? selectedUser.main_area : '',
 					}}
 					validationSchema={object().shape({
@@ -88,29 +88,31 @@ const EditUserForm = ({
 								message: locale.texts.THE_USERNAME_IS_ALREADY_TAKEN,
 								test: (value) => {
 									let reapeatFlag = true
-									if (value != undefined) {
-										data.map((item) => {
-											item.name.toUpperCase() == value.toUpperCase()
-												? (reapeatFlag = false)
-												: null
+									if (value) {
+										data.forEach((item) => {
+											if (item.name.toUpperCase() === value.toUpperCase()) {
+												reapeatFlag = false
+											}
 										})
-										if (title == 'edit user') {
-											selectedUser.name.toUpperCase() == value.toUpperCase()
-												? (reapeatFlag = true)
-												: null
+										if (
+											title === 'edit user' &&
+											selectedUser.name.toUpperCase() === value.toUpperCase()
+										) {
+											reapeatFlag = true
 										}
 									}
 									return reapeatFlag
 								},
 							})
 							.test('name', locale.texts.NOT_ALLOW_PUNCTUATION, (value) => {
-								let punctuationFlag = true
-								if (value != undefined) {
-									value.indexOf("'") != -1 || value.indexOf('"') != -1
-										? (punctuationFlag = false)
-										: null
+								if (
+									value &&
+									// eslint-disable-next-line quotes
+									(value.indexOf("'") !== -1 || value.indexOf('"') !== -1)
+								) {
+									return false
 								}
-								return punctuationFlag
+								return true
 							})
 							.max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
 						area: selectedUser
@@ -124,13 +126,14 @@ const EditUserForm = ({
 										'password',
 										locale.texts.NOT_ALLOW_PUNCTUATION,
 										(value) => {
-											let punctuationFlag = true
-											if (value != undefined) {
-												value.indexOf("'") != -1 || value.indexOf('"') != -1
-													? (punctuationFlag = false)
-													: null
+											if (
+												value &&
+												// eslint-disable-next-line quotes
+												(value.indexOf("'") !== -1 || value.indexOf('"') !== -1)
+											) {
+												return false
 											}
-											return punctuationFlag
+											return true
 										}
 									)
 									.max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
@@ -149,7 +152,6 @@ const EditUserForm = ({
 					render={({
 						values,
 						errors,
-						status,
 						touched,
 						isSubmitting,
 						setFieldValue,
@@ -191,10 +193,12 @@ const EditUserForm = ({
 									<CheckboxGroup
 										id="roles"
 										value={values.roles}
+										error={errors.roles}
+										touched={touched.roles}
 										onChange={setFieldValue}
 									>
 										{roleName
-											.filter((roleName) => roleName.name != 'guest')
+											.filter((roleName) => roleName.name !== 'guest')
 											.map((roleName, index) => {
 												return (
 													<Field
@@ -245,6 +249,17 @@ const EditUserForm = ({
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+EditUserForm.propTypes = {
+	show: PropTypes.bool.isRequired,
+	title: PropTypes.string.isRequired,
+	selectedUser: PropTypes.object.isRequired,
+	areaTable: PropTypes.array.isRequired,
+	handleSubmit: PropTypes.func.isRequired,
+	handleClose: PropTypes.func.isRequired,
+	roleName: PropTypes.object.isRequired,
+	data: PropTypes.array.isRequired,
 }
 
 export default EditUserForm
