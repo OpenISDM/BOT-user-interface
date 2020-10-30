@@ -224,11 +224,6 @@ export const reportContainerModule = {
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
-			name: 'Report Of Historical Notes On Patients',
-			component: () => null,
-			platform: ['browser', 'tablet', 'mobile'],
-		},
-		{
 			name: 'Report Of Historical Device Status Changed Records',
 			component: (props) => <ObjectEditedRecord {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],

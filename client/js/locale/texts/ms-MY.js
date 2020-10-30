@@ -66,8 +66,6 @@ const ms = {
 	REQUEST_ASSET_USAGE_DATA: 'Catat data penggunaan aset',
 	REPORT_OF_HISTORICAL_NOTIFICATIONS: 'Report Of Historical Notifications',
 	REPORT_AND_CHANGE_NOTES_ON_PATIENTS: 'Hasilkan dan lihat nota pada pesakit',
-	REPORT_OF_HISTORICAL_NOTES_ON_PATIENTS:
-		'Report of historical notes on patients',
 	REPORT_OF_HISTORICAL_DEVICE_STATUS_CHANGED_RECORDS:
 		'Report of historical device status changed records',
 	GENERATE_AND_VIEW_SHIFT_CHANGE_RECORD:

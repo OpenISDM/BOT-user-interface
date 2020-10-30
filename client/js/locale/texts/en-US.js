@@ -66,8 +66,6 @@ const en = {
 	REQUEST_ASSET_USAGE_DATA: 'Request Asset Usage Data',
 	REPORT_OF_HISTORICAL_NOTIFICATIONS: 'Report Of Historical Notifications',
 	REPORT_AND_CHANGE_NOTES_ON_PATIENTS: 'Report and Change Notes On Patients',
-	REPORT_OF_HISTORICAL_NOTES_ON_PATIENTS:
-		'Report of historical notes on patients',
 	REPORT_OF_HISTORICAL_DEVICE_STATUS_CHANGED_RECORDS:
 		'Report of historical device status changed records',
 	GENERATE_AND_VIEW_SHIFT_CHANGE_RECORD:
