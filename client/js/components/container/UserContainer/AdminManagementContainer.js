@@ -36,7 +36,7 @@ import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 import ReactTable from 'react-table'
 import axios from 'axios'
-import dataSrc from '../../../dataSrc'
+import { user } from '../../../dataSrc'
 import { userInfoTableColumn } from '../../../config/tables'
 import EditUserForm from '../../presentational/form/EditUserForm'
 import { AppContext } from '../../../context/AppContext'
@@ -69,7 +69,7 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getUserList()
 		}
 	}
@@ -153,9 +153,7 @@ class AdminManagementContainer extends React.Component {
 
 	handleSubmit = (values) => {
 		const { auth } = this.context
-
 		const { api, selectedUser } = this.state
-
 		const user = {
 			...auth.user,
 			...values,
@@ -173,6 +171,7 @@ class AdminManagementContainer extends React.Component {
 		const callback = () => {
 			messageGenerator.setSuccessMessage('save success')
 		}
+
 		auth[api](user, () => {
 			this.getUserList(callback)
 		})
@@ -187,12 +186,12 @@ class AdminManagementContainer extends React.Component {
 
 	handleWarningChecked = () => {
 		axios
-			.delete(dataSrc.user, {
+			.delete(user, {
 				data: {
 					username: this.state.deleteUserName,
 				},
 			})
-			.then((res) => {
+			.then(() => {
 				const callback = () =>
 					messageGenerator.setSuccessMessage('save success')
 				this.getUserList(callback)
@@ -214,9 +213,9 @@ class AdminManagementContainer extends React.Component {
 		})
 	}
 
-	onRowClick = (state, rowInfo, column, instance) => {
+	onRowClick = (state, rowInfo) => {
 		return {
-			onClick: (e, handleOriginal) => {
+			onClick: () => {
 				this.setState({
 					showAddUserForm: true,
 					selectedUser: rowInfo.original,
@@ -227,7 +226,7 @@ class AdminManagementContainer extends React.Component {
 		}
 	}
 
-	handleClick = (e, value) => {
+	handleClick = (e) => {
 		switch (e.target.name) {
 			case 'add user':
 				this.setState({
@@ -246,7 +245,6 @@ class AdminManagementContainer extends React.Component {
 
 	render() {
 		const { locale } = this.context
-
 		const { title } = this.state
 
 		return (
