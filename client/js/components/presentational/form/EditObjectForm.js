@@ -329,7 +329,7 @@ class EditObjectForm extends React.Component {
 									<Col>
 										<FormikFormGroup
 											name="mac_address"
-											label={locale.texts.MAC_ADDRESS}
+											label={locale.texts.TAG_ID}
 											error={errors.mac_address}
 											touched={touched.mac_address}
 											component={() => (
@@ -397,7 +397,7 @@ class EditObjectForm extends React.Component {
 											name={DISASSOCIATE}
 											disabled={!selectedRowData.isBind}
 										>
-											{locale.texts.UNBIND}
+											{locale.texts.DISSOCIATE}
 										</Button>
 									</div>
 									<div>

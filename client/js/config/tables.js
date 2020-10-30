@@ -396,7 +396,7 @@ const objectTableColumn = [
 		accessor: 'type',
 	},
 	{
-		Header: 'Mac Address',
+		Header: 'Tag ID',
 		accessor: 'mac_address',
 		width: 200,
 		Cell: (props) =>
