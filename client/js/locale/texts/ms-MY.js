@@ -534,7 +534,7 @@ const ms = {
 		'Nama pengguna atau kata laluan tidak betul',
 	PASSWORD_IS_INCORRECT: 'kata laluan tidak betul',
 	PLEASE_ENTER_ID_AND_PASSWORD: 'sila masukkan maklumat Pentadbir',
-	PLEASE_ENTER_PASSWORD_TO_CONFIRM: 'sila masukkan kata laluan',
+	PLEASE_LOGIN_TO_CONFIRM: 'sila masukkan kata laluan',
 	EDIT_LBEACON_SUCCESS: 'edit kejayaan lbeacon',
 	EDIT_OBJECT_SUCCESS: 'edit kejayaan objek',
 	DELETE_LBEACON_SUCCESS: 'hapus kejayaan lbeacon',

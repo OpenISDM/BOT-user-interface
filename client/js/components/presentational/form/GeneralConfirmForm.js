@@ -41,7 +41,6 @@ import apiHelper from '../../../helper/apiHelper'
 import FormikFormGroup from '../FormikFormGroup'
 import PropTypes from 'prop-types'
 import { Paragraph } from '../../BOTComponent/styleComponent'
-import AuthenticationContext from '../../../context/AuthenticationContext'
 
 const style = {
 	modal: {
@@ -51,7 +50,6 @@ const style = {
 
 const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthenticationContext)
 
 	return (
 		<Modal
@@ -65,7 +63,7 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 				<Paragraph sub>{title}</Paragraph>
 				<Formik
 					initialValues={{
-						username: auth.user.name,
+						username: '',
 						password: '',
 					}}
 					validationSchema={object().shape({
@@ -75,19 +73,15 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 						{ username, password },
 						{ setStatus, setSubmitting }
 					) => {
-						try {
-							const res = await apiHelper.authApiAgent.confirmValidation({
-								username,
-								password,
-							})
-							if (!res.data.confirmation) {
-								setStatus(res.data.message)
-								setSubmitting(false)
-							} else {
-								handleSubmit()
-							}
-						} catch (e) {
-							console.log(e)
+						const res = await apiHelper.authApiAgent.confirmValidation({
+							username,
+							password,
+						})
+						if (!res.data.confirmation) {
+							setStatus(res.data.message)
+							setSubmitting(false)
+						} else {
+							handleSubmit()
 						}
 					}}
 					render={({ errors, status, touched, isSubmitting }) => (
@@ -99,11 +93,20 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 								</div>
 							)}
 							<FormikFormGroup
+								type="username"
+								name="username"
+								error={errors.username}
+								touched={touched.username}
+								autoComplete="off"
+								placeholder={locale.texts.NAME}
+							/>
+							<FormikFormGroup
 								type="password"
 								name="password"
 								error={errors.password}
 								touched={touched.password}
 								autoComplete="off"
+								placeholder={locale.texts.PASSWORD}
 							/>
 							<Modal.Footer>
 								<Button type="submit" variant="primary" disabled={isSubmitting}>

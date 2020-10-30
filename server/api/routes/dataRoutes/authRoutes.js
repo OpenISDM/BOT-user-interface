@@ -32,18 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import authController from '../../controllers/authController'
+import {
+	signin,
+	signout,
+	validation,
+	sentResetPwdInstruction,
+	resetPassword,
+} from '../../controllers/authController'
 
 export default (app) => {
-	app.route('/data/auth/signin').post(authController.signin)
-
-	app.route('/data/auth/signout').post(authController.signout)
-
-	app.route('/data/auth/validation').post(authController.validation)
-
-	app
-		.route('/data/auth/sentResetPwdInstruction')
-		.post(authController.sentResetPwdInstruction)
-
-	app.route('/data/auth/resetpassword').post(authController.resetPassword)
+	app.route('/data/auth/signin').post(signin)
+	app.route('/data/auth/signout').post(signout)
+	app.route('/data/auth/validation').post(validation)
+	app.route('/data/auth/sentResetPwdInstruction').post(sentResetPwdInstruction)
+	app.route('/data/auth/resetpassword').post(resetPassword)
 }

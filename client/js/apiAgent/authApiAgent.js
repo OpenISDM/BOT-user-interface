@@ -32,39 +32,46 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
 import axios from 'axios'
+import { auth } from '../dataSrc'
+import { tcWrapper } from '../helper/utilities'
+
+async function confirmValidation({ username, password, authenticatedRoles }) {
+	return await axios.post(auth.validation, {
+		username,
+		password,
+		authenticatedRoles,
+	})
+}
+
+async function sentResetPwdInstruction({ email }) {
+	return await axios.post(auth.sentResetPwdInstruction, {
+		email,
+	})
+}
+
+async function resetPassword({ token, password }) {
+	return await axios.post(auth.resetPassword, {
+		token,
+		password,
+	})
+}
+
+async function logout() {
+	return await axios.post(auth.signout)
+}
+
+async function login({ username, password }) {
+	return await axios.post(auth.signin, {
+		username,
+		password,
+	})
+}
 
 export default {
-	async confirmValidation({ username, password, authenticatedRoles }) {
-		return await axios.post(dataSrc.auth.validation, {
-			username,
-			password,
-			authenticatedRoles,
-		})
-	},
-
-	async sentResetPwdInstruction({ email }) {
-		return await axios.post(dataSrc.auth.sentResetPwdInstruction, {
-			email,
-		})
-	},
-
-	async resetPassword({ token, password }) {
-		return await axios.post(dataSrc.auth.resetPassword, {
-			token,
-			password,
-		})
-	},
-
-	async logout() {
-		return await axios.post(dataSrc.auth.signout)
-	},
-
-	async login({ username, password }) {
-		return await axios.post(dataSrc.auth.signin, {
-			username,
-			password,
-		})
-	},
+	confirmValidation: tcWrapper(confirmValidation),
+	sentResetPwdInstruction: tcWrapper(sentResetPwdInstruction),
+	resetPassword: tcWrapper(resetPassword),
+	logout: tcWrapper(logout),
+	login: tcWrapper(login),
 }

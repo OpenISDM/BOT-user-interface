@@ -133,7 +133,7 @@ export const signout = (req, res) => {
 }
 
 export const validation = (request, response) => {
-	const { username, password, authenticatedRoles } = request.body
+	const { username, password } = request.body
 
 	pool
 		.query(dbQueries.signin(username.toLowerCase()))
@@ -146,16 +146,11 @@ export const validation = (request, response) => {
 				})
 			} else {
 				const hash = encrypt.createHash(password)
-
-				if (hash == res.rows[0].password) {
-					const { roles } = res.rows[0]
-
+				const { password: encodedPassword, roles } = res.rows[0]
+				if (hash === encodedPassword) {
 					/** authenticate if user is care provider */
-					if (
-						!authenticatedRoles ||
-						roles.filter((role) => authenticatedRoles.includes(role)).length !=
-							0
-					) {
+					// TODO: Should have ENUM to keep the KEYWORD for care_provider
+					if (roles.includes('care_provider')) {
 						console.log('confirm validation succeed')
 						response.json({
 							confirmation: true,

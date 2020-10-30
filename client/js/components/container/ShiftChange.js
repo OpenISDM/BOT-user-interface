@@ -346,7 +346,7 @@ class ShiftChange extends React.Component {
 				</Modal>
 				<GeneralConfirmForm
 					show={this.state.showConfirmForm}
-					title={`${locale.texts.PLEASE_ENTER_PASSWORD_TO_CONFIRM}${locale.texts.SHIFT_CHANGE_RECORD}`}
+					title={`${locale.texts.PLEASE_LOGIN_TO_CONFIRM}${locale.texts.SHIFT_CHANGE_RECORD}`}
 					handleSubmit={this.handleConfirmFormSubmit}
 					handleClose={this.handleClose}
 					authenticatedRoles={null}

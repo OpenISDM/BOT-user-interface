@@ -542,7 +542,7 @@ const en = {
 
 	// eslint-disable-next-line quotes
 	PLEASE_ENTER_ID_AND_PASSWORD: "please enter Admin's info",
-	PLEASE_ENTER_PASSWORD_TO_CONFIRM: 'Please enter  your password to confirm ',
+	PLEASE_LOGIN_TO_CONFIRM: 'Please login to confirm ',
 	EDIT_LBEACON_SUCCESS: 'edit lbeacon success',
 	EDIT_OBJECT_SUCCESS: 'edit object success',
 	DELETE_LBEACON_SUCCESS: 'delete lbeacon success',

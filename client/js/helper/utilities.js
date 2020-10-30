@@ -69,3 +69,15 @@ export const isWebpSupported = () => {
 export const formatTime = (timeString) => {
 	return moment(timeString).format('YYYY-MM-DD HH:mm:ss')
 }
+
+export const tcWrapper = function (f) {
+	return async function () {
+		try {
+			/* eslint-disable prefer-rest-params */
+			// eslint-disable-next-line babel/no-invalid-this
+			return await f.apply(this, arguments)
+		} catch (err) {
+			console.error(err)
+		}
+	}
+}
