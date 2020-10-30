@@ -57,56 +57,70 @@ export default {
 	},
 	modifyPatientGroupList: async (request, response) => {
 		const { groupId, mode, newName, itemId } = request.body
+		const promises = []
 		try {
 			const modeIntType = parseInt(mode)
 			if (modeIntType === 0) {
-				await PatientGroupList.update(
-					{
-						patients: sequelize.fn(
-							'array_append',
-							sequelize.col('patients'),
-							itemId
-						),
-					},
-					{ where: { id: groupId } }
-				)
-				await ObjectTable.update(
-					{ list_id: groupId },
-					{
-						where: {
-							id: itemId,
-						},
-					}
-				)
+				const { patients } = await PatientGroupList.findByPk(groupId)
+				if (!patients.includes(itemId)) {
+					promises.push(
+						PatientGroupList.update(
+							{
+								patients: sequelize.fn(
+									'array_append',
+									sequelize.col('patients'),
+									itemId
+								),
+							},
+							{ where: { id: groupId } }
+						)
+					)
+					promises.push(
+						ObjectTable.update(
+							{ list_id: groupId },
+							{
+								where: {
+									id: itemId,
+								},
+							}
+						)
+					)
+				}
 			} else if (modeIntType === 1) {
-				await PatientGroupList.update(
-					{
-						patients: sequelize.fn(
-							'array_remove',
-							sequelize.col('patients'),
-							itemId
-						),
-					},
-					{ where: { id: groupId } }
-				)
-				await ObjectTable.update(
-					{ list_id: null },
-					{
-						where: {
-							id: itemId,
+				promises.push(
+					PatientGroupList.update(
+						{
+							patients: sequelize.fn(
+								'array_remove',
+								sequelize.col('patients'),
+								itemId
+							),
 						},
-					}
+						{ where: { id: groupId } }
+					)
+				)
+				promises.push(
+					ObjectTable.update(
+						{ list_id: null },
+						{
+							where: {
+								id: itemId,
+							},
+						}
+					)
 				)
 			} else if (modeIntType === 2) {
 				// not used for now
-				await PatientGroupList.update(
-					{
-						name: newName,
-					},
-					{ where: { id: groupId } }
+				promises.push(
+					PatientGroupList.update(
+						{
+							name: newName,
+						},
+						{ where: { id: groupId } }
+					)
 				)
 			}
-
+			await Promise.all(promises)
 			response.status(200).json('ok')
 		} catch (err) {
 			console.log(`modify device list failed ${err}`)
