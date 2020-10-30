@@ -39,7 +39,7 @@ import axios from 'axios'
 import EditAreasForm from '../../presentational/form/EditAreasForm'
 import EditPwdForm from '../../presentational/form/EditPwdForm'
 import messageGenerator from '../../../helper/messageGenerator'
-import dataSrc from '../../../dataSrc'
+import { userInfo } from '../../../dataSrc'
 import config from '../../../config'
 import NumberPicker from '../NumberPicker'
 import apiHelper from '../../../helper/apiHelper'
@@ -95,7 +95,7 @@ class UserProfile extends React.Component {
 					info: userInfo,
 					username: userInfo.name,
 				})
-				.then((res) => {
+				.then(() => {
 					auth.setUserInfo('freqSearchCount', value)
 				})
 		}
@@ -143,11 +143,11 @@ class UserProfile extends React.Component {
 
 			case 1:
 				axios
-					.post(dataSrc.userInfo.password, {
+					.post(userInfo.password, {
 						user_id: auth.user.id,
 						password: values.check_password,
 					})
-					.then((res) => {
+					.then(() => {
 						this.setState(
 							{
 								show: false,
@@ -168,7 +168,8 @@ class UserProfile extends React.Component {
 
 		const { areaTable } = this.state
 
-		let userKeywordType = {}
+		let userKeywordType
+		let defaultUserKeywordType
 
 		const keywordTypeOptions = config.KEYWORD_TYPE.map((item, index) => {
 			const option = {
@@ -176,11 +177,21 @@ class UserProfile extends React.Component {
 				value: item,
 				id: index,
 			}
-			if (auth.user.keyword_type == index) {
+
+			if (item === 'type') {
+				defaultUserKeywordType = option
+			}
+
+			if (parseInt(auth.user.keyword_type) === index) {
 				userKeywordType = option
 			}
+
 			return option
 		})
+
+		if (!userKeywordType) {
+			userKeywordType = defaultUserKeywordType
+		}
 
 		return (
 			<div className="d-flex flex-column">
@@ -218,7 +229,7 @@ class UserProfile extends React.Component {
 					</div>
 					<div>
 						{locale.texts.PRIMARY_AREA}:{' '}
-						{areaTable.length != 0 &&
+						{areaTable.length !== 0 &&
 							auth.user.main_area &&
 							locale.texts[areaTable[auth.user.main_area].name]}
 					</div>
@@ -227,7 +238,7 @@ class UserProfile extends React.Component {
 						{Object.values(this.state.areaTable)
 							.filter((area) => {
 								return (
-									auth.user.main_area != area.id &&
+									parseInt(auth.user.main_area) !== parseInt(area.id) &&
 									auth.user.areas_id.includes(area.id)
 								)
 							})
