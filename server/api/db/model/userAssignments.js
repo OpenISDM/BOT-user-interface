@@ -3,10 +3,6 @@ import { sequelize } from '../connection'
 const { DataTypes } = pkg
 
 export const UserAssignmentEnum = {
-	ASSIGNMENT_TYPE: {
-		DEVICE: 0,
-		PATIENT: 1,
-	},
 	STATUS: {
 		ON_GOING: 0,
 		COMPLETED: 1,
@@ -25,10 +21,7 @@ const UserAssignments = sequelize.define(
 		user_id: {
 			type: DataTypes.INTEGER,
 		},
-		group_list_id: {
-			type: DataTypes.INTEGER,
-		},
-		assignment_type: {
+		assignment_id: {
 			type: DataTypes.INTEGER,
 		},
 		status: {
