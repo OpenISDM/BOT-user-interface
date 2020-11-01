@@ -180,16 +180,19 @@ export default {
 		const { formOption, username, pdfPackage, reservedTimestamp } = request.body
 		try {
 			let getPdfFailed = false
-			pdf
-				.create(pdfPackage.pdf, pdfPackage.options)
-				.toFile(
-					path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
-					function (err) {
-						if (err) {
-							getPdfFailed = true
+
+			if (pdfPackage) {
+				pdf
+					.create(pdfPackage.pdf, pdfPackage.options)
+					.toFile(
+						path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
+						function (err) {
+							if (err) {
+								getPdfFailed = true
+							}
 						}
-					}
-				)
+					)
+			}
 
 			const res = await pool.query(
 				recordQueries.addEditObjectRecord(formOption, username, pdfPackage.path)
