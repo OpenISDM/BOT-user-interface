@@ -62,7 +62,7 @@ export default {
 			const modeIntType = parseInt(mode)
 			if (modeIntType === 0) {
 				const { items } = await DeviceGroupList.findByPk(groupId)
-				if (!items.includes(itemId)) {
+				if (!items || !items.includes(itemId)) {
 					promises.push(
 						DeviceGroupList.update(
 							{

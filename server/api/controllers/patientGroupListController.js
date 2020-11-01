@@ -62,7 +62,7 @@ export default {
 			const modeIntType = parseInt(mode)
 			if (modeIntType === 0) {
 				const { patients } = await PatientGroupList.findByPk(groupId)
-				if (!patients.includes(itemId)) {
+				if (!patients || !patients.includes(itemId)) {
 					promises.push(
 						PatientGroupList.update(
 							{
