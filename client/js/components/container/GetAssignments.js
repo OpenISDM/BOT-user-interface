@@ -61,6 +61,13 @@ class GetAssignments extends React.Component {
 		this.reload()
 	}
 
+	componentDidUpdate = (prevProps) => {
+		const { prevIndex, myIndex } = prevProps
+		if (prevIndex !== myIndex) {
+			this.reload()
+		}
+	}
+
 	reload = () => {
 		this.getPatientGroupList()
 		this.getDeviceGroupListDetail()

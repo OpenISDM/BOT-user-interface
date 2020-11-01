@@ -57,8 +57,11 @@ class ShiftChangeRecord extends React.Component {
 		locale: this.context.locale.abbr,
 	}
 
-	componentDidMount = () => {
-		this.reload()
+	componentDidUpdate = (prevProps) => {
+		const { prevIndex, myIndex } = prevProps
+		if (prevIndex !== myIndex) {
+			this.reload()
+		}
 	}
 
 	reload = () => {
@@ -146,10 +149,12 @@ class ShiftChangeRecord extends React.Component {
 		assignedDeviceGroupListids,
 		assignedPatientGroupListids
 	) => {
-		if (
-			assignedDeviceGroupListids.length !== 0 ||
-			assignedDeviceGroupListids.length !== 0
-		) {
+		const renderAssignmentItems = [
+			...assignedDeviceGroupListids,
+			...assignedPatientGroupListids,
+		]
+
+		if (renderAssignmentItems.length > 0) {
 			return (
 				<>
 					<hr />
@@ -157,10 +162,8 @@ class ShiftChangeRecord extends React.Component {
 						objectMap={objectMap}
 						gruopMap={groupMap}
 						submitGroupListIds={[]}
-						assignedGroupListids={[
-							...assignedDeviceGroupListids,
-							...assignedPatientGroupListids,
-						]}
+						assignedGroupListids={renderAssignmentItems}
+						showOnlyAssigned={true}
 					/>
 					<hr />
 				</>
@@ -179,7 +182,10 @@ class ShiftChangeRecord extends React.Component {
 			showShiftChange,
 		} = this.state
 
-		const disabled = !assignedDeviceGroupListids || !assignedPatientGroupListids
+		const disabled = !(
+			assignedDeviceGroupListids.length > 0 ||
+			assignedPatientGroupListids.length > 0
+		)
 
 		let allAssignmentsName = ''
 		if (groupMap) {

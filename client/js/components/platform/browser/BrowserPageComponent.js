@@ -32,21 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tab, ListGroup } from 'react-bootstrap'
-import {
-	BOTSideNavTitle,
-	BOTSideNav,
-	Title,
-} from '../../BOTComponent/styleComponent'
+import { BOTSideNav } from '../../BOTComponent/styleComponent'
 import LocaleContext from '../../../context/LocaleContext'
 import AccessControl from '../../authentication/AccessControl'
+import PropTypes from 'prop-types'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
-	const { tabList, title, defaultActiveKey } = containerModule
-
+	const { tabList, title } = containerModule
+	const defaultActiveKey = '0' // set first item to default
 	const locale = React.useContext(LocaleContext)
-	const [key, setKey] = React.useState(defaultActiveKey)
+	const [key, setKey] = useState(defaultActiveKey)
 
 	useEffect(() => {
 		setKey(defaultActiveKey)
@@ -56,8 +53,8 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 		<Tab.Container
 			transition={false}
 			activeKey={key}
-			onSelect={(k) => {
-				setKey(k)
+			onSelect={(key) => {
+				setKey(`${key}`)
 			}}
 		>
 			<div className="BOTsidenav">
@@ -68,14 +65,11 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 					{tabList.map((tab, index) => {
 						return (
 							<AccessControl
+								key={index}
 								permission={tab.permission}
 								renderNoAccess={() => null}
 							>
-								<BOTSideNav
-									key={index}
-									eventKey={tab.name.replace(/ /g, '_')}
-									action
-								>
+								<BOTSideNav key={index} eventKey={index} action>
 									{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
 								</BOTSideNav>
 							</AccessControl>
@@ -89,12 +83,11 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 						const props = {
 							type: tab.name,
 							setMessage,
+							prevIndex: key,
+							myIndex: `${index}`,
 						}
 						return (
-							<Tab.Pane
-								eventKey={tab.name.replace(/ /g, '_')}
-								key={tab.name.replace(/ /g, '_')}
-							>
+							<Tab.Pane eventKey={index} key={index}>
 								<div className="font-size-140-percent color-black">
 									{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
 								</div>
@@ -108,4 +101,10 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 		</Tab.Container>
 	)
 }
+
+BrowserPageComponent.propTypes = {
+	containerModule: PropTypes.object.isRequired,
+	setMessage: PropTypes.func.isRequired,
+}
+
 export default BrowserPageComponent

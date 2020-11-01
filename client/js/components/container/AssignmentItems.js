@@ -43,29 +43,38 @@ class AssignmentItems extends React.Component {
 		groupMap,
 		submitGroupListIds,
 		assignedGroupListids,
-		handleChange
+		handleChange,
+		showOnlyAssigned
 	) => {
-		return Object.values(groupMap).map((group) => {
-			const { id, name } = group
-			const checked =
-				assignedGroupListids.includes(id) || submitGroupListIds.includes(id)
-			return (
-				<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
-					<CheckboxOverlayTrigger
-						popoverTitle={name}
-						popoverBody={this.generateAssismentsDetails(objectMap, group)}
-						id={id}
-						name={name}
-						checked={checked}
-						placement={'right'}
-						onChange={handleChange}
-						label={name}
-						disabled={assignedGroupListids.includes(id)}
-						trigger={'hover'}
-					/>
-				</Row>
-			)
-		})
+		return Object.values(groupMap)
+			.filter((gruop) => {
+				const { id } = gruop
+				if (showOnlyAssigned) {
+					return assignedGroupListids.includes(id)
+				}
+				return true
+			})
+			.map((group) => {
+				const { id, name } = group
+				const checked =
+					assignedGroupListids.includes(id) || submitGroupListIds.includes(id)
+				return (
+					<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
+						<CheckboxOverlayTrigger
+							popoverTitle={name}
+							popoverBody={this.generateAssismentsDetails(objectMap, group)}
+							id={id}
+							name={name}
+							checked={checked}
+							placement={'right'}
+							onChange={handleChange}
+							label={name}
+							disabled={assignedGroupListids.includes(id)}
+							trigger={'hover'}
+						/>
+					</Row>
+				)
+			})
 	}
 
 	generateAssismentsDetails = (objectMap, gruop) => {
@@ -99,6 +108,7 @@ class AssignmentItems extends React.Component {
 			submitGroupListIds,
 			assignedGroupListids,
 			handleChange,
+			showOnlyAssigned = false,
 		} = this.props
 
 		return (
@@ -109,7 +119,8 @@ class AssignmentItems extends React.Component {
 						gruopMap,
 						submitGroupListIds,
 						assignedGroupListids,
-						handleChange
+						handleChange,
+						showOnlyAssigned
 					)}
 				</Col>
 			</>
@@ -123,6 +134,7 @@ AssignmentItems.propTypes = {
 	submitGroupListIds: PropTypes.array.isRequired,
 	assignedGroupListids: PropTypes.array.isRequired,
 	handleChange: PropTypes.func.isRequired,
+	showOnlyAssigned: PropTypes.bool,
 }
 
 export default AssignmentItems
