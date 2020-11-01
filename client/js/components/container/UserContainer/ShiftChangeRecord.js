@@ -50,50 +50,14 @@ class ShiftChangeRecord extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		data: [],
 		deviceGroupListOptions: [],
 		devicelist: null,
 		showShiftChange: false,
 		locale: this.context.locale.abbr,
 	}
 
-	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr !== prevState.locale) {
-			this.getData()
-		}
-	}
-
 	componentDidMount = () => {
-		this.getData()
 		this.getDeviceGroup()
-	}
-
-	getData = async (callback) => {
-		const { locale } = this.context
-
-		try {
-			const res = await apiHelper.record.getRecord(
-				config.RECORD_TYPE.SHIFT_CHANGE,
-				locale.abbr
-			)
-
-			res.data.rows.forEach((item) => {
-				item.shift =
-					item.shift &&
-					locale.texts[item.shift.toUpperCase().replace(/ /g, '_')]
-				item.submit_timestamp =
-					item.submit_timestamp && formatTime(item.submit_timestamp)
-			})
-			this.setState(
-				{
-					data: res.data.rows,
-					locale: locale.abbr,
-				},
-				callback
-			)
-		} catch (e) {
-			console.log(`get shift change record failed ${e}`)
-		}
 	}
 
 	handleClose = () => {
