@@ -34,30 +34,37 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
+import _ from 'lodash'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
-import { formatTime } from '../../../helper/utilities'
 import ShiftChange from '../ShiftChange'
-import Select from 'react-select'
-import Cookies from 'js-cookie'
-import messageGenerator from '../../../helper/messageGenerator'
-import { SAVE_SUCCESS } from '../../../config/wordMap'
+import AssignmentItems from '../AssignmentItems'
+
+const { ASSIGNMENT } = config
 
 class ShiftChangeRecord extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		deviceGroupListOptions: [],
-		devicelist: null,
+		objectMap: {},
+		groupMap: {},
+		assignedDeviceGroupListids: [],
+		assignedPatientGroupListids: [],
 		showShiftChange: false,
 		locale: this.context.locale.abbr,
 	}
 
 	componentDidMount = () => {
-		this.getDeviceGroup()
+		this.reload()
+	}
+
+	reload = () => {
+		this.getAssignments()
+		this.getPatientGroupList()
+		this.getDeviceGroupListDetail()
 	}
 
 	handleClose = () => {
@@ -66,82 +73,130 @@ class ShiftChangeRecord extends React.Component {
 		})
 	}
 
-	getDeviceGroup = () => {
-		apiHelper.deviceGroupListApis
-			.getDeviceGroupList()
-			.then((res) => {
-				const listId =
-					Cookies.get('user') && JSON.parse(Cookies.get('user')).list_id
-						? JSON.parse(Cookies.get('user')).list_id
-						: null
+	getAssignments = async () => {
+		const { stateReducer, auth } = this.context
+		const [{ areaId }] = stateReducer
+		const userId = auth.user.id
+		const assignedDeviceGroupListids = []
+		const assignedPatientGroupListids = []
 
-				let devicelist = null
+		const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
+			areaId,
+			userId,
+		})
 
-				const deviceGroupListOptions = res.data.map((item) => {
-					const option = {
-						label: item.name,
-						value: item,
+		if (res) {
+			res.data
+				.filter((item) => item.status === ASSIGNMENT.STATUS.ON_GOING)
+				.forEach((item) => {
+					switch (item.assignment_type) {
+						case ASSIGNMENT.TYPE.DEVICE:
+							assignedDeviceGroupListids.push(parseInt(item.group_list_id))
+							break
+						case ASSIGNMENT.TYPE.PATIENT:
+							assignedPatientGroupListids.push(parseInt(item.group_list_id))
+							break
 					}
-					if (item.id === listId) {
-						devicelist = option
-					}
-					return option
 				})
+		}
 
-				this.setState({
-					deviceGroupListOptions,
-					devicelist,
-				})
-			})
-			.catch((err) => {
-				console.log('err when get device group ', err)
-			})
+		this.setState({
+			assignedDeviceGroupListids,
+			assignedPatientGroupListids,
+		})
 	}
 
-	selectDeviceGroup = (devicelist) => {
-		const { auth } = this.context
-		const callback = async () => {
-			const user = {
-				...JSON.parse(Cookies.get('user')),
-				list_id: devicelist.value.id,
-			}
-			await Cookies.set('user', user)
-			auth.setListId(devicelist.value.id)
+	getPatientGroupList = async () => {
+		const { stateReducer } = this.context
+		const [{ areaId }] = stateReducer
+
+		try {
+			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(areaId)
+			const patientGruopMap = _.keyBy(res.data.gruopList, 'id')
+			const patientObjectMap = _.keyBy(res.data.objectList, 'id')
+			this.setState({
+				groupMap: { ...this.state.groupMap, ...patientGruopMap },
+				objectMap: { ...this.state.objectMap, ...patientObjectMap },
+			})
+		} catch (e) {
+			console.log('get patient group failed', e)
 		}
-		this.setState(
-			{
-				devicelist,
-			},
-			callback
-		)
+	}
+
+	getDeviceGroupListDetail = async () => {
+		const { stateReducer } = this.context
+		const [{ areaId }] = stateReducer
+
+		try {
+			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(areaId)
+			const deviceGruopMap = _.keyBy(res.data.gruopList, 'id')
+			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
+			this.setState({
+				groupMap: { ...this.state.groupMap, ...deviceGruopMap },
+				objectMap: { ...this.state.objectMap, ...deviceObjectMap },
+			})
+		} catch (e) {
+			console.log('get device group failed', e)
+		}
+	}
+
+	generateAssignmentItems = (
+		objectMap,
+		groupMap,
+		assignedDeviceGroupListids,
+		assignedPatientGroupListids
+	) => {
+		if (
+			assignedDeviceGroupListids.length !== 0 ||
+			assignedDeviceGroupListids.length !== 0
+		) {
+			return (
+				<>
+					<hr />
+					<AssignmentItems
+						objectMap={objectMap}
+						gruopMap={groupMap}
+						submitGroupListIds={[]}
+						assignedGroupListids={[
+							...assignedDeviceGroupListids,
+							...assignedPatientGroupListids,
+						]}
+					/>
+					<hr />
+				</>
+			)
+		}
+		return null
 	}
 
 	render() {
 		const { locale } = this.context
-		const { devicelist } = this.state
+		const {
+			objectMap,
+			groupMap,
+			assignedDeviceGroupListids,
+			assignedPatientGroupListids,
+			showShiftChange,
+		} = this.state
+
+		const disabled = !assignedDeviceGroupListids || !assignedPatientGroupListids
+
+		let allAssignmentsName = ''
+		if (groupMap) {
+			allAssignmentsName = Object.values(groupMap)
+				.map((item) => item.name)
+				.toString()
+		}
 
 		return (
 			<Fragment>
-				<div className="mb-">
-					<div className="color-black mb-2">
-						{locale.texts.SELECT_DEVICE_LIST}
-					</div>
-					<Select
-						className="w-50"
-						isClearable
-						onChange={this.selectDeviceGroup}
-						options={this.state.deviceGroupListOptions}
-						value={this.state.devicelist}
-					/>
-				</div>
-				<hr />
 				<AccessControl
 					renderNoAccess={() => null}
 					platform={['browser', 'tablet']}
 				>
 					<ButtonToolbar>
 						<PrimaryButton
-							disabled={!devicelist}
+							disabled={disabled}
 							onClick={() => {
 								this.setState({
 									showShiftChange: true,
@@ -152,10 +207,21 @@ class ShiftChangeRecord extends React.Component {
 						</PrimaryButton>
 					</ButtonToolbar>
 				</AccessControl>
+
+				{this.generateAssignmentItems(
+					objectMap,
+					groupMap,
+					assignedDeviceGroupListids,
+					assignedPatientGroupListids
+				)}
+
 				<ShiftChange
-					show={this.state.showShiftChange}
+					show={showShiftChange}
 					handleClose={this.handleClose}
-					listName={this.state.devicelist ? this.state.devicelist.label : null}
+					handleSubmit={this.reload}
+					assignedDeviceGroupListids={assignedDeviceGroupListids}
+					assignedPatientGroupListids={assignedPatientGroupListids}
+					listName={allAssignmentsName}
 				/>
 			</Fragment>
 		)

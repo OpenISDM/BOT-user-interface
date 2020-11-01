@@ -96,6 +96,10 @@ class ShiftChange extends React.Component {
 	getTrackingData = () => {
 		const { locale, auth, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
+		const {
+			assignedDeviceGroupListids,
+			assignedPatientGroupListids,
+		} = this.props
 
 		apiHelper.trackingDataApiAgent
 			.getTrackingData({
@@ -111,7 +115,10 @@ class ShiftChange extends React.Component {
 
 				res.data
 					.filter((item) => {
-						return parseInt(item.list_id) === parseInt(auth.user.list_id)
+						return (
+							assignedDeviceGroupListids.includes(parseInt(item.list_id)) ||
+							assignedPatientGroupListids.includes(parseInt(item.list_id))
+						)
 					})
 					.forEach((item) => {
 						switch (item.object_type) {
@@ -150,10 +157,13 @@ class ShiftChange extends React.Component {
 
 	handleConfirmFormSubmit = async (authentication = '') => {
 		const { values } = this.formikRef.current.state
-
 		const { locale, auth } = this.context
-
-		const listName = this.props.listName
+		const userId = auth.user.id
+		const {
+			listName,
+			assignedDeviceGroupListids,
+			assignedPatientGroupListids,
+		} = this.props
 
 		authentication = auth.user.name
 
@@ -204,6 +214,14 @@ class ShiftChange extends React.Component {
 				list_id: auth.user.list_id,
 			})
 
+			await apiHelper.userAssignmentsApiAgent.finish({
+				userId,
+				groupListIds: [
+					...assignedDeviceGroupListids,
+					...assignedPatientGroupListids,
+				],
+			})
+
 			const callback = () => {
 				this.props.handleClose(() => {
 					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
@@ -218,6 +236,8 @@ class ShiftChange extends React.Component {
 				},
 				callback
 			)
+
+			this.props.handleSubmit()
 		} catch (e) {
 			console.log(`add shift change record failed ${e}`)
 		}
@@ -232,13 +252,9 @@ class ShiftChange extends React.Component {
 
 	render() {
 		const { locale, auth } = this.context
-
 		const { show, handleClose, listName } = this.props
-
 		const { foundResult, notFoundResult } = this.state.searchResult
-
 		const { foundPatients, notFoundPatients } = this.state.patients
-
 		const nowTime = moment().locale(locale.abbr).format(config.TIMESTAMP_FORMAT)
 		const hasFoundResult = foundResult.length !== 0
 		const hasNotFoundResult = notFoundResult.length !== 0
@@ -361,6 +377,15 @@ class ShiftChange extends React.Component {
 	}
 }
 
+ShiftChange.propTypes = {
+	assignedDeviceGroupListids: PropTypes.array.isRequired,
+	assignedPatientGroupListids: PropTypes.array.isRequired,
+	show: PropTypes.bool.isRequired,
+	handleClose: PropTypes.func.isRequired,
+	handleSubmit: PropTypes.func.isRequired,
+	listName: PropTypes.string.isRequired,
+}
+
 export default ShiftChange
 
 const TypeBlock = ({ title, hasType, typeArray }) => {
@@ -386,12 +411,6 @@ const TypeBlock = ({ title, hasType, typeArray }) => {
 				})}
 		</Fragment>
 	)
-}
-
-ShiftChange.propTypes = {
-	listName: PropTypes.string,
-	show: PropTypes.bool,
-	handleClose: PropTypes.func,
 }
 
 TypeBlock.propTypes = {

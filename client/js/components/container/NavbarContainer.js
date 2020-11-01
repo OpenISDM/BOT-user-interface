@@ -38,7 +38,6 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Navbar, Nav, Dropdown } from 'react-bootstrap'
 import config from '../../config'
 import AccessControl from '../authentication/AccessControl'
-import ShiftChange from './ShiftChange'
 import { AppContext } from '../../context/AppContext'
 import Select from 'react-select'
 import BatteryLevelNotification from './BatteryLevelNotification'
@@ -46,7 +45,6 @@ import { navbarNavList } from '../../config/pageModules'
 import styleConfig from '../../config/styleConfig'
 import { BOTNavLink } from '../BOTComponent/styleComponent'
 import routes from '../../config/routes/routes'
-import { SHIFT_CHANGE } from '../../config/wordMap'
 import { SET_AREA } from '../../reducer/action'
 import ImageWebp from '../utils/ImageWebp'
 
@@ -58,6 +56,10 @@ class NavbarContainer extends React.Component {
 	}
 
 	navList = navbarNavList
+
+	handleClick = () => {
+		// console.log(e)
+	}
 
 	render = () => {
 		const style = {

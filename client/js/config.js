@@ -221,6 +221,17 @@ const config = {
 		DEVICE: 'DEVICE',
 		PATIENT: 'PATIENT',
 	},
+
+	ASSIGNMENT: {
+		TYPE: {
+			DEVICE: 0,
+			PATIENT: 1,
+		},
+		STATUS: {
+			ON_GOING: 0,
+			COMPLETED: 1,
+		},
+	},
 }
 
 export default config

@@ -33,30 +33,22 @@
 */
 
 import React, { Fragment } from 'react'
-import { ButtonToolbar, Row, Col } from 'react-bootstrap'
+import { ButtonToolbar } from 'react-bootstrap'
 import _ from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import apiHelper from '../../helper/apiHelper'
 import messageGenerator from '../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../config/wordMap'
-import CheckboxOverlayTrigger from '../presentational/CheckboxOverlayTrigger'
-
-const ASSIGNMENT_TYPE = {
-	DEVICE: 0,
-	PATIENT: 1,
-}
-
-const ASSIGNMENT_STATUS = {
-	ON_GOING: 0,
-	COMPLETED: 1,
-}
+import config from '../../config'
+import AssignmentItems from './AssignmentItems'
+const { ASSIGNMENT } = config
 
 class GetAssignments extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		currentAssignmentType: ASSIGNMENT_TYPE.DEVICE,
+		currentAssignmentType: ASSIGNMENT.TYPE.DEVICE,
 		deviceGroupMap: {},
 		patientGroupMap: {},
 		objectMap: {},
@@ -79,36 +71,34 @@ class GetAssignments extends React.Component {
 		const { stateReducer, auth } = this.context
 		const [{ areaId }] = stateReducer
 		const userId = auth.user.id
+		const assignedDeviceGroupListids = []
+		const assignedPatientGroupListids = []
 
-		try {
-			const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
-				areaId,
-				userId,
-			})
+		const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
+			areaId,
+			userId,
+		})
 
-			const assignedDeviceGroupListids = []
-			const assignedPatientGroupListids = []
+		if (res) {
 			res.data
-				.filter((item) => item.status === ASSIGNMENT_STATUS.ON_GOING)
+				.filter((item) => item.status === ASSIGNMENT.STATUS.ON_GOING)
 				.forEach((item) => {
 					switch (item.assignment_type) {
-						case ASSIGNMENT_TYPE.DEVICE:
+						case ASSIGNMENT.TYPE.DEVICE:
 							assignedDeviceGroupListids.push(parseInt(item.group_list_id))
 							break
-						case ASSIGNMENT_TYPE.PATIENT:
+						case ASSIGNMENT.TYPE.PATIENT:
 							assignedPatientGroupListids.push(parseInt(item.group_list_id))
 							break
 					}
 				})
-
-			this.setState({
-				assignedDeviceGroupListids,
-				assignedPatientGroupListids,
-				submitGroupListIds: [],
-			})
-		} catch (e) {
-			console.log('get patient group failed', e)
 		}
+
+		this.setState({
+			assignedDeviceGroupListids,
+			assignedPatientGroupListids,
+			submitGroupListIds: [],
+		})
 	}
 
 	acceptAssignments = async (submitGroupListIds) => {
@@ -136,7 +126,6 @@ class GetAssignments extends React.Component {
 			await apiHelper.userAssignmentsApiAgent.cancel({
 				userId,
 				groupListIds: assignedGroupListids,
-				assignmentType: this.state.currentAssignmentType,
 			})
 			await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 			this.reload()
@@ -202,55 +191,6 @@ class GetAssignments extends React.Component {
 		})
 	}
 
-	generateAssisments = (groupMap, assignedGroupListids) => {
-		return Object.values(groupMap).map((group) => {
-			const { id, name } = group
-			const checked =
-				this.state.submitGroupListIds.includes(id) ||
-				assignedGroupListids.includes(id)
-			return (
-				<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
-					<CheckboxOverlayTrigger
-						popoverTitle={name}
-						popoverBody={this.generateAssismentsDetails(group)}
-						id={id}
-						name={name}
-						checked={checked}
-						placement={'right'}
-						onChange={this.handleChange}
-						label={name}
-						disabled={assignedGroupListids.includes(id)}
-						trigger={'hover'}
-					/>
-				</Row>
-			)
-		})
-	}
-
-	generateAssismentsDetails = (gruop) => {
-		let itemsNameString = ''
-
-		const { items } = gruop
-		if (items) {
-			const itemMap = {}
-			items.forEach((id) => {
-				const name = this.state.objectMap[id].name
-				if (itemMap[name]) {
-					itemMap[name] += 1
-				} else {
-					itemMap[name] = 1
-				}
-			})
-			Object.keys(itemMap).forEach((itemKey) => {
-				itemsNameString = `${itemsNameString}${itemKey} : ${
-					itemMap[itemKey]
-				} ${String.fromCharCode(13, 10)}`
-			})
-		}
-
-		return itemsNameString
-	}
-
 	handleAssigmentTypeChange = (e) => {
 		const type = parseInt(e.target.id)
 		this.setState({ currentAssignmentType: type })
@@ -299,40 +239,50 @@ class GetAssignments extends React.Component {
 	render() {
 		const { locale } = this.context
 
+		const { handleChange } = this
+
 		const gruopMap =
-			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
+			this.state.currentAssignmentType === ASSIGNMENT.TYPE.DEVICE
 				? this.state.deviceGroupMap
 				: this.state.patientGroupMap
 
 		const assignedGroupListids =
-			this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
+			this.state.currentAssignmentType === ASSIGNMENT.TYPE.DEVICE
 				? this.state.assignedDeviceGroupListids
 				: this.state.assignedPatientGroupListids
+
+		const { objectMap, submitGroupListIds } = this.state
 
 		return (
 			<>
 				<ButtonToolbar>
 					<PrimaryButton
 						disabled={
-							this.state.currentAssignmentType === ASSIGNMENT_TYPE.DEVICE
+							this.state.currentAssignmentType === ASSIGNMENT.TYPE.DEVICE
 						}
-						id={ASSIGNMENT_TYPE.DEVICE}
+						id={ASSIGNMENT.TYPE.DEVICE}
 						onClick={this.handleAssigmentTypeChange}
 					>
 						{locale.texts.DEVICE}
 					</PrimaryButton>
 					<PrimaryButton
 						disabled={
-							this.state.currentAssignmentType === ASSIGNMENT_TYPE.PATIENT
+							this.state.currentAssignmentType === ASSIGNMENT.TYPE.PATIENT
 						}
-						id={ASSIGNMENT_TYPE.PATIENT}
+						id={ASSIGNMENT.TYPE.PATIENT}
 						onClick={this.handleAssigmentTypeChange}
 					>
 						{locale.texts.PATIENT}
 					</PrimaryButton>
 				</ButtonToolbar>
 				<hr />
-				<Col>{this.generateAssisments(gruopMap, assignedGroupListids)}</Col>
+				<AssignmentItems
+					objectMap={objectMap}
+					gruopMap={gruopMap}
+					submitGroupListIds={submitGroupListIds}
+					assignedGroupListids={assignedGroupListids}
+					handleChange={handleChange}
+				/>
 				<hr />
 				{this.generateActionButtons(locale, assignedGroupListids)}
 			</>

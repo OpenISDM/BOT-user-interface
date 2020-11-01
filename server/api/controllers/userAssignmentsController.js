@@ -112,9 +112,7 @@ export default {
 				},
 				{
 					where: {
-						user_id: userId,
 						id: foundIds,
-						assignment_type: assignmentType,
 					},
 				}
 			)
@@ -143,7 +141,7 @@ export default {
 		}
 	},
 	finish: async (request, response) => {
-		const { userId, groupListIds, assignmentType } = request.body
+		const { userId, groupListIds } = request.body
 		try {
 			const res = await UserAssignments.update(
 				{
@@ -154,7 +152,6 @@ export default {
 					where: {
 						user_id: userId,
 						group_list_id: groupListIds,
-						assignment_type: assignmentType,
 					},
 				}
 			)
@@ -164,7 +161,7 @@ export default {
 		}
 	},
 	cancel: async (request, response) => {
-		const { userId, groupListIds, assignmentType } = request.body
+		const { userId, groupListIds } = request.body
 		try {
 			const res = await UserAssignments.update(
 				{
@@ -175,7 +172,6 @@ export default {
 					where: {
 						user_id: userId,
 						group_list_id: groupListIds,
-						assignment_type: assignmentType,
 					},
 				}
 			)

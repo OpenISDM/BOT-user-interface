@@ -34,30 +34,42 @@
 
 import { userAssignments } from '../dataSrc'
 import axios from 'axios'
+import { tcWrapper } from '../helper/utilities'
+
+async function getByUserId({ areaId, userId }) {
+	return await axios.get(userAssignments.getByUserId, {
+		params: { areaId, userId },
+	})
+}
+async function getGroupIdListByUserId({ areaId, userId }) {
+	return await axios.get(userAssignments.getGroupIdListByUserId, {
+		params: { areaId, userId },
+	})
+}
+async function accept({ userId, groupListIds, assignmentType }) {
+	return await axios.post(userAssignments.accept, {
+		userId,
+		groupListIds,
+		assignmentType,
+	})
+}
+async function cancel({ userId, groupListIds }) {
+	return await axios.post(userAssignments.cancel, {
+		userId,
+		groupListIds,
+	})
+}
+async function finish({ userId, groupListIds }) {
+	return await axios.post(userAssignments.finish, {
+		userId,
+		groupListIds,
+	})
+}
 
 export default {
-	async getByUserId({ areaId, userId }) {
-		return await axios.get(userAssignments.getByUserId, {
-			params: { areaId, userId },
-		})
-	},
-	async getGroupIdListByUserId({ areaId, userId }) {
-		return await axios.get(userAssignments.getGroupIdListByUserId, {
-			params: { areaId, userId },
-		})
-	},
-	async accept({ userId, groupListIds, assignmentType }) {
-		return await axios.post(userAssignments.accept, {
-			userId,
-			groupListIds,
-			assignmentType,
-		})
-	},
-	async cancel({ userId, groupListIds, assignmentType }) {
-		return await axios.post(userAssignments.cancel, {
-			userId,
-			groupListIds,
-			assignmentType,
-		})
-	},
+	getByUserId: tcWrapper(getByUserId),
+	getGroupIdListByUserId: tcWrapper(getGroupIdListByUserId),
+	accept: tcWrapper(accept),
+	cancel: tcWrapper(cancel),
+	finish: tcWrapper(finish),
 }
