@@ -84,7 +84,6 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 							type: tab.name,
 							setMessage,
 							prevIndex: key,
-							myIndex: `${index}`,
 						}
 						return (
 							<Tab.Pane eventKey={index} key={index}>

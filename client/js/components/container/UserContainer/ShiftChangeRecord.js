@@ -55,11 +55,13 @@ class ShiftChangeRecord extends React.Component {
 		assignedPatientGroupListids: [],
 		showShiftChange: false,
 		locale: this.context.locale.abbr,
+		prevIndex: null,
 	}
 
-	componentDidUpdate = (prevProps) => {
-		const { prevIndex, myIndex } = prevProps
-		if (prevIndex !== myIndex) {
+	componentDidUpdate = (prevProps, prevState) => {
+		const { prevIndex } = prevProps
+		if (prevIndex !== prevState.prevIndex) {
+			this.setState({ prevIndex })
 			this.reload()
 		}
 	}
