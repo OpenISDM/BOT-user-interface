@@ -14,6 +14,7 @@ import {
 	BOTNav,
 	PageTitle,
 } from '../../../components/BOTComponent/styleComponent'
+import TrackingTable from '../../../components/container/TrackingTable'
 
 class ObjectManagementContainer extends React.Component {
 	static contextType = AppContext
@@ -49,7 +50,7 @@ class ObjectManagementContainer extends React.Component {
 							</BOTNavLink>
 						</Nav.Item>
 						<Nav.Item>
-							<BOTNavLink secondary eventKey="''">
+							<BOTNavLink secondary eventKey="battery_table">
 								{locale.texts.BATTERY_FORM}
 							</BOTNavLink>
 						</Nav.Item>
@@ -103,6 +104,10 @@ class ObjectManagementContainer extends React.Component {
 								<ImportPatientTable />
 							</Tab.Pane>
 						</AccessControl>
+
+						<Tab.Pane eventKey="battery_table">
+							<TrackingTable />
+						</Tab.Pane>
 					</Tab.Content>
 				</Tab.Container>
 			</BOTContainer>
