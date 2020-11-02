@@ -69,6 +69,7 @@ const TransferredLocationManagement = Loadable({
 
 export const userContainerModule = {
 	title: 'user profile',
+	defaultActiveKey: 'user profile',
 	tabList: [
 		{
 			name: 'user profile',
@@ -94,6 +95,7 @@ export const userContainerModule = {
 export const monitorSettingModule = {
 	title: 'monitor setting',
 	path: routes.MONITOR_SETTINGS,
+	defaultActiveKey: '', // to be assigned
 	tabList: [
 		// {
 		//     name: config.monitorSettingType.MOVEMENT_MONITOR,
@@ -116,6 +118,7 @@ export const monitorSettingModule = {
 
 export const settingModule = {
 	title: 'settings',
+	defaultActiveKey: 'user profile',
 	path: routes.SETTINGS,
 	tabList: [
 		{
@@ -163,6 +166,7 @@ export const settingModule = {
 
 export const trackingHistoryContainerModule = {
 	title: 'tracking history',
+	defaultActiveKey: '', // to be assigned
 	path: routes.TRACE,
 	tabList: [
 		{
@@ -182,6 +186,7 @@ export const trackingHistoryContainerModule = {
 
 export const reportContainerModule = {
 	title: 'report',
+	defaultActiveKey: 'Get Assignments',
 	path: routes.RECORDS,
 	tabList: [
 		{
@@ -229,6 +234,7 @@ export const reportContainerModule = {
 
 export const BOTAdminModule = {
 	title: 'BOT admin',
+	defaultActiveKey: 'Add Delete User Accounts',
 	path: routes.BOT_ADMIN,
 	tabList: [
 		{

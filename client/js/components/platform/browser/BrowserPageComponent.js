@@ -40,8 +40,8 @@ import AccessControl from '../../authentication/AccessControl'
 import PropTypes from 'prop-types'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
-	const { tabList, title } = containerModule
-	const defaultActiveKey = '0' // set first item to default
+	const { tabList, title, defaultActiveKey } = containerModule
+
 	const locale = React.useContext(LocaleContext)
 	const [key, setKey] = useState(defaultActiveKey)
 
@@ -53,8 +53,8 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 		<Tab.Container
 			transition={false}
 			activeKey={key}
-			onSelect={(key) => {
-				setKey(`${key}`)
+			onSelect={(k) => {
+				setKey(k)
 			}}
 		>
 			<div className="BOTsidenav">
@@ -69,7 +69,11 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 								permission={tab.permission}
 								renderNoAccess={() => null}
 							>
-								<BOTSideNav key={index} eventKey={index} action>
+								<BOTSideNav
+									key={index}
+									eventKey={tab.name.replace(/ /g, '_')}
+									action
+								>
 									{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
 								</BOTSideNav>
 							</AccessControl>
@@ -79,14 +83,16 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 			</div>
 			<div className="BOTsidemain">
 				<Tab.Content>
-					{tabList.map((tab, index) => {
+					{tabList.map((tab) => {
 						const props = {
 							type: tab.name,
 							setMessage,
-							prevIndex: key,
 						}
 						return (
-							<Tab.Pane eventKey={index} key={index}>
+							<Tab.Pane
+								eventKey={tab.name.replace(/ /g, '_')}
+								key={tab.name.replace(/ /g, '_')}
+							>
 								<div className="font-size-140-percent color-black">
 									{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
 								</div>
