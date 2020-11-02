@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
+import { object, objectPackage } from '../dataSrc'
 import axios from 'axios'
 
 export default {
@@ -40,7 +40,7 @@ export default {
 	 * get object data from object_table
 	 */
 	async getObjectTable({ locale, areas_id, objectType }) {
-		return await axios.get(dataSrc.object.object, {
+		return await axios.get(object.object, {
 			params: {
 				locale,
 				areas_id,
@@ -50,31 +50,31 @@ export default {
 	},
 
 	async getAlias() {
-		return await axios.get(dataSrc.object.alias)
+		return await axios.get(object.alias)
 	},
 
 	async editAlias({ objectType, alias }) {
-		return await axios.put(dataSrc.object.alias, {
+		return await axios.put(object.alias, {
 			objectType,
 			alias,
 		})
 	},
 
 	async editAliases({ objectTypeList }) {
-		return await axios.put(dataSrc.object.aliases, {
+		return await axios.put(object.aliases, {
 			objectTypeList,
 		})
 	},
 
 	async post({ formOption, mode }) {
-		return await axios.post(dataSrc.object[mode], {
+		return await axios.post(object[mode], {
 			formOption,
 			mode,
 		})
 	},
 
 	async put({ formOption, mode }) {
-		return await axios.put(dataSrc.object[mode], {
+		return await axios.put(object[mode], {
 			formOption,
 			mode,
 		})
@@ -87,7 +87,7 @@ export default {
 		pdfPackage,
 		reservedTimestamp
 	) {
-		return await axios.put(dataSrc.objectPackage, {
+		return await axios.put(objectPackage, {
 			locale,
 			formOption,
 			username,
@@ -97,7 +97,7 @@ export default {
 	},
 
 	async deleteObject({ formOption }) {
-		return await axios.delete(dataSrc.object.object, {
+		return await axios.delete(object.object, {
 			data: {
 				formOption,
 			},
@@ -105,12 +105,12 @@ export default {
 	},
 
 	async disassociate({ formOption }) {
-		return await axios.patch(dataSrc.object.object, {
+		return await axios.patch(object.object, {
 			formOption,
 		})
 	},
 
 	async getIdleMacaddr() {
-		return await axios.post(dataSrc.object.idleMacaddr)
+		return await axios.post(object.idleMacaddr)
 	},
 }

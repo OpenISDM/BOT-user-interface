@@ -51,6 +51,7 @@ import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
 import { DISASSOCIATE, NORMAL, TRANSFERRED } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
+import { formatToMac } from '../../../helper/utilities'
 import apiHelper from '../../../helper/apiHelper'
 import PropTypes from 'prop-types'
 
@@ -117,6 +118,7 @@ class EditObjectForm extends React.Component {
 			show,
 			handleClose,
 			disableASN,
+			// idleMacaddrSet = [],
 		} = this.props
 
 		const {
@@ -131,102 +133,91 @@ class EditObjectForm extends React.Component {
 			nickname,
 		} = selectedRowData
 
+		const initialValues = {
+			name: name || '',
+			type: type || '',
+			asset_control_number: asset_control_number || '',
+			mac_address: selectedRowData.isBind
+				? { label: mac_address, value: mac_address }
+				: null,
+			status: selectedRowData.length !== 0 ? status.value : NORMAL,
+			area: area_name || '',
+			monitorType:
+				selectedRowData.length !== 0
+					? selectedRowData.monitor_type === 0
+						? null
+						: selectedRowData.monitor_type.split('/')
+					: [],
+			transferred_location:
+				status.value === TRANSFERRED ? transferred_location : ' ',
+			nickname: nickname || '',
+		}
+
+		const validationSchema = object().shape({
+			name: string().required(locale.texts.NAME_IS_REQUIRED),
+			type: string().required(locale.texts.TYPE_IS_REQUIRED),
+			asset_control_number: string()
+				.required(locale.texts.ASSET_CONTROL_NUMBER_IS_REQUIRED)
+				.test(
+					'asset_control_number',
+					locale.texts.THE_ASSET_CONTROL_NUMBER_IS_ALREADY_USED,
+					(value) => {
+						if (!value) {
+							return false
+						}
+						const alreadyUsedNumber =
+							!disableASN &&
+							objectTable
+								.map((item) => item.asset_control_number.toUpperCase())
+								.includes(value.toUpperCase())
+						if (alreadyUsedNumber) {
+							return false
+						}
+						return true
+					}
+				),
+			mac_address: object()
+				.nullable()
+				.test(
+					'mac_address',
+					locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
+					(obj) => {
+						if (!obj || isEmpty(obj)) {
+							return true
+						}
+						return macaddrValidation(obj.label)
+					}
+					// ) // TODO: Just comment out and wait for clear requirement
+					// .test(
+					// 	'mac_address',
+					// 	locale.texts.THE_MAC_ADDRESS_IS_ALREADY_USED,
+					// 	(obj) => {
+					// 		if (!obj || isEmpty(obj)) {
+					// 			return true
+					// 		}
+					// 		const macWithColons = obj.label
+					// 		return idleMacaddrSet.includes(macWithColons)
+					// 	}
+				),
+			status: string().required(locale.texts.STATUS_IS_REQUIRED),
+			area: string().required(locale.texts.AREA_IS_REQUIRED),
+			transferred_location: object()
+				.nullable()
+				.when('status', {
+					is: TRANSFERRED,
+					then: object().required(locale.texts.LOCATION_IS_REQUIRED),
+				}),
+		})
+
 		return (
 			<Modal show={show} onHide={handleClose} size="md">
 				<Modal.Header closeButton>
 					{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
 				</Modal.Header>
-
 				<Modal.Body>
 					<Formik
-						initialValues={{
-							name: name || '',
-							type: type || '',
-							asset_control_number: asset_control_number || '',
-							mac_address: selectedRowData.isBind
-								? {
-										label: mac_address,
-										value: mac_address,
-								  }
-								: null,
-							status: selectedRowData.length !== 0 ? status.value : NORMAL,
-							area: area_name || '',
-
-							monitorType:
-								selectedRowData.length !== 0
-									? selectedRowData.monitor_type === 0
-										? null
-										: selectedRowData.monitor_type.split('/')
-									: [],
-							transferred_location:
-								status.value === TRANSFERRED ? transferred_location : ' ',
-							nickname: nickname || '',
-						}}
-						validationSchema={object().shape({
-							name: string().required(locale.texts.NAME_IS_REQUIRED),
-
-							type: string().required(locale.texts.TYPE_IS_REQUIRED),
-
-							asset_control_number: string()
-								.required(locale.texts.ASSET_CONTROL_NUMBER_IS_REQUIRED)
-								.test(
-									'asset_control_number',
-									locale.texts.THE_ASSET_CONTROL_NUMBER_IS_ALREADY_USED,
-									(value) => {
-										if (value === undefined) {
-											return false
-										}
-										if (!disableASN) {
-											if (value != null) {
-												if (
-													objectTable
-														.map((item) =>
-															item.asset_control_number.toUpperCase()
-														)
-														.includes(value.toUpperCase())
-												) {
-													return false
-												}
-											}
-										}
-										return true
-									}
-								),
-
-							mac_address: object()
-								.nullable()
-								/** check if there are duplicated mac address in object table */
-								.test(
-									'mac_address',
-									locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
-									(obj) => {
-										if (obj === undefined) return true
-										if (obj == null || isEmpty(obj)) return true
-										if (selectedRowData.length === 0) return true
-										return macaddrValidation(obj.label)
-									}
-								),
-							// .test(
-							//     'mac_address',
-							//     locale.texts.THE_MAC_ADDRESS_IS_ALREADY_USED ,
-							//     obj => {
-							//         if (obj == undefined) return true;
-							//         if (obj == null || isEmpty(obj)) return true;
-							//         if (this.props.idleMacaddrSet.includes(obj.value.match(/.{1,2}/g).join(':'))) return true;
-							//     }
-							// ),
-
-							status: string().required(locale.texts.STATUS_IS_REQUIRED),
-
-							area: string().required(locale.texts.AREA_IS_REQUIRED),
-
-							transferred_location: object()
-								.nullable()
-								.when('status', {
-									is: TRANSFERRED,
-									then: object().required(locale.texts.LOCATION_IS_REQUIRED),
-								}),
-						})}
+						initialValues={initialValues}
+						validationSchema={validationSchema}
 						onSubmit={(values) => {
 							const monitor_type = values.monitorType
 								? values.monitorType
@@ -338,7 +329,7 @@ class EditObjectForm extends React.Component {
 													value={values.mac_address}
 													className="my-1"
 													onChange={(obj) => {
-														obj.label = obj.value.match(/.{1,2}/g).join(':')
+														obj.label = formatToMac(obj.value)
 														setFieldValue('mac_address', obj)
 													}}
 													options={this.props.macOptions}
@@ -429,6 +420,7 @@ EditObjectForm.propTypes = {
 	handleClick: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	disableASN: PropTypes.bool.isRequired,
+	idleMacaddrSet: PropTypes.array.isRequired,
 	objectTable: PropTypes.array.isRequired,
 	areaTable: PropTypes.array.isRequired,
 	title: PropTypes.string.isRequired,

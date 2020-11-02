@@ -49,7 +49,6 @@ import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import messageGenerator from '../../helper/messageGenerator'
 import { objectTableColumn } from '../../config/tables'
-import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
 import { transferMonitorTypeToString } from '../../helper/dataTransfer'
 import moment from 'moment'
@@ -103,11 +102,11 @@ class ObjectTable extends React.Component {
 		this.getData()
 		this.getAreaTable()
 		this.getIdleMacaddrSet()
-		// this.getImportData()
+		this.getImportData()
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getRefresh()
 		}
 	}
@@ -119,29 +118,25 @@ class ObjectTable extends React.Component {
 		const columns = JSONClone(objectTableColumn)
 		const { locale } = this.context
 
-		columns.map((field) => {
+		columns.forEach((field) => {
 			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 		})
 
-		this.state.data.map((item) => {
+		this.state.data.forEach((item) => {
 			item.area_name.label = locale.texts[item.area_name.value]
 			item.registered_timestamp = moment(item.registered_timestamp._i)
 				.locale(this.context.locale.abbr)
 				.format('lll')
-			item.area_name.label == undefined
-				? (item.area_name.label = '*site module error*')
-				: null
+			item.area_name.label = item.area_name.label ? null : '*site module error*'
 		})
 
-		this.state.filteredData.map((item) => {
+		this.state.filteredData.forEach((item) => {
 			item.area_name.label = locale.texts[item.area_name.value]
 
 			item.registered_timestamp = moment(item.registered_timestamp._i)
 				.locale(this.context.locale.abbr)
 				.format('lll')
-			item.area_name.label == undefined
-				? (item.area_name.label = '*site module error*')
-				: null
+			item.area_name.label = item.area_name.label ? null : '*site module error*'
 		})
 
 		this.setState({
@@ -189,13 +184,13 @@ class ObjectTable extends React.Component {
 				const columns = JSONClone(objectTableColumn)
 				const typeList = {}
 
-				columns.map((field) => {
+				columns.forEach((field) => {
 					field.Header =
 						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				})
 
 				const data = res.data.rows
-					.filter((item) => item.object_type == 0)
+					.filter((item) => parseInt(item.object_type) === 0)
 					.map((item) => {
 						item.monitor_type = transferMonitorTypeToString(item, 'object')
 
@@ -310,6 +305,10 @@ class ObjectTable extends React.Component {
 	}
 
 	objectMultipleDelete = () => {
+		const formOption = []
+		const deleteArray = []
+		let deleteCount = 0
+
 		switch (this.state.action) {
 			case DISASSOCIATE:
 				apiHelper.objectApiAgent
@@ -318,7 +317,7 @@ class ObjectTable extends React.Component {
 							id: this.state.selectedRowData.id,
 						},
 					})
-					.then((res) => {
+					.then(() => {
 						const callback = () => {
 							messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 						}
@@ -330,37 +329,33 @@ class ObjectTable extends React.Component {
 				break
 
 			case DELETE:
-				const formOption = []
-				var deleteArray = []
-				var deleteCount = 0
-
-				this.state.data.map((item) => {
-					this.state.selection.map((itemSelect) => {
-						itemSelect == item.id
-							? deleteArray.push(deleteCount.toString())
-							: null
+				this.state.data.forEach((item) => {
+					this.state.selection.forEach((itemSelect) => {
+						if (itemSelect === item.id) {
+							deleteArray.push(deleteCount.toString())
+						}
 					})
 					deleteCount += 1
 				})
 
 				this.setState({ selectAll: false })
 
-				deleteArray.map((item) => {
-					this.state.data[item] == undefined
-						? null
-						: formOption.push({
-								id: this.state.data[item].id,
-								mac_address: this.state.data[item].isBind
-									? this.state.data[item].mac_address
-									: null,
-						  })
+				deleteArray.forEach((item) => {
+					if (this.state.data[item]) {
+						formOption.push({
+							id: this.state.data[item].id,
+							mac_address: this.state.data[item].isBind
+								? this.state.data[item].mac_address
+								: null,
+						})
+					}
 				})
 
 				apiHelper.objectApiAgent
 					.deleteObject({
 						formOption,
 					})
-					.then((res) => {
+					.then(() => {
 						const callback = () => {
 							messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 						}
@@ -376,14 +371,13 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	handleSubmitForm = (formOption, cb) => {
+	handleSubmitForm = (formOption) => {
 		const { apiMethod } = this.state
-
 		apiHelper.objectApiAgent[apiMethod]({
 			formOption,
 			mode: DEVICE,
 		})
-			.then((res) => {
+			.then(() => {
 				const callback = () => {
 					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 				}
@@ -394,7 +388,7 @@ class ObjectTable extends React.Component {
 			})
 	}
 
-	toggleSelection = (key, shift, row) => {
+	toggleSelection = (key) => {
 		let selection = [...this.state.selection]
 		key = key.split('-')[1] ? key.split('-')[1] : key
 		const keyIndex = selection.indexOf(key)
@@ -417,7 +411,6 @@ class ObjectTable extends React.Component {
 		let rowsCount = 0
 		if (selectAll) {
 			const wrappedInstance = this.selectTable.getWrappedInstance()
-			// const currentRecords = wrappedInstance.props.data
 			const currentRecords = wrappedInstance.getResolvedState().sortedData
 			currentRecords.forEach((item) => {
 				rowsCount++
@@ -497,7 +490,6 @@ class ObjectTable extends React.Component {
 	}
 
 	filterData = (data, key, filteredAttribute) => {
-		const { locale } = this.context
 		key = key.toLowerCase()
 		const filteredData = data.filter((obj) => {
 			if (filteredAttribute.includes('name')) {
@@ -508,7 +500,6 @@ class ObjectTable extends React.Component {
 			}
 			if (filteredAttribute.includes('type')) {
 				const keyRex = new RegExp(key)
-
 				if (obj.type.toLowerCase().match(keyRex)) {
 					return true
 				}
@@ -521,7 +512,6 @@ class ObjectTable extends React.Component {
 
 			if (filteredAttribute.includes('status')) {
 				const keyRex = new RegExp(key.toLowerCase())
-
 				if (obj.status.label.toLowerCase().match(keyRex)) {
 					return true
 				}
@@ -529,7 +519,7 @@ class ObjectTable extends React.Component {
 
 			if (filteredAttribute.includes('area')) {
 				const keyRex = new RegExp(key)
-				if (obj.area_name.label != undefined) {
+				if (obj.area_name.label) {
 					if (obj.area_name.label.match(keyRex)) {
 						return true
 					}
@@ -550,14 +540,13 @@ class ObjectTable extends React.Component {
 			}
 
 			if (filteredAttribute.includes('sex')) {
-				if (obj.object_type == key) {
+				if (parseInt(obj.object_type) === parseInt(key)) {
 					return true
 				}
 			}
 
 			if (filteredAttribute.includes('physician_name')) {
 				const keyRex = new RegExp(key)
-
 				if (
 					obj.physician_name &&
 					obj.physician_name.toLowerCase().match(keyRex)
@@ -573,27 +562,29 @@ class ObjectTable extends React.Component {
 	}
 
 	addObjectFilter = (key, attribute, source) => {
-		this.state.objectFilter = this.state.objectFilter.filter(
-			(filter) => source != filter.source
+		const objectFilter = this.state.objectFilter.filter(
+			(filter) => source !== filter.source
 		)
 
-		this.state.objectFilter.push({
+		objectFilter.push({
 			key,
 			attribute,
 			source,
 		})
-		this.filterObjects()
+
+		this.filterObjects(objectFilter)
 	}
 
 	removeObjectFilter = (source) => {
-		this.state.objectFilter = this.state.objectFilter.filter(
-			(filter) => source != filter.source
+		const objectFilter = this.state.objectFilter.filter(
+			(filter) => source !== filter.source
 		)
-		this.filterObjects()
+
+		this.filterObjects(objectFilter)
 	}
 
-	filterObjects = () => {
-		const filteredData = this.state.objectFilter.reduce((acc, curr) => {
+	filterObjects = (objectFilter) => {
+		const filteredData = objectFilter.reduce((acc, curr) => {
 			return this.filterData(acc, curr.key, curr.attribute)
 		}, this.state.data)
 
@@ -729,16 +720,16 @@ class ObjectTable extends React.Component {
 					ref={(r) => (this.selectTable = r)}
 					className="-highlight text-none"
 					style={{ maxHeight: '70vh' }}
-					onPageChange={(e) => {
+					onPageChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
-					onSortedChange={(e) => {
+					onSortedChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
 					{...extraProps}
 					{...styleConfig.reactTable}
 					NoDataComponent={() => null}
-					getTrProps={(state, rowInfo, column, instance) => {
+					getTrProps={(state, rowInfo) => {
 						return {
 							onClick: (e) => {
 								if (!e.target.type) {
@@ -766,7 +757,7 @@ class ObjectTable extends React.Component {
 					objectTable={this.state.objectTable}
 					disableASN={this.state.disableASN}
 					areaTable={this.state.areaTable}
-					// idleMacaddrSet={this.state.idleMacaddrSet}
+					idleMacaddrSet={this.state.idleMacaddrSet}
 					macOptions={this.state.macOptions}
 				/>
 				<BindForm

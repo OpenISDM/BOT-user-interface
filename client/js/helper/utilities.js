@@ -81,3 +81,11 @@ export const tcWrapper = function (f) {
 		}
 	}
 }
+
+export const formatToMac = (string) => {
+	const stringWithoutColons = string.replaceAll(':', '')
+	if (stringWithoutColons.length === 12) {
+		return stringWithoutColons.match(/.{1,2}/g).join(':')
+	}
+	return string
+}
