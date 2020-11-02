@@ -204,7 +204,7 @@ const en = {
 	ASSOCIATE: 'associate',
 	DISSOCIATE: 'dissociate',
 	BIND: 'bind',
-	IMPORT_FROM_DATA: 'import from data',
+	EXTRACT_DEVICE_INFO: 'extract device info',
 	UNBIND: 'unbind',
 	IMPORT_OBJECT: 'Import Excel',
 	ACN_VERIFICATION: 'ACN Verification',

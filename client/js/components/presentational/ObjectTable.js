@@ -60,7 +60,7 @@ import {
 	DEVICE,
 	SAVE_SUCCESS,
 	DISASSOCIATE,
-	IMPORT_FROM_DATA,
+	EXTRACT_DEVICE_INFO,
 } from '../../config/wordMap'
 import { JSONClone, formatTime } from '../../helper/utilities'
 
@@ -456,7 +456,7 @@ class ObjectTable extends React.Component {
 					apiMethod: 'post',
 				})
 				break
-			case IMPORT_FROM_DATA:
+			case EXTRACT_DEVICE_INFO:
 				this.setState({
 					isShowBind: true,
 					bindCase: 1,
@@ -697,10 +697,10 @@ class ObjectTable extends React.Component {
 					>
 						<ButtonToolbar>
 							<PrimaryButton
-								name={IMPORT_FROM_DATA}
+								name={EXTRACT_DEVICE_INFO}
 								onClick={this.handleClickButton}
 							>
-								{locale.texts.IMPORT_FROM_DATA}
+								{locale.texts.EXTRACT_DEVICE_INFO}
 							</PrimaryButton>
 							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
 								{locale.texts.ADD_DEVICE}

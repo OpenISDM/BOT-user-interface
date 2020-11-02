@@ -204,7 +204,7 @@ const tw = {
 	ASSOCIATE: '綁定',
 	DISSOCIATE: '解除綁定',
 	BIND: '綁定',
-	IMPORT_FROM_DATA: '由匯入資料新增',
+	EXTRACT_DEVICE_INFO: '由匯入資料新增',
 	UNBIND: '解除綁定',
 	IMPORT_OBJECT: '匯入',
 	ACN_VERIFICATION: 'ACN驗證',

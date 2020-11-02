@@ -36,7 +36,7 @@ export const NOT_FOUND = 'not found'
 
 export const BIND = 'bind'
 
-export const IMPORT_FROM_DATA = 'import form data'
+export const EXTRACT_DEVICE_INFO = 'import form data'
 
 export const UNBIND = 'unbind'
 

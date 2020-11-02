@@ -144,7 +144,9 @@ class BindForm extends React.Component {
 				size="md"
 				className="text-capitalize"
 			>
-				<Modal.Header closeButton>{locale.texts.IMPORT_FROM_DATA}</Modal.Header>
+				<Modal.Header closeButton>
+					{locale.texts.EXTRACT_DEVICE_INFO}
+				</Modal.Header>
 				<Modal.Body className="mb-2">
 					<Formik
 						initialValues={{
