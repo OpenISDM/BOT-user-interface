@@ -151,7 +151,7 @@ class SearchContainer extends React.Component {
 
 		return (
 			<Fragment>
-				<CustomView condition={isTablet && isMobile}>
+				<CustomView condition={!isTablet && !isMobile}>
 					<BrowserSearchContainer {...propsGroup} />
 				</CustomView>
 				<TabletView>

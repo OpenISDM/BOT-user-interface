@@ -38,6 +38,7 @@ import BOTSearchbar from '../../presentational/BOTSearchbar'
 import config from '../../../config'
 import FrequentSearch from '../../container/FrequentSearch'
 import ObjectTypeList from '../../container/ObjectTypeList'
+import PropTypes from 'prop-types'
 
 const BrowserSearchContainer = ({
 	searchKey,
@@ -95,6 +96,19 @@ const BrowserSearchContainer = ({
 			</Row>
 		</div>
 	)
+}
+
+BrowserSearchContainer.propTypes = {
+	searchKey: PropTypes.object.isRequired,
+	objectTypeList: PropTypes.array.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
+	handleTouchMove: PropTypes.func.isRequired,
+	clearSearchResult: PropTypes.bool.isRequired,
+	hasGridButton: PropTypes.bool.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	keywords: PropTypes.array.isRequired,
+	handleSearchTypeClick: PropTypes.func.isRequired,
 }
 
 export default BrowserSearchContainer
