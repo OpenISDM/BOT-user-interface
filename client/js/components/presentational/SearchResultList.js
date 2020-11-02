@@ -56,7 +56,8 @@ import messageGenerator from '../../helper/messageGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import { SET_ENABLE_REQUEST_TRACKING_DATA } from '../../reducer/action'
 import { JSONClone } from '../../helper/utilities'
-import { PIN_SELETION, TRANSFERRED } from '../../config/wordMap'
+import { TRANSFERRED } from '../../config/wordMap'
+import PropTypes from 'prop-types'
 
 class SearchResultList extends React.Component {
 	static contextType = AppContext
@@ -78,16 +79,14 @@ class SearchResultList extends React.Component {
 
 	onSelect = (eventKey) => {
 		const { stateReducer } = this.context
-
-		const [{}, dispatch] = stateReducer
-
+		const [, dispatch] = stateReducer
 		const eventItem = eventKey.split(':')
 		const isFound = parseInt(eventItem[0])
 		const number = parseInt(eventItem[1])
 		const selectItem = isFound
 			? this.props.searchResult.filter((item) => item.found)[number]
 			: this.props.searchResult.filter((item) => !item.found)[number]
-		if (selectItem.object_type == 0) {
+		if (parseInt(selectItem.object_type) === 0) {
 			/** The reason using array to encapture the selectedObjectData is to have the consisten data form passed into ChangeStatusForm */
 			this.toggleSelection(number, isFound)
 			this.props.highlightSearchPanel(true)
@@ -114,7 +113,7 @@ class SearchResultList extends React.Component {
 		let selectedObjectData = [...this.state.selectedObjectData]
 		if (this.state.showAddDevice) {
 			if (index >= 0) {
-				if (selection.length == 1) return
+				if (selection.length === 1) return
 				selection = [
 					...selection.slice(0, index),
 					...selection.slice(index + 1),
@@ -140,7 +139,7 @@ class SearchResultList extends React.Component {
 
 	handleChangeObjectStatusFormClose = () => {
 		const { stateReducer } = this.context
-		const [{}, dispatch] = stateReducer
+		const [, dispatch] = stateReducer
 		this.setState({
 			showEditObjectForm: false,
 			showSignatureForm: false,
@@ -159,19 +158,21 @@ class SearchResultList extends React.Component {
 	handleChangeObjectStatusFormSubmit = (values) => {
 		const editedObjectPackage = JSONClone(this.state.selectedObjectData).map(
 			(item) => {
-				;(item.status = values.status.toLowerCase()),
-					(item.transferred_location = values.transferred_location
-						? values.transferred_location
-						: '')
+				item.status = values.status.toLowerCase()
+				item.transferred_location = values.transferred_location
+					? values.transferred_location
+					: ''
 				item.notes = values.notes
 				return item
 			}
 		)
+
 		this.setState({
 			showEditObjectForm: false,
 			editedObjectPackage,
 		})
-		if (values.status == TRANSFERRED) {
+
+		if (values.status === TRANSFERRED) {
 			this.setState({
 				showSignatureForm: true,
 			})
@@ -200,7 +201,7 @@ class SearchResultList extends React.Component {
 		const signatureName = this.state.signatureName
 		const { editedObjectPackage } = this.state
 		const { locale, auth, stateReducer } = this.context
-		const [{}, dispatch] = stateReducer
+		const [, dispatch] = stateReducer
 		const username = auth.user.name
 		const shouldCreatePdf = config.statusToCreatePdf.includes(
 			editedObjectPackage[0].status
@@ -228,7 +229,7 @@ class SearchResultList extends React.Component {
 				pdfPackage,
 				reservedTimestamp
 			)
-			.then((res) => {
+			.then(() => {
 				const callback = () => {
 					dispatch({
 						type: SET_ENABLE_REQUEST_TRACKING_DATA,
@@ -242,7 +243,6 @@ class SearchResultList extends React.Component {
 						showAddDevice: false,
 						showDownloadPdfRequest: shouldCreatePdf,
 						pdfPath: shouldCreatePdf && pdfPackage.path,
-						showConfirmForm: false,
 						selection: [],
 					},
 					callback
@@ -253,7 +253,7 @@ class SearchResultList extends React.Component {
 			})
 	}
 
-	handleAdditionalButton = (text) => {
+	handleAdditionalButton = () => {
 		const selection = []
 		const selectedObjectData = []
 		if (this.state.showAddDevice) {
@@ -315,7 +315,7 @@ class SearchResultList extends React.Component {
 			.addPatientRecord({
 				objectPackage,
 			})
-			.then((res) => {
+			.then(() => {
 				const callback = () =>
 					messageGenerator.setSuccessMessage('save success')
 				this.setState(
@@ -365,6 +365,8 @@ class SearchResultList extends React.Component {
 		const { selection } = this.state
 
 		const result = searchResult.filter((item) => {
+			// TODO: found value may be 1 or false two types
+			// eslint-disable-next-line eqeqeq
 			return item.found == showFoundResult
 		})
 
@@ -390,7 +392,7 @@ class SearchResultList extends React.Component {
 		}
 		return (
 			<Fragment>
-				<CustomView condition={isTablet != true && isMobile != true}>
+				<CustomView condition={isTablet !== true && isMobile !== true}>
 					<BrowserSearchResultList {...propsGroup} />
 				</CustomView>
 				<TabletView>
@@ -450,6 +452,16 @@ class SearchResultList extends React.Component {
 			</Fragment>
 		)
 	}
+}
+
+SearchResultList.propTypes = {
+	handleShowPath: PropTypes.func.isRequired,
+	searchResult: PropTypes.object.isRequired,
+	showFoundResult: PropTypes.bool.isRequired,
+	searchKey: PropTypes.string.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	highlightSearchPanel: PropTypes.func.isRequired,
 }
 
 export default SearchResultList
