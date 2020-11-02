@@ -211,7 +211,7 @@ export const reportContainerModule = {
 		},
 		{
 			name: 'Request Object Trace',
-			component: (props) => <TrackingTable {...props} />,
+			component: () => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
