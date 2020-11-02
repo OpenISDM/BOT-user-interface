@@ -246,7 +246,7 @@ const trackingTableColumn = [
 		width: 60,
 	},
 	{
-		Header: 'Mac Address',
+		Header: 'Tag ID',
 		accessor: 'mac_address',
 		width: 180,
 	},
@@ -317,7 +317,7 @@ const patientTableColumn = [
 		width: 150,
 	},
 	{
-		Header: 'Mac Address',
+		Header: 'Tag ID',
 		accessor: 'mac_address',
 		width: 200,
 		Cell: (props) =>
@@ -436,7 +436,7 @@ const objectTableColumn = [
 
 const geofenceTableColumn = [
 	{
-		Header: 'Mac Address',
+		Header: 'Tag ID',
 		accessor: 'mac_address',
 		width: 180,
 	},
@@ -816,6 +816,7 @@ export {
 	patientTableColumn,
 	userInfoTableColumn,
 	locationHistoryByNameColumns,
+	locationHistoryByNameGroupByUUIDColumns,
 	locationHistoryByNameGroupBYUUIDColumns,
 	locationHistoryByUUIDColumns,
 	locationHistoryByAreaColumns,
