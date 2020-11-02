@@ -236,7 +236,7 @@ class GetAssignments extends React.Component {
 							this.cancelAssignments(assignedGroupListids)
 						}}
 					>
-						{locale.texts.CANCEL_ALL}
+						{locale.texts.DISCARD}
 					</PrimaryButton>
 				</ButtonToolbar>
 			)
