@@ -64,14 +64,17 @@ class FrequentSearch extends React.Component {
 		}
 	}
 
-	handleClick = (e) => {
+	handleClick = async (e) => {
 		const { name, value } = e.target
 
 		const searchKey = {
 			type: name,
 			value,
 		}
+
+		await this.props.handleSearchTypeClick(searchKey)
 		this.props.getSearchKey(searchKey)
+
 		this.setState({
 			searchKey,
 		})
@@ -173,6 +176,7 @@ class FrequentSearch extends React.Component {
 FrequentSearch.propTypes = {
 	searchObjectArray: PropTypes.array.isRequired,
 	pinColorArray: PropTypes.array.isRequired,
+	handleSearchTypeClick: PropTypes.func.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
 }

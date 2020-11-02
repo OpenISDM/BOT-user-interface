@@ -46,6 +46,7 @@ import MobileSearchContainer from '../platform/mobile/MobileSearchContainer'
 import BrowserSearchContainer from '../platform/browser/BrowserSearchContainer'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
+import PropTypes from 'prop-types'
 
 class SearchContainer extends React.Component {
 	static contextType = AppContext
@@ -77,7 +78,7 @@ class SearchContainer extends React.Component {
 			this.props.getSearchKey(this.state.searchKey)
 		}
 		if (
-			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			this.props.clearSearchResult
 		) {
 			this.setState({
@@ -85,7 +86,7 @@ class SearchContainer extends React.Component {
 			})
 		}
 		if (
-			prepProps.hasSearchKey != this.props.hasSearchKey &&
+			prepProps.hasSearchKey !== this.props.hasSearchKey &&
 			prepProps.hasSearchKey
 		) {
 			this.setState({
@@ -131,6 +132,7 @@ class SearchContainer extends React.Component {
 			searchObjectArray,
 			pinColorArray,
 			keywords,
+			handleSearchTypeClick,
 		} = this.props
 
 		const { objectTypeList } = this.state
@@ -144,11 +146,12 @@ class SearchContainer extends React.Component {
 			searchObjectArray,
 			pinColorArray,
 			keywords,
+			handleSearchTypeClick,
 		}
 
 		return (
 			<Fragment>
-				<CustomView condition={isTablet != true && isMobile != true}>
+				<CustomView condition={isTablet && isMobile}>
 					<BrowserSearchContainer {...propsGroup} />
 				</CustomView>
 				<TabletView>
@@ -160,6 +163,19 @@ class SearchContainer extends React.Component {
 			</Fragment>
 		)
 	}
+}
+
+SearchContainer.propTypes = {
+	handleSearchTypeClick: PropTypes.func.isRequired,
+	keywords: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	handleShowResultListForMobile: PropTypes.array.isRequired,
+	searchKey: PropTypes.object.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
+	clearSearchResult: PropTypes.bool.isRequired,
+	hasSearchKey: PropTypes.bool.isRequired,
+	hasGridButton: PropTypes.bool.isRequired,
 }
 
 export default SearchContainer

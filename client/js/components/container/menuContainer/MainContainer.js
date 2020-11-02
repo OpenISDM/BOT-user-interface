@@ -108,6 +108,7 @@ class MainContainer extends React.Component {
 		this.getLbeaconPosition()
 		this.getGeofenceConfig()
 		this.getLocationMonitorConfig()
+		this.getGroupIdList()
 		this.interval = setInterval(
 			this.getTrackingData,
 			config.mapConfig.intervalTime
@@ -262,26 +263,17 @@ class MainContainer extends React.Component {
 	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
-		const userId = auth.user.id
 
 		try {
-			const groupIdsPromise = apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId(
-				{ areaId, userId }
-			)
-			const trackingDataPromise = apiHelper.trackingDataApiAgent.getTrackingData(
-				{
-					locale: locale.abbr,
-					user: auth.user,
-					areaId,
-				}
-			)
-			const [{ data: groupIds }, { data: trackingData }] = await Promise.all([
-				groupIdsPromise,
-				trackingDataPromise,
-			])
+			const {
+				data: trackingData,
+			} = await apiHelper.trackingDataApiAgent.getTrackingData({
+				locale: locale.abbr,
+				user: auth.user,
+				areaId,
+			})
 
 			this.setState({
-				groupIds,
 				trackingData,
 			})
 			/** dismiss error message when the database is connected */
@@ -410,11 +402,7 @@ class MainContainer extends React.Component {
 	 *  6. coordinate(disable now)
 	 *  7. multiple selected object(gridbutton)(disable now)
 	 */
-	getResultBySearchKey = (searchKey) => {
-		let searchResult = []
-
-		const hasSearchKey = true
-
+	getResultBySearchKey = async (searchKey) => {
 		const {
 			searchedObjectType,
 			showedObjects,
@@ -422,6 +410,9 @@ class MainContainer extends React.Component {
 			pinColorArray,
 			groupIds,
 		} = this.state
+		let searchResult = []
+
+		const hasSearchKey = true
 
 		let { searchObjectArray } = this.state
 
@@ -659,6 +650,29 @@ class MainContainer extends React.Component {
 		})
 	}
 
+	getGroupIdList = async () => {
+		const { auth, stateReducer } = this.context
+		const [{ areaId }] = stateReducer
+		const userId = auth.user.id
+
+		const {
+			data: groupIds,
+		} = await apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId({
+			areaId,
+			userId,
+		})
+
+		this.setState({
+			groupIds,
+		})
+	}
+
+	handleSearchTypeClick = (searchKey) => {
+		if ([MY_PATIENTS, MY_DEVICES].includes(searchKey.type)) {
+			this.getGroupIdList()
+		}
+	}
+
 	handleClick = (e) => {
 		const name = e.target.name || e.target.getAttribute('name')
 		const value = e.target.getAttribute('value')
@@ -727,6 +741,7 @@ class MainContainer extends React.Component {
 			mapButtonHandler,
 			highlightSearchPanel,
 			handleClick,
+			handleSearchTypeClick,
 		} = this
 
 		const propsGroup = {
@@ -760,6 +775,7 @@ class MainContainer extends React.Component {
 			showFoundResult,
 			keywords,
 			activeActionButtons,
+			handleSearchTypeClick,
 		}
 
 		return (

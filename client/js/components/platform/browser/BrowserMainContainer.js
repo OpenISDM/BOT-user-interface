@@ -39,9 +39,9 @@ import { Row, Col } from 'react-bootstrap'
 import InfoPrompt from '../../presentational/InfoPrompt'
 import AuthenticationContext from '../../../context/AuthenticationContext'
 import MapContainer from '../../container/MapContainer'
+import PropTypes from 'prop-types'
 
 const BrowserMainContainer = ({
-	handleClearButton,
 	getSearchKey,
 	setMonitor,
 	clearAlerts,
@@ -68,6 +68,7 @@ const BrowserMainContainer = ({
 	showFoundResult,
 	keywords,
 	activeActionButtons,
+	handleSearchTypeClick,
 }) => {
 	const auth = React.useContext(AuthenticationContext)
 
@@ -104,7 +105,7 @@ const BrowserMainContainer = ({
 					<MapContainer
 						pathMacAddress={pathMacAddress}
 						proccessedTrackingData={
-							proccessedTrackingData.length == 0
+							proccessedTrackingData.length === 0
 								? trackingData
 								: proccessedTrackingData
 						}
@@ -153,6 +154,7 @@ const BrowserMainContainer = ({
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						keywords={keywords}
+						handleSearchTypeClick={handleSearchTypeClick}
 					/>
 					<div id="searchResult" style={style.searchResultDiv}>
 						<SearchResultList
@@ -170,6 +172,37 @@ const BrowserMainContainer = ({
 			</Row>
 		</div>
 	)
+}
+
+BrowserMainContainer.propTypes = {
+	handleClearButton: PropTypes.func.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
+	setMonitor: PropTypes.func.isRequired,
+	clearAlerts: PropTypes.func.isRequired,
+	lbeaconPosition: PropTypes.array.isRequired,
+	geofenceConfig: PropTypes.object.isRequired,
+	searchedObjectType: PropTypes.array.isRequired,
+	showedObjects: PropTypes.array.isRequired,
+	highlightSearchPanel: PropTypes.func.isRequired,
+	showMobileMap: PropTypes.bool.isRequired,
+	clearSearchResult: PropTypes.bool.isRequired,
+	searchKey: PropTypes.object.isRequired,
+	searchResult: PropTypes.array.isRequired,
+	trackingData: PropTypes.array.isRequired,
+	proccessedTrackingData: PropTypes.array.isRequired,
+	hasSearchKey: PropTypes.bool.isRequired,
+	setShowedObjects: PropTypes.func.isRequired,
+	pathMacAddress: PropTypes.string.isRequired,
+	isHighlightSearchPanel: PropTypes.bool.isRequired,
+	locationMonitorConfig: PropTypes.object.isRequired,
+	currentAreaId: PropTypes.number.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	handleClick: PropTypes.func.isRequired,
+	showFoundResult: PropTypes.bool.isRequired,
+	keywords: PropTypes.array.isRequired,
+	activeActionButtons: PropTypes.array.isRequired,
+	handleSearchTypeClick: PropTypes.func.isRequired,
 }
 
 export default BrowserMainContainer

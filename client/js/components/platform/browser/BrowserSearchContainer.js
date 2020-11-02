@@ -49,6 +49,7 @@ const BrowserSearchContainer = ({
 	searchObjectArray,
 	pinColorArray,
 	keywords,
+	handleSearchTypeClick,
 }) => {
 	return (
 		<div
@@ -77,6 +78,7 @@ const BrowserSearchContainer = ({
 						maxHeigh={config.searchResultProportion}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
+						handleSearchTypeClick={handleSearchTypeClick}
 					/>
 				</Col>
 				<Col xs={6} sm={6} md={6} lg={6} xl={6}>
