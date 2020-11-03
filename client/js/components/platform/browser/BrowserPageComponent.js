@@ -40,7 +40,7 @@ import AccessControl from '../../authentication/AccessControl'
 import PropTypes from 'prop-types'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
-	const { tabList, title, defaultActiveKey } = containerModule
+	const { tabList, title, defaultActiveKey, permission } = containerModule
 
 	const locale = React.useContext(LocaleContext)
 	const [key, setKey] = useState(defaultActiveKey)
@@ -58,48 +58,56 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 			}}
 		>
 			<div className="BOTsidenav">
-				<div className="font-size-120-percent font-weight-bold color-black">
-					{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-				</div>
-				<ListGroup>
-					{tabList.map((tab, index) => {
-						return (
-							<AccessControl
-								key={index}
-								permission={tab.permission}
-								renderNoAccess={() => null}
-							>
-								<BOTSideNav
+				<AccessControl permission={permission} renderNoAccess={() => null}>
+					<div className="font-size-120-percent font-weight-bold color-black">
+						{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
+					</div>
+					<ListGroup>
+						{tabList.map((tab, index) => {
+							return (
+								<AccessControl
 									key={index}
-									eventKey={tab.name.replace(/ /g, '_')}
-									action
+									permission={tab.permission}
+									renderNoAccess={() => null}
 								>
-									{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
-								</BOTSideNav>
-							</AccessControl>
-						)
-					})}
-				</ListGroup>
+									<BOTSideNav
+										key={index}
+										eventKey={tab.name.replace(/ /g, '_')}
+										action
+									>
+										{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
+									</BOTSideNav>
+								</AccessControl>
+							)
+						})}
+					</ListGroup>
+				</AccessControl>
 			</div>
 			<div className="BOTsidemain">
 				<Tab.Content>
-					{tabList.map((tab) => {
+					{tabList.map((tab, index) => {
 						const props = {
 							type: tab.name,
 							setMessage,
 							prevIndex: key,
 						}
 						return (
-							<Tab.Pane
-								eventKey={tab.name.replace(/ /g, '_')}
-								key={tab.name.replace(/ /g, '_')}
+							<AccessControl
+								key={index}
+								permission={tab.permission}
+								renderNoAccess={() => null}
 							>
-								<div className="font-size-140-percent color-black">
-									{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
-								</div>
-								<hr />
-								{tab.component(props)}
-							</Tab.Pane>
+								<Tab.Pane
+									eventKey={tab.name.replace(/ /g, '_')}
+									key={tab.name.replace(/ /g, '_')}
+								>
+									<div className="font-size-140-percent color-black">
+										{locale.texts[tab.name.toUpperCase().replace(/ /g, '_')]}
+									</div>
+									<hr />
+									{tab.component(props)}
+								</Tab.Pane>
+							</AccessControl>
 						)
 					})}
 				</Tab.Content>
