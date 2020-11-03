@@ -84,11 +84,14 @@ class AssignmentItems extends React.Component {
 		if (items) {
 			const itemMap = {}
 			items.forEach((id) => {
-				const name = objectMap[id].name
-				if (itemMap[name]) {
-					itemMap[name] += 1
-				} else {
-					itemMap[name] = 1
+				const object = objectMap[id]
+				if (object) {
+					const { name } = object
+					if (itemMap[name]) {
+						itemMap[name] += 1
+					} else {
+						itemMap[name] = 1
+					}
 				}
 			})
 			Object.keys(itemMap).forEach((itemKey) => {
