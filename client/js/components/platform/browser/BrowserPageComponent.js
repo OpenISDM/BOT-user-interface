@@ -87,6 +87,7 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 						const props = {
 							type: tab.name,
 							setMessage,
+							prevIndex: key,
 						}
 						return (
 							<Tab.Pane
