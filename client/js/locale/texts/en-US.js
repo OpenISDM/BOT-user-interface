@@ -604,6 +604,7 @@ const en = {
 	UNSELECTED_DEVICES: 'Unselected Devices',
 	SELECTED_PATIENTS: 'Selected Patients',
 	UNSELECTED_PATIENTS: 'Unselected Patients',
+	CREATE: 'Create',
 }
 
 export default en

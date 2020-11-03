@@ -591,6 +591,7 @@ const tw = {
 	UNSELECTED_DEVICES: '未選取裝置',
 	SELECTED_PATIENTS: '已選取病人',
 	UNSELECTED_PATIENTS: '未選取病人',
+	CREATE: '新增',
 }
 
 export default tw

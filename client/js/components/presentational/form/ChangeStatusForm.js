@@ -34,7 +34,7 @@
 
 import React from 'react'
 import { Modal, Button, Row, Col, ButtonToolbar } from 'react-bootstrap'
-import Select from 'react-select'
+import Creatable from 'react-select/creatable'
 import { Formik, Field, Form } from 'formik'
 import { FormFieldName } from '../../BOTComponent/styleComponent'
 import { object, string } from 'yup'
@@ -91,6 +91,17 @@ class ChangeStatusForm extends React.Component {
 
 	handleClose = () => {
 		this.props.handleChangeObjectStatusFormClose()
+	}
+
+	handleAddSubmit = async (name, department) => {
+		try {
+			await apiHelper.transferredLocationApiAgent.addOne({
+				name,
+				department,
+			})
+		} catch (e) {
+			console.log(`add location failed ${e}`)
+		}
 	}
 
 	handleClick = (e) => {
@@ -316,20 +327,33 @@ class ChangeStatusForm extends React.Component {
 									touched={touched.transferred_location}
 									display={values.status === 'transferred'}
 									component={() => (
-										<Select
-											name="transferred_location"
-											value={values.transferred_location}
-											onChange={(value) => {
-												setFieldValue('transferred_location', value)
-											}}
-											options={this.state.transferredLocationOptions}
-											isSearchable={false}
-											styles={styleConfig.reactSelect}
-											placeholder={locale.texts.SELECT_LOCATION}
-											components={{
-												IndicatorSeparator: () => null,
-											}}
-										/>
+										<>
+											<Creatable
+												formatCreateLabel={(e) => {
+													const createPix = locale.texts.CREATE
+													const createTail = `[${locale.texts.TRANSFERRED_LOCATION}-${locale.texts.DEPARTMENT}]`
+													const [
+														name,
+														department = `${locale.texts.DEPARTMENT}`,
+													] = e.split('-')
+													return `${createPix}: ${name}-${department} ${createTail}`
+												}}
+												name="transferred_location"
+												value={values.transferred_location}
+												onChange={async (e) => {
+													const [name, department] = e.value.split('-')
+													await this.handleAddSubmit(name, department)
+													setFieldValue('transferred_location', e)
+												}}
+												options={this.state.transferredLocationOptions}
+												isSearchable={true}
+												styles={styleConfig.reactSelect}
+												placeholder={locale.texts.SELECT_LOCATION}
+												components={{
+													IndicatorSeparator: () => null,
+												}}
+											/>
+										</>
 									)}
 								/>
 								<hr />
