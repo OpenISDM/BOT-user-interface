@@ -32,18 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
+import { record, monitor } from '../dataSrc'
 import axios from 'axios'
 
 export default {
 	async getRecord(type, locale) {
-		return await axios.post(dataSrc.record[type], {
+		return await axios.post(record[type], {
 			locale,
 		})
 	},
 
 	async addShiftChangeRecord({ userInfo, pdfPackage, shift, list_id }) {
-		return await axios.put(dataSrc.record.shiftChange, {
+		return await axios.put(record.shiftChange, {
 			userInfo,
 			pdfPackage,
 			shift,
@@ -52,7 +52,15 @@ export default {
 	},
 
 	async deleteShiftChangeRecord({ idPackage }) {
-		return await axios.delete(dataSrc.record.shiftChange, {
+		return await axios.delete(record.shiftChange, {
+			data: {
+				idPackage,
+			},
+		})
+	},
+
+	async deleteEditObjectRecord({ idPackage }) {
+		return await axios.delete(record.editedObject, {
 			data: {
 				idPackage,
 			},
@@ -60,13 +68,13 @@ export default {
 	},
 
 	async addPatientRecord({ objectPackage }) {
-		return await axios.post(dataSrc.record.patientRecord, {
+		return await axios.post(record.patientRecord, {
 			objectPackage,
 		})
 	},
 
 	async delete(configPackage) {
-		return await axios.delete(dataSrc.monitor, {
+		return await axios.delete(monitor, {
 			data: {
 				configPackage,
 			},
@@ -74,13 +82,13 @@ export default {
 	},
 
 	async add(configPackage) {
-		return await axios.patch(dataSrc.monitor, {
+		return await axios.patch(monitor, {
 			configPackage,
 		})
 	},
 
 	async put(configPackage) {
-		return await axios.put(dataSrc.monitor, {
+		return await axios.put(monitor, {
 			configPackage,
 		})
 	},

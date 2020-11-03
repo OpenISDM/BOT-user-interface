@@ -116,6 +116,15 @@ const addEditObjectRecord = (formOption, username, filePath) => {
 	return query
 }
 
+const deleteEditObjectRecord = (idPackage) => {
+	const query = `
+		DELETE FROM edit_object_record
+		WHERE id IN (${idPackage.map((item) => `'${item}'`)})
+		RETURNING *;
+	`
+	return query
+}
+
 const addShiftChangeRecord = (userInfo, file_path, shift, list_id) => {
 	const text = `
 		INSERT INTO shift_change_record (
@@ -179,9 +188,10 @@ const deleteShiftChangeRecord = (idPackage) => {
 
 export default {
 	getShiftChangeRecord,
+	addShiftChangeRecord,
+	deleteShiftChangeRecord,
 	getEditObjectRecord,
 	addEditObjectRecord,
-	addShiftChangeRecord,
+	deleteEditObjectRecord,
 	addPatientRecord,
-	deleteShiftChangeRecord,
 }

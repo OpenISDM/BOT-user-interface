@@ -32,18 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
+import { file, pdfUrl } from '../dataSrc'
 import axios from 'axios'
 
 export default {
 	async getPDF({ userInfo, pdfPackage }) {
-		return await axios.post(dataSrc.file.export.pdf, {
+		return await axios.post(file.export.pdf, {
 			userInfo,
 			pdfPackage,
 		})
 	},
 
 	async getFile({ path }) {
-		return await window.open(dataSrc.pdfUrl(path))
+		return await window.open(pdfUrl(path))
 	},
 }

@@ -35,9 +35,7 @@
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 import ReactTable from 'react-table'
-import axios from 'axios'
 import { editObjectRecordTableColumn } from '../../../config/tables'
-import dataSrc from '../../../dataSrc'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
 import DeleteConfirmationForm from '../../presentational/DeleteConfirmationForm'
 const SelectTable = selecTableHOC(ReactTable)
@@ -67,7 +65,7 @@ class ObjectEditedRecord extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getData()
 		}
 	}
@@ -138,7 +136,7 @@ class ObjectEditedRecord extends React.Component {
 		this.setState({ selectAll, selection })
 	}
 
-	toggleSelection = (key, shift, row) => {
+	toggleSelection = (key) => {
 		/*
           Implementation of how to manage the selection state is up to the developer.
           This implementation uses an array stored in the component state.
@@ -173,27 +171,24 @@ class ObjectEditedRecord extends React.Component {
 		return this.state.selection.includes(key)
 	}
 
-	deleteRecord = () => {
+	deleteRecord = async () => {
 		this.setState({ selectAll: false })
 		const idPackage = []
-		this.state.selection.map((item) => {
+		this.state.selection.forEach((item) => {
 			idPackage.push(parseInt(this.state.data[item - 1].id))
 		})
-		axios
-			.post(dataSrc.deleteEditObjectRecord, {
-				idPackage,
+
+		try {
+			await apiHelper.record.deleteEditObjectRecord({ idPackage })
+			this.getData()
+			this.setState({
+				selection: [],
+				selectAll: false,
+				showDeleteConfirmation: false,
 			})
-			.then((res) => {
-				this.getData()
-				this.setState({
-					selection: [],
-					selectAll: false,
-					showDeleteConfirmation: false,
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		} catch (e) {
+			console.log(e)
+		}
 	}
 
 	handleCloseDeleteConfirmForm = () => {
@@ -202,7 +197,7 @@ class ObjectEditedRecord extends React.Component {
 		})
 	}
 
-	handleSubmitDeleteConfirmForm = (pack) => {
+	handleSubmitDeleteConfirmForm = () => {
 		this.deleteRecord()
 	}
 
@@ -248,17 +243,17 @@ class ObjectEditedRecord extends React.Component {
 					columns={this.state.columns}
 					ref={(r) => (this.selectTable = r)}
 					className="-highlight text-none"
-					onPageChange={(e) => {
+					onPageChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
-					onSortedChange={(e) => {
+					onSortedChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
 					style={{ maxHeight: '75vh' }}
 					{...extraProps}
 					{...styleConfig.reactTable}
 					NoDataComponent={() => null}
-					getTrProps={(state, rowInfo, column, instance) => {
+					getTrProps={(state, rowInfo) => {
 						return {
 							onClick: (e, handleOriginal) => {
 								const id = rowInfo.original._id
@@ -267,7 +262,7 @@ class ObjectEditedRecord extends React.Component {
 								if (handleOriginal) {
 									handleOriginal()
 								}
-								window.open(dataSrc.pdfUrl(rowInfo.original.file_path))
+								apiHelper.fileApiAgent.getFile(rowInfo.original.file_path)
 							},
 						}
 					}}
