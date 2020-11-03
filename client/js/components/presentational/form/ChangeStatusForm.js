@@ -283,35 +283,46 @@ class ChangeStatusForm extends React.Component {
 								</div>
 								<FormikFormGroup
 									type="text"
-									name="status"
-									label={locale.texts.STATUS}
-									error={errors.status}
-									touched={touched.status}
+									name="current_status"
+									label={locale.texts.CURRENT_STATUS}
+									error={errors.current_status}
+									touched={touched.current_status}
+									value={values.status}
+									placeholder=""
+									disabled
+								/>
+								<hr />
+								<FormikFormGroup
+									type="text"
+									name="action_options"
+									label={locale.texts.ACTION}
+									error={errors.action_options}
+									touched={touched.action_options}
 									placeholder=""
 									component={() => (
-										<RadioButtonGroup value={values.status}>
+										<RadioButtonGroup>
 											<div className="d-flex justify-content-between form-group my-1">
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={BROKEN}
 													label={locale.texts.BROKEN}
 												/>
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={TRANSFERRED}
 													label={locale.texts.TRANSFERRED}
 												/>
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={RETURNED}
 													label={locale.texts.RETURNED}
 												/>
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={TRACE}
 													label={locale.texts.TRACE}
 												/>

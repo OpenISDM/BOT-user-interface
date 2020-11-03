@@ -435,6 +435,7 @@ const tw = {
 	PLEASE_TYPE_OBJECT_IDENTITY_NUMBER: '請輸入財產編號或是人員編號',
 
 	/* Object Status */
+	CURRENT_STATUS: '當前狀態',
 	STATUS: '狀態',
 	NORMAL: '正常',
 	BROKEN: '報修',
@@ -517,7 +518,7 @@ const tw = {
 	SERVER_TIME_OFFSET: 'server time offset',
 	PRODUCT_VERSION: '版本號',
 	ABNORMAL_LBEACON_LIST: '異常LBeacon列表',
-	ACTION: 'action',
+	ACTION: '操作選項',
 	BRANCH: '分院',
 	ROLE_LIST: '角色列表',
 	PERMISSION_LIST: '權限列表',
