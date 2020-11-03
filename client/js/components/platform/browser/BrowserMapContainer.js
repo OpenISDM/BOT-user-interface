@@ -39,17 +39,19 @@ import { Nav, Button } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
 import Map from '../../presentational/Map'
 import { CLEAR_SEARCH_RESULT } from '../../../config/wordMap'
+import PropTypes from 'prop-types'
 
-const { ACTION_BUTTONS } = config
-
-export default class BrowserMapContainer extends React.Component {
+class BrowserMapContainer extends React.Component {
 	static contextType = AppContext
 
 	render() {
-		const { locale, stateReducer, auth } = this.context
-
+		const { locale, stateReducer } = this.context
+		const { mapConfig, ACTION_BUTTONS } = config
 		const {
+			pathMacAddress,
+			colorPanel,
 			hasSearchKey,
+			lbeaconPosition,
 			geofenceConfig,
 			locationMonitorConfig,
 			searchedObjectType,
@@ -58,25 +60,24 @@ export default class BrowserMapContainer extends React.Component {
 			showPdfDownloadForm,
 			handleClickButton,
 			currentAreaId,
-			authenticated,
 			searchObjectArray,
 			pinColorArray,
 			searchKey,
-			handleClick,
 			getSearchKey,
 			searchResultListRef,
 			searchResult,
 			activeActionButtons,
+			handleClosePath,
+			handleShowPath,
+			showPath,
 		} = this.props
 
 		const [{ areaId }] = stateReducer
-
 		const style = {
 			mapForMobile: {
 				border: 'solid 2px rgba(227, 222, 222, 0.619)',
 				padding: '5px',
 			},
-
 			MapAndQrcode: {
 				height: '42vh',
 			},
@@ -101,25 +102,24 @@ export default class BrowserMapContainer extends React.Component {
 			>
 				<div className="p-1 border-grey">
 					<Map
-						pathMacAddress={this.props.pathMacAddress}
+						pathMacAddress={pathMacAddress}
 						hasSearchKey={hasSearchKey}
-						colorPanel={this.props.colorPanel}
+						colorPanel={colorPanel}
 						proccessedTrackingData={proccessedTrackingData}
-						lbeaconPosition={this.props.lbeaconPosition}
-						geofenceConfig={this.props.geofenceConfig}
-						locationMonitorConfig={this.props.locationMonitorConfig}
-						getSearchKey={this.props.getSearchKey}
+						lbeaconPosition={lbeaconPosition}
+						geofenceConfig={geofenceConfig}
+						locationMonitorConfig={locationMonitorConfig}
+						getSearchKey={getSearchKey}
 						areaId={areaId}
-						searchedObjectType={this.props.showedObjects}
-						mapConfig={config.mapConfig}
-						handleClosePath={this.props.handleClosePath}
-						handleShowPath={this.props.handleShowPath}
-						showPath={this.props.showPath}
+						searchedObjectType={searchedObjectType}
+						mapConfig={mapConfig}
+						handleClosePath={handleClosePath}
+						handleShowPath={handleShowPath}
+						showPath={showPath}
 						currentAreaId={currentAreaId}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						searchKey={searchKey}
-						getSearchKey={getSearchKey}
 						searchResultListRef={searchResultListRef}
 						showedObjects={showedObjects}
 						searchResult={searchResult}
@@ -133,7 +133,7 @@ export default class BrowserMapContainer extends React.Component {
 								className="mr-1 ml-2 text-capitalize"
 								onClick={handleClickButton}
 								name={CLEAR_SEARCH_RESULT}
-								disabled={!this.props.hasSearchKey}
+								disabled={!hasSearchKey}
 							>
 								{locale.texts.CLEAR}
 							</Button>
@@ -149,9 +149,7 @@ export default class BrowserMapContainer extends React.Component {
 									onClick={handleClickButton}
 									name="save"
 									value={1}
-									disabled={
-										!this.props.hasSearchKey || this.props.showPdfDownloadForm
-									}
+									disabled={!hasSearchKey || showPdfDownloadForm}
 								>
 									{locale.texts.SAVE}
 								</Button>
@@ -169,8 +167,7 @@ export default class BrowserMapContainer extends React.Component {
 									name="searchedObjectType"
 									value={[-1, 0]}
 									active={
-										this.props.showedObjects.includes(0) ||
-										this.props.showedObjects.includes(-1)
+										showedObjects.includes(0) || showedObjects.includes(-1)
 									}
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
@@ -194,8 +191,7 @@ export default class BrowserMapContainer extends React.Component {
 									name="searchedObjectType"
 									value={[-2, 1, 2]}
 									active={
-										this.props.showedObjects.includes(1) ||
-										this.props.showedObjects.includes(2)
+										showedObjects.includes(1) || showedObjects.includes(2)
 									}
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.PATIENT)
@@ -263,3 +259,32 @@ export default class BrowserMapContainer extends React.Component {
 		)
 	}
 }
+
+BrowserMapContainer.propTypes = {
+	mapConfig: PropTypes.object.isRequired,
+	proccessedTrackingData: PropTypes.array.isRequired,
+	searchedObjectType: PropTypes.array.isRequired,
+	searchResultListRef: PropTypes.object.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchKey: PropTypes.object.isRequired,
+	showedObjects: PropTypes.array.isRequired,
+	searchResult: PropTypes.array.isRequired,
+	locationMonitorConfig: PropTypes.object.isRequired,
+	geofenceConfig: PropTypes.object.isRequired,
+	pathMacAddress: PropTypes.object.isRequired,
+	areaId: PropTypes.number.isRequired,
+	lbeaconPosition: PropTypes.array.isRequired,
+	currentAreaId: PropTypes.number.isRequired,
+	activeActionButtons: PropTypes.array.isRequired,
+	hasSearchKey: PropTypes.bool.isRequired,
+	showPdfDownloadForm: PropTypes.bool.isRequired,
+	handleClickButton: PropTypes.func.isRequired,
+	colorPanel: PropTypes.object.isRequired,
+	showPath: PropTypes.bool.isRequired,
+	handleShowPath: PropTypes.func.isRequired,
+	handleClosePath: PropTypes.func.isRequired,
+}
+
+export default BrowserMapContainer

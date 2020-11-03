@@ -341,6 +341,7 @@ class SearchResultList extends React.Component {
 	}
 
 	handleClick = () => {
+		this.props.highlightSearchPanel(true)
 		this.setState({
 			showEditObjectForm: true,
 			selectedObjectData: this.props.searchResult,
