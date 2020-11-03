@@ -206,7 +206,7 @@ export const reportContainerModule = {
 		},
 		{
 			name: 'Report And Change Device Status',
-			component: (props) => <ObjectEditedRecord {...props} />,
+			component: () => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
