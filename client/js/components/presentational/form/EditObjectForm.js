@@ -119,6 +119,7 @@ class EditObjectForm extends React.Component {
 			handleClose,
 			disableASN,
 			// idleMacaddrSet = [],
+			associatedMacSet = [],
 		} = this.props
 
 		const {
@@ -187,17 +188,17 @@ class EditObjectForm extends React.Component {
 						}
 						return macaddrValidation(obj.label)
 					}
-					// ) // TODO: Just comment out and wait for clear requirement
-					// .test(
-					// 	'mac_address',
-					// 	locale.texts.THE_MAC_ADDRESS_IS_ALREADY_USED,
-					// 	(obj) => {
-					// 		if (!obj || isEmpty(obj)) {
-					// 			return true
-					// 		}
-					// 		const macWithColons = obj.label
-					// 		return idleMacaddrSet.includes(macWithColons)
-					// 	}
+				)
+				.test(
+					'mac_address',
+					locale.texts.THE_MAC_ADDRESS_IS_ALREADY_USED,
+					(obj) => {
+						if (!obj || isEmpty(obj)) {
+							return true
+						}
+						const macWithColons = obj.label
+						return !associatedMacSet.includes(macWithColons)
+					}
 				),
 			status: string().required(locale.texts.STATUS_IS_REQUIRED),
 			area: string().required(locale.texts.AREA_IS_REQUIRED),
@@ -421,6 +422,7 @@ EditObjectForm.propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 	disableASN: PropTypes.bool.isRequired,
 	idleMacaddrSet: PropTypes.array.isRequired,
+	associatedMacSet: PropTypes.array.isRequired,
 	objectTable: PropTypes.array.isRequired,
 	areaTable: PropTypes.array.isRequired,
 	title: PropTypes.string.isRequired,
