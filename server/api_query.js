@@ -1,15 +1,8 @@
 import error_code from './api_error_code'
 import moment from 'moment-timezone'
 import queryType from './api_queryType'
-import pg from 'pg'
-const config = {
-	user: process.env.DB_USER,
-	host: process.env.DB_HOST,
-	database: process.env.DB_DATABASE,
-	password: process.env.DB_PASS,
-	port: process.env.DB_PORT,
-}
-const pool = new pg.Pool(config)
+import pool from './api/db/connection'
+
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
@@ -19,12 +12,12 @@ const get_api_key = (request, response) => {
 
 	let getUserName = ''
 	pool
-		.query(queryType.getAllUser()) //verification by sha256
+		.query(queryType.getAllUserQuery) //verification by sha256
 		.then((res) => {
 			res.rows.map((item) => {
 				if (
-					username == item.username_sha256 &&
-					password == item.password_sha256
+					username == item.username &&
+					password == item.password
 				) {
 					getUserName = item.name
 				}
@@ -76,10 +69,12 @@ async function get_history_data(request, response) {
 		sort_type,
 	} = request.body
 
-	let matchRes = Promise.resolve(match_key(key))
-	await matchRes.then(function (result) {
-		matchRes = result
-	})
+	// let matchRes = Promise.resolve(match_key(key))
+	// await matchRes.then(function (result) {
+	// 	matchRes = result
+	// })
+
+	let matchRes = await match_key(key);
 
 	if (matchRes == 1) {
 		// matched
@@ -172,10 +167,10 @@ async function get_history_data(request, response) {
 	}
 }
 
-async function match_key(key, response) {
+async function match_key(key) {
 	let matchFlag = 0 // flag = 0 when key error
 	return await pool
-		.query(queryType.getAllKey())
+		.query(queryType.getAllKeyQuery)
 		.then((res) => {
 			res.rows.map((item) => {
 				const vaildTime = moment(item.register_time).add(30, 'm')
