@@ -16,7 +16,7 @@ const get_api_key = (request, response) => {
 		.then((res) => {
 			res.rows.map((item) => {
 				if (
-					username == item.username &&
+					username == item.name &&
 					password == item.password
 				) {
 					getUserName = item.name
@@ -146,12 +146,12 @@ async function get_history_data(request, response) {
 			response.json(error_code.sort_type_define_error)
 		}
 
-		data = Promise.resolve(
-			get_data(key, start_time, end_time, tag, Lbeacon, count_limit, sort_type)
-		)
-		await data.then(function (result) {
-			data = result
-		})
+		//data = Promise.resolve(
+		let data = await get_data(key, start_time, end_time, tag, Lbeacon, count_limit, sort_type)
+		//)
+		//await data.then(function (result) {
+		//	data = result
+		//})
 
 		data.map((item) => {
 			item.start_time = moment(item.start_time).format(timeDefaultFormat)
