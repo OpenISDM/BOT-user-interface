@@ -34,7 +34,7 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import _ from 'lodash'
+import _, { debounce } from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import apiHelper from '../../helper/apiHelper'
@@ -66,9 +66,20 @@ class GetAssignments extends React.Component {
 		const { prevIndex } = prevProps
 		if (prevIndex !== prevState.prevIndex) {
 			this.setState({ prevIndex })
-			this.reload()
+			this.debounceReload()
 		}
 	}
+
+	debounceReload = debounce(
+		() => {
+			this.reload()
+		},
+		100,
+		{
+			leading: true,
+			trailing: false,
+		}
+	)
 
 	reload = () => {
 		this.getPatientGroupList()
