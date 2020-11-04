@@ -486,7 +486,7 @@ class TraceContainer extends React.Component {
 						pdfPackage,
 					})
 					.then((res) => {
-						apiHelper.fileApiAgent.getFile(pdfPackage.path)
+						apiHelper.fileApiAgent.getFile({ path: pdfPackage.path })
 						callBack(res.data)
 					})
 					.catch((err) => {

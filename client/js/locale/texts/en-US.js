@@ -606,6 +606,7 @@ const en = {
 	SELECTED_PATIENTS: 'Selected Patients',
 	UNSELECTED_PATIENTS: 'Unselected Patients',
 	CREATE: 'Create',
+	FILE_URL_NOT_FOUND: 'File URL not found',
 }
 
 export default en

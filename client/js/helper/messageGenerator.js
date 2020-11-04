@@ -34,7 +34,7 @@
 
 import React from 'react'
 import ToastMessage from '../components/presentational/ToastMessage'
-import { toast, Slide, Zoom, Flip } from 'react-toastify'
+import { toast, Slide } from 'react-toastify'
 
 const setSuccessMessage = (msg) => {
 	return toast.success(<ToastMessage msg={msg} />, {
@@ -50,10 +50,13 @@ const setSuccessMessage = (msg) => {
 	})
 }
 
-const setErrorMessage = (msg) => {
-	return toast.success(<ToastMessage msg={'connect to database failed'} />, {
+const setErrorMessage = (
+	msg = 'connect to database failed',
+	autoClose = false
+) => {
+	return toast.success(<ToastMessage msg={msg} />, {
 		position: toast.POSITION.TOP_CENTER,
-		autoClose: false,
+		autoClose,
 		className: 'color-red bg-pink',
 		bodyClassName: 'd-flex justify-content-center',
 		hideProgressBar: true,

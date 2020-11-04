@@ -593,6 +593,7 @@ const tw = {
 	SELECTED_PATIENTS: '已選取病人',
 	UNSELECTED_PATIENTS: '未選取病人',
 	CREATE: '新增',
+	FILE_URL_NOT_FOUND: '找不到檔案位址',
 }
 
 export default tw
