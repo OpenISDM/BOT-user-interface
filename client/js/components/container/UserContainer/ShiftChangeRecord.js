@@ -220,13 +220,20 @@ class ShiftChangeRecord extends React.Component {
 		)
 
 		let allAssignmentsName = ''
-		if (deviceGruopMap) {
-			allAssignmentsName += Object.values(deviceGruopMap)
-				.map((item) => item.name)
-				.toString()
+		if (assignedDeviceGroupListids.length > 0) {
+			allAssignmentsName +=
+				Object.values(deviceGruopMap)
+					.filter((item) => {
+						return assignedDeviceGroupListids.includes(item.id)
+					})
+					.map((item) => item.name)
+					.toString() + ','
 		}
-		if (patientGruopMap) {
+		if (assignedPatientGroupListids.length > 0) {
 			allAssignmentsName += Object.values(patientGruopMap)
+				.filter((item) => {
+					return assignedPatientGroupListids.includes(item.id)
+				})
 				.map((item) => item.name)
 				.toString()
 		}
