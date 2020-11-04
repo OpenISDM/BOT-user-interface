@@ -49,23 +49,17 @@ const confirmValidation = (username) => {
 	return query
 }
 
-function setKey(user_id, username, hash) {
-	const text = `
-			UPDATE  api_key
-			SET
-                name = $2,
-                key = $3,
-                register_time = now()
-	    	WHERE id = $1
-		`
-	const values = [user_id, username, hash]
-
-	const query = {
-		text,
-		values,
-	}
-
-	return query
+function setKey(user_id, username, hash)
+{
+	return ` insert into api_key (id, name, key, register_time)
+   values (${user_id}, '${username}', '${hash}', now())
+   on conflict(id)
+   do
+   update set
+	name = '${username}',
+	key = '${hash}',
+	register_time = now()
+	`;		
 }
 
 const getAllKeyQuery = ' SELECT  * FROM api_key '
