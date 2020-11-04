@@ -569,14 +569,19 @@ class Map extends React.Component {
 
 	/** Filter out undesired tracking data */
 	filterTrackingData = (proccessedTrackingData) => {
-		return proccessedTrackingData.filter((item) => {
-			return (
-				item.found &&
-				item.isMatchedObject &&
-				(this.props.searchedObjectType.includes(parseInt(item.object_type)) ||
-					this.props.searchedObjectType.includes(parseInt(item.searchedType)))
-			)
-		})
+		const { showedObjects = [], searchedObjectType = [] } = this.props
+		if (showedObjects.length > 0) {
+			return proccessedTrackingData.filter((item) => {
+				return (
+					showedObjects.includes(item.searchedType) &&
+					item.found &&
+					item.isMatchedObject &&
+					(searchedObjectType.includes(parseInt(item.object_type)) ||
+						searchedObjectType.includes(parseInt(item.searchedType)))
+				)
+			})
+		}
+		return []
 	}
 
 	collectObjectsByLatLng = (lbPosition) => {
