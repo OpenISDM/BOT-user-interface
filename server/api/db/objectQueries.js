@@ -270,16 +270,29 @@ const editObjectPackage = (
 	reservedTimestamp
 ) => {
 	const item = formOption[0]
+
+	const [name, department] =
+		item &&
+		item.transferred_location &&
+		item.transferred_location.label &&
+		item.transferred_location.label.split('-')
+
+	let branchQuery = null
+	if (name && department) {
+		branchQuery = `
+            (
+                SELECT id FROM branches WHERE name = '${name}' AND department = '${department}'
+            )`
+	}
+
 	const text = `
 		UPDATE object_table
 		SET
 			status = '${item.status}',
-			transferred_location = ${
-				item.status == 'transferred' ? item.transferred_location.id : null
-			},
+			transferred_location = ${item.status === 'transferred' ? branchQuery : null},
 			note_id = ${record_id},
 			reserved_timestamp = ${
-				item.status == 'reserve' ? `'${reservedTimestamp}'` : null
+				item.status === 'reserve' ? `'${reservedTimestamp}'` : null
 			},
 			reserved_user_id = (SELECT id
 				FROM user_table
