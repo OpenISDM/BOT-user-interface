@@ -158,7 +158,7 @@ class SearchResultList extends React.Component {
 	handleChangeObjectStatusFormSubmit = (values) => {
 		const editedObjectPackage = JSONClone(this.state.selectedObjectData).map(
 			(item) => {
-				item.status = values.status.toLowerCase()
+				item.status = values.action_options.toLowerCase()
 				item.transferred_location = values.transferred_location
 					? values.transferred_location
 					: ''

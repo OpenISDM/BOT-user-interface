@@ -122,7 +122,6 @@ class ChangeStatusForm extends React.Component {
 				// }) : null;
 				// this.handleClose();
 				this.props.handleShowPath(macAddress, this.handleClose)
-
 				break
 		}
 	}
@@ -157,6 +156,22 @@ class ChangeStatusForm extends React.Component {
 
 		return initValues
 	}
+
+	generateCurrentStatus = (locale, status) => {
+		switch (status) {
+			case RETURNED:
+				return locale.texts.NORMAL
+			case BROKEN:
+				return locale.texts.BROKEN
+			case TRANSFERRED:
+				return locale.texts.TRANSFERRED
+			case TRACE:
+				return locale.texts.TRACE
+			default:
+				return locale.texts.NORMAL
+		}
+	}
+
 	render() {
 		const { locale } = this.context
 		const { title } = this.props
@@ -287,7 +302,7 @@ class ChangeStatusForm extends React.Component {
 									label={locale.texts.CURRENT_STATUS}
 									error={errors.current_status}
 									touched={touched.current_status}
-									value={values.status}
+									value={this.generateCurrentStatus(locale, values.status)}
 									placeholder=""
 									disabled
 								/>
@@ -336,7 +351,7 @@ class ChangeStatusForm extends React.Component {
 									label={locale.texts.TRANSFERRED_LOCATION}
 									error={errors.transferred_location}
 									touched={touched.transferred_location}
-									display={values.status === 'transferred'}
+									display={values.action_options === 'transferred'}
 									component={() => (
 										<>
 											<Creatable
