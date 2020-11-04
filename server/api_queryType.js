@@ -49,23 +49,17 @@ const confirmValidation = (username) => {
 	return query
 }
 
-function setKey(user_id, username, hash) {
-	const text = `
-			UPDATE  api_key
-			SET
-                name = $2,
-                key = $3,
-                register_time = now()
-	    	WHERE id = $1
-		`
-	const values = [user_id, username, hash]
-
-	const query = {
-		text,
-		values,
-	}
-
-	return query
+function setKey(user_id, username, hash)
+{
+	return ` insert into api_key (id, name, key, register_time)
+   values (${user_id}, '${username}', '${hash}', now())
+   on conflict(id)
+   do
+   update set
+	name = '${username}',
+	key = '${hash}',
+	register_time = now()
+	`;		
 }
 
 const getAllKeyQuery = ' SELECT  * FROM api_key '
@@ -82,7 +76,7 @@ const get_data = (
 ) => {
 	let text = `
     WITH ranges AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi,
+        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, payload,
             CASE WHEN LAG(uuid) OVER
                     (PARTITION BY mac_address
                         ORDER BY mac_address, record_timestamp) = uuid
@@ -95,7 +89,8 @@ const get_data = (
                 location_history_table.uuid AS uuid,
                 location_history_table.record_timestamp AS record_timestamp,
                 location_history_table.battery_voltage AS battery_voltage,
-                location_history_table.average_rssi AS average_rssi
+				location_history_table.average_rssi AS average_rssi,
+				location_history_table.payload as payload
             FROM location_history_table
 
             INNER JOIN object_table
@@ -128,7 +123,7 @@ const get_data = (
     )
 
     , groups AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r,
+        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, payload, r,
             SUM(r)
                 OVER (ORDER BY mac_address, record_timestamp) grp
         FROM ranges
@@ -145,7 +140,8 @@ const get_data = (
         AVG(groups.average_rssi) AS avg_rssi,
         MIN(groups.record_timestamp) AS start_time,
         MAX(groups.record_timestamp) AS end_time,
-        MAX(groups.record_timestamp) - MIN(groups.record_timestamp)  AS duration
+		MAX(groups.record_timestamp) - MIN(groups.record_timestamp)  AS duration,
+		MIN(groups.payload) as payload
     FROM groups
 
     INNER JOIN object_table
