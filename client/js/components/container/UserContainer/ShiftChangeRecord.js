@@ -219,23 +219,23 @@ class ShiftChangeRecord extends React.Component {
 			assignedPatientGroupListids.length > 0
 		)
 
-		let allAssignmentsName = ''
+		let allAssignmentsNameList = []
 		if (assignedDeviceGroupListids.length > 0) {
-			allAssignmentsName +=
-				Object.values(deviceGruopMap)
-					.filter((item) => {
-						return assignedDeviceGroupListids.includes(item.id)
-					})
-					.map((item) => item.name)
-					.toString() + ','
-		}
-		if (assignedPatientGroupListids.length > 0) {
-			allAssignmentsName += Object.values(patientGruopMap)
+			allAssignmentsNameList = Object.values(deviceGruopMap)
 				.filter((item) => {
-					return assignedPatientGroupListids.includes(item.id)
+					return assignedDeviceGroupListids.includes(item.id)
 				})
 				.map((item) => item.name)
-				.toString()
+		}
+		if (assignedPatientGroupListids.length > 0) {
+			allAssignmentsNameList = [
+				...allAssignmentsNameList,
+				...Object.values(patientGruopMap)
+					.filter((item) => {
+						return assignedPatientGroupListids.includes(item.id)
+					})
+					.map((item) => item.name),
+			]
 		}
 
 		return (
@@ -272,7 +272,7 @@ class ShiftChangeRecord extends React.Component {
 					handleSubmit={this.reload}
 					assignedDeviceGroupListids={assignedDeviceGroupListids}
 					assignedPatientGroupListids={assignedPatientGroupListids}
-					listName={allAssignmentsName}
+					listName={allAssignmentsNameList.join()}
 				/>
 			</Fragment>
 		)
