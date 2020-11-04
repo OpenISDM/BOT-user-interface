@@ -58,6 +58,10 @@ class ShiftChangeRecord extends React.Component {
 		prevIndex: null,
 	}
 
+	componentDidMount = () => {
+		this.reload()
+	}
+
 	componentDidUpdate = (prevProps, prevState) => {
 		const { prevIndex } = prevProps
 		if (prevIndex !== prevState.prevIndex) {
