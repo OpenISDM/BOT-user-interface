@@ -206,7 +206,7 @@ export const reportContainerModule = {
 		},
 		{
 			name: 'Report And Change Device Status',
-			component: (props) => <ObjectEditedRecord {...props} />,
+			component: () => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
@@ -235,35 +235,39 @@ export const reportContainerModule = {
 export const BOTAdminModule = {
 	title: 'BOT admin',
 	defaultActiveKey: 'Add Delete User Accounts',
+	permission: 'route:BOTAdmin',
 	path: routes.BOT_ADMIN,
 	tabList: [
 		{
 			name: 'Add Delete User Accounts',
-			permission: 'route:bigScreen',
+			permission: 'route:BOTAdmin',
 			component: (props) => <AdminManagementContainer {...props} />,
 			platform: ['browser', 'tablet'],
 		},
 		{
 			name: 'Edit User Roles And Permissions',
-			// permission: 'rolePermissionManagement',
+			permission: 'route:BOTAdmin',
 			// component: (props) => <RolePermissionManagement {...props} />, // temporary hide
 			component: () => null,
 			platform: ['browser'],
 		},
 		{
 			name: 'Generate Revise Device Assignments',
+			permission: 'route:BOTAdmin',
 			path: 'devicesManagement',
 			href: '#DevicesManagement',
 			component: (props) => <DeviceGroupManager {...props} />,
 		},
 		{
 			name: 'Generate Revise Patient Assignments',
+			permission: 'route:BOTAdmin',
 			path: 'patientManagement',
 			href: '#PatientManagement',
 			component: (props) => <PatientGroupManager {...props} />,
 		},
 		{
 			name: 'Add Delete Transfer Locations',
+			permission: 'route:BOTAdmin',
 			component: (props) => <TransferredLocationManagement {...props} />,
 			platform: ['browser'],
 		},

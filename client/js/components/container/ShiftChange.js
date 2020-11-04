@@ -115,24 +115,28 @@ class ShiftChange extends React.Component {
 
 				res.data
 					.filter((item) => {
-						return (
-							assignedDeviceGroupListids.includes(parseInt(item.list_id)) ||
-							assignedPatientGroupListids.includes(parseInt(item.list_id))
-						)
+						return assignedDeviceGroupListids.includes(parseInt(item.list_id))
 					})
 					.forEach((item) => {
-						switch (item.object_type) {
-							case '0':
-								if (item.found) foundResult.push(item)
-								else notFoundResult.push(item)
-								break
-							case '1':
-							case '2':
-								if (item.found) foundPatients.push(item)
-								else notFoundPatients.push(item)
-								break
+						if (item.found) {
+							foundResult.push(item)
+						} else {
+							notFoundResult.push(item)
 						}
 					})
+
+				res.data
+					.filter((item) => {
+						return assignedPatientGroupListids.includes(parseInt(item.list_id))
+					})
+					.forEach((item) => {
+						if (item.found) {
+							foundPatients.push(item)
+						} else {
+							notFoundPatients.push(item)
+						}
+					})
+
 				this.setState({
 					searchResult: {
 						foundResult,

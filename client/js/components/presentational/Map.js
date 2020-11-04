@@ -40,12 +40,11 @@ import { AppContext } from '../../context/AppContext'
 import axios from 'axios'
 import dataSrc from '../../dataSrc'
 import siteConfig from '../../../../site_module/siteConfig'
-import polylineDecorator from 'leaflet-polylinedecorator'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-
 import { JSONClone, isEqual, isWebpSupported } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
+import PropTypes from 'prop-types'
 
 class Map extends React.Component {
 	static contextType = AppContext
@@ -72,9 +71,7 @@ class Map extends React.Component {
 		this.initMap()
 	}
 
-	componentDidUpdate = (prevProps, prevState) => {
-		const { auth } = this.context
-
+	componentDidUpdate = (prevProps) => {
 		if (this.state.shouldUpdateTrackingData) {
 			this.handleObjectMarkers()
 		}
@@ -102,11 +99,12 @@ class Map extends React.Component {
 		) {
 			this.createLocationMonitorMarkers()
 		}
+
 		if (!isEqual(prevProps.pathMacAddress, this.props.pathMacAddress)) {
 			this.drawPolyline()
 		}
 
-		if (prevProps.areaId != this.props.areaId) {
+		if (prevProps.areaId !== this.props.areaId) {
 			this.setMap()
 		}
 	}
@@ -123,13 +121,8 @@ class Map extends React.Component {
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
 		const { auth } = this.context
-
-		const [{ areaId }] = this.context.stateReducer
-
 		const { mapConfig } = this.props
-
 		const { areaOptions } = mapConfig
-
 		const { areaModules } = siteConfig
 
 		if (isBrowser) {
@@ -188,9 +181,7 @@ class Map extends React.Component {
 	/** Set the overlay image when changing area */
 	setMap = () => {
 		const [{ areaId }] = this.context.stateReducer
-
 		const { areaModules } = siteConfig
-
 		const { areaOptions, mapOptions } = this.props.mapConfig
 
 		/** Error handler of the user's auth area does not include the group of sites */
@@ -253,7 +244,7 @@ class Map extends React.Component {
 	/** init path */
 	drawPolyline = () => {
 		this.pathOfDevice.clearLayers()
-		if (this.props.pathMacAddress != '') {
+		if (this.props.pathMacAddress !== '') {
 			const route = []
 
 			axios
@@ -262,8 +253,8 @@ class Map extends React.Component {
 				})
 				.then((res) => {
 					let preUUID = ''
-					res.data.rows.map((item) => {
-						if (item.uuid != preUUID) {
+					res.data.rows.forEach((item) => {
+						if (item.uuid !== preUUID) {
 							preUUID = item.uuid
 							const latLng = [item.base_y, item.base_x]
 
@@ -330,10 +321,10 @@ class Map extends React.Component {
 		/** Create the markers of lbeacons of perimeters and fences
 		 *  and onto the map  */
 		if (geofenceConfig[areaId] && geofenceConfig[areaId].enable) {
-			;['parsePerimeters', 'parseFences'].map((type) => {
-				geofenceConfig[areaId].rules.map((rule) => {
+			;['parsePerimeters', 'parseFences'].forEach((type) => {
+				geofenceConfig[areaId].rules.forEach((rule) => {
 					if (rule.is_active) {
-						rule[type].coordinates.map((item) => {
+						rule[type].coordinates.forEach((item) => {
 							L.circleMarker(
 								item,
 								this.iconOptions.geoFenceMarkerOptions
@@ -382,8 +373,11 @@ class Map extends React.Component {
 		}
 		/** Creat the marker of all lbeacons onto the map  */
 		parseUUIDArray
-			.filter((lbeacon) => parseInt(lbeacon.coordinate.split(',')[2]) == areaId)
-			.map((lbeacon) => {
+			.filter(
+				(lbeacon) =>
+					parseInt(lbeacon.coordinate.split(',')[2]) === parseInt(areaId)
+			)
+			.forEach((lbeacon) => {
 				const latLng = lbeacon.coordinate.split(',')
 
 				const lbeaconMarkerOptions = lbeacon.isInHealthInterval
@@ -410,14 +404,13 @@ class Map extends React.Component {
 	handlemenu = (e) => {
 		const { objectInfo } = this.state
 		const lbeacon_coorinate = Object.values(e.target._latlng).toString()
-		let objectList = [],
-			key
-		for (key in objectInfo) {
-			if (objectInfo[key].lbeacon_coordinate.toString() == lbeacon_coorinate) {
+		const objectList = []
+		for (const key in objectInfo) {
+			if (objectInfo[key].lbeacon_coordinate.toString() === lbeacon_coorinate) {
 				objectList.push(objectInfo[key])
 			}
 		}
-		if (objectList.length != 0) {
+		if (objectList.length !== 0) {
 			const popupContent = this.popupContent(objectList)
 			e.target
 				.bindPopup(popupContent, this.props.mapConfig.popupOptions)
@@ -463,7 +456,7 @@ class Map extends React.Component {
 
 		const numberSheet = {}
 
-		this.filterTrackingData(JSONClone(searchResult)).map((item, index) => {
+		this.filterTrackingData(JSONClone(searchResult)).forEach((item) => {
 			/** Calculate the position of the object  */
 			const position = macAddressToCoordinate(
 				item.mac_address,
@@ -491,10 +484,9 @@ class Map extends React.Component {
 				item.searched = true
 				item.pinColor = pinColorArray[pinColorIndex]
 			}
-			const iconSize = this.iconOptions.iconSize
 
 			/** Set the attribute if the object in search result list is on hover */
-			if (item.mac_address == assignedObject) {
+			if (item.mac_address === assignedObject) {
 				// iconSize = iconSize.map(item => item * 5)
 
 				const errorCircleOptions = this.iconOptions.errorCircleOptions
@@ -577,25 +569,34 @@ class Map extends React.Component {
 
 	/** Filter out undesired tracking data */
 	filterTrackingData = (proccessedTrackingData) => {
-		return proccessedTrackingData.filter((item) => {
-			return (
-				item.found &&
-				item.isMatchedObject &&
-				(this.props.searchedObjectType.includes(parseInt(item.object_type)) ||
-					this.props.searchedObjectType.includes(parseInt(item.searchedType)))
-			)
-		})
+		const { showedObjects = [], searchedObjectType = [] } = this.props
+		if (showedObjects.length > 0) {
+			return proccessedTrackingData.filter((item) => {
+				return (
+					showedObjects.includes(item.searchedType) &&
+					item.found &&
+					item.isMatchedObject &&
+					(searchedObjectType.includes(parseInt(item.object_type)) ||
+						searchedObjectType.includes(parseInt(item.searchedType)))
+				)
+			})
+		}
+		return []
 	}
 
 	collectObjectsByLatLng = (lbPosition) => {
 		const objectList = []
-		this.filterTrackingData(this.props.proccessedTrackingData).map((item) => {
-			item.lbeacon_coordinate &&
-			item.lbeacon_coordinate.toString() == lbPosition.toString() &&
-			item.isMatchedObject
-				? objectList.push(item)
-				: null
-		})
+		this.filterTrackingData(this.props.proccessedTrackingData).forEach(
+			(item) => {
+				const qualified =
+					item.lbeacon_coordinate &&
+					item.lbeacon_coordinate.toString() === lbPosition.toString() &&
+					item.isMatchedObject
+				if (qualified) {
+					objectList.push(item)
+				}
+			}
+		)
 
 		return objectList
 	}
@@ -632,6 +633,28 @@ class Map extends React.Component {
 			/>
 		)
 	}
+}
+
+Map.propTypes = {
+	mapConfig: PropTypes.object.isRequired,
+	proccessedTrackingData: PropTypes.array.isRequired,
+	searchedObjectType: PropTypes.array.isRequired,
+	searchResultListRef: PropTypes.object.isRequired,
+	getSearchKey: PropTypes.func.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchKey: PropTypes.object.isRequired,
+	showedObjects: PropTypes.array.isRequired,
+	searchResult: PropTypes.array.isRequired,
+	isObjectListShownProp: PropTypes.func.isRequired,
+	selectObjectListProp: PropTypes.func.isRequired,
+	locationMonitorConfig: PropTypes.object.isRequired,
+	geofenceConfig: PropTypes.object.isRequired,
+	pathMacAddress: PropTypes.object.isRequired,
+	areaId: PropTypes.number.isRequired,
+	lbeaconPosition: PropTypes.array.isRequired,
+	currentAreaId: PropTypes.number.isRequired,
+	authenticated: PropTypes.bool.isRequired,
 }
 
 export default Map

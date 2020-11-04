@@ -96,6 +96,7 @@ class ObjectTable extends React.Component {
 		apiMethod: '',
 		idleMacaddrSet: [],
 		locale: this.context.locale.abbr,
+		associatedMacSet: [],
 	}
 
 	componentDidMount = () => {
@@ -228,6 +229,14 @@ class ObjectTable extends React.Component {
 						return item
 					})
 
+				const associatedMacSet = [
+					...new Set(
+						res.data.rows.map((item) => {
+							return item.mac_address
+						})
+					),
+				]
+
 				this.getIdleMacaddrSet()
 
 				this.setState(
@@ -244,6 +253,7 @@ class ObjectTable extends React.Component {
 							...this.state.filterSelection,
 							typeList,
 						},
+						associatedMacSet,
 					},
 					callback
 				)
@@ -758,6 +768,7 @@ class ObjectTable extends React.Component {
 					disableASN={this.state.disableASN}
 					areaTable={this.state.areaTable}
 					idleMacaddrSet={this.state.idleMacaddrSet}
+					associatedMacSet={this.state.associatedMacSet}
 					macOptions={this.state.macOptions}
 				/>
 				<BindForm

@@ -107,15 +107,16 @@ export default {
 			})
 	},
 
-	deleteShiftChangeRecord: (request, response) => {
+	deleteShiftChangeRecord: async (request, response) => {
 		const { idPackage } = request.body
+		try {
+			const res = await pool.query(dbQueries.deleteShiftChangeRecord(idPackage))
+			console.log('delete shift change record success')
 
-		pool
-			.query(dbQueries.deleteShiftChangeRecord(idPackage))
-			.then((res) => {
-				console.log('delete shift change record success')
+			if (res.rows.length > 0 && res.rows[0].path) {
+				const { file_path: filePath } = res.rows[0]
 				fs.promises.unlink(
-					path.join(process.env.LOCAL_FILE_PATH, res.rows[0].file_path),
+					path.join(process.env.LOCAL_FILE_PATH, filePath),
 					(err) => {
 						if (err) {
 							console.log('err when deleting files', err)
@@ -123,9 +124,34 @@ export default {
 						response.status(200).json(res)
 					}
 				)
-			})
-			.catch((err) => {
-				console.log('deleteShiftChangeRecord error: ', err)
-			})
+			} else {
+				response.status(200).json(res)
+			}
+		} catch (e) {
+			console.log('deleteShiftChangeRecord error: ', e)
+		}
+	},
+
+	deleteEditObjectRecord: async (request, response) => {
+		const { idPackage } = request.body
+		try {
+			const res = await pool.query(dbQueries.deleteEditObjectRecord(idPackage))
+			console.log('delete shift change record success')
+
+			if (res.rows.length > 0 && res.rows[0].path) {
+				fs.promises.unlink(
+					path.join(process.env.LOCAL_FILE_PATH, res.rows[0].path),
+					(err) => {
+						if (err) {
+							console.log('err when deleting files', err)
+						}
+						response.status(200).json(res)
+					}
+				)
+			}
+			response.status(200).json(res)
+		} catch (e) {
+			console.log('deleteEditObjectRecord error: ', e)
+		}
 	},
 }

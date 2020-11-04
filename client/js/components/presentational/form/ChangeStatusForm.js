@@ -34,7 +34,7 @@
 
 import React from 'react'
 import { Modal, Button, Row, Col, ButtonToolbar } from 'react-bootstrap'
-import Select from 'react-select'
+import Creatable from 'react-select/creatable'
 import { Formik, Field, Form } from 'formik'
 import { FormFieldName } from '../../BOTComponent/styleComponent'
 import { object, string } from 'yup'
@@ -93,6 +93,17 @@ class ChangeStatusForm extends React.Component {
 		this.props.handleChangeObjectStatusFormClose()
 	}
 
+	handleAddSubmit = async (name, department) => {
+		try {
+			await apiHelper.transferredLocationApiAgent.addOne({
+				name,
+				department,
+			})
+		} catch (e) {
+			console.log(`add location failed ${e}`)
+		}
+	}
+
 	handleClick = (e) => {
 		const item = e.target.name
 		const { selectedObjectData } = this.props
@@ -111,7 +122,6 @@ class ChangeStatusForm extends React.Component {
 				// }) : null;
 				// this.handleClose();
 				this.props.handleShowPath(macAddress, this.handleClose)
-
 				break
 		}
 	}
@@ -146,6 +156,22 @@ class ChangeStatusForm extends React.Component {
 
 		return initValues
 	}
+
+	generateCurrentStatus = (locale, status) => {
+		switch (status) {
+			case RETURNED:
+				return locale.texts.NORMAL
+			case BROKEN:
+				return locale.texts.BROKEN
+			case TRANSFERRED:
+				return locale.texts.TRANSFERRED
+			case TRACE:
+				return locale.texts.TRACE
+			default:
+				return locale.texts.NORMAL
+		}
+	}
+
 	render() {
 		const { locale } = this.context
 		const { title } = this.props
@@ -272,35 +298,46 @@ class ChangeStatusForm extends React.Component {
 								</div>
 								<FormikFormGroup
 									type="text"
-									name="status"
-									label={locale.texts.STATUS}
-									error={errors.status}
-									touched={touched.status}
+									name="current_status"
+									label={locale.texts.CURRENT_STATUS}
+									error={errors.current_status}
+									touched={touched.current_status}
+									value={this.generateCurrentStatus(locale, values.status)}
+									placeholder=""
+									disabled
+								/>
+								<hr />
+								<FormikFormGroup
+									type="text"
+									name="action_options"
+									label={locale.texts.ACTION}
+									error={errors.action_options}
+									touched={touched.action_options}
 									placeholder=""
 									component={() => (
-										<RadioButtonGroup value={values.status}>
+										<RadioButtonGroup>
 											<div className="d-flex justify-content-between form-group my-1">
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={BROKEN}
 													label={locale.texts.BROKEN}
 												/>
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={TRANSFERRED}
 													label={locale.texts.TRANSFERRED}
 												/>
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={RETURNED}
 													label={locale.texts.RETURNED}
 												/>
 												<Field
 													component={RadioButton}
-													name="status"
+													name="action_options"
 													id={TRACE}
 													label={locale.texts.TRACE}
 												/>
@@ -314,22 +351,35 @@ class ChangeStatusForm extends React.Component {
 									label={locale.texts.TRANSFERRED_LOCATION}
 									error={errors.transferred_location}
 									touched={touched.transferred_location}
-									display={values.status === 'transferred'}
+									display={values.action_options === 'transferred'}
 									component={() => (
-										<Select
-											name="transferred_location"
-											value={values.transferred_location}
-											onChange={(value) => {
-												setFieldValue('transferred_location', value)
-											}}
-											options={this.state.transferredLocationOptions}
-											isSearchable={false}
-											styles={styleConfig.reactSelect}
-											placeholder={locale.texts.SELECT_LOCATION}
-											components={{
-												IndicatorSeparator: () => null,
-											}}
-										/>
+										<>
+											<Creatable
+												formatCreateLabel={(e) => {
+													const createPix = locale.texts.CREATE
+													const createTail = `[${locale.texts.TRANSFERRED_LOCATION}-${locale.texts.DEPARTMENT}]`
+													const [
+														name,
+														department = `${locale.texts.DEPARTMENT}`,
+													] = e.split('-')
+													return `${createPix}: ${name}-${department} ${createTail}`
+												}}
+												name="transferred_location"
+												value={values.transferred_location}
+												onChange={async (e) => {
+													const [name, department] = e.value.split('-')
+													await this.handleAddSubmit(name, department)
+													setFieldValue('transferred_location', e)
+												}}
+												options={this.state.transferredLocationOptions}
+												isSearchable={true}
+												styles={styleConfig.reactSelect}
+												placeholder={locale.texts.SELECT_LOCATION}
+												components={{
+													IndicatorSeparator: () => null,
+												}}
+											/>
+										</>
 									)}
 								/>
 								<hr />

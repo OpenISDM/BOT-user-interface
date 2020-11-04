@@ -39,11 +39,14 @@ export default (app) => {
 	// enable pre-flight request for DELETE request
 	app.options('/data/record', cors())
 
+	app.options('/data/record/editedObject', cors())
 	app.options('/data/record/shiftChange', cors())
+	app.options('/data/record/patientRecord', cors())
 
 	app
 		.route('/data/record/editedObject')
 		.post(recordController.getEditObjectRecord)
+		.delete(recordController.deleteEditObjectRecord)
 
 	app
 		.route('/data/record/shiftChange')

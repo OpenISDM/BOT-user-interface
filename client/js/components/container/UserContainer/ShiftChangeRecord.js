@@ -34,7 +34,7 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import _ from 'lodash'
+import _, { debounce } from 'lodash'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
@@ -50,7 +50,8 @@ class ShiftChangeRecord extends React.Component {
 
 	state = {
 		objectMap: {},
-		groupMap: {},
+		patientGruopMap: {},
+		deviceGruopMap: {},
 		assignedDeviceGroupListids: [],
 		assignedPatientGroupListids: [],
 		showShiftChange: false,
@@ -58,13 +59,29 @@ class ShiftChangeRecord extends React.Component {
 		prevIndex: null,
 	}
 
+	componentDidMount = () => {
+		this.reload()
+	}
+
 	componentDidUpdate = (prevProps, prevState) => {
 		const { prevIndex } = prevProps
 		if (prevIndex !== prevState.prevIndex) {
-			this.setState({ prevIndex })
-			this.reload()
+			this.debounceReload({ prevIndex, prevState: prevState.prevIndex })
 		}
 	}
+
+	debounceReload = debounce(
+		(object) => {
+			console.log('ShiftChangeRecord', object)
+			this.setState(object)
+			this.reload()
+		},
+		10,
+		{
+			leading: true,
+			trailing: false,
+		}
+	)
 
 	reload = () => {
 		this.getAssignments()
@@ -120,7 +137,7 @@ class ShiftChangeRecord extends React.Component {
 			const patientGruopMap = _.keyBy(res.data.gruopList, 'id')
 			const patientObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({
-				groupMap: { ...this.state.groupMap, ...patientGruopMap },
+				patientGruopMap,
 				objectMap: { ...this.state.objectMap, ...patientObjectMap },
 			})
 		} catch (e) {
@@ -137,7 +154,7 @@ class ShiftChangeRecord extends React.Component {
 			const deviceGruopMap = _.keyBy(res.data.gruopList, 'id')
 			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({
-				groupMap: { ...this.state.groupMap, ...deviceGruopMap },
+				deviceGruopMap,
 				objectMap: { ...this.state.objectMap, ...deviceObjectMap },
 			})
 		} catch (e) {
@@ -145,40 +162,53 @@ class ShiftChangeRecord extends React.Component {
 		}
 	}
 
-	generateAssignmentItems = (
+	generateAssignmentItems = ({
 		objectMap,
-		groupMap,
+		deviceGruopMap,
+		patientGruopMap,
 		assignedDeviceGroupListids,
-		assignedPatientGroupListids
-	) => {
-		const renderAssignmentItems = [
-			...assignedDeviceGroupListids,
-			...assignedPatientGroupListids,
-		]
-
-		if (renderAssignmentItems.length > 0) {
-			return (
-				<>
-					<hr />
-					<AssignmentItems
-						objectMap={objectMap}
-						gruopMap={groupMap}
-						submitGroupListIds={[]}
-						assignedGroupListids={renderAssignmentItems}
-						showOnlyAssigned={true}
-					/>
-					<hr />
-				</>
+		assignedPatientGroupListids,
+	}) => {
+		let deviceItems = null
+		let patientItems = null
+		if (assignedDeviceGroupListids.length > 0) {
+			deviceItems = (
+				<AssignmentItems
+					objectMap={objectMap}
+					gruopMap={deviceGruopMap}
+					submitGroupListIds={[]}
+					assignedGroupListids={assignedDeviceGroupListids}
+					showOnlyAssigned={true}
+				/>
 			)
 		}
-		return null
+		if (assignedPatientGroupListids.length > 0) {
+			patientItems = (
+				<AssignmentItems
+					objectMap={objectMap}
+					gruopMap={patientGruopMap}
+					submitGroupListIds={[]}
+					assignedGroupListids={assignedPatientGroupListids}
+					showOnlyAssigned={true}
+				/>
+			)
+		}
+		return (
+			<>
+				<hr />
+				{deviceItems}
+				{patientItems}
+				<hr />
+			</>
+		)
 	}
 
 	render() {
 		const { locale } = this.context
 		const {
 			objectMap,
-			groupMap,
+			deviceGruopMap,
+			patientGruopMap,
 			assignedDeviceGroupListids,
 			assignedPatientGroupListids,
 			showShiftChange,
@@ -190,8 +220,13 @@ class ShiftChangeRecord extends React.Component {
 		)
 
 		let allAssignmentsName = ''
-		if (groupMap) {
-			allAssignmentsName = Object.values(groupMap)
+		if (deviceGruopMap) {
+			allAssignmentsName += Object.values(deviceGruopMap)
+				.map((item) => item.name)
+				.toString()
+		}
+		if (patientGruopMap) {
+			allAssignmentsName += Object.values(patientGruopMap)
 				.map((item) => item.name)
 				.toString()
 		}
@@ -216,12 +251,13 @@ class ShiftChangeRecord extends React.Component {
 					</ButtonToolbar>
 				</AccessControl>
 
-				{this.generateAssignmentItems(
+				{this.generateAssignmentItems({
 					objectMap,
-					groupMap,
+					deviceGruopMap,
+					patientGruopMap,
 					assignedDeviceGroupListids,
-					assignedPatientGroupListids
-				)}
+					assignedPatientGroupListids,
+				})}
 
 				<ShiftChange
 					show={showShiftChange}

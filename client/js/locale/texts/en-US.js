@@ -445,6 +445,7 @@ const en = {
 	PLEASE_TYPE_OBJECT_IDENTITY_NUMBER: 'please type ACN or ID',
 
 	/* Object Status */
+	CURRENT_STATUS: 'current status',
 	STATUS: 'status',
 	NORMAL: 'normal',
 	BROKEN: 'broken',
@@ -525,7 +526,7 @@ const en = {
 	SERVER_TIME_OFFSET: 'server time offset',
 	PRODUCT_VERSION: 'product version',
 	ABNORMAL_LBEACON_LIST: 'abnormal lbeacon list',
-	ACTION: 'action',
+	ACTION: 'action options',
 	BRANCH: 'branch',
 	NEW_BRANCH: 'new branch',
 	ROLE_LIST: 'Role List',
@@ -604,6 +605,7 @@ const en = {
 	UNSELECTED_DEVICES: 'Unselected Devices',
 	SELECTED_PATIENTS: 'Selected Patients',
 	UNSELECTED_PATIENTS: 'Unselected Patients',
+	CREATE: 'Create',
 }
 
 export default en
