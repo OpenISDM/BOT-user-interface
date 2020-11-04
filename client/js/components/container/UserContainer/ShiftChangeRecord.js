@@ -61,16 +61,17 @@ class ShiftChangeRecord extends React.Component {
 	componentDidUpdate = (prevProps, prevState) => {
 		const { prevIndex } = prevProps
 		if (prevIndex !== prevState.prevIndex) {
-			this.setState({ prevIndex })
-			this.debounceReload()
+			this.debounceReload({ prevIndex, prevState: prevState.prevIndex })
 		}
 	}
 
 	debounceReload = debounce(
-		() => {
+		(object) => {
+			console.log('ShiftChangeRecord', object)
+			this.setState(object)
 			this.reload()
 		},
-		100,
+		10,
 		{
 			leading: true,
 			trailing: false,
