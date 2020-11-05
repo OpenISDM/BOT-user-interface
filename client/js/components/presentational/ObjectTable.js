@@ -61,7 +61,7 @@ import {
 	DISASSOCIATE,
 	EXTRACT_DEVICE_INFO,
 } from '../../config/wordMap'
-import { JSONClone, formatTime } from '../../helper/utilities'
+import { JSONClone, formatTime, compareString } from '../../helper/utilities'
 
 const SelectTable = selecTableHOC(ReactTable)
 
@@ -500,53 +500,35 @@ class ObjectTable extends React.Component {
 	}
 
 	filterData = (data, key, filteredAttribute) => {
-		key = key.toLowerCase()
 		const filteredData = data.filter((obj) => {
 			if (filteredAttribute.includes('name')) {
-				const keyRex = new RegExp(key)
-				if (obj.name.toLowerCase().match(keyRex)) {
-					return true
-				}
+				return compareString(obj.name, key)
 			}
 			if (filteredAttribute.includes('type')) {
-				const keyRex = new RegExp(key)
-				if (obj.type.toLowerCase().match(keyRex)) {
-					return true
-				}
+				return compareString(obj.type, key)
 			}
-
 			if (filteredAttribute.includes('acn')) {
-				const keyRex = new RegExp(key)
-				if (obj.asset_control_number.toLowerCase().match(keyRex)) return true
+				return compareString(obj.asset_control_number, key)
 			}
 
 			if (filteredAttribute.includes('status')) {
-				const keyRex = new RegExp(key.toLowerCase())
-				if (obj.status.label.toLowerCase().match(keyRex)) {
-					return true
+				if (obj.status && obj.status.label) {
+					return compareString(obj.status.label, key)
 				}
 			}
 
 			if (filteredAttribute.includes('area')) {
-				const keyRex = new RegExp(key)
-				if (obj.area_name.label) {
-					if (obj.area_name.label.match(keyRex)) {
-						return true
-					}
+				if (obj.area_name && obj.area_name.label) {
+					return compareString(obj.area_name.label, key)
 				}
 			}
 
 			if (filteredAttribute.includes('monitor')) {
-				const keyRex = new RegExp(key)
-				if (obj.monitor_type.toLowerCase().match(keyRex)) {
-					return true
-				}
+				return compareString(obj.monitor_type, key)
 			}
 
 			if (filteredAttribute.includes('macAddress')) {
-				const keyRex = key.replace(/:/g, '')
-				if (obj.mac_address.replace(/:/g, '').toLowerCase().match(keyRex))
-					return true
+				return compareString(obj.mac_address, key)
 			}
 
 			if (filteredAttribute.includes('sex')) {
@@ -556,13 +538,7 @@ class ObjectTable extends React.Component {
 			}
 
 			if (filteredAttribute.includes('physician_name')) {
-				const keyRex = new RegExp(key)
-				if (
-					obj.physician_name &&
-					obj.physician_name.toLowerCase().match(keyRex)
-				) {
-					return true
-				}
+				return compareString(obj.physician_name, key)
 			}
 
 			return false

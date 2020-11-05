@@ -89,3 +89,10 @@ export const formatToMac = (string) => {
 	}
 	return string
 }
+
+export const compareString = (firstString, secondString) => {
+	if (firstString && secondString) {
+		return `${firstString}`.toLowerCase() === `${secondString}`.toLowerCase()
+	}
+	return false
+}
