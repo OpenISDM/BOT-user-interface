@@ -41,7 +41,7 @@ import moment from 'moment'
 import supportedLocale from './locale/supportedLocale'
 
 const config = {
-	VERSION: `v${version} b.1974`,
+	VERSION: `v${version} b.1975`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 

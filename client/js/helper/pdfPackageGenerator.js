@@ -172,7 +172,7 @@ const pdfPackageGenerator = {
 					pdfPackageGenerator.PDF_FILENAME_TIME_FORMAT
 				)}.${additional.extension}`
 			},
-			contactTree: (option, additional) => {
+			contactTree: (option) => {
 				return `${option}_${moment().format(
 					pdfPackageGenerator.PDF_FILENAME_TIME_FORMAT
 				)}.pdf`
@@ -196,7 +196,7 @@ const pdfPackageGenerator = {
 				return title + list + notes
 			},
 			transferred: (data, locale, user, location, signature) => {
-				const area = data[0].transferred_location_label
+				const area = data[0].transferred_location
 				const signature_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'transferred to',
 					locale,
@@ -229,7 +229,7 @@ const pdfPackageGenerator = {
 					'devices found',
 					locale,
 					area,
-					data.searchResult.foundResult.length != 0
+					data.searchResult.foundResult.length !== 0
 				)
 				const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
 					data.searchResult.foundResult,
@@ -239,7 +239,7 @@ const pdfPackageGenerator = {
 					'devices not found',
 					locale,
 					area,
-					data.searchResult.notFoundResult.length != 0
+					data.searchResult.notFoundResult.length !== 0
 				)
 				const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
 					data.searchResult.notFoundResult,
@@ -249,7 +249,7 @@ const pdfPackageGenerator = {
 					'patients found',
 					locale,
 					area,
-					data.patients.foundPatients.length != 0
+					data.patients.foundPatients.length !== 0
 				)
 
 				const patientFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
@@ -261,7 +261,7 @@ const pdfPackageGenerator = {
 					'patients not found',
 					locale,
 					area,
-					data.patients.notFoundPatients.length != 0
+					data.patients.notFoundPatients.length !== 0
 				)
 
 				const patientNotFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
@@ -281,12 +281,12 @@ const pdfPackageGenerator = {
 				)
 			},
 
-			searchResult: (data, locale, user, location) => {
+			searchResult: (data, locale) => {
 				const foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices found',
 					locale,
 					null,
-					data.foundResult.length != 0
+					data.foundResult.length !== 0
 				)
 				const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
 					data.foundResult,
@@ -296,7 +296,7 @@ const pdfPackageGenerator = {
 					'devices not found',
 					locale,
 					null,
-					data.notFoundResult.length != 0
+					data.notFoundResult.length !== 0
 				)
 				const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
 					data.notFoundResult,
@@ -305,7 +305,7 @@ const pdfPackageGenerator = {
 				return foundTitle + foundResultList + notFoundTitle + notFoundResultList
 			},
 
-			patientRecord: (data, locale, user) => {
+			patientRecord: (data, locale) => {
 				const title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'patient historical record',
 					locale,
@@ -347,7 +347,7 @@ const pdfPackageGenerator = {
 				return table
 			},
 
-			contactTree: (data, locale, user, location) => {
+			contactTree: (data, locale) => {
 				return pdfPackageGenerator.pdfFormat.getBodyItem.getContactTracingContent(
 					data,
 					locale
@@ -356,6 +356,15 @@ const pdfPackageGenerator = {
 		},
 		getBodyItem: {
 			getBodyTitle: (title, locale, area, hasTitle = true) => {
+				const titleUpperCase = locale.texts[
+					title.toUpperCase().replace(/ /g, '_')
+				].toUpperCase()
+
+				let location = ''
+				if (area) {
+					location = area.label
+				}
+
 				return hasTitle
 					? `
                         <h4 style='
@@ -364,15 +373,14 @@ const pdfPackageGenerator = {
                             padding-bottom: 5px;
                             border-bottom: 1px solid black;'
                         >
-                            ${locale.texts[
-															title.toUpperCase().replace(/ /g, '_')
-														].toUpperCase()}
+                            ${titleUpperCase} ${location}
                         </h4>
                     `
 					: ''
 			},
 
 			getDataContent: (data, locale) => {
+				const acn = locale.texts.LAST_FOUR_DIGITS_IN_ACN
 				return data
 					.map((item, index) => {
 						return `
@@ -380,9 +388,7 @@ const pdfPackageGenerator = {
                             ${index + 1}.
                             &nbsp;
                             ${item.name},
-                            ${
-															locale.texts.LAST_FOUR_DIGITS_IN_ACN
-														}: ${item.asset_control_number.slice(-4)},
+                            ${acn}: ${item.asset_control_number.slice(-4)},
                             ${locale.texts.NEAR} ${item.location_description},
                             ${item.residence_time}
                         </div>
@@ -392,6 +398,7 @@ const pdfPackageGenerator = {
 			},
 
 			getLocationHistoryByName: (data, locale) => {
+				const acn = locale.texts.LAST_FOUR_DIGITS_IN_ACN
 				return data
 					.map((item, index) => {
 						return `
@@ -399,9 +406,7 @@ const pdfPackageGenerator = {
                             ${index + 1}.
                             &nbsp;
                             ${item.area},
-                            ${
-															locale.texts.LAST_FOUR_DIGITS_IN_ACN
-														}: ${item.asset_control_number.slice(-4)},
+                            ${acn}: ${item.asset_control_number.slice(-4)},
                             ${locale.texts.NEAR} ${item.location_description},
                             ${item.residence_time}
                         </div>
@@ -410,8 +415,21 @@ const pdfPackageGenerator = {
 					.join(' ')
 			},
 
-			getLocationHistoryByNameAsTable: (dataObject, locale) => {
+			getLocationHistoryByNameAsTable: (dataObject) => {
 				const { columns, data } = dataObject
+				const tr = data
+					.map((item) => {
+						return `
+                            <tr>
+                            <td>${item.area}</td>
+                            <td>${item.startTime}</td>
+                            <td>${item.endTime}</td>
+                            <td>${item.residenceTime}</td>
+                            </tr>
+                            `
+					})
+					.join(' ')
+
 				const headers = columns
 					.map((field) => {
 						return `
@@ -435,24 +453,26 @@ const pdfPackageGenerator = {
                         '
                     >
                         ${headers}
-                        ${data
-													.map((item, index) => {
-														return `
-                                <tr>
-                                    <td>${item.area}</td>
-                                    <td>${item.startTime}</td>
-                                    <td>${item.endTime}</td>
-                                    <td>${item.residenceTime}</td>
-                                </tr>
-                            `
-													})
-													.join(' ')}
+                        ${tr}
                     </table>
                 `
 			},
 
-			getLocationHistoryByNameGroupByUUIDAsTable: (dataObject, locale) => {
+			getLocationHistoryByNameGroupByUUIDAsTable: (dataObject) => {
 				const { columns, data } = dataObject
+				const tr = data
+					.map((item) => {
+						return `
+                            <tr>
+                            <td>${item.area}</td>
+                            <td>${item.location_description}</td>
+                            <td>${item.startTime}</td>
+                            <td>${item.endTime}</td>
+                            <td>${item.residenceTime}</td>
+                            </tr>
+                            `
+					})
+					.join(' ')
 				const headers = columns
 					.map((field) => {
 						return `
@@ -476,26 +496,25 @@ const pdfPackageGenerator = {
                         '
                     >
                         ${headers}
-                        ${data
-													.map((item, index) => {
-														return `
-                                <tr>
-                                    <td>${item.area}</td>
-                                    <td>${item.location_description}</td>
-                                    <td>${item.startTime}</td>
-                                    <td>${item.endTime}</td>
-                                    <td>${item.residenceTime}</td>
-                                </tr>
-                            `
-													})
-													.join(' ')}
+                        ${tr}
                     </table>
                 `
 			},
 
-			getLocationHistoryByUUIDAsTable: (dataObject, locale) => {
+			getLocationHistoryByUUIDAsTable: (dataObject) => {
 				const { columns, data } = dataObject
-
+				const tr = data
+					.map((item, index) => {
+						return `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.name}</td>
+                                <td>${item.mac_address}</td>
+                                <td>${item.area}</td>
+                            </tr>
+                            `
+					})
+					.join(' ')
 				const headers = columns
 					.map((field) => {
 						return `
@@ -519,18 +538,7 @@ const pdfPackageGenerator = {
                         '
                     >
                         ${headers}
-                        ${data
-													.map((item, index) => {
-														return `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${item.name}</td>
-                                    <td>${item.mac_address}</td>
-                                    <td>${item.area}</td>
-                                </tr>
-                            `
-													})
-													.join(' ')}
+                        ${tr}
                     </table>
                 `
 			},
@@ -643,6 +651,57 @@ const pdfPackageGenerator = {
 			},
 
 			getContactTracingContent: (data, locale) => {
+				const sub = (level, parent) => {
+					return level[parent]
+						.map((child) => {
+							return `
+                            <div>
+                            ${child}
+                            </div>
+                            `
+						})
+						.join('')
+				}
+
+				const getLevel = (level) => {
+					return Object.keys(level)
+						.map((parent) => {
+							return `
+                            <div
+                                style='
+                                    display: table;
+                                    width: 100%; /*Optional*/
+                                    table-layout: fixed; /*Optional*/
+                                    border-spacing: 10px; /*Optional*/
+                                '
+                            >
+                                <div
+                                    style='
+                                        display: table-cell;
+                                    '
+                                >
+                                    ${parent}
+                                </div>
+                                <div
+                                    style='
+                                        display: table-cell;
+                                    '
+                                >
+                                    ->
+                                </div>
+                                <div
+                                    style='
+                                        display: table-cell;
+                                    '
+                                >
+                                ${sub}
+                                </div>
+                            </div>
+                        `
+						})
+						.join('')
+				}
+
 				return data
 					.map((level, index) => {
 						return `
@@ -660,50 +719,7 @@ const pdfPackageGenerator = {
                                 ${locale.texts.LEVEL} ${index}
                             </div>
                             <div>
-                                ${Object.keys(level)
-																	.map((parent, index) => {
-																		return `
-                                        <div
-                                            style='
-                                                display: table;
-                                                width: 100%; /*Optional*/
-                                                table-layout: fixed; /*Optional*/
-                                                border-spacing: 10px; /*Optional*/
-                                            '
-                                        >
-                                            <div
-                                                style='
-                                                    display: table-cell;
-                                                '
-                                            >
-                                                ${parent}
-                                            </div>
-                                            <div
-                                                style='
-                                                    display: table-cell;
-                                                '
-                                            >
-                                                ->
-                                            </div>
-                                            <div
-                                                style='
-                                                    display: table-cell;
-                                                '
-                                            >
-                                                ${level[parent]
-																									.map((child) => {
-																										return `
-                                                        <div>
-                                                            ${child}
-                                                        </div>
-                                                    `
-																									})
-																									.join('')}
-                                            </div>
-                                        </div>
-                                    `
-																	})
-																	.join('')}
+                                ${getLevel(level)}
                             </div>
                         </div>
                     `
@@ -730,13 +746,13 @@ const pdfPackageGenerator = {
 				const shift = `<div style='text-transform: capitalize;'>
                         ${locale.texts.SHIFT}: ${lastShift} ${locale.texts.SHIFT_TO} ${thisShift}
                     </div>`
+				const signatureString =
+					locale.abbr === 'en'
+						? `${locale.texts.CONFIRMED_BY} ${signature}`
+						: `${locale.texts.CONFIRMED_BY}: ${signature}`
 				const confirmedBy = `<div style='text-transform: capitalize;'>
-                    ${
-											locale.abbr == 'en'
-												? `${locale.texts.CONFIRMED_BY} ${signature}`
-												: `${locale.texts.CONFIRMED_BY}: ${signature}`
-										}
-                </div>`
+                    ${signatureString}
+                    </div>`
 
 				const checkby = `<div style='text-transform: capitalize;'>
                         ${locale.texts.DEVICE_LOCATION_STATUS_CHECKED_BY}: ${user.name}, ${additional.shift.label}
@@ -791,9 +807,8 @@ const pdfPackageGenerator = {
 				return timestamp + patientName + patientID + providerName
 			},
 
-			trackingRecord: (locale, user, name, additional, data) => {
-				let { key, startTime, endTime, mode } = additional
-
+			trackingRecord: (locale, user, name, additional) => {
+				let { key, startTime, endTime } = additional
 				const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(locale)
 				key = pdfPackageGenerator.pdfFormat.getSubTitleInfo.field(
 					locale,
@@ -814,9 +829,8 @@ const pdfPackageGenerator = {
 				return timestamp + key + startTime + endTime
 			},
 
-			contactTree: (locale, user, name, additional, data) => {
-				const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(locale)
-				return timestamp
+			contactTree: (locale) => {
+				return pdfPackageGenerator.pdfFormat.getTimeStamp(locale)
 			},
 		},
 

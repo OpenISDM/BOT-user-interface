@@ -47,6 +47,7 @@ import AccessControl from '../../authentication/AccessControl'
 import apiHelper from '../../../helper/apiHelper'
 import { RETURNED, BROKEN, TRANSFERRED, TRACE } from '../../../config/wordMap'
 import PropTypes from 'prop-types'
+import { isEmpty } from '../../../helper/validation'
 
 class ChangeStatusForm extends React.Component {
 	static contextType = AppContext
@@ -194,10 +195,26 @@ class ChangeStatusForm extends React.Component {
 						initialValues={this.initValues()}
 						validationSchema={object().shape({
 							status: string().required(locale.texts.STATUS_IS_REQUIRED),
-							transferred_location: string().when('status', {
-								is: TRANSFERRED,
-								then: string().required(locale.texts.LOCATION_IS_REQUIRED),
-							}),
+							transferred_location: object()
+								.when('action_options', {
+									is: TRANSFERRED,
+									then: object().required(locale.texts.LOCATION_IS_REQUIRED),
+								})
+								.test(
+									'transferred_location',
+									locale.texts.INCORRECT_TRANSFERRED_LOCATION_FORMAT,
+									(obj) => {
+										console.log(obj)
+										if (!obj || isEmpty(obj)) {
+											return true
+										}
+										const [name, department] = obj.label.split('-')
+										if (name && department) {
+											return true
+										}
+										return false
+									}
+								),
 						})}
 						onSubmit={(values) => {
 							this.props.handleChangeObjectStatusFormSubmit(values)
@@ -366,10 +383,12 @@ class ChangeStatusForm extends React.Component {
 												}}
 												name="transferred_location"
 												value={values.transferred_location}
-												onChange={async (e) => {
-													const [name, department] = e.value.split('-')
-													await this.handleAddSubmit(name, department)
-													setFieldValue('transferred_location', e)
+												onChange={async (obj) => {
+													const [name, department] = obj.value.split('-')
+													if (name && department) {
+														await this.handleAddSubmit(name, department)
+													}
+													setFieldValue('transferred_location', obj)
 												}}
 												options={this.state.transferredLocationOptions}
 												isSearchable={true}

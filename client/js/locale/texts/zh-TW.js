@@ -384,6 +384,7 @@ const tw = {
 	THE_Patient_Number_IS_ALREADY_USED: '病人編號已被使用',
 	THE_ID_IS_ALREADY_USED: '人員編號已被使用',
 	INCORRECT_MAC_ADDRESS_FORMAT: 'MAC位址格式錯誤',
+	INCORRECT_TRANSFERRED_LOCATION_FORMAT: '轉移地點格式錯誤',
 	THE_ATTENDINGPHYSICIAN_IS_WRONG: '醫生編號 必須是數字',
 	AREA_IS_REQUIRED: '請選擇地區',
 	NOT_ASSIGNED_TO_ANY_DEVICES: '尚未指定任何儀器',
@@ -593,6 +594,7 @@ const tw = {
 	SELECTED_PATIENTS: '已選取病人',
 	UNSELECTED_PATIENTS: '未選取病人',
 	CREATE: '新增',
+	FILE_URL_NOT_FOUND: '找不到檔案位址',
 }
 
 export default tw

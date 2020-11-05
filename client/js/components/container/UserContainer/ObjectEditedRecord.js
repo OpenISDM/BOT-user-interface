@@ -46,6 +46,7 @@ import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
 import { JSONClone, formatTime } from '../../../helper/utilities'
+import messageGenerator from '../../../helper/messageGenerator'
 
 class ObjectEditedRecord extends React.Component {
 	static contextType = AppContext
@@ -262,7 +263,16 @@ class ObjectEditedRecord extends React.Component {
 								if (handleOriginal) {
 									handleOriginal()
 								}
-								apiHelper.fileApiAgent.getFile(rowInfo.original.file_path)
+								if (rowInfo.original.file_path) {
+									apiHelper.fileApiAgent.getFile({
+										path: rowInfo.original.file_path,
+									})
+								} else {
+									messageGenerator.setErrorMessage(
+										locale.texts.FILE_URL_NOT_FOUND,
+										2000
+									)
+								}
 							},
 						}
 					}}

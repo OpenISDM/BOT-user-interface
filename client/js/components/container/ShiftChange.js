@@ -115,7 +115,10 @@ class ShiftChange extends React.Component {
 
 				res.data
 					.filter((item) => {
-						return assignedDeviceGroupListids.includes(parseInt(item.list_id))
+						return (
+							assignedDeviceGroupListids.includes(parseInt(item.list_id)) &&
+							parseInt(item.object_type) === 0
+						)
 					})
 					.forEach((item) => {
 						if (item.found) {
@@ -127,7 +130,10 @@ class ShiftChange extends React.Component {
 
 				res.data
 					.filter((item) => {
-						return assignedPatientGroupListids.includes(parseInt(item.list_id))
+						return (
+							assignedPatientGroupListids.includes(parseInt(item.list_id)) &&
+							parseInt(item.object_type) > 0
+						)
 					})
 					.forEach((item) => {
 						if (item.found) {

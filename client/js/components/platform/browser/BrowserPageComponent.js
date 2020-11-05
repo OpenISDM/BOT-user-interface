@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Tab, ListGroup } from 'react-bootstrap'
 import { BOTSideNav } from '../../BOTComponent/styleComponent'
 import LocaleContext from '../../../context/LocaleContext'
@@ -41,8 +41,7 @@ import PropTypes from 'prop-types'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
 	const { tabList, title, defaultActiveKey, permission } = containerModule
-
-	const locale = React.useContext(LocaleContext)
+	const locale = useContext(LocaleContext)
 	const [key, setKey] = useState(defaultActiveKey)
 
 	useEffect(() => {
@@ -89,7 +88,7 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 						const props = {
 							type: tab.name,
 							setMessage,
-							prevIndex: key,
+							key,
 						}
 						return (
 							<AccessControl

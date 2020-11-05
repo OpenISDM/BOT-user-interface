@@ -60,20 +60,11 @@ class ShiftChangeRecord extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.reload()
-	}
-
-	componentDidUpdate = (prevProps, prevState) => {
-		const { prevIndex } = prevProps
-		if (prevIndex !== prevState.prevIndex) {
-			this.debounceReload({ prevIndex, prevState: prevState.prevIndex })
-		}
+		this.debounceReload()
 	}
 
 	debounceReload = debounce(
-		(object) => {
-			console.log('ShiftChangeRecord', object)
-			this.setState(object)
+		() => {
 			this.reload()
 		},
 		10,
@@ -219,16 +210,23 @@ class ShiftChangeRecord extends React.Component {
 			assignedPatientGroupListids.length > 0
 		)
 
-		let allAssignmentsName = ''
-		if (deviceGruopMap) {
-			allAssignmentsName += Object.values(deviceGruopMap)
+		let allAssignmentsNameList = []
+		if (assignedDeviceGroupListids.length > 0) {
+			allAssignmentsNameList = Object.values(deviceGruopMap)
+				.filter((item) => {
+					return assignedDeviceGroupListids.includes(item.id)
+				})
 				.map((item) => item.name)
-				.toString()
 		}
-		if (patientGruopMap) {
-			allAssignmentsName += Object.values(patientGruopMap)
-				.map((item) => item.name)
-				.toString()
+		if (assignedPatientGroupListids.length > 0) {
+			allAssignmentsNameList = [
+				...allAssignmentsNameList,
+				...Object.values(patientGruopMap)
+					.filter((item) => {
+						return assignedPatientGroupListids.includes(item.id)
+					})
+					.map((item) => item.name),
+			]
 		}
 
 		return (
@@ -265,7 +263,7 @@ class ShiftChangeRecord extends React.Component {
 					handleSubmit={this.reload}
 					assignedDeviceGroupListids={assignedDeviceGroupListids}
 					assignedPatientGroupListids={assignedPatientGroupListids}
-					listName={allAssignmentsName}
+					listName={allAssignmentsNameList.join()}
 				/>
 			</Fragment>
 		)

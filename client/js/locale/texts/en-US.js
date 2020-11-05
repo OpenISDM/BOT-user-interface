@@ -390,6 +390,8 @@ const en = {
 	THE_ASSET_CONTROL_NUMBER_IS_ALREADY_USED: 'The asset ID is already used',
 	THE_MAC_ADDRESS_IS_ALREADY_USED: 'The Mac Address is already used',
 	INCORRECT_MAC_ADDRESS_FORMAT: 'the mac address format is incorrect',
+	INCORRECT_TRANSFERRED_LOCATION_FORMAT:
+		'the transferred location format is incorrect',
 	THE_ATTENDINGPHYSICIAN_IS_WRONG: 'AttendingPhysician must be a number',
 	AREA_IS_REQUIRED: 'Area is required',
 	NOT_ASSIGNED_TO_ANY_DEVICES: 'Not assigned to any devices',
@@ -606,6 +608,7 @@ const en = {
 	SELECTED_PATIENTS: 'Selected Patients',
 	UNSELECTED_PATIENTS: 'Unselected Patients',
 	CREATE: 'Create',
+	FILE_URL_NOT_FOUND: 'File URL not found',
 }
 
 export default en
