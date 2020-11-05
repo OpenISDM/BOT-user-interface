@@ -30,7 +30,9 @@ async function get_object_id(request, response) {
 
 const nullObject = [];
 async function get_history_data(request, response) {
-    let { key, object_id, Lbeacon_uuid, start_time, end_time, sort_type, count_limit } = request.body;
+    //let { key, object_id, Lbeacon_uuid, start_time, end_time, sort_type, count_limit } = request.body;
+
+    let{key, start_time, end_time, sort_type, count_limit}=request.body;
 
     let matchRes = await match_key(key);
 
@@ -41,17 +43,19 @@ async function get_history_data(request, response) {
             return;
         }
 
-        if (object_id == 269 || object_id == undefined) {
-            if ((Lbeacon_uuid != "00010018-0000-0001-1111-000000022222" && Lbeacon_uuid != undefined) || count_limit == 0) {
+        //if (object_id == 269 || object_id == undefined) {
+            if (count_limit == 0) {
                 response.json(nullObject);
+                return;
             }
             else{
                 response.json(mockData.get_history_record());
+                return;
             }
-        }
-        else {
-            response.json(nullObject);
-        }
+        //}
+        //else {
+        //    response.json(nullObject);
+        //}
     }
     else if (matchRes == 2) {
         response.json(error_code.key_timeout);
@@ -61,17 +65,19 @@ async function get_history_data(request, response) {
     }
 }
 async function get_realtime_data(request, response) {
-    let { key, object_id } = request.body;
+    //let { key, object_id } = request.body;
+    let{key}=request.body;
 
     let matchRes = await match_key(key);
 
     if (matchRes == 1) {
-        if (object_id == undefined || object_id == "269") {
-            response.json(mockData.CurrentPosition269);
-        }
-        else {            
-            response.json(nullObject);
-        }
+        // if (object_id == undefined || object_id == "269") {
+        //     response.json(mockData.CurrentPosition269);
+        // }
+        // else {            
+        //     response.json(nullObject);
+        // }
+        response.json(mockData.CurrentPosition269);
     }
     else if (matchRes == 2) {
         response.json(error_code.key_timeout);
