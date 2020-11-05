@@ -69,8 +69,7 @@ async function get_realtime_data(request, response) {
         if (object_id == undefined || object_id == "269") {
             response.json(mockData.CurrentPosition269);
         }
-        else {
-            let nullObject = [];
+        else {            
             response.json(nullObject);
         }
     }
