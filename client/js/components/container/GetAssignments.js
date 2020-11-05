@@ -59,20 +59,11 @@ class GetAssignments extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.reload()
-	}
-
-	componentDidUpdate = (prevProps, prevState) => {
-		const { prevIndex } = prevProps
-		if (prevIndex !== prevState.prevIndex) {
-			this.debounceReload({ prevIndex, prevState: prevState.prevIndex })
-		}
+		this.debounceReload()
 	}
 
 	debounceReload = debounce(
-		(object) => {
-			console.log('GetAssignments', object)
-			this.setState(object)
+		() => {
 			this.reload()
 		},
 		10,
