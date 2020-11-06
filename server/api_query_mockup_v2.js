@@ -9,24 +9,26 @@ import encrypt from './api/service/encrypt'
 
 
 
-async function get_object_id(request, response) {
-    let { key, tag } = request.body;
+// async function get_object_id(request, response) {
+//     let { key, tag } = request.body;
 
-    let matchRes = await match_key(key);
+//     let matchRes = await match_key(key);
 
-    if (matchRes == 1) {
-        if (tag == "f4:2f:08:7a:71:66")
-            response.json(mockData.ObjectID269);
-        else
-            response.json(error_code.mac_address_error);
-    }
-    else if (matchRes == 2) {
-        response.json(error_code.key_timeout);
-    }
-    else {
-        response.json(error_code.key_incorrect);
-    }
-}
+//     if (matchRes == 1) {
+//         if (tag == "f4:2f:08:7a:71:66"){   
+//             let data = [mockData.ObjectID269, mockData.ObjectID270];
+//             response.json(data);
+//         }
+//         else
+//             response.json(error_code.mac_address_error);
+//     }
+//     else if (matchRes == 2) {
+//         response.json(error_code.key_timeout);
+//     }
+//     else {
+//         response.json(error_code.key_incorrect);
+//     }
+// }
 
 const nullObject = [];
 async function get_history_data(request, response) {
@@ -38,24 +40,27 @@ async function get_history_data(request, response) {
 
     //console.log(count_limit);
     if (matchRes == 1) {
+        let sort = undefined;
         if ((sort_type != "asc" && sort_type != "desc") && sort_type != undefined){
             response.json(error_code.sort_type_define_error);
             return;
+        }else if(sort_type != undefined){
+            sort = sort_type;
+        }else{
+            sort='desc'
+        }
+        if (count_limit == 0) {
+            response.json(nullObject);
+            return;
         }
 
-        //if (object_id == 269 || object_id == undefined) {
-            if (count_limit == 0) {
-                response.json(nullObject);
-                return;
-            }
-            else{
-                response.json(mockData.get_history_record());
-                return;
-            }
-        //}
-        //else {
-        //    response.json(nullObject);
-        //}
+        if(count_limit == undefined)
+            count_limit =10;
+
+            //response.json(mockData.get_history_record());
+        response.json(mockData.generate_history_record(start_time, end_time, count_limit, sort))
+        return;
+         
     }
     else if (matchRes == 2) {
         response.json(error_code.key_timeout);
@@ -71,13 +76,8 @@ async function get_realtime_data(request, response) {
     let matchRes = await match_key(key);
 
     if (matchRes == 1) {
-        // if (object_id == undefined || object_id == "269") {
-        //     response.json(mockData.CurrentPosition269);
-        // }
-        // else {            
-        //     response.json(nullObject);
-        // }
-        response.json(mockData.CurrentPosition269);
+        let data = [mockData.CurrentPosition269, mockData.CurrentPosition270];
+        response.json(data);
     }
     else if (matchRes == 2) {
         response.json(error_code.key_timeout);
@@ -109,6 +109,5 @@ async function match_key(key) {
 
 export default {
     get_history_data,
-    get_object_id,
     get_realtime_data,
 }
