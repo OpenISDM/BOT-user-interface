@@ -76,44 +76,36 @@ class SystemStatus extends React.Component {
 		toast.dismiss(this.toastId)
 	}
 
-	getTrackingData = () => {
+	getTrackingData = async () => {
 		const { locale, auth, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
 
-		apiHelper.trackingDataApiAgent
-			.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId,
+		const res = apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId,
+		})
+		if (res) {
+			this.setMessage('clear')
+			const column = JSONClone(trackingTableColumn)
+			column.forEach((field) => {
+				field.headerStyle = {
+					textAlign: 'left',
+				}
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
-			.then((res) => {
-				this.setMessage('clear')
-				const column = JSONClone(trackingTableColumn)
-				column.map((field) => {
-					field.headerStyle = {
-						textAlign: 'left',
-					}
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
-				res.data.map((item) => {
-					item.status = locale.texts[item.status.toUpperCase()]
-					item.transferred_location = ''
-					// item.transferred_location
-					//     ? locale.texts[item.transferred_location.toUpperCase().replace(/ /g, '_')]
-					//     : ''
-				})
-				this.setState({
-					trackingData: res.data,
-					trackingColunm: column,
-				})
+			res.data.map((item) => {
+				item.status = locale.texts[item.status.toUpperCase()]
+				item.transferred_location = ''
 			})
-			.catch((err) => {
-				this.setMessage(true)
-				this.setMessage('error', 'connect to database failed', true)
-
-				console.log(`get tracking data failed ${err}`)
+			this.setState({
+				trackingData: res.data,
+				trackingColunm: column,
 			})
+		} else {
+			this.setMessage('error', 'connect to database failed', true)
+		}
 	}
 
 	setMessage = (type, msg, isSetting) => {

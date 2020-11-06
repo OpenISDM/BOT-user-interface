@@ -32,13 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { monitor } from '../dataSrc'
+import { post, del, patch, put } from '../helper/httpClient'
 import config from '../config'
 
 const monitorApis = {
 	async getMonitorConfig(type, areasId, isGetLbeaconPosition = false) {
-		return await axios.post(dataSrc.monitor, {
+		return await post(monitor, {
 			type: config.monitorSettingUrlMap[type],
 			areasId,
 			isGetLbeaconPosition,
@@ -46,21 +46,19 @@ const monitorApis = {
 	},
 
 	async delete(configPackage) {
-		return await axios.delete(dataSrc.monitor, {
-			data: {
-				configPackage,
-			},
+		return await del(monitor, {
+			configPackage,
 		})
 	},
 
 	async add(configPackage) {
-		return await axios.patch(dataSrc.monitor, {
+		return await patch(monitor, {
 			configPackage,
 		})
 	},
 
 	async put(configPackage) {
-		return await axios.put(dataSrc.monitor, {
+		return await put(monitor, {
 			configPackage,
 		})
 	},

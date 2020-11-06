@@ -197,7 +197,7 @@ class SearchResultList extends React.Component {
 		)
 	}
 
-	handleConfirmFormSubmit = (isDelayTime) => {
+	handleConfirmFormSubmit = async (isDelayTime) => {
 		const signatureName = this.state.signatureName
 		const { editedObjectPackage } = this.state
 		const { locale, auth, stateReducer } = this.context
@@ -221,36 +221,32 @@ class SearchResultList extends React.Component {
 				locale,
 				signature: signatureName,
 			})
-		apiHelper.objectApiAgent
-			.editObjectPackage(
-				locale,
-				editedObjectPackage,
-				username,
-				pdfPackage,
-				reservedTimestamp
-			)
-			.then(() => {
-				const callback = () => {
-					dispatch({
-						type: SET_ENABLE_REQUEST_TRACKING_DATA,
-						value: true,
-					})
-					messageGenerator.setSuccessMessage('edit object success')
-				}
-				this.setState(
-					{
-						showConfirmForm: shouldCreatePdf,
-						showAddDevice: false,
-						showDownloadPdfRequest: shouldCreatePdf,
-						pdfPath: shouldCreatePdf && pdfPackage.path,
-						selection: [],
-					},
-					callback
-				)
+
+		await apiHelper.objectApiAgent.editObjectPackage(
+			locale,
+			editedObjectPackage,
+			username,
+			pdfPackage,
+			reservedTimestamp
+		)
+
+		const callback = () => {
+			dispatch({
+				type: SET_ENABLE_REQUEST_TRACKING_DATA,
+				value: true,
 			})
-			.catch((error) => {
-				console.log(error)
-			})
+			messageGenerator.setSuccessMessage('edit object success')
+		}
+		this.setState(
+			{
+				showConfirmForm: shouldCreatePdf,
+				showAddDevice: false,
+				showDownloadPdfRequest: shouldCreatePdf,
+				pdfPath: shouldCreatePdf && pdfPackage.path,
+				selection: [],
+			},
+			callback
+		)
 	}
 
 	handleAdditionalButton = () => {
@@ -303,35 +299,27 @@ class SearchResultList extends React.Component {
 		})
 	}
 
-	handlePatientView = (values) => {
+	handlePatientView = async (values) => {
 		const { auth } = this.context
-
 		const objectPackage = {
 			userId: auth.user.id,
 			record: values.record,
 			id: this.state.selectedObjectData.id,
 		}
-		apiHelper.record
-			.addPatientRecord({
-				objectPackage,
-			})
-			.then(() => {
-				const callback = () =>
-					messageGenerator.setSuccessMessage('save success')
-				this.setState(
-					{
-						showDownloadPdfRequest: false,
-						showConfirmForm: false,
-						showPatientView: false,
-						selection: [],
-						selectedObjectData: [],
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(`add patient record failed ${err}`)
-			})
+		await apiHelper.record.addPatientRecord({
+			objectPackage,
+		})
+		const callback = () => messageGenerator.setSuccessMessage('save success')
+		this.setState(
+			{
+				showDownloadPdfRequest: false,
+				showConfirmForm: false,
+				showPatientView: false,
+				selection: [],
+				selectedObjectData: [],
+			},
+			callback
+		)
 	}
 
 	handleShowSignatureForm = () => {

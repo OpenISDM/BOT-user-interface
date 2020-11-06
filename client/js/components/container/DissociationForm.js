@@ -40,14 +40,14 @@
  * 3. Modify the query_editObject function in queryType
  */
 
-import React, { Component } from 'react'
-import { Modal, Button, Row, Col } from 'react-bootstrap'
-import axios from 'axios'
+import React from 'react'
+import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { object, string } from 'yup'
-import { getImportData, deleteDevice } from '../../dataSrc'
 import { AppContext } from '../../context/AppContext'
 import messageGenerator from '../../helper/messageGenerator'
+import PropTypes from 'prop-types'
+import apiHelper from '../../helper/apiHelper'
 
 class DissociationForm extends React.Component {
 	static contextType = AppContext
@@ -76,18 +76,10 @@ class DissociationForm extends React.Component {
 		this.props.handleClose()
 	}
 
-	handleSubmit = (postOption) => {
-		axios
-			.post(deleteDevice, {
-				formOption: [postOption],
-			})
-			.then((res) => {
-				this.props.refreshData()
-				this.handleClose()
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+	handleSubmit = async (postOption) => {
+		await apiHelper.utilsApiAgent.deleteDevice({ formOption: [postOption] })
+		this.props.refreshData()
+		this.handleClose()
 	}
 
 	handleMacAddress(event) {
@@ -101,32 +93,27 @@ class DissociationForm extends React.Component {
 		}, 500)
 	}
 
-	handleChange() {
+	async handleChange() {
 		this.setState({
 			showDetail: false,
 		})
-		this.props.data.map((item) => {
-			if (item.asset_control_number == this.state.inputValue)
+		this.props.data.forEach((item) => {
+			if (item.asset_control_number === this.state.inputValue)
 				this.setState({ showDetail: true })
 		})
 
-		this.state.showDetail
-			? axios
-					.post(getImportData, {
-						formOption: this.state.inputValue,
-					})
-					.then((res) => {
-						res.data.rows.map((item) => {
-							this.setState({
-								objectName: item.name,
-								objectType: item.type,
-							})
-						})
-					})
-					.catch((error) => {
-						console.log(error)
-					})
-			: null
+		if (this.state.showDetail) {
+			const res = await apiHelper.utilsApiAgent.getImportData({
+				formOption: this.state.inputValue,
+			})
+
+			res.data.rows.forEach((item) => {
+				this.setState({
+					objectName: item.name,
+					objectType: item.type,
+				})
+			})
+		}
 	}
 
 	render() {
@@ -157,25 +144,26 @@ class DissociationForm extends React.Component {
 									locale.texts.MAC_DO_NOT_MATCH,
 
 									(value) => {
-										if (value == undefined) return false
-										value != undefined
-											? (value = value.toString().toLowerCase())
-											: null
-										if (this.props.selectedObjectData) {
-											if (this.props.selectedObjectData == 'handleAllDelete') {
-												if (value != undefined) {
-													if (value.length == 17 || value.length == 12) {
+										if (value) {
+											value = value.toString().toLowerCase()
+										} else {
+											return false
+										}
+										if (selectedObjectData) {
+											if (selectedObjectData === 'handleAllDelete') {
+												if (value) {
+													if (value.length === 17 || value.length === 12) {
 														this.setState({
 															returnFlag: false,
 														})
-														this.props.objectTable.map((item) => {
-															if (value == item.mac_address) {
+														this.props.objectTable.forEach((item) => {
+															if (value === item.mac_address) {
 																this.setState({
 																	returnFlag: true,
 																	valueForDataArray: value,
 																})
 															} else if (
-																item.mac_address ==
+																item.mac_address ===
 																value.match(/.{1,2}/g).join(':')
 															) {
 																this.setState({
@@ -189,16 +177,18 @@ class DissociationForm extends React.Component {
 													}
 												}
 											} else {
-												if (value == undefined) return false
+												if (!value) {
+													return false
+												}
 												if (
-													this.props.selectedObjectData.mac_address == value
+													this.props.selectedObjectData.mac_address === value
 												) {
 													this.setState({
 														returnFlag: true,
 														valueForDataArray: value,
 													})
 												} else if (
-													this.props.selectedObjectData.mac_address ==
+													this.props.selectedObjectData.mac_address ===
 													value.match(/.{1,2}/g).join(':')
 												) {
 													this.setState({
@@ -212,14 +202,14 @@ class DissociationForm extends React.Component {
 												}
 											}
 										} else {
-											this.props.objectTable.map((item) => {
-												if (value == item.mac_address) {
+											this.props.objectTable.forEach((item) => {
+												if (value === item.mac_address) {
 													this.setState({
 														returnFlag: true,
 														valueForDataArray: value,
 													})
 												} else if (
-													item.mac_address == value.match(/.{1,2}/g).join(':')
+													item.mac_address === value.match(/.{1,2}/g).join(':')
 												) {
 													this.setState({
 														returnFlag: true,
@@ -229,7 +219,7 @@ class DissociationForm extends React.Component {
 											})
 										}
 
-										if (this.state.returnFlag == true) {
+										if (this.state.returnFlag === true) {
 											this.setState({
 												objectName: data[this.state.valueForDataArray].name,
 												objectType: data[this.state.valueForDataArray].type,
@@ -250,21 +240,13 @@ class DissociationForm extends React.Component {
 									}
 								),
 						})}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
+						onSubmit={(values) => {
 							const callback = () =>
 								messageGenerator.setSuccessMessage('save success')
 							this.handleSubmit(values.mac)
 							callback()
 						}}
-						render={({
-							values,
-							errors,
-							status,
-							touched,
-							isSubmitting,
-							setFieldValue,
-							submitForm,
-						}) => (
+						render={({ errors, touched, isSubmitting, submitForm }) => (
 							<Form className="text-capitalize">
 								<div className="form-group">
 									<Field
@@ -353,6 +335,16 @@ class DissociationForm extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+DissociationForm.propTypes = {
+	show: PropTypes.bool.isRequired,
+	title: PropTypes.string.isRequired,
+	objectTable: PropTypes.object.isRequired,
+	selectedObjectData: PropTypes.object.isRequired,
+	handleClose: PropTypes.func.isRequired,
+	refreshData: PropTypes.func.isRequired,
+	data: PropTypes.array.isRequired,
 }
 
 export default DissociationForm

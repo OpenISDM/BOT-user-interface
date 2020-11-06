@@ -145,10 +145,9 @@ class MyDeviceManager extends React.Component {
 			const { locale } = this.context
 			return (
 				<div
-					className="d-flex justify-content-start text-left"
+					className="d-flex justify-content-start text-left py-1 text-left justify-content-start"
 					style={style.list}
 					name={item.asset_control_number}
-					className="d-flex py-1 text-left justify-content-start"
 					key={index}
 				>
 					<div
@@ -190,38 +189,34 @@ class MyDeviceManager extends React.Component {
 		this.APIforAddableList_2.setOnClick(onClick)
 	}
 
-	getObjectData = () => {
+	getObjectData = async () => {
 		const { locale, auth } = this.context
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [0],
-			})
-			.then((res) => {
-				const myDevices = {}
-				const notMyDevices = {}
+		const res = apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [0],
+		})
+		if (res) {
+			const myDevices = {}
+			const notMyDevices = {}
 
-				res.data.rows.map((item) => {
-					if (auth.user.myDevice.includes(item.asset_control_number)) {
-						myDevices[item.asset_control_number] = item
-					} else {
-						notMyDevices[item.asset_control_number] = item
-					}
-				})
-
-				this.setState({
-					myDevices,
-					notMyDevices,
-				})
-
-				this.APIforAddableList_1.setList(myDevices)
-				this.APIforAddableList_2.setList(notMyDevices)
+			res.data.rows.forEach((item) => {
+				if (auth.user.myDevice.includes(item.asset_control_number)) {
+					myDevices[item.asset_control_number] = item
+				} else {
+					notMyDevices[item.asset_control_number] = item
+				}
 			})
-			.catch(function (error) {
-				console.log(error)
+
+			this.setState({
+				myDevices,
+				notMyDevices,
 			})
+
+			this.APIforAddableList_1.setList(myDevices)
+			this.APIforAddableList_2.setList(notMyDevices)
+		}
 	}
 
 	render() {

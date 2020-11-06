@@ -112,6 +112,7 @@ export const utils = {
 }
 export const deleteDevice = `${domain}/data/deleteDevice`
 export const getImportData = `${domain}/data/getImportData`
+export const getTrackingTableByMacAddress = `${domain}/data/getTrackingTableByMacAddress`
 
 export default {
 	trackingData,
@@ -138,4 +139,5 @@ export default {
 	deleteDevice,
 	getImportData,
 	deviceGruopDetailByAreaId,
+	getTrackingTableByMacAddress,
 }

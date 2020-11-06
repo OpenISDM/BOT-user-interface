@@ -32,12 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import axios from 'axios'
 import { auth } from '../dataSrc'
-import { tcWrapper } from '../helper/utilities'
+import { post } from '../helper/httpClient'
 
 async function confirmValidation({ username, password, authenticatedRoles }) {
-	return await axios.post(auth.validation, {
+	return await post(auth.validation, {
 		username,
 		password,
 		authenticatedRoles,
@@ -45,33 +44,33 @@ async function confirmValidation({ username, password, authenticatedRoles }) {
 }
 
 async function sentResetPwdInstruction({ email }) {
-	return await axios.post(auth.sentResetPwdInstruction, {
+	return await post(auth.sentResetPwdInstruction, {
 		email,
 	})
 }
 
 async function resetPassword({ token, password }) {
-	return await axios.post(auth.resetPassword, {
+	return await post(auth.resetPassword, {
 		token,
 		password,
 	})
 }
 
 async function logout() {
-	return await axios.post(auth.signout)
+	return await post(auth.signout)
 }
 
 async function login({ username, password }) {
-	return await axios.post(auth.signin, {
+	return await post(auth.signin, {
 		username,
 		password,
 	})
 }
 
 export default {
-	confirmValidation: tcWrapper(confirmValidation),
-	sentResetPwdInstruction: tcWrapper(sentResetPwdInstruction),
-	resetPassword: tcWrapper(resetPassword),
-	logout: tcWrapper(logout),
-	login: tcWrapper(login),
+	confirmValidation,
+	sentResetPwdInstruction,
+	resetPassword,
+	logout,
+	login,
 }

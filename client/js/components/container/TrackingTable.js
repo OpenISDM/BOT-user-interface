@@ -57,7 +57,7 @@ class TrackingTable extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const { locale } = this.context
-		if (locale.abbr != prevState.locale) {
+		if (locale.abbr !== prevState.locale) {
 			this.getTrackingData()
 		}
 	}
@@ -70,52 +70,47 @@ class TrackingTable extends React.Component {
 		toast.dismiss(this.toastId)
 	}
 
-	getTrackingData = () => {
+	getTrackingData = async () => {
 		const { locale, auth, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
+		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId,
+		})
 
-		apiHelper.trackingDataApiAgent
-			.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId,
-			})
-			.then((res) => {
-				this.setMessage('clear')
-				const column = JSONClone(trackingTableColumn)
+		if (res) {
+			this.setMessage('clear')
+			const column = JSONClone(trackingTableColumn)
 
-				column.map((field) => {
+			column.forEach((field) => {
+				field.headerStyle = {
+					textAlign: 'left',
+					textTransform: 'capitalize',
+				}
+				if (field.accessor === '_id') {
 					field.headerStyle = {
-						textAlign: 'left',
-						textTransform: 'capitalize',
+						textAlign: 'center',
 					}
-					if (field.accessor == '_id') {
-						field.headerStyle = {
-							textAlign: 'center',
-						}
-					}
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
-				res.data.map((item, index) => {
-					item.status = locale.texts[item.status.toUpperCase()]
-					item.transferred_location = ''
-					item._id = index + 1
-					// item.transferred_location
-					//     ? locale.texts[item.transferred_location.toUpperCase().replace(/ /g, '_')]
-					//     : ''
-				})
-				this.setState({
-					trackingData: res.data,
-					trackingColunm: column,
-					locale: locale.abbr,
-				})
+				}
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
-			.catch((err) => {
-				this.setMessage('error', 'connect to database failed', true)
 
-				console.log(`get tracking data failed ${err}`)
+			res.data.forEach((item, index) => {
+				item.status = locale.texts[item.status.toUpperCase()]
+				item.transferred_location = ''
+				item._id = index + 1
 			})
+
+			this.setState({
+				trackingData: res.data,
+				trackingColunm: column,
+				locale: locale.abbr,
+			})
+		} else {
+			this.setMessage('error', 'connect to database failed', true)
+		}
 	}
 
 	setMessage = (type, msg, isSetting) => {

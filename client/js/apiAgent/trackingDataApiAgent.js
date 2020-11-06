@@ -32,12 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { trackingData } from '../dataSrc'
+import { post } from '../helper/httpClient'
 
 export default {
 	async getTrackingData({ locale, user, areaId }) {
-		return await axios.post(dataSrc.trackingData, {
+		return await post(trackingData, {
 			locale,
 			user,
 			areaId,

@@ -32,11 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { role } from '../dataSrc'
+import { get } from '../helper/httpClient'
 
 export default {
 	async getAllRole() {
-		return await axios.get(dataSrc.role)
+		return await get(role)
 	},
 }

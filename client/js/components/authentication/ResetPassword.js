@@ -32,23 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Component } from 'react'
-import { Modal, Image, Button } from 'react-bootstrap'
+import React from 'react'
+import { Button } from 'react-bootstrap'
 import config from '../../config'
 import LocaleContext from '../../context/LocaleContext'
-import AuthContext from '../../context/AuthenticationContext'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import {
-	CenterContainer,
-	PageTitle,
-	Title,
-} from '../BOTComponent/styleComponent'
-import styleConfig from '../../config/styleConfig'
+import { Formik, Form } from 'formik'
+import { CenterContainer, Title } from '../BOTComponent/styleComponent'
 import FormikFormGroup from '../presentational/FormikFormGroup'
-import { Link, useHistory } from 'react-router-dom'
-import { set } from 'js-cookie'
+import { useHistory } from 'react-router-dom'
 import apiHelper from '../../helper/apiHelper'
+import PropTypes from 'prop-types'
 
 import ImageWebp from '../utils/ImageWebp'
 
@@ -56,7 +49,6 @@ const imageLength = 80
 
 const ResetPassword = ({ match }) => {
 	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthContext)
 	const history = useHistory()
 
 	const { token } = match.params
@@ -81,30 +73,15 @@ const ResetPassword = ({ match }) => {
 				}}
 				// validationSchema = {
 				//     Yup.object().shape({
-
 				// })}
-
-				onSubmit={(values, { setStatus }) => {
-					apiHelper.authApiAgent
-						.resetPassword({
-							token,
-							password: values.new,
-						})
-						.then((res) => {
-							history.push('/resetpassword/success')
-						})
-						.catch((err) => {
-							console.log(err)
-						})
+				onSubmit={async (values) => {
+					await apiHelper.authApiAgent.resetPassword({
+						token,
+						password: values.new,
+					})
+					history.push('/resetpassword/success')
 				}}
-				render={({
-					values,
-					errors,
-					status,
-					touched,
-					isSubmitting,
-					setFieldValue,
-				}) => (
+				render={({ status, isSubmitting }) => (
 					<Form>
 						<Title page>{locale.texts.RESET_PASSWORD}</Title>
 						{status && (
@@ -135,6 +112,10 @@ const ResetPassword = ({ match }) => {
 			/>
 		</CenterContainer>
 	)
+}
+
+ResetPassword.propTypes = {
+	match: PropTypes.object.isRequired,
 }
 
 export default ResetPassword

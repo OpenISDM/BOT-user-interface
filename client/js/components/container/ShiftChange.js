@@ -93,7 +93,7 @@ class ShiftChange extends React.Component {
 		}
 	}
 
-	getTrackingData = () => {
+	getTrackingData = async () => {
 		const { locale, auth, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
 		const {
@@ -101,62 +101,59 @@ class ShiftChange extends React.Component {
 			assignedPatientGroupListids,
 		} = this.props
 
-		apiHelper.trackingDataApiAgent
-			.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId,
-			})
-			.then((res) => {
-				const foundResult = []
-				const notFoundResult = []
-				const foundPatients = []
-				const notFoundPatients = []
+		const res = apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId,
+		})
 
-				res.data
-					.filter((item) => {
-						return (
-							assignedDeviceGroupListids.includes(parseInt(item.list_id)) &&
-							parseInt(item.object_type) === 0
-						)
-					})
-					.forEach((item) => {
-						if (item.found) {
-							foundResult.push(item)
-						} else {
-							notFoundResult.push(item)
-						}
-					})
+		if (res) {
+			const foundResult = []
+			const notFoundResult = []
+			const foundPatients = []
+			const notFoundPatients = []
 
-				res.data
-					.filter((item) => {
-						return (
-							assignedPatientGroupListids.includes(parseInt(item.list_id)) &&
-							parseInt(item.object_type) > 0
-						)
-					})
-					.forEach((item) => {
-						if (item.found) {
-							foundPatients.push(item)
-						} else {
-							notFoundPatients.push(item)
-						}
-					})
-
-				this.setState({
-					searchResult: {
-						foundResult,
-						notFoundResult,
-					},
-					patients: {
-						foundPatients,
-						notFoundPatients,
-					},
+			res.data
+				.filter((item) => {
+					return (
+						assignedDeviceGroupListids.includes(parseInt(item.list_id)) &&
+						parseInt(item.object_type) === 0
+					)
 				})
+				.forEach((item) => {
+					if (item.found) {
+						foundResult.push(item)
+					} else {
+						notFoundResult.push(item)
+					}
+				})
+
+			res.data
+				.filter((item) => {
+					return (
+						assignedPatientGroupListids.includes(parseInt(item.list_id)) &&
+						parseInt(item.object_type) > 0
+					)
+				})
+				.forEach((item) => {
+					if (item.found) {
+						foundPatients.push(item)
+					} else {
+						notFoundPatients.push(item)
+					}
+				})
+
+			this.setState({
+				searchResult: {
+					foundResult,
+					notFoundResult,
+				},
+				patients: {
+					foundPatients,
+					notFoundPatients,
+				},
 			})
-			.catch((err) => {
-				console.log(`get tracking data failed ${err}`)
-			})
+		}
 	}
 
 	confirmShift = () => {

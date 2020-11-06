@@ -113,23 +113,19 @@ class ObjectTypeList extends React.Component {
 	}
 
 	/** Insert search history to database */
-	checkInSearchHistory = (itemName) => {
+	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
 
-		apiHelper.userApiAgent
-			.addSearchHistory({
-				username: auth.user.name,
-				keyType: 'object type search',
-				keyWord: itemName,
+		const res = await apiHelper.userApiAgent.addSearchHistory({
+			username: auth.user.name,
+			keyType: 'object type search',
+			keyWord: itemName,
+		})
+		if (res) {
+			this.setState({
+				searchKey: itemName,
 			})
-			.then((res) => {
-				this.setState({
-					searchKey: itemName,
-				})
-			})
-			.catch((err) => {
-				console.log(`check in search history failed ${err}`)
-			})
+		}
 	}
 
 	render() {

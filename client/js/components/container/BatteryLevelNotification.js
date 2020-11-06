@@ -34,7 +34,6 @@
 
 import React from 'react'
 import NotificationBadge, { Effect } from 'react-notification-badge'
-
 import { Row, Dropdown } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
@@ -50,7 +49,7 @@ class BatteryLevelNotification extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getTrackingData()
 		}
 	}
@@ -59,30 +58,25 @@ class BatteryLevelNotification extends React.Component {
 		this.getTrackingData()
 	}
 
-	getTrackingData = () => {
+	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
 
 		const [{ areaId }] = stateReducer
 
-		apiHelper.trackingDataApiAgent
-			.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId,
-			})
-			.then((res) => {
-				this.setState({
-					data: res.data.filter((item) => item.battery_indicator == 2),
-					locale: this.context.locale.abbr,
-				})
-			})
+		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId,
+		})
+		this.setState({
+			data: res.data.filter((item) => item.battery_indicator === 2),
+			locale: this.context.locale.abbr,
+		})
 	}
 
 	render() {
 		const { data } = this.state
-
 		const { locale } = this.context
-
 		const style = {
 			list: {
 				wordBreak: 'keep-all',
@@ -136,7 +130,7 @@ class BatteryLevelNotification extends React.Component {
 						className="overflow-hidden-scroll custom-scrollbar"
 						style={style.dropdown}
 					>
-						{data.length != 0 ? (
+						{data.length !== 0 ? (
 							data.map((item) => {
 								return (
 									<Dropdown.Item

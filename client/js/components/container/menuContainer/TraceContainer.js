@@ -153,62 +153,60 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	getObjectTable = () => {
+	getObjectTable = async () => {
 		const { locale, auth } = this.context
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [1, 2],
+		})
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [1, 2],
+		if (res) {
+			const name = res.data.rows.map((item) => {
+				return {
+					value: item.name,
+					label: item.name,
+					description: item.name,
+				}
 			})
-			.then((res) => {
-				const name = res.data.rows.map((item) => {
-					return {
-						value: item.name,
-						label: item.name,
-						description: item.name,
-					}
-				})
-				this.setState({
-					options: {
-						...this.state.options,
-						nameGroupByArea: name,
-						nameGroupByUUID: name,
-					},
-				})
+			this.setState({
+				options: {
+					...this.state.options,
+					nameGroupByArea: name,
+					nameGroupByUUID: name,
+				},
 			})
+		}
 	}
 
-	getLbeaconTable = () => {
+	getLbeaconTable = async () => {
 		const { locale } = this.context
-
-		apiHelper.lbeaconApiAgent
-			.getLbeaconTable({
-				locale: locale.abbr,
+		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+			locale: locale.abbr,
+		})
+		if (res) {
+			const uuid = res.data.rows.map((lbeacon) => {
+				return {
+					value: lbeacon.uuid,
+					label: `${lbeacon.description}[${lbeacon.uuid}]`,
+					description: lbeacon.description,
+				}
 			})
-			.then((res) => {
-				const uuid = res.data.rows.map((lbeacon) => {
-					return {
-						value: lbeacon.uuid,
-						label: `${lbeacon.description}[${lbeacon.uuid}]`,
-						description: lbeacon.description,
-					}
-				})
 
-				this.setState({
-					options: {
-						...this.state.options,
-						uuid,
-					},
-				})
+			this.setState({
+				options: {
+					...this.state.options,
+					uuid,
+				},
 			})
+		}
 	}
 
-	getAreaTable = () => {
+	getAreaTable = async () => {
 		const { locale } = this.context
 
-		apiHelper.areaApiAgent.getAreaTable().then((res) => {
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
 			const area = res.data.rows.map((area) => {
 				return {
 					value: area.id,
@@ -222,7 +220,7 @@ class TraceContainer extends React.Component {
 					area,
 				},
 			})
-		})
+		}
 	}
 
 	getLocationHistory = (fields, breadIndex) => {
@@ -413,7 +411,7 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	handleClick = (e, data) => {
+	handleClick = async (e, data) => {
 		const name = e.target.name || e.target.getAttribute('name')
 
 		const { auth, locale } = this.context
@@ -480,18 +478,13 @@ class TraceContainer extends React.Component {
 					},
 				})
 
-				apiHelper.fileApiAgent
-					.getPDF({
-						userInfo: auth.user,
-						pdfPackage,
-					})
-					.then((res) => {
-						apiHelper.fileApiAgent.getFile({ path: pdfPackage.path })
-						callBack(res.data)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+				const res = await apiHelper.fileApiAgent.getPDF({
+					userInfo: auth.user,
+					pdfPackage,
+				})
+				if (res) {
+					apiHelper.fileApiAgent.getFile({ path: pdfPackage.path })
+				}
 
 				break
 

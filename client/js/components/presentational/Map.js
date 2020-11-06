@@ -37,14 +37,13 @@ import L from 'leaflet'
 import 'leaflet.markercluster'
 import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
-import axios from 'axios'
-import dataSrc from '../../dataSrc'
 import siteConfig from '../../../../site_module/siteConfig'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
 import { JSONClone, isEqual, isWebpSupported } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
+import apiHelper from '../../helper/apiHelper'
 
 class Map extends React.Component {
 	static contextType = AppContext
@@ -242,67 +241,63 @@ class Map extends React.Component {
 	}
 
 	/** init path */
-	drawPolyline = () => {
+	drawPolyline = async () => {
 		this.pathOfDevice.clearLayers()
 		if (this.props.pathMacAddress !== '') {
 			const route = []
+			const res = await apiHelper.utilsApiAgent.getTrackingTableByMacAddress({
+				object_mac_address: this.props.pathMacAddress,
+			})
+			if (res) {
+				let preUUID = ''
+				res.data.rows.forEach((item) => {
+					if (item.uuid !== preUUID) {
+						preUUID = item.uuid
+						const latLng = [item.base_y, item.base_x]
 
-			axios
-				.post(dataSrc.getTrackingTableByMacAddress, {
-					object_mac_address: this.props.pathMacAddress,
+						/** Calculate the position of the object  */
+						const pos = macAddressToCoordinate(
+							item.mac_address,
+							latLng,
+							item.updated_by_n_lbeacons,
+							this.props.mapConfig.iconOptions.markerDispersity
+						)
+						const marker = L.circleMarker(pos, {
+							radius: 3,
+							color: 'lightgrey',
+						})
+
+						this.pathOfDevice.addLayer(marker)
+						route.push(pos)
+					}
 				})
-				.then((res) => {
-					let preUUID = ''
-					res.data.rows.forEach((item) => {
-						if (item.uuid !== preUUID) {
-							preUUID = item.uuid
-							const latLng = [item.base_y, item.base_x]
 
-							/** Calculate the position of the object  */
-							const pos = macAddressToCoordinate(
-								item.mac_address,
-								latLng,
-								item.updated_by_n_lbeacons,
-								this.props.mapConfig.iconOptions.markerDispersity
-							)
-							const marker = L.circleMarker(pos, {
-								radius: 3,
-								color: 'lightgrey',
-							})
-
-							this.pathOfDevice.addLayer(marker)
-							route.push(pos)
-						}
-					})
-					const polyline = L.polyline(route, {
-						color: 'black',
-						dashArray: '1,1',
-					})
-
-					const decorator = L.polylineDecorator(polyline, {
-						patterns: [
-							{
-								offset: '100%',
-								repeat: 0,
-								symbol: L.Symbol.arrowHead({
-									weight: 3,
-									pixelSize: 10,
-									polygon: false,
-									pathOptions: {
-										color: 'black',
-										stroke: true,
-									},
-								}),
-							},
-						],
-					})
-					this.pathOfDevice.addLayer(polyline)
-					this.pathOfDevice.addLayer(decorator)
-					this.pathOfDevice.addTo(this.map)
+				const polyline = L.polyline(route, {
+					color: 'black',
+					dashArray: '1,1',
 				})
-				.catch((err) => {
-					console.log(`get tracking table by mac address failed ${err}`)
+
+				const decorator = L.polylineDecorator(polyline, {
+					patterns: [
+						{
+							offset: '100%',
+							repeat: 0,
+							symbol: L.Symbol.arrowHead({
+								weight: 3,
+								pixelSize: 10,
+								polygon: false,
+								pathOptions: {
+									color: 'black',
+									stroke: true,
+								},
+							}),
+						},
+					],
 				})
+				this.pathOfDevice.addLayer(polyline)
+				this.pathOfDevice.addLayer(decorator)
+				this.pathOfDevice.addTo(this.map)
+			}
 		}
 	}
 

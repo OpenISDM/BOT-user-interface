@@ -146,162 +146,144 @@ class ObjectTable extends React.Component {
 		})
 	}
 
-	getAreaTable = () => {
+	getAreaTable = async () => {
 		const { locale } = this.context
 
-		apiHelper.areaApiAgent
-			.getAreaTable()
-			.then((res) => {
-				const areaSelection = res.data.rows.map((area) => {
-					return {
-						value: area.name,
-						label: locale.texts[area.name],
-					}
-				})
-				this.setState({
-					areaTable: res.data.rows,
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
+			const areaSelection = res.data.rows.map((area) => {
+				return {
+					value: area.name,
+					label: locale.texts[area.name],
+				}
+			})
+			this.setState({
+				areaTable: res.data.rows,
+				areaSelection,
+				filterSelection: {
+					...this.state.filterSelection,
 					areaSelection,
-					filterSelection: {
-						...this.state.filterSelection,
-						areaSelection,
-					},
-				})
+				},
 			})
-			.catch((err) => {
-				console.log(`get area table failed ${err}`)
-			})
+		}
 	}
 
-	getData = (callback) => {
+	getData = async (callback) => {
 		const { locale, auth } = this.context
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [0, 1, 2],
-			})
-			.then((res) => {
-				const columns = JSONClone(objectTableColumn)
-				const typeList = {}
+		const res = apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [0, 1, 2],
+		})
+		if (res) {
+			const columns = JSONClone(objectTableColumn)
+			const typeList = {}
 
-				columns.forEach((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			})
+
+			const data = res.data.rows
+				.filter((item) => parseInt(item.object_type) === 0)
+				.map((item) => {
+					item.monitor_type = transferMonitorTypeToString(item, 'object')
+
+					item.status = {
+						value: item.status,
+						label: item.status ? locale.texts[item.status.toUpperCase()] : null,
+					}
+					item.transferred_location = item.transferred_location.id && {
+						value: `${item.transferred_location.name}-${item.transferred_location.department}`,
+						label: `${item.transferred_location.name}-${item.transferred_location.department}`,
+					}
+
+					item.isBind = item.mac_address ? 1 : 0
+					item.mac_address = item.mac_address
+						? item.mac_address
+						: locale.texts.NON_BINDING
+
+					if (!Object.keys(typeList).includes(item.type)) {
+						typeList[item.type] = {
+							value: item.type,
+							label: item.type,
+						}
+					}
+
+					item.area_name = {
+						value: item.area_name,
+						label: locale.texts[item.area_name],
+						id: item.area_id,
+					}
+
+					item.registered_timestamp = formatTime(item.registered_timestamp)
+
+					return item
 				})
 
-				const data = res.data.rows
-					.filter((item) => parseInt(item.object_type) === 0)
-					.map((item) => {
-						item.monitor_type = transferMonitorTypeToString(item, 'object')
-
-						item.status = {
-							value: item.status,
-							label: item.status
-								? locale.texts[item.status.toUpperCase()]
-								: null,
-						}
-						item.transferred_location = item.transferred_location.id && {
-							value: `${item.transferred_location.name}-${item.transferred_location.department}`,
-							label: `${item.transferred_location.name}-${item.transferred_location.department}`,
-						}
-
-						item.isBind = item.mac_address ? 1 : 0
-						item.mac_address = item.mac_address
-							? item.mac_address
-							: locale.texts.NON_BINDING
-
-						if (!Object.keys(typeList).includes(item.type)) {
-							typeList[item.type] = {
-								value: item.type,
-								label: item.type,
-							}
-						}
-
-						item.area_name = {
-							value: item.area_name,
-							label: locale.texts[item.area_name],
-							id: item.area_id,
-						}
-
-						item.registered_timestamp = formatTime(item.registered_timestamp)
-
-						return item
+			const associatedMacSet = [
+				...new Set(
+					res.data.rows.map((item) => {
+						return item.mac_address
 					})
+				),
+			]
 
-				const associatedMacSet = [
-					...new Set(
-						res.data.rows.map((item) => {
-							return item.mac_address
-						})
-					),
-				]
+			this.getIdleMacaddrSet()
 
-				this.getIdleMacaddrSet()
-
-				this.setState(
-					{
-						data,
-						isShowEdit: false,
-						isShowBind: false,
-						showDeleteConfirmation: false,
-						disableASN: false,
-						filteredData: data,
-						columns,
-						objectTable: res.data.rows,
-						filterSelection: {
-							...this.state.filterSelection,
-							typeList,
-						},
-						associatedMacSet,
+			this.setState(
+				{
+					data,
+					isShowEdit: false,
+					isShowBind: false,
+					showDeleteConfirmation: false,
+					disableASN: false,
+					filteredData: data,
+					columns,
+					objectTable: res.data.rows,
+					filterSelection: {
+						...this.state.filterSelection,
+						typeList,
 					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+					associatedMacSet,
+				},
+				callback
+			)
+		}
 	}
 
 	getIdleMacaddrSet = async () => {
-		await apiHelper.objectApiAgent
-			.getIdleMacaddr()
-			.then((res) => {
-				const idleMacaddrSet = res.data.rows[0].mac_set
-				const macOptions = idleMacaddrSet.map((mac) => {
-					return {
-						label: mac,
-						value: mac.replace(/:/g, ''),
-					}
-				})
-				this.setState({
-					idleMacaddrSet,
-					macOptions,
-				})
+		const res = await apiHelper.objectApiAgent.getIdleMacaddr()
+		if (res) {
+			const idleMacaddrSet = res.data.rows[0].mac_set
+			const macOptions = idleMacaddrSet.map((mac) => {
+				return {
+					label: mac,
+					value: mac.replace(/:/g, ''),
+				}
 			})
-			.catch((err) => {
-				console.log(err)
+			this.setState({
+				idleMacaddrSet,
+				macOptions,
 			})
+		}
 	}
 
-	getImportData = (callback) => {
+	getImportData = async (callback) => {
 		const { locale } = this.context
 
-		apiHelper.importedObjectApiAgent
-			.getImportedObjectTable({
-				locale: locale.abbr,
-			})
-			.then((res) => {
-				this.setState(
-					{
-						importData: res.data.rows,
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		const res = apiHelper.importedObjectApiAgent.getImportedObjectTable({
+			locale: locale.abbr,
+		})
+		if (res) {
+			this.setState(
+				{
+					importData: res.data.rows,
+				},
+				callback
+			)
+		}
 	}
 
 	handleClose = () => {
@@ -314,28 +296,20 @@ class ObjectTable extends React.Component {
 		})
 	}
 
-	objectMultipleDelete = () => {
+	objectMultipleDelete = async () => {
 		const formOption = []
 		const deleteArray = []
 		let deleteCount = 0
+		let res = null
 
 		switch (this.state.action) {
 			case DISASSOCIATE:
-				apiHelper.objectApiAgent
-					.disassociate({
-						formOption: {
-							id: this.state.selectedRowData.id,
-						},
-					})
-					.then(() => {
-						const callback = () => {
-							messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-						}
-						this.getData(callback)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+				res = await apiHelper.objectApiAgent.disassociate({
+					formOption: {
+						id: this.state.selectedRowData.id,
+					},
+				})
+
 				break
 
 			case DELETE:
@@ -361,41 +335,36 @@ class ObjectTable extends React.Component {
 					}
 				})
 
-				apiHelper.objectApiAgent
-					.deleteObject({
-						formOption,
-					})
-					.then(() => {
-						const callback = () => {
-							messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-						}
-						this.getData(callback)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+				res = await apiHelper.objectApiAgent.deleteObject({
+					formOption,
+				})
 
 				this.setState({ selectAll: false, selection: [] })
 
 				break
 		}
+
+		if (res) {
+			const callback = () => {
+				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			}
+			this.getData(callback)
+		}
 	}
 
-	handleSubmitForm = (formOption) => {
+	handleSubmitForm = async (formOption) => {
 		const { apiMethod } = this.state
-		apiHelper.objectApiAgent[apiMethod]({
+		const res = await apiHelper.objectApiAgent[apiMethod]({
 			formOption,
 			mode: DEVICE,
 		})
-			.then(() => {
-				const callback = () => {
-					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-				}
-				this.getData(callback)
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+
+		if (res) {
+			const callback = () => {
+				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			}
+			this.getData(callback)
+		}
 	}
 
 	toggleSelection = (key) => {

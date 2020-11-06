@@ -33,14 +33,14 @@
 */
 
 import React from 'react'
-import { Col, Row, ListGroup, Nav, Button } from 'react-bootstrap'
+import { Col, Nav } from 'react-bootstrap'
 import apiHelper from '../../helper/apiHelper'
 import { AppContext } from '../../context/AppContext'
-import config from '../../config'
 import { OBJECT_TYPE } from '../../config/wordMap'
 import { Title } from '../BOTComponent/styleComponent'
+import PropTypes from 'prop-types'
 /*
-    this class contain three two components
+    this class contain two components
         1. sectionIndexList : this is the alphabet list for user to search their objects by the first letter of their type
         2. sectionTitleList : when you hover a section Index List letter, the section title list will show a row of object types of same first letter (i.e. bed, bladder scanner, ...)
 */
@@ -91,21 +91,6 @@ class SearchableObjectType extends React.Component {
 	onSubmit = null
 
 	API = {
-		// setObjectList : (objectList) => {
-		//     var firstLetterMap = new Array()
-		//     if(objectList.length != 0){
-		//         objectList.map((name) => {
-		//             firstLetterMap[name[0]]
-		//                 ? firstLetterMap[name[0]].push(name)
-		//                 : firstLetterMap[name[0]] = [name]
-		//         })
-		//     }
-		//     this.shouldUpdate = true
-
-		//     this.data.sectionTitleData = firstLetterMap
-		//     this.setState({})
-
-		// },
 		setOnSubmit: (func) => {
 			this.onSubmit = func
 		},
@@ -127,37 +112,34 @@ class SearchableObjectType extends React.Component {
 		this.getData()
 	}
 
-	getData = () => {
-		const { locale, stateReducer, auth } = this.context
+	getData = async () => {
+		const { locale, auth } = this.context
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [0],
-			})
-			.then((res) => {
-				const objectTypeList = []
-				res.data.rows.map((item) => {
-					objectTypeList.includes(item.type)
-						? null
-						: objectTypeList.push(item.type)
-				})
-				const firstLetterMap = this.getObjectIndexList(objectTypeList)
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [0],
+		})
 
-				this.setState({
-					firstLetterMap,
-				})
+		if (res) {
+			const objectTypeList = []
+			res.data.rows.forEach((item) => {
+				if (!objectTypeList.includes(item.type)) {
+					objectTypeList.push(item.type)
+				}
 			})
-			.catch((err) => {
-				console.log(`get object table failed ${err}  `)
+			const firstLetterMap = this.getObjectIndexList(objectTypeList)
+
+			this.setState({
+				firstLetterMap,
 			})
+		}
 	}
 
 	getObjectIndexList = (objectList) => {
 		const firstLetterMap = []
-		if (objectList.length != 0) {
-			objectList.map((name) => {
+		if (objectList.length !== 0) {
+			objectList.forEach((name) => {
 				firstLetterMap[name[0]]
 					? firstLetterMap[name[0]].push(name)
 					: (firstLetterMap[name[0]] = [name])
@@ -165,21 +147,15 @@ class SearchableObjectType extends React.Component {
 		}
 		this.shouldUpdate = true
 		return firstLetterMap
-		// this.data.sectionTitleData = firstLetterMap
-		// console.log(firstLetterMap)
-		// this.setState({})
 	}
 
-	shouldComponentUpdate = (nextProps, nexState) => {
+	shouldComponentUpdate = (nextProps) => {
 		if (this.shouldUpdate) {
 			this.shouldUpdate = false
 			return true
 		}
-		// if(!_.isEqual(this.props.objectTypeList, nextProps.objectTypeList) ){
-		//     this.API.setObjectList(nextProps.objectTypeList)
-		//     return true
-		// }
-		if (this.props.floatUp != nextProps.floatUp) {
+
+		if (this.props.floatUp !== nextProps.floatUp) {
 			if (nextProps.floatUp) {
 				this.API.floatUp()
 			} else {
@@ -270,7 +246,6 @@ class SearchableObjectType extends React.Component {
 
 			for (const i in this.state.firstLetterMap[first]) {
 				const name = this.state.firstLetterMap[first][i]
-
 				const pinColorIndex = searchObjectArray.indexOf(name)
 
 				Data.push(
@@ -299,10 +274,9 @@ class SearchableObjectType extends React.Component {
 			type: OBJECT_TYPE,
 			value: itemName,
 		}
+
 		this.props.getSearchKey(searchKey)
-
 		this.addSearchHistory(searchKey)
-
 		this.shouldUpdate = true
 
 		this.setState({
@@ -320,22 +294,21 @@ class SearchableObjectType extends React.Component {
 		let flag = false
 
 		const toReturnSearchHistory = searchHistory.map((item) => {
-			if (item.name == searchKey.value) {
+			if (item.name === searchKey.value) {
 				item.value += 1
 				flag = true
 			}
 			return item
 		})
-		flag == false
-			? toReturnSearchHistory.push({
-					name: searchKey.value,
-					value: 1,
-			  })
-			: null
+		if (!flag) {
+			toReturnSearchHistory.push({
+				name: searchKey.value,
+				value: 1,
+			})
+		}
+
 		const sortedSearchHistory = this.sortSearchHistory(toReturnSearchHistory)
-
 		auth.setSearchHistory(sortedSearchHistory)
-
 		this.checkInSearchHistory(searchKey.value)
 	}
 
@@ -348,23 +321,18 @@ class SearchableObjectType extends React.Component {
 	}
 
 	/** Insert search history to database */
-	checkInSearchHistory = (itemName) => {
+	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
 
-		apiHelper.userApiAgent
-			.addSearchHistory({
-				username: auth.user.name,
-				keyType: 'object type search',
-				keyWord: itemName,
-			})
-			.then((res) => {
-				this.setState({
-					searchKey: itemName,
-				})
-			})
-			.catch((err) => {
-				console.log(`check in search history failed ${err}`)
-			})
+		await apiHelper.userApiAgent.addSearchHistory({
+			username: auth.user.name,
+			keyType: 'object type search',
+			keyWord: itemName,
+		})
+
+		this.setState({
+			searchKey: itemName,
+		})
 	}
 
 	render() {
@@ -379,16 +347,8 @@ class SearchableObjectType extends React.Component {
 				borderRadius: '10px',
 				overflowY: 'scroll',
 				height: '70vh',
-				// width: '30vw',
-				// zIndex: 1500,
 				display: this.state.IsShowSection ? 'block' : 'none',
 			},
-			// SearchableObjectType:{
-			//     position: 'relative',
-			//     top: '-25vh',
-			//     right: '1%'
-
-			// }
 		}
 
 		const style = {
@@ -439,6 +399,13 @@ class SearchableObjectType extends React.Component {
 			</div>
 		)
 	}
+}
+
+SearchableObjectType.propTypes = {
+	getSearchKey: PropTypes.func.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	floatUp: PropTypes.bool.isRequired,
 }
 
 export default SearchableObjectType

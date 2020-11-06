@@ -53,24 +53,24 @@ class LBeaconPicker extends React.Component {
 		}
 	}
 
-	getBeacon = () => {
+	getBeacon = async () => {
 		if (this.props.area) {
 			const { locale } = this.context
 
-			apiHelper.lbeaconApiAgent
-				.getLbeaconTable({
-					locale: locale.abbr,
+			const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+				locale: locale.abbr,
+			})
+			if (res) {
+				const beacons = res.data.rows.filter((beacon) => {
+					return (
+						parseInt(beacon.uuid.slice(0, 4).length) ===
+						parseInt(this.props.area)
+					)
 				})
-				.then((res) => {
-					const beacons = res.data.rows.filter((beacon) => {
-						return (
-							parseInt(beacon.uuid.slice(0, 4)) == parseInt(this.props.area)
-						)
-					})
-					this.setState({
-						beacons,
-					})
+				this.setState({
+					beacons,
 				})
+			}
 		}
 	}
 

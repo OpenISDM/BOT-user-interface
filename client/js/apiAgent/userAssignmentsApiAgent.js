@@ -33,43 +33,46 @@
 */
 
 import { userAssignments } from '../dataSrc'
-import axios from 'axios'
-import { tcWrapper } from '../helper/utilities'
+import { get, post } from '../helper/httpClient'
 
 async function getByUserId({ areaId, userId }) {
-	return await axios.get(userAssignments.getByUserId, {
+	return await get(userAssignments.getByUserId, {
 		params: { areaId, userId },
 	})
 }
+
 async function getGroupIdListByUserId({ areaId, userId }) {
-	return await axios.get(userAssignments.getGroupIdListByUserId, {
+	return await get(userAssignments.getGroupIdListByUserId, {
 		params: { areaId, userId },
 	})
 }
+
 async function accept({ userId, groupListIds, assignmentType }) {
-	return await axios.post(userAssignments.accept, {
+	return await post(userAssignments.accept, {
 		userId,
 		groupListIds,
 		assignmentType,
 	})
 }
+
 async function cancel({ userId, groupListIds }) {
-	return await axios.post(userAssignments.cancel, {
+	return await post(userAssignments.cancel, {
 		userId,
 		groupListIds,
 	})
 }
+
 async function finish({ userId, groupListIds }) {
-	return await axios.post(userAssignments.finish, {
+	return await post(userAssignments.finish, {
 		userId,
 		groupListIds,
 	})
 }
 
 export default {
-	getByUserId: tcWrapper(getByUserId),
-	getGroupIdListByUserId: tcWrapper(getGroupIdListByUserId),
-	accept: tcWrapper(accept),
-	cancel: tcWrapper(cancel),
-	finish: tcWrapper(finish),
+	getByUserId,
+	getGroupIdListByUserId,
+	accept,
+	cancel,
+	finish,
 }

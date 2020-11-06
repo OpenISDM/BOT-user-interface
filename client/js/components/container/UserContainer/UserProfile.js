@@ -35,11 +35,9 @@
 import React from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import { AppContext } from '../../../context/AppContext'
-import axios from 'axios'
 import EditAreasForm from '../../presentational/form/EditAreasForm'
 import EditPwdForm from '../../presentational/form/EditPwdForm'
 import messageGenerator from '../../../helper/messageGenerator'
-import { userInfo } from '../../../dataSrc'
 import config from '../../../config'
 import NumberPicker from '../NumberPicker'
 import apiHelper from '../../../helper/apiHelper'
@@ -60,44 +58,35 @@ class UserProfile extends React.Component {
 	}
 
 	/** get area table from database */
-	getAreaTable = () => {
-		apiHelper.areaApiAgent
-			.getAreaTable()
-			.then((res) => {
-				const areaTable = res.data.rows.reduce((table, area) => {
-					table[area.id] = area
-					return table
-				}, {})
-				this.setState({
-					areaTable,
-				})
+	getAreaTable = async () => {
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
+			const areaTable = res.data.rows.reduce((table, area) => {
+				table[area.id] = area
+				return table
+			}, {})
+			this.setState({
+				areaTable,
 			})
-			.catch((err) => {
-				console.log(`get area table failed ${err}`)
-			})
+		}
 	}
 
 	/** set user's number of search history */
-	resetFreqSearchCount = (value) => {
+	resetFreqSearchCount = async (value) => {
 		const { auth } = this.context
 
 		if (value) {
 			const userInfo = auth.user
-
 			userInfo.freqSearchCount = value
-
 			this.setState({
 				userInfo,
 			})
 
-			apiHelper.userApiAgent
-				.editMaxSearchHistoryCount({
-					info: userInfo,
-					username: userInfo.name,
-				})
-				.then(() => {
-					auth.setUserInfo('freqSearchCount', value)
-				})
+			await apiHelper.userApiAgent.editMaxSearchHistoryCount({
+				info: userInfo,
+				username: userInfo.name,
+			})
+			auth.setUserInfo('freqSearchCount', value)
 		}
 	}
 
@@ -124,7 +113,7 @@ class UserProfile extends React.Component {
 		})
 	}
 
-	handleSubmit = (values) => {
+	handleSubmit = async (values) => {
 		const formIndex = [this.state.show, this.state.showEditPwd].indexOf(true)
 
 		const callback = () => messageGenerator.setSuccessMessage(SAVE_SUCCESS)
@@ -132,35 +121,25 @@ class UserProfile extends React.Component {
 		switch (formIndex) {
 			case 0:
 				auth.setArea(values.areas_id)
-				this.setState(
-					{
-						show: false,
-						showEditPwd: false,
-					},
-					callback
-				)
+
 				break
 
 			case 1:
-				axios
-					.post(userInfo.password, {
-						user_id: auth.user.id,
-						password: values.check_password,
-					})
-					.then(() => {
-						this.setState(
-							{
-								show: false,
-								showEditPwd: false,
-							},
-							callback
-						)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+				await apiHelper.userApiAgent.password({
+					user_id: auth.user.id,
+					password: values.check_password,
+				})
+
 				break
 		}
+
+		this.setState(
+			{
+				show: false,
+				showEditPwd: false,
+			},
+			callback
+		)
 	}
 
 	render() {

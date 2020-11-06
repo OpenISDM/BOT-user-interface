@@ -33,22 +33,22 @@
 */
 
 import { transferredLocation } from '../dataSrc'
-import axios from 'axios'
+import { get, post } from '../helper/httpClient'
 
 export default {
 	async getAll() {
-		return await axios.get(transferredLocation.getAll)
+		return await get(transferredLocation.getAll)
 	},
 
 	async addOne({ name, department }) {
-		return await axios.post(transferredLocation.addOne, {
+		return await post(transferredLocation.addOne, {
 			name,
 			department,
 		})
 	},
 
 	async removeByIds({ branchIds }) {
-		return await axios.post(transferredLocation.removeByIds, {
+		return await post(transferredLocation.removeByIds, {
 			branchIds,
 		})
 	},

@@ -33,17 +33,17 @@
 */
 
 import { record, monitor } from '../dataSrc'
-import axios from 'axios'
+import { post, put, del, patch } from '../helper/httpClient'
 
 export default {
 	async getRecord(type, locale) {
-		return await axios.post(record[type], {
+		return await post(record[type], {
 			locale,
 		})
 	},
 
 	async addShiftChangeRecord({ userInfo, pdfPackage, shift, list_id }) {
-		return await axios.put(record.shiftChange, {
+		return await put(record.shiftChange, {
 			userInfo,
 			pdfPackage,
 			shift,
@@ -52,43 +52,37 @@ export default {
 	},
 
 	async deleteShiftChangeRecord({ idPackage }) {
-		return await axios.delete(record.shiftChange, {
-			data: {
-				idPackage,
-			},
+		return await del(record.shiftChange, {
+			idPackage,
 		})
 	},
 
 	async deleteEditObjectRecord({ idPackage }) {
-		return await axios.delete(record.editedObject, {
-			data: {
-				idPackage,
-			},
+		return await del(record.editedObject, {
+			idPackage,
 		})
 	},
 
 	async addPatientRecord({ objectPackage }) {
-		return await axios.post(record.patientRecord, {
+		return await post(record.patientRecord, {
 			objectPackage,
 		})
 	},
 
 	async delete(configPackage) {
-		return await axios.delete(monitor, {
-			data: {
-				configPackage,
-			},
+		return await del(monitor, {
+			configPackage,
 		})
 	},
 
 	async add(configPackage) {
-		return await axios.patch(monitor, {
+		return await patch(monitor, {
 			configPackage,
 		})
 	},
 
 	async put(configPackage) {
-		return await axios.put(monitor, {
+		return await put(monitor, {
 			configPackage,
 		})
 	},

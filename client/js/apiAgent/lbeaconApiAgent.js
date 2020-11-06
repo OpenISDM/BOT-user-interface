@@ -32,15 +32,27 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { lbeacon } from '../dataSrc'
+import { get, put, del } from '../helper/httpClient'
 
 export default {
 	async getLbeaconTable({ locale }) {
-		return await axios.get(dataSrc.lbeacon, {
+		return await get(lbeacon, {
 			params: {
 				locale,
 			},
+		})
+	},
+
+	async putLbeacon({ formOption }) {
+		return await put(lbeacon, {
+			formOption,
+		})
+	},
+
+	async deleteLbeacon({ idPackage }) {
+		return await del(lbeacon, {
+			idPackage,
 		})
 	},
 }

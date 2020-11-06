@@ -32,15 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { geofence } from '../dataSrc'
+import { post, put, del, patch } from '../helper/httpClient'
 import config from '../config'
-
-const src = dataSrc.geofence
 
 const geofenceApis = {
 	async getGeofenceConfig(type, areasId, isGetLbeaconPosition = false) {
-		return await axios.post(src, {
+		return await post(geofence, {
 			type: config.monitorSettingUrlMap[type],
 			areasId,
 			isGetLbeaconPosition,
@@ -48,21 +46,19 @@ const geofenceApis = {
 	},
 
 	async delete(configPackage) {
-		return await axios.delete(src, {
-			data: {
-				configPackage,
-			},
+		return await del(geofence, {
+			configPackage,
 		})
 	},
 
 	async add(configPackage) {
-		return await axios.patch(src, {
+		return await patch(geofence, {
 			configPackage,
 		})
 	},
 
 	async setGeofenceConfig(configPackage) {
-		return await axios.put(src, {
+		return await put(geofence, {
 			configPackage,
 		})
 	},

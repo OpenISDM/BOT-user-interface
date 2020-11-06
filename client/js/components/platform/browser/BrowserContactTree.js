@@ -81,27 +81,26 @@ class BrowserContactTree extends React.Component {
 		this.getObjectTable()
 	}
 
-	getObjectTable = () => {
+	getObjectTable = async () => {
 		const { locale, auth } = this.context
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [1, 2],
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [1, 2],
+		})
+		if (res) {
+			const options = res.data.rows.map((item) => {
+				return {
+					value: item.name,
+					label: item.name,
+					description: item.name,
+				}
 			})
-			.then((res) => {
-				const options = res.data.rows.map((item) => {
-					return {
-						value: item.name,
-						label: item.name,
-						description: item.name,
-					}
-				})
-				this.setState({
-					options,
-				})
+			this.setState({
+				options,
 			})
+		}
 	}
 
 	/** Get location history */
@@ -134,12 +133,16 @@ class BrowserContactTree extends React.Component {
 		while (wait.length != 0) {
 			const parent = wait.shift()
 			if (parent.level > level - 1) break
-			const childrenPromise = this.getChildren(
-				parent.name,
-				duplicate,
-				parent.startTime,
-				endTime
-			).then((res) => {
+			const res = await apiHelper.utilsApiAgent.getTraceContactTree({
+				child: parent.name,
+				parents: duplicate,
+				startTime: parent.startTime,
+				endTime,
+			})
+			if (res) {
+				this.setState({
+					collection,
+				})
 				return res.data.rows
 					.filter((child) => !duplicate.includes(child.child))
 					.map((child) => {
@@ -153,11 +156,7 @@ class BrowserContactTree extends React.Component {
 						this.mountChild(collection, child)
 						return child
 					})
-			})
-			await childrenPromise
-			this.setState({
-				collection,
-			})
+			}
 		}
 
 		/** set status code of fetching contact tracing data */
@@ -196,19 +195,11 @@ class BrowserContactTree extends React.Component {
 		return data
 	}
 
-	getChildren = (child, parents, startTime, endTime) => {
-		return axios.post(dataSrc.trace.contactTree, {
-			child,
-			parents,
-			startTime,
-			endTime,
-		})
-	}
-
-	handleClick = (e) => {
+	handleClick = async (e) => {
 		const name = e.target.name
 		const { auth, locale } = this.context
 		const values = this.formikRef.current.state.values
+		let res = null
 		switch (name) {
 			case 'exportPDF':
 				const pdfOptions = {
@@ -227,18 +218,13 @@ class BrowserContactTree extends React.Component {
 					additional: null,
 					// pdfOptions,
 				})
-
-				axios
-					.post(dataSrc.file.export.pdf, {
-						userInfo: auth.user,
-						pdfPackage,
-					})
-					.then((res) => {
-						window.open(dataSrc.pdfUrl(pdfPackage.path))
-					})
-					.catch((err) => {
-						console.log(`export PDF failed ${err}`)
-					})
+				res = await apiHelper.fileApiAgent.getPDF({
+					userInfo: auth.user,
+					pdfPackage,
+				})
+				if (res) {
+					await apiHelper.fileApiAgent.getFile(pdfPackage.path)
+				}
 				break
 		}
 	}

@@ -35,13 +35,12 @@
 import React from 'react'
 import AuthenticationContext from './context/AuthenticationContext'
 import Cookies from 'js-cookie'
-import axios from 'axios'
-import dataSrc from './dataSrc'
 import config from './config'
 import permissionsTable from './config/roles'
 import { AppContext } from './context/AppContext'
 import { SET_AREA } from './reducer/action'
 import apiHelper from './helper/apiHelper'
+import PropTypes from 'prop-types'
 
 class Auth extends React.Component {
 	static contextType = AppContext
@@ -54,147 +53,113 @@ class Auth extends React.Component {
 				: config.DEFAULT_USER,
 	}
 
-	login = (userInfo, { actions, dispatch, callback, locale }) => {
+	login = async (userInfo, { actions, dispatch, callback, locale }) => {
 		const { username, password } = userInfo
+		const res = await apiHelper.authApiAgent.login({
+			username,
+			password,
+		})
 
-		apiHelper.authApiAgent
-			.login({
-				username,
-				password,
-			})
-			.then((res) => {
-				if (!res.data.authentication) {
-					actions.setStatus(res.data.message)
-					actions.setSubmitting(false)
-				} else {
-					const { userInfo } = res.data
-
-					if (userInfo.roles.includes('dev')) {
-						userInfo.permissions = Object.keys(permissionsTable).reduce(
-							(permissions, role) => {
-								permissionsTable[role].permission.map((item) => {
-									if (!permissions.includes(item)) {
-										permissions.push(item)
-									}
-								})
-								return permissions
-							},
-							[]
-						)
-					} else {
-						userInfo.permissions = userInfo.roles.reduce(
-							(permissions, role) => {
-								permissionsTable[role].permission.map((item) => {
-									if (!permissions.includes(item)) {
-										permissions.push(item)
-									}
-								})
-								return permissions
-							},
-							[]
-						)
-					}
-
-					Cookies.set('authenticated', true)
-					Cookies.set('user', userInfo)
-
-					locale.setLocale(userInfo.locale)
-
-					dispatch({
-						type: SET_AREA,
-						value: userInfo.main_area,
+		if (!res.data.authentication) {
+			actions.setStatus(res.data.message)
+			actions.setSubmitting(false)
+		} else {
+			const { userInfo } = res.data
+			if (userInfo.roles.includes('dev')) {
+				userInfo.permissions = Object.keys(permissionsTable).reduce(
+					(permissions, role) => {
+						permissionsTable[role].permission.forEach((item) => {
+							if (!permissions.includes(item)) {
+								permissions.push(item)
+							}
+						})
+						return permissions
+					},
+					[]
+				)
+			} else {
+				userInfo.permissions = userInfo.roles.reduce((permissions, role) => {
+					permissionsTable[role].permission.forEach((item) => {
+						if (!permissions.includes(item)) {
+							permissions.push(item)
+						}
 					})
+					return permissions
+				}, [])
+			}
 
-					this.setState(
-						{
-							authenticated: true,
-							user: userInfo,
-						},
-						callback
-					)
-				}
+			Cookies.set('authenticated', true)
+			Cookies.set('user', userInfo)
+
+			locale.setLocale(userInfo.locale)
+
+			dispatch({
+				type: SET_AREA,
+				value: userInfo.main_area,
 			})
-			.catch((error) => {
-				console.log(error)
-			})
+
+			this.setState(
+				{
+					authenticated: true,
+					user: userInfo,
+				},
+				callback
+			)
+		}
 	}
 
-	logout = () => {
-		apiHelper.authApiAgent
-			.logout()
-			.then((res) => {
-				Cookies.remove('authenticated')
-				Cookies.remove('user')
-				this.setState({
-					authenticated: false,
-					user: config.DEFAULT_USER,
-					accessToken: '',
-				})
-			})
-			.catch((err) => {
-				console.log(`logout failed ${err}`)
-			})
+	logout = async () => {
+		await apiHelper.authApiAgent.logout()
+		Cookies.remove('authenticated')
+		Cookies.remove('user')
+		this.setState({
+			authenticated: false,
+			user: config.DEFAULT_USER,
+			accessToken: '',
+		})
 	}
 
-	signup = (values, callback) => {
+	signup = async (values, callback) => {
 		const { name, email, password, roles, area } = values
 
-		axios
-			.post(dataSrc.user, {
-				name: name.toLowerCase(),
-				email: email.toLowerCase(),
-				password,
-				roles,
-				area_id: area.id,
-				...values,
-			})
-			.then((res) => {
-				callback()
-			})
+		await apiHelper.userApiAgent.signup({
+			name: name.toLowerCase(),
+			email: email.toLowerCase(),
+			password,
+			roles,
+			area_id: area.id,
+			...values,
+		})
+
+		callback()
 	}
 
-	setUser = (user, callback) => {
-		axios
-			.put(dataSrc.user, {
-				user,
-			})
-			.then((res) => {
-				callback()
-			})
-			.catch((err) => {
-				console.log(`set user info failed ${err}`)
-			})
+	setUser = async (user, callback) => {
+		await apiHelper.userApiAgent.setUser({ user })
+		callback()
 	}
 
-	setArea = (areas_id, callback) => {
+	setArea = async (areas_id, callback) => {
 		const user = {
 			...this.state.user,
 			areas_id,
 		}
-		axios
-			.post(dataSrc.userInfo.area.secondary, {
+		await apiHelper.userApiAgent.setArea({ user })
+		this.setCookies('user', user)
+		this.setState(
+			{
+				...this.state,
 				user,
-			})
-			.then((res) => {
-				this.setCookies('user', user)
-				this.setState(
-					{
-						...this.state,
-						user,
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(`set secondary area failed ${err}`)
-			})
+			},
+			callback
+		)
 	}
 
-	handleAuthentication = () => {}
+	handleAuthentication = () => {
+		// handleAuthentication
+	}
 
-	setSession(authResult) {}
-
-	setCookies(key, value) {
+	setCookies = (key, value) => {
 		Cookies.set(key, value)
 	}
 
@@ -237,70 +202,52 @@ class Auth extends React.Component {
 		})
 	}
 
-	setLocale = (abbr) => {
-		apiHelper.userApiAgent
-			.setLocale({
-				userId: this.state.user.id,
-				localeName: abbr,
-			})
-			.then((res) => {
-				Cookies.set('user', {
-					...JSON.parse(Cookies.get('user')),
-					locale: abbr,
-				})
-			})
-			.catch((err) => {
-				console.log(`set locale failed ${err}`)
-			})
+	setLocale = async (abbr) => {
+		await apiHelper.userApiAgent.setLocale({
+			userId: this.state.user.id,
+			localeName: abbr,
+		})
+		Cookies.set('user', {
+			...JSON.parse(Cookies.get('user')),
+			locale: abbr,
+		})
 	}
 
-	setKeywordType = (keywordTypeId) => {
-		apiHelper.userApiAgent
-			.editKeywordType({
-				userId: this.state.user.id,
-				keywordTypeId,
+	setKeywordType = async (keywordTypeId) => {
+		await apiHelper.userApiAgent.editKeywordType({
+			userId: this.state.user.id,
+			keywordTypeId,
+		})
+		const callback = () => {
+			Cookies.set('user', {
+				...JSON.parse(Cookies.get('user')),
+				keyword_type: keywordTypeId,
 			})
-			.then((res) => {
-				const callback = () => {
-					Cookies.set('user', {
-						...JSON.parse(Cookies.get('user')),
-						keyword_type: keywordTypeId,
-					})
-				}
-				this.setState(
-					{
-						...this.state,
-						user: {
-							...this.state.user,
-							keyword_type: keywordTypeId,
-						},
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(`edit keyword type failed ${err}`)
-			})
+		}
+		this.setState(
+			{
+				...this.state,
+				user: {
+					...this.state.user,
+					keyword_type: keywordTypeId,
+				},
+			},
+			callback
+		)
 	}
 
-	setListId = (id) => {
-		apiHelper.userApiAgent
-			.editListId({
-				userId: this.state.user.id,
-				listId: id,
-			})
-			.then((res) => {
-				this.setState({
-					...this.state,
-					user: {
-						...this.state.user,
-						list_id: id,
-					},
-				})
-			})
-			.catch((err) => {
-				console.log(`edit list id failed ${err}`)
-			})
+	setListId = async (id) => {
+		await apiHelper.userApiAgent.editListId({
+			userId: this.state.user.id,
+			listId: id,
+		})
+		this.setState({
+			...this.state,
+			user: {
+				...this.state.user,
+				list_id: id,
+			},
+		})
 	}
 
 	render() {
@@ -327,6 +274,10 @@ class Auth extends React.Component {
 			</AuthenticationContext.Provider>
 		)
 	}
+}
+
+Auth.propTypes = {
+	children: PropTypes.node.isRequired,
 }
 
 export default Auth

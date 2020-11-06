@@ -112,7 +112,7 @@ const getTrackingData = (request, response) => {
 				/** Set the boolean if its rssi is below the specific rssi threshold  */
 				const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
 				/** Flag the object that satisfied the time period and rssi threshold */
-				item.found = isInTheTimePeriod && isMatchRssi
+				item.found = !isInTheTimePeriod && isMatchRssi
 
 				/** Set the residence time of the object */
 				item.residence_time = item.found

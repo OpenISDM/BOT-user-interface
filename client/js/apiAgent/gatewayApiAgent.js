@@ -32,15 +32,23 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { gateway } from '../dataSrc'
+import { get, del, put } from '../helper/httpClient'
 
 export default {
 	async getGatewayTable({ locale }) {
-		return await axios.get(dataSrc.gateway, {
+		return await get(gateway, {
 			params: {
 				locale,
 			},
 		})
+	},
+
+	async deleteGateway({ data }) {
+		return await del(gateway, { data })
+	},
+
+	async putGateway({ formOption }) {
+		return await put(gateway, { formOption })
 	},
 }
