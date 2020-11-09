@@ -172,41 +172,83 @@ const get_data = (
 	return query
 }
 
-const get_people_history_data()=>{
-	let queryText = ``;
+const get_people_history_data= (key, start_time,end_time, count_limit, sort_type)=>{
+	return `select 
+	location_history_table.object_id as object_id,
+	location_history_table.mac_address as mac_address,
+	object_table.name as name,
+	location_history_table.area_id as area_id,
+	area_table.readable_name as area_name,
+	location_history_table.uuid as Lbeacon_uuid,
+	lbeacon_table.description as Lbeacon_description,
+	location_history_table.record_timestamp as record_timestamp,
+	location_history_table.payload as payload
+	from location_history_table
+	
+	inner join (
+		select 
+			api_key.id as user_id,
+			user_table.main_area as area_id
+			from api_key 
+			inner join user_table 
+			on api_key.id = user_table.id
+			where api_key.key = '${key}'
+		) as user_area_table  
+	on user_area_table.area_id = location_history_table.area_id 
+	
+	inner join object_table	
+	on location_history_table.mac_address = object_table.mac_address 
+	and object_table.type = 'Patient'
 
-	let parameter = [];
+	inner join area_table
+	on location_history_table.area_id = area_table.id
+	
+	inner join lbeacon_table
+	on location_history_table.uuid = lbeacon_table.uuid
+	
+	where record_timestamp > ${start_time} && record_timestamp<${end_time}
 
-	return {queryText, parameter};
+	order by record_timestamp ${sort_type}
+	limit ${count_limit};`;
 }
 
-const get_people_realtime_data(key)=>{
-	let queryText = `
+const get_people_realtime_data = (key)=>{
+	return `
 	select 
 	object_summary_table.id as object_id, 
 	object_summary_table.mac_address as mac_address, 
 	object_table.name as object_name, 
 	object_summary_table.updated_by_area as area_id, 
-	area_table.readable_name as area_name, 
+	area_table.readable_name as area_name,
 	object_summary_table.uuid as Lbeacon_uuid,
 	lbeacon_table.description as Lbeacon_description, 
 	object_summary_table.payload as payload
 	from object_summary_table
 	
-	inner join object_table	
-	on object_summary_table.mac_address = object_table.mac_address 
-	and object_table.type = 'Patient'
-
+	inner join (
+		select 
+			api_key.id as user_id,
+			user_table.main_area as area_id
+		from api_key 
+		inner join user_table 
+		on api_key.id = user_table.id
+		where api_key.key = ${key}) as user_area_table
+	on user_area_table.area_id = object_summary_table.updated_by_area
+--		
 	inner join area_table
 	on object_summary_table.updated_by_area = area_table.id
+	
+	inner join object_table	
+	on object_summary_table.mac_address = object_table.mac_address 
+	and object_table.type = 'Patient'	
 	
 	inner join lbeacon_table
 	on object_summary_table.uuid = lbeacon_table.uuid
 	`;
 
-	let parameter = [key];
+	//let parameter = [key];
 
-	return {queryText, parameter};
+	//return {queryText, parameter};
 }
 
 export default {
@@ -215,4 +257,6 @@ export default {
 	getAllKeyQuery,
 	getAllUserQuery,
 	get_data,
+	get_people_realtime_data,
+	get_people_history_data
 }
