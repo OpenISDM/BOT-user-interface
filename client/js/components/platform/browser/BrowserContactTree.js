@@ -295,7 +295,7 @@ class BrowserContactTree extends React.Component {
 											}}
 											isClearable={true}
 											isSearchable={true}
-											options={this.state.options}
+											options={this.state.options || []}
 											styles={styleConfig.reactSelectSearch}
 											components={styleConfig.reactSelectSearchComponent}
 											placeholder={locale.texts.SEARCH}

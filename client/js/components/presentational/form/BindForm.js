@@ -246,7 +246,7 @@ class BindForm extends React.Component {
 												name="area"
 												value={values.area}
 												onChange={(value) => setFieldValue('area', value)}
-												options={areaOptions}
+												options={areaOptions || []}
 												style={style.select}
 												components={{
 													IndicatorSeparator: () => null,
@@ -277,7 +277,7 @@ class BindForm extends React.Component {
 													value={values.mac}
 													className="my-1"
 													onChange={(value) => setFieldValue('mac', value)}
-													options={this.props.macOptions}
+													options={this.props.macOptions || []}
 													isSearchable={true}
 													styles={styleConfig.reactSelect}
 													placeholder=""

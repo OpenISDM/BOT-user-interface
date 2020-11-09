@@ -238,7 +238,7 @@ const TabletTraceContainerView = React.forwardRef(
 													paddingLeft: 35,
 												}),
 											}}
-											options={options[values.mode]}
+											options={options[values.mode] || []}
 											components={styleConfig.reactSelectSearchComponent}
 											placeholder={
 												locale.texts[`SEARCH_FOR_${values.mode.toUpperCase()}`]

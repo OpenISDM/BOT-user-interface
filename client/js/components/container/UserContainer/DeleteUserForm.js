@@ -90,7 +90,7 @@ const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
 										name="name"
 										value={values.name}
 										onChange={(value) => setFieldValue('name', value)}
-										options={userOptions}
+										options={userOptions || []}
 										styles={styleConfig.reactSelect}
 										components={{
 											IndicatorSeparator: () => null,

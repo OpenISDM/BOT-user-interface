@@ -70,6 +70,7 @@ class RolePermissionManagement extends React.Component {
 		permissionList: [],
 		rolesPermission: [],
 		permissionType: ['form', 'route', 'user'],
+		roleList: [],
 	}
 
 	columns = [
@@ -230,7 +231,7 @@ class RolePermissionManagement extends React.Component {
 								<Select
 									name="selectedRole"
 									placeholder={locale.texts.SELECT_ROLE + '...'}
-									options={this.state.roleList}
+									options={this.state.roleList || []}
 									value={values.selectedRole}
 									onChange={(value) => {
 										let selectedPermission = this.state.rolesPermission.filter(

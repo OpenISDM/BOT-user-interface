@@ -84,7 +84,7 @@ class AreaPicker extends React.Component {
 				name="areaPicker"
 				value={defaultValue}
 				onChange={(value) => this.onChange(value)}
-				options={options}
+				options={options || []}
 				isSearchable={false}
 				components={{
 					IndicatorSeparator: () => null,

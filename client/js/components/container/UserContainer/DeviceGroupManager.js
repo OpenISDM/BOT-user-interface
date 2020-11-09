@@ -17,7 +17,7 @@ class DeviceGroupManager extends React.Component {
 		showAddGroupForm: false,
 		showDeleteModal: false,
 		areaOptions: null,
-		deviceGroupListOptions: null,
+		deviceGroupListOptions: [],
 		allDevices: [],
 	}
 
@@ -219,7 +219,7 @@ class DeviceGroupManager extends React.Component {
 						isClearable
 						value={selectedOption}
 						onChange={this.selectDeviceGroup}
-						options={deviceGroupListOptions}
+						options={deviceGroupListOptions || []}
 					/>
 				</div>
 				<DualListBox

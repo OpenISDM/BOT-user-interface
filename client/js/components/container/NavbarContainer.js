@@ -108,7 +108,7 @@ class NavbarContainer extends React.Component {
 								placeholder={locale.texts.SELECT_LOCATION}
 								name="select"
 								value={selectedArea}
-								options={options}
+								options={options || []}
 								onChange={(value) => {
 									dispatch({
 										type: SET_AREA,

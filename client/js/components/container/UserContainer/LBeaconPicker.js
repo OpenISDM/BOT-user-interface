@@ -96,7 +96,7 @@ class LBeaconPicker extends React.Component {
 				name="beaconPicker"
 				value={defaultValue}
 				onChange={(value) => this.onChange(value)}
-				options={options}
+				options={options || []}
 				isSearchable={false}
 				components={{
 					IndicatorSeparator: () => null,

@@ -594,7 +594,7 @@ class ObjectTable extends React.Component {
 										this.removeObjectFilter('type select')
 									}
 								}}
-								options={typeSelection}
+								options={typeSelection || []}
 								isClearable={true}
 								isSearchable={true}
 								placeholder={locale.texts.TYPE}
@@ -610,7 +610,7 @@ class ObjectTable extends React.Component {
 										this.removeObjectFilter('area select')
 									}
 								}}
-								options={this.state.filterSelection.areaSelection}
+								options={this.state.filterSelection.areaSelection || []}
 								isClearable={true}
 								isSearchable={true}
 								placeholder={locale.texts.AREA}
@@ -630,7 +630,7 @@ class ObjectTable extends React.Component {
 										this.removeObjectFilter('status select')
 									}
 								}}
-								options={this.state.filterSelection.statusOptions}
+								options={this.state.filterSelection.statusOptions || []}
 								isClearable={true}
 								isSearchable={true}
 								placeholder={locale.texts.STATUS}

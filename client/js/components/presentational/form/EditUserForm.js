@@ -227,7 +227,7 @@ const EditUserForm = ({
 										name="area"
 										value={values.area}
 										onChange={(value) => setFieldValue('area', value)}
-										options={areaOptions}
+										options={areaOptions || []}
 										styles={styleConfig.reactSelect}
 										components={{
 											IndicatorSeparator: () => null,

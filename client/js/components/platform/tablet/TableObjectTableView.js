@@ -78,7 +78,7 @@ const MobileObjectTableView = ({
 								removeObjectFilter('area select')
 							}
 						}}
-						options={filterSelection.areaSelection}
+						options={filterSelection.areaSelection || []}
 						isClearable={true}
 						isSearchable={true}
 						placeholder={locale.texts.SELECT_AREA}

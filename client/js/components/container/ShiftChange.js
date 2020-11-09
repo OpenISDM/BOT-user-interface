@@ -309,7 +309,7 @@ class ShiftChange extends React.Component {
 										{locale.texts.SHIFT}: &nbsp;
 										<Select
 											name="shift"
-											options={shiftOptions}
+											options={shiftOptions || []}
 											value={values.shift}
 											onChange={(value) => setFieldValue('shift', value)}
 											styles={style.select}

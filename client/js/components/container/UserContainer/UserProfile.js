@@ -251,7 +251,7 @@ class UserProfile extends React.Component {
 								onChange={(value) => {
 									auth.setKeywordType(value.id)
 								}}
-								options={keywordTypeOptions}
+								options={keywordTypeOptions || []}
 								isSearchable={false}
 								styles={{
 									control: (provided) => ({
