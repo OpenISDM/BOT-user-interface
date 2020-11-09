@@ -81,7 +81,7 @@ const getTrackingData = (request, response) => {
 			console.log('get tracking data')
 
 			/** Filter the objects that do no belong the area */
-			const toReturn = res.rows.map((item, index) => {
+			const toReturn = res.rows.map((item) => {
 				/** Parse lbeacon uuid into three field in an array: area id, latitude, longtitude */
 				const lbeacon_coordinate = item.lbeacon_uuid
 					? parseLbeaconCoordinate(item.lbeacon_uuid)
@@ -95,7 +95,8 @@ const getTrackingData = (request, response) => {
 
 				const lbeaconAreaId = lbeacon_coordinate ? lbeacon_coordinate[2] : null
 
-				const isLbeaconMatchArea = lbeaconAreaId == currentAreaId
+				const isLbeaconMatchArea =
+					parseInt(lbeaconAreaId) === parseInt(currentAreaId)
 
 				const isUserSObject = userAuthenticatedAreasId.includes(
 					parseInt(item.area_id)
@@ -112,7 +113,7 @@ const getTrackingData = (request, response) => {
 				/** Set the boolean if its rssi is below the specific rssi threshold  */
 				const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
 				/** Flag the object that satisfied the time period and rssi threshold */
-				item.found = !isInTheTimePeriod && isMatchRssi
+				item.found = isInTheTimePeriod && isMatchRssi
 
 				/** Set the residence time of the object */
 				item.residence_time = item.found
@@ -124,7 +125,7 @@ const getTrackingData = (request, response) => {
 					: ''
 
 				/** Flag the object that is on sos */
-				if (item.object_type != 0) {
+				if (parseInt(item.object_type) !== 0) {
 					item.panic =
 						moment().diff(item.panic_violation_timestamp, 'second') <
 						process.env.PANIC_TIME_INTERVAL_IN_SEC

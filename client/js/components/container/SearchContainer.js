@@ -98,7 +98,7 @@ class SearchContainer extends React.Component {
 	getData = async () => {
 		const { locale, auth } = this.context
 
-		const res = apiHelper.objectApiAgent.getObjectTable({
+		const res = await apiHelper.objectApiAgent.getObjectTable({
 			locale: locale.abbr,
 			areas_id: auth.user.areas_id,
 			objectType: [0],

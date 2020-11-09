@@ -93,7 +93,7 @@ class BindForm extends React.Component {
 
 	getImportedData = async () => {
 		const { locale } = this.context
-		const res = apiHelper.importedObjectApiAgent.getImportedObjectTable({
+		const res = await apiHelper.importedObjectApiAgent.getImportedObjectTable({
 			locale: locale.abbr,
 		})
 		if (res) {

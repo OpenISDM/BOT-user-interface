@@ -60,7 +60,7 @@ class SystemStatus extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const { locale } = this.context
-		if (locale.lang != prevState.locale) {
+		if (locale.lang !== prevState.locale) {
 			this.getTrackingData()
 			this.setState({
 				locale: locale.lang,
@@ -80,7 +80,7 @@ class SystemStatus extends React.Component {
 		const { locale, auth, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
 
-		const res = apiHelper.trackingDataApiAgent.getTrackingData({
+		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			locale: locale.abbr,
 			user: auth.user,
 			areaId,
@@ -95,7 +95,7 @@ class SystemStatus extends React.Component {
 				field.Header =
 					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
-			res.data.map((item) => {
+			res.data.forEach((item) => {
 				item.status = locale.texts[item.status.toUpperCase()]
 				item.transferred_location = ''
 			})

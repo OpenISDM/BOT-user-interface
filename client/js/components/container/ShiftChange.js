@@ -101,7 +101,7 @@ class ShiftChange extends React.Component {
 			assignedPatientGroupListids,
 		} = this.props
 
-		const res = apiHelper.trackingDataApiAgent.getTrackingData({
+		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			locale: locale.abbr,
 			user: auth.user,
 			areaId,
