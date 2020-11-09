@@ -142,10 +142,7 @@ export default class TabletMapContainer extends React.Component {
 									{locale.texts.CLEAR}
 								</Button>
 							</Nav.Item>
-							<AccessControl
-								permission={'user:saveSearchRecord'}
-								renderNoAccess={() => null}
-							>
+							<AccessControl permission={'user:saveSearchRecord'}>
 								<Nav.Item className="mt-2">
 									<Button
 										variant="outline-primary"
@@ -158,10 +155,7 @@ export default class TabletMapContainer extends React.Component {
 									</Button>
 								</Nav.Item>
 							</AccessControl>
-							<AccessControl
-								permission={'user:toggleShowDevices'}
-								renderNoAccess={() => null}
-							>
+							<AccessControl permission={'user:toggleShowDevices'}>
 								<Nav.Item className="mt-2">
 									<Button
 										variant="primary"
@@ -189,10 +183,7 @@ export default class TabletMapContainer extends React.Component {
 									</Button>
 								</Nav.Item>
 							</AccessControl>
-							<AccessControl
-								permission={'user:toggleShowResidents'}
-								renderNoAccess={() => null}
-							>
+							<AccessControl permission={'user:toggleShowResidents'}>
 								<Nav.Item className="mt-2">
 									<Button
 										variant="primary"
@@ -221,10 +212,7 @@ export default class TabletMapContainer extends React.Component {
 								</Nav.Item>
 							</AccessControl>
 							{process.env.IS_TRACKING_PATH_ON == 1 && (
-								<AccessControl
-									permission={'user:cleanPath'}
-									renderNoAccess={() => null}
-								>
+								<AccessControl permission={'user:cleanPath'}>
 									<Nav.Item className="mt-2">
 										<Button
 											variant="primary"

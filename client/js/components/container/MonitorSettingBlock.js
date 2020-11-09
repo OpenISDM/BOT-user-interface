@@ -245,10 +245,7 @@ class MonitorSettingBlock extends React.Component {
 		return (
 			<div>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="mr-2 mb-1"

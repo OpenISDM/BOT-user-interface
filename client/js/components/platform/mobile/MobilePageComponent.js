@@ -61,11 +61,7 @@ const MobilePageComponent = ({ containerModule, setMessage }) => {
 				>
 					{tabList.map((tab) => {
 						return (
-							<AccessControl
-								renderNoAccess={() => null}
-								platform={tab.platform}
-								key={tab.name}
-							>
+							<AccessControl platform={tab.platform} key={tab.name}>
 								<Nav.Item>
 									<BOTNavLink eventKey={tab.name.replace(/ /g, '_')}>
 										{locale.texts[tab.name.replace(/ /g, '_').toUpperCase()]}
@@ -82,11 +78,7 @@ const MobilePageComponent = ({ containerModule, setMessage }) => {
 							setMessage,
 						}
 						return (
-							<AccessControl
-								renderNoAccess={() => null}
-								platform={tab.platform}
-								key={tab.name}
-							>
+							<AccessControl platform={tab.platform} key={tab.name}>
 								<Tab.Pane eventKey={tab.name.replace(/ /g, '_')}>
 									{tab.component(props)}
 								</Tab.Pane>

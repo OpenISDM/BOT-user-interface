@@ -262,7 +262,6 @@ class GeoFenceSettingBlock extends React.Component {
 			<div>
 				<div className="d-flex justify-content-start">
 					<AccessControl
-						renderNoAccess={() => null}
 						platform={['browser', 'tablet']}
 					>
 						<ButtonToolbar>

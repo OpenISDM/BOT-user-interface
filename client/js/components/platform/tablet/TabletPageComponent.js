@@ -55,11 +55,7 @@ const TabletPageComponent = ({ containerModule, setMessage }) => {
 				<BOTNav>
 					{tabList.map((tab) => {
 						return (
-							<AccessControl
-								renderNoAccess={() => null}
-								platform={tab.platform}
-								key={tab.name}
-							>
+							<AccessControl platform={tab.platform} key={tab.name}>
 								<Nav.Item>
 									<BOTNavLink eventKey={tab.name.replace(/ /g, '_')}>
 										{locale.texts[tab.name.replace(/ /g, '_').toUpperCase()]}
@@ -76,11 +72,7 @@ const TabletPageComponent = ({ containerModule, setMessage }) => {
 							setMessage,
 						}
 						return (
-							<AccessControl
-								renderNoAccess={() => null}
-								platform={tab.platform}
-								key={tab.name}
-							>
+							<AccessControl platform={tab.platform} key={tab.name}>
 								<Tab.Pane eventKey={tab.name.replace(/ /g, '_')}>
 									{tab.component(props)}
 								</Tab.Pane>

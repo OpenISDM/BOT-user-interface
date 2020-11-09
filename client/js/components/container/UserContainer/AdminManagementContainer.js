@@ -237,7 +237,7 @@ class AdminManagementContainer extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-start">
-					<AccessControl renderNoAccess={() => null}>
+					<AccessControl>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="mb-1 mr-1"

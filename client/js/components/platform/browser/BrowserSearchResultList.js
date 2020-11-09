@@ -33,23 +33,11 @@
 */
 
 import React, { Fragment } from 'react'
-import { Button, Col, Row } from 'react-bootstrap'
-import ScrollArea from 'react-scrollbar'
+import { Col, Row } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
 import SearchResultListGroup from '../../presentational/SearchResultListGroup'
 import LocaleContext from '../../../context/LocaleContext'
 import { Title } from '../../BOTComponent/styleComponent'
-
-const style = {
-	noResultDiv: {
-		color: 'grey',
-		fontSize: '1rem',
-	},
-	list: {
-		maxHeight: '60vh',
-		overflow: 'hidden scroll',
-	},
-}
 
 const BrowserSearchResultList = ({
 	searchResult,
@@ -70,7 +58,7 @@ const BrowserSearchResultList = ({
 				<Title>{title}</Title>
 			</Row>
 
-			{searchResult.length == 0 ? (
+			{searchResult.length === 0 ? (
 				<Col className="d-flex justify-content-center color-grey">
 					{locale.texts.NO_RESULT}
 				</Col>
@@ -84,6 +72,7 @@ const BrowserSearchResultList = ({
 					<AccessControl
 						permission={'form:edit'}
 						renderNoAccess={() => (
+							// TODO: To be refined
 							<SearchResultListGroup
 								data={searchResult}
 								selection={selection}

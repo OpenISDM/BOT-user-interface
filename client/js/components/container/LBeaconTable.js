@@ -235,7 +235,6 @@ class LbeaconTable extends React.Component {
 			<Fragment>
 				<div className="d-flex justify-content-start">
 					<AccessControl
-						renderNoAccess={() => null}
 						platform={['browser', 'tablet']}
 					>
 						<ButtonToolbar>

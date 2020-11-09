@@ -342,10 +342,7 @@ class ImportObjectTable extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-between">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<InputFiles
 								accept=".xlsx, .xls"

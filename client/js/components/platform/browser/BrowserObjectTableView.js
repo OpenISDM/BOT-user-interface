@@ -74,7 +74,7 @@ const BrowserObjectTableView = ({
 					}}
 					clearSearchResult={null}
 				/>
-				<AccessControl renderNoAccess={() => null} platform={['browser']}>
+				<AccessControl platform={['browser']}>
 					<Select
 						className="mx-2 text-capitalize w-30-view min-height-regular"
 						styles={styleConfig.reactSelectFilter}
@@ -92,10 +92,7 @@ const BrowserObjectTableView = ({
 					/>
 				</AccessControl>
 			</div>
-			<AccessControl
-				renderNoAccess={() => null}
-				platform={['browser', 'tablet']}
-			>
+			<AccessControl platform={['browser', 'tablet']}>
 				<ButtonToolbar>
 					<PrimaryButton
 						className="text-capitalize mr-2 mb-1"

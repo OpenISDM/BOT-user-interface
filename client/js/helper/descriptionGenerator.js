@@ -181,7 +181,7 @@ export const getPosition = (item) => {
 
 export const getMacaddress = (item, locale) => {
 	return (
-		<AccessControl permission={'form:develop'} renderNoAccess={() => null}>
+		<AccessControl permission={'form:develop'}>
 			| {locale.texts.MAC_ADDRESS}: {item.mac_address}
 		</AccessControl>
 	)
@@ -189,7 +189,7 @@ export const getMacaddress = (item, locale) => {
 
 export const getRSSI = (item, locale) => {
 	return (
-		<AccessControl permission={'form:develop'} renderNoAccess={() => null}>
+		<AccessControl permission={'form:develop'}>
 			| {locale.texts.RSSI}: {item.rssi}
 		</AccessControl>
 	)
@@ -206,7 +206,7 @@ export const getID = (item, locale) => {
 
 export const getUpdatedByNLbeacons = (item, locale) => {
 	return (
-		<AccessControl permission={'form:develop'} renderNoAccess={() => null}>
+		<AccessControl permission={'form:develop'}>
 			| {locale.texts.NUM_OF_UPDATED_LBEACON}: {item.updated_by_n_lbeacons}
 		</AccessControl>
 	)

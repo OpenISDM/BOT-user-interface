@@ -414,10 +414,7 @@ class ChangeStatusForm extends React.Component {
 										rows={3}
 									/>
 								</div>
-								<AccessControl
-									platform={['browser', 'tablet']}
-									renderNoAccess={() => null}
-								>
+								<AccessControl platform={['browser', 'tablet']}>
 									<Row className="d-flex justify-content-center pb-2">
 										<ButtonToolbar>
 											<Button

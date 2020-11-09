@@ -582,7 +582,7 @@ class ObjectTable extends React.Component {
 							}}
 							clearSearchResult={null}
 						/>
-						<AccessControl renderNoAccess={() => null} platform={['browser']}>
+						<AccessControl platform={['browser']}>
 							<Select
 								name="Select Type"
 								className="mx-2 w-30-view min-height-regular"
@@ -637,10 +637,7 @@ class ObjectTable extends React.Component {
 							/>
 						</AccessControl>
 					</div>
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								name={EXTRACT_DEVICE_INFO}

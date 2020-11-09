@@ -67,7 +67,7 @@ const MobileObjectTableView = ({
 					clearSearchResult={null}
 				/>
 			</div>
-			<AccessControl renderNoAccess={() => null} platform={['mobile']}>
+			<AccessControl platform={['mobile']}>
 				<Select
 					name="Select Area Patient"
 					className="mb-2"

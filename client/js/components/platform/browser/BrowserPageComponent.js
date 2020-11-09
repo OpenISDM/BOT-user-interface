@@ -57,18 +57,14 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 			}}
 		>
 			<div className="BOTsidenav">
-				<AccessControl permission={permission} renderNoAccess={() => null}>
+				<AccessControl permission={permission}>
 					<div className="font-size-120-percent font-weight-bold color-black">
 						{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
 					</div>
 					<ListGroup>
 						{tabList.map((tab, index) => {
 							return (
-								<AccessControl
-									key={index}
-									permission={tab.permission}
-									renderNoAccess={() => null}
-								>
+								<AccessControl key={index} permission={tab.permission}>
 									<BOTSideNav
 										key={index}
 										eventKey={tab.name.replace(/ /g, '_')}
@@ -91,11 +87,7 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 							key,
 						}
 						return (
-							<AccessControl
-								key={index}
-								permission={tab.permission}
-								renderNoAccess={() => null}
-							>
+							<AccessControl key={index} permission={tab.permission}>
 								<Tab.Pane
 									eventKey={tab.name.replace(/ /g, '_')}
 									key={tab.name.replace(/ /g, '_')}

@@ -219,10 +219,7 @@ class ObjectEditedRecord extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								onClick={() => {

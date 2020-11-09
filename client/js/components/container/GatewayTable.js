@@ -235,10 +235,7 @@ class GatewayTable extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="mb-1 text-capitalize mr-2"

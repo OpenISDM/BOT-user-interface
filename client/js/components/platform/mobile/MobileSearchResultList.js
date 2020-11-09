@@ -72,7 +72,7 @@ const MobileSearchResultList = ({
 				<Title>{title}</Title>
 			</Row>
 			<Row>
-				{searchResult.length == 0 ? (
+				{searchResult.length === 0 ? (
 					<Col
 						className="d-flex justify-content-center font-weight-lighter"
 						style={style.noResultDiv}
@@ -90,6 +90,7 @@ const MobileSearchResultList = ({
 							<AccessControl
 								permission={'form:edit'}
 								renderNoAccess={() => (
+									// TODO: To be refined
 									<SearchResultListGroup
 										data={searchResult}
 										selection={selection}
