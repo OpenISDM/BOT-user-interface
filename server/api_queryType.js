@@ -172,6 +172,43 @@ const get_data = (
 	return query
 }
 
+const get_people_history_data()=>{
+	let queryText = ``;
+
+	let parameter = [];
+
+	return {queryText, parameter};
+}
+
+const get_people_realtime_data(key)=>{
+	let queryText = `
+	select 
+	object_summary_table.id as object_id, 
+	object_summary_table.mac_address as mac_address, 
+	object_table.name as object_name, 
+	object_summary_table.updated_by_area as area_id, 
+	area_table.readable_name as area_name, 
+	object_summary_table.uuid as Lbeacon_uuid,
+	lbeacon_table.description as Lbeacon_description, 
+	object_summary_table.payload as payload
+	from object_summary_table
+	
+	inner join object_table	
+	on object_summary_table.mac_address = object_table.mac_address 
+	and object_table.type = 'Patient'
+
+	inner join area_table
+	on object_summary_table.updated_by_area = area_table.id
+	
+	inner join lbeacon_table
+	on object_summary_table.uuid = lbeacon_table.uuid
+	`;
+
+	let parameter = [key];
+
+	return {queryText, parameter};
+}
+
 export default {
 	confirmValidation,
 	setKey,
