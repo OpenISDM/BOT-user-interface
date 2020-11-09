@@ -6,6 +6,93 @@ import pool from './api/db/connection'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
+import { response } from 'express'
+
+
+async function get_people_realtime_data(request, response){
+	const {key} =request.body;
+
+	let matchRes = await matchRes(key);
+
+	if(matchRes == 1){
+		let data = 
+			await pool.query(queryType.get_people_realtime_data(key))
+					  .catch(
+						(err)=>{
+							console.log(`get realtime data failed : ${err} `);
+						});
+		if(data != undefined){
+			console.log(`get realtime data successful`);
+
+			response.json(data);
+		}
+	}
+	else if(matchRes ==2){
+		response.json(error_code.key_timeout);
+	}
+	else{
+		response.json(error_code.key_incorrect);
+	}
+}
+async function get_people_history_data(request, response){
+	const {key, start_time, end_time, count_limit, sort_type} = request.body;
+
+	let matchRes = await matchRes(key);
+
+	if(matchRes ==1){
+		//start time 
+		if(start_time != undefined){
+			if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
+				response.json(error_code.start_time_error)
+			} else {
+				// if format right then convert to utc
+				start_time = time_format(start_time)
+			}
+		}else{
+			start_time = moment(moment().subtract(1, 'day')).format(timeDefaultFormat);
+		}
+
+		//end time
+		if(end_time != undefined){
+			if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
+				response.json(error_code.end_time_error)
+			} else {
+				end_time = time_format(end_time)
+			}
+		}else{
+			end_time = moment(moment()).format(timeDefaultFormat);
+		}
+
+		//count_limit is 10
+		if(count_limit == undefined)
+			count_limit = 10;
+		
+		//0=DESC 1=ASC  : default=0
+		if (sort_type == undefined) {
+			sort_type = 'desc'
+		} else if (sort_type != 'desc' && sort_type != 'asc') {
+			response.json(error_code.sort_type_define_error)
+		}
+
+		let data = 
+			await pool.query(queryType.get_people_history_data(key,start_time, end_time,count_limit, sort_type))
+			.catch((err)=>{
+					console.log(`get people history data failed : ${err}`);
+			});
+
+		if(data != undefined){
+			console.log(`get people history data successed.`);
+
+			response.json(data);
+		}
+	}
+	else if(matchRes ==2){
+		response.json(error_code.key_timeout);
+	}
+	else {
+		response.json(error_code.key_incorrect);
+	} 
+}
 
 const get_api_key = (request, response) => {
 	const { username, password } = request.body
@@ -68,11 +155,6 @@ async function get_history_data(request, response) {
 		count_limit, //
 		sort_type,
 	} = request.body
-
-	// let matchRes = Promise.resolve(match_key(key))
-	// await matchRes.then(function (result) {
-	// 	matchRes = result
-	// })
 
 	let matchRes = await match_key(key);
 
