@@ -38,9 +38,7 @@ import { get, put, del } from '../helper/httpClient'
 export default {
 	async getLbeaconTable({ locale }) {
 		return await get(lbeacon, {
-			params: {
-				locale,
-			},
+			locale,
 		})
 	},
 

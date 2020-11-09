@@ -58,9 +58,7 @@ const patientGroupListApis = {
 
 	async getDetailByAreaId(areaId) {
 		return await get(patientGruopDetailByAreaId, {
-			params: {
-				areaId,
-			},
+			areaId,
 		})
 	},
 }

@@ -38,9 +38,7 @@ import { get, post, put, del } from '../helper/httpClient'
 export default {
 	async getAllUser({ locale }) {
 		return await get(userPath, {
-			params: {
-				locale,
-			},
+			locale,
 		})
 	},
 

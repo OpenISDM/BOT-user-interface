@@ -38,10 +38,8 @@ import { post, get, del } from '../helper/httpClient'
 export default {
 	async getImportedObjectTable({ locale, type }) {
 		return await get(importedObject, {
-			params: {
-				locale,
-				type,
-			},
+			locale,
+			type,
 		})
 	},
 

@@ -38,9 +38,7 @@ import { get, del, put } from '../helper/httpClient'
 export default {
 	async getGatewayTable({ locale }) {
 		return await get(gateway, {
-			params: {
-				locale,
-			},
+			locale,
 		})
 	},
 

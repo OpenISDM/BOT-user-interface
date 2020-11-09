@@ -41,11 +41,9 @@ export default {
 	 */
 	async getObjectTable({ locale, areas_id, objectType }) {
 		return await get(object.object, {
-			params: {
-				locale,
-				areas_id,
-				objectType,
-			},
+			locale,
+			areas_id,
+			objectType,
 		})
 	},
 

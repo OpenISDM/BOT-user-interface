@@ -61,9 +61,7 @@ const deviceGroupListApis = {
 
 	async getDetailByAreaId(areaId) {
 		return await get(deviceGruopDetailByAreaId, {
-			params: {
-				areaId,
-			},
+			areaId,
 		})
 	},
 }

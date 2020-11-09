@@ -37,13 +37,15 @@ import { get, post } from '../helper/httpClient'
 
 async function getByUserId({ areaId, userId }) {
 	return await get(userAssignments.getByUserId, {
-		params: { areaId, userId },
+		areaId,
+		userId,
 	})
 }
 
 async function getGroupIdListByUserId({ areaId, userId }) {
 	return await get(userAssignments.getGroupIdListByUserId, {
-		params: { areaId, userId },
+		areaId,
+		userId,
 	})
 }
 
