@@ -53,7 +53,7 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 
 module.exports = {
 	entry: './client/index.js',
-	mode: env.NODE_ENV,
+	mode: 'production',
 	devtool: 'none',
 	output: {
 		path: path.join(__dirname, 'server/dist'),
