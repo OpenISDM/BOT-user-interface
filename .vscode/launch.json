@@ -7,8 +7,19 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"runtimeVersion": "12.18.4",
 			"name": "Launch Program",
+			"skipFiles": ["<node_internals>/**"],
+			"program": "${workspaceFolder}/server/index.js",
+			"runtimeArgs": [
+				"--experimental-modules",
+				"--es-module-specifier-resolution=node"
+			]
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"runtimeVersion": "12.18.4",
+			"name": "Launch Program with NVM",
 			"skipFiles": ["<node_internals>/**"],
 			"program": "${workspaceFolder}/server/index.js",
 			"runtimeArgs": [
