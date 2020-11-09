@@ -45,7 +45,7 @@ import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
 import AccessControl from '../../authentication/AccessControl'
 import apiHelper from '../../../helper/apiHelper'
-import { RETURNED, BROKEN, TRANSFERRED, TRACE } from '../../../config/wordMap'
+import { NORMAL, BROKEN, TRANSFERRED, TRACE } from '../../../config/wordMap'
 import PropTypes from 'prop-types'
 import { isEmpty } from '../../../helper/validation'
 
@@ -160,7 +160,7 @@ class ChangeStatusForm extends React.Component {
 
 	generateCurrentStatus = (locale, status) => {
 		switch (status) {
-			case RETURNED:
+			case NORMAL:
 				return locale.texts.NORMAL
 			case BROKEN:
 				return locale.texts.BROKEN
@@ -349,8 +349,8 @@ class ChangeStatusForm extends React.Component {
 												<Field
 													component={RadioButton}
 													name="action_options"
-													id={RETURNED}
-													label={locale.texts.RETURNED}
+													id={NORMAL}
+													label={locale.texts.NORMAL}
 												/>
 												<Field
 													component={RadioButton}
