@@ -71,6 +71,7 @@ const en = {
 	GENERATE_AND_VIEW_SHIFT_CHANGE_RECORD:
 		'Generate And View Shift Change Records',
 	DEVICE_SERVICE_REQUEST: 'Request device repair service',
+	SHIFT_CHANGE_HISTORICAL_RECORD: 'Shift Change Historical Record',
 	REQUEST_OBJECT_TRACE: 'Request Object Trace',
 	SHIFT_CHANGE: 'shift change',
 	MONITOR_SETTINGS: 'monitor settings',

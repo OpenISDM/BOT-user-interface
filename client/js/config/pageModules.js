@@ -53,6 +53,7 @@ import Loadable from 'react-loadable'
 import Loader from '../components/presentational/Loader'
 import GeneralSettings from '../components/container/menuContainer/GeneralSettings'
 import GetAssignments from '../components/container/GetAssignments'
+import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHistoricalRecord'
 // import RolePermissionManagement from '../components/container/RolePermissionManagement'
 // import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
 // import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
@@ -227,6 +228,11 @@ export const reportContainerModule = {
 		{
 			name: 'Report Of Historical Notifications',
 			component: () => null,
+			platform: ['browser', 'tablet', 'mobile'],
+		},
+		{
+			name: 'Shift Change Historical Record',
+			component: (props) => <ShiftChangeHistoricalRecord {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 	],
