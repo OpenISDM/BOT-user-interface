@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "waderyan.gitblame",
+      "donjayamanne.githistory",
+      "eamodio.gitlens",
+      "eg2.vscode-npm-script",
+      "christian-kohler.npm-intellisense",
+      "esbenp.prettier-vscode",
+  ]
+}
