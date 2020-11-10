@@ -35,7 +35,7 @@
 import config from '../config'
 import React from 'react'
 import AccessControl from '../components/authentication/AccessControl'
-import { RESERVE, RETURNED } from '../config/wordMap'
+import { RESERVE, RETURNED, TRANSFERRED, BROKEN } from '../config/wordMap'
 import { isEqual } from 'lodash'
 
 export const getDescription = (item, locale, keywordType) => {
@@ -210,4 +210,11 @@ export const getUpdatedByNLbeacons = (item, locale) => {
 			| {locale.texts.NUM_OF_UPDATED_LBEACON}: {item.updated_by_n_lbeacons}
 		</AccessControl>
 	)
+}
+
+export const getLastUpdatedUserName = (item, locale) => {
+	const showUserName =
+		isEqual(item.status, BROKEN) || isEqual(item.status, TRANSFERRED)
+	const userName = item.edit_user_name ? item.edit_user_name : ''
+	return showUserName ? ` | ${locale.texts.STATUS_CHANGED_BY}: ${userName}` : ''
 }

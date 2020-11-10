@@ -38,6 +38,7 @@ import AccessControl from '../../authentication/AccessControl'
 import SearchResultListGroup from '../../presentational/SearchResultListGroup'
 import LocaleContext from '../../../context/LocaleContext'
 import { Title } from '../../BOTComponent/styleComponent'
+import PropTypes from 'prop-types'
 
 const BrowserSearchResultList = ({
 	searchResult,
@@ -93,6 +94,16 @@ const BrowserSearchResultList = ({
 			)}
 		</Fragment>
 	)
+}
+
+BrowserSearchResultList.propTypes = {
+	searchResult: PropTypes.array.isRequired,
+	title: PropTypes.string.isRequired,
+	selection: PropTypes.array.isRequired,
+	onSelect: PropTypes.func.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchKey: PropTypes.string.isRequired,
 }
 
 export default BrowserSearchResultList
