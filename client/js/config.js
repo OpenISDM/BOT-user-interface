@@ -39,6 +39,7 @@ import mapConfig from './config/mapConfig'
 import viewConfig from './config/viewConfig'
 import moment from 'moment'
 import supportedLocale from './locale/supportedLocale'
+import botFeaturesConfig from './config/botFeaturesConfig'
 
 const config = {
 	VERSION: `v${version} b.1977`,
@@ -214,6 +215,8 @@ const config = {
 	},
 
 	...viewConfig,
+
+	...botFeaturesConfig,
 
 	mapConfig,
 

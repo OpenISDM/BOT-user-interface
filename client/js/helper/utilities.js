@@ -84,3 +84,9 @@ export const compareString = (firstString, secondString) => {
 	}
 	return false
 }
+
+export const convertConfigValue = (config) => {
+	return JSON.parse(config, (k, v) => {
+		return v === 'true' ? true : v === 'false' ? false : v
+	})
+}
