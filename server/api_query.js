@@ -30,7 +30,8 @@ async function get_people_realtime_data(request, response) {
 	}
 }
 async function get_people_history_data(request, response) {
-	let { key, start_time, end_time, count_limit, sort_type } = request.body
+	const { key } = request.body
+	let { start_time, end_time, count_limit, sort_type } = request.body
 
 	const matchRes = await match_key(key)
 
@@ -85,7 +86,7 @@ async function get_people_history_data(request, response) {
 		if (data !== undefined) {
 			console.log('get people history data successed.')
 
-			data.rows.map((item) => {
+			data.rows.forEach((item) => {
 				item.record_timestamp = moment(item.record_timestamp).format(
 					timeDefaultFormat
 				)
@@ -107,7 +108,7 @@ const get_api_key = (request, response) => {
 	pool
 		.query(queryType.getAllUserQuery) //verification by sha256
 		.then((res) => {
-			res.rows.map((item) => {
+			res.rows.forEach((item) => {
 				if (username === item.name && password === item.password) {
 					getUserName = item.name
 				}
@@ -149,8 +150,8 @@ const get_api_key = (request, response) => {
 }
 
 async function get_history_data(request, response) {
+	const { key } = request.body
 	let {
-		key,
 		tag, // string
 		Lbeacon, // string
 		start_time, // YYYY/MM/DD HH:mm:ss
@@ -195,7 +196,7 @@ async function get_history_data(request, response) {
 			const pattern = new RegExp(
 				'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
 			)
-			tag.map((item) => {
+			tag.forEach((item) => {
 				if (item.match(pattern) == null) {
 					//judge format
 					response.json(error_code.mac_address_error)
@@ -209,7 +210,7 @@ async function get_history_data(request, response) {
 			const pattern = new RegExp(
 				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
 			)
-			Lbeacon.map((item) => {
+			Lbeacon.forEach((item) => {
 				if (item.match(pattern) == null) {
 					//judge format
 					response.json(error_code.Lbeacon_error)
@@ -241,10 +242,9 @@ async function get_history_data(request, response) {
 			sort_type
 		)
 
-		data.map((item) => {
+		data.forEach((item) => {
 			item.start_time = moment(item.start_time).format(timeDefaultFormat)
 			item.end_time = moment(item.end_time).format(timeDefaultFormat)
-			return item
 		})
 
 		response.json(data)
@@ -261,14 +261,13 @@ async function match_key(key) {
 	return await pool
 		.query(queryType.getAllKeyQuery)
 		.then((res) => {
-			res.rows.map((item) => {
+			res.rows.forEach((item) => {
 				const vaildTime = moment(item.register_time).add(30, 'm')
 				if (moment().isBefore(moment(vaildTime)) && item.key === key) {
 					matchFlag = 1 //in time & key right
 				} else if (moment().isAfter(moment(vaildTime)) && item.key === key) {
 					matchFlag = 2 // out time & key right
 				}
-				return matchFlag
 			})
 			return matchFlag
 		})
@@ -295,11 +294,11 @@ function check_input_error(start_time, end_time, sort_type, count_limit) {
 	}
 }
 
-function set_start_time(start_time){
-	if(start_time === undefined){
+function set_start_time(start_time) {
+	if (start_time === undefined) {
 		return moment(moment().subtract(1, 'day')).format()
 	}
-	return set_time_format(start_time);
+	return set_time_format(start_time)
 }
 
 function set_sort_type(sort_type) {
@@ -342,7 +341,7 @@ async function get_history_data_from_db(
 		) //get area id
 		.then((res) => {
 			console.log('get_data success')
-			res.rows.map((item) => {
+			res.rows.forEach((item) => {
 				item.area_name = tw[item.area_name.toUpperCase().replace(/ /g, '_')]
 				item.duration.hours = set_duration_time(item.duration.hours)
 				item.duration.minutes = set_duration_time(item.duration.minutes)
@@ -350,7 +349,6 @@ async function get_history_data_from_db(
 				item.duration.milliseconds = set_duration_time(
 					item.duration.milliseconds
 				)
-				return item
 			})
 			return res.rows
 		})
