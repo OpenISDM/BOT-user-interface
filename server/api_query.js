@@ -295,11 +295,25 @@ function check_input_error(start_time, end_time, sort_type, count_limit) {
 	}
 }
 
+function set_start_time(start_time){
+	if(start_time === undefined){
+		return moment(moment().subtract(1, 'day')).format()
+	}
+	return set_time_format(start_time);
+}
+
 function set_sort_type(sort_type) {
 	if (sort_type === undefined) {
 		return 'desc'
 	}
 	return sort_type
+}
+
+function set_time_format(time) {
+	if (time !== undefined) {
+		return moment(time, timeDefaultFormat).format()
+	}
+	return time
 }
 
 function DateIsValid(time) {
@@ -348,13 +362,6 @@ async function get_history_data_from_db(
 function set_duration_time(time) {
 	if (time === undefined) {
 		return 0
-	}
-	return time
-}
-
-function set_time_format(time) {
-	if (time !== undefined) {
-		return moment(time, timeDefaultFormat).format()
 	}
 	return time
 }
