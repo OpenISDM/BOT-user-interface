@@ -6,13 +6,13 @@ import pool from './api/db/connection'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
-import { response } from 'express'
+//import { response } from 'express'
 
 
 async function get_people_realtime_data(request, response){
 	const {key} =request.body;
 
-	let matchRes = await matchRes(key);
+	let matchRes = await match_key(key);
 
 	if(matchRes == 1){
 		let data = 
@@ -24,7 +24,7 @@ async function get_people_realtime_data(request, response){
 		if(data != undefined){
 			console.log(`get realtime data successful`);
 
-			response.json(data);
+			response.json(data.rows);
 		}
 	}
 	else if(matchRes ==2){
@@ -35,11 +35,12 @@ async function get_people_realtime_data(request, response){
 	}
 }
 async function get_people_history_data(request, response){
-	const {key, start_time, end_time, count_limit, sort_type} = request.body;
+	let {key, start_time, end_time, count_limit, sort_type} = request.body;
 
-	let matchRes = await matchRes(key);
+	let matchRes = await match_key(key);
 
 	if(matchRes ==1){
+
 		//start time 
 		if(start_time != undefined){
 			if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
@@ -49,7 +50,7 @@ async function get_people_history_data(request, response){
 				start_time = time_format(start_time)
 			}
 		}else{
-			start_time = moment(moment().subtract(1, 'day')).format(timeDefaultFormat);
+			start_time = moment(moment().subtract(1, 'day')).format();
 		}
 
 		//end time
@@ -60,7 +61,7 @@ async function get_people_history_data(request, response){
 				end_time = time_format(end_time)
 			}
 		}else{
-			end_time = moment(moment()).format(timeDefaultFormat);
+			end_time = moment(moment()).format();
 		}
 
 		//count_limit is 10
@@ -73,7 +74,7 @@ async function get_people_history_data(request, response){
 		} else if (sort_type != 'desc' && sort_type != 'asc') {
 			response.json(error_code.sort_type_define_error)
 		}
-
+		console.log(queryType.get_people_history_data(key,start_time,end_time,count_limit, sort_type));
 		let data = 
 			await pool.query(queryType.get_people_history_data(key,start_time, end_time,count_limit, sort_type))
 			.catch((err)=>{
@@ -83,7 +84,7 @@ async function get_people_history_data(request, response){
 		if(data != undefined){
 			console.log(`get people history data successed.`);
 
-			response.json(data);
+			response.json(data.rows);
 		}
 	}
 	else if(matchRes ==2){
@@ -228,6 +229,7 @@ async function get_history_data(request, response) {
 			response.json(error_code.sort_type_define_error)
 		}
 
+
 		//data = Promise.resolve(
 		let data = await get_data(key, start_time, end_time, tag, Lbeacon, count_limit, sort_type)
 		//)
@@ -278,6 +280,8 @@ async function get_data(
 	count_limit,
 	sort_type
 ) {
+	// console.log(queryType.get_data(key, start_time, end_time, tag, Lbeacon,count_limit, sort_type).text);
+	// console.log(queryType.get_data(key,start_time,end_time,tag,Lbeacon, count_limit, sort_type).values);
 	return await pool
 		.query(
 			queryType.get_data(
@@ -317,4 +321,6 @@ function time_format(time) {
 export default {
 	get_api_key,
 	get_history_data,
+	get_people_history_data,
+	get_people_realtime_data
 }

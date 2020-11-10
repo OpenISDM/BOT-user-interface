@@ -206,10 +206,10 @@ const get_people_history_data= (key, start_time,end_time, count_limit, sort_type
 	inner join lbeacon_table
 	on location_history_table.uuid = lbeacon_table.uuid
 	
-	where record_timestamp > ${start_time} && record_timestamp<${end_time}
+	where record_timestamp > '${start_time}' AND record_timestamp < '${end_time}'
 
 	order by record_timestamp ${sort_type}
-	limit ${count_limit};`;
+	limit ${count_limit}`;
 }
 
 const get_people_realtime_data = (key)=>{
@@ -232,7 +232,7 @@ const get_people_realtime_data = (key)=>{
 		from api_key 
 		inner join user_table 
 		on api_key.id = user_table.id
-		where api_key.key = ${key}) as user_area_table
+		where api_key.key = '${key}') as user_area_table
 	on user_area_table.area_id = object_summary_table.updated_by_area
 --		
 	inner join area_table

@@ -10,4 +10,6 @@ export default (app) => {
 	app.post('/api/1.0/tracing/history/people', mockup.get_history_data);
 	app.post('/api/1.0/tracing/realtime/people', mockup.get_realtime_data);
 
+	app.post('/api/1.1/history', db.get_people_history_data);
+	app.post('/api/realtime', db.get_people_realtime_data);
 }
