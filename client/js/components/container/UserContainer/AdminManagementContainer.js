@@ -289,6 +289,7 @@ class AdminManagementContainer extends React.Component {
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
 					handleSubmit={this.handleWarningChecked}
+					message={locale.texts.ARE_YOU_SURE_TO_DELETE}
 				/>
 			</Fragment>
 		)
