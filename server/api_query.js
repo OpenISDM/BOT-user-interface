@@ -74,7 +74,7 @@ async function get_people_history_data(request, response){
 		} else if (sort_type != 'desc' && sort_type != 'asc') {
 			response.json(error_code.sort_type_define_error)
 		}
-		console.log(queryType.get_people_history_data(key,start_time,end_time,count_limit, sort_type));
+
 		let data = 
 			await pool.query(queryType.get_people_history_data(key,start_time, end_time,count_limit, sort_type))
 			.catch((err)=>{
@@ -284,8 +284,6 @@ async function get_data(
 	count_limit,
 	sort_type
 ) {
-	// console.log(queryType.get_data(key, start_time, end_time, tag, Lbeacon,count_limit, sort_type).text);
-	// console.log(queryType.get_data(key,start_time,end_time,tag,Lbeacon, count_limit, sort_type).values);
 	return await pool
 		.query(
 			queryType.get_data(
