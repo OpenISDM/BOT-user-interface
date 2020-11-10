@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import AppContext from './js/context/AppContext'
+import CombinedContext from './js/context/AppContext'
 import PrivateRoutes from './js/components/utils/PrivateRoutes'
 import { ToastContainer } from 'react-toastify'
 import config from './js/config'
@@ -42,17 +42,24 @@ import publicRoutes from './js/config/routes/publicRoutesConfig'
 
 const App = () => {
 	return (
-		<AppContext>
+		<CombinedContext>
 			<BrowserRouter>
 				<Switch>
-					{publicRoutes.map((route) => {
-						return <Route path={route.path} exact component={route.component} />
+					{publicRoutes.map((route, index) => {
+						return (
+							<Route
+								path={route.path}
+								key={index}
+								exact
+								component={route.component}
+							/>
+						)
 					})}
 					<PrivateRoutes />
 				</Switch>
 			</BrowserRouter>
 			<ToastContainer {...config.TOAST_PROPS} />
-		</AppContext>
+		</CombinedContext>
 	)
 }
 
