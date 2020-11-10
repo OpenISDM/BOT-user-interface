@@ -32,11 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { area } from '../dataSrc'
+import { post } from '../helper/httpClient'
 
 export default {
 	async getAreaTable() {
-		return await axios.post(dataSrc.area)
+		return await post(area)
 	},
 }

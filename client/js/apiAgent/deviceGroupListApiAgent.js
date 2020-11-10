@@ -33,33 +33,35 @@
 */
 
 import { deviceGroupList, deviceGruopDetailByAreaId } from '../dataSrc'
-import axios from 'axios'
+import { get, post, put, del } from '../helper/httpClient'
 
 const deviceGroupListApis = {
 	async addDeviceGroupList({ name, areaId }) {
-		return await axios.post(deviceGroupList, {
+		return await post(deviceGroupList, {
 			name,
 			areaId,
 		})
 	},
+
 	async getDeviceGroupList() {
-		return await axios.get(deviceGroupList)
+		return await get(deviceGroupList)
 	},
+
 	async modifyDeviceGroupList({ groupId, mode, itemId }) {
-		return await axios.put(deviceGroupList, {
+		return await put(deviceGroupList, {
 			groupId,
 			mode,
 			itemId,
 		})
 	},
+
 	async deleteGroup(groupId) {
-		return await axios.delete(deviceGroupList, { data: groupId })
+		return await del(deviceGroupList, groupId)
 	},
+
 	async getDetailByAreaId(areaId) {
-		return await axios.get(deviceGruopDetailByAreaId, {
-			params: {
-				areaId,
-			},
+		return await get(deviceGruopDetailByAreaId, {
+			areaId,
 		})
 	},
 }

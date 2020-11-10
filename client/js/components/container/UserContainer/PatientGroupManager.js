@@ -17,7 +17,7 @@ class PatientGroupManager extends React.Component {
 		showAddGroupForm: false,
 		showDeleteModal: false,
 		areaOptions: null,
-		patientGroupListOptions: null,
+		patientGroupListOptions: [],
 		allPatients: [],
 	}
 
@@ -219,7 +219,7 @@ class PatientGroupManager extends React.Component {
 						isClearable
 						value={selectedOption}
 						onChange={this.selectPatientGroup}
-						options={patientGroupListOptions}
+						options={patientGroupListOptions || []}
 					/>
 				</div>
 				<DualListBox

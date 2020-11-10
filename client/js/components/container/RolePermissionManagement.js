@@ -70,6 +70,7 @@ class RolePermissionManagement extends React.Component {
 		permissionList: [],
 		rolesPermission: [],
 		permissionType: ['form', 'route', 'user'],
+		roleList: [],
 	}
 
 	columns = [
@@ -113,91 +114,90 @@ class RolePermissionManagement extends React.Component {
 	}
 
 	getRolesPermission = () => {
-		axios
-			.get(dataSrc.getRolesPermission)
-			.then((res) => {
-				const rolesList = res.data.roles_list.map((role) => {
-					return {
-						label: role.name,
-						value: role.name,
-						id: role.id,
-					}
-				})
-				this.setState({
-					permissionList: res.data.permission_list,
-					rolesPermission: res.data.roles_permission,
-					roleList: rolesList,
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// axios
+		// 	.get(dataSrc.getRolesPermission)
+		// 	.then((res) => {
+		// 		const rolesList = res.data.roles_list.map((role) => {
+		// 			return {
+		// 				label: role.name,
+		// 				value: role.name,
+		// 				id: role.id,
+		// 			}
+		// 		})
+		// 		this.setState({
+		// 			permissionList: res.data.permission_list,
+		// 			rolesPermission: res.data.roles_permission,
+		// 			roleList: rolesList,
+		// 		})
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	}
 
 	addPermission = (type, e) => {
-		axios
-			.post(dataSrc.modifyPermission, {
-				type: 'add permission',
-				permissionType: type,
-				name: 'new permission',
-			})
-			.then((res) => {
-				this.getRolesPermission()
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// axios
+		// 	.post(dataSrc.modifyPermission, {
+		// 		type: 'add permission',
+		// 		permissionType: type,
+		// 		name: 'new permission',
+		// 	})
+		// 	.then((res) => {
+		// 		this.getRolesPermission()
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	}
 
 	renamePermissionToState = (type, id, e) => {
 		this.state.permissionList.map((permission) => {
 			if (permission.id == id) {
 				permission.name = `${type}:${e.target.value}`
-				return
 			}
 		})
 	}
 	renamePermissionToBackend = (type, id, e) => {
 		if (e.target.value) {
-			axios
-				.post(dataSrc.modifyPermission, {
-					type: 'rename permission',
-					permissionType: type,
-					id,
-					name: e.target.value,
-				})
-				.then((res) => {
-					this.getRolesPermission()
-				})
-				.catch((err) => {
-					console.log(err)
-				})
+			// axios
+			// 	.post(dataSrc.modifyPermission, {
+			// 		type: 'rename permission',
+			// 		permissionType: type,
+			// 		id,
+			// 		name: e.target.value,
+			// 	})
+			// 	.then((res) => {
+			// 		this.getRolesPermission()
+			// 	})
+			// 	.catch((err) => {
+			// 		console.log(err)
+			// 	})
 		}
 	}
 	removePermission = (type, id, e) => {
-		axios
-			.post(dataSrc.modifyPermission, {
-				type: 'remove permission',
-				permissionType: type,
-				id,
-			})
-			.then((res) => {
-				this.getRolesPermission()
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// axios
+		// 	.post(dataSrc.modifyPermission, {
+		// 		type: 'remove permission',
+		// 		permissionType: type,
+		// 		id,
+		// 	})
+		// 	.then((res) => {
+		// 		this.getRolesPermission()
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	}
 
 	onChangeRolesPermission = (sendPackage) => {
-		axios
-			.post(dataSrc.modifyRolesPermission, sendPackage)
-			.then((res) => {
-				this.getRolesPermission()
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// axios
+		// 	.post(dataSrc.modifyRolesPermission, sendPackage)
+		// 	.then((res) => {
+		// 		this.getRolesPermission()
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	}
 
 	render() {
@@ -231,7 +231,7 @@ class RolePermissionManagement extends React.Component {
 								<Select
 									name="selectedRole"
 									placeholder={locale.texts.SELECT_ROLE + '...'}
-									options={this.state.roleList}
+									options={this.state.roleList || []}
 									value={values.selectedRole}
 									onChange={(value) => {
 										let selectedPermission = this.state.rolesPermission.filter(

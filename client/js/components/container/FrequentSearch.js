@@ -142,10 +142,7 @@ class FrequentSearch extends React.Component {
 					>
 						{locale.texts.ALL_PATIENTS}
 					</Button>
-					<AccessControl
-						permission={'user:mydevice'}
-						renderNoAccess={() => null}
-					>
+					<AccessControl permission={'user:mydevice'}>
 						<Button
 							variant="outline-custom"
 							onClick={this.handleClick}
@@ -155,10 +152,7 @@ class FrequentSearch extends React.Component {
 							{locale.texts.MY_DEVICES}
 						</Button>
 					</AccessControl>
-					<AccessControl
-						permission={'user:mypatient'}
-						renderNoAccess={() => null}
-					>
+					<AccessControl permission={'user:mypatient'}>
 						<Button
 							variant="outline-custom"
 							onClick={this.handleClick}

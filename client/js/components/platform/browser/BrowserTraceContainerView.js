@@ -213,7 +213,7 @@ const BrowseTraceContainerView = React.forwardRef(
 											}}
 											isClearable={true}
 											isSearchable={true}
-											options={options[values.mode]}
+											options={options[values.mode] || []}
 											styles={styleConfig.reactSelectSearch}
 											components={styleConfig.reactSelectSearchComponent}
 											placeholder={

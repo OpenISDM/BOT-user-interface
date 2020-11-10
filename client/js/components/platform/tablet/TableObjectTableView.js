@@ -66,7 +66,7 @@ const MobileObjectTableView = ({
 					}}
 					clearSearchResult={null}
 				/>
-				<AccessControl renderNoAccess={() => null} platform={['tablet']}>
+				<AccessControl platform={['tablet']}>
 					<Select
 						name="Select Area Patient"
 						className="mx-2"
@@ -78,7 +78,7 @@ const MobileObjectTableView = ({
 								removeObjectFilter('area select')
 							}
 						}}
-						options={filterSelection.areaSelection}
+						options={filterSelection.areaSelection || []}
 						isClearable={true}
 						isSearchable={true}
 						placeholder={locale.texts.SELECT_AREA}
@@ -86,7 +86,7 @@ const MobileObjectTableView = ({
 				</AccessControl>
 			</div>
 
-			<AccessControl renderNoAccess={() => null} platform={['tablet']}>
+			<AccessControl platform={['tablet']}>
 				<ButtonToolbar>
 					<PrimaryButton
 						className="text-capitalize mr-2 mb-1"

@@ -41,6 +41,7 @@ import {
 	getMacaddress,
 	getRSSI,
 	getUpdatedByNLbeacons,
+	getLastUpdatedUserName,
 } from '../../helper/descriptionGenerator'
 import { countNumber } from '../../helper/dataTransfer'
 import {
@@ -50,24 +51,23 @@ import {
 	SEARCH_HISTORY,
 } from '../../config/wordMap'
 import { ASSIGN_OBJECT } from '../../reducer/action'
+import PropTypes from 'prop-types'
 
 const SearchResultListGroup = ({
 	data,
 	onSelect,
 	selection,
-	disabled,
 	action,
 	searchObjectArray,
 	pinColorArray,
 	searchKey,
-	onClick,
 }) => {
 	const { locale, auth, stateReducer } = React.useContext(AppContext)
 
 	const numberSheet = {}
 
 	const onMouseOver = (e, value) => {
-		const [{}, dispatch] = stateReducer
+		const [, dispatch] = stateReducer
 		dispatch({
 			type: ASSIGN_OBJECT,
 			value,
@@ -75,7 +75,7 @@ const SearchResultListGroup = ({
 	}
 
 	const onMouseOut = () => {
-		const [{}, dispatch] = stateReducer
+		const [, dispatch] = stateReducer
 		dispatch({
 			type: ASSIGN_OBJECT,
 			value: null,
@@ -142,12 +142,23 @@ const SearchResultListGroup = ({
 						{getMacaddress(item, locale)}
 						{getRSSI(item, locale)}
 						{getUpdatedByNLbeacons(item, locale)}
+						{getLastUpdatedUserName(item, locale)}
 					</ListGroup.Item>
 				)
 				return element
 			})}
 		</ListGroup>
 	)
+}
+
+SearchResultListGroup.propTypes = {
+	data: PropTypes.array.isRequired,
+	onSelect: PropTypes.func.isRequired,
+	selection: PropTypes.array.isRequired,
+	action: PropTypes.bool.isRequired,
+	searchObjectArray: PropTypes.array.isRequired,
+	pinColorArray: PropTypes.array.isRequired,
+	searchKey: PropTypes.string.isRequired,
 }
 
 export default SearchResultListGroup

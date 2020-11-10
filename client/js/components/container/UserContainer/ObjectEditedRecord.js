@@ -71,53 +71,52 @@ class ObjectEditedRecord extends React.Component {
 		}
 	}
 
-	getData = () => {
+	getData = async () => {
 		const { locale } = this.context
-		apiHelper.record
-			.getRecord(config.RECORD_TYPE.EDITED_OBJECT, locale.abbr)
-			.then((res) => {
-				const columns = JSONClone(editObjectRecordTableColumn)
-				columns.forEach((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
-				const data = res.data.rows.map((item, index) => {
-					item._id = index + 1
-					item.new_status =
-						locale.texts[item.new_status.toUpperCase().replace(/ /g, '_')]
-					item.edit_time = formatTime(item.edit_time)
-					return item
-				})
+		const res = await apiHelper.record.getRecord(
+			config.RECORD_TYPE.EDITED_OBJECT,
+			locale.abbr
+		)
+		if (res) {
+			const columns = JSONClone(editObjectRecordTableColumn)
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			})
+			const data = res.data.rows.map((item, index) => {
+				item._id = index + 1
+				item.new_status =
+					locale.texts[item.new_status.toUpperCase().replace(/ /g, '_')]
+				item.edit_time = formatTime(item.edit_time)
+				return item
+			})
 
-				this.setState({
-					data,
-					columns,
-					locale: locale.abbr,
-				})
+			this.setState({
+				data,
+				columns,
+				locale: locale.abbr,
 			})
-			.catch((err) => {
-				console.log(`get edited object record failed ${err}`)
-			})
+		}
 	}
 
 	toggleAll = () => {
 		/*
-          'toggleAll' is a tricky concept with any filterable table
-          do you just select ALL the records that are in your data?
-          OR
-          do you only select ALL the records that are in the current filtered data?
+            'toggleAll' is a tricky concept with any filterable table
+            do you just select ALL the records that are in your data?
+            OR
+            do you only select ALL the records that are in the current filtered data?
 
-          The latter makes more sense because 'selection' is a visual thing for the user.
-          This is especially true if you are going to implement a set of external functions
-          that act on the selected information (you would not want to DELETE the wrong thing!).
+            The latter makes more sense because 'selection' is a visual thing for the user.
+            This is especially true if you are going to implement a set of external functions
+            that act on the selected information (you would not want to DELETE the wrong thing!).
 
-          So, to that end, access to the internals of ReactTable are required to get what is
-          currently visible in the table (either on the current page or any other page).
+            So, to that end, access to the internals of ReactTable are required to get what is
+            currently visible in the table (either on the current page or any other page).
 
-          The HOC provides a method call 'getWrappedInstance' to get a ref to the wrapped
-          ReactTable and then get the internal state and the 'sortedData'.
-          That can then be iterrated to get all the currently visible records and set
-          the selection state.
+            The HOC provides a method call 'getWrappedInstance' to get a ref to the wrapped
+            ReactTable and then get the internal state and the 'sortedData'.
+            That can then be iterrated to get all the currently visible records and set
+            the selection state.
         */
 		const selectAll = !this.state.selectAll
 		const selection = []
@@ -139,9 +138,9 @@ class ObjectEditedRecord extends React.Component {
 
 	toggleSelection = (key) => {
 		/*
-          Implementation of how to manage the selection state is up to the developer.
-          This implementation uses an array stored in the component state.
-          Other implementations could use object keys, a Javascript Set, or Redux... etc.
+            Implementation of how to manage the selection state is up to the developer.
+            This implementation uses an array stored in the component state.
+            Other implementations could use object keys, a Javascript Set, or Redux... etc.
         */
 
 		let selection = [...this.state.selection]
@@ -220,10 +219,7 @@ class ObjectEditedRecord extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								onClick={() => {

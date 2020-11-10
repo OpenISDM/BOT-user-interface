@@ -73,31 +73,27 @@ class ImportObjectTable extends React.Component {
 		this.getData()
 	}
 
-	getData = () => {
+	getData = async () => {
 		const { locale } = this.context
 
-		apiHelper.importedObjectApiAgent
-			.getImportedObjectTable({
+		const res = await apiHelper.importedObjectApiAgent.getImportedObjectTable({
+			locale: locale.abbr,
+		})
+		if (res) {
+			const columns = JSONClone(importTableColumn)
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			})
+			const data = res.data.rows.filter((item) => item.type !== 'patient')
+
+			this.setState({
+				data,
+				columns,
+				showDeleteConfirmation: false,
 				locale: locale.abbr,
 			})
-			.then((res) => {
-				const columns = JSONClone(importTableColumn)
-				columns.map((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
-				const data = res.data.rows.filter((item) => item.type != 'patient')
-
-				this.setState({
-					data,
-					columns,
-					showDeleteConfirmation: false,
-					locale: locale.abbr,
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		}
 	}
 
 	handleClose = () => {
@@ -174,20 +170,16 @@ class ImportObjectTable extends React.Component {
 		return this.state.selection.includes(key)
 	}
 
-	deleteRecordImport = () => {
+	deleteRecordImport = async () => {
 		this.setState({ selectAll: false })
 
-		apiHelper.importedObjectApiAgent
-			.deleteImportedObject({
-				idPackage: this.state.selection,
-			})
-			.then((res) => {
-				this.setState({ selection: [] })
-				this.handleSubmitForm()
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		const res = await apiHelper.importedObjectApiAgent.deleteImportedObject({
+			idPackage: this.state.selection,
+		})
+		if (res) {
+			this.setState({ selection: [] })
+			this.handleSubmitForm()
+		}
 	}
 
 	handleClickButton = (e) => {
@@ -304,20 +296,16 @@ class ImportObjectTable extends React.Component {
 				} else if (ReapeName != '') {
 					messageGenerator.importErrorMessage('ASN_IS_REPEAT', ReapeName)
 				} else {
-					apiHelper.importedObjectApiAgent
-						.addImportedObject({
-							locale: locale.abbr,
-							newData,
-						})
-						.then((res) => {
-							this.handleSubmitForm()
-							const callback = () =>
-								messageGenerator.setSuccessMessage('save success')
-							callback()
-						})
-						.catch((err) => {
-							console.log(err)
-						})
+					const res = await apiHelper.importedObjectApiAgent.addImportedObject({
+						locale: locale.abbr,
+						newData,
+					})
+					if (res) {
+						this.handleSubmitForm()
+						const callback = () =>
+							messageGenerator.setSuccessMessage('save success')
+						callback()
+					}
 				}
 			} catch (e) {
 				// 這裡可以拋出文件類型錯誤不正確的相關提示
@@ -354,10 +342,7 @@ class ImportObjectTable extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-between">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<InputFiles
 								accept=".xlsx, .xls"

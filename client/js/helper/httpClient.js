@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        fileApiAgent.js
+        httpClient.js
 
     File Description:
         BOT UI component
@@ -32,19 +32,44 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { file, pdfUrl } from '../dataSrc'
-import { post } from '../helper/httpClient'
+import axios from 'axios'
 
-export default {
-	async getPDF({ userInfo, pdfPackage }) {
-		return await post(file.export.pdf, {
-			userInfo,
-			pdfPackage,
-		})
-	},
+export async function get(url, object) {
+	try {
+		return await axios.get(url, { params: object })
+	} catch (e) {
+		console.log(e)
+	}
+}
 
-	getFile({ path }) {
-		// TODO: put it to utils
-		window.open(pdfUrl(path))
-	},
+export async function post(url, object) {
+	try {
+		return await axios.post(url, object)
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+export async function put(url, object) {
+	try {
+		return await axios.put(url, object)
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+export async function del(url, object) {
+	try {
+		return await axios.delete(url, { data: object })
+	} catch (e) {
+		console.log(e)
+	}
+}
+
+export async function patch(url, object) {
+	try {
+		return await axios.patch(url, object)
+	} catch (e) {
+		console.log(e)
+	}
 }

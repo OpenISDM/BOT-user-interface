@@ -65,15 +65,16 @@ class QRCodeContainer extends React.Component {
 	}
 
 	sendSearchResultToBackend = (searchResultInfo, callBack) => {
-		axios
-			.post(dataSrc.generatePDF, searchResultInfo)
-			.then((res) => {
-				callBack(res.data)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		// axios
+		// 	.post(dataSrc.generatePDF, searchResultInfo)
+		// 	.then((res) => {
+		// 		callBack(res.data)
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err)
+		// 	})
 	}
+
 	componentWillUpdate = (preProps) => {
 		if (this.props.isSearched) {
 			const data = {
@@ -129,10 +130,6 @@ class QRCodeContainer extends React.Component {
 		const { hasData, show, savePath, isDone } = this.state
 
 		const { locale } = this.context
-
-		//var clientHeight = document.getElementById('qrcode').offsetHeight;
-
-		//console.log(this.state.savePath)
 
 		return (
 			<div id="qrcode" style={style.QRcodeDiv}>

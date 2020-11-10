@@ -42,7 +42,6 @@ import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import moment from 'moment'
 import EditPatientForm from '../presentational/form/EditPatientForm'
 import messageGenerator from '../../helper/messageGenerator'
-const SelectTable = selecTableHOC(ReactTable)
 import { patientTableColumn } from '../../config/tables'
 import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
@@ -67,6 +66,8 @@ import {
 	SAVE_SUCCESS,
 	DISASSOCIATE,
 } from '../../config/wordMap'
+
+const SelectTable = selecTableHOC(ReactTable)
 
 class PatientTable extends React.Component {
 	static contextType = AppContext
@@ -101,7 +102,7 @@ class PatientTable extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getRefresh()
 			this.setState({
 				locale: this.context.locale.abbr,
@@ -111,39 +112,37 @@ class PatientTable extends React.Component {
 
 	getRefresh = () => {
 		this.getAreaTable()
-
 		const columns = JSONClone(patientTableColumn)
-
 		const { locale } = this.context
 
-		columns.map((field) => {
+		columns.forEach((field) => {
 			field.Header = this.context.locale.texts[
 				field.Header.toUpperCase().replace(/ /g, '_')
 			]
 		})
 
-		this.state.data.map((item) => {
+		this.state.data.forEach((item) => {
 			item.area_name.label = locale.texts[item.area_name.value]
 			item.object_type.label =
 				locale.texts[item.object_type.value.toUpperCase()]
 			item.registered_timestamp = moment(item.registered_timestamp._i)
 				.locale(this.context.locale.abbr)
 				.format('lll')
-			item.area_name.label == undefined
-				? (item.area_name.label = '*site module error*')
-				: null
+			if (!item.area_name.label) {
+				item.area_name.label = '*site module error*'
+			}
 		})
 
-		this.state.filteredData.map((item) => {
+		this.state.filteredData.forEach((item) => {
 			item.area_name.label = locale.texts[item.area_name.value]
 			item.object_type.label =
 				locale.texts[item.object_type.value.toUpperCase()]
 			item.registered_timestamp = moment(item.registered_timestamp._i)
 				.locale(this.context.locale.abbr)
 				.format('lll')
-			item.area_name.label == undefined
-				? (item.area_name.label = '*site module error*')
-				: null
+			if (!item.area_name.label) {
+				item.area_name.label = '*site module error*'
+			}
 		})
 
 		this.setState({
@@ -152,117 +151,104 @@ class PatientTable extends React.Component {
 		})
 	}
 
-	getData = (callback) => {
+	getData = async (callback) => {
 		const { locale, auth } = this.context
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [0, 1, 2],
-			})
-			.then((res) => {
-				const columns = JSONClone(patientTableColumn)
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [0, 1, 2],
+		})
 
-				columns.map((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+		if (res) {
+			const columns = JSONClone(patientTableColumn)
+
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			})
+
+			const data = res.data.rows
+				.filter((item) => parseInt(item.object_type) !== 0)
+				.map((item) => {
+					item.area_name = {
+						value: item.area_name,
+						label: locale.texts[item.area_name] || '*site module error*',
+						id: item.area_id,
+					}
+					item.monitor_type = transferMonitorTypeToString(item)
+					item.object_type = {
+						...config.GENDER_OPTIONS[item.object_type],
+						label:
+							locale.texts[
+								config.GENDER_OPTIONS[item.object_type].value.toUpperCase()
+							],
+					}
+					item.isBind = item.mac_address ? 1 : 0
+					item.mac_address = item.mac_address
+						? item.mac_address
+						: locale.texts.NON_BINDING
+
+					item.registered_timestamp = formatTime(item.registered_timestamp)
+
+					return item
 				})
 
-				const data = res.data.rows
-					.filter((item) => item.object_type != 0)
-					.map((item) => {
-						item.area_name = {
-							value: item.area_name,
-							label: locale.texts[item.area_name] || '*site module error*',
-							id: item.area_id,
-						}
-						item.monitor_type = transferMonitorTypeToString(item)
-						item.object_type = {
-							...config.GENDER_OPTIONS[item.object_type],
-							label:
-								locale.texts[
-									config.GENDER_OPTIONS[item.object_type].value.toUpperCase()
-								],
-						}
-						item.isBind = item.mac_address ? 1 : 0
-						item.mac_address = item.mac_address
-							? item.mac_address
-							: locale.texts.NON_BINDING
-
-						item.registered_timestamp = formatTime(item.registered_timestamp)
-
-						return item
-					})
-
-				this.getIdleMacaddrSet()
-
-				this.setState(
-					{
-						data,
-						isShowEdit: false,
-						isShowBind: false,
-						showDeleteConfirmation: false,
-						isPatientShowEdit: false,
-						disableASN: false,
-						columns,
-						objectTable: res.data.rows,
-						locale: locale.abbr,
-						filteredData: data,
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+			this.getIdleMacaddrSet()
+			this.setState(
+				{
+					data,
+					isShowEdit: false,
+					isShowBind: false,
+					showDeleteConfirmation: false,
+					isPatientShowEdit: false,
+					disableASN: false,
+					columns,
+					objectTable: res.data.rows,
+					locale: locale.abbr,
+					filteredData: data,
+				},
+				callback
+			)
+		}
 	}
 
 	getIdleMacaddrSet = async () => {
-		await apiHelper.objectApiAgent
-			.getIdleMacaddr()
-			.then((res) => {
-				const idleMacaddrSet = res.data.rows[0].mac_set
-				const macOptions = idleMacaddrSet.map((mac) => {
-					return {
-						label: mac,
-						value: mac.replace(/:/g, ''),
-					}
-				})
-				this.setState({
-					idleMacaddrSet,
-					macOptions,
-				})
+		const res = await apiHelper.objectApiAgent.getIdleMacaddr()
+		if (res) {
+			const idleMacaddrSet = res.data.rows[0].mac_set
+			const macOptions = idleMacaddrSet.map((mac) => {
+				return {
+					label: mac,
+					value: mac.replace(/:/g, ''),
+				}
 			})
-			.catch((err) => {
-				console.log(err)
+			this.setState({
+				idleMacaddrSet,
+				macOptions,
 			})
+		}
 	}
 
-	getAreaTable = () => {
+	getAreaTable = async () => {
 		const { locale } = this.context
-
-		apiHelper.areaApiAgent
-			.getAreaTable()
-			.then((res) => {
-				const areaSelection = res.data.rows.map((area) => {
-					return {
-						value: area.name,
-						label: locale.texts[area.name],
-					}
-				})
-				this.setState({
-					areaTable: res.data.rows,
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
+			const areaSelection = res.data.rows.map((area) => {
+				return {
+					value: area.name,
+					label: locale.texts[area.name],
+				}
+			})
+			this.setState({
+				areaTable: res.data.rows,
+				areaSelection,
+				filterSelection: {
+					...this.state.filterSelection,
 					areaSelection,
-					filterSelection: {
-						...this.state.filterSelection,
-						areaSelection,
-					},
-				})
+				},
 			})
-			.catch((err) => {
-				console.log(`get area table failed ${err}`)
-			})
+		}
 	}
 
 	handleClose = () => {
@@ -275,25 +261,20 @@ class PatientTable extends React.Component {
 		})
 	}
 
-	handleSubmitForm = (formOption, cb) => {
+	handleSubmitForm = async (formOption) => {
 		const { apiMethod } = this.state
 
-		apiHelper.objectApiAgent[apiMethod]({
+		await apiHelper.objectApiAgent[apiMethod]({
 			formOption,
 			mode: PERSON,
 		})
-			.then((res) => {
-				const callback = () => {
-					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-				}
-				this.getData(callback)
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+		const callback = () => {
+			messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+		}
+		this.getData(callback)
 	}
 
-	toggleSelection = (key, shift, row) => {
+	toggleSelection = (key) => {
 		let selection = [...this.state.selection]
 		key = key.split('-')[1] ? key.split('-')[1] : key
 		const keyIndex = selection.indexOf(key)
@@ -316,8 +297,6 @@ class PatientTable extends React.Component {
 		let rowsCount = 0
 		if (selectAll) {
 			const wrappedInstance = this.selectTable.getWrappedInstance()
-			// const currentRecords = wrappedInstance.props.data
-
 			const currentRecords = wrappedInstance.getResolvedState().sortedData
 			currentRecords.forEach((item) => {
 				rowsCount++
@@ -395,75 +374,62 @@ class PatientTable extends React.Component {
 		}
 	}
 
-	objectMultipleDelete = () => {
+	objectMultipleDelete = async () => {
+		const formOption = []
+		const deleteArray = []
+		let deleteCount = 0
+		let res = null
+
 		switch (this.state.action) {
 			case DISASSOCIATE:
-				apiHelper.objectApiAgent
-					.disassociate({
-						formOption: {
-							id: this.state.selectedRowData.id,
-						},
-					})
-					.then((res) => {
-						const callback = () => {
-							messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-						}
-						this.getData(callback)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+				res = await apiHelper.objectApiAgent.disassociate({
+					formOption: {
+						id: this.state.selectedRowData.id,
+					},
+				})
 				break
 
 			case DELETE:
-				const formOption = []
-				var deleteArray = []
-				var deleteCount = 0
-
-				this.state.data.map((item) => {
-					this.state.selection.map((itemSelect) => {
-						itemSelect == item.id
-							? deleteArray.push(deleteCount.toString())
-							: null
+				this.state.data.forEach((item) => {
+					this.state.selection.forEach((itemSelect) => {
+						if (itemSelect === item.id) {
+							deleteArray.push(deleteCount.toString())
+						}
 					})
 					deleteCount += 1
 				})
 
 				this.setState({ selectAll: false })
 
-				deleteArray.map((item) => {
-					this.state.data[item] == undefined
-						? null
-						: formOption.push({
-								id: this.state.data[item].id,
-								mac_address: this.state.data[item].isBind
-									? this.state.data[item].mac_address
-									: null,
-						  })
+				deleteArray.forEach((item) => {
+					if (!this.state.data[item]) {
+						formOption.push({
+							id: this.state.data[item].id,
+							mac_address: this.state.data[item].isBind
+								? this.state.data[item].mac_address
+								: null,
+						})
+					}
 				})
 
-				apiHelper.objectApiAgent
-					.deleteObject({
-						formOption,
-					})
-					.then((res) => {
-						const callback = () => {
-							messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-						}
-						this.getData(callback)
-					})
-					.catch((err) => {
-						console.log(err)
-					})
+				res = await apiHelper.objectApiAgent.deleteObject({
+					formOption,
+				})
 
 				this.setState({ selectAll: false, selection: [] })
 
 				break
 		}
+
+		if (res) {
+			const callback = () => {
+				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+			}
+			this.getData(callback)
+		}
 	}
 
 	filterData = (data, key, filteredAttribute) => {
-		const { locale } = this.context
 		key = key.toLowerCase()
 		const filteredData = data.filter((obj) => {
 			if (filteredAttribute.includes('name')) {
@@ -499,27 +465,29 @@ class PatientTable extends React.Component {
 	}
 
 	addObjectFilter = (key, attribute, source) => {
-		this.state.objectFilter = this.state.objectFilter.filter(
-			(filter) => source != filter.source
+		const objectFilter = this.state.objectFilter.filter(
+			(filter) => source !== filter.source
 		)
 
-		this.state.objectFilter.push({
+		objectFilter.push({
 			key,
 			attribute,
 			source,
 		})
-		this.filterObjects()
+
+		this.filterObjects(objectFilter)
 	}
 
 	removeObjectFilter = (source) => {
-		this.state.objectFilter = this.state.objectFilter.filter(
-			(filter) => source != filter.source
+		const objectFilter = this.state.objectFilter.filter(
+			(filter) => source !== filter.source
 		)
-		this.filterObjects()
+
+		this.filterObjects(objectFilter)
 	}
 
-	filterObjects = () => {
-		const filteredData = this.state.objectFilter.reduce((acc, curr) => {
+	filterObjects = (objectFilter) => {
+		const filteredData = objectFilter.reduce((acc, curr) => {
 			return this.filterData(acc, curr.key, curr.attribute)
 		}, this.state.data)
 
@@ -566,7 +534,7 @@ class PatientTable extends React.Component {
 
 		return (
 			<Fragment>
-				<CustomView condition={isTablet != true && isMobile != true}>
+				<CustomView condition={!isTablet && !isMobile}>
 					<BrowserObjectTableView {...propsGroup} />
 				</CustomView>
 				<TabletView>
@@ -583,16 +551,16 @@ class PatientTable extends React.Component {
 					ref={(r) => (this.selectTable = r)}
 					className="-highlight text-none"
 					style={{ maxHeight: '70vh' }}
-					onPageChange={(e) => {
+					onPageChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
-					onSortedChange={(e) => {
+					onSortedChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
 					{...extraProps}
 					{...styleConfig.reactTable}
 					NoDataComponent={() => null}
-					getTrProps={(state, rowInfo, column, instance) => {
+					getTrProps={(state, rowInfo) => {
 						return {
 							onClick: (e) => {
 								if (!e.target.type) {

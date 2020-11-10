@@ -284,7 +284,7 @@ class EditObjectForm extends React.Component {
 													name="area"
 													value={values.area}
 													onChange={(value) => setFieldValue('area', value)}
-													options={areaOptions}
+													options={areaOptions || []}
 													styles={styleConfig.reactSelect}
 													components={{
 														IndicatorSeparator: () => null,
@@ -370,7 +370,7 @@ class EditObjectForm extends React.Component {
 											onChange={(value) =>
 												setFieldValue('transferred_location', value)
 											}
-											options={this.state.transferredLocationOptions}
+											options={this.state.transferredLocationOptions || []}
 											isSearchable={false}
 											isDisabled={values.status !== TRANSFERRED}
 											styles={styleConfig.reactSelect}

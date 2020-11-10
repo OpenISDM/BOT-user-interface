@@ -32,12 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Component } from 'react'
-import { Modal, Image, Button } from 'react-bootstrap'
+import React from 'react'
+import { Button } from 'react-bootstrap'
 import config from '../../config'
 import LocaleContext from '../../context/LocaleContext'
-import AuthContext from '../../context/AuthenticationContext'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
+import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import {
 	CenterContainer,
@@ -45,7 +44,7 @@ import {
 	Paragraph,
 } from '../BOTComponent/styleComponent'
 import FormikFormGroup from '../presentational/FormikFormGroup'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import apiHelper from '../../helper/apiHelper'
 import { emailValidation } from '../../helper/validation'
 import ImageWebp from '../utils/ImageWebp'
@@ -54,7 +53,6 @@ const imageLength = 80
 
 const ForgetPassword = () => {
 	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthContext)
 	const history = useHistory()
 
 	return (
@@ -83,28 +81,15 @@ const ForgetPassword = () => {
 							emailValidation
 						),
 				})}
-				onSubmit={(values, { setStatus }) => {
+				onSubmit={async (values, { setStatus }) => {
 					const { email } = values
 					setStatus('verifying')
-					apiHelper.authApiAgent
-						.sentResetPwdInstruction({
-							email,
-						})
-						.then((res) => {
-							history.push('/resetpassword/instruction')
-						})
-						.catch((err) => {
-							console.log(err)
-						})
+					await apiHelper.authApiAgent.sentResetPwdInstruction({
+						email,
+					})
+					history.push('/resetpassword/instruction')
 				}}
-				render={({
-					values,
-					errors,
-					status,
-					touched,
-					isSubmitting,
-					setFieldValue,
-				}) => (
+				render={({ errors, touched, isSubmitting }) => (
 					<Form>
 						{errors.email && touched.email && (
 							<div className="alert alert-danger mb-2 warning">

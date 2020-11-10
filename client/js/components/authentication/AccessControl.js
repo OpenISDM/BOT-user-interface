@@ -35,21 +35,15 @@
 import React from 'react'
 import AuthContext from '../../context/AuthenticationContext'
 import { isBrowser, isMobile, isTablet } from 'react-device-detect'
+import { Redirect } from 'react-router-dom'
+import routes from '../../config/routes/routes'
+import PropTypes from 'prop-types'
 
-const AccessControl = ({
-	permission,
-	children,
-	renderNoAccess,
-	platform = [true],
-}) => {
+const AccessControl = ({ permission, children, platform = [true] }) => {
 	const auth = React.useContext(AuthContext)
-
 	const ownedPermissions = auth.user.permissions
-
 	const authenticated = auth.authenticated
-
 	const permitted = permission ? ownedPermissions.includes(permission) : true
-
 	const platformSupported = platform
 		.map((item) => {
 			switch (item) {
@@ -68,7 +62,14 @@ const AccessControl = ({
 	if (authenticated && permitted && platformSupported) {
 		return children
 	}
-	return renderNoAccess()
+
+	return <Redirect to={{ pathname: routes.HOME, state: {} }} />
+}
+
+AccessControl.propTypes = {
+	permission: PropTypes.string.isRequired,
+	children: PropTypes.element.isRequired,
+	platform: PropTypes.array,
 }
 
 export default AccessControl

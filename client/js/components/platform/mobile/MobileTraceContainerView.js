@@ -223,7 +223,7 @@ const MobileTraceContainerView = React.forwardRef(
 										}}
 										isClearable={true}
 										isSearchable={true}
-										options={options[values.mode]}
+										options={options[values.mode] || []}
 										styles={{
 											control: (provided) => ({
 												...provided,

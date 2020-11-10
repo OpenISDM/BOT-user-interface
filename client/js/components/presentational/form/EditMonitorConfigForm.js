@@ -114,7 +114,7 @@ const EditMonitorConfigForm = ({
 									<Select
 										placeholder={locale.texts.SELECT_AREA}
 										name="area"
-										options={areaOptions}
+										options={areaOptions || []}
 										value={values.area}
 										styles={styleConfig.reactSelect}
 										isDisabled={isEdited}

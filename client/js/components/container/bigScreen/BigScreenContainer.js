@@ -99,44 +99,38 @@ class BigScreenContainer extends React.Component {
 		return count
 	}
 
-	getTrackingData = () => {
+	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
 
-		apiHelper.trackingDataApiAgent
-			.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId,
-			})
-			.then((res) => {
-				axios.post(dataSrc.getSearchQueue).then((searchQueue) => {
-					const rawTrackingData = res.data
-					const queue = searchQueue.data.rows
+		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId,
+		})
+		if (res) {
+			axios.post(dataSrc.getSearchQueue).then((searchQueue) => {
+				const rawTrackingData = res.data
+				const queue = searchQueue.data.rows
 
-					// used for legend, with text description and image icon
-					const trackingData = this.addSearchedIndex(rawTrackingData, queue)
+				// used for legend, with text description and image icon
+				const trackingData = this.addSearchedIndex(rawTrackingData, queue)
 
-					const legendDescriptor = queue.map((queue1, index) => {
-						return {
-							text: queue1.key_word,
-							pinColor:
-								config.mapConfig.iconColor.pinColorArray[
-									queue1.pin_color_index
-								],
-							itemCount: this.countItemsInQueue(trackingData, index),
-						}
-					})
+				const legendDescriptor = queue.map((queue1, index) => {
+					return {
+						text: queue1.key_word,
+						pinColor:
+							config.mapConfig.iconColor.pinColorArray[queue1.pin_color_index],
+						itemCount: this.countItemsInQueue(trackingData, index),
+					}
+				})
 
-					this.setState({
-						trackingData,
-						legendDescriptor,
-					})
+				this.setState({
+					trackingData,
+					legendDescriptor,
 				})
 			})
-			.catch((err) => {
-				console.log(`get tracking data failed ${err}`)
-			})
+		}
 	}
 
 	render() {

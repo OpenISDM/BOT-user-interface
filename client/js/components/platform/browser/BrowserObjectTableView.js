@@ -74,7 +74,7 @@ const BrowserObjectTableView = ({
 					}}
 					clearSearchResult={null}
 				/>
-				<AccessControl renderNoAccess={() => null} platform={['browser']}>
+				<AccessControl platform={['browser']}>
 					<Select
 						className="mx-2 text-capitalize w-30-view min-height-regular"
 						styles={styleConfig.reactSelectFilter}
@@ -85,17 +85,14 @@ const BrowserObjectTableView = ({
 								removeObjectFilter('area select')
 							}
 						}}
-						options={filterSelection.areaSelection}
+						options={filterSelection.areaSelection || []}
 						isClearable={true}
 						isSearchable={true}
 						placeholder={locale.texts.SELECT_AREA}
 					/>
 				</AccessControl>
 			</div>
-			<AccessControl
-				renderNoAccess={() => null}
-				platform={['browser', 'tablet']}
-			>
+			<AccessControl platform={['browser', 'tablet']}>
 				<ButtonToolbar>
 					<PrimaryButton
 						className="text-capitalize mr-2 mb-1"

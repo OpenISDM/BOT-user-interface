@@ -42,6 +42,7 @@ import FormikFormGroup from '../FormikFormGroup'
 import { FormFieldName } from '../../BOTComponent/styleComponent'
 import apiHelper from '../../../helper/apiHelper'
 import styleConfig from '../../../config/styleConfig'
+import PropTypes from 'prop-types'
 
 class BindForm extends React.Component {
 	static contextType = AppContext
@@ -56,8 +57,8 @@ class BindForm extends React.Component {
 		importData: [],
 	}
 
-	componentDidUpdate = (prevProps, prevState) => {
-		if (prevProps.show != this.props.show && this.props.show) {
+	componentDidUpdate = (prevProps) => {
+		if (prevProps.show !== this.props.show && this.props.show) {
 			this.getImportedData()
 		}
 	}
@@ -90,23 +91,16 @@ class BindForm extends React.Component {
 		)
 	}
 
-	getImportedData = () => {
+	getImportedData = async () => {
 		const { locale } = this.context
-
-		apiHelper.importedObjectApiAgent
-			.getImportedObjectTable({
-				params: {
-					locale: locale.abbr,
-				},
+		const res = await apiHelper.importedObjectApiAgent.getImportedObjectTable({
+			locale: locale.abbr,
+		})
+		if (res) {
+			this.setState({
+				importData: res.data.rows,
 			})
-			.then((res) => {
-				this.setState({
-					importData: res.data.rows,
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		}
 	}
 
 	render() {
@@ -135,7 +129,7 @@ class BindForm extends React.Component {
 				color: '#dc3545',
 			},
 		}
-		const { data, objectTable, show } = this.props
+		const { show } = this.props
 		let lock = 0
 		return (
 			<Modal
@@ -161,15 +155,17 @@ class BindForm extends React.Component {
 									'acn',
 									locale.texts.THE_ID_IS_ALREADY_ASSOCIATED,
 									(value) => {
-										if (value != undefined) {
+										if (value) {
 											let findFlag = true
-											this.props.objectTable.map((item) => {
-												item.asset_control_number.toUpperCase() ==
-												value.toUpperCase()
-													? (findFlag = false)
-													: null
+											this.props.objectTable.forEach((item) => {
+												if (
+													item.asset_control_number.toUpperCase() ===
+													value.toUpperCase()
+												) {
+													findFlag = false
+												}
 											})
-											if (findFlag == false) {
+											if (findFlag === false) {
 												lock = 0
 											} else {
 												lock = 1
@@ -179,11 +175,11 @@ class BindForm extends React.Component {
 									}
 								)
 								.test('acn', locale.texts.ID_IS_NOT_FOUND, (value) => {
-									if (value != undefined) {
+									if (value) {
 										let findFlag = false
-										this.state.importData.map((item) => {
+										this.state.importData.forEach((item) => {
 											if (
-												item.asset_control_number.toUpperCase() ==
+												item.asset_control_number.toUpperCase() ===
 												value.toUpperCase()
 											) {
 												this.setState({
@@ -192,22 +188,22 @@ class BindForm extends React.Component {
 												findFlag = true
 											}
 										})
-										findFlag == true && lock
-											? this.setState({
-													showDetail: true,
-											  })
-											: this.setState({
-													showDetail: false,
-											  })
+										if (findFlag === true && lock) {
+											this.setState({
+												showDetail: true,
+											})
+										} else {
+											this.setState({
+												showDetail: false,
+											})
+										}
 										return findFlag
 									}
 								}),
-
 							mac: string().required(locale.texts.MAC_ADDRESS_IS_REQUIRED),
-
 							area: string().required(locale.texts.AREA_IS_REQUIRED),
 						})}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
+						onSubmit={(values) => {
 							let formOption = this.state.bindData
 							formOption = {
 								...formOption,
@@ -219,7 +215,6 @@ class BindForm extends React.Component {
 						render={({
 							values,
 							errors,
-							status,
 							touched,
 							isSubmitting,
 							setFieldValue,
@@ -251,16 +246,13 @@ class BindForm extends React.Component {
 												name="area"
 												value={values.area}
 												onChange={(value) => setFieldValue('area', value)}
-												options={areaOptions}
+												options={areaOptions || []}
 												style={style.select}
 												components={{
 													IndicatorSeparator: () => null,
 												}}
 											/>
-											<Row
-												className="no-gutters"
-												className="d-flex align-self-center"
-											>
+											<Row className="no-gutters d-flex align-self-center">
 												<Col>
 													{touched.area && errors.area && (
 														<div style={style.errorMessage}>{errors.area}</div>
@@ -285,7 +277,7 @@ class BindForm extends React.Component {
 													value={values.mac}
 													className="my-1"
 													onChange={(value) => setFieldValue('mac', value)}
-													options={this.props.macOptions}
+													options={this.props.macOptions || []}
 													isSearchable={true}
 													styles={styleConfig.reactSelect}
 													placeholder=""
@@ -320,6 +312,15 @@ class BindForm extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+BindForm.propTypes = {
+	show: PropTypes.bool.isRequired,
+	areaTable: PropTypes.array.isRequired,
+	macOptions: PropTypes.object.isRequired,
+	handleClose: PropTypes.func.isRequired,
+	handleSubmit: PropTypes.func.isRequired,
+	objectTable: PropTypes.array.isRequired,
 }
 
 export default BindForm

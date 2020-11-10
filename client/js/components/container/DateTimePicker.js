@@ -87,7 +87,7 @@ class DateTimePicker extends React.Component {
 					placeholder={locale.texts.SELECT_TIME}
 					value={defaultValue}
 					onChange={(value) => this.onChange(value)}
-					options={options}
+					options={options || []}
 					isSearchable={false}
 					styles={styleConfig.reactSelect}
 					controlHeigh={20}

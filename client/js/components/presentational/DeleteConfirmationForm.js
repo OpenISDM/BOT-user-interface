@@ -36,6 +36,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import LocaleContext from '../../context/LocaleContext'
+import PropTypes from 'prop-types'
 
 const DeleteConfirmationForm = ({
 	handleClose,
@@ -53,14 +54,7 @@ const DeleteConfirmationForm = ({
 					onSubmit={() => {
 						handleSubmit()
 					}}
-					render={({
-						values,
-						errors,
-						status,
-						touched,
-						isSubmitting,
-						setFieldValue,
-					}) => (
+					render={({ isSubmitting }) => (
 						<Form className="text-capitalize">
 							<div className="mb-5">{message}</div>
 							<Modal.Footer>
@@ -79,4 +73,10 @@ const DeleteConfirmationForm = ({
 	)
 }
 
+DeleteConfirmationForm.propTypes = {
+	handleClose: PropTypes.func.isRequired,
+	handleSubmit: PropTypes.func.isRequired,
+	show: PropTypes.bool.isRequired,
+	message: PropTypes.string.isRequired,
+}
 export default DeleteConfirmationForm

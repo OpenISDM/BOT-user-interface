@@ -32,31 +32,27 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { importedObject } from '../dataSrc'
+import { post, get, del } from '../helper/httpClient'
 
 export default {
 	async getImportedObjectTable({ locale, type }) {
-		return await axios.get(dataSrc.importedObject, {
-			params: {
-				locale,
-				type,
-			},
+		return await get(importedObject, {
+			locale,
+			type,
 		})
 	},
 
 	async addImportedObject({ locale, newData }) {
-		return await axios.post(dataSrc.importedObject, {
+		return await post(importedObject, {
 			locale,
 			newData,
 		})
 	},
 
 	async deleteImportedObject({ idPackage }) {
-		return await axios.delete(dataSrc.importedObject, {
-			data: {
-				idPackage,
-			},
+		return await del(importedObject, {
+			idPackage,
 		})
 	},
 }

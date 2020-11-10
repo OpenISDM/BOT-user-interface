@@ -35,7 +35,7 @@
 import config from '../config'
 import React from 'react'
 import AccessControl from '../components/authentication/AccessControl'
-import { RESERVE, RETURNED } from '../config/wordMap'
+import { RESERVE, RETURNED, TRANSFERRED, BROKEN } from '../config/wordMap'
 import { isEqual } from 'lodash'
 
 export const getDescription = (item, locale, keywordType) => {
@@ -181,7 +181,7 @@ export const getPosition = (item) => {
 
 export const getMacaddress = (item, locale) => {
 	return (
-		<AccessControl permission={'form:develop'} renderNoAccess={() => null}>
+		<AccessControl permission={'form:develop'}>
 			| {locale.texts.MAC_ADDRESS}: {item.mac_address}
 		</AccessControl>
 	)
@@ -189,7 +189,7 @@ export const getMacaddress = (item, locale) => {
 
 export const getRSSI = (item, locale) => {
 	return (
-		<AccessControl permission={'form:develop'} renderNoAccess={() => null}>
+		<AccessControl permission={'form:develop'}>
 			| {locale.texts.RSSI}: {item.rssi}
 		</AccessControl>
 	)
@@ -206,8 +206,15 @@ export const getID = (item, locale) => {
 
 export const getUpdatedByNLbeacons = (item, locale) => {
 	return (
-		<AccessControl permission={'form:develop'} renderNoAccess={() => null}>
+		<AccessControl permission={'form:develop'}>
 			| {locale.texts.NUM_OF_UPDATED_LBEACON}: {item.updated_by_n_lbeacons}
 		</AccessControl>
 	)
+}
+
+export const getLastUpdatedUserName = (item, locale) => {
+	const showUserName =
+		isEqual(item.status, BROKEN) || isEqual(item.status, TRANSFERRED)
+	const userName = item.edit_user_name ? item.edit_user_name : ''
+	return showUserName ? ` | ${locale.texts.STATUS_CHANGED_BY}: ${userName}` : ''
 }

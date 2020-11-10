@@ -33,30 +33,32 @@
 */
 
 import { patientGroupList, patientGruopDetailByAreaId } from '../dataSrc'
-import axios from 'axios'
+import { get, post, put, del } from '../helper/httpClient'
 
 const patientGroupListApis = {
 	async addPatientGroupList({ name, areaId }) {
-		return await axios.post(patientGroupList, { name, areaId })
+		return await post(patientGroupList, { name, areaId })
 	},
+
 	async getPatientGroupList() {
-		return await axios.get(patientGroupList)
+		return await get(patientGroupList)
 	},
+
 	async modifyPatientGroupList({ groupId, mode, itemId }) {
-		return await axios.put(patientGroupList, {
+		return await put(patientGroupList, {
 			groupId,
 			mode,
 			itemId,
 		})
 	},
+
 	async deleteGroup(groupId) {
-		return await axios.delete(patientGroupList, { data: groupId })
+		return await del(patientGroupList, { groupId })
 	},
+
 	async getDetailByAreaId(areaId) {
-		return await axios.get(patientGruopDetailByAreaId, {
-			params: {
-				areaId,
-			},
+		return await get(patientGruopDetailByAreaId, {
+			areaId,
 		})
 	},
 }

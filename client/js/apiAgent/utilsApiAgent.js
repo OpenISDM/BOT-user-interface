@@ -32,11 +32,33 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import {
+	utils,
+	getImportData,
+	deleteDevice,
+	getTrackingTableByMacAddress,
+	trace,
+} from '../dataSrc'
+import { post } from '../helper/httpClient'
 
 export default {
 	async getSearchableKeywords() {
-		return await axios.post(dataSrc.utils.searchableKeyword)
+		return await post(utils.searchableKeyword)
+	},
+
+	async getImportData({ formOption }) {
+		return await post(getImportData, { formOption })
+	},
+
+	async deleteDevice({ formOption }) {
+		return await post(deleteDevice, { formOption })
+	},
+
+	async getTrackingTableByMacAddress({ object_mac_address }) {
+		return await post(getTrackingTableByMacAddress, { object_mac_address })
+	},
+
+	async getTraceContactTree({ child, parents, startTime, endTime }) {
+		return await post(trace.contactTree, { child, parents, startTime, endTime })
 	},
 }

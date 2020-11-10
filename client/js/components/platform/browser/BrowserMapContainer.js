@@ -138,10 +138,7 @@ class BrowserMapContainer extends React.Component {
 								{locale.texts.CLEAR}
 							</Button>
 						</Nav.Item>
-						<AccessControl
-							permission={'user:saveSearchRecord'}
-							renderNoAccess={() => null}
-						>
+						<AccessControl permission={'user:saveSearchRecord'}>
 							<Nav.Item className="mt-2">
 								<Button
 									variant="outline-primary"
@@ -155,10 +152,7 @@ class BrowserMapContainer extends React.Component {
 								</Button>
 							</Nav.Item>
 						</AccessControl>
-						<AccessControl
-							permission={'user:toggleShowDevices'}
-							renderNoAccess={() => null}
-						>
+						<AccessControl permission={'user:toggleShowDevices'}>
 							<Nav.Item className="mt-2">
 								<Button
 									variant="primary"
@@ -179,10 +173,7 @@ class BrowserMapContainer extends React.Component {
 								</Button>
 							</Nav.Item>
 						</AccessControl>
-						<AccessControl
-							permission={'user:toggleShowResidents'}
-							renderNoAccess={() => null}
-						>
+						<AccessControl permission={'user:toggleShowResidents'}>
 							<Nav.Item className="mt-2">
 								<Button
 									variant="primary"

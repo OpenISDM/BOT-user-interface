@@ -95,32 +95,29 @@ class SearchContainer extends React.Component {
 		}
 	}
 	/** Get the searchable object type. */
-	getData = () => {
+	getData = async () => {
 		const { locale, auth } = this.context
 
-		apiHelper.objectApiAgent
-			.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [0],
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			locale: locale.abbr,
+			areas_id: auth.user.areas_id,
+			objectType: [0],
+		})
+
+		if (res) {
+			const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
+			const objectTypeList = res.data.rows.reduce((objectTypeList, item) => {
+				const name = item[keywordType] ? item[keywordType] : item.type
+				const addToList = !objectTypeList.includes(name)
+				if (addToList) {
+					objectTypeList.push(name)
+				}
+				return objectTypeList
+			}, [])
+			this.setState({
+				objectTypeList,
 			})
-			.then((res) => {
-				const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
-				const objectTypeList = res.data.rows.reduce((objectTypeList, item) => {
-					const name = item[keywordType] ? item[keywordType] : item.type
-					const addToList = !objectTypeList.includes(name)
-					if (addToList) {
-						objectTypeList.push(name)
-					}
-					return objectTypeList
-				}, [])
-				this.setState({
-					objectTypeList,
-				})
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		}
 	}
 
 	render() {

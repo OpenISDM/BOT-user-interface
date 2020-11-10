@@ -260,7 +260,7 @@ class EditPatientForm extends React.Component {
 													styles={styleConfig.reactSelect}
 													value={values.gender}
 													onChange={(value) => setFieldValue('gender', value)}
-													options={genderOptions}
+													options={genderOptions || []}
 													components={{
 														IndicatorSeparator: () => null,
 													}}
@@ -323,7 +323,7 @@ class EditPatientForm extends React.Component {
 													name="area"
 													value={values.area}
 													onChange={(value) => setFieldValue('area', value)}
-													options={areaOptions}
+													options={areaOptions || []}
 													styles={styleConfig.reactSelect}
 													components={{
 														IndicatorSeparator: () => null,
@@ -347,7 +347,7 @@ class EditPatientForm extends React.Component {
 													onChange={(value) =>
 														setFieldValue('physician', value)
 													}
-													options={physicianListOptions}
+													options={physicianListOptions || []}
 													styles={styleConfig.reactSelect}
 													components={{
 														IndicatorSeparator: () => null,
@@ -370,7 +370,7 @@ class EditPatientForm extends React.Component {
 											styles={styleConfig.reactSelect}
 											value={values.room}
 											onChange={(value) => setFieldValue('room', value)}
-											options={this.props.roomOptions}
+											options={this.props.roomOptions || []}
 											components={{
 												IndicatorSeparator: () => null,
 											}}

@@ -231,10 +231,7 @@ class ShiftChangeRecord extends React.Component {
 
 		return (
 			<Fragment>
-				<AccessControl
-					renderNoAccess={() => null}
-					platform={['browser', 'tablet']}
-				>
+				<AccessControl platform={['browser', 'tablet']}>
 					<ButtonToolbar>
 						<PrimaryButton
 							disabled={disabled}

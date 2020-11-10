@@ -33,48 +33,46 @@
 */
 
 import { object, objectPackage } from '../dataSrc'
-import axios from 'axios'
+import { get, put, post, patch, del } from '../helper/httpClient'
 
 export default {
 	/**
 	 * get object data from object_table
 	 */
 	async getObjectTable({ locale, areas_id, objectType }) {
-		return await axios.get(object.object, {
-			params: {
-				locale,
-				areas_id,
-				objectType,
-			},
+		return await get(object.object, {
+			locale,
+			areas_id,
+			objectType,
 		})
 	},
 
 	async getAlias() {
-		return await axios.get(object.alias)
+		return await get(object.alias)
 	},
 
 	async editAlias({ objectType, alias }) {
-		return await axios.put(object.alias, {
+		return await put(object.alias, {
 			objectType,
 			alias,
 		})
 	},
 
 	async editAliases({ objectTypeList }) {
-		return await axios.put(object.aliases, {
+		return await put(object.aliases, {
 			objectTypeList,
 		})
 	},
 
 	async post({ formOption, mode }) {
-		return await axios.post(object[mode], {
+		return await post(object[mode], {
 			formOption,
 			mode,
 		})
 	},
 
 	async put({ formOption, mode }) {
-		return await axios.put(object[mode], {
+		return await put(object[mode], {
 			formOption,
 			mode,
 		})
@@ -87,7 +85,7 @@ export default {
 		pdfPackage,
 		reservedTimestamp
 	) {
-		return await axios.put(objectPackage, {
+		return await put(objectPackage, {
 			locale,
 			formOption,
 			username,
@@ -97,20 +95,18 @@ export default {
 	},
 
 	async deleteObject({ formOption }) {
-		return await axios.delete(object.object, {
-			data: {
-				formOption,
-			},
+		return await del(object.object, {
+			formOption,
 		})
 	},
 
 	async disassociate({ formOption }) {
-		return await axios.patch(object.object, {
+		return await patch(object.object, {
 			formOption,
 		})
 	},
 
 	async getIdleMacaddr() {
-		return await axios.post(object.idleMacaddr)
+		return await post(object.idleMacaddr)
 	},
 }

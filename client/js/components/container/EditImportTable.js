@@ -32,18 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Component } from 'react'
-import { Modal, Button, Row, Col } from 'react-bootstrap'
-import Select from 'react-select'
-import config from '../../config'
+import React from 'react'
+import { Modal, Button } from 'react-bootstrap'
 import LocaleContext from '../../context/LocaleContext'
 import axios from 'axios'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
 import { toast } from 'react-toastify'
-import { cleanImportData, deleteImportData } from '../../dataSrc'
-import messageGenerator from '../../helper/messageGenerator'
+// import { cleanImportData, deleteImportData } from '../../dataSrc'
 import { isEqual } from '../../helper/utilities'
+import messageGenerator from '../../helper/messageGenerator'
+import PropTypes from 'prop-types'
 
 class EditImportTable extends React.Component {
 	state = {
@@ -68,27 +66,22 @@ class EditImportTable extends React.Component {
 		this.props.handleCloseForm()
 	}
 
-	handleSubmit = (postOption) => {
+	handleSubmit = async () => {
 		if (
-			this.state.scanValue == this.props.selectedObjectData.asset_control_number
+			this.state.scanValue ===
+			this.props.selectedObjectData.asset_control_number
 		) {
-			axios
-				.post(deleteImportData, {
-					idPackage: this.props.selectedObjectData.id,
-				})
-				.then((res) => {
-					toast.success('Edit Import Table Success', {
-						position: toast.POSITION.TOP_RIGHT,
-						autoClose: 5000,
-						hideProgressBar: true,
-					})
-					setTimeout(this.props.handleSubmitForm(), 500)
-				})
-				.catch((error) => {
-					console.log(error)
-				})
+			await axios.post('deleteImportData', {
+				idPackage: this.props.selectedObjectData.id,
+			})
+			toast.success('Edit Import Table Success', {
+				position: toast.POSITION.TOP_RIGHT,
+				autoClose: 5000,
+				hideProgressBar: true,
+			})
+			setTimeout(this.props.handleSubmitForm(), 500)
 		} else {
-			alert('ＴＡＧ與產品編號不符')
+			messageGenerator.importErrorMessage('Tag 與產品編號不符')
 			this.setState({
 				scanValue: '',
 			})
@@ -103,9 +96,7 @@ class EditImportTable extends React.Component {
 
 	render() {
 		const locale = this.context
-
-		const { title, selectedObjectData } = this.props
-		const { name, type, asset_control_number, mac_address } = selectedObjectData
+		const { selectedObjectData } = this.props
 
 		return (
 			<Modal show={this.state.show} onHide={this.handleClose} size="md">
@@ -116,18 +107,10 @@ class EditImportTable extends React.Component {
 					<Formik
 						initialValues={{}}
 						validationSchema={null}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
+						onSubmit={() => {
 							this.handleSubmit()
 						}}
-						render={({
-							values,
-							errors,
-							status,
-							touched,
-							isSubmitting,
-							setFieldValue,
-							submitForm,
-						}) => (
+						render={({ errors, touched, isSubmitting }) => (
 							<Form className="text-capitalize">
 								<div className="form-group">
 									<Field
@@ -167,21 +150,7 @@ class EditImportTable extends React.Component {
 										className="invalid-feedback"
 									/>
 								</div>
-
 								<hr />
-
-								{/* <div className="form-group">
-                                   <Field
-                                    type="text"
-                                    name="MAC_Address_Check"
-                                    placeholder={locale.texts.SCAN_TAG}
-                                    className={'form-control' + (errors.MAC_Address_Check && touched.MAC_Address_Check ? ' is-invalid' : '')}
-                                    value = {this.state.scanValue}
-                                    onChange={this.updateInput}
-                                    />
-                                      <ErrorMessage name="MAC_Address_Check" component="div" className="invalid-feedback" />
-                        </div> */}
-
 								<Modal.Footer>
 									<Button
 										variant="outline-secondary"
@@ -210,5 +179,12 @@ class EditImportTable extends React.Component {
 }
 
 EditImportTable.contextType = LocaleContext
+
+EditImportTable.propTypes = {
+	show: PropTypes.bool.isRequired,
+	handleCloseForm: PropTypes.func.isRequired,
+	handleSubmitForm: PropTypes.func.isRequired,
+	selectedObjectData: PropTypes.object.isRequired,
+}
 
 export default EditImportTable

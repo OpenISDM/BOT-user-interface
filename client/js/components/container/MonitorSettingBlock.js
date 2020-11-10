@@ -34,7 +34,7 @@
 
 import React from 'react'
 import { AppContext } from '../../context/AppContext'
-import { ButtonToolbar, Button } from 'react-bootstrap'
+import { ButtonToolbar } from 'react-bootstrap'
 import config from '../../config'
 import ReactTable from 'react-table'
 import styleConfig from '../../config/styleConfig'
@@ -43,11 +43,13 @@ import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import { monitorConfigColumn } from '../../config/tables'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
 import messageGenerator from '../../helper/messageGenerator'
-const SelectTable = selecTableHOC(ReactTable)
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import apiHelper from '../../helper/apiHelper'
 import { JSONClone } from '../../helper/utilities'
+import PropTypes from 'prop-types'
+
+const SelectTable = selecTableHOC(ReactTable)
 
 class MonitorSettingBlock extends React.Component {
 	static contextType = AppContext
@@ -69,61 +71,52 @@ class MonitorSettingBlock extends React.Component {
 		this.getMonitorConfig()
 	}
 
-	getMonitorConfig = (callback) => {
+	getMonitorConfig = async (callback) => {
 		const { auth, locale } = this.context
-		apiHelper.monitor
-			.getMonitorConfig(this.props.type, auth.user.areas_id)
-			.then((res) => {
-				const columns = JSONClone(monitorConfigColumn)
+		const res = await apiHelper.monitor.getMonitorConfig(
+			this.props.type,
+			auth.user.areas_id
+		)
+		const columns = JSONClone(monitorConfigColumn)
 
-				columns.map((field) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
-				res.data.map((item, index) => {
-					item.area = {
-						value: config.mapConfig.areaOptions[item.area_id],
-						label: locale.texts[config.mapConfig.areaOptions[item.area_id]],
-						id: item.area_id,
-					}
-				})
-				this.setState(
-					{
-						data: res.data,
-						columns,
-						show: false,
-						showDeleteConfirmation: false,
-						selectedData: null,
-						selection: '',
-						selectAll: false,
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		columns.forEach((field) => {
+			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+		})
+		res.data.forEach((item) => {
+			item.area = {
+				value: config.mapConfig.areaOptions[item.area_id],
+				label: locale.texts[config.mapConfig.areaOptions[item.area_id]],
+				id: item.area_id,
+			}
+		})
+		this.setState(
+			{
+				data: res.data,
+				columns,
+				show: false,
+				showDeleteConfirmation: false,
+				selectedData: null,
+				selection: '',
+				selectAll: false,
+			},
+			callback
+		)
 	}
 
-	handleSubmit = (pack) => {
+	handleSubmit = async (pack) => {
 		const configPackage = pack || {}
-		const { path, selectedData } = this.state
+		const { path } = this.state
 		configPackage.type = config.monitorSettingUrlMap[this.props.type]
-		// configPackage["id"] = selectedData ? selectedData.id : null;
 		configPackage.id = this.state.selection
-		if (configPackage.id == '' && this.state.selectedData != null) {
+		if (configPackage.id === '' && this.state.selectedData !== null) {
 			configPackage.id = this.state.selectedData.id
 		}
 
-		apiHelper.monitor[path](configPackage)
-			.then((res) => {
-				const callback = () =>
-					messageGenerator.setSuccessMessage('save success')
-				this.getMonitorConfig(callback)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+		const res = await apiHelper.monitor[path](configPackage)
+		if (res) {
+			const callback = () => messageGenerator.setSuccessMessage('save success')
+			this.getMonitorConfig(callback)
+		}
 	}
 
 	handleClose = () => {
@@ -161,7 +154,7 @@ class MonitorSettingBlock extends React.Component {
 		}
 	}
 
-	toggleSelection = (key, shift, row) => {
+	toggleSelection = (key) => {
 		let selection = [...this.state.selection]
 		key = key.split('-')[1] ? key.split('-')[1] : key
 		const keyIndex = selection.indexOf(key)
@@ -185,7 +178,6 @@ class MonitorSettingBlock extends React.Component {
 
 		if (selectAll) {
 			const wrappedInstance = this.selectTable.getWrappedInstance()
-			//const currentRecords = wrappedInstance.props.data
 			const currentRecords = wrappedInstance.getResolvedState().sortedData
 			currentRecords.forEach((item) => {
 				rowsCount++
@@ -210,14 +202,14 @@ class MonitorSettingBlock extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.state.exIndex != this.props.nowIndex) {
+		if (this.state.exIndex !== this.props.nowIndex) {
 			this.setState({
 				selectAll: false,
 				selection: '',
 				exIndex: this.props.nowIndex,
 			})
 		}
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.getMonitorConfig()
 			this.setState({
 				locale: this.context.locale.abbr,
@@ -226,10 +218,8 @@ class MonitorSettingBlock extends React.Component {
 	}
 
 	render() {
-		const { selectedRowData, selectAll, selectType } = this.state
-
+		const { selectAll, selectType, isEdited } = this.state
 		const { toggleSelection, toggleAll, isSelected } = this
-
 		const extraProps = {
 			selectAll,
 			isSelected,
@@ -239,13 +229,10 @@ class MonitorSettingBlock extends React.Component {
 		}
 
 		const { locale } = this.context
-
 		const { type } = this.props
 
-		const { isEdited } = this.state
-
 		const areaOptions = Object.values(config.mapConfig.AREA_MODULES).map(
-			(area, index) => {
+			(area) => {
 				return {
 					value: area.name,
 					label: locale.texts[area.name],
@@ -258,10 +245,7 @@ class MonitorSettingBlock extends React.Component {
 		return (
 			<div>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						renderNoAccess={() => null}
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="mr-2 mb-1"
@@ -290,12 +274,12 @@ class MonitorSettingBlock extends React.Component {
 					minRows={0}
 					{...extraProps}
 					{...styleConfig.reactTable}
-					onSortedChange={(e) => {
+					onSortedChange={() => {
 						this.setState({ selectAll: false, selection: '' })
 					}}
-					getTrProps={(state, rowInfo, column, instance) => {
+					getTrProps={(state, rowInfo) => {
 						return {
-							onClick: (e, handleOriginal) => {
+							onClick: () => {
 								this.setState({
 									selectedData: rowInfo.row._original,
 									show: true,
@@ -325,6 +309,11 @@ class MonitorSettingBlock extends React.Component {
 			</div>
 		)
 	}
+}
+
+MonitorSettingBlock.propTypes = {
+	type: PropTypes.string.isRequired,
+	nowIndex: PropTypes.number.isRequired,
 }
 
 export default MonitorSettingBlock

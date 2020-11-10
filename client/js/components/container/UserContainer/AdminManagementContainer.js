@@ -35,8 +35,6 @@
 import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 import ReactTable from 'react-table'
-import axios from 'axios'
-import { user } from '../../../dataSrc'
 import { userInfoTableColumn } from '../../../config/tables'
 import EditUserForm from '../../presentational/form/EditUserForm'
 import { AppContext } from '../../../context/AppContext'
@@ -44,12 +42,13 @@ import DeleteUserForm from './DeleteUserForm'
 import DeleteConfirmationForm from '../../presentational/DeleteConfirmationForm'
 import messageGenerator from '../../../helper/messageGenerator'
 import styleConfig from '../../../config/styleConfig'
-const Fragment = React.Fragment
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import config from '../../../config'
 import apiHelper from '../../../helper/apiHelper'
 import { JSONClone, formatTime } from '../../../helper/utilities'
+
+const Fragment = React.Fragment
 
 class AdminManagementContainer extends React.Component {
 	static contextType = AppContext
@@ -80,75 +79,70 @@ class AdminManagementContainer extends React.Component {
 		this.getAreaTable()
 	}
 
-	getUserList = (callback) => {
+	getUserList = async (callback) => {
 		const { locale } = this.context
-
-		apiHelper.userApiAgent
-			.getAllUser({
-				locale: locale.abbr,
+		const res = await apiHelper.userApiAgent.getAllUser({
+			locale: locale.abbr,
+		})
+		if (res) {
+			const columns = JSONClone(userInfoTableColumn)
+			columns.forEach((field) => {
+				field.Header =
+					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
-			.then((res) => {
-				const columns = JSONClone(userInfoTableColumn)
-				columns.map((field, index) => {
-					field.Header =
-						locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-				})
 
-				const data = res.data.rows.map((item, index) => {
-					item._id = index + 1
-					item.roles = item.role_type
-						.map((role) => locale.texts[role.toUpperCase()])
-						.join('/')
-					item.area_ids = item.area_ids
-						.filter((area) => area.id != item.main_area.id)
-						.map((area) => locale.texts[area.value])
-						.join('/')
-					item.main_area.label = locale.texts[item.main_area.value]
-					item.last_visit_timestamp = formatTime(item.last_visit_timestamp)
-					item.registered_timestamp = formatTime(item.registered_timestamp)
+			const data = res.data.rows.map((item, index) => {
+				item._id = index + 1
+				item.roles = item.role_type
+					.map((role) => locale.texts[role.toUpperCase()])
+					.join('/')
+				item.area_ids = item.area_ids
+					.filter((area) => parseInt(area.id) !== parseInt(item.main_area.id))
+					.map((area) => locale.texts[area.value])
+					.join('/')
+				item.main_area.label = locale.texts[item.main_area.value]
+				item.last_visit_timestamp = formatTime(item.last_visit_timestamp)
+				item.registered_timestamp = formatTime(item.registered_timestamp)
 
-					return item
-				})
-				this.setState(
-					{
-						data,
-						columns,
-						showModifyUserInfo: false,
-						showAddUserForm: false,
-						showDeleteUserForm: false,
-						showDeleteConfirmation: false,
-						deleteUserName: '',
-						selectedUser: null,
-						locale: locale.abbr,
-					},
-					callback
-				)
+				return item
 			})
+
+			this.setState(
+				{
+					data,
+					columns,
+					showModifyUserInfo: false,
+					showAddUserForm: false,
+					showDeleteUserForm: false,
+					showDeleteConfirmation: false,
+					deleteUserName: '',
+					selectedUser: null,
+					locale: locale.abbr,
+				},
+				callback
+			)
+		}
 	}
 
-	getAllRole = () => {
-		apiHelper.roleApiAgent.getAllRole().then((res) => {
-			/** filter system default roles */
+	getAllRole = async () => {
+		const res = await apiHelper.roleApiAgent.getAllRole()
+		if (res) {
 			const roleName = res.data.filter((item) =>
 				config.ROLES_SELECTION.includes(item.name)
 			)
 			this.setState({
 				roleName,
 			})
-		})
+		}
 	}
 
-	getAreaTable = () => {
-		apiHelper.areaApiAgent
-			.getAreaTable()
-			.then((res) => {
-				this.setState({
-					areaTable: res.data.rows,
-				})
+	getAreaTable = async () => {
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
+			this.setState({
+				areaTable: res.data.rows,
 			})
-			.catch((err) => {
-				console.log(`get area table failed ${err}`)
-			})
+		}
 	}
 
 	handleSubmit = (values) => {
@@ -184,21 +178,14 @@ class AdminManagementContainer extends React.Component {
 		})
 	}
 
-	handleWarningChecked = () => {
-		axios
-			.delete(user, {
-				data: {
-					username: this.state.deleteUserName,
-				},
-			})
-			.then(() => {
-				const callback = () =>
-					messageGenerator.setSuccessMessage('save success')
-				this.getUserList(callback)
-			})
-			.catch((err) => {
-				console.log(`delete user failed ${err}`)
-			})
+	handleWarningChecked = async () => {
+		const res = await apiHelper.userApiAgent.deleteUser({
+			username: this.state.deleteUserName,
+		})
+		if (res) {
+			const callback = () => messageGenerator.setSuccessMessage('save success')
+			this.getUserList(callback)
+		}
 	}
 
 	handleClose = () => {
@@ -250,7 +237,7 @@ class AdminManagementContainer extends React.Component {
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-start">
-					<AccessControl renderNoAccess={() => null}>
+					<AccessControl>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="mb-1 mr-1"
@@ -302,6 +289,7 @@ class AdminManagementContainer extends React.Component {
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
 					handleSubmit={this.handleWarningChecked}
+					message={locale.texts.ARE_YOU_SURE_TO_DELETE}
 				/>
 			</Fragment>
 		)

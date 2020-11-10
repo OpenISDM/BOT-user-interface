@@ -55,17 +55,13 @@ class PdfDownloadForm extends React.Component {
 		isDone: false,
 	}
 
-	sendSearchResultToBackend = (searchResultInfo, callBack) => {
-		apiHelper.fileApiAgent
-			.getPDF({
-				...searchResultInfo,
-			})
-			.then((res) => {
-				callBack(res.data)
-			})
-			.catch((err) => {
-				console.log(err)
-			})
+	sendSearchResultToBackend = async (searchResultInfo, callBack) => {
+		const res = await apiHelper.fileApiAgent.getPDF({
+			...searchResultInfo,
+		})
+		if (res) {
+			callBack(res.data)
+		}
 	}
 
 	componentDidUpdate = (preProps) => {

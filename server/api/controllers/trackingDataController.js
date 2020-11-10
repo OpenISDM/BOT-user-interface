@@ -67,7 +67,7 @@ const calculatePosition = (item) => {
 
 const getTrackingData = (request, response) => {
 	const locale = request.body.locale || 'en'
-	const { user, areaId, key } = request.body
+	const { user, areaId } = request.body
 
 	/** The user's authenticated area id */
 	const userAuthenticatedAreasId = user.areas_id
@@ -76,12 +76,12 @@ const getTrackingData = (request, response) => {
 	const currentAreaId = areaId.toString()
 
 	pool
-		.query(dbQueries.getTrackingData(userAuthenticatedAreasId, key))
+		.query(dbQueries.getTrackingData(userAuthenticatedAreasId))
 		.then((res) => {
 			console.log('get tracking data')
 
 			/** Filter the objects that do no belong the area */
-			const toReturn = res.rows.map((item, index) => {
+			const toReturn = res.rows.map((item) => {
 				/** Parse lbeacon uuid into three field in an array: area id, latitude, longtitude */
 				const lbeacon_coordinate = item.lbeacon_uuid
 					? parseLbeaconCoordinate(item.lbeacon_uuid)
@@ -95,7 +95,8 @@ const getTrackingData = (request, response) => {
 
 				const lbeaconAreaId = lbeacon_coordinate ? lbeacon_coordinate[2] : null
 
-				const isLbeaconMatchArea = lbeaconAreaId == currentAreaId
+				const isLbeaconMatchArea =
+					parseInt(lbeaconAreaId) === parseInt(currentAreaId)
 
 				const isUserSObject = userAuthenticatedAreasId.includes(
 					parseInt(item.area_id)
@@ -124,7 +125,7 @@ const getTrackingData = (request, response) => {
 					: ''
 
 				/** Flag the object that is on sos */
-				if (item.object_type != 0) {
+				if (parseInt(item.object_type) !== 0) {
 					item.panic =
 						moment().diff(item.panic_violation_timestamp, 'second') <
 						process.env.PANIC_TIME_INTERVAL_IN_SEC
@@ -150,15 +151,16 @@ const getTrackingData = (request, response) => {
 					item.battery_indicator = 0
 				}
 
-				/** Delete the unused field of the object */
-				delete item.first_seen_timestamp
-				// delete item.last_seen_timestamp
-				delete item.panic_violation_timestamp
-				delete item.lbeacon_uuid
-				delete item.base_x
-				delete item.base_y
+				const newItem = new Map(Object.entries(item))
 
-				return item
+				/** Delete the unused field of the object */
+				newItem.delete('first_seen_timestamp')
+				newItem.delete('panic_violation_timestamp')
+				newItem.delete('lbeacon_uuid')
+				newItem.delete('base_x')
+				newItem.delete('base_y')
+
+				return Object.fromEntries(newItem)
 			})
 			response.status(200).json(toReturn)
 		})

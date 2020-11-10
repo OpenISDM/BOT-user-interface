@@ -185,19 +185,20 @@ class MainContainer extends React.Component {
 		const toastId = `${mac_address}-${monitor_type}`
 		const violatedObjects = this.state.violatedObjects
 		delete violatedObjects[toastId]
-		axios
-			.post(dataSrc.checkoutViolation, {
-				mac_address,
-				monitor_type,
-			})
-			.then(() => {
-				this.setState({
-					violatedObjects,
-				})
-			})
-			.catch((err) => {
-				console.log(`checkout violation fail: ${err}`)
-			})
+
+		// axios
+		// 	.post(dataSrc.checkoutViolation, {
+		// 		mac_address,
+		// 		monitor_type,
+		// 	})
+		// 	.then(() => {
+		// 		this.setState({
+		// 			violatedObjects,
+		// 		})
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(`checkout violation fail: ${err}`)
+		// 	})
 	}
 
 	/** Clear the recorded violated object */
@@ -291,100 +292,89 @@ class MainContainer extends React.Component {
 		}
 	}
 
-	getKeywords = () => {
-		apiHelper.utilsApiAgent
-			.getSearchableKeywords()
-			.then((res) => {
-				this.setState({
-					keywords: res.data.rows[0].keys,
-				})
+	getKeywords = async () => {
+		const res = await apiHelper.utilsApiAgent.getSearchableKeywords()
+		if (res) {
+			this.setState({
+				keywords: res.data.rows[0].keys,
 			})
-			.catch((err) => {
-				console.log(err)
-			})
+		}
 	}
 
 	/** Retrieve lbeacon data from database */
-	getLbeaconPosition = () => {
+	getLbeaconPosition = async () => {
 		const { locale } = this.context
 
-		apiHelper.lbeaconApiAgent
-			.getLbeaconTable({
-				locale: locale.abbr,
+		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+			locale: locale.abbr,
+		})
+		if (res) {
+			const lbeaconPosition = res.data.rows.map((item) => {
+				item.coordinate = createLbeaconCoordinate(item.uuid).toString()
+				return item
 			})
-			.then((res) => {
-				const lbeaconPosition = res.data.rows.map((item) => {
-					item.coordinate = createLbeaconCoordinate(item.uuid).toString()
-					return item
-				})
-				this.setState({
-					lbeaconPosition,
-				})
+			this.setState({
+				lbeaconPosition,
 			})
-			.catch((err) => {
-				console.log(err)
-			})
+		}
 	}
 
 	/** Retrieve geofence data from database */
-	getGeofenceConfig = (callback) => {
+	getGeofenceConfig = async (callback) => {
 		const { stateReducer } = this.context
 		const [{ areaId }] = stateReducer
 
-		apiHelper.geofenceApis
-			.getGeofenceConfig(areaId)
-			.then((res) => {
-				const geofenceConfig = res.data.rows.reduce((config, rule) => {
-					if (!config[rule.area_id]) {
-						config[rule.area_id] = {
-							enable: rule.enable,
-							rules: [rule],
-						}
-					} else config[rule.area_id].rules.push(rule)
-					return config
-				}, {})
-				this.setState(
-					{
-						geofenceConfig,
-					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(`get geofence data failed ${err}`)
-			})
+		const res = await apiHelper.geofenceApis.getGeofenceConfig(areaId)
+		if (res) {
+			const geofenceConfig = res.data.rows.reduce((config, rule) => {
+				if (!config[rule.area_id]) {
+					config[rule.area_id] = {
+						enable: rule.enable,
+						rules: [rule],
+					}
+				} else config[rule.area_id].rules.push(rule)
+				return config
+			}, {})
+			this.setState(
+				{
+					geofenceConfig,
+				},
+				callback
+			)
+		}
 	}
 
 	/** Retrieve location monitor data from database */
-	getLocationMonitorConfig = (callback) => {
+	getLocationMonitorConfig = async (callback) => {
 		const { auth } = this.context
-		apiHelper.monitor
-			.getMonitorConfig(NOT_STAY_ROOM_MONITOR, auth.user.areas_id, true)
-			.then((res) => {
-				const locationMonitorConfig = res.data.reduce((config, rule) => {
-					config[rule.area_id] = {
-						enable: rule.enable,
-						rule: {
-							...rule,
-							lbeacons:
-								rule.lbeacons &&
-								rule.lbeacons.map((uuid) => {
-									return createLbeaconCoordinate(uuid).toString()
-								}),
-						},
-					}
-					return config
-				}, {})
-				this.setState(
-					{
-						locationMonitorConfig,
+
+		const res = await apiHelper.monitor.getMonitorConfig(
+			NOT_STAY_ROOM_MONITOR,
+			auth.user.areas_id,
+			true
+		)
+		if (res) {
+			const locationMonitorConfig = res.data.reduce((config, rule) => {
+				config[rule.area_id] = {
+					enable: rule.enable,
+					rule: {
+						...rule,
+						lbeacons:
+							rule.lbeacons &&
+							rule.lbeacons.map((uuid) => {
+								return createLbeaconCoordinate(uuid).toString()
+							}),
 					},
-					callback
-				)
-			})
-			.catch((err) => {
-				console.log(`get location monitor config failed ${err}`)
-			})
+				}
+				return config
+			}, {})
+			this.setState(
+				{
+					locationMonitorConfig,
+				},
+				callback
+			)
+		}
 	}
 
 	/** Fired once the user click the item in object type list or in frequent seaerch */

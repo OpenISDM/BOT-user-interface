@@ -146,10 +146,7 @@ class TabletObjectTypeList extends React.Component {
 
 						<div className="d-inline-flex flex-column">
 							&nbsp;
-							<AccessControl
-								permission={'user:mydevice'}
-								renderNoAccess={() => null}
-							>
+							<AccessControl permission={'user:mydevice'}>
 								<Button
 									variant="outline-custom"
 									onClick={this.handleClick}
@@ -192,10 +189,7 @@ class TabletObjectTypeList extends React.Component {
 				</TabletView>
 				<MobileOnlyView>
 					<div className="d-inline-flex flex-column" style={style.textSmall}>
-						<AccessControl
-							permission={'user:mydevice'}
-							renderNoAccess={() => null}
-						>
+						<AccessControl permission={'user:mydevice'}>
 							<Col>
 								<Button
 									variant="outline-custom"

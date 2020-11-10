@@ -32,20 +32,41 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import dataSrc from '../dataSrc'
-import axios from 'axios'
+import { userInfo, user as userPath } from '../dataSrc'
+import { get, post, put, del } from '../helper/httpClient'
 
 export default {
 	async getAllUser({ locale }) {
-		return await axios.get(dataSrc.user, {
-			params: {
-				locale,
-			},
+		return await get(userPath, {
+			locale,
+		})
+	},
+
+	async deleteUser({ username }) {
+		return await del(userPath, {
+			username,
+		})
+	},
+
+	async signup({ name, email, password, roles, area_id, ...values }) {
+		return await post(userPath, {
+			name,
+			email,
+			password,
+			roles,
+			area_id,
+			...values,
+		})
+	},
+
+	async setUser({ user }) {
+		return await put(userPath, {
+			user,
 		})
 	},
 
 	async addSearchHistory({ username, keyType, keyWord }) {
-		return await axios.put(dataSrc.userInfo.searchHistory, {
+		return await put(userInfo.searchHistory, {
 			username,
 			keyType,
 			keyWord,
@@ -53,7 +74,7 @@ export default {
 	},
 
 	async editMyDevice({ username, mode, acn }) {
-		return await axios.put(dataSrc.userInfo.mydevice, {
+		return await put(userInfo.mydevice, {
 			username,
 			mode,
 			acn,
@@ -61,30 +82,43 @@ export default {
 	},
 
 	async editMaxSearchHistoryCount({ info, username }) {
-		return await axios.post(dataSrc.userInfo.maxSearchHistoryCount, {
+		return await post(userInfo.maxSearchHistoryCount, {
 			info,
 			username,
 		})
 	},
 
 	async setLocale({ userId, localeName }) {
-		return await axios.post(dataSrc.userInfo.locale, {
+		return await post(userInfo.locale, {
 			userId,
 			localeName,
 		})
 	},
 
 	async editKeywordType({ userId, keywordTypeId }) {
-		return await axios.put(dataSrc.userInfo.keywordType, {
+		return await put(userInfo.keywordType, {
 			userId,
 			keywordTypeId,
 		})
 	},
 
 	async editListId({ userId, listId }) {
-		return await axios.put(dataSrc.userInfo.listId, {
+		return await put(userInfo.listId, {
 			userId,
 			listId,
+		})
+	},
+
+	async setArea({ user }) {
+		return await put(userInfo.area.secondary, {
+			user,
+		})
+	},
+
+	async password({ user_id, password }) {
+		return await post(userInfo.password, {
+			user_id,
+			password,
 		})
 	},
 }

@@ -56,7 +56,6 @@ class ObjectManagementContainer extends React.Component {
 						</Nav.Item>
 						<AccessControl
 							permission={'user:importTable'}
-							renderNoAccess={() => null}
 							platform={['browser']}
 						>
 							<Nav.Item>
@@ -67,7 +66,6 @@ class ObjectManagementContainer extends React.Component {
 						</AccessControl>
 						<AccessControl
 							permission={'user:importTable'}
-							renderNoAccess={() => null}
 							platform={['browser']}
 						>
 							<Nav.Item>
@@ -88,7 +86,6 @@ class ObjectManagementContainer extends React.Component {
 
 						<AccessControl
 							permission={'user:importTable'}
-							renderNoAccess={() => null}
 							platform={['browser']}
 						>
 							<Tab.Pane eventKey="import_devices">
@@ -97,7 +94,6 @@ class ObjectManagementContainer extends React.Component {
 						</AccessControl>
 						<AccessControl
 							permission={'user:importTable'}
-							renderNoAccess={() => null}
 							platform={['browser']}
 						>
 							<Tab.Pane eventKey="import_patients">

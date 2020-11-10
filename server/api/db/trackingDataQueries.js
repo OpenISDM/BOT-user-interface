@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const getTrackingData = (areas_id, key) => {
+const getTrackingData = (areas_id) => {
 	const query = `
 		SELECT
 			object_table.mac_address,
@@ -64,6 +64,12 @@ const getTrackingData = (areas_id, key) => {
 			object_table.monitor_type,
 			object_table.nickname,
 			edit_object_record.notes,
+            edit_object_record.edit_user_id,
+            (
+				SELECT name
+				FROM user_table
+				WHERE user_table.id = edit_object_record.edit_user_id
+			) as edit_user_name,
 			lbeacon_table.description as location_description,
 			JSON_BUILD_OBJECT(
 				'id', area_table.id,
@@ -134,7 +140,7 @@ const getTrackingData = (areas_id, key) => {
 		ON notification.mac_address = object_summary_table.mac_address
 
 		LEFT JOIN branches
-		ON object_table.transferred_location = branches.id
+        ON object_table.transferred_location = branches.id
 
 		WHERE object_table.area_id IN (${areas_id.map((item) => item)})
 

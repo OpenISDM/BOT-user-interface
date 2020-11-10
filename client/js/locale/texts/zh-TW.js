@@ -243,12 +243,12 @@ const tw = {
 	PATIENT_NAME: '病人姓名',
 	KEY: '關鍵字',
 	TYPE: '類別',
-	ASSET_CONTROL_NUMBER: '財產編號',
+	ASSET_CONTROL_NUMBER: '財編',
 	OBJECT_IDENTITY_NUMBER: '物件 ID',
 	MAC_ADDRESS: 'MAC位址',
 	TAG_ID: '標籤編號',
 	MONITOR_TYPE: '監控類別',
-	ACN: '財產編號',
+	ACN: '財編',
 	LOCATION: '地點',
 	PATIENT_HISTORICAL_RECORD: '歷史報告',
 	RSSI_THRESHOLD: 'RSSI設定',
@@ -442,7 +442,7 @@ const tw = {
 	BROKEN: '報修',
 	TRANSFERRED: '轉移',
 	RESERVE: '預約',
-	RETURNED: '歸還',
+	RETURNED: '正常',
 	TRACED: '追蹤',
 
 	/** User Setting */
@@ -595,6 +595,7 @@ const tw = {
 	UNSELECTED_PATIENTS: '未選取病人',
 	CREATE: '新增',
 	FILE_URL_NOT_FOUND: '找不到檔案位址',
+	STATUS_CHANGED_BY: '狀態變更',
 }
 
 export default tw
