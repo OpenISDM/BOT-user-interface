@@ -40,7 +40,7 @@ import styleConfig from '../../config/styleConfig'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
 import { JSONClone, formatTime } from '../../helper/utilities'
-
+import messageGenerator from '../../helper/messageGenerator'
 class ShiftChangeHistoricalRecord extends React.Component {
 	static contextType = AppContext
 
@@ -92,6 +92,8 @@ class ShiftChangeHistoricalRecord extends React.Component {
 	}
 
 	render() {
+		const { locale } = this.context
+
 		return (
 			<Fragment>
 				<div className="mb-2">
@@ -105,9 +107,16 @@ class ShiftChangeHistoricalRecord extends React.Component {
 						getTrProps={(state, rowInfo) => {
 							return {
 								onClick: () => {
-									apiHelper.fileApiAgent.getFile({
-										path: rowInfo.original.file_path,
-									})
+									if (rowInfo.original.file_path) {
+										apiHelper.fileApiAgent.getFile({
+											path: rowInfo.original.file_path,
+										})
+									} else {
+										messageGenerator.setErrorMessage(
+											locale.texts.FILE_URL_NOT_FOUND,
+											2000
+										)
+									}
 								},
 							}
 						}}
