@@ -9,94 +9,95 @@ import encrypt from './api/service/encrypt'
 //import { response } from 'express'
 
 
-async function get_people_realtime_data(request, response){
-	const {key} =request.body;
+async function get_people_realtime_data(request, response) {
+	const { key } = request.body;
 
 	let matchRes = await match_key(key);
 
-	if(matchRes == 1){
-		let data = 
+	if (matchRes == 1) {
+		let data =
 			await pool.query(queryType.get_people_realtime_data(key))
-					  .catch(
-						(err)=>{
-							console.log(`get realtime data failed : ${err} `);
-						});
-		if(data != undefined){
+				.catch((err) => {
+					console.log(`get realtime data failed : ${err} `);
+				});
+		if (data != undefined) {
 			console.log(`get realtime data successful`);
-
 			response.json(data.rows);
 		}
 	}
-	else if(matchRes ==2){
+	else if (matchRes == 2) {
 		response.json(error_code.key_timeout);
 	}
-	else{
+	else {
 		response.json(error_code.key_incorrect);
 	}
 }
-async function get_people_history_data(request, response){
-	let {key, start_time, end_time, count_limit, sort_type} = request.body;
+async function get_people_history_data(request, response) {
+	let { key, start_time, end_time, count_limit, sort_type } = request.body;
 
 	let matchRes = await match_key(key);
 
-	if(matchRes ==1){
+	if (matchRes == 1) {
 
 		//start time 
-		if(start_time != undefined){
-			if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
-				response.json(error_code.start_time_error)
+		if (start_time != undefined) {
+			if (DateIsValid(start_time) == false) {
+				response.json(error_code.start_time_error);
+				return;
 			} else {
 				// if format right then convert to utc
-				start_time = time_format(start_time)
+				start_time = set_time_format(start_time)
 			}
-		}else{
+		} else {
 			start_time = moment(moment().subtract(1, 'day')).format();
 		}
 
 		//end time
-		if(end_time != undefined){
-			if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
-				response.json(error_code.end_time_error)
+		if (end_time != undefined) {
+			if (DateIsValid(end_time) == false) {
+				response.json(error_code.end_time_error);
+				return;
 			} else {
-				end_time = time_format(end_time)
+				end_time = set_time_format(end_time);
 			}
-		}else{
+		} else {
 			end_time = moment(moment()).format();
 		}
 
 		//count_limit is 10
-		if(count_limit == undefined)
+		if (count_limit == undefined)
 			count_limit = 10;
-		
+
 		//0=DESC 1=ASC  : default=0
 		if (sort_type == undefined) {
-			sort_type = 'desc'
+			sort_type = 'desc';
 		} else if (sort_type != 'desc' && sort_type != 'asc') {
-			response.json(error_code.sort_type_define_error)
+			response.json(error_code.sort_type_define_error);
+			return;
 		}
 
-		let data = 
-			await pool.query(queryType.get_people_history_data(key,start_time, end_time,count_limit, sort_type))
-			.catch((err)=>{
+		let data =
+			await pool.query(queryType.get_people_history_data(key, start_time, end_time, count_limit, sort_type))
+				.catch((err) => {
 					console.log(`get people history data failed : ${err}`);
-			});
+				});
 
-		if(data != undefined){
+		if (data != undefined) {
 			console.log(`get people history data successed.`);
-			
-			data.rows.map((item)=>{
+
+			data.rows.map((item) => {
 				item.record_timestamp = moment(item.record_timestamp).format(timeDefaultFormat);
 			});
 
 			response.json(data.rows);
 		}
 	}
-	else if(matchRes ==2){
+	else if (matchRes == 2) {
 		response.json(error_code.key_timeout);
 	}
 	else {
 		response.json(error_code.key_incorrect);
-	} 
+	}
 }
 
 const get_api_key = (request, response) => {
@@ -174,7 +175,7 @@ async function get_history_data(request, response) {
 				response.json(error_code.start_time_error)
 			} else {
 				// if format right then convert to utc
-				start_time = time_format(start_time)
+				start_time = set_time_format(start_time)
 			}
 		} else {
 			// set default WHEN no input
@@ -185,7 +186,7 @@ async function get_history_data(request, response) {
 			if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
 				response.json(error_code.end_time_error)
 			} else {
-				end_time = time_format(end_time)
+				end_time = set_time_format(end_time)
 			}
 		} else {
 			end_time = moment(moment()).format()
@@ -233,13 +234,8 @@ async function get_history_data(request, response) {
 			response.json(error_code.sort_type_define_error)
 		}
 
+		let data = await get_history_data_from_db(key, start_time, end_time, tag, Lbeacon, count_limit, sort_type)
 
-		//data = Promise.resolve(
-		let data = await get_data(key, start_time, end_time, tag, Lbeacon, count_limit, sort_type)
-		//)
-		//await data.then(function (result) {
-		//	data = result
-		//})
 
 		data.map((item) => {
 			item.start_time = moment(item.start_time).format(timeDefaultFormat)
@@ -275,7 +271,10 @@ async function match_key(key) {
 		})
 }
 
-async function get_data(
+function DateIsValid(time) {
+	return moment(time, timeDefaultFormat, true).isValid();
+}
+async function get_history_data_from_db(
 	key,
 	start_time,
 	end_time,
@@ -314,11 +313,14 @@ async function get_data(
 		})
 }
 
-function time_format(time) {
-	if (time != undefined) {
-		return moment(time, timeDefaultFormat).format()
-	}
+
+function set_time_format(time) {
+	if (time != undefined)
+		return moment(time, timeDefaultFormat).format();
+
+	return time;
 }
+
 
 export default {
 	get_api_key,

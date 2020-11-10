@@ -206,12 +206,11 @@ const get_people_history_data= (key, start_time,end_time, count_limit, sort_type
 		  record_timestamp < '${end_time}'
 
 	order by record_timestamp ${sort_type}
-	limit ${count_limit}`;
+	limit ${count_limit};`;
 }
 
 const get_people_realtime_data = (key)=>{
-	return `
-	select 
+	return `select 
 	object_summary_table.id as object_id, 
 	object_summary_table.mac_address as mac_address, 
 	object_table.name as object_name, 
@@ -220,7 +219,6 @@ const get_people_realtime_data = (key)=>{
 	object_summary_table.uuid as Lbeacon_uuid,
 	lbeacon_table.description as Lbeacon_description, 
 	object_summary_table.payload as payload
-
 	from api_key
 	
 	inner join user_table
@@ -238,7 +236,6 @@ const get_people_realtime_data = (key)=>{
 	
 	left join area_table
 	on area_table.id = object_summary_table.updated_by_area
-	
 	where api_key.key = '${key}';
 	`;
 }
