@@ -83,6 +83,10 @@ async function get_people_history_data(request, response){
 
 		if(data != undefined){
 			console.log(`get people history data successed.`);
+			
+			data.rows.map((item)=>{
+				item.record_timestamp = moment(item.record_timestamp).format(timeDefaultFormat);
+			});
 
 			response.json(data.rows);
 		}
