@@ -200,7 +200,7 @@ const pdfPackageGenerator = {
 				const signature_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'transferred to',
 					locale,
-					area
+					area.label
 				)
 				const list_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'transferred device list',
@@ -285,7 +285,7 @@ const pdfPackageGenerator = {
 				const foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices found',
 					locale,
-					null,
+					'',
 					data.foundResult.length !== 0
 				)
 				const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
@@ -295,7 +295,7 @@ const pdfPackageGenerator = {
 				const notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices not found',
 					locale,
-					null,
+					'',
 					data.notFoundResult.length !== 0
 				)
 				const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
@@ -359,12 +359,7 @@ const pdfPackageGenerator = {
 				const titleUpperCase = locale.texts[
 					title.toUpperCase().replace(/ /g, '_')
 				].toUpperCase()
-
-				let location = ''
-				if (area) {
-					location = area.label
-				}
-
+				const location = area || ''
 				return hasTitle
 					? `
                         <h4 style='
