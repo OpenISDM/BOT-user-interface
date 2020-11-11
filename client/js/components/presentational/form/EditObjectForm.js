@@ -51,7 +51,7 @@ import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
 import { DISASSOCIATE, NORMAL, TRANSFERRED } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
-import { formatToMac } from '../../../helper/utilities'
+import { formatToMac, compareString } from '../../../helper/utilities'
 import apiHelper from '../../../helper/apiHelper'
 import PropTypes from 'prop-types'
 
@@ -72,9 +72,9 @@ class EditObjectForm extends React.Component {
 	}
 
 	getTransferredLocation = async () => {
-		try {
-			const res = await apiHelper.transferredLocationApiAgent.getAll()
-			const optionsMap = {}
+		const res = await apiHelper.transferredLocationApiAgent.getAll()
+		const optionsMap = {}
+		if (res) {
 			res.data.forEach(({ id, name, department }) => {
 				const option = {
 					id,
@@ -96,21 +96,11 @@ class EditObjectForm extends React.Component {
 			this.setState({
 				transferredLocationOptions,
 			})
-		} catch (e) {
-			console.log(e)
 		}
 	}
 
 	render() {
 		const { locale } = this.context
-		const areaOptions = this.props.areaTable.map((area) => {
-			return {
-				value: area.name,
-				label: locale.texts[area.name.toUpperCase().replace(/ /g, '_')],
-				id: area.id,
-			}
-		})
-
 		const {
 			title,
 			selectedRowData,
@@ -120,7 +110,19 @@ class EditObjectForm extends React.Component {
 			disableASN,
 			// idleMacaddrSet = [],
 			associatedMacSet = [],
+			handleSubmit,
+			macOptions,
+			handleClick,
+			areaTable,
 		} = this.props
+
+		const areaOptions = areaTable.map((area) => {
+			return {
+				value: area.name,
+				label: locale.texts[area.name.toUpperCase().replace(/ /g, '_')],
+				id: area.id,
+			}
+		})
 
 		const {
 			id,
@@ -146,11 +148,11 @@ class EditObjectForm extends React.Component {
 			monitorType:
 				selectedRowData.length !== 0
 					? selectedRowData.monitor_type === 0
-						? null
+						? []
 						: selectedRowData.monitor_type.split('/')
 					: [],
 			transferred_location:
-				status.value === TRANSFERRED ? transferred_location : ' ',
+				status.value === TRANSFERRED ? transferred_location : null,
 			nickname: nickname || '',
 		}
 
@@ -193,10 +195,19 @@ class EditObjectForm extends React.Component {
 					'mac_address',
 					locale.texts.THE_MAC_ADDRESS_IS_ALREADY_USED,
 					(obj) => {
-						if (!obj || isEmpty(obj)) {
+						let macWithColons = ''
+						if (obj && obj.label) {
+							macWithColons = obj.label
+						}
+
+						if (
+							!obj ||
+							isEmpty(obj) ||
+							compareString(selectedRowData.mac_address, macWithColons)
+						) {
 							return true
 						}
-						const macWithColons = obj.label
+
 						return !associatedMacSet.includes(macWithColons)
 					}
 				),
@@ -242,12 +253,12 @@ class EditObjectForm extends React.Component {
 								monitor_type,
 								area_id: values.area.id || 0,
 								mac_address:
-									isEmpty(values.mac_address) || values.mac_address == null
+									isEmpty(values.mac_address) || values.mac_address === null
 										? null
 										: values.mac_address.label,
 							}
 
-							this.props.handleSubmit(postOption)
+							handleSubmit(postOption)
 						}}
 						render={({
 							values,
@@ -333,7 +344,7 @@ class EditObjectForm extends React.Component {
 														obj.label = formatToMac(obj.value)
 														setFieldValue('mac_address', obj)
 													}}
-													options={this.props.macOptions}
+													options={macOptions}
 													isSearchable={true}
 													isDisabled={selectedRowData.isBind}
 													styles={styleConfig.reactSelect}
@@ -384,7 +395,7 @@ class EditObjectForm extends React.Component {
 								<Modal.Footer>
 									<div className="mr-auto">
 										<Button
-											onClick={this.props.handleClick}
+											onClick={handleClick}
 											variant="link"
 											name={DISASSOCIATE}
 											disabled={!selectedRowData.isBind}

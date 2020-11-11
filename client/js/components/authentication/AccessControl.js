@@ -35,8 +35,6 @@
 import React from 'react'
 import AuthContext from '../../context/AuthenticationContext'
 import { isBrowser, isMobile, isTablet } from 'react-device-detect'
-import { Redirect } from 'react-router-dom'
-import routes from '../../config/routes/routes'
 import PropTypes from 'prop-types'
 
 const AccessControl = ({ permission, children, platform = [true] }) => {
@@ -63,7 +61,7 @@ const AccessControl = ({ permission, children, platform = [true] }) => {
 		return children
 	}
 
-	return <Redirect to={{ pathname: routes.HOME, state: {} }} />
+	return () => null
 }
 
 AccessControl.propTypes = {
