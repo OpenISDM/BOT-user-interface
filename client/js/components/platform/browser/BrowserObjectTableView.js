@@ -40,15 +40,8 @@ import { ButtonToolbar } from 'react-bootstrap'
 import Select from 'react-select'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
-import {
-	ADD,
-	BIND,
-	UNBIND,
-	DELETE,
-	DEVICE,
-	SAVE_SUCCESS,
-	DISASSOCIATE,
-} from '../../../config/wordMap'
+import { ADD, BIND, DELETE } from '../../../config/wordMap'
+import PropTypes from 'prop-types'
 
 const BrowserObjectTableView = ({
 	addObjectFilter,
@@ -56,7 +49,6 @@ const BrowserObjectTableView = ({
 	filterSelection,
 	handleClickButton,
 	selection,
-	handleClick,
 }) => {
 	const locale = React.useContext(LocaleContext)
 	return (
@@ -68,7 +60,7 @@ const BrowserObjectTableView = ({
 					getSearchKey={(key) => {
 						addObjectFilter(
 							key,
-							['name', 'area', 'macAddress', 'acn'],
+							['name', 'area', 'macAddress', 'acn', 'sex', 'monitor_type'],
 							'search bar'
 						)
 					}}
@@ -112,7 +104,7 @@ const BrowserObjectTableView = ({
 						className="text-capitalize mr-2 mb-1"
 						name={DELETE}
 						onClick={handleClickButton}
-						disabled={selection.length == 0}
+						disabled={selection.length === 0}
 					>
 						{locale.texts.DELETE_PATIENT}
 					</PrimaryButton>
@@ -120,6 +112,14 @@ const BrowserObjectTableView = ({
 			</AccessControl>
 		</div>
 	)
+}
+
+BrowserObjectTableView.propTypes = {
+	addObjectFilter: PropTypes.func.isRequired,
+	removeObjectFilter: PropTypes.func.isRequired,
+	filterSelection: PropTypes.array.isRequired,
+	handleClickButton: PropTypes.func.isRequired,
+	selection: PropTypes.array.isRequired,
 }
 
 export default BrowserObjectTableView
