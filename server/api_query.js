@@ -6,7 +6,6 @@ import pool from './api/db/connection'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
-//import { response } from 'express'
 
 async function get_people_realtime_data(request, response) {
 	const { key } = request.body
