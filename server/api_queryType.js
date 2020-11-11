@@ -49,8 +49,7 @@ const confirmValidation = (username) => {
 	return query
 }
 
-function setKey(user_id, username, hash)
-{
+function setKey(user_id, username, hash) {
 	return ` insert into api_key (id, name, key, register_time)
    values (${user_id}, '${username}', '${hash}', now())
    on conflict(id)
@@ -59,7 +58,7 @@ function setKey(user_id, username, hash)
 	name = '${username}',
 	key = '${hash}',
 	register_time = now()
-	`;		
+	`
 }
 
 const getAllKeyQuery = ' SELECT  * FROM api_key '
@@ -109,12 +108,12 @@ const get_data = (
             WHERE
                 record_timestamp > $1
                 AND record_timestamp < $2`
-	if (tag != undefined) {
+	if (tag !== undefined) {
 		text += `  AND location_history_table.mac_address IN  (${tag.map(
 			(item) => `'${item}'`
 		)})`
 	}
-	if (Lbeacon != undefined) {
+	if (Lbeacon !== undefined) {
 		text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
 			(item) => `'${item}'`
 		)})`
@@ -156,7 +155,7 @@ const get_data = (
     GROUP BY grp, groups.mac_address
     `
 
-	if (sort_type == 'desc') {
+	if (sort_type === 'desc') {
 		text += '  ORDER by mac_address ASC, start_time DESC   '
 	} else {
 		text += '   ORDER by mac_address ASC, start_time ASC   '
@@ -172,10 +171,86 @@ const get_data = (
 	return query
 }
 
+const get_people_history_data = (
+	key,
+	start_time,
+	end_time,
+	count_limit,
+	sort_type
+) => {
+	return `select 
+	location_history_table.object_id as object_id,
+	location_history_table.mac_address as mac_address,
+	object_table.name as name,
+	location_history_table.area_id as area_id,
+	area_table.readable_name as area_name,
+	location_history_table.uuid as Lbeacon_uuid,
+	lbeacon_table.description as Lbeacon_description,
+	location_history_table.record_timestamp as record_timestamp,
+	location_history_table.payload as payload
+	from api_key
+	
+	inner join user_table
+	on user_table.id = api_key.id
+	
+	inner join object_table
+	on object_table.area_id = user_table.main_area
+	and object_table.type = 'Patient'
+	
+	inner join location_history_table
+	on location_history_table.object_id = object_table.id
+	
+	left join lbeacon_table
+	on lbeacon_table.uuid = location_history_table.uuid
+	
+	left join area_table
+	on area_table.id = location_history_table.area_id
+	
+	where api_key.key = '${key}' and 
+		  record_timestamp > '${start_time}' and
+		  record_timestamp < '${end_time}'
+
+	order by record_timestamp ${sort_type}
+	limit ${count_limit};`
+}
+
+const get_people_realtime_data = (key) => {
+	return `select 
+	object_summary_table.id as object_id, 
+	object_summary_table.mac_address as mac_address, 
+	object_table.name as object_name, 
+	object_summary_table.updated_by_area as area_id, 
+	area_table.readable_name as area_name,
+	object_summary_table.uuid as Lbeacon_uuid,
+	lbeacon_table.description as Lbeacon_description, 
+	object_summary_table.payload as payload
+	from api_key
+	
+	inner join user_table
+	on user_table.id = api_key.id
+	
+	inner join object_table
+	on object_table.area_id = user_table.main_area
+	and object_table.type = 'Patient'
+	
+	inner join object_summary_table
+	on object_summary_table.id = object_table.id
+	
+	left join lbeacon_table
+	on object_summary_table.uuid = lbeacon_table.uuid
+	
+	left join area_table
+	on area_table.id = object_summary_table.updated_by_area
+	where api_key.key = '${key}';
+	`
+}
+
 export default {
 	confirmValidation,
 	setKey,
 	getAllKeyQuery,
 	getAllUserQuery,
 	get_data,
+	get_people_realtime_data,
+	get_people_history_data,
 }
