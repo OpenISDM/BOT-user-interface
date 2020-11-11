@@ -14,14 +14,12 @@ async function get_people_realtime_data(request, response) {
 	const matchRes = await match_key(key)
 
 	if (matchRes === 1) {
-		const data = await pool
-			.query(queryType.get_people_realtime_data(key))
-			.catch((err) => {
-				console.log(`get realtime data failed : ${err} `)
-			})
-		if (data !== undefined) {
+		try {
+			const data = await pool.query(queryType.get_people_realtime_data(key))
 			console.log('get realtime data successful')
 			response.json(data.rows)
+		} catch (err) {
+			console.log(`get realtime data failed : ${err}`)
 		}
 	} else if (matchRes === 2) {
 		response.json(error_code.key_timeout)
@@ -53,8 +51,8 @@ async function get_people_history_data(request, response) {
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
 
-		const data = await pool
-			.query(
+		try {
+			const data = await pool.query(
 				queryType.get_people_history_data(
 					key,
 					start_time,
@@ -63,20 +61,15 @@ async function get_people_history_data(request, response) {
 					sort_type
 				)
 			)
-			.catch((err) => {
-				console.log(`get people history data failed : ${err}`)
-			})
-
-		if (data !== undefined) {
-			console.log('get people history data successed.')
-
+			console.log('get people history successed.')
 			data.rows.forEach((item) => {
 				item.record_timestamp = moment(item.record_timestamp).format(
 					timeDefaultFormat
 				)
 			})
-
 			response.json(data.rows)
+		} catch (err) {
+			console.log(`get people history data failed : ${err}`)
 		}
 	} else if (matchRes === 2) {
 		response.json(error_code.key_timeout)
