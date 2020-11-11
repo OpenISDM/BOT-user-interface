@@ -84,3 +84,68 @@ export const compareString = (firstString, secondString) => {
 	}
 	return false
 }
+
+export const includes = (firstString, secondString) => {
+	return `${firstString}`
+		.toLowerCase()
+		.includes(`${secondString}`.toLowerCase())
+}
+
+export const convertConfigValue = (config) => {
+	return JSON.parse(config, (k, v) => {
+		return v === 'true' ? true : v === 'false' ? false : v
+	})
+}
+
+export const filterByField = (callback, data, key, filteredAttribute) => {
+	let filteredData = data
+	if (key) {
+		filteredData = data.filter((obj) => {
+			const resultArray = []
+			if (filteredAttribute.includes('name')) {
+				resultArray.push(callback(obj.name, key))
+			}
+			if (filteredAttribute.includes('type')) {
+				resultArray.push(callback(obj.type, key))
+			}
+			if (filteredAttribute.includes('acn')) {
+				resultArray.push(callback(obj.asset_control_number, key))
+			}
+			if (filteredAttribute.includes('status')) {
+				if (obj.status && obj.status.label) {
+					resultArray.push(callback(obj.status.label, key))
+				}
+			}
+			if (filteredAttribute.includes('area')) {
+				if (obj.area_name && obj.area_name.label) {
+					resultArray.push(callback(obj.area_name.label, key))
+				}
+			}
+			if (filteredAttribute.includes('monitor')) {
+				resultArray.push(callback(obj.monitor_type, key))
+			}
+			if (filteredAttribute.includes('macAddress')) {
+				resultArray.push(callback(obj.mac_address, key))
+			}
+			if (filteredAttribute.includes('sex')) {
+				if (obj.object_type && obj.object_type.label) {
+					resultArray.push(callback(obj.object_type.label, key))
+				}
+			}
+			if (filteredAttribute.includes('transferred_location')) {
+				if (obj.transferred_location && obj.transferred_location.label) {
+					resultArray.push(callback(obj.transferred_location.label, key))
+				}
+			}
+			if (filteredAttribute.includes('physician_name')) {
+				resultArray.push(callback(obj.physician_name, key))
+			}
+			if (filteredAttribute.includes('monitor_type')) {
+				resultArray.push(callback(obj.monitor_type, key))
+			}
+			return resultArray.includes(true)
+		})
+	}
+
+	return filteredData
+}

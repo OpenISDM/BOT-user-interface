@@ -157,23 +157,26 @@ class ShiftChange extends React.Component {
 	}
 
 	confirmShift = () => {
-		this.setState({
-			showConfirmForm: true,
-		})
+		const showConfirmForm = config.GENERATE_SHIFT_RECORD_ENABLE_DOUBLE_CONFIRMED
+		if (showConfirmForm) {
+			this.setState({
+				showConfirmForm: true,
+			})
+		} else {
+			this.handleConfirmFormSubmit()
+		}
 	}
 
-	handleConfirmFormSubmit = async (authentication = '') => {
+	handleConfirmFormSubmit = async () => {
 		const { values } = this.formikRef.current.state
 		const { locale, auth } = this.context
 		const userId = auth.user.id
+		const authentication = auth.user.name
 		const {
 			listName,
 			assignedDeviceGroupListids,
 			assignedPatientGroupListids,
 		} = this.props
-
-		authentication = auth.user.name
-
 		const shiftChangeObjectPackage = {
 			searchResult: this.state.searchResult,
 			patients: this.state.patients,
@@ -213,41 +216,37 @@ class ShiftChange extends React.Component {
 			return pkg
 		}, pdfPackage)
 
-		try {
-			await apiHelper.record.addShiftChangeRecord({
-				userInfo: auth.user,
-				pdfPackage,
-				shift: values.shift,
-				list_id: auth.user.list_id,
+		await apiHelper.record.addShiftChangeRecord({
+			userInfo: auth.user,
+			pdfPackage,
+			shift: values.shift,
+			list_id: auth.user.list_id,
+		})
+
+		await apiHelper.userAssignmentsApiAgent.finish({
+			userId,
+			groupListIds: [
+				...assignedDeviceGroupListids,
+				...assignedPatientGroupListids,
+			],
+		})
+
+		const callback = () => {
+			this.props.handleClose(() => {
+				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
 			})
-
-			await apiHelper.userAssignmentsApiAgent.finish({
-				userId,
-				groupListIds: [
-					...assignedDeviceGroupListids,
-					...assignedPatientGroupListids,
-				],
-			})
-
-			const callback = () => {
-				this.props.handleClose(() => {
-					messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-				})
-			}
-
-			this.setState(
-				{
-					fileUrl: pdfPackage.path,
-					showConfirmForm: false,
-					showDownloadPdfRequest: true,
-				},
-				callback
-			)
-
-			this.props.handleSubmit()
-		} catch (e) {
-			console.log(`add shift change record failed ${e}`)
 		}
+
+		this.setState(
+			{
+				fileUrl: pdfPackage.path,
+				showConfirmForm: false,
+				showDownloadPdfRequest: true,
+			},
+			callback
+		)
+
+		this.props.handleSubmit()
 	}
 
 	handleClose = () => {

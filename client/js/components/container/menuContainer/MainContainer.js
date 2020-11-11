@@ -34,8 +34,6 @@
 import React, { Fragment } from 'react'
 import 'react-table/react-table.css'
 import config from '../../../config'
-import axios from 'axios'
-import dataSrc from '../../../dataSrc'
 import { AppContext } from '../../../context/AppContext'
 import { toast } from 'react-toastify'
 import ToastNotification from '../../presentational/ToastNotification'

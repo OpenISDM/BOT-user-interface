@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        App.js
+        botFeaturesConfig.js
 
     File Description:
         BOT UI component
@@ -32,35 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react'
-import CombinedContext from './js/context/AppContext'
-import PrivateRoutes from './js/components/utils/PrivateRoutes'
-import { ToastContainer } from 'react-toastify'
-import config from './js/config'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import publicRoutes from './js/config/routes/publicRoutesConfig'
+import { convertConfigValue } from '../helper/utilities'
 
-const App = () => {
-	return (
-		<CombinedContext>
-			<BrowserRouter>
-				<Switch>
-					{publicRoutes.map((route, index) => {
-						return (
-							<Route
-								path={route.path}
-								key={index}
-								exact
-								component={route.component}
-							/>
-						)
-					})}
-					<PrivateRoutes />
-				</Switch>
-			</BrowserRouter>
-			<ToastContainer {...config.TOAST_PROPS} />
-		</CombinedContext>
-	)
+const botFeaturesConfig = {
+	GENERATE_SHIFT_RECORD_ENABLE_DOUBLE_CONFIRMED:
+		process.env.GENERATE_SHIFT_RECORD_ENABLE_DOUBLE_CONFIRMED || false,
 }
 
-export default App
+export default convertConfigValue(JSON.stringify(botFeaturesConfig))

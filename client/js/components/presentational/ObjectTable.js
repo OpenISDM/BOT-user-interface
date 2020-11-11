@@ -60,8 +60,15 @@ import {
 	SAVE_SUCCESS,
 	DISASSOCIATE,
 	EXTRACT_DEVICE_INFO,
+	SEARCH_BAR,
 } from '../../config/wordMap'
-import { JSONClone, formatTime, compareString } from '../../helper/utilities'
+import {
+	JSONClone,
+	formatTime,
+	compareString,
+	includes,
+	filterByField,
+} from '../../helper/utilities'
 
 const SelectTable = selecTableHOC(ReactTable)
 
@@ -468,54 +475,6 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	filterData = (data, key, filteredAttribute) => {
-		const filteredData = data.filter((obj) => {
-			if (filteredAttribute.includes('name')) {
-				return compareString(obj.name, key)
-			}
-			if (filteredAttribute.includes('type')) {
-				return compareString(obj.type, key)
-			}
-			if (filteredAttribute.includes('acn')) {
-				return compareString(obj.asset_control_number, key)
-			}
-
-			if (filteredAttribute.includes('status')) {
-				if (obj.status && obj.status.label) {
-					return compareString(obj.status.label, key)
-				}
-			}
-
-			if (filteredAttribute.includes('area')) {
-				if (obj.area_name && obj.area_name.label) {
-					return compareString(obj.area_name.label, key)
-				}
-			}
-
-			if (filteredAttribute.includes('monitor')) {
-				return compareString(obj.monitor_type, key)
-			}
-
-			if (filteredAttribute.includes('macAddress')) {
-				return compareString(obj.mac_address, key)
-			}
-
-			if (filteredAttribute.includes('sex')) {
-				if (parseInt(obj.object_type) === parseInt(key)) {
-					return true
-				}
-			}
-
-			if (filteredAttribute.includes('physician_name')) {
-				return compareString(obj.physician_name, key)
-			}
-
-			return false
-		})
-
-		return filteredData
-	}
-
 	addObjectFilter = (key, attribute, source) => {
 		const objectFilter = this.state.objectFilter.filter(
 			(filter) => source !== filter.source
@@ -540,10 +499,17 @@ class ObjectTable extends React.Component {
 
 	filterObjects = (objectFilter) => {
 		const filteredData = objectFilter.reduce((acc, curr) => {
-			return this.filterData(acc, curr.key, curr.attribute)
+			let callback
+			if (curr.source === SEARCH_BAR) {
+				callback = includes
+			} else {
+				callback = compareString
+			}
+			return filterByField(callback, acc, curr.key, curr.attribute)
 		}, this.state.data)
 
 		this.setState({
+			objectFilter,
 			filteredData,
 		})
 	}
@@ -576,7 +542,15 @@ class ObjectTable extends React.Component {
 							getSearchKey={(key) => {
 								this.addObjectFilter(
 									key,
-									['name', 'type', 'area', 'status', 'macAddress', 'acn'],
+									[
+										'name',
+										'type',
+										'area',
+										'status',
+										'macAddress',
+										'acn',
+										'transferred_location',
+									],
 									'search bar'
 								)
 							}}

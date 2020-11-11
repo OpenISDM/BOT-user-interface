@@ -45,7 +45,13 @@ import messageGenerator from '../../helper/messageGenerator'
 import { patientTableColumn } from '../../config/tables'
 import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone, formatTime } from '../../helper/utilities'
+import {
+	JSONClone,
+	formatTime,
+	compareString,
+	includes,
+	filterByField,
+} from '../../helper/utilities'
 import {
 	MobileOnlyView,
 	TabletView,
@@ -65,6 +71,7 @@ import {
 	PERSON,
 	SAVE_SUCCESS,
 	DISASSOCIATE,
+	SEARCH_BAR,
 } from '../../config/wordMap'
 
 const SelectTable = selecTableHOC(ReactTable)
@@ -429,41 +436,6 @@ class PatientTable extends React.Component {
 		}
 	}
 
-	filterData = (data, key, filteredAttribute) => {
-		key = key.toLowerCase()
-		const filteredData = data.filter((obj) => {
-			if (filteredAttribute.includes('name')) {
-				const keyRex = new RegExp(key)
-				if (obj.name.toLowerCase().match(keyRex)) {
-					return true
-				}
-			}
-
-			if (filteredAttribute.includes('acn')) {
-				const keyRex = new RegExp(key)
-				if (obj.asset_control_number.toLowerCase().match(keyRex)) return true
-			}
-
-			if (filteredAttribute.includes('area')) {
-				const keyRex = new RegExp(key)
-				if (obj.area_name.label != undefined) {
-					if (obj.area_name.label.toLowerCase().match(keyRex)) {
-						return true
-					}
-				}
-			}
-
-			if (filteredAttribute.includes('macAddress')) {
-				const keyRex = key.replace(/:/g, '')
-				if (obj.mac_address.replace(/:/g, '').toLowerCase().match(keyRex))
-					return true
-			}
-
-			return false
-		})
-		return filteredData
-	}
-
 	addObjectFilter = (key, attribute, source) => {
 		const objectFilter = this.state.objectFilter.filter(
 			(filter) => source !== filter.source
@@ -488,10 +460,17 @@ class PatientTable extends React.Component {
 
 	filterObjects = (objectFilter) => {
 		const filteredData = objectFilter.reduce((acc, curr) => {
-			return this.filterData(acc, curr.key, curr.attribute)
+			let callback
+			if (curr.source === SEARCH_BAR) {
+				callback = includes
+			} else {
+				callback = compareString
+			}
+			return filterByField(callback, acc, curr.key, curr.attribute)
 		}, this.state.data)
 
 		this.setState({
+			objectFilter,
 			filteredData,
 		})
 	}

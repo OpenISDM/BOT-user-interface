@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        ObjectEditedRecord.js
+        ShiftChangeHistoricalRecord.js
 
     File Description:
         BOT UI component
@@ -34,15 +34,14 @@
 
 import React, { Fragment } from 'react'
 import ReactTable from 'react-table'
-import { editObjectRecordTableColumn } from '../../../config/tables'
-import { AppContext } from '../../../context/AppContext'
-import styleConfig from '../../../config/styleConfig'
-import apiHelper from '../../../helper/apiHelper'
-import config from '../../../config'
-import { JSONClone, formatTime } from '../../../helper/utilities'
-import messageGenerator from '../../../helper/messageGenerator'
-
-class ObjectEditedRecord extends React.Component {
+import { shiftChangeRecordTableColumn } from '../../config/tables'
+import { AppContext } from '../../context/AppContext'
+import styleConfig from '../../config/styleConfig'
+import apiHelper from '../../helper/apiHelper'
+import config from '../../config'
+import { JSONClone, formatTime } from '../../helper/utilities'
+import messageGenerator from '../../helper/messageGenerator'
+class ShiftChangeHistoricalRecord extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -51,39 +50,41 @@ class ObjectEditedRecord extends React.Component {
 		locale: this.context.locale.abbr,
 	}
 
-	componentDidMount = () => {
-		this.getData()
-	}
-
 	componentDidUpdate = (prevProps, prevState) => {
 		if (this.context.locale.abbr !== prevState.locale) {
 			this.getData()
 		}
 	}
 
+	componentDidMount = () => {
+		this.getData()
+	}
+
 	getData = async () => {
 		const { locale } = this.context
+
 		const res = await apiHelper.record.getRecord(
-			config.RECORD_TYPE.EDITED_OBJECT,
+			config.RECORD_TYPE.SHIFT_CHANGE,
 			locale.abbr
 		)
+
 		if (res) {
-			const columns = JSONClone(editObjectRecordTableColumn)
+			const columns = JSONClone(shiftChangeRecordTableColumn)
 			columns.forEach((field) => {
 				field.Header =
 					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
 
-			const data = res.data.rows.map((item, index) => {
-				item._id = index + 1
-				item.new_status =
-					locale.texts[item.new_status.toUpperCase().replace(/ /g, '_')]
-				item.edit_time = formatTime(item.edit_time)
-				return item
+			const data = res.data.rows
+			data.forEach((item) => {
+				item.shift =
+					item.shift &&
+					locale.texts[item.shift.toUpperCase().replace(/ /g, '_')]
+				item.submit_timestamp = formatTime(item.submit_timestamp)
 			})
 
 			this.setState({
-				data,
+				data: res.data.rows,
 				columns,
 				locale: locale.abbr,
 			})
@@ -95,33 +96,35 @@ class ObjectEditedRecord extends React.Component {
 
 		return (
 			<Fragment>
-				<ReactTable
-					keyField="_id"
-					data={this.state.data}
-					columns={this.state.columns}
-					className="-highlight text-none"
-					style={{ maxHeight: '75vh' }}
-					{...styleConfig.reactTable}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: () => {
-								if (rowInfo.original.file_path) {
-									apiHelper.fileApiAgent.getFile({
-										path: rowInfo.original.file_path,
-									})
-								} else {
-									messageGenerator.setErrorMessage(
-										locale.texts.FILE_URL_NOT_FOUND,
-										2000
-									)
-								}
-							},
-						}
-					}}
-				/>
+				<div className="mb-2">
+					<ReactTable
+						keyField="id"
+						data={this.state.data}
+						columns={this.state.columns}
+						className="-highlight text-none"
+						style={{ maxHeight: '75vh' }}
+						{...styleConfig.reactTable}
+						getTrProps={(state, rowInfo) => {
+							return {
+								onClick: () => {
+									if (rowInfo.original.file_path) {
+										apiHelper.fileApiAgent.getFile({
+											path: rowInfo.original.file_path,
+										})
+									} else {
+										messageGenerator.setErrorMessage(
+											locale.texts.FILE_URL_NOT_FOUND,
+											2000
+										)
+									}
+								},
+							}
+						}}
+					/>
+				</div>
 			</Fragment>
 		)
 	}
 }
 
-export default ObjectEditedRecord
+export default ShiftChangeHistoricalRecord

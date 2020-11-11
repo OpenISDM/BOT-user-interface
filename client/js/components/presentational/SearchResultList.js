@@ -46,7 +46,6 @@ import MobileSearchResultList from '../platform/mobile/MobileSearchResultList'
 import BrowserSearchResultList from '../platform/browser/BrowserSearchResultList'
 import ChangeStatusForm from './form/ChangeStatusForm'
 import PatientViewModal from '../presentational/PatientViewModal'
-import SignatureForm from '../container/UserContainer/SignatureForm'
 import ConfirmForm from '../container/ConfirmForm'
 import DownloadPdfRequestForm from '../presentational/form/DownloadPdfRequestForm'
 import config from '../../config'
@@ -56,7 +55,6 @@ import messageGenerator from '../../helper/messageGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import { SET_ENABLE_REQUEST_TRACKING_DATA } from '../../reducer/action'
 import { JSONClone } from '../../helper/utilities'
-import { TRANSFERRED } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 
 class SearchResultList extends React.Component {
@@ -64,7 +62,6 @@ class SearchResultList extends React.Component {
 
 	state = {
 		showEditObjectForm: false,
-		showSignatureForm: false,
 		showConfirmForm: false,
 		showAddDevice: false,
 		showDownloadPdfRequest: false,
@@ -142,7 +139,6 @@ class SearchResultList extends React.Component {
 		const [, dispatch] = stateReducer
 		this.setState({
 			showEditObjectForm: false,
-			showSignatureForm: false,
 			showConfirmForm: false,
 			selection: [],
 			selectedObjectData: [],
@@ -172,24 +168,17 @@ class SearchResultList extends React.Component {
 			editedObjectPackage,
 		})
 
-		if (values.status === TRANSFERRED) {
-			this.setState({
-				showSignatureForm: true,
-			})
-		} else {
-			this.setState(
-				{
-					showConfirmForm: true,
-				},
-				this.props.highlightSearchPanel(false)
-			)
-		}
+		this.setState(
+			{
+				showConfirmForm: true,
+			},
+			this.props.highlightSearchPanel(false)
+		)
 	}
 
 	handleSignatureSubmit = (values) => {
 		this.setState(
 			{
-				showSignatureForm: false,
 				signatureName: values.name,
 				showConfirmForm: true,
 			},
@@ -291,7 +280,6 @@ class SearchResultList extends React.Component {
 			showDownloadPdfRequest: false,
 			showConfirmForm: false,
 			showPatientView: false,
-			showSignatureForm: false,
 			showAddDevice: false,
 			selectedObjectData: [],
 			selection: [],
@@ -320,12 +308,6 @@ class SearchResultList extends React.Component {
 			},
 			callback
 		)
-	}
-
-	handleShowSignatureForm = () => {
-		this.setState({
-			showSignatureForm: true,
-		})
 	}
 
 	handleClick = () => {
@@ -413,13 +395,6 @@ class SearchResultList extends React.Component {
 					handleClose={this.handleClose}
 					handleSubmit={this.handlePatientView}
 					data={this.state.selectedObjectData}
-				/>
-
-				<SignatureForm
-					show={this.state.showSignatureForm}
-					title={locale.texts.SIGNATURE}
-					handleClose={this.handleClose}
-					handleSubmit={this.handleSignatureSubmit}
 				/>
 
 				<ConfirmForm
