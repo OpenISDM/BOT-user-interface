@@ -7,9 +7,6 @@ export default (app) => {
 	/** 給我金鑰 我還你屬於這金鑰持有者的地區擁有的物品 **/
 	app.post('/api/1.0/tracing/history', db.get_history_data)
 
-	app.post('/api/1.0/tracing/history/people', mockup.get_history_data)
-	app.post('/api/1.0/tracing/realtime/people', mockup.get_realtime_data)
-
-	app.post('/api/development/history', db.get_people_history_data)
-	app.post('/api/development/realtime', db.get_people_realtime_data)
+	app.post('/api/1.0/tracing/history/people', db.get_people_history_data)
+	app.post('/api/1.0/tracing/realtime/people', db.get_people_realtime_data)
 }
