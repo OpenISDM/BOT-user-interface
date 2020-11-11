@@ -549,11 +549,11 @@ const shiftChangeRecordTableColumn = [
 		accessor: 'shift',
 		width: 140,
 	},
-	{
-		Header: 'list name',
-		accessor: 'list_name',
-		width: 200,
-	},
+	// {
+	// 	Header: 'list name',
+	// 	accessor: 'list_name',
+	// 	width: 200,
+	// },
 	{
 		Header: 'submit timestamp',
 		accessor: 'submit_timestamp',
