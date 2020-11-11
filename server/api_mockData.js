@@ -55,7 +55,7 @@ function generate_history_record(start_time, end_time, limit_count, sort_type){
     {
         let start_tmp = start_time;
         for(let i=0;i<limit_count/2;i++){
-            if(start_tmp.isBefore(moment(end_time)))
+            if(start_tmp.isAfter(moment(end_time)))
                 break;
 
             data.push(get_history_record_(start_tmp));
@@ -67,7 +67,7 @@ function generate_history_record(start_time, end_time, limit_count, sort_type){
     {
         let end_tmp = end_time;
         for(let i=0;i<limit_count/2;i++){
-            if(end_tmp.isAfter(moment(start_time)))
+            if(end_tmp.isBefore(moment(start_time)))
                 break;
 
             data.push(get_history_record_(end_tmp));
