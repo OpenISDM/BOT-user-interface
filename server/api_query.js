@@ -36,38 +36,22 @@ async function get_people_history_data(request, response) {
 	const matchRes = await match_key(key)
 
 	if (matchRes === 1) {
-		//start time
-		if (start_time !== undefined) {
-			if (DateIsValid(start_time) === false) {
-				response.json(error_code.start_time_error)
-				return
-			}
-			start_time = set_time_format(start_time)
-		} else {
-			start_time = moment(moment().subtract(1, 'day')).format()
-		}
+		const error_msg = check_input_error(
+			start_time,
+			end_time,
+			sort_type,
+			count_limit
+		)
 
-		//end time
-		if (end_time !== undefined) {
-			if (DateIsValid(end_time) === false) {
-				response.json(error_code.end_time_error)
-				return
-			}
-			end_time = set_time_format(end_time)
-		} else {
-			end_time = moment(moment()).format()
-		}
-
-		//count_limit is 10
-		if (count_limit === undefined) count_limit = 10
-
-		//0=DESC 1=ASC  : default=0
-		if (sort_type === undefined) {
-			sort_type = 'desc'
-		} else if (sort_type !== 'desc' && sort_type !== 'asc') {
-			response.json(error_code.sort_type_define_error)
+		if (error_msg !== undefined) {
+			response.json(error_msg)
 			return
 		}
+
+		start_time = set_initial_time(start_time, 1)
+		end_time = set_initial_time(end_time, 0)
+		count_limit = set_count_limit(count_limit)
+		sort_type = set_sort_type(sort_type)
 
 		const data = await pool
 			.query(
@@ -165,30 +149,22 @@ async function get_history_data(request, response) {
 	if (matchRes === 1) {
 		// matched
 
-		//** Time **//
+		const error_msg = check_input_error(
+			start_time,
+			end_time,
+			sort_type,
+			count_limit
+		)
 
-		if (start_time !== undefined) {
-			// verification by format
-			if (moment(start_time, timeDefaultFormat, true).isValid() === false) {
-				response.json(error_code.start_time_error)
-			} else {
-				// if format right then convert to utc
-				start_time = set_time_format(start_time)
-			}
-		} else {
-			// set default WHEN no input
-			start_time = moment(moment().subtract(1, 'day')).format()
+		if (error_msg !== undefined) {
+			response.json(error_msg)
+			return
 		}
 
-		if (end_time !== undefined) {
-			if (moment(end_time, timeDefaultFormat, true).isValid() === false) {
-				response.json(error_code.end_time_error)
-			} else {
-				end_time = set_time_format(end_time)
-			}
-		} else {
-			end_time = moment(moment()).format()
-		}
+		start_time = set_initial_time(start_time, 1)
+		end_time = set_initial_time(end_time, 0)
+		count_limit = set_count_limit(count_limit)
+		sort_type = set_sort_type(sort_type)
 
 		//** TAG **//
 		if (tag !== undefined) {
@@ -216,20 +192,6 @@ async function get_history_data(request, response) {
 					response.json(error_code.Lbeacon_error)
 				}
 			})
-		}
-
-		//set default when no input
-		if (count_limit === undefined) {
-			count_limit = 10
-		} else {
-			isNaN(count_limit) ? response.json(error_code.count_error) : null
-		}
-
-		//0=DESC 1=ASC  : default=0
-		if (sort_type === undefined) {
-			sort_type = 'desc'
-		} else if (sort_type !== 'desc' && sort_type !== 'asc') {
-			response.json(error_code.sort_type_define_error)
 		}
 
 		const data = await get_history_data_from_db(
@@ -277,28 +239,28 @@ async function match_key(key) {
 }
 
 function check_input_error(start_time, end_time, sort_type, count_limit) {
-	if (DateIsValid(start_time)) {
+	if (start_time !== undefined && DateIsValid(start_time) === false) {
 		return error_code.start_time_error
 	}
 
-	if (DateIsValid(end_time)) {
+	if (end_time !== undefined && DateIsValid(end_time) === false) {
 		return error_code.end_time_error
 	}
 
-	if (sort_type !== 'desc' && sort_type !== 'asc') {
+	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
 		return error_code.sort_type_define_error
 	}
 
-	if (isNaN(count_limit)) {
+	if (count_limit !== undefined && isNaN(count_limit)) {
 		return error_code.count_error
 	}
 }
 
-function set_start_time(start_time) {
-	if (start_time === undefined) {
-		return moment(moment().subtract(1, 'day')).format()
+function set_initial_time(time, diff) {
+	if (time === undefined) {
+		return moment(moment().subtract(diff, 'day')).format()
 	}
-	return set_time_format(start_time)
+	return set_time_format(time)
 }
 
 function set_sort_type(sort_type) {
@@ -308,11 +270,17 @@ function set_sort_type(sort_type) {
 	return sort_type
 }
 
-function set_time_format(time) {
-	if (time !== undefined) {
-		return moment(time, timeDefaultFormat).format()
+function set_count_limit(count_limit) {
+	if (count_limit === undefined) {
+		return 10
+	} else if (count_limit >= 50000) {
+		return 50000
 	}
-	return time
+	return count_limit
+}
+
+function set_time_format(time) {
+	return moment(time, timeDefaultFormat).format()
 }
 
 function DateIsValid(time) {
