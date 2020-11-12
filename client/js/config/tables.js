@@ -31,6 +31,8 @@
         Edward Chen, r08921a28@ntu.edu.tw
         Joe Chou, jjoe100892@gmail.com
 */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
 
 import React from 'react'
 import config from '../config'
@@ -220,13 +222,13 @@ const trackingTableColumn = [
 		style: style.column,
 		width: 70,
 		Cell: (props) =>
-			(props.value == 3 && (
+			(props.value === 3 && (
 				<i className="fas fa-battery-full" style={style.battery.full}></i>
 			)) ||
-			(props.value == 2 && (
+			(props.value === 2 && (
 				<i className="fas fa-battery-half" style={style.battery.half}></i>
 			)) ||
-			(props.value == 1 && (
+			(props.value === 1 && (
 				<i className="fas fa-battery-empty" style={style.battery.empty}></i>
 			)),
 	},
@@ -431,6 +433,40 @@ const objectTableColumn = [
 	{
 		Header: 'registered timestamp',
 		accessor: 'registered_timestamp',
+	},
+]
+
+const shiftChangeCheckTableColumn = [
+	{
+		Header: 'Name',
+		accessor: 'name',
+	},
+	{
+		Header: 'Nickname',
+		accessor: 'nickname',
+	},
+	{
+		Header: 'Type',
+		accessor: 'type',
+	},
+	{
+		Header: 'Tag ID',
+		accessor: 'mac_address',
+		width: 200,
+	},
+	{
+		Header: 'Asset Control Number',
+		accessor: 'asset_control_number',
+		width: 200,
+	},
+	{
+		Header: 'Status',
+		accessor: 'status.label',
+		width: 150,
+	},
+	{
+		Header: 'Transferred Location',
+		accessor: 'transferred_location.label',
 	},
 ]
 
@@ -812,6 +848,7 @@ export {
 	lbeaconTableColumn,
 	gatewayTableColumn,
 	objectTableColumn,
+	shiftChangeCheckTableColumn,
 	importTableColumn,
 	patientTableColumn,
 	userInfoTableColumn,

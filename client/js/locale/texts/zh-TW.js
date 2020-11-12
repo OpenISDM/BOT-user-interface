@@ -597,6 +597,7 @@ const tw = {
 	CREATE: '新增',
 	FILE_URL_NOT_FOUND: '找不到檔案位址',
 	STATUS_CHANGED_BY: '狀態變更',
+	SHIFT_CHANGE_CHECK_LIST: '交班檢查清單',
 }
 
 export default tw

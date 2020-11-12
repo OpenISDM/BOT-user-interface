@@ -33,8 +33,9 @@
 */
 
 export const SET_AREA = 'set area'
-
 export const SET_ENABLE_REQUEST_TRACKING_DATA =
 	'set enable request tracking data'
-
 export const ASSIGN_OBJECT = 'assign object'
+export const SET_TABLE_SELECTION = 'set shift change selection'
+export const SET_TRACKING_DATA = 'set tracking data'
+export const SET_OBJECT_FOUND_RESULTS = 'set object found results'

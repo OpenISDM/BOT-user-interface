@@ -34,14 +34,19 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import _, { debounce } from 'lodash'
+import _ from 'lodash'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
 import ShiftChange from '../ShiftChange'
+import ShiftChangeCheckList from '../ShiftChangeCheckList'
 import AssignmentItems from '../AssignmentItems'
+import {
+	SET_TRACKING_DATA,
+	SET_OBJECT_FOUND_RESULTS,
+} from '../../../reducer/action'
 
 const { ASSIGNMENT } = config
 
@@ -60,30 +65,13 @@ class ShiftChangeRecord extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.debounceReload()
+		this.reload()
 	}
-
-	debounceReload = debounce(
-		() => {
-			this.reload()
-		},
-		10,
-		{
-			leading: true,
-			trailing: false,
-		}
-	)
 
 	reload = () => {
 		this.getAssignments()
 		this.getPatientGroupList()
 		this.getDeviceGroupListDetail()
-	}
-
-	handleClose = () => {
-		this.setState({
-			showShiftChange: false,
-		})
 	}
 
 	getAssignments = async () => {
@@ -117,6 +105,8 @@ class ShiftChangeRecord extends React.Component {
 			assignedDeviceGroupListids,
 			assignedPatientGroupListids,
 		})
+
+		this.getTrackingData()
 	}
 
 	getPatientGroupList = async () => {
@@ -150,6 +140,78 @@ class ShiftChangeRecord extends React.Component {
 			})
 		} catch (e) {
 			console.log('get device group failed', e)
+		}
+	}
+
+	getTrackingData = async () => {
+		const { locale, auth, stateReducer } = this.context
+		const [{ areaId }, dispatch] = stateReducer
+
+		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId,
+		})
+
+		if (res) {
+			const {
+				assignedDeviceGroupListids,
+				assignedPatientGroupListids,
+			} = this.state
+			const foundDevices = []
+			const notFoundDevices = []
+			const foundPatients = []
+			const notFoundPatients = []
+			const data = res.data
+
+			data
+				.filter((item) => {
+					return (
+						assignedDeviceGroupListids.includes(parseInt(item.list_id)) &&
+						parseInt(item.object_type) === 0
+					)
+				})
+				.forEach((item) => {
+					if (item.found) {
+						foundDevices.push(item)
+					} else {
+						notFoundDevices.push(item)
+					}
+				})
+
+			data
+				.filter((item) => {
+					return (
+						assignedPatientGroupListids.includes(parseInt(item.list_id)) &&
+						parseInt(item.object_type) > 0
+					)
+				})
+				.forEach((item) => {
+					if (item.found) {
+						foundPatients.push(item)
+					} else {
+						notFoundPatients.push(item)
+					}
+				})
+
+			dispatch({
+				type: SET_TRACKING_DATA,
+				value: data,
+			})
+
+			dispatch({
+				type: SET_OBJECT_FOUND_RESULTS,
+				value: {
+					devicesResult: {
+						found: foundDevices,
+						notFound: notFoundDevices,
+					},
+					patientsReslut: {
+						found: foundPatients,
+						notFound: notFoundPatients,
+					},
+				},
+			})
 		}
 	}
 
@@ -203,6 +265,7 @@ class ShiftChangeRecord extends React.Component {
 			assignedDeviceGroupListids,
 			assignedPatientGroupListids,
 			showShiftChange,
+			showCheckShiftChangeList,
 		} = this.state
 
 		const disabled = !(
@@ -237,7 +300,7 @@ class ShiftChangeRecord extends React.Component {
 							disabled={disabled}
 							onClick={() => {
 								this.setState({
-									showShiftChange: true,
+									showCheckShiftChangeList: true,
 								})
 							}}
 						>
@@ -254,9 +317,29 @@ class ShiftChangeRecord extends React.Component {
 					assignedPatientGroupListids,
 				})}
 
+				<ShiftChangeCheckList
+					show={showCheckShiftChangeList}
+					handleClose={() => {
+						this.setState({
+							showCheckShiftChangeList: false,
+						})
+					}}
+					handleSubmit={() => {
+						this.setState({
+							showShiftChange: true,
+						})
+					}}
+					assignedDeviceGroupListids={assignedDeviceGroupListids}
+					assignedPatientGroupListids={assignedPatientGroupListids}
+				/>
+
 				<ShiftChange
 					show={showShiftChange}
-					handleClose={this.handleClose}
+					handleClose={() => {
+						this.setState({
+							showShiftChange: false,
+						})
+					}}
 					handleSubmit={this.reload}
 					assignedDeviceGroupListids={assignedDeviceGroupListids}
 					assignedPatientGroupListids={assignedPatientGroupListids}

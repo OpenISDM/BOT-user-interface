@@ -611,6 +611,7 @@ const en = {
 	CREATE: 'Create',
 	FILE_URL_NOT_FOUND: 'File URL not found',
 	STATUS_CHANGED_BY: 'changed by',
+	SHIFT_CHANGE_CHECK_LIST: 'Shift Change Check List',
 }
 
 export default en

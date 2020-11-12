@@ -36,6 +36,9 @@ import {
 	SET_AREA,
 	SET_ENABLE_REQUEST_TRACKING_DATA,
 	ASSIGN_OBJECT,
+	SET_TABLE_SELECTION,
+	SET_TRACKING_DATA,
+	SET_OBJECT_FOUND_RESULTS,
 } from './action'
 
 const StateReducer = (state, action) => {
@@ -54,6 +57,21 @@ const StateReducer = (state, action) => {
 			return {
 				...state,
 				assignedObject: action.value,
+			}
+		case SET_TABLE_SELECTION:
+			return {
+				...state,
+				shiftChangeSelection: action.value,
+			}
+		case SET_TRACKING_DATA:
+			return {
+				...state,
+				trackingData: action.value,
+			}
+		case SET_OBJECT_FOUND_RESULTS:
+			return {
+				...state,
+				objectFoundResults: action.value,
 			}
 		default:
 			return state
