@@ -38,7 +38,13 @@ import AccessControl from '../components/authentication/AccessControl'
 import { RESERVE, RETURNED, TRANSFERRED, BROKEN } from '../config/wordMap'
 import { isEqual } from 'lodash'
 
-export const getDescription = (item, locale, keywordType) => {
+export const getDescription = (
+	item,
+	locale,
+	keywordType,
+	showChecked,
+	checked
+) => {
 	let foundDeviceDescription = ''
 	const reserveText =
 		item.status === RESERVE
@@ -76,10 +82,19 @@ export const getDescription = (item, locale, keywordType) => {
                 ${item.residence_time ? item.residence_time : ''}`
 			break
 	}
+
+	if (showChecked) {
+		const comfirmed = checked
+			? locale.texts.CONFIRMED
+			: locale.texts.UNCONFIRMED
+		foundDeviceDescription = `(${comfirmed}) ${foundDeviceDescription}`
+	}
+
 	return foundDeviceDescription
 }
 
 export const getSubDescription = (item, locale) => {
+	const { value = '' } = item.status
 	switch (locale.abbr) {
 		// case locale.supportedLocale.cn.abbr:
 		// case locale.supportedLocale.ms.abbr:
@@ -87,11 +102,11 @@ export const getSubDescription = (item, locale) => {
 			if (
 				item.mac_address &&
 				item.currentPosition &&
-				isEqual(item.status, RETURNED)
+				isEqual(value, RETURNED)
 			) {
 				return `${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
 			} else if (item.mac_address && item.currentPosition) {
-				return item.status
+				return value
 			} else if (item.mac_address) {
 				return `${locale.texts.NOT_AVAILABLE}`
 			}
@@ -101,11 +116,11 @@ export const getSubDescription = (item, locale) => {
 			if (
 				item.mac_address &&
 				item.currentPosition &&
-				isEqual(item.status, RETURNED)
+				isEqual(value, RETURNED)
 			) {
 				return `${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${item.location_description}`
 			} else if (item.mac_address && item.currentPosition) {
-				return item.status
+				return value
 			} else if (item.mac_address) {
 				return `${locale.texts.NOT_AVAILABLE}`
 			}
@@ -170,9 +185,8 @@ export const getPhysicianName = (item, locale) => {
 }
 
 export const getStatus = (item, locale) => {
-	return isEqual(item.status, RETURNED)
-		? ''
-		: `${locale.texts[item.status.toUpperCase()]}`
+	const { value = '' } = item.status
+	return isEqual(value, RETURNED) ? '' : `${locale.texts[value.toUpperCase()]}`
 }
 
 export const getPosition = (item) => {

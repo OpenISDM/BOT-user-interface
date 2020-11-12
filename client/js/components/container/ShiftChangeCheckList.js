@@ -46,7 +46,8 @@ class ShiftChangeCheckList extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const { show, handleClose, handleSubmit } = this.props
-		const [{ trackingData }] = stateReducer
+		const [{ objectFoundResults = {} }] = stateReducer
+		const { totalResults = [] } = objectFoundResults
 
 		return (
 			<>
@@ -56,7 +57,7 @@ class ShiftChangeCheckList extends React.Component {
 					</Modal.Header>
 					<Modal.Body>
 						<BOTSelectTable
-							data={trackingData}
+							data={totalResults}
 							columns={shiftChangeCheckTableColumn}
 						/>
 					</Modal.Body>

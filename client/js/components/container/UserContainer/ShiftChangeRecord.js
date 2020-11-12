@@ -164,6 +164,20 @@ class ShiftChangeRecord extends React.Component {
 			const notFoundPatients = []
 			const data = res.data
 
+			data.forEach((item) => {
+				item.status = {
+					value: item.status,
+					label: item.status ? locale.texts[item.status.toUpperCase()] : null,
+				}
+				item.transferred_location = item.transferred_location.id && {
+					value: `${item.transferred_location.name}-${item.transferred_location.department}`,
+					label: `${item.transferred_location.name}-${item.transferred_location.department}`,
+				}
+				item.found_text = item.found
+					? locale.texts.FOUND
+					: locale.texts.NOT_FOUND
+			})
+
 			data
 				.filter((item) => {
 					return (
@@ -202,6 +216,12 @@ class ShiftChangeRecord extends React.Component {
 			dispatch({
 				type: SET_OBJECT_FOUND_RESULTS,
 				value: {
+					totalResults: [
+						...foundDevices,
+						...notFoundDevices,
+						...foundPatients,
+						...notFoundPatients,
+					],
 					devicesResult: {
 						found: foundDevices,
 						notFound: notFoundDevices,

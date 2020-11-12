@@ -438,21 +438,14 @@ const objectTableColumn = [
 
 const shiftChangeCheckTableColumn = [
 	{
+		Header: 'Position',
+		accessor: 'found_text',
+		width: 100,
+	},
+	{
 		Header: 'Name',
 		accessor: 'name',
-	},
-	{
-		Header: 'Nickname',
-		accessor: 'nickname',
-	},
-	{
-		Header: 'Type',
-		accessor: 'type',
-	},
-	{
-		Header: 'Tag ID',
-		accessor: 'mac_address',
-		width: 200,
+		width: 'auto',
 	},
 	{
 		Header: 'Asset Control Number',
@@ -462,11 +455,12 @@ const shiftChangeCheckTableColumn = [
 	{
 		Header: 'Status',
 		accessor: 'status.label',
-		width: 150,
+		width: 50,
 	},
 	{
 		Header: 'Transferred Location',
 		accessor: 'transferred_location.label',
+		width: 100,
 	},
 ]
 

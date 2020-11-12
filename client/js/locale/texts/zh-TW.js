@@ -598,6 +598,8 @@ const tw = {
 	FILE_URL_NOT_FOUND: '找不到檔案位址',
 	STATUS_CHANGED_BY: '狀態變更',
 	SHIFT_CHANGE_CHECK_LIST: '交班檢查清單',
+	CONFIRMED: '已確認',
+	UNCONFIRMED: '未確認',
 }
 
 export default tw

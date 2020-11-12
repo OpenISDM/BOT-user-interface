@@ -73,87 +73,10 @@ class ShiftChange extends React.Component {
 	formikRef = React.createRef()
 
 	state = {
-		searchResult: {
-			foundResult: [],
-			notFoundResult: [],
-		},
-		patients: {
-			foundPatients: [],
-			notFoundPatients: [],
-		},
 		fileUrl: '',
 		showPdfDownloadForm: false,
 		showConfirmForm: false,
 		showDownloadPdfRequest: false,
-	}
-
-	componentDidUpdate = (prevProps) => {
-		if (this.props.show && !prevProps.show) {
-			this.getTrackingData()
-		}
-	}
-
-	getTrackingData = async () => {
-		const { locale, auth, stateReducer } = this.context
-		const [{ areaId }] = stateReducer
-		const {
-			assignedDeviceGroupListids,
-			assignedPatientGroupListids,
-		} = this.props
-
-		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
-			locale: locale.abbr,
-			user: auth.user,
-			areaId,
-		})
-
-		if (res) {
-			const foundResult = []
-			const notFoundResult = []
-			const foundPatients = []
-			const notFoundPatients = []
-
-			res.data
-				.filter((item) => {
-					return (
-						assignedDeviceGroupListids.includes(parseInt(item.list_id)) &&
-						parseInt(item.object_type) === 0
-					)
-				})
-				.forEach((item) => {
-					if (item.found) {
-						foundResult.push(item)
-					} else {
-						notFoundResult.push(item)
-					}
-				})
-
-			res.data
-				.filter((item) => {
-					return (
-						assignedPatientGroupListids.includes(parseInt(item.list_id)) &&
-						parseInt(item.object_type) > 0
-					)
-				})
-				.forEach((item) => {
-					if (item.found) {
-						foundPatients.push(item)
-					} else {
-						notFoundPatients.push(item)
-					}
-				})
-
-			this.setState({
-				searchResult: {
-					foundResult,
-					notFoundResult,
-				},
-				patients: {
-					foundPatients,
-					notFoundPatients,
-				},
-			})
-		}
 	}
 
 	confirmShift = () => {
@@ -257,15 +180,21 @@ class ShiftChange extends React.Component {
 	}
 
 	render() {
-		const { locale, auth } = this.context
+		const { locale, auth, stateReducer } = this.context
+		const [
+			{ objectFoundResults = {}, shiftChangeSelection = [] },
+		] = stateReducer
 		const { show, handleClose, listName } = this.props
-		const { foundResult, notFoundResult } = this.state.searchResult
-		const { foundPatients, notFoundPatients } = this.state.patients
+		const { devicesResult = {}, patientsReslut = {} } = objectFoundResults
 		const nowTime = moment().locale(locale.abbr).format(config.TIMESTAMP_FORMAT)
-		const hasFoundResult = foundResult.length !== 0
-		const hasNotFoundResult = notFoundResult.length !== 0
-		const hasFoundPatients = foundPatients.length !== 0
-		const hasNotFoundPatients = notFoundPatients.length !== 0
+		const hasDevicesFound =
+			devicesResult.found && devicesResult.found.length !== 0
+		const hasDevicesNotFound =
+			devicesResult.notFound && devicesResult.notFound.length !== 0
+		const hasPatientsFound =
+			patientsReslut.found && patientsReslut.found.length !== 0
+		const hasPatientsNotFound =
+			patientsReslut.notFound && patientsReslut.notFound.length !== 0
 
 		const shiftOptions = Object.values(config.SHIFT_OPTIONS).map((shift) => {
 			return {
@@ -320,7 +249,7 @@ class ShiftChange extends React.Component {
 									style={style.modalBody}
 								>
 									<Form className="text-capitalize">
-										{!hasFoundResult && !hasNotFoundResult && (
+										{!hasDevicesFound && !hasDevicesNotFound && (
 											<div className="d-flex justify-content-center">
 												<p className="font-italic ">
 													{locale.texts.NOT_ASSIGNED_TO_ANY_DEVICES}
@@ -329,26 +258,34 @@ class ShiftChange extends React.Component {
 										)}
 										<TypeBlock
 											title={locale.texts.DEVICES_FOUND}
-											hasType={hasFoundResult}
-											typeArray={foundResult}
+											hasType={hasDevicesFound}
+											typeArray={devicesResult.found}
+											selection={shiftChangeSelection}
 										/>
 										<TypeBlock
 											title={locale.texts.DEVICES_NOT_FOUND}
-											hasType={hasNotFoundResult}
-											typeArray={notFoundResult}
+											hasType={hasDevicesNotFound}
+											typeArray={devicesResult.notFound}
+											selection={shiftChangeSelection}
 										/>
 										<TypeBlock
 											title={locale.texts.PATIENTS_FOUND}
-											hasType={hasFoundPatients}
-											typeArray={foundPatients}
+											hasType={hasPatientsFound}
+											typeArray={patientsReslut.found}
+											selection={shiftChangeSelection}
 										/>
 										<TypeBlock
 											title={locale.texts.PATIENTS_NOT_FOUND}
-											hasType={hasNotFoundPatients}
-											typeArray={notFoundPatients}
+											hasType={hasPatientsNotFound}
+											typeArray={patientsReslut.notFound}
+											selection={shiftChangeSelection}
 										/>
 									</Form>
 								</Modal.Body>
+								<Modal.Body
+									className="overflow-hidden-scroll custom-scrollbar"
+									style={style.modalBody}
+								></Modal.Body>
 								<Modal.Footer>
 									<Button variant="outline-secondary" onClick={handleClose}>
 										{locale.texts.CANCEL}
@@ -357,7 +294,7 @@ class ShiftChange extends React.Component {
 										type="submit"
 										variant="primary"
 										onClick={submitForm}
-										disabled={!hasFoundResult && !hasNotFoundResult}
+										disabled={!hasDevicesFound && !hasDevicesNotFound}
 									>
 										{locale.texts.CONFIRM}
 									</Button>
@@ -394,23 +331,25 @@ ShiftChange.propTypes = {
 
 export default ShiftChange
 
-const TypeBlock = ({ title, hasType, typeArray }) => {
+const TypeBlock = ({ title, hasType, typeArray, selection }) => {
 	const appContext = React.useContext(AppContext)
-
 	const { locale } = appContext
+	const showChecked = true
 
 	return (
 		<Fragment>
 			{hasType && <Title sub>{title}</Title>}
 			{hasType &&
 				typeArray.map((item, index) => {
+					const checked = selection.includes(item.id)
+
 					return (
 						<div className="d-flex justify-content-start" key={index}>
 							<div style={style.item} className="d-flex justify-content-center">
 								{index + 1}.
 							</div>
 							<div key={index} className="pb-1" style={style.row}>
-								{getDescription(item, locale, config)}
+								{getDescription(item, locale, config, showChecked, checked)}
 							</div>
 						</div>
 					)
@@ -423,4 +362,5 @@ TypeBlock.propTypes = {
 	title: PropTypes.string,
 	hasType: PropTypes.bool,
 	typeArray: PropTypes.array,
+	selection: PropTypes.array,
 }
