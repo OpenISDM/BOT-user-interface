@@ -234,7 +234,7 @@ const get_people_realtime_data = (key) => {
 	and object_table.type = 'Patient'
 	
 	inner join object_summary_table
-	on object_summary_table.id = object_table.id
+	on object_summary_table.mac_address = object_table.mac_address
 	
 	left join lbeacon_table
 	on object_summary_table.uuid = lbeacon_table.uuid
