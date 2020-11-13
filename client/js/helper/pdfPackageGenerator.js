@@ -389,7 +389,7 @@ const pdfPackageGenerator = {
 			},
 
 			getDataContent: (data, locale, showChecked, selection) => {
-				const acn = locale.texts.LAST_FOUR_DIGITS_IN_ACN
+				const acn = locale.texts.ACN
 				return data
 					.map((item, index) => {
 						let confirmed = ''
@@ -400,7 +400,7 @@ const pdfPackageGenerator = {
 						}
 						let location = ''
 						if (item.location_description) {
-							location = `${locale.texts.NEAR} ${item.location_description}`
+							location = `${locale.texts.NEAR} ${item.location_description},`
 						}
 						return `
                         <div style='margin-bottom: 10px;' key=${index}>
@@ -408,8 +408,9 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${confirmed}
                             ${item.name},
-                            ${acn}: ${item.asset_control_number.slice(-4)},
-                            ${location},
+                            ${item.type},
+                            ${acn}: ${item.asset_control_number},
+                            ${location}
                             ${item.residence_time}
                         </div>
                     `
@@ -566,7 +567,7 @@ const pdfPackageGenerator = {
 			getPatientContent: (data, locale, showChecked, selection) => {
 				return data
 					.map((item, index) => {
-						const acn = locale.texts.LAST_FOUR_DIGITS_IN_ACN
+						const acn = locale.texts.PATIENT_NUMBER
 						let confirmed = ''
 						if (showChecked) {
 							confirmed = selection.includes(item.id)
@@ -584,7 +585,8 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${confirmed}
                             ${item.name},
-                            ${acn}: ${item.asset_control_number.slice(-4)},
+                            ${item.type},
+                            ${acn}: ${item.asset_control_number},
                             ${location}
                             ${item.residence_time}
                         </div>
