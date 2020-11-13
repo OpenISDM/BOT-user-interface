@@ -139,6 +139,7 @@ class ChangeStatusForm extends React.Component {
 				selectedObjectData.length !== 0
 					? selectedObjectData[0].asset_control_number
 					: '',
+			action_options: '',
 			status:
 				selectedObjectData.length !== 0 ? selectedObjectData[0].status : '',
 			transferred_location:
@@ -194,7 +195,9 @@ class ChangeStatusForm extends React.Component {
 						enableReinitialize={true}
 						initialValues={this.initValues()}
 						validationSchema={object().shape({
-							status: string().required(locale.texts.STATUS_IS_REQUIRED),
+							action_options: string().required(
+								locale.texts.STATUS_IS_REQUIRED
+							),
 							transferred_location: object()
 								.when('action_options', {
 									is: TRANSFERRED,
@@ -204,7 +207,6 @@ class ChangeStatusForm extends React.Component {
 									'transferred_location',
 									locale.texts.INCORRECT_TRANSFERRED_LOCATION_FORMAT,
 									(obj) => {
-										console.log(obj)
 										if (!obj || isEmpty(obj)) {
 											return true
 										}
