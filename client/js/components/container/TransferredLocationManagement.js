@@ -276,6 +276,7 @@ class TranferredLocationManagement extends React.Component {
 				/>
 				<DeleteAlertModal
 					show={this.state.showDeleteModal}
+					actionName={DELETE}
 					handleClose={this.handleClose}
 					handleSubmit={this.handleRemoveSubmit}
 					title={locale.texts.ARE_YOU_SURE_TO_DELETE}

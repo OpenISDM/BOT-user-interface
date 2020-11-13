@@ -37,14 +37,20 @@ import { Modal, Button } from 'react-bootstrap'
 import LocaleContext from '../../context/LocaleContext'
 import PropTypes from 'prop-types'
 
-const DeleteAlertModal = ({ show, handleClose, handleSubmit, title }) => {
+const DeleteAlertModal = ({
+	show,
+	handleClose,
+	handleSubmit,
+	title,
+	actionName = 'DELETE',
+}) => {
 	const locale = React.useContext(LocaleContext)
 
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header>{title}</Modal.Header>
 			<Modal.Footer>
-				<Button variant="primary" name={'DELETE'} onClick={handleClose}>
+				<Button variant="primary" name={actionName} onClick={handleClose}>
 					{locale.texts.CANCEL}
 				</Button>
 				<Button variant="secondary" onClick={handleSubmit}>
@@ -60,6 +66,7 @@ DeleteAlertModal.propTypes = {
 	handleClose: PropTypes.func,
 	handleSubmit: PropTypes.func,
 	title: PropTypes.string,
+	actionName: PropTypes.string,
 }
 
 export default DeleteAlertModal
