@@ -42,7 +42,7 @@ import supportedLocale from './locale/supportedLocale'
 import botFeaturesConfig from './config/botFeaturesConfig'
 
 const config = {
-	VERSION: `v${version} b.1978`,
+	VERSION: `v${version} b.1979`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 
