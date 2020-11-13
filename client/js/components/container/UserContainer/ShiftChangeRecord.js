@@ -358,9 +358,16 @@ class ShiftChangeRecord extends React.Component {
 					handleClose={() => {
 						this.setState({
 							showShiftChange: false,
+							showCheckShiftChangeList: false,
 						})
 					}}
-					handleSubmit={this.reload}
+					handleSubmit={() => {
+						this.setState({
+							showShiftChange: false,
+							showCheckShiftChangeList: false,
+						})
+						this.reload()
+					}}
 					assignedDeviceGroupListids={assignedDeviceGroupListids}
 					assignedPatientGroupListids={assignedPatientGroupListids}
 					listName={allAssignmentsNameList.join()}

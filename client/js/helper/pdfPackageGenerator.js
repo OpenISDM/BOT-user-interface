@@ -229,43 +229,56 @@ const pdfPackageGenerator = {
 					'devices found',
 					locale,
 					area,
-					data.searchResult.foundResult.length !== 0
+					data.devicesResult.found.length !== 0
 				)
 				const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
-					data.searchResult.foundResult,
-					locale
+					data.devicesResult.found,
+					locale,
+					true,
+					data.selection
 				)
 				const notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices not found',
 					locale,
 					area,
-					data.searchResult.notFoundResult.length !== 0
+					data.devicesResult.notFound.length !== 0
 				)
 				const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
-					data.searchResult.notFoundResult,
-					locale
+					data.devicesResult.notFound,
+					locale,
+					true,
+					data.selection
 				)
 				const patientFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'patients found',
 					locale,
 					area,
-					data.patients.foundPatients.length !== 0
+					data.patientsReslut.found.length !== 0
 				)
 
 				const patientFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
-					data.patients.foundPatients,
-					locale
+					data.patientsReslut.found,
+					locale,
+					true,
+					data.selection
 				)
 
 				const patientNotFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'patients not found',
 					locale,
 					area,
-					data.patients.notFoundPatients.length !== 0
+					data.patientsReslut.notFound.length !== 0
 				)
 
 				const patientNotFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
-					data.patients.notFoundPatients,
+					data.patientsReslut.notFound,
+					locale,
+					true,
+					data.selection
+				)
+
+				const notes = pdfPackageGenerator.pdfFormat.getBodyItem.getNotes(
+					[data], // TODO: workaround
 					locale
 				)
 
@@ -277,7 +290,8 @@ const pdfPackageGenerator = {
 					patientFoundTitle +
 					patientFoundList +
 					patientNotFoundTitle +
-					patientNotFoundList
+					patientNotFoundList +
+					notes
 				)
 			},
 
@@ -374,17 +388,28 @@ const pdfPackageGenerator = {
 					: ''
 			},
 
-			getDataContent: (data, locale) => {
+			getDataContent: (data, locale, showChecked, selection) => {
 				const acn = locale.texts.LAST_FOUR_DIGITS_IN_ACN
 				return data
 					.map((item, index) => {
+						let confirmed = ''
+						if (showChecked) {
+							confirmed = selection.includes(item.id)
+								? `(${locale.texts.CONFIRMED}) `
+								: `(${locale.texts.UNCONFIRMED}) `
+						}
+						let location = ''
+						if (item.location_description) {
+							location = `${locale.texts.NEAR} ${item.location_description}`
+						}
 						return `
                         <div style='margin-bottom: 10px;' key=${index}>
                             ${index + 1}.
                             &nbsp;
+                            ${confirmed}
                             ${item.name},
                             ${acn}: ${item.asset_control_number.slice(-4)},
-                            ${locale.texts.NEAR} ${item.location_description},
+                            ${location},
                             ${item.residence_time}
                         </div>
                     `
@@ -402,7 +427,7 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${item.area},
                             ${acn}: ${item.asset_control_number.slice(-4)},
-                            ${locale.texts.NEAR} ${item.location_description},
+                            ${locale.texts.NEAR} ${item.location_description}
                             ${item.residence_time}
                         </div>
                     `
@@ -538,18 +563,29 @@ const pdfPackageGenerator = {
                 `
 			},
 
-			getPatientContent: (data, locale) => {
+			getPatientContent: (data, locale, showChecked, selection) => {
 				return data
 					.map((item, index) => {
+						const acn = locale.texts.LAST_FOUR_DIGITS_IN_ACN
+						let confirmed = ''
+						if (showChecked) {
+							confirmed = selection.includes(item.id)
+								? `(${locale.texts.CONFIRMED}) `
+								: `(${locale.texts.UNCONFIRMED}) `
+						}
+						let location = ''
+						if (item.location_description) {
+							location = `${locale.texts.NEAR} ${item.location_description},`
+						}
+
 						return `
                         <div style='margin-bottom: 10px;' key=${index}>
                             ${index + 1}.
                             &nbsp;
+                            ${confirmed}
                             ${item.name},
-                            ${
-															locale.texts.LAST_FOUR_DIGITS_IN_ACN
-														}: ${item.asset_control_number.slice(-4)},
-                            ${locale.texts.NEAR} ${item.location_description},
+                            ${acn}: ${item.asset_control_number.slice(-4)},
+                            ${location}
                             ${item.residence_time}
                         </div>
                     `

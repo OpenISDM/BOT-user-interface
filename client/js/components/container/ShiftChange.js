@@ -33,7 +33,7 @@
 */
 
 import React, { Fragment } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, Form } from 'react-bootstrap'
 import moment from 'moment'
 import config from '../../config'
 import { AppContext } from '../../context/AppContext'
@@ -41,7 +41,7 @@ import GeneralConfirmForm from '../presentational/form/GeneralConfirmForm'
 import DownloadPdfRequestForm from '../presentational/form/DownloadPdfRequestForm'
 import Select from 'react-select'
 import messageGenerator from '../../helper/messageGenerator'
-import { Formik, Form } from 'formik'
+import { Formik } from 'formik'
 import { getDescription } from '../../helper/descriptionGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import apiHelper from '../../helper/apiHelper'
@@ -77,6 +77,9 @@ class ShiftChange extends React.Component {
 		showPdfDownloadForm: false,
 		showConfirmForm: false,
 		showDownloadPdfRequest: false,
+		searchResult: null,
+		patients: null,
+		notes: '',
 	}
 
 	confirmShift = () => {
@@ -92,17 +95,25 @@ class ShiftChange extends React.Component {
 
 	handleConfirmFormSubmit = async () => {
 		const { values } = this.formikRef.current.state
-		const { locale, auth } = this.context
+		const { locale, auth, stateReducer } = this.context
 		const userId = auth.user.id
 		const authentication = auth.user.name
+		const [
+			{ objectFoundResults = {}, shiftChangeSelection = [] },
+		] = stateReducer
 		const {
 			listName,
 			assignedDeviceGroupListids,
 			assignedPatientGroupListids,
 		} = this.props
+
+		const { devicesResult = {}, patientsReslut = {} } = objectFoundResults
+
 		const shiftChangeObjectPackage = {
-			searchResult: this.state.searchResult,
-			patients: this.state.patients,
+			devicesResult,
+			patientsReslut,
+			selection: shiftChangeSelection,
+			notes: this.state.notes,
 		}
 
 		const pdfPackage = pdfPackageGenerator.getPdfPackage({
@@ -119,25 +130,31 @@ class ShiftChange extends React.Component {
 			},
 		})
 
-		this.state.patients.foundPatients.reduce((pkg, object) => {
-			const temp = pdfPackageGenerator.getPdfPackage({
-				option: 'patientRecord',
-				user: auth.user,
-				data: object,
-				locale,
-				signature: authentication,
-			})
+		/**
+		 * Just comment it for the future
+		 */
+		// this.state.patients.foundPatients.reduce((pkg, object) => {
+		// 	const temp = pdfPackageGenerator.getPdfPackage({
+		// 		option: 'patientRecord',
+		// 		user: auth.user,
+		// 		data: object,
+		// 		locale,
+		// 		signature: authentication,
+		// 	})
 
-			if (pkg.pdf) {
-				pkg.pdf += `
-                    <div style="page-break-before:always"></div>
-                `
-				pkg.pdf += temp.pdf
-			} else {
-				pkg = temp
-			}
-			return pkg
-		}, pdfPackage)
+		// 	if (pkg.pdf) {
+		// 		pkg.pdf += `
+		//             <div style="page-break-before:always"></div>
+		//         `
+		// 		pkg.pdf += temp.pdf
+		// 	} else {
+		// 		pkg = temp
+		// 	}
+		// 	return pkg
+		// }, pdfPackage)
+		/**
+		 * Just comment it for the future
+		 */
 
 		await apiHelper.record.addShiftChangeRecord({
 			userInfo: auth.user,
@@ -248,44 +265,48 @@ class ShiftChange extends React.Component {
 									className="overflow-hidden-scroll custom-scrollbar"
 									style={style.modalBody}
 								>
-									<Form className="text-capitalize">
-										{!hasDevicesFound && !hasDevicesNotFound && (
-											<div className="d-flex justify-content-center">
-												<p className="font-italic ">
-													{locale.texts.NOT_ASSIGNED_TO_ANY_DEVICES}
-												</p>
-											</div>
-										)}
-										<TypeBlock
-											title={locale.texts.DEVICES_FOUND}
-											hasType={hasDevicesFound}
-											typeArray={devicesResult.found}
-											selection={shiftChangeSelection}
+									{!hasDevicesFound && !hasDevicesNotFound && (
+										<div className="d-flex justify-content-center">
+											<p className="font-italic ">
+												{locale.texts.NOT_ASSIGNED_TO_ANY_DEVICES}
+											</p>
+										</div>
+									)}
+									<TypeBlock
+										title={locale.texts.DEVICES_FOUND}
+										hasType={hasDevicesFound}
+										typeArray={devicesResult.found}
+										selection={shiftChangeSelection}
+									/>
+									<TypeBlock
+										title={locale.texts.DEVICES_NOT_FOUND}
+										hasType={hasDevicesNotFound}
+										typeArray={devicesResult.notFound}
+										selection={shiftChangeSelection}
+									/>
+									<TypeBlock
+										title={locale.texts.PATIENTS_FOUND}
+										hasType={hasPatientsFound}
+										typeArray={patientsReslut.found}
+										selection={shiftChangeSelection}
+									/>
+									<TypeBlock
+										title={locale.texts.PATIENTS_NOT_FOUND}
+										hasType={hasPatientsNotFound}
+										typeArray={patientsReslut.notFound}
+										selection={shiftChangeSelection}
+									/>
+									<Form.Group controlId="exampleForm.ControlTextarea1">
+										<Form.Label>{locale.texts.NOTES}</Form.Label>
+										<Form.Control
+											as="textarea"
+											rows={5}
+											onChange={(e) => {
+												this.setState({ notes: e.target.value })
+											}}
 										/>
-										<TypeBlock
-											title={locale.texts.DEVICES_NOT_FOUND}
-											hasType={hasDevicesNotFound}
-											typeArray={devicesResult.notFound}
-											selection={shiftChangeSelection}
-										/>
-										<TypeBlock
-											title={locale.texts.PATIENTS_FOUND}
-											hasType={hasPatientsFound}
-											typeArray={patientsReslut.found}
-											selection={shiftChangeSelection}
-										/>
-										<TypeBlock
-											title={locale.texts.PATIENTS_NOT_FOUND}
-											hasType={hasPatientsNotFound}
-											typeArray={patientsReslut.notFound}
-											selection={shiftChangeSelection}
-										/>
-									</Form>
+									</Form.Group>
 								</Modal.Body>
-								<Modal.Body
-									className="overflow-hidden-scroll custom-scrollbar"
-									style={style.modalBody}
-								></Modal.Body>
 								<Modal.Footer>
 									<Button variant="outline-secondary" onClick={handleClose}>
 										{locale.texts.CANCEL}
