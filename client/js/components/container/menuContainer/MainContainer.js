@@ -656,6 +656,7 @@ class MainContainer extends React.Component {
 	}
 
 	handleSearchTypeClick = (searchKey) => {
+		this.setState({ showedObjects: [] })
 		if ([MY_PATIENTS, MY_DEVICES].includes(searchKey.type)) {
 			this.getGroupIdList()
 		}
