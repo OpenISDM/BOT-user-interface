@@ -94,7 +94,10 @@ export const getDescription = (
 }
 
 export const getSubDescription = (item, locale) => {
-	const { value = '' } = item.status
+	let { value = '' } = item.status
+	if (!value) {
+		value = item.status
+	}
 	switch (locale.abbr) {
 		// case locale.supportedLocale.cn.abbr:
 		// case locale.supportedLocale.ms.abbr:
@@ -185,7 +188,10 @@ export const getPhysicianName = (item, locale) => {
 }
 
 export const getStatus = (item, locale) => {
-	const { value = '' } = item.status
+	let { value = '' } = item.status
+	if (!value) {
+		value = item.status
+	}
 	return isEqual(value, RETURNED) ? '' : `${locale.texts[value.toUpperCase()]}`
 }
 
