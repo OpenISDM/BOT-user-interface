@@ -15,7 +15,7 @@ export default {
 	VETERAN_HOME_FIRST_FLOOR: '榮民之家1樓',
 	VETERAN_HOME_THIRD_FLOOR: '榮民之家3樓',
 	YUANLIN_CHRISTIAN_HOSPITAL: '員林基督教醫院',
-	NURSING_HOME: '護理之家',
+	BIDAE_TECH: '畢迪科技',
 	EMERGENCY_ROOM: '急診室',
 	NTUH_EMERGENCY_ROOM: 'emergency room',
 	WHOLE_SITE: '公共區域',

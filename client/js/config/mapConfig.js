@@ -181,7 +181,7 @@ const mapConfig = {
 
 			fillOpacity: 0.5,
 
-			radius: 50,
+			radius: 70,
 		},
 	},
 
