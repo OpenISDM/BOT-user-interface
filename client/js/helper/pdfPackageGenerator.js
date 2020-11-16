@@ -33,6 +33,7 @@
 */
 
 import moment from 'moment'
+import { RETURNED } from '../config/wordMap'
 
 const pdfPackageGenerator = {
 	/** Create pdf package, including header, body and the pdf path
@@ -402,6 +403,15 @@ const pdfPackageGenerator = {
 						if (item.location_description) {
 							location = `${locale.texts.NEAR} ${item.location_description},`
 						}
+						let statusText = ''
+						if (
+							item.status &&
+							item.status.label &&
+							item.status.value &&
+							item.status.value.toLowerCase() !== RETURNED
+						) {
+							statusText = ` ${item.status.label}, `
+						}
 						return `
                         <div style='margin-bottom: 10px;' key=${index}>
                             ${index + 1}.
@@ -411,6 +421,7 @@ const pdfPackageGenerator = {
                             ${item.type},
                             ${acn}: ${item.asset_control_number},
                             ${location}
+                            ${statusText}
                             ${item.residence_time}
                         </div>
                     `
