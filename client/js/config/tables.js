@@ -443,13 +443,13 @@ const shiftChangeCheckTableColumn = [
 		width: 100,
 	},
 	{
-		Header: 'Last Location',
-		accessor: 'location_description',
-		width: 150,
-	},
-	{
 		Header: 'Name',
 		accessor: 'name',
+		width: 'auto',
+	},
+	{
+		Header: 'Last Location',
+		accessor: 'location_description',
 		width: 'auto',
 	},
 	{
