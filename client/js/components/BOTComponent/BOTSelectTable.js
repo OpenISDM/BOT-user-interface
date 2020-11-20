@@ -51,29 +51,19 @@ class BOTSelectTable extends React.Component {
 		data: [],
 		columns: [],
 		currentSelectedRow: {},
-		showEdit: false,
-		selection: [],
 		selectAll: false,
-		selectType: '',
-	}
-
-	componentDidMount = () => {
-		const { stateReducer } = this.context
-		const [, dispatch] = stateReducer
-		dispatch({
-			type: SET_TABLE_SELECTION,
-			value: [],
-		})
 	}
 
 	isSelected = (key) => {
-		return this.state.selection.includes(key)
+		const { stateReducer } = this.context
+		const [{ tableSelection = [] }] = stateReducer
+		return tableSelection.includes(key)
 	}
 
 	toggleSelection = (key) => {
 		const { stateReducer } = this.context
-		const [, dispatch] = stateReducer
-		let selection = [...this.state.selection]
+		const [{ tableSelection = [] }, dispatch] = stateReducer
+		let selection = [...tableSelection]
 
 		key = key.split('-')[1] ? key.split('-')[1] : key
 
@@ -86,10 +76,6 @@ class BOTSelectTable extends React.Component {
 		} else {
 			selection.push(key)
 		}
-
-		this.setState({
-			selection,
-		})
 
 		dispatch({
 			type: SET_TABLE_SELECTION,
@@ -124,7 +110,7 @@ class BOTSelectTable extends React.Component {
 			selection = []
 		}
 
-		this.setState({ selectAll, selection })
+		this.setState({ selectAll })
 
 		dispatch({
 			type: SET_TABLE_SELECTION,
@@ -133,16 +119,17 @@ class BOTSelectTable extends React.Component {
 	}
 
 	render() {
+		const { stateReducer } = this.context
+		const [{ tableSelection = [] }] = stateReducer
 		const { locale } = this.context
 		const { data } = this.props
-		const { selectAll, selectType } = this.state
+
 		const { toggleSelection, toggleAll, isSelected } = this
 		const extraProps = {
-			selectAll,
+			selectAll: tableSelection.length === data.length,
 			isSelected,
 			toggleAll,
 			toggleSelection,
-			selectType,
 		}
 
 		const columns = JSONClone(this.props.columns)

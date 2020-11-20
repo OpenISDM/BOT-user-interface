@@ -98,9 +98,7 @@ class ShiftChange extends React.Component {
 		const { locale, auth, stateReducer } = this.context
 		const userId = auth.user.id
 		const authentication = auth.user.name
-		const [
-			{ objectFoundResults = {}, shiftChangeSelection = [] },
-		] = stateReducer
+		const [{ objectFoundResults = {}, tableSelection = [] }] = stateReducer
 		const {
 			listName,
 			assignedDeviceGroupListids,
@@ -112,7 +110,7 @@ class ShiftChange extends React.Component {
 		const shiftChangeObjectPackage = {
 			devicesResult,
 			patientsReslut,
-			selection: shiftChangeSelection,
+			selection: tableSelection,
 			notes: this.state.notes,
 		}
 
@@ -198,9 +196,7 @@ class ShiftChange extends React.Component {
 
 	render() {
 		const { locale, auth, stateReducer } = this.context
-		const [
-			{ objectFoundResults = {}, shiftChangeSelection = [] },
-		] = stateReducer
+		const [{ objectFoundResults = {}, tableSelection = [] }] = stateReducer
 		const { show, handleClose, listName } = this.props
 		const { devicesResult = {}, patientsReslut = {} } = objectFoundResults
 		const nowTime = moment().locale(locale.abbr).format(config.TIMESTAMP_FORMAT)
@@ -276,25 +272,25 @@ class ShiftChange extends React.Component {
 										title={locale.texts.DEVICES_FOUND}
 										hasType={hasDevicesFound}
 										typeArray={devicesResult.found}
-										selection={shiftChangeSelection}
+										selection={tableSelection}
 									/>
 									<TypeBlock
 										title={locale.texts.DEVICES_NOT_FOUND}
 										hasType={hasDevicesNotFound}
 										typeArray={devicesResult.notFound}
-										selection={shiftChangeSelection}
+										selection={tableSelection}
 									/>
 									<TypeBlock
 										title={locale.texts.PATIENTS_FOUND}
 										hasType={hasPatientsFound}
 										typeArray={patientsReslut.found}
-										selection={shiftChangeSelection}
+										selection={tableSelection}
 									/>
 									<TypeBlock
 										title={locale.texts.PATIENTS_NOT_FOUND}
 										hasType={hasPatientsNotFound}
 										typeArray={patientsReslut.notFound}
-										selection={shiftChangeSelection}
+										selection={tableSelection}
 									/>
 									<Form.Group controlId="exampleForm.ControlTextarea1">
 										<Form.Label>{locale.texts.NOTES}</Form.Label>

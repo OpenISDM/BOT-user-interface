@@ -36,29 +36,20 @@ import { AppContext } from '../../context/AppContext'
 import { TransferredLocationColumn } from '../../config/tables'
 import messageGenerator from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone } from '../../helper/utilities'
-import ReactTable from 'react-table'
-import styleConfig from '../../config/styleConfig'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import EditBranchForm from '../presentational/form/EditBranchForm'
 import DeleteAlertModal from '../presentational/DeleteAlertModal'
 import { ADD, DELETE, SAVE_SUCCESS } from '../../config/wordMap'
-import selecTableHOC from 'react-table/lib/hoc/selectTable'
+import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 
-const SelectTable = selecTableHOC(ReactTable)
 class TranferredLocationManagement extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		transferredLocationOptions: [],
-		unFoldBranches: [],
 		data: [],
-		columns: [],
 		branchOptions: [],
 		showAddForm: false,
 		showDeleteModal: false,
-		selectAll: false,
-		selection: [],
 	}
 
 	componentDidMount = () => {
@@ -66,46 +57,32 @@ class TranferredLocationManagement extends React.Component {
 	}
 
 	getTransferredLocation = async (callback) => {
-		const { locale } = this.context
+		const res = await apiHelper.transferredLocationApiAgent.getAll()
+		const branchOptionsMap = {}
+		const data = []
 
-		try {
-			const res = await apiHelper.transferredLocationApiAgent.getAll()
-			const columns = JSONClone(TransferredLocationColumn)
-			const branchOptionsMap = {}
-			const data = []
+		res.data.forEach((obj) => {
+			branchOptionsMap[obj.name] = {
+				label: obj.name,
+				value: obj.name,
+			}
 
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+			data.push({
+				id: obj.id,
+				name: obj.name,
+				department: obj.department,
 			})
+		})
 
-			res.data.forEach((obj) => {
-				branchOptionsMap[obj.name] = {
-					label: obj.name,
-					value: obj.name,
-				}
-
-				data.push({
-					id: obj.id,
-					name: obj.name,
-					department: obj.department,
-				})
-			})
-
-			this.setState(
-				{
-					data,
-					columns,
-					branchOptions: Object.values(branchOptionsMap),
-					showAddForm: false,
-					showDeleteModal: false,
-					selection: [],
-				},
-				callback
-			)
-		} catch (e) {
-			console.log(e)
-		}
+		this.setState(
+			{
+				data,
+				branchOptions: Object.values(branchOptionsMap),
+				showAddForm: false,
+				showDeleteModal: false,
+			},
+			callback
+		)
 	}
 
 	handleButtonClick = (e) => {
@@ -156,10 +133,11 @@ class TranferredLocationManagement extends React.Component {
 	}
 
 	handleRemoveSubmit = async () => {
-		const branchIds = this.state.selection
+		const { stateReducer } = this.context
+		const [{ tableSelection = [] }] = stateReducer
 		try {
 			await apiHelper.transferredLocationApiAgent.removeByIds({
-				branchIds,
+				branchIds: tableSelection,
 			})
 			const callback = () => {
 				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
@@ -170,102 +148,27 @@ class TranferredLocationManagement extends React.Component {
 		}
 	}
 
-	toggleSelection = (key) => {
-		let selection = [...this.state.selection]
-		key = parseInt(key.split('-')[1] ? key.split('-')[1] : key)
-		const keyIndex = selection.indexOf(key)
-		if (keyIndex >= 0) {
-			selection = [
-				...selection.slice(0, keyIndex),
-				...selection.slice(keyIndex + 1),
-			]
-		} else {
-			selection.push(key)
-		}
-		this.setState({
-			selection,
-		})
-	}
-
-	toggleAll = () => {
-		const selectAll = !this.state.selectAll
-		let selection = []
-		let rowsCount = 0
-		if (selectAll) {
-			const wrappedInstance = this.selectTable.getWrappedInstance()
-			const currentRecords = wrappedInstance.getResolvedState().sortedData
-			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
-			})
-		} else {
-			selection = []
-		}
-		this.setState({ selectAll, selection })
-	}
-
-	isSelected = (key) => {
-		return this.state.selection.includes(parseInt(key))
-	}
-
 	render() {
-		const { locale } = this.context
-		const { branchOptions, selectAll, data, columns } = this.state
-		const { toggleSelection, toggleAll, isSelected } = this
-		const extraProps = {
-			selectAll,
-			isSelected,
-			toggleAll,
-			toggleSelection,
-		}
+		const { locale, stateReducer } = this.context
+		const { branchOptions, data } = this.state
+		const [{ tableSelection = [] }] = stateReducer
 
 		return (
 			<div>
 				<div className="d-flex justify-content-start">
-					<PrimaryButton
-						onClick={this.handleButtonClick}
-						name={ADD}
-						disabled={this.state.selection.length > 0}
-					>
+					<PrimaryButton onClick={this.handleButtonClick} name={ADD}>
 						{locale.texts.ADD}
 					</PrimaryButton>
 					<PrimaryButton
 						onClick={this.handleButtonClick}
 						name={DELETE}
-						disabled={this.state.selection.length === 0}
+						disabled={tableSelection.length === 0}
 					>
 						{locale.texts.REMOVE}
 					</PrimaryButton>
 				</div>
 				<hr />
-				<SelectTable
-					keyField="id"
-					data={data}
-					columns={columns}
-					ref={(r) => (this.selectTable = r)}
-					className="-highlight text-none"
-					style={{ maxHeight: '70vh' }}
-					onPageChange={() => {
-						this.setState({ selectAll: false, selection: [] })
-					}}
-					onSortedChange={() => {
-						this.setState({ selectAll: false, selection: [] })
-					}}
-					{...extraProps}
-					{...styleConfig.reactTable}
-					resizable={true}
-					freezeWhenExpanded={false}
-					pageSize={10}
-					NoDataComponent={() => null}
-				/>
+				<BOTSelectTable data={data} columns={TransferredLocationColumn} />
 				<EditBranchForm
 					show={this.state.showAddForm}
 					actionName={ADD}

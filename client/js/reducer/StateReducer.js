@@ -61,7 +61,7 @@ const StateReducer = (state, action) => {
 		case SET_TABLE_SELECTION:
 			return {
 				...state,
-				shiftChangeSelection: action.value,
+				tableSelection: action.value,
 			}
 		case SET_TRACKING_DATA:
 			return {
