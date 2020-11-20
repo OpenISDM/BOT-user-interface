@@ -56,7 +56,7 @@ export const getDescription = (
 		item.status === RESERVE
 			? `~ ${item.reserved_timestamp_final} ${locale.texts.IS_RESERVED_FOR} ${item.reserved_user_name}`
 			: ''
-	const returnedText = item.currentPosition
+	const normalText = item.currentPosition
 		? isEqual(item.status, NORMAL)
 			? `${item.residence_time} `
 			: ''
@@ -73,7 +73,7 @@ export const getDescription = (
                     ${getACN(item, locale)}
                     ${getPosition(item, locale)}
                     ${getStatus(item, locale)}
-                    ${returnedText}
+                    ${normalText}
                     ${reserveText}`
 				: ` ${getDeviceName(item, locale, keywordType)}
                     ${getACN(item, locale)}
@@ -198,7 +198,7 @@ export const getStatus = (item, locale) => {
 	if (!value) {
 		value = item.status
 	}
-	return isEqual(value, RETURNED) ? '' : `${locale.texts[value.toUpperCase()]}`
+	return isEqual(value, NORMAL) ? '' : `${locale.texts[value.toUpperCase()]}`
 }
 
 export const getPosition = (item) => {
