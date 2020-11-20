@@ -18,7 +18,8 @@
 		"webp": "node ./tools/webpCovertor.js",
 		"lint": "eslint .",
 		"lint-fix": "eslint . --fix && prettier --write .",
-		"analyze": "npm_config_report=true webpack --mode production --config webpack.config.prod.cjs -r esm"
+		"analyze": "npm_config_report=true webpack --mode production --config webpack.config.prod.cjs -r esm",
+		"newman": "newman run ./server/test/real_data/bot_demo_site.postman_collection.json"
 	},
 	"keywords": [],
 	"author": "",
@@ -62,6 +63,7 @@
 		"html-webpack-plugin": "^3.2.0",
 		"leaflet": "^1.5.1",
 		"mini-css-extract-plugin": "^0.10.0",
+		"newman": "^5.2.1",
 		"node-sass": "^4.14.1",
 		"prettier": "^2.1.2",
 		"prop-types": "^15.7.2",
