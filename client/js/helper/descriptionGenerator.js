@@ -108,11 +108,7 @@ export const getSubDescription = (item, locale) => {
 		// case locale.supportedLocale.cn.abbr:
 		// case locale.supportedLocale.ms.abbr:
 		case locale.supportedLocale.en.abbr:
-			if (
-				item.mac_address &&
-				item.currentPosition &&
-				isEqual(value, RETURNED)
-			) {
+			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
 				return `${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
 			} else if (item.mac_address && item.currentPosition) {
 				return value
@@ -122,11 +118,7 @@ export const getSubDescription = (item, locale) => {
 			return `${locale.texts.NON_BINDING}`
 
 		case locale.supportedLocale.tw.abbr:
-			if (
-				item.mac_address &&
-				item.currentPosition &&
-				isEqual(value, RETURNED)
-			) {
+			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
 				return `${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${item.location_description}`
 			} else if (item.mac_address && item.currentPosition) {
 				return value
