@@ -111,7 +111,7 @@ export const getSubDescription = (item, locale) => {
 			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
 				return `${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
 			} else if (item.mac_address && item.currentPosition) {
-				return value
+				return `${getStatus(item, locale)}`
 			} else if (item.mac_address) {
 				return `${locale.texts.NOT_AVAILABLE}`
 			}
@@ -121,7 +121,7 @@ export const getSubDescription = (item, locale) => {
 			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
 				return `${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${item.location_description}`
 			} else if (item.mac_address && item.currentPosition) {
-				return value
+				return `${getStatus(item, locale)}`
 			} else if (item.mac_address) {
 				return `${locale.texts.NOT_AVAILABLE}`
 			}
