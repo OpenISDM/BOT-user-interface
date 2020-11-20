@@ -35,7 +35,13 @@
 import config from '../config'
 import React from 'react'
 import AccessControl from '../components/authentication/AccessControl'
-import { RESERVE, RETURNED, TRANSFERRED, BROKEN } from '../config/wordMap'
+import {
+	RESERVE,
+	RETURNED,
+	TRANSFERRED,
+	BROKEN,
+	NORMAL,
+} from '../config/wordMap'
 import { isEqual } from 'lodash'
 
 export const getDescription = (
@@ -51,7 +57,7 @@ export const getDescription = (
 			? `~ ${item.reserved_timestamp_final} ${locale.texts.IS_RESERVED_FOR} ${item.reserved_user_name}`
 			: ''
 	const returnedText = item.currentPosition
-		? isEqual(item.status, RETURNED)
+		? isEqual(item.status, NORMAL)
 			? `${item.residence_time} `
 			: ''
 		: ''

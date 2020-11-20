@@ -35,7 +35,7 @@
 import siteConfig from '../../../site_module/siteConfig'
 import viewConfig from './viewConfig'
 import { monitorTypeChecker } from '../helper/dataTransfer'
-import { RETURNED, RESERVE } from './wordMap'
+import { NORMAL, RESERVE, RETURNED } from './wordMap'
 
 /** Map configuration.
  *  Refer leaflet.js for more optional setting https://leafletjs.com/reference-1.5.0.html
@@ -338,18 +338,29 @@ const mapConfig = {
 
 	/** Set the schema to select the color pin */
 	getIconColor: (item, hasColorPanel) => {
-		if (item.panic) return mapConfig.iconColor.sos
+		if (item.panic) {
+			return mapConfig.iconColor.sos
+		}
 
-		if (item.object_type == 0) {
-			if (item.clear_bed) return mapConfig.iconColor.whiteBed
-			if (monitorTypeChecker(item.monitor_type, 16))
+		if (parseInt(item.object_type) === 0) {
+			if (item.clear_bed) {
+				return mapConfig.iconColor.whiteBed
+			}
+			if (monitorTypeChecker(item.monitor_type, 16)) {
 				return mapConfig.iconColor.blackBed
-			else if (hasColorPanel) return item.pinColor
-			else if (item.searched) return mapConfig.iconColor.searched
-			else if (item.status != RETURNED) return mapConfig.iconColor.unNormal
+			} else if (hasColorPanel) {
+				return item.pinColor
+			} else if (item.searched) {
+				return mapConfig.iconColor.searched
+			} else if (item.status !== NORMAL) {
+				return mapConfig.iconColor.unNormal
+			}
 			return mapConfig.iconColor.normal
-		} else if (item.object_type == 1) return mapConfig.iconColor.male
-		else if (item.object_type == 2) return mapConfig.iconColor.female
+		} else if (parseInt(item.object_type) === 1) {
+			return mapConfig.iconColor.male
+		} else if (parseInt(item.object_type) === 2) {
+			return mapConfig.iconColor.female
+		}
 	},
 
 	getIconColorInBigScreen: (item, hasColorPanel) => {
