@@ -16,7 +16,7 @@ async function get_people_realtime_data(request, response) {
 		try {
 			const data = await pool.query(queryType.get_people_realtime_data(key))
 			data.rows.forEach((item) => {
-				item.last_reported_timtstamp = moment(
+				item.last_reported_timestamp = moment(
 					item.last_reported_timtstamp
 				).format(timeDefaultFormat)
 			})
