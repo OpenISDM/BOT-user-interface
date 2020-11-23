@@ -15,6 +15,11 @@ async function get_people_realtime_data(request, response) {
 	if (matchRes === 1) {
 		try {
 			const data = await pool.query(queryType.get_people_realtime_data(key))
+			data.rows.forEach((item) => {
+				item.last_reported_timtstamp = moment(
+					item.last_reported_timtstamp
+				).format(timeDefaultFormat)
+			})
 			console.log('get realtime data successful')
 			response.json(data.rows)
 		} catch (err) {
