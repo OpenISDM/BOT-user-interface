@@ -54,6 +54,16 @@ class BOTSelectTable extends React.Component {
 		selectAll: false,
 	}
 
+	componentDidMount = () => {
+		const { stateReducer } = this.context
+		const [, dispatch] = stateReducer
+
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
+		})
+	}
+
 	isSelected = (key) => {
 		const { stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
