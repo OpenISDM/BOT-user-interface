@@ -479,7 +479,7 @@ class Map extends React.Component {
 				item.searched = true
 				item.pinColor = pinColorArray[pinColorIndex]
 			}
-
+			
 			/** Set the attribute if the object in search result list is on hover */
 			if (item.mac_address === assignedObject) {
 				// iconSize = iconSize.map(item => item * 5)

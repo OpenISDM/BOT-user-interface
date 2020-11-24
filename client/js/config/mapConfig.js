@@ -327,6 +327,8 @@ const mapConfig = {
 		number: 'white',
 		female: 'female',
 		male: 'male',
+		
+		person: 'person',
 		female_1: 'female_2',
 		male_1: 'male_1',
 		blackBed: 'blackRound',
@@ -356,10 +358,11 @@ const mapConfig = {
 				return mapConfig.iconColor.unNormal
 			}
 			return mapConfig.iconColor.normal
-		} else if (parseInt(item.object_type) === 1) {
-			return mapConfig.iconColor.male
-		} else if (parseInt(item.object_type) === 2) {
-			return mapConfig.iconColor.female
+		} else if (
+			parseInt(item.object_type) === 1 ||
+			parseInt(item.object_type) === 2
+		) {
+			return mapConfig.iconColor.person
 		}
 	},
 
