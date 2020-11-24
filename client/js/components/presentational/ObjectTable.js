@@ -59,7 +59,6 @@ import {
 	DEVICE,
 	SAVE_SUCCESS,
 	DISASSOCIATE,
-	EXTRACT_DEVICE_INFO,
 	SEARCH_BAR,
 } from '../../config/wordMap'
 import {
@@ -435,13 +434,7 @@ class ObjectTable extends React.Component {
 					apiMethod: 'post',
 				})
 				break
-			case EXTRACT_DEVICE_INFO:
-				this.setState({
-					isShowBind: true,
-					bindCase: 1,
-					apiMethod: 'post',
-				})
-				break
+			
 			case UNBIND:
 				this.setState({
 					isShowBind: true,
@@ -457,13 +450,6 @@ class ObjectTable extends React.Component {
 					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 				})
 				break
-
-			// case DISASSOCIATE:
-			//     this.setState({
-			//         formTitle: name,
-			//         isShowEditImportTable: true
-			//     })
-			//     break;
 
 			case DISASSOCIATE:
 				this.setState({
@@ -613,21 +599,9 @@ class ObjectTable extends React.Component {
 					</div>
 					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
-							<PrimaryButton
-								name={EXTRACT_DEVICE_INFO}
-								onClick={this.handleClickButton}
-							>
-								{locale.texts.EXTRACT_DEVICE_INFO}
-							</PrimaryButton>
 							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
 								{locale.texts.ADD_DEVICE}
 							</PrimaryButton>
-							{/* <PrimaryButton
-                                name={UNBIND}
-                                onClick={this.handleClickButton}
-                            >
-                                {locale.texts.UNBIND}
-                            </PrimaryButton> */}
 							<PrimaryButton
 								name={DELETE}
 								onClick={this.handleClickButton}

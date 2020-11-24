@@ -3,11 +3,9 @@ import 'react-table/react-table.css'
 import { Nav, Tab } from 'react-bootstrap'
 import 'react-tabs/style/react-tabs.css'
 import { AppContext } from '../../../context/AppContext'
-import AccessControl from '../../authentication/AccessControl'
 import ObjectTable from '../../presentational/ObjectTable'
 import PatientTable from '../../presentational/PatientTable'
-import ImportObjectTable from '../../presentational/ImportObjectTable'
-import ImportPatientTable from '../../presentational/ImportPatientTable'
+
 import {
 	BOTContainer,
 	BOTNavLink,
@@ -54,26 +52,6 @@ class ObjectManagementContainer extends React.Component {
 								{locale.texts.BATTERY_FORM}
 							</BOTNavLink>
 						</Nav.Item>
-						<AccessControl
-							permission={'user:importTable'}
-							platform={['browser']}
-						>
-							<Nav.Item>
-								<BOTNavLink secondary eventKey="import_devices">
-									{locale.texts.IMPORT_DEVICES_DATA}
-								</BOTNavLink>
-							</Nav.Item>
-						</AccessControl>
-						<AccessControl
-							permission={'user:importTable'}
-							platform={['browser']}
-						>
-							<Nav.Item>
-								<BOTNavLink secondary eventKey="import_patients">
-									{locale.texts.IMPORT_PATIENTS_DATA}
-								</BOTNavLink>
-							</Nav.Item>
-						</AccessControl>
 					</BOTNav>
 					<Tab.Content className="my-3">
 						<Tab.Pane eventKey="devices_table">
@@ -83,24 +61,6 @@ class ObjectManagementContainer extends React.Component {
 						<Tab.Pane eventKey="patients_table">
 							<PatientTable />
 						</Tab.Pane>
-
-						<AccessControl
-							permission={'user:importTable'}
-							platform={['browser']}
-						>
-							<Tab.Pane eventKey="import_devices">
-								<ImportObjectTable />
-							</Tab.Pane>
-						</AccessControl>
-						<AccessControl
-							permission={'user:importTable'}
-							platform={['browser']}
-						>
-							<Tab.Pane eventKey="import_patients">
-								<ImportPatientTable />
-							</Tab.Pane>
-						</AccessControl>
-
 						<Tab.Pane eventKey="battery_table">
 							<TrackingTable />
 						</Tab.Pane>
