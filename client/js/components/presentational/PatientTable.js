@@ -409,7 +409,7 @@ class PatientTable extends React.Component {
 				this.setState({ selectAll: false })
 
 				deleteArray.forEach((item) => {
-					if (!this.state.data[item]) {
+					if (this.state.data[item]) {
 						formOption.push({
 							id: this.state.data[item].id,
 							mac_address: this.state.data[item].isBind
@@ -418,7 +418,7 @@ class PatientTable extends React.Component {
 						})
 					}
 				})
-
+				
 				res = await apiHelper.objectApiAgent.deleteObject({
 					formOption,
 				})
