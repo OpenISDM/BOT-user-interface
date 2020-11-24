@@ -44,13 +44,13 @@ import {
 } from '../config/wordMap'
 import { isEqual } from 'lodash'
 
-export const getDescription = (
+export const getDescription = ({
 	item,
 	locale,
 	keywordType,
 	showChecked,
 	checked
-) => {
+}) => {
 	let foundDeviceDescription = ''
 	const reserveText =
 		item.status === RESERVE
@@ -61,10 +61,6 @@ export const getDescription = (
 			? `${item.residence_time} `
 			: ''
 		: ''
-	const areaPositionText = `${getAreaName(item, locale)}-${getPosition(
-		item,
-		locale
-	)}`
 
 	switch (item.object_type) {
 		case '0':
@@ -84,7 +80,7 @@ export const getDescription = (
 			foundDeviceDescription += `
                 ${getName(item, locale)}
                 ${getID(item, locale)}
-                ${item.currentPosition ? areaPositionText : ''}
+                ${getPosition(item, locale)}
                 ${item.residence_time ? item.residence_time : ''}`
 			break
 	}
@@ -107,6 +103,7 @@ export const getSubDescription = (item, locale) => {
 	switch (locale.abbr) {
 		// case locale.supportedLocale.cn.abbr:
 		// case locale.supportedLocale.ms.abbr:
+
 		case locale.supportedLocale.en.abbr:
 			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
 				return `${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
@@ -193,8 +190,14 @@ export const getStatus = (item, locale) => {
 	return isEqual(value, NORMAL) ? '' : `${locale.texts[value.toUpperCase()]}`
 }
 
-export const getPosition = (item) => {
-	return `${item.location_description},`
+export const getPosition = (item, locale) => {
+	if (parseInt(item.lbeacon_area.id) === parseInt(item.area_id)) {
+		return `${item.location_description},`
+	} else {
+		return `${locale.texts.NEAR} ${locale.texts[item.lbeacon_area.value]}-${
+			item.location_description
+		},`
+	}
 }
 
 export const getMacaddress = (item, locale) => {
@@ -211,10 +214,6 @@ export const getRSSI = (item, locale) => {
 			| {locale.texts.RSSI}: {item.rssi}
 		</AccessControl>
 	)
-}
-
-export const getAreaName = (item, locale) => {
-	return `${locale.texts.NEAR} ${locale.texts[item.lbeacon_area.value]}`
 }
 
 export const getID = (item, locale) => {

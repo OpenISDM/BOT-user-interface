@@ -63,7 +63,7 @@ const SearchResultListGroup = ({
 	searchKey,
 }) => {
 	const { locale, auth, stateReducer } = React.useContext(AppContext)
-
+	
 	const numberSheet = {}
 
 	const onMouseOver = (e, value) => {
@@ -138,7 +138,7 @@ const SearchResultListGroup = ({
 						<div className="d-flex justify-content-center">
 							{createItem(searchKey, item, index)}
 						</div>
-						{getDescription(item, locale, keywordType)}
+						{getDescription({ item, locale, keywordType })}
 						{getMacaddress(item, locale)}
 						{getRSSI(item, locale)}
 						{getUpdatedByNLbeacons(item, locale)}

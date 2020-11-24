@@ -366,7 +366,13 @@ const TypeBlock = ({ title, hasType, typeArray, selection }) => {
 								{index + 1}.
 							</div>
 							<div key={index} className="pb-1" style={style.row}>
-								{getDescription(item, locale, config, showChecked, checked)}
+								{getDescription({
+									item,
+									locale,
+									keywordType: config,
+									showChecked,
+									checked,
+								})}
 							</div>
 						</div>
 					)

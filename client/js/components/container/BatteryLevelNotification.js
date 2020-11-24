@@ -146,7 +146,7 @@ class BatteryLevelNotification extends React.Component {
 											style={style.list}
 										>
 											<p className="d-inline-block mx-2">&#8729;</p>
-											{getDescription(item, locale, config)}
+											{getDescription({ item, locale, keywordType: config })}
 											{locale.texts.BATTERY_VOLTAGE}:
 											{(item.battery_voltage / 10).toFixed(1)}
 										</div>
