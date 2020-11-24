@@ -391,6 +391,8 @@ class MainContainer extends React.Component {
 	 *  7. multiple selected object(gridbutton)(disable now)
 	 */
 	getResultBySearchKey = async (searchKey) => {
+		const { stateReducer } = this.context
+		const [{ areaId }] = stateReducer
 		const {
 			searchedObjectType,
 			showedObjects,
@@ -404,8 +406,10 @@ class MainContainer extends React.Component {
 
 		let { searchObjectArray } = this.state
 
-		const proccessedTrackingData = JSONClone(trackingData)
-
+		const proccessedTrackingData = JSONClone(trackingData).filter(
+			(item) => parseInt(item.area_id) === parseInt(areaId)
+		)
+		
 		const searchableField = config.SEARCHABLE_FIELD
 
 		const activeActionButtons = []
