@@ -51,6 +51,5 @@ const resetPasswordInstruction = {
 	},
 }
 
-export default {
-	resetPasswordInstruction,
-}
+export default resetPasswordInstruction
+

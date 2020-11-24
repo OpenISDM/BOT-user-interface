@@ -223,7 +223,8 @@ const get_people_realtime_data = (key) => {
 	area_table.readable_name as area_name,
 	object_summary_table.uuid as Lbeacon_uuid,
 	lbeacon_table.description as Lbeacon_description, 
-	object_summary_table.payload as payload
+	object_summary_table.payload as payload,
+	object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from api_key
 	
 	inner join user_table
