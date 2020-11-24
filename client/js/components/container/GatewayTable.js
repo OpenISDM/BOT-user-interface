@@ -205,14 +205,13 @@ class GatewayTable extends React.Component {
 		})
 		this.setState({ selectAll: false })
 		deleteArray.forEach((item) => {
-			if (!this.state.data[item]) {
+			if (this.state.data[item]) {
 				idPackage.push(parseInt(this.state.data[item].id))
 			}
 		})
-		await apiHelper.utilsApiAgent.deleteGateway({
-			data: {
-				idPackage,
-			},
+
+		await apiHelper.gatewayApiAgent.deleteGateway({
+			idPackage,
 		})
 		const callback = () => messageGenerator.setSuccessMessage('save success')
 		this.getData(callback)
