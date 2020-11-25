@@ -68,6 +68,7 @@ import {
 	includes,
 	filterByField,
 } from '../../helper/utilities'
+import config from '../../config'
 
 const SelectTable = selecTableHOC(ReactTable)
 
@@ -434,7 +435,7 @@ class ObjectTable extends React.Component {
 					apiMethod: 'post',
 				})
 				break
-			
+
 			case UNBIND:
 				this.setState({
 					isShowBind: true,
@@ -518,6 +519,13 @@ class ObjectTable extends React.Component {
 			? Object.values(this.state.filterSelection.typeList)
 			: null
 
+		const statusOptions = config.statusOptions.map((status) => {
+			return {
+				value: status,
+				label: locale.texts[status.toUpperCase().replace(/ /g, '_')],
+			}
+		})
+
 		return (
 			<div>
 				<Row className="d-flex justify-content-between my-4">
@@ -590,7 +598,7 @@ class ObjectTable extends React.Component {
 										this.removeObjectFilter('status select')
 									}
 								}}
-								options={this.state.filterSelection.statusOptions || []}
+								options={statusOptions || []}
 								isClearable={true}
 								isSearchable={true}
 								placeholder={locale.texts.STATUS}
