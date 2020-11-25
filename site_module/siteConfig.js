@@ -13,8 +13,8 @@ import NTUH_YUNLIN_WARD_FIVE_B_MAP from '../site_module/img/map/ntuh_yunlin_bran
 import NTUH_YUNLIN_WARD_FIVE_B_MAP_WEBP from '../site_module/img/map/ntuh_yunlin_branch_ward_five_b.webp'
 import NURSING_HOME_MAP from '../site_module/img/map/nursing_home.png'
 import NURSING_HOME_MAP_WEBP from '../site_module/img/map/nursing_home.webp'
-import BIDAE_TECH_MAP from '../site_module/img/map/bidae_tech.png'
-import BIDAE_TECH_MAP_WEBP from '../site_module/img/map/bidae_tech.webp'
+import CAPSTONE_MAP from '../site_module/img/map/capstone.png'
+import CAPSTONE_MAP_WEBP from '../site_module/img/map/capstone.webp'
 
 const siteConfig = {
 	areaModules: {
@@ -55,15 +55,15 @@ const siteConfig = {
 				[26067, 36928],
 			],
 		},
-		BIDAE_TECH: {
+		CAPSTONE: {
 			id: 4,
-			name: 'BIDAE_TECH',
+			name: 'CAPSTONE',
 			hasMap: 1,
-			url: BIDAE_TECH_MAP,
-			urlWebp: BIDAE_TECH_MAP_WEBP,
+			url: CAPSTONE_MAP,
+			// urlWebp: CAPSTONE_MAP_WEBP,
 			bounds: [
-				[0, 0],
-				[9042, 6302],
+				[10, 10],
+				[13455, 21580],
 			],
 		},
 	},

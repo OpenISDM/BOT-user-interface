@@ -16,7 +16,7 @@ export default {
 	VETERAN_HOME_THIRD_FLOOR: 'veteran home floor 3',
 	NTUH_EMERGENCY_ROOM: 'emergency room',
 	YUANLIN_CHRISTIAN_HOSPITAL: 'Yuanlin Christian Hospital',
-	BIDAE_TECH: 'bidae tech',
+	CAPSTONE: 'Healthcare EXPO-TAIWAN 2020',
 	EMERGENCY_ROOM: 'emergency room',
 	WHOLE_SITE: 'public space',
 }
