@@ -34,6 +34,7 @@
 
 import moment from 'moment'
 import { RETURNED } from '../config/wordMap'
+import { getPosition } from './descriptionGenerator'
 
 const pdfPackageGenerator = {
 	/** Create pdf package, including header, body and the pdf path
@@ -401,7 +402,7 @@ const pdfPackageGenerator = {
 						}
 						let location = ''
 						if (item.location_description) {
-							location = `${locale.texts.NEAR} ${item.location_description},`
+							location = `${getPosition(item, locale)}`
 						}
 						let statusText = ''
 						if (
@@ -587,7 +588,7 @@ const pdfPackageGenerator = {
 						}
 						let location = ''
 						if (item.location_description) {
-							location = `${locale.texts.NEAR} ${item.location_description},`
+							location = `${getPosition(item, locale)}`
 						}
 
 						return `
