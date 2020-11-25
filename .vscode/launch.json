@@ -18,7 +18,7 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"runtimeVersion": "12.18.4",
+			"runtimeVersion": "14.15.1",
 			"name": "Launch Program with NVM",
 			"skipFiles": ["<node_internals>/**"],
 			"program": "${workspaceFolder}/server/index.js",
