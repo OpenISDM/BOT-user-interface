@@ -147,11 +147,11 @@ const mapConfig = {
 		geoFenceMarkerOptions: {
 			color: 'rgba(0, 0, 0, 0)',
 
-			fillColor: 'orange',
+			fillColor: 'red',
 
-			fillOpacity: 0.4,
+			fillOpacity: 0.1,
 
-			radius: 20,
+			radius: 30,
 		},
 
 		lbeaconMarkerOptions: {
@@ -159,7 +159,7 @@ const mapConfig = {
 
 			fillColor: 'orange',
 
-			fillOpacity: 0.4,
+			fillOpacity: 0.3,
 
 			radius: 10,
 		},
