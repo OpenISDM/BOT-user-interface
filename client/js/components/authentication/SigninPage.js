@@ -57,7 +57,6 @@ const SigninPage = () => {
 	const appContext = React.useContext(AppContext)
 
 	const history = useHistory()
-
 	return (
 		<CenterContainer>
 			<div className="d-flex justify-content-center">
@@ -82,9 +81,7 @@ const SigninPage = () => {
 				})}
 				onSubmit={(values, actions) => {
 					const callback = () => history.push('/')
-
 					const { stateReducer, locale } = appContext
-
 					const [{}, dispatch] = stateReducer
 
 					auth.login(values, { actions, dispatch, callback, locale })
@@ -140,7 +137,8 @@ const SigninPage = () => {
 							</div>
 							<Dropdown
 								onSelect={(e) => {
-									locale.setLocale(e)
+									const callback = () => auth.setLocale(e)
+									locale.setLocale(e, callback)
 								}}
 								drop="up"
 							>

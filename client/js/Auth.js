@@ -91,8 +91,6 @@ class Auth extends React.Component {
 			Cookies.set('authenticated', true)
 			Cookies.set('user', userInfo)
 
-			locale.setLocale(userInfo.locale)
-
 			dispatch({
 				type: SET_AREA,
 				value: userInfo.main_area,
@@ -207,10 +205,13 @@ class Auth extends React.Component {
 			userId: this.state.user.id,
 			localeName: abbr,
 		})
-		Cookies.set('user', {
-			...JSON.parse(Cookies.get('user')),
-			locale: abbr,
-		})
+		const cookie = Cookies.get('user')
+		if (cookie) {
+			Cookies.set('user', {
+				...JSON.parse(cookie),
+				locale: abbr,
+			})
+		}
 	}
 
 	setKeywordType = async (keywordTypeId) => {
@@ -219,11 +220,15 @@ class Auth extends React.Component {
 			keywordTypeId,
 		})
 		const callback = () => {
-			Cookies.set('user', {
-				...JSON.parse(Cookies.get('user')),
-				keyword_type: keywordTypeId,
-			})
+			const cookie = Cookies.get('user')
+			if (cookie) {
+				Cookies.set('user', {
+					...JSON.parse(cookie),
+					keyword_type: keywordTypeId,
+				})
+			}
 		}
+
 		this.setState(
 			{
 				...this.state,
