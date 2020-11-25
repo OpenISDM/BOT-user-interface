@@ -41,6 +41,7 @@ import EditBranchForm from '../presentational/form/EditBranchForm'
 import DeleteAlertModal from '../presentational/DeleteAlertModal'
 import { ADD, DELETE, SAVE_SUCCESS } from '../../config/wordMap'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import { SET_TABLE_SELECTION } from '../../reducer/action'
 
 class TranferredLocationManagement extends React.Component {
 	static contextType = AppContext
@@ -57,6 +58,8 @@ class TranferredLocationManagement extends React.Component {
 	}
 
 	getTransferredLocation = async (callback) => {
+		const { stateReducer } = this.context
+		const [, dispatch] = stateReducer
 		const res = await apiHelper.transferredLocationApiAgent.getAll()
 		const branchOptionsMap = {}
 		const data = []
@@ -72,6 +75,11 @@ class TranferredLocationManagement extends React.Component {
 				name: obj.name,
 				department: obj.department,
 			})
+		})
+
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
 		})
 
 		this.setState(

@@ -136,7 +136,8 @@ class BOTSelectTable extends React.Component {
 
 		const { toggleSelection, toggleAll, isSelected } = this
 		const extraProps = {
-			selectAll: tableSelection.length === data.length,
+			selectAll:
+				data && data.length > 0 && tableSelection.length === data.length,
 			isSelected,
 			toggleAll,
 			toggleSelection,
