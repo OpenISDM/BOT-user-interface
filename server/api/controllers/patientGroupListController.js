@@ -49,9 +49,13 @@ export default {
 	addPatientGroupList: async (request, response) => {
 		const { name, areaId } = request.body
 		try {
-			const res = await PatientGroupList.create({ name, area_id: areaId })
+			const res = await PatientGroupList.upsert(
+				{ name, area_id: areaId }, // Record to upsert
+				{ returning: true } // Return upserted record
+			)
 			response.status(200).json(res)
 		} catch (e) {
+			response.status(200).json()
 			console.log(`add device group list failed ${e}`)
 		}
 	},
