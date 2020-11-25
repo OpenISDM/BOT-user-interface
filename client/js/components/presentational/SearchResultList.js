@@ -163,14 +163,11 @@ class SearchResultList extends React.Component {
 			}
 		)
 
-		this.setState({
-			showEditObjectForm: false,
-			editedObjectPackage,
-		})
-
 		this.setState(
 			{
+				showEditObjectForm: false,
 				showConfirmForm: true,
+				editedObjectPackage,
 			},
 			this.props.highlightSearchPanel(false)
 		)
