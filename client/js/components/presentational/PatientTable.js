@@ -341,13 +341,6 @@ class PatientTable extends React.Component {
 					apiMethod: 'post',
 				})
 				break
-			case BIND:
-				this.setState({
-					isShowBind: true,
-					bindCase: 1,
-					apiMethod: 'post',
-				})
-				break
 			case UNBIND:
 				this.setState({
 					isShowBind: true,
@@ -363,13 +356,6 @@ class PatientTable extends React.Component {
 					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 				})
 				break
-
-			// case DISASSOCIATE:
-			//     this.setState({
-			//         formTitle: name,
-			//         isShowEditImportTable: true
-			//     })
-			//     break;
 
 			case DISASSOCIATE:
 				this.setState({
@@ -418,7 +404,7 @@ class PatientTable extends React.Component {
 						})
 					}
 				})
-				
+
 				res = await apiHelper.objectApiAgent.deleteObject({
 					formOption,
 				})

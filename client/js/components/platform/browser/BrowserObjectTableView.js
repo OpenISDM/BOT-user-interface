@@ -40,7 +40,7 @@ import { ButtonToolbar } from 'react-bootstrap'
 import Select from 'react-select'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
-import { ADD, BIND, DELETE } from '../../../config/wordMap'
+import { ADD, DELETE } from '../../../config/wordMap'
 import PropTypes from 'prop-types'
 
 const BrowserObjectTableView = ({
@@ -86,13 +86,6 @@ const BrowserObjectTableView = ({
 			</div>
 			<AccessControl platform={['browser', 'tablet']}>
 				<ButtonToolbar>
-					<PrimaryButton
-						className="text-capitalize mr-2 mb-1"
-						name={BIND}
-						onClick={handleClickButton}
-					>
-						{locale.texts.BIND}
-					</PrimaryButton>
 					<PrimaryButton
 						className="text-capitalize mr-2 mb-1"
 						name={ADD}

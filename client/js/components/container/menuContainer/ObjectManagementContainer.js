@@ -57,7 +57,6 @@ class ObjectManagementContainer extends React.Component {
 						<Tab.Pane eventKey="devices_table">
 							<ObjectTable />
 						</Tab.Pane>
-
 						<Tab.Pane eventKey="patients_table">
 							<PatientTable />
 						</Tab.Pane>
