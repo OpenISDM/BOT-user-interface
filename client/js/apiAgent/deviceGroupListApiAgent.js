@@ -55,8 +55,8 @@ const deviceGroupListApis = {
 		})
 	},
 
-	async deleteGroup(groupId) {
-		return await del(deviceGroupList, groupId)
+	async deleteGroup({ groupId }) {
+		return await del(deviceGroupList, { groupId })
 	},
 
 	async getDetailByAreaId(areaId) {

@@ -52,7 +52,7 @@ const patientGroupListApis = {
 		})
 	},
 
-	async deleteGroup(groupId) {
+	async deleteGroup({ groupId }) {
 		return await del(patientGroupList, { groupId })
 	},
 
