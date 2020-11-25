@@ -91,7 +91,12 @@ const config = {
 
 	LOGO_WEBP: BOT_LOGO_WEBP,
 
-	statusOptions: ['normal', 'broken', 'reserve', 'transferred'],
+	statusOptions: [
+		'normal',
+		'broken',
+		// 'reserve',
+		'transferred',
+	],
 
 	GENDER_OPTIONS: {
 		1: {
