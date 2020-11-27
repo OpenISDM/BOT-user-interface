@@ -61,7 +61,7 @@ const mapConfig = {
 		crs: L.CRS.Simple,
 		zoom: -5.5,
 		minZoom: -5.46,
-		maxZoom: -4,
+		maxZoom: -1,
 		zoomDelta: 0.25,
 		zoomSnap: 0,
 		zoomControl: true,
