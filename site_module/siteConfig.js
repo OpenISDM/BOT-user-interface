@@ -13,8 +13,8 @@ import NTUH_YUNLIN_WARD_FIVE_B_MAP from '../site_module/img/map/ntuh_yunlin_bran
 import NTUH_YUNLIN_WARD_FIVE_B_MAP_WEBP from '../site_module/img/map/ntuh_yunlin_branch_ward_five_b.webp'
 import NURSING_HOME_MAP from '../site_module/img/map/nursing_home.png'
 import NURSING_HOME_MAP_WEBP from '../site_module/img/map/nursing_home.webp'
-import BIDAE_TECH_MAP from '../site_module/img/map/bidae_tech.png'
-import BIDAE_TECH_MAP_WEBP from '../site_module/img/map/bidae_tech.webp'
+import HEALTH_CARE_MAP from '../site_module/img/map/HEALTH_CARE.png'
+// import HEALTH_CARE_MAP_WEBP from '../site_module/img/map/HEALTH_CARE.webp'
 
 const siteConfig = {
 	areaModules: {
@@ -43,27 +43,16 @@ const siteConfig = {
 				[21130, 35710],
 			],
 		},
-
-		NTUH_YUNLIN_WARD_FIVE_B: {
-			id: 3,
-			name: 'NTUH_YUNLIN_WARD_FIVE_B',
-			hasMap: 1,
-			url: NTUH_YUNLIN_WARD_FIVE_B_MAP,
-			urlWebp: NTUH_YUNLIN_WARD_FIVE_B_MAP_WEBP,
-			bounds: [
-				[0, 0],
-				[26067, 36928],
-			],
-		},
-		BIDAE_TECH: {
+		HEALTH_CARE: {
 			id: 4,
-			name: 'BIDAE_TECH',
+			name: 'HEALTH_CARE',
 			hasMap: 1,
-			url: BIDAE_TECH_MAP,
-			urlWebp: BIDAE_TECH_MAP_WEBP,
+			url: HEALTH_CARE_MAP,
+			// urlWebp: HEALTH_CARE_MAP_WEBP,
 			bounds: [
 				[0, 0],
-				[9042, 6302],
+				[5405, 21621],
+				// [1000, 3920], // 0.00000900900901
 			],
 		},
 	},
