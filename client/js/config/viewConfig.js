@@ -35,7 +35,7 @@
 const viewConfig = {
 	ACNOmitsymbol: '...',
 
-	MARKER_SIZE_IN_DESKTOP: 40,
+	MARKER_SIZE_IN_DESKTOP: 50,
 
 	MARKER_SIZE_IN_MOBILE: 20,
 

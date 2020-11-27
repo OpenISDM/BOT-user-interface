@@ -77,3 +77,25 @@ If user would like to modify or add the sql command, query functions used in BOT
 ### Data request interface
 
 In ./client/js/dataSrc.js, there are the list of requests used in UI code. The default router is http://localhost:3000. If user would like to modify or create new data retrieving url, one can find the info in this file.
+
+### Set up map bounds
+
+- Calculate to get ratio of image size (Width / Height)
+- To get right-upper point coordinate of image, first we need to know real height and width in meter.
+- second, to calculate meter to coordinates at geographic coordinate system
+- 1 meter = 0.00000900900901 degree
+- for example, width is 6 and height is 24
+- we can get
+  0.00005405405 (6 x 0.00000900900901)
+  0.00021621621 (24 x 0.00000900900901)
+- and we get only thrid/fourth decimal point to get number in meter
+- then we get
+  5405
+  21621
+
+```javascript
+			bounds: [
+				[0, 0], // left-bottom point coordinate
+				[5405, 21621], // right-upper point coordinate
+			],
+```
