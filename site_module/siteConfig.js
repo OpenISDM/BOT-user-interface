@@ -50,8 +50,8 @@ const siteConfig = {
 			url: HEALTH_CARE_MAP,
 			// urlWebp: HEALTH_CARE_MAP_WEBP,
 			bounds: [
-				[1081, 2702],
-				[5555, 13513],
+				[1801, 5045],
+				[5555, 11621],
 				// [1000, 3920], // 0.00000900900901
 			],
 		},
