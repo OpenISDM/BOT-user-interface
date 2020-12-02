@@ -181,7 +181,7 @@ const mapConfig = {
 
 			fillOpacity: 0.5,
 
-			radius: 70,
+			radius: 120,
 		},
 	},
 
@@ -327,7 +327,7 @@ const mapConfig = {
 		number: 'white',
 		female: 'female',
 		male: 'male',
-		
+
 		person: 'person',
 		female_1: 'female_2',
 		male_1: 'male_1',
