@@ -72,7 +72,7 @@ class BrowserMapContainer extends React.Component {
 			showPath,
 		} = this.props
 
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 		const style = {
 			mapForMobile: {
 				border: 'solid 2px rgba(227, 222, 222, 0.619)',
@@ -110,7 +110,7 @@ class BrowserMapContainer extends React.Component {
 						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
 						getSearchKey={getSearchKey}
-						areaId={areaId}
+						areaId={area.id}
 						searchedObjectType={searchedObjectType}
 						mapConfig={mapConfig}
 						handleClosePath={handleClosePath}
@@ -197,7 +197,7 @@ class BrowserMapContainer extends React.Component {
 						<div className="d-flex bd-highligh ml-auto">
 							{locationMonitorConfig &&
 								Object.keys(locationMonitorConfig).includes(
-									areaId.toString()
+									area.id.toString()
 								) && (
 									<Nav.Item className="mt-2 bd-highligh">
 										<Button
@@ -205,17 +205,17 @@ class BrowserMapContainer extends React.Component {
 											className="mr-1 ml-2"
 											onClick={handleClickButton}
 											name="location"
-											value={locationMonitorConfig[areaId].enable}
-											active={!locationMonitorConfig[areaId].enable}
+											value={locationMonitorConfig[area.id].enable}
+											active={!locationMonitorConfig[area.id].enable}
 										>
-											{locationMonitorConfig[areaId].enable
+											{locationMonitorConfig[area.id].enable
 												? locale.texts.LOCATION_MONITOR_ON
 												: locale.texts.LOCATION_MONITOR_OFF}
 										</Button>
 									</Nav.Item>
 								)}
 							{geofenceConfig &&
-								Object.keys(geofenceConfig).includes(areaId.toString()) && (
+								Object.keys(geofenceConfig).includes(area.id.toString()) && (
 									<div className="d-flex">
 										<Nav.Item className="mt-2 bd-highligh">
 											<Button
@@ -223,10 +223,10 @@ class BrowserMapContainer extends React.Component {
 												className="mr-1 ml-2"
 												onClick={handleClickButton}
 												name="geofence"
-												value={geofenceConfig[areaId].enable}
-												active={!geofenceConfig[areaId].enable}
+												value={geofenceConfig[area.id].enable}
+												active={!geofenceConfig[area.id].enable}
 											>
-												{geofenceConfig[areaId].enable
+												{geofenceConfig[area.id].enable
 													? locale.texts.FENCE_ON
 													: locale.texts.FENCE_OFF}
 											</Button>
@@ -265,7 +265,6 @@ BrowserMapContainer.propTypes = {
 	locationMonitorConfig: PropTypes.object.isRequired,
 	geofenceConfig: PropTypes.object.isRequired,
 	pathMacAddress: PropTypes.object.isRequired,
-	areaId: PropTypes.number.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	currentAreaId: PropTypes.number.isRequired,
 	activeActionButtons: PropTypes.array.isRequired,

@@ -46,7 +46,7 @@ class ShiftChangeCheckList extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const { show, handleClose, handleSubmit } = this.props
-		const [{ objectFoundResults = {} }] = stateReducer
+		const [{ objectFoundResults }] = stateReducer
 		const { totalResults = [] } = objectFoundResults
 
 		return (

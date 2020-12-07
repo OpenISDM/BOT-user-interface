@@ -93,7 +93,7 @@ class Auth extends React.Component {
 
 			dispatch({
 				type: SET_AREA,
-				value: userInfo.main_area,
+				value: { id: userInfo.main_area },
 			})
 
 			this.setState(

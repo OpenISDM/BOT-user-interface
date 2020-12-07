@@ -46,7 +46,7 @@ const StateReducer = (state, action) => {
 		case SET_AREA:
 			return {
 				...state,
-				areaId: action.value,
+				area: action.value,
 			}
 		case SET_ENABLE_REQUEST_TRACKING_DATA:
 			return {

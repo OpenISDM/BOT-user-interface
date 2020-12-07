@@ -66,13 +66,13 @@ class BOTSelectTable extends React.Component {
 
 	isSelected = (key) => {
 		const { stateReducer } = this.context
-		const [{ tableSelection = [] }] = stateReducer
+		const [{ tableSelection }] = stateReducer
 		return tableSelection.includes(key)
 	}
 
 	toggleSelection = (key) => {
 		const { stateReducer } = this.context
-		const [{ tableSelection = [] }, dispatch] = stateReducer
+		const [{ tableSelection }, dispatch] = stateReducer
 		let selection = [...tableSelection]
 
 		key = key.split('-')[1] ? key.split('-')[1] : key
@@ -130,7 +130,7 @@ class BOTSelectTable extends React.Component {
 
 	render() {
 		const { stateReducer } = this.context
-		const [{ tableSelection = [] }] = stateReducer
+		const [{ tableSelection }] = stateReducer
 		const { locale } = this.context
 		const { data } = this.props
 

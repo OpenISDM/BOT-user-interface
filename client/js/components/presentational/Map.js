@@ -77,7 +77,7 @@ class Map extends React.Component {
 
 		if (
 			!isEqual(prevProps.lbeaconPosition, this.props.lbeaconPosition) ||
-			!isEqual(prevProps.currentAreaId, this.context.stateReducer[0].areaId) ||
+			!isEqual(prevProps.currentAreaId, this.context.stateReducer[0].area.id) ||
 			!isEqual(prevProps.authenticated, this.props.authenticated)
 		) {
 			this.createLbeaconMarkers(
@@ -179,12 +179,12 @@ class Map extends React.Component {
 
 	/** Set the overlay image when changing area */
 	setMap = () => {
-		const [{ areaId }] = this.context.stateReducer
+		const [{ area }] = this.context.stateReducer
 		const { areaModules } = siteConfig
 		const { areaOptions, mapOptions } = this.props.mapConfig
 
 		/** Error handler of the user's auth area does not include the group of sites */
-		const areaOption = areaOptions[areaId]
+		const areaOption = areaOptions[area.id]
 
 		/** set the map's config */
 		const { bounds, hasMap } = areaModules[areaOption]
@@ -309,15 +309,15 @@ class Map extends React.Component {
 
 		// this.calculateScale()
 
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		this.geoFenceLayer.clearLayers()
 
 		/** Create the markers of lbeacons of perimeters and fences
 		 *  and onto the map  */
-		if (geofenceConfig[areaId] && geofenceConfig[areaId].enable) {
+		if (geofenceConfig[area.id] && geofenceConfig[area.id].enable) {
 			;['parsePerimeters', 'parseFences'].forEach((type) => {
-				geofenceConfig[areaId].rules.forEach((rule) => {
+				geofenceConfig[area.id].rules.forEach((rule) => {
 					if (rule.is_active) {
 						rule[type].coordinates.forEach((item) => {
 							L.circleMarker(
@@ -339,18 +339,18 @@ class Map extends React.Component {
 		const { locationMonitorConfig } = this.props
 		const { stateReducer } = this.context
 
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		this.locationMonitorLayer.clearLayers()
 		/** Create the markers of lbeacons of perimeters and fences
 		 *  and onto the map  */
 		if (
-			locationMonitorConfig[areaId] &&
-			locationMonitorConfig[areaId].enable &&
-			locationMonitorConfig[areaId].rule.is_active
+			locationMonitorConfig[area.id] &&
+			locationMonitorConfig[area.id].enable &&
+			locationMonitorConfig[area.id].rule.is_active
 		) {
 			this.createLbeaconMarkers(
-				locationMonitorConfig[areaId].rule.lbeacons,
+				locationMonitorConfig[area.id].rule.lbeacons,
 				this.locationMonitorLayer
 			)
 		}
@@ -359,7 +359,7 @@ class Map extends React.Component {
 	/** Create the lbeacon and invisibleCircle markers */
 	createLbeaconMarkers = (parseUUIDArray, layer) => {
 		const { stateReducer, auth } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		layer.clearLayers()
 
@@ -370,7 +370,7 @@ class Map extends React.Component {
 		parseUUIDArray
 			.filter(
 				(lbeacon) =>
-					parseInt(lbeacon.coordinate.split(',')[2]) === parseInt(areaId)
+					parseInt(lbeacon.coordinate.split(',')[2]) === parseInt(area.id)
 			)
 			.forEach((lbeacon) => {
 				const latLng = lbeacon.coordinate.split(',')
@@ -479,7 +479,7 @@ class Map extends React.Component {
 				item.searched = true
 				item.pinColor = pinColorArray[pinColorIndex]
 			}
-			
+
 			/** Set the attribute if the object in search result list is on hover */
 			if (item.mac_address === assignedObject) {
 				// iconSize = iconSize.map(item => item * 5)

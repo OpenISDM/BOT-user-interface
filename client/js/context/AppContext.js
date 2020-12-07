@@ -46,9 +46,12 @@ const AppContextProvider = (props) => {
 	const locale = React.useContext(LocaleContext)
 
 	const initialState = {
-		areaId: parseInt(auth.user.main_area),
+		area: { id: parseInt(auth.user.main_area) },
 		shouldUpdateTrackingData: true,
 		assignedObject: null,
+		tableSelection: [],
+		trackingData: {},
+		objectFoundResults: {},
 	}
 
 	const stateReducer = React.useReducer(StateReducer, initialState)

@@ -61,12 +61,11 @@ class BatteryLevelNotification extends React.Component {
 	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
 
-		const [{ areaId }] = stateReducer
-
+		const [{ area }] = stateReducer
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			locale: locale.abbr,
 			user: auth.user,
-			areaId,
+			areaId: area.id,
 		})
 		this.setState({
 			data: res.data.filter((item) => item.battery_indicator === 2),

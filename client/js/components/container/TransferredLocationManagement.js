@@ -142,7 +142,7 @@ class TranferredLocationManagement extends React.Component {
 
 	handleRemoveSubmit = async () => {
 		const { stateReducer } = this.context
-		const [{ tableSelection = [] }] = stateReducer
+		const [{ tableSelection }] = stateReducer
 		try {
 			await apiHelper.transferredLocationApiAgent.removeByIds({
 				branchIds: tableSelection,
@@ -159,7 +159,7 @@ class TranferredLocationManagement extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const { branchOptions, data } = this.state
-		const [{ tableSelection = [] }] = stateReducer
+		const [{ tableSelection }] = stateReducer
 
 		return (
 			<div>

@@ -87,7 +87,7 @@ class MainContainer extends React.Component {
 		showMobileMap: true,
 		searchedObjectType: [],
 		showedObjects: [],
-		currentAreaId: this.context.stateReducer[0].areaId,
+		currentAreaId: this.context.stateReducer[0].area.id,
 		searchObjectArray: [],
 		pinColorArray: config.mapConfig.iconColor.pinColorArray.filter(
 			(item, index) => index < MAX_SEARCH_OBJECT_NUM
@@ -135,9 +135,9 @@ class MainContainer extends React.Component {
 			})
 		}
 
-		if (!isEqual(prevState.currentAreaId, stateReducer[0].areaId)) {
+		if (!isEqual(prevState.currentAreaId, stateReducer[0].area.id)) {
 			this.setState({
-				currentAreaId: stateReducer[0].areaId,
+				currentAreaId: stateReducer[0].area.id,
 			})
 		}
 
@@ -233,7 +233,7 @@ class MainContainer extends React.Component {
 	}
 	// setMonitor = (type, callback) => {
 	// 	const { stateReducer } = this.context
-	// 	const [{ areaId }] = stateReducer
+	// 	const [{ area }] = stateReducer
 	// 	const configName = `${config.monitor[type].name}Config`
 	// 	const triggerMonitorFunctionName = `get${configName.replace(
 	// 		/^\w/,
@@ -242,10 +242,10 @@ class MainContainer extends React.Component {
 	// 		}
 	// 	)}`
 	// 	const cloneConfig = JSONClone(this.state[configName])
-	// 	const enable = +!cloneConfig[areaId].enable
+	// 	const enable = +!cloneConfig[area.id].enable
 	// 	retrieveDataHelper.setMonitorEnable(
 	// 	    enable,
-	// 	    areaId,
+	// 	    area.id,
 	// 	    config.monitor[type].api
 	// 	)
 	// 	.then(res => {
@@ -261,7 +261,7 @@ class MainContainer extends React.Component {
 	 *  Once get the tracking data, violated objects would be collected. */
 	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		try {
 			const {
@@ -269,7 +269,7 @@ class MainContainer extends React.Component {
 			} = await apiHelper.trackingDataApiAgent.getTrackingData({
 				locale: locale.abbr,
 				user: auth.user,
-				areaId,
+				areaId: area.id,
 			})
 
 			this.setState({
@@ -320,9 +320,9 @@ class MainContainer extends React.Component {
 	/** Retrieve geofence data from database */
 	getGeofenceConfig = async (callback) => {
 		const { stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
-		const res = await apiHelper.geofenceApis.getGeofenceConfig(areaId)
+		const res = await apiHelper.geofenceApis.getGeofenceConfig(area.id)
 		if (res) {
 			const geofenceConfig = res.data.rows.reduce((config, rule) => {
 				if (!config[rule.area_id]) {
@@ -392,7 +392,7 @@ class MainContainer extends React.Component {
 	 */
 	getResultBySearchKey = async (searchKey) => {
 		const { stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 		const {
 			searchedObjectType,
 			showedObjects,
@@ -407,9 +407,9 @@ class MainContainer extends React.Component {
 		let { searchObjectArray } = this.state
 
 		const proccessedTrackingData = JSONClone(trackingData).filter(
-			(item) => parseInt(item.area_id) === parseInt(areaId)
+			(item) => parseInt(item.area_id) === parseInt(area.id)
 		)
-		
+
 		const searchableField = config.SEARCHABLE_FIELD
 
 		const activeActionButtons = []
@@ -644,13 +644,13 @@ class MainContainer extends React.Component {
 
 	getGroupIdList = async () => {
 		const { auth, stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 		const userId = auth.user.id
 
 		const {
 			data: groupIds,
 		} = await apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId({
-			areaId,
+			areaId: area.id,
 			userId,
 		})
 

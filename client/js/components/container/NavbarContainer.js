@@ -61,6 +61,17 @@ class NavbarContainer extends React.Component {
 		// console.log(e)
 	}
 
+	setCurrentArea = (selectedArea) => {
+		const { stateReducer } = this.context
+		const [{ area }, dispatch] = stateReducer
+		if (area && area.value !== selectedArea.value) {
+			dispatch({
+				type: SET_AREA,
+				value: selectedArea,
+			})
+		}
+	}
+
 	render = () => {
 		const style = {
 			navbar: {
@@ -70,7 +81,7 @@ class NavbarContainer extends React.Component {
 
 		const { locale, auth, stateReducer } = this.context
 
-		const [{ areaId }, dispatch] = stateReducer
+		const [{ area }, dispatch] = stateReducer
 
 		const AREA_MODULE = config.mapConfig.AREA_MODULES
 
@@ -83,8 +94,8 @@ class NavbarContainer extends React.Component {
 					id: module.id,
 				}
 			})
-
-		const selectedArea = options.filter((module) => module.id === areaId)
+		const selectedArea = options.filter((module) => module.id === area.id)[0]
+		this.setCurrentArea(selectedArea)
 		return (
 			<div>
 				<Navbar
@@ -112,7 +123,7 @@ class NavbarContainer extends React.Component {
 								onChange={(value) => {
 									dispatch({
 										type: SET_AREA,
-										value: value.id,
+										value,
 									})
 								}}
 								styles={styleConfig.reactSelectNavbar}

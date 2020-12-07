@@ -78,12 +78,12 @@ class SystemStatus extends React.Component {
 
 	getTrackingData = async () => {
 		const { locale, auth, stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			locale: locale.abbr,
 			user: auth.user,
-			areaId,
+			areaId: area.id,
 		})
 		if (res) {
 			this.setMessage('clear')

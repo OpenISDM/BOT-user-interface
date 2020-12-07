@@ -65,7 +65,7 @@ export default class TabletMapContainer extends React.Component {
 			getSearchKey,
 		} = this.props
 
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		const style = {
 			mapForMobile: {
@@ -90,7 +90,7 @@ export default class TabletMapContainer extends React.Component {
 					geofenceConfig={this.props.geofenceConfig}
 					locationMonitorConfig={this.props.locationMonitorConfig}
 					getSearchKey={this.props.getSearchKey}
-					areaId={areaId}
+					areaId={area.id}
 					searchedObjectType={this.props.showedObjects}
 					mapConfig={config.mapConfig}
 					handleClosePath={this.props.handleClosePath}

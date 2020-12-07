@@ -52,7 +52,7 @@ class MapContainer extends React.Component {
 
 		const { stateReducer } = this.context
 
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		return (
 			<div
@@ -67,7 +67,7 @@ class MapContainer extends React.Component {
 						proccessedTrackingData={this.props.proccessedTrackingData}
 						lbeaconPosition={this.props.lbeaconPosition}
 						getSearchKey={this.props.getSearchKey}
-						areaId={areaId}
+						areaId={area.id}
 						mapConfig={config.mapConfig}
 						legendDescriptor={this.props.legendDescriptor}
 					/>

@@ -76,13 +76,13 @@ class ShiftChangeRecord extends React.Component {
 
 	getAssignments = async () => {
 		const { stateReducer, auth } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 		const userId = auth.user.id
 		const assignedDeviceGroupListids = []
 		const assignedPatientGroupListids = []
 
 		const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
-			areaId,
+			areaId: area.id,
 			userId,
 		})
 
@@ -111,10 +111,12 @@ class ShiftChangeRecord extends React.Component {
 
 	getPatientGroupList = async () => {
 		const { stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(areaId)
+			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(
+				area.id
+			)
 			const patientGruopMap = _.keyBy(res.data.gruopList, 'id')
 			const patientObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({
@@ -128,10 +130,10 @@ class ShiftChangeRecord extends React.Component {
 
 	getDeviceGroupListDetail = async () => {
 		const { stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(areaId)
+			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
 			const deviceGruopMap = _.keyBy(res.data.gruopList, 'id')
 			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({
@@ -145,12 +147,12 @@ class ShiftChangeRecord extends React.Component {
 
 	getTrackingData = async () => {
 		const { locale, auth, stateReducer } = this.context
-		const [{ areaId }, dispatch] = stateReducer
+		const [{ area }, dispatch] = stateReducer
 
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			locale: locale.abbr,
 			user: auth.user,
-			areaId,
+			areaId: area.id,
 		})
 
 		if (res) {

@@ -55,7 +55,7 @@ export default class TabletMapContainer extends React.Component {
 			handleClickButton,
 			currentAreaId,
 		} = this.props
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 		const style = {
 			title: {
 				color: 'grey',
@@ -116,7 +116,7 @@ export default class TabletMapContainer extends React.Component {
 								lbeaconPosition={this.props.lbeaconPosition}
 								geofenceConfig={this.props.geofenceConfig}
 								getSearchKey={this.props.getSearchKey}
-								areaId={areaId}
+								areaId={area.id}
 								searchedObjectType={showedObjects}
 								mapConfig={config.mapConfig}
 								handleClosePath={this.props.handleClosePath}

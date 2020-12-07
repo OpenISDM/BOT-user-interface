@@ -81,13 +81,13 @@ class GetAssignments extends React.Component {
 
 	getAssignments = async () => {
 		const { stateReducer, auth } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 		const userId = auth.user.id
 		const assignedDeviceGroupListids = []
 		const assignedPatientGroupListids = []
 
 		const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
-			areaId,
+			areaId: area.id,
 			userId,
 		})
 
@@ -148,10 +148,12 @@ class GetAssignments extends React.Component {
 
 	getPatientGroupList = async () => {
 		const { stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(areaId)
+			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(
+				area.id
+			)
 			const patientGroupMap = _.keyBy(res.data.gruopList, 'id')
 			const patientObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({
@@ -165,10 +167,10 @@ class GetAssignments extends React.Component {
 
 	getDeviceGroupListDetail = async () => {
 		const { stateReducer } = this.context
-		const [{ areaId }] = stateReducer
+		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(areaId)
+			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
 			const deviceGroupMap = _.keyBy(res.data.gruopList, 'id')
 			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({

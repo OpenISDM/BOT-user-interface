@@ -89,13 +89,13 @@ class QRCodeContainer extends React.Component {
 			}
 
 			const { locale, auth, stateReducer } = this.context
-			const [{ areaId }] = stateReducer
+			const [{ area }] = stateReducer
 			const pdfPackage = config.getPdfPackage(
 				'searchResult',
 				auth.user,
 				data,
 				locale,
-				areaId
+				area.id
 			)
 			//console.log(foundResult)
 			const searResultInfo = {

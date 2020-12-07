@@ -68,12 +68,12 @@ class Map extends React.Component {
 
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
-		const [{ areaId }] = this.context.stateReducer
+		const [{ area }] = this.context.stateReducer
 
 		const { areaModules } = siteConfig
 
 		this.iconOptions = this.props.mapConfig.iconOptionsInBigScreen
-		const areaOption = this.props.mapConfig.areaOptions[areaId]
+		const areaOption = this.props.mapConfig.areaOptions[area.id]
 
 		/** set the map's config */
 		const { url, bounds, hasMap } = areaModules[areaOption]
@@ -100,10 +100,10 @@ class Map extends React.Component {
 
 	/** Set the overlay image */
 	setMap = () => {
-		const [{ areaId }] = this.context.stateReducer
+		const [{ area }] = this.context.stateReducer
 		const { areaModules } = siteConfig
 
-		const areaOption = this.props.mapConfig.areaOptions[areaId]
+		const areaOption = this.props.mapConfig.areaOptions[area.id]
 
 		/** set the map's config */
 		const { url, bounds, hasMap } = areaModules[areaOption]

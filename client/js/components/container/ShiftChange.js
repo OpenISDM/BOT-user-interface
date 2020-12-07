@@ -98,7 +98,7 @@ class ShiftChange extends React.Component {
 		const { locale, auth, stateReducer } = this.context
 		const userId = auth.user.id
 		const authentication = auth.user.name
-		const [{ objectFoundResults = {}, tableSelection = [] }] = stateReducer
+		const [{ objectFoundResults, tableSelection }] = stateReducer
 		const {
 			listName,
 			assignedDeviceGroupListids,
@@ -196,7 +196,7 @@ class ShiftChange extends React.Component {
 
 	render() {
 		const { locale, auth, stateReducer } = this.context
-		const [{ objectFoundResults = {}, tableSelection = [] }] = stateReducer
+		const [{ objectFoundResults, tableSelection }] = stateReducer
 		const { show, handleClose, listName } = this.props
 		const { devicesResult = {}, patientsReslut = {} } = objectFoundResults
 		const nowTime = moment().locale(locale.abbr).format(config.TIMESTAMP_FORMAT)
