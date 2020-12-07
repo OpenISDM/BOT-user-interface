@@ -54,7 +54,6 @@ const style = {
 	item: {
 		minWidth: 30,
 	},
-
 	blockOne: {
 		minWidth: 'initial',
 	},
@@ -89,7 +88,6 @@ class PatientViewModal extends React.Component {
 				onHide={this.handleClose}
 				size="md"
 				enforceFocus={false}
-				style={style.modal}
 			>
 				<Modal.Header>
 					{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
@@ -237,7 +235,7 @@ const recordBlockTypeOne = (item, index, locale) => {
 		>
 			<div style={style.index}>&bull;</div>
 			&nbsp;
-			<div key={index} className="pb-1" style={style.row}>
+			<div key={index} className="pb-1">
 				{moment(item.create_timestamp)
 					.locale(locale.abbr)
 					.format('YYYY/MM/DD hh:mm')}

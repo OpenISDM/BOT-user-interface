@@ -83,6 +83,7 @@ class SearchResultList extends React.Component {
 		const selectItem = isFound
 			? this.props.searchResult.filter((item) => item.found)[number]
 			: this.props.searchResult.filter((item) => !item.found)[number]
+
 		if (parseInt(selectItem.object_type) === 0) {
 			/** The reason using array to encapture the selectedObjectData is to have the consisten data form passed into ChangeStatusForm */
 			this.toggleSelection(number, isFound)
@@ -92,9 +93,11 @@ class SearchResultList extends React.Component {
 				value: false,
 			})
 		} else {
+			this.props.highlightSearchPanel(false)
 			this.setState({
 				showPatientView: true,
-				selectedObjectData: selectItem,
+				showEditObjectForm: false,
+				selectedObjectData: [selectItem],
 			})
 		}
 	}
@@ -129,6 +132,7 @@ class SearchResultList extends React.Component {
 		}
 		this.setState({
 			showEditObjectForm: true,
+			showPatientView: false,
 			selection,
 			selectedObjectData,
 		})
@@ -291,9 +295,11 @@ class SearchResultList extends React.Component {
 			record: values.record,
 			id: this.state.selectedObjectData.id,
 		}
+
 		await apiHelper.record.addPatientRecord({
 			objectPackage,
 		})
+
 		const callback = () => messageGenerator.setSuccessMessage('save success')
 		this.setState(
 			{
@@ -305,16 +311,6 @@ class SearchResultList extends React.Component {
 			},
 			callback
 		)
-	}
-
-	handleClick = () => {
-		this.props.highlightSearchPanel(true)
-		this.setState({
-			showEditObjectForm: true,
-			selectedObjectData: this.props.searchResult,
-			selection: this.props.searchResult.map((a) => a.mac_address),
-			showAddDevice: true,
-		})
 	}
 
 	render() {
@@ -369,6 +365,7 @@ class SearchResultList extends React.Component {
 				<MobileOnlyView>
 					<MobileSearchResultList {...propsGroup} />
 				</MobileOnlyView>
+
 				<ChangeStatusForm
 					handleShowPath={this.props.handleShowPath}
 					show={this.state.showEditObjectForm}
