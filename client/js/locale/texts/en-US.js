@@ -343,6 +343,7 @@ const en = {
 	// eslint-disable-next-line quotes
 	WHOSE_DEVICES: "'s devices",
 	TRANSFERRED_TO: 'transferred to',
+	RETURNED_TO: 'returned to',
 	CHECKED_BY: 'checked by',
 	CONFIRMED_BY: 'confirmed by',
 	MOVEMENT_MONITOR: 'movement monitor',

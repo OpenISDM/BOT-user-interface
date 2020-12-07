@@ -33,13 +33,14 @@
 */
 
 import React from 'react'
-import { Modal, Button, Row, Col, Image, ButtonToolbar } from 'react-bootstrap'
+import { Modal, Button, Row, Col, ButtonToolbar } from 'react-bootstrap'
 import config from '../../config'
 import moment from 'moment'
 import { Formik, Form } from 'formik'
 import { AppContext } from '../../context/AppContext'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import { RESERVE, TRANSFERRED } from '../../config/wordMap'
+import { convertStatusToText } from '../../helper/utilities'
 
 class ConfirmForm extends React.Component {
 	static contextType = AppContext
@@ -180,9 +181,10 @@ class ConfirmForm extends React.Component {
 										<div className="d-flex flex-column">
 											<h6 className="d-flex justify-content-center">
 												{hasSelectedObjectData &&
-													locale.texts[
-														selectedObjectData[0].status.toUpperCase()
-													]}
+													convertStatusToText(
+														locale,
+														selectedObjectData[0].status
+													)}
 												&nbsp;
 												{isTransferObject && locale.texts.TO}
 											</h6>

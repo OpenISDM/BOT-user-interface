@@ -337,6 +337,7 @@ const tw = {
 	TRANSFERRED_DEVICE_LIST: '轉移儀器列表',
 	WHOSE_DEVICES: '的儀器',
 	TRANSFERRED_TO: '轉移至',
+	RETURNED_TO: '歸還至',
 	CHECKED_BY: '確認',
 	CONFIRMED_BY: '審核',
 	MOVEMENT_MONITOR: '活動監控',

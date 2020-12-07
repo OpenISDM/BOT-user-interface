@@ -40,6 +40,7 @@ import viewConfig from './config/viewConfig'
 import moment from 'moment'
 import supportedLocale from './locale/supportedLocale'
 import botFeaturesConfig from './config/botFeaturesConfig'
+import { NORMAL, BROKEN, TRANSFERRED } from './config/wordMap'
 
 const config = {
 	VERSION: `v${version} b.1984`,
@@ -92,10 +93,10 @@ const config = {
 	LOGO_WEBP: BOT_LOGO_WEBP,
 
 	statusOptions: [
-		'normal',
-		'broken',
+		NORMAL,
+		BROKEN,
 		// 'reserve',
-		'transferred',
+		TRANSFERRED,
 	],
 
 	GENDER_OPTIONS: {
@@ -161,7 +162,7 @@ const config = {
 	ROLES_SELECTION: ['system_admin', 'care_provider', 'dev'],
 
 	HEALTH_STATUS_MAP: {
-		0: 'normal',
+		0: NORMAL,
 		9999: 'n/a',
 	},
 
@@ -207,7 +208,7 @@ const config = {
 		8: 'error',
 	},
 
-	statusToCreatePdf: ['broken', 'transferred'],
+	statusToCreatePdf: [NORMAL, BROKEN, TRANSFERRED],
 
 	getShift: () => {
 		const hour = moment().hours()

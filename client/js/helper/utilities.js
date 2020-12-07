@@ -33,6 +33,7 @@
 */
 
 import moment from 'moment'
+import { NORMAL } from '../config/wordMap'
 
 /** Compare two objects, including strings, deep objects  */
 export const isEqual = (obj1, obj2) => {
@@ -148,4 +149,10 @@ export const filterByField = (callback, data, key, filteredAttribute) => {
 	}
 
 	return filteredData
+}
+
+export const convertStatusToText = (locale, status) => {
+	return status === NORMAL
+		? locale.texts.RETURNED
+		: locale.texts[status.toUpperCase().replace(/ /g, '_')]
 }

@@ -191,7 +191,7 @@ class SearchResultList extends React.Component {
 		const signatureName = this.state.signatureName
 		const { editedObjectPackage } = this.state
 		const { locale, auth, stateReducer } = this.context
-		const [, dispatch] = stateReducer
+		const [{ area }, dispatch] = stateReducer
 		const username = auth.user.name
 		const shouldCreatePdf = config.statusToCreatePdf.includes(
 			editedObjectPackage[0].status
@@ -210,6 +210,7 @@ class SearchResultList extends React.Component {
 				data: this.state.editedObjectPackage,
 				locale,
 				signature: signatureName,
+				currentArea: area,
 			})
 
 		await apiHelper.objectApiAgent.editObjectPackage(

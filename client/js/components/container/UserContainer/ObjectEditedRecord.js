@@ -39,7 +39,11 @@ import { AppContext } from '../../../context/AppContext'
 import styleConfig from '../../../config/styleConfig'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
-import { JSONClone, formatTime } from '../../../helper/utilities'
+import {
+	JSONClone,
+	formatTime,
+	convertStatusToText,
+} from '../../../helper/utilities'
 import messageGenerator from '../../../helper/messageGenerator'
 
 class ObjectEditedRecord extends React.Component {
@@ -76,8 +80,7 @@ class ObjectEditedRecord extends React.Component {
 
 			const data = res.data.rows.map((item, index) => {
 				item._id = index + 1
-				item.new_status =
-					locale.texts[item.new_status.toUpperCase().replace(/ /g, '_')]
+				item.new_status = convertStatusToText(locale, item.new_status)
 				item.edit_time = formatTime(item.edit_time)
 				return item
 			})
@@ -102,6 +105,7 @@ class ObjectEditedRecord extends React.Component {
 					className="-highlight text-none"
 					style={{ maxHeight: '75vh' }}
 					{...styleConfig.reactTable}
+					pageSize={100}
 					getTrProps={(state, rowInfo) => {
 						return {
 							onClick: () => {

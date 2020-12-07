@@ -335,6 +335,7 @@ const cn = {
 	TRANSFERRED_DEVICE_LIST: '转移仪器列表',
 	WHOSE_DEVICES: '的仪器',
 	TRANSFERRED_TO: '转移至',
+	RETURNED_TO: '归还至',
 	CHECKED_BY: '确认',
 	CONFIRMED_BY: '审核',
 	MOVEMENT_MONITOR: '活动监控',

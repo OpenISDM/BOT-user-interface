@@ -48,6 +48,7 @@ const pdfPackageGenerator = {
 		signature,
 		additional,
 		pdfOptions,
+		currentArea,
 	}) => {
 		const header = pdfPackageGenerator.pdfFormat.getHeader(
 			user,
@@ -57,14 +58,15 @@ const pdfPackageGenerator = {
 			additional,
 			data
 		)
-		const body = pdfPackageGenerator.pdfFormat.getBody[option](
+		const body = pdfPackageGenerator.pdfFormat.getBody[option]({
 			data,
 			locale,
 			user,
 			location,
 			signature,
-			additional
-		)
+			additional,
+			currentArea,
+		})
 		const path = pdfPackageGenerator.pdfFormat.getPath(option, additional).path
 		const pdf = header + body
 
@@ -110,16 +112,18 @@ const pdfPackageGenerator = {
 		},
 
 		getTitle: (option, locale) => {
+			const title = locale.texts[
+				pdfPackageGenerator.pdfFormat.pdfTitle[option]
+			].toUpperCase()
 			return `
                 <h3 style='text-transform: capitalize;'>
-                    ${locale.texts[
-											pdfPackageGenerator.pdfFormat.pdfTitle[option]
-										].toUpperCase()}
+                    ${title}
                 </h3>
             `
 		},
 
 		pdfTitle: {
+			normal: 'DEVICE_TRANSFER_RECORD',
 			broken: 'REQUEST_FOR_DEVICE_REPARIE',
 			transferred: 'DEVICE_TRANSFER_RECORD',
 			shiftChange: 'SHIFT_CHANGE_RECORD',
@@ -146,6 +150,11 @@ const pdfPackageGenerator = {
 		getFileName: {
 			broken: (option) => {
 				return `${option}_report_${moment().format(
+					pdfPackageGenerator.PDF_FILENAME_TIME_FORMAT
+				)}.pdf`
+			},
+			normal: () => {
+				return `returned_report_${moment().format(
 					pdfPackageGenerator.PDF_FILENAME_TIME_FORMAT
 				)}.pdf`
 			},
@@ -182,7 +191,7 @@ const pdfPackageGenerator = {
 		},
 
 		getBody: {
-			broken: (data, locale) => {
+			broken: ({ data, locale }) => {
 				const title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'broken device list',
 					locale
@@ -197,7 +206,35 @@ const pdfPackageGenerator = {
 				)
 				return title + list + notes
 			},
-			transferred: (data, locale, user, location, signature) => {
+
+			normal: ({ data, locale, signature, currentArea }) => {
+				const signature_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+					'returned to',
+					locale,
+					currentArea.label
+				)
+				const list_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+					'transferred device list',
+					locale
+				)
+				const signatureName = pdfPackageGenerator.pdfFormat.getBodyItem.getSignature(
+					locale,
+					signature
+				)
+				const list = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
+					data,
+					locale,
+					signature
+				)
+				const notes = pdfPackageGenerator.pdfFormat.getBodyItem.getNotes(
+					data,
+					locale,
+					signature
+				)
+				return signature_title + signatureName + list_title + list + notes
+			},
+
+			transferred: ({ data, locale, signature }) => {
 				const area = data[0].transferred_location
 				const signature_title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'transferred to',
@@ -225,7 +262,7 @@ const pdfPackageGenerator = {
 				return signature_title + signatureName + list_title + list + notes
 			},
 
-			shiftChange: (data, locale, user, location, signature, additional) => {
+			shiftChange: ({ data, locale, additional }) => {
 				const area = additional.area
 				const foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices found',
@@ -297,7 +334,7 @@ const pdfPackageGenerator = {
 				)
 			},
 
-			searchResult: (data, locale) => {
+			searchResult: ({ data, locale }) => {
 				const foundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices found',
 					locale,
@@ -321,7 +358,7 @@ const pdfPackageGenerator = {
 				return foundTitle + foundResultList + notFoundTitle + notFoundResultList
 			},
 
-			patientRecord: (data, locale) => {
+			patientRecord: ({ data, locale }) => {
 				const title = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'patient historical record',
 					locale,
@@ -336,7 +373,7 @@ const pdfPackageGenerator = {
 				return title + content
 			},
 
-			trackingRecord: (data, locale, user, location, signature, additional) => {
+			trackingRecord: ({ data, locale, additional }) => {
 				let table
 				switch (additional.type) {
 					case 'name':
@@ -363,7 +400,7 @@ const pdfPackageGenerator = {
 				return table
 			},
 
-			contactTree: (data, locale) => {
+			contactTree: ({ data, locale }) => {
 				return pdfPackageGenerator.pdfFormat.getBodyItem.getContactTracingContent(
 					data,
 					locale
@@ -687,9 +724,9 @@ const pdfPackageGenerator = {
                                     border-top: 0;
                                     border-left: 0;
                                     border-right: 0;
-                                    display: inline-block';
-                                    value = ${signature}
-                            />
+									display: inline-block'
+								value='${signature}'
+							/>
                         </div>
                     </div>
                 `
@@ -818,6 +855,7 @@ const pdfPackageGenerator = {
 				)
 				return timestamp + username
 			},
+
 			broken: (locale, user) => {
 				const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(locale)
 				const username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
@@ -826,6 +864,16 @@ const pdfPackageGenerator = {
 				)
 				return timestamp + username
 			},
+
+			normal: (locale, user) => {
+				const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(locale)
+				const username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
+					locale,
+					user
+				)
+				return timestamp + username
+			},
+
 			transferred: (locale, user) => {
 				const timestamp = pdfPackageGenerator.pdfFormat.getTimeStamp(locale)
 				const username = pdfPackageGenerator.pdfFormat.getSubTitleInfo.username(
