@@ -307,12 +307,7 @@ class ShiftChange extends React.Component {
 									<Button variant="outline-secondary" onClick={handleClose}>
 										{locale.texts.CANCEL}
 									</Button>
-									<Button
-										type="submit"
-										variant="primary"
-										onClick={submitForm}
-										disabled={!hasDevicesFound && !hasDevicesNotFound}
-									>
+									<Button type="submit" variant="primary" onClick={submitForm}>
 										{locale.texts.CONFIRM}
 									</Button>
 								</Modal.Footer>

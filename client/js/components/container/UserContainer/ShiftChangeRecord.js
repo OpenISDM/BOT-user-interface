@@ -290,29 +290,35 @@ class ShiftChangeRecord extends React.Component {
 			showCheckShiftChangeList,
 		} = this.state
 
-		const disabled = !(
-			assignedDeviceGroupListids.length > 0 ||
-			assignedPatientGroupListids.length > 0
-		)
-
+		let hasDeviceItems = false
 		let allAssignmentsNameList = []
 		if (assignedDeviceGroupListids.length > 0) {
-			allAssignmentsNameList = Object.values(deviceGruopMap)
-				.filter((item) => {
-					return assignedDeviceGroupListids.includes(item.id)
-				})
-				.map((item) => item.name)
+			const deviceGroupList = Object.values(deviceGruopMap).filter((item) => {
+				return assignedDeviceGroupListids.includes(item.id)
+			})
+
+			allAssignmentsNameList = deviceGroupList.map((item) => item.name)
+			hasDeviceItems = deviceGroupList.some(
+				(deviceGroup) => deviceGroup.items && deviceGroup.items.length > 0
+			)
 		}
+
+		let hasPatientItems = false
 		if (assignedPatientGroupListids.length > 0) {
+			const patientGroupList = Object.values(patientGruopMap).filter((item) => {
+				return assignedPatientGroupListids.includes(item.id)
+			})
+
 			allAssignmentsNameList = [
 				...allAssignmentsNameList,
-				...Object.values(patientGruopMap)
-					.filter((item) => {
-						return assignedPatientGroupListids.includes(item.id)
-					})
-					.map((item) => item.name),
+				...patientGroupList.map((item) => item.name),
 			]
+			hasPatientItems = patientGroupList.some(
+				(patientGroup) => patientGroup.items && patientGroup.items.length > 0
+			)
 		}
+
+		const disabled = !(hasDeviceItems || hasPatientItems)
 
 		return (
 			<Fragment>
