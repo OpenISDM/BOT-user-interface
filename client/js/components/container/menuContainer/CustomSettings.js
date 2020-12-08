@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        GeneralSettings.js
+        CustomSettings.js
 
     File Description:
         BOT UI component
@@ -42,7 +42,7 @@ import styleConfig from '../../../config/styleConfig'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import messageGenerator from '../../../helper/messageGenerator'
 
-class GeneralSettings extends React.Component {
+class CustomSettings extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -163,4 +163,4 @@ class GeneralSettings extends React.Component {
 	}
 }
 
-export default GeneralSettings
+export default CustomSettings

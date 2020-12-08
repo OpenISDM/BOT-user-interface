@@ -79,7 +79,7 @@ const rules = {
 			'route:contactTree',
 			'route:setting',
 			'route:BOTAdmin',
-			'route:generalSettings',
+			'route:customSettings',
 
 			'user:mydevice',
 			'user:mypatient',

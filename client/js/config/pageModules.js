@@ -51,7 +51,7 @@ import TraceContainer from '../components/container/menuContainer/TraceContainer
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
 import Loader from '../components/presentational/Loader'
-import GeneralSettings from '../components/container/menuContainer/GeneralSettings'
+import CustomSettings from '../components/container/menuContainer/CustomSettings'
 import GetAssignments from '../components/container/GetAssignments'
 import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHistoricalRecord'
 // import RolePermissionManagement from '../components/container/RolePermissionManagement'
@@ -128,13 +128,13 @@ export const settingModule = {
 		},
 		{
 			name: 'custom settings',
-			component: (props) => <GeneralSettings {...props} />,
-			permission: 'route:generalSettings',
+			component: (props) => <CustomSettings {...props} />,
+			permission: 'route:customSettings',
 		},
 		{
 			name: 'search settings',
 			component: () => null,
-			permission: 'route:generalSettings',
+			permission: 'route:customSettings',
 		},
 		{
 			name: 'monitor settings',
@@ -148,7 +148,7 @@ export const settingModule = {
 		{
 			name: 'notification settings',
 			component: () => null,
-			permission: 'route:generalSettings',
+			permission: 'route:customSettings',
 		},
 		{
 			name: 'lbeacon',
