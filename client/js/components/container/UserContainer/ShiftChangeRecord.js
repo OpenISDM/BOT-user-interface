@@ -56,7 +56,7 @@ class ShiftChangeRecord extends React.Component {
 	state = {
 		objectMap: {},
 		patientGruopMap: {},
-		deviceGruopMap: {},
+		deviceGroupMap: {},
 		assignedDeviceGroupListids: [],
 		assignedPatientGroupListids: [],
 		showShiftChange: false,
@@ -134,10 +134,10 @@ class ShiftChangeRecord extends React.Component {
 
 		try {
 			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
-			const deviceGruopMap = _.keyBy(res.data.gruopList, 'id')
+			const deviceGroupMap = _.keyBy(res.data.gruopList, 'id')
 			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
 			this.setState({
-				deviceGruopMap,
+				deviceGroupMap,
 				objectMap: { ...this.state.objectMap, ...deviceObjectMap },
 			})
 		} catch (e) {
@@ -239,7 +239,7 @@ class ShiftChangeRecord extends React.Component {
 
 	generateAssignmentItems = ({
 		objectMap,
-		deviceGruopMap,
+		deviceGroupMap,
 		patientGruopMap,
 		assignedDeviceGroupListids,
 		assignedPatientGroupListids,
@@ -250,7 +250,7 @@ class ShiftChangeRecord extends React.Component {
 			deviceItems = (
 				<AssignmentItems
 					objectMap={objectMap}
-					gruopMap={deviceGruopMap}
+					gruopMap={deviceGroupMap}
 					submitGroupListIds={[]}
 					assignedGroupListids={assignedDeviceGroupListids}
 					showOnlyAssigned={true}
@@ -282,7 +282,7 @@ class ShiftChangeRecord extends React.Component {
 		const { locale } = this.context
 		const {
 			objectMap,
-			deviceGruopMap,
+			deviceGroupMap,
 			patientGruopMap,
 			assignedDeviceGroupListids,
 			assignedPatientGroupListids,
@@ -293,7 +293,7 @@ class ShiftChangeRecord extends React.Component {
 		let hasDeviceItems = false
 		let allAssignmentsNameList = []
 		if (assignedDeviceGroupListids.length > 0) {
-			const deviceGroupList = Object.values(deviceGruopMap).filter((item) => {
+			const deviceGroupList = Object.values(deviceGroupMap).filter((item) => {
 				return assignedDeviceGroupListids.includes(item.id)
 			})
 
@@ -339,7 +339,7 @@ class ShiftChangeRecord extends React.Component {
 
 				{this.generateAssignmentItems({
 					objectMap,
-					deviceGruopMap,
+					deviceGroupMap,
 					patientGruopMap,
 					assignedDeviceGroupListids,
 					assignedPatientGroupListids,
