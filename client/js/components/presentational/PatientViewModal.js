@@ -75,8 +75,19 @@ class PatientViewModal extends React.Component {
 	}
 
 	render() {
-		const { show, handleClose, handleSubmit, data, title } = this.props
-		const { locale, auth } = this.context
+		const { show, handleSubmit, data, title } = this.props
+		const { locale } = this.context
+
+		const patientData = data[0] ? data[0] : {} // Get only first patient item for now
+
+		const {
+			name = '',
+			type_alias,
+			asset_control_number,
+			lbeacon_area,
+			record,
+			records,
+		} = patientData
 
 		const recordBlock = {
 			display: this.state.display ? '' : 'none',
@@ -114,7 +125,7 @@ class PatientViewModal extends React.Component {
 									type="text"
 									name="name"
 									label={locale.texts.NAME}
-									value={data.name}
+									value={name}
 									error={errors.name}
 									touched={touched.name}
 									placeholder=""
@@ -124,7 +135,7 @@ class PatientViewModal extends React.Component {
 									type="text"
 									name="name"
 									label={locale.texts.ALIAS}
-									value={data.type_alias}
+									value={type_alias}
 									error={errors.name}
 									touched={touched.name}
 									placeholder=""
@@ -134,7 +145,7 @@ class PatientViewModal extends React.Component {
 									type="text"
 									name="name"
 									label={locale.texts.PATIENT_NUMBER}
-									value={data.asset_control_number}
+									value={asset_control_number}
 									error={errors.name}
 									touched={touched.name}
 									placeholder=""
@@ -144,11 +155,7 @@ class PatientViewModal extends React.Component {
 									type="text"
 									name="name"
 									label={locale.texts.LOCATION}
-									value={
-										data.lbeacon_area !== undefined
-											? data.lbeacon_area.value
-											: null
-									}
+									value={lbeacon_area !== undefined ? lbeacon_area.value : null}
 									error={errors.name}
 									touched={touched.name}
 									placeholder=""
@@ -186,14 +193,14 @@ class PatientViewModal extends React.Component {
 								</FormFieldName>
 
 								<div style={recordBlock}>
-									{data.record && data.record.length != 0 && (
+									{record && record.length != 0 && (
 										<hr style={{ margin: 0 }}></hr>
 									)}
 
 									<ListGroup className="text-none px-0 max-height-30 custom-scrollbar">
-										{data.records && data.records.length != 0 && (
+										{records && records.length != 0 && (
 											<div>
-												{data.records.map((item, index) => {
+												{records.map((item, index) => {
 													return recordBlockTypeTwo(item, index, locale)
 												})}
 											</div>
