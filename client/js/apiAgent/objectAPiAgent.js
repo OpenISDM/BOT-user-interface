@@ -36,45 +36,44 @@ import { object, objectPackage } from '../dataSrc'
 import { get, put, post, patch, del } from '../helper/httpClient'
 
 export default {
-	/**
-	 * get object data from object_table
-	 */
-	async getObjectTable({ locale, areas_id, objectType }) {
+	async getObjectTable({ areas_id, objectType }) {
 		return await get(object.object, {
-			locale,
 			areas_id,
 			objectType,
 		})
 	},
 
-	async getAlias() {
-		return await get(object.alias)
-	},
-
-	async editAlias({ objectType, alias }) {
-		return await put(object.alias, {
+	async getAliases({ objectType, areaId }) {
+		return await get(object.alias, {
 			objectType,
-			alias,
+			areaId,
 		})
 	},
 
-	async editAliases({ objectTypeList }) {
+	async editAlias({ objectType, alias, areaId }) {
+		return await put(object.alias, {
+			objectType,
+			alias,
+			areaId,
+		})
+	},
+
+	async editAliases({ objectTypeList, areaId }) {
 		return await put(object.aliases, {
 			objectTypeList,
+			areaId,
 		})
 	},
 
 	async post({ formOption, mode }) {
 		return await post(object[mode], {
 			formOption,
-			mode,
 		})
 	},
 
 	async put({ formOption, mode }) {
 		return await put(object[mode], {
 			formOption,
-			mode,
 		})
 	},
 
@@ -108,5 +107,9 @@ export default {
 
 	async getIdleMacaddr() {
 		return await post(object.idleMacaddr)
+	},
+
+	async editNickname({ personList }) {
+		return await post(object.nickname, { personList })
 	},
 }

@@ -154,11 +154,10 @@ class TraceContainer extends React.Component {
 	}
 
 	getObjectTable = async () => {
-		const { locale, auth } = this.context
+		const { auth } = this.context
 		const res = await apiHelper.objectApiAgent.getObjectTable({
-			locale: locale.abbr,
 			areas_id: auth.user.areas_id,
-			objectType: [1, 2],
+			objectType: [config.OBJECT_TYPE.PERSON],
 		})
 
 		if (res) {

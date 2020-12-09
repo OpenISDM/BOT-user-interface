@@ -319,6 +319,11 @@ const patientTableColumn = [
 		width: 150,
 	},
 	{
+		Header: 'Nickname',
+		accessor: 'nickname',
+		width: 150,
+	},
+	{
 		Header: 'Tag ID',
 		accessor: 'mac_address',
 		width: 200,
@@ -339,11 +344,11 @@ const patientTableColumn = [
 		accessor: 'area_name.label',
 		width: 150,
 	},
-	{
-		Header: 'PATIENT_GENDER',
-		accessor: 'object_type.label',
-		width: 70,
-	},
+	// {
+	// 	Header: 'PATIENT_GENDER',
+	// 	accessor: 'object_type.label',
+	// 	width: 70,
+	// },
 	{
 		Header: 'room',
 		accessor: 'room',

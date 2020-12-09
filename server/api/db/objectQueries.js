@@ -325,32 +325,6 @@ const getIdleMacaddr = () => {
 	`
 }
 
-const getAlias = () => {
-	return `
-		SELECT
-			DISTINCT type,
-			type_alias
-		FROM object_table
-		WHERE type != 'Patient'
-		ORDER BY type ASC
-	`
-}
-
-const editAlias = (objectType, alias) => {
-	const text = `
-		UPDATE object_table
-		SET type_alias = $2
-		WHERE type = $1
-	`
-
-	const values = [objectType, alias]
-
-	return {
-		text,
-		values,
-	}
-}
-
 export default {
 	getObject,
 	addPerson,
@@ -362,6 +336,4 @@ export default {
 	editObjectPackage,
 	deleteObjectSummaryRecord,
 	getIdleMacaddr,
-	getAlias,
-	editAlias,
 }

@@ -152,7 +152,7 @@ const ms = {
 	MALE: 'lelaki',
 	FEMALE: 'perempuan',
 	EDIT_ALIAS: 'edit alias',
-	EDIT_DEVICE_ALIAS: 'edit alias peranti',
+	EDIT_DEVICE_ALIASES: 'edit alias peranti',
 
 	/* buttons */
 	CLEAR: 'jelas',

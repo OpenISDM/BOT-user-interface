@@ -130,8 +130,8 @@ class PatientTable extends React.Component {
 
 		this.state.data.forEach((item) => {
 			item.area_name.label = locale.texts[item.area_name.value]
-			item.object_type.label =
-				locale.texts[item.object_type.value.toUpperCase()]
+			// item.object_type.label =
+			// 	locale.texts[item.object_type.value.toUpperCase()]
 			item.registered_timestamp = moment(item.registered_timestamp._i)
 				.locale(this.context.locale.abbr)
 				.format('lll')
@@ -142,8 +142,8 @@ class PatientTable extends React.Component {
 
 		this.state.filteredData.forEach((item) => {
 			item.area_name.label = locale.texts[item.area_name.value]
-			item.object_type.label =
-				locale.texts[item.object_type.value.toUpperCase()]
+			// item.object_type.label =
+			// 	locale.texts[item.object_type.value.toUpperCase()]
 			item.registered_timestamp = moment(item.registered_timestamp._i)
 				.locale(this.context.locale.abbr)
 				.format('lll')
@@ -162,9 +162,8 @@ class PatientTable extends React.Component {
 		const { locale, auth } = this.context
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
-			locale: locale.abbr,
 			areas_id: auth.user.areas_id,
-			objectType: [0, 1, 2],
+			objectType: [config.OBJECT_TYPE.PERSON],
 		})
 
 		if (res) {
@@ -175,31 +174,22 @@ class PatientTable extends React.Component {
 					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			})
 
-			const data = res.data.rows
-				.filter((item) => parseInt(item.object_type) !== 0)
-				.map((item) => {
-					item.area_name = {
-						value: item.area_name,
-						label: locale.texts[item.area_name] || '*site module error*',
-						id: item.area_id,
-					}
-					item.monitor_type = transferMonitorTypeToString(item)
-					item.object_type = {
-						...config.GENDER_OPTIONS[item.object_type],
-						label:
-							locale.texts[
-								config.GENDER_OPTIONS[item.object_type].value.toUpperCase()
-							],
-					}
-					item.isBind = item.mac_address ? 1 : 0
-					item.mac_address = item.mac_address
-						? item.mac_address
-						: locale.texts.NON_BINDING
+			const data = res.data.rows.map((item) => {
+				item.area_name = {
+					value: item.area_name,
+					label: locale.texts[item.area_name] || '*site module error*',
+					id: item.area_id,
+				}
+				item.monitor_type = transferMonitorTypeToString(item)
+				item.isBind = item.mac_address ? 1 : 0
+				item.mac_address = item.mac_address
+					? item.mac_address
+					: locale.texts.NON_BINDING
 
-					item.registered_timestamp = formatTime(item.registered_timestamp)
+				item.registered_timestamp = formatTime(item.registered_timestamp)
 
-					return item
-				})
+				return item
+			})
 
 			this.getIdleMacaddrSet()
 			this.setState(

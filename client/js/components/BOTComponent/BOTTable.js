@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        objectRoutes.js
+        BOTTable.js
 
     File Description:
         BOT UI component
@@ -32,41 +32,37 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import objectController from '../../controllers/objectController'
-import cors from 'cors'
+import React from 'react'
+import ReactTable from 'react-table'
+import { AppContext } from '../../context/AppContext'
+import styleConfig from '../../config/styleConfig'
+import { JSONClone } from '../../helper/utilities'
+import PropTypes from 'prop-types'
 
-export default (app) => {
-	// enable pre-flight request for DELETE request
-	app.options('/data/object', cors())
-	app.options('/data/object/:type', cors())
-	app.options('/data/objectPackage', cors())
+const BOTTable = ({ data, columns }) => {
+	const { locale } = React.useContext(AppContext)
 
-	app
-		.route('/data/object')
-		.get(objectController.getObject)
-		.delete(objectController.deleteObject)
-		.patch(objectController.disassociate)
+	const newColumns = JSONClone(columns)
+	newColumns.forEach((field) => {
+		field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
+	})
 
-	app
-		.route('/data/object/device')
-		.post(objectController.addDevice)
-		.put(objectController.editDevice)
-
-	app
-		.route('/data/object/person')
-		.post(objectController.addPerson)
-		.put(objectController.editPerson)
-
-	app.route('/data/objectPackage').put(objectController.editObjectPackage)
-
-	app.route('/data/object/mac/idle').post(objectController.getIdleMacaddr)
-
-	app
-		.route('/data/object/alias')
-		.get(objectController.getAliases)
-		.put(objectController.editAlias)
-
-	app.route('/data/object/aliases').put(objectController.editAliases)
-
-	app.route('/data/object/nickname').post(objectController.editNickname)
+	return (
+		<ReactTable
+			{...styleConfig.reactTable}
+			columns={newColumns}
+			data={data}
+			pageSize={data.length}
+			resizable={true}
+			freezeWhenExpanded={false}
+			showPagination={false}
+		/>
+	)
 }
+
+BOTTable.propTypes = {
+	data: PropTypes.array.isRequired,
+	columns: PropTypes.array.isRequired,
+}
+
+export default BOTTable

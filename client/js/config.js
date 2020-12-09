@@ -99,13 +99,18 @@ const config = {
 		TRANSFERRED,
 	],
 
+	OBJECT_TYPE: {
+		DEVICE: 0,
+		PERSON: 1,
+	},
+
 	GENDER_OPTIONS: {
-		1: {
-			id: 1,
+		0: {
+			id: 0,
 			value: 'male',
 		},
-		2: {
-			id: 2,
+		1: {
+			id: 1,
 			value: 'female',
 		},
 	},

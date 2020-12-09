@@ -59,6 +59,7 @@ export const object = {
 	idleMacaddr: `${domain}/data/object/mac/idle`,
 	alias: `${domain}/data/object/alias`,
 	aliases: `${domain}/data/object/aliases`,
+	nickname: `${domain}/data/object/nickname`,
 }
 export const userAssignments = {
 	getByUserId: `${domain}/data/userAssignments/getByUserId`,

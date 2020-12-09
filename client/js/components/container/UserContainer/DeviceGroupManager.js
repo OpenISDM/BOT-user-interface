@@ -96,18 +96,15 @@ class DeviceGroupManager extends React.Component {
 	}
 
 	getObjectData = async () => {
-		const { locale, auth } = this.context
-		try {
-			const res = await apiHelper.objectApiAgent.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [0],
-			})
+		const { auth } = this.context
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			areas_id: auth.user.areas_id,
+			objectType: [config.OBJECT_TYPE.DEVICE],
+		})
+		if (res) {
 			this.setState({
 				allDevices: res.data.rows,
 			})
-		} catch (e) {
-			console.log(`get object data of device failed ${e}`)
 		}
 	}
 

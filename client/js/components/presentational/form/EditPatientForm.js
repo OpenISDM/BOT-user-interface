@@ -84,10 +84,10 @@ class EditPatientForm extends React.Component {
 			}
 		})
 
-		const genderOptions = Object.values(config.GENDER_OPTIONS).map((item) => {
-			item.label = locale.texts[item.value.toUpperCase()]
-			return item
-		})
+		// const genderOptions = Object.values(config.GENDER_OPTIONS).map((item) => {
+		// 	item.label = locale.texts[item.value.toUpperCase()]
+		// 	return item
+		// })
 
 		const physicianListOptions = physicianList.map((user) => {
 			return {
@@ -128,7 +128,7 @@ class EditPatientForm extends React.Component {
 
 							asset_control_number: asset_control_number || '',
 
-							gender: object_type || '',
+							// gender: object_type || '',
 
 							monitorType:
 								selectedRowData.length != 0 ? monitor_type.split('/') : [],
@@ -147,7 +147,7 @@ class EditPatientForm extends React.Component {
 
 							area: string().required(locale.texts.AREA_IS_REQUIRED),
 
-							gender: string().required(locale.texts.GENDER_IS_REQUIRED),
+							// gender: string().required(locale.texts.GENDER_IS_REQUIRED),
 
 							asset_control_number: string()
 								.required(locale.texts.NUMBER_IS_REQUIRED)
@@ -211,10 +211,10 @@ class EditPatientForm extends React.Component {
 								...values,
 								name: values.name.trim(),
 								area_id: values.area.id,
-								gender_id: values.gender.value,
+								// gender_id: values.gender.value,
 								monitor_type,
 								room: values.room ? values.room.label : '',
-								object_type: values.gender.id,
+								object_type: config.OBJECT_TYPE.PERSON,
 								physicianIDNumber: values.physician
 									? values.physician.value
 									: this.props.physicianIDNumber,
@@ -248,7 +248,7 @@ class EditPatientForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-										<FormikFormGroup
+										{/* <FormikFormGroup
 											name="gender"
 											label={locale.texts.PATIENT_GENDER}
 											error={errors.gender}
@@ -266,7 +266,7 @@ class EditPatientForm extends React.Component {
 													}}
 												/>
 											)}
-										/>
+										/> */}
 									</Col>
 								</Row>
 								<Row noGutters>

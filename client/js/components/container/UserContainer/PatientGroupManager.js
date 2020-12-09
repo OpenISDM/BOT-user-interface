@@ -96,18 +96,16 @@ class PatientGroupManager extends React.Component {
 	}
 
 	getObjectData = async () => {
-		const { locale, auth } = this.context
-		try {
-			const res = await apiHelper.objectApiAgent.getObjectTable({
-				locale: locale.abbr,
-				areas_id: auth.user.areas_id,
-				objectType: [1, 2],
-			})
+		const { auth } = this.context
+
+		const res = await apiHelper.objectApiAgent.getObjectTable({
+			areas_id: auth.user.areas_id,
+			objectType: [config.OBJECT_TYPE.PERSON],
+		})
+		if (res) {
 			this.setState({
 				allPatients: res.data.rows,
 			})
-		} catch (e) {
-			console.log(`get object data of patient failed ${e}`)
 		}
 	}
 

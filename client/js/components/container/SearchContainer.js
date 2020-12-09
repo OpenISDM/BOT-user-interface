@@ -96,12 +96,11 @@ class SearchContainer extends React.Component {
 	}
 	/** Get the searchable object type. */
 	getData = async () => {
-		const { locale, auth } = this.context
+		const { auth } = this.context
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
-			locale: locale.abbr,
 			areas_id: auth.user.areas_id,
-			objectType: [0],
+			objectType: [config.OBJECT_TYPE.DEVICE],
 		})
 
 		if (res) {

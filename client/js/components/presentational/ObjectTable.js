@@ -179,9 +179,8 @@ class ObjectTable extends React.Component {
 		const { locale, auth } = this.context
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
-			locale: locale.abbr,
 			areas_id: auth.user.areas_id,
-			objectType: [0, 1, 2],
+			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
 		if (res) {
 			const columns = JSONClone(objectTableColumn)

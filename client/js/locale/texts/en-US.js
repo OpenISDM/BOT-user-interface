@@ -152,7 +152,7 @@ const en = {
 	MALE: 'male',
 	FEMALE: 'female',
 	EDIT_ALIAS: 'edit alias',
-	EDIT_DEVICE_ALIAS: 'edit device alias',
+	EDIT_DEVICE_ALIASES: 'Edit Device Aliases',
 
 	/* buttons */
 	CLEAR: 'Clear',
@@ -615,6 +615,11 @@ const en = {
 	SHIFT_CHANGE_CHECK_LIST: 'Shift Change Check List',
 	CONFIRMED: 'Comfirmed',
 	UNCONFIRMED: 'Uncomfirmed',
+
+	COVERED_AREA_PROFILE: 'Covered Area Profile',
+	PATIENT_ALIASES: 'Patient Aliases',
+	DEVICE_ALIASES: 'Device Aliases',
+	TRANSFER_LOCATION_ALIASES: 'Transfer Location Aliases',
 }
 
 export default en

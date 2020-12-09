@@ -84,38 +84,33 @@ export default {
 			})
 	},
 
-	/** Controller for editing device
-	 *  If the
-	 */
 	editDevice: (request, response) => {
-		const { formOption, mode } = request.body
+		const { formOption } = request.body
 		const { area_id } = formOption
 
 		pool
 			.query(dbQueries.editDevice(formOption))
 			.then((res) => {
-				console.log(`edit ${mode} succeed`)
 				reloadGeofenceConfig(area_id)
 				response.status(200).json(res)
 			})
 			.catch((err) => {
-				console.log(`edit ${mode} failed ${err}`)
+				console.log(`editDevice failed ${err}`)
 			})
 	},
 
 	editPerson: (request, response) => {
-		const { formOption, mode } = request.body
+		const { formOption } = request.body
 		const { area_id } = formOption
 
 		pool
 			.query(dbQueries.editPersona(formOption))
 			.then((res) => {
-				console.log(`edit ${mode} succeed`)
 				reloadGeofenceConfig(area_id)
 				response.status(200).json(res)
 			})
 			.catch((err) => {
-				console.log(`edit ${mode} failed ${err}`)
+				console.log(`editPerson failed ${err}`)
 			})
 	},
 
@@ -230,7 +225,8 @@ export default {
 			})
 	},
 
-	getAlias: async (request, response) => {
+	getAliases: async (request, response) => {
+		const { objectType, areaId } = request.query
 		try {
 			const alias = await ObjectTable.findAll({
 				attributes: [
@@ -238,9 +234,8 @@ export default {
 					'type_alias',
 				],
 				where: {
-					type: {
-						[Op.ne]: 'Patient',
-					},
+					object_type: objectType,
+					area_id: areaId,
 				},
 				order: [['type', 'ASC']],
 			})
@@ -252,13 +247,14 @@ export default {
 	},
 
 	editAlias: async (request, response) => {
-		const { objectType, alias } = request.body
+		const { objectType, alias, areaId } = request.body
 		try {
 			const res = ObjectTable.update(
 				{ type_alias: alias },
 				{
 					where: {
 						type: objectType,
+						area_id: areaId,
 					},
 				}
 			)
@@ -271,7 +267,7 @@ export default {
 	},
 
 	editAliases: async (request, response) => {
-		const { objectTypeList } = request.body
+		const { objectTypeList, areaId } = request.body
 		try {
 			const promises = objectTypeList.map((item) => {
 				const { type, type_alias } = item
@@ -280,6 +276,7 @@ export default {
 					{
 						where: {
 							type,
+							area_id: areaId,
 						},
 					}
 				)
@@ -289,6 +286,28 @@ export default {
 			response.status(200).send('OK')
 		} catch (e) {
 			console.log(`edit object type alias failed ${e}`)
+		}
+	},
+
+	editNickname: async (request, response) => {
+		const { personList } = request.body
+		try {
+			const promises = personList.map((item) => {
+				const { id, nickname } = item
+				return ObjectTable.update(
+					{ nickname },
+					{
+						where: {
+							id,
+						},
+					}
+				)
+			})
+			await Promise.all(promises)
+			console.log('edit nickname succeed')
+			response.status(200).send('OK')
+		} catch (e) {
+			console.log(`edit nickname failed ${e}`)
 		}
 	},
 }

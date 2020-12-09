@@ -149,7 +149,7 @@ const cn = {
 	PREFERENCE: '偏好设定',
 	SEARCH_PREFERENCES: '搜寻设定',
 	EDIT_ALIAS: '编辑别名',
-	EDIT_DEVICE_ALIAS: '编辑仪器别名',
+	EDIT_DEVICE_ALIASES: '编辑仪器别名',
 
 	/* buttons */
 	CLEAR: '清除',

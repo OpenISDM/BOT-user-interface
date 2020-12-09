@@ -150,7 +150,7 @@ const tw = {
 	PREFERENCE: '偏好設定',
 	SEARCH_PREFERENCES: '搜尋設定',
 	EDIT_ALIAS: '編輯別名',
-	EDIT_DEVICE_ALIAS: '編輯儀器別名',
+	EDIT_DEVICE_ALIASES: '編輯儀器別名',
 
 	/* buttons */
 	CLEAR: '清除',
@@ -601,6 +601,11 @@ const tw = {
 	SHIFT_CHANGE_CHECK_LIST: '交班檢查清單',
 	CONFIRMED: '已確認',
 	UNCONFIRMED: '未確認',
+
+	COVERED_AREA_PROFILE: '當前區域配置',
+	PATIENT_ALIASES: '病人別名',
+	DEVICE_ALIASES: '儀器別名',
+	TRANSFER_LOCATION_ALIASES: '轉移地點別名',
 }
 
 export default tw
