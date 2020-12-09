@@ -74,7 +74,7 @@ export default {
 		const { formOption } = request.body
 
 		pool
-			.query(dbQueries.addPersona(formOption))
+			.query(dbQueries.addPerson(formOption))
 			.then((res) => {
 				console.log('add person succeed')
 				response.status(200).json(res)

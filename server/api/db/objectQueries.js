@@ -83,7 +83,7 @@ const getObject = (objectType, areas_id) => {
 	return text
 }
 
-const addPersona = (formOption) => {
+const addPerson = (formOption) => {
 	const text = `
 		INSERT INTO object_table (
 			name,
@@ -353,7 +353,7 @@ const editAlias = (objectType, alias) => {
 
 export default {
 	getObject,
-	addPersona,
+	addPerson,
 	addObject,
 	editDevice,
 	editPersona,
