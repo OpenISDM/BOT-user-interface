@@ -70,25 +70,22 @@ const BrowserSearchContainer = ({
 					suggestData={keywords}
 				/>
 			</Row>
-			<Row id="searchOption" className="pt-2 d-flex justify-content-center">
-				<Col xs={6} sm={6} md={6} lg={6} xl={6}>
+			<Row>
+				<Col xs={4} sm={4} md={4} lg={4} xl={4} style={{ paddingRight: '0px' }}>
 					<FrequentSearch
 						getSearchKey={getSearchKey}
 						clearSearchResult={clearSearchResult}
-						hasGridButton={hasGridButton}
-						maxHeigh={config.searchResultProportion}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						handleSearchTypeClick={handleSearchTypeClick}
 					/>
 				</Col>
-				<Col xs={6} sm={6} md={6} lg={6} xl={6}>
+				<Col xs={8} sm={8} md={8} lg={8} xl={8} style={{ paddingLeft: '0px' }}>
 					<ObjectTypeList
 						getSearchKey={getSearchKey}
 						clearSearchResult={clearSearchResult}
 						hasGridButton={hasGridButton}
 						objectTypeList={objectTypeList || []}
-						maxHeigh={config.searchResultProportion}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 					/>

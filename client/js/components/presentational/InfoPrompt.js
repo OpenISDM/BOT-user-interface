@@ -32,17 +32,10 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment } from 'react'
 import { Row } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
-import {
-	BrowserView,
-	TabletView,
-	MobileOnlyView,
-	isTablet,
-	CustomView,
-	isMobile,
-} from 'react-device-detect'
+import { TabletView, isTablet, CustomView, isMobile } from 'react-device-detect'
 import { SWITCH_SEARCH_LIST, FOUND, NOT_FOUND } from '../../config/wordMap'
 import {
 	HoverDiv,
@@ -70,75 +63,73 @@ export default ({ searchKey, searchResult, handleClick }) => {
 	return (
 		<Fragment>
 			<CustomView condition={isTablet != true && isMobile != true}>
-				<div className="d-flex justify-content-center">
-					<ReactBootstrapAlert
-						variant="secondary"
-						className="px-4 position-fixed sm:display-none xs:display-none"
-						style={{
-							width: '32%',
-						}}
-					>
-						<Row>
-							<HoverWithUnderlineDiv onClick={handleClick}>
-								{stringBlock({
-									name: SWITCH_SEARCH_LIST,
-									value: true,
-									data: searchResult.filter((item) => item.found).length,
-									label: FOUND,
-									locale,
-									onClick: handleClick,
-								})}
-							</HoverWithUnderlineDiv>
-							<HoverWithUnderlineDiv onClick={handleClick}>
-								{stringBlock({
-									name: SWITCH_SEARCH_LIST,
-									value: false,
-									data: searchResult.filter((item) => !item.found).length,
-									label: NOT_FOUND,
-									locale,
-									onClick: handleClick,
-								})}
-							</HoverWithUnderlineDiv>
-							<HoverDiv
-								onClick={handleShowDetail}
-								className="text-muted ml-auto d-flex align-items-center position-relative right-0 font-size-80-percent"
-							>
-								{locale.texts.DETAIL}
-								&nbsp;
-								<i
-									className={`fas ${
-										showDetail ? 'fa-angle-up' : 'fa-angle-down'
-									}`}
-								/>
-							</HoverDiv>
-						</Row>
-						<ToggleDisplayDiv display={showDetail} className="pt-1">
-							{Object.keys(searchResultMap).map((item, index) => {
-								return (
-									<Row className="text-capitalize">
-										<JustifyCenterDiv className="mr-1">
-											{locale.texts.FOUND}
-											&nbsp;
-											<FontBoldDiv>{searchResultMap[item][1]}</FontBoldDiv>
-											&nbsp;
-											{item}
-										</JustifyCenterDiv>
-										&nbsp;
-										<JustifyCenterDiv className="mr-1">
-											{locale.texts.NOT_FOUND}
-											&nbsp;
-											<FontBoldDiv>
-												{searchResultMap[item][0] - searchResultMap[item][1]}
-											</FontBoldDiv>
-											&nbsp;
-											{item}
-										</JustifyCenterDiv>
-									</Row>
-								)
+				<ReactBootstrapAlert
+					variant="secondary"
+					className="px-4 position-fixed sm:display-none xs:display-none"
+					style={{
+						width: '32%',
+					}}
+				>
+					<Row>
+						<HoverWithUnderlineDiv onClick={handleClick}>
+							{stringBlock({
+								name: SWITCH_SEARCH_LIST,
+								value: true,
+								data: searchResult.filter((item) => item.found).length,
+								label: FOUND,
+								locale,
+								onClick: handleClick,
 							})}
-						</ToggleDisplayDiv>
-					</ReactBootstrapAlert>
-				</div>
+						</HoverWithUnderlineDiv>
+						<HoverWithUnderlineDiv onClick={handleClick}>
+							{stringBlock({
+								name: SWITCH_SEARCH_LIST,
+								value: false,
+								data: searchResult.filter((item) => !item.found).length,
+								label: NOT_FOUND,
+								locale,
+								onClick: handleClick,
+							})}
+						</HoverWithUnderlineDiv>
+						<HoverDiv
+							onClick={handleShowDetail}
+							className="text-muted ml-auto d-flex align-items-center position-relative right-0 font-size-80-percent"
+						>
+							{locale.texts.DETAIL}
+							&nbsp;
+							<i
+								className={`fas ${
+									showDetail ? 'fa-angle-up' : 'fa-angle-down'
+								}`}
+							/>
+						</HoverDiv>
+					</Row>
+					<ToggleDisplayDiv display={showDetail} className="pt-1">
+						{Object.keys(searchResultMap).map((item, index) => {
+							return (
+								<Row className="text-capitalize">
+									<JustifyCenterDiv className="mr-1">
+										{locale.texts.FOUND}
+										&nbsp;
+										<FontBoldDiv>{searchResultMap[item][1]}</FontBoldDiv>
+										&nbsp;
+										{item}
+									</JustifyCenterDiv>
+									&nbsp;
+									<JustifyCenterDiv className="mr-1">
+										{locale.texts.NOT_FOUND}
+										&nbsp;
+										<FontBoldDiv>
+											{searchResultMap[item][0] - searchResultMap[item][1]}
+										</FontBoldDiv>
+										&nbsp;
+										{item}
+									</JustifyCenterDiv>
+								</Row>
+							)
+						})}
+					</ToggleDisplayDiv>
+				</ReactBootstrapAlert>
 			</CustomView>
 			<TabletView>
 				<FontBoldDiv>

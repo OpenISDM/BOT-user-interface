@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import { Button } from 'react-bootstrap'
+import { Row, Col, ListGroup } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import apiHelper from '../../helper/apiHelper'
 import { OBJECT_TYPE } from '../../config/wordMap'
@@ -66,7 +66,7 @@ class ObjectTypeList extends React.Component {
 	}
 
 	handleClick = (e) => {
-		const itemName = e.target.name
+		const itemName = e.target.textContent
 
 		const searchKey = {
 			type: OBJECT_TYPE,
@@ -135,33 +135,90 @@ class ObjectTypeList extends React.Component {
 
 		return (
 			<div>
-				<Title list className="text-center">
-					{locale.texts.OBJECT_TYPE}
-				</Title>
-				<div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar text-center max-height-30">
-					<div className="text-center">
-						{this.props.objectTypeList.map((item, index) => {
-							const pinColorIndex = searchObjectArray.indexOf(item)
-
-							return (
-								<Button
-									variant="outline-custom"
-									className="text-none"
-									onClick={this.handleClick}
-									// active={this.state.searchKey == item.toLowerCase()}
-									style={{
-										color:
-											pinColorIndex > -1 ? pinColorArray[pinColorIndex] : null,
-									}}
-									key={index}
-									name={item}
-								>
-									{item}
-								</Button>
-							)
-						})}
-					</div>
+				<div style={{ padding: '2px' }}>
+					<Title list className="text-center">
+						{locale.texts.OBJECT_TYPE}
+					</Title>
 				</div>
+				<Row>
+					<Col
+						xs={6}
+						sm={6}
+						md={6}
+						lg={6}
+						xl={6}
+						style={{ paddingRight: '0px' }}
+					>
+						<ListGroup
+							style={{
+								maxHeight: '250px',
+								overflowY: 'auto',
+							}}
+						>
+							{this.props.objectTypeList.map((item, index) => {
+								const pinColorIndex = searchObjectArray.indexOf(item)
+								const element = (
+									<ListGroup.Item
+										eventKey={item.found + ':' + index}
+										key={index}
+										onClick={this.handleClick}
+										name={item}
+										className="d-flex text-right justify-content-end"
+										style={{
+											cursor: 'pointer',
+											color:
+												pinColorIndex > -1
+													? pinColorArray[pinColorIndex]
+													: null,
+										}}
+									>
+										{item}
+									</ListGroup.Item>
+								)
+								return element
+							})}
+						</ListGroup>
+					</Col>
+					<Col
+						xs={6}
+						sm={6}
+						md={6}
+						lg={6}
+						xl={6}
+						style={{ paddingLeft: '0px' }}
+					>
+						<ListGroup
+							style={{
+								maxHeight: '250px',
+								overflowY: 'auto',
+								direction: 'rtl',
+							}}
+						>
+							{this.props.objectTypeList.map((item, index) => {
+								const pinColorIndex = searchObjectArray.indexOf(item)
+								const element = (
+									<ListGroup.Item
+										eventKey={item.found + ':' + index}
+										key={index}
+										onClick={this.handleClick}
+										name={item}
+										className="d-flex text-left justify-content-end"
+										style={{
+											cursor: 'pointer',
+											color:
+												pinColorIndex > -1
+													? pinColorArray[pinColorIndex]
+													: null,
+										}}
+									>
+										{item}
+									</ListGroup.Item>
+								)
+								return element
+							})}
+						</ListGroup>
+					</Col>
+				</Row>
 			</div>
 		)
 	}

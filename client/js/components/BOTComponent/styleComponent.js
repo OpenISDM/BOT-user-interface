@@ -87,8 +87,8 @@ export const FieldLabel = styled.div`
 export const Title = styled.div`
 	color: black;
 	text-transform: capitalize;
-	font-size: 1rem;
-	font-weight: 400;
+	font-size: 1.1rem;
+	font-weight: 600;
 	${(props) =>
 		props.page &&
 		css`

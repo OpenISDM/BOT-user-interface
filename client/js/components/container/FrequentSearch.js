@@ -101,7 +101,6 @@ class FrequentSearch extends React.Component {
 							style={{
 								color: pinColorIndex > -1 ? pinColorArray[pinColorIndex] : null,
 							}}
-							// active={this.state.searchKey == item.name.toLowerCase()}
 							key={index}
 							name={SEARCH_HISTORY}
 							value={item}
@@ -119,49 +118,44 @@ class FrequentSearch extends React.Component {
 
 		return (
 			<div>
-				<Title list className="text-center">
-					{locale.texts.FREQUENT_SEARCH}
-				</Title>
-				<div className="d-inline-flex flex-column overflow-hidden-scroll custom-scrollbar max-height-30">
-					<div className="text-center">{this.generateFrequentItems()}</div>
-
-					<hr />
-					<Button
-						variant="outline-custom"
-						onClick={this.handleClick}
-						// active={this.state.searchKey == 'all devices'}
-						name={ALL_DEVICES}
-					>
-						{locale.texts.ALL_DEVICES}
-					</Button>
-					<Button
-						variant="outline-custom"
-						onClick={this.handleClick}
-						// active={this.state.searchKey == 'all devices'}
-						name={ALL_PATIENTS}
-					>
-						{locale.texts.ALL_PATIENTS}
-					</Button>
-					<AccessControl permission={'user:mydevice'}>
-						<Button
-							variant="outline-custom"
-							onClick={this.handleClick}
-							// active={this.state.searchKey == 'my devices'}
-							name={MY_DEVICES}
-						>
-							{locale.texts.MY_DEVICES}
-						</Button>
-					</AccessControl>
-					<AccessControl permission={'user:mypatient'}>
-						<Button
-							variant="outline-custom"
-							onClick={this.handleClick}
-							name={MY_PATIENTS}
-						>
-							{locale.texts.MY_PATIENTS}
-						</Button>
-					</AccessControl>
+				<div style={{ padding: '2px' }}>
+					<Title list className="text-center">
+						{locale.texts.FREQUENT_SEARCH}
+					</Title>
 				</div>
+				{this.generateFrequentItems()}
+				<Button
+					variant="outline-custom"
+					onClick={this.handleClick}
+					name={ALL_DEVICES}
+				>
+					{locale.texts.ALL_DEVICES}
+				</Button>
+				<Button
+					variant="outline-custom"
+					onClick={this.handleClick}
+					name={ALL_PATIENTS}
+				>
+					{locale.texts.ALL_PATIENTS}
+				</Button>
+				<AccessControl permission={'user:mydevice'}>
+					<Button
+						variant="outline-custom"
+						onClick={this.handleClick}
+						name={MY_DEVICES}
+					>
+						{locale.texts.MY_DEVICES}
+					</Button>
+				</AccessControl>
+				<AccessControl permission={'user:mypatient'}>
+					<Button
+						variant="outline-custom"
+						onClick={this.handleClick}
+						name={MY_PATIENTS}
+					>
+						{locale.texts.MY_PATIENTS}
+					</Button>
+				</AccessControl>
 			</div>
 		)
 	}
