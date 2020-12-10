@@ -49,7 +49,7 @@ export const getDescription = ({
 	locale,
 	keywordType,
 	showChecked,
-	checked
+	checked,
 }) => {
 	let foundDeviceDescription = ''
 	const reserveText =
@@ -76,9 +76,8 @@ export const getDescription = ({
                     ${getSubDescription(item, locale)}`
 			break
 		case '1':
-		case '2':
 			foundDeviceDescription += `
-                ${getName(item, locale)}
+                ${getName({ item, keywordType })}
                 ${getID(item, locale)}
                 ${getPosition(item, locale)}
                 ${item.residence_time ? item.residence_time : ''}`
@@ -150,8 +149,9 @@ export const getDeviceName = (item, locale, keywordType) => {
 	return `${item[keywordType] || item.type}`
 }
 
-export const getName = (item) => {
-	return `${item.name},`
+export const getName = ({ item, keywordType }) => {
+	const showAlias = keywordType && config.KEYWORD_TYPE[0] === keywordType
+	return showAlias && item.nickname ? `${item.nickname},` : `${item.name},`
 }
 
 export const getType = (item) => {

@@ -160,7 +160,7 @@ class MyDeviceManager extends React.Component {
 						</div>
 					</div>
 					<div name={item.asset_control_number}>
-						{getName(item, locale)}
+						{getName({ item })}
 						{getType(item, locale)}
 						{getACN(item, locale).replace(/,/, '')}
 					</div>
