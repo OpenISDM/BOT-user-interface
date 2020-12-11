@@ -75,17 +75,27 @@ const BrowserMainContainer = ({
 	const searchResultListRef = React.useRef(null)
 
 	const style = {
-		margin: '0px',
-		padding: '0px',
-		border: '0px',
-		maxWidth: '100%',
-		zIndex: isHighlightSearchPanel ? 1060 : 1,
+		searchResultDiv: {
+			display: hasSearchKey ? null : 'none',
+		},
+
+		searchPanel: {
+			margin: '0px',
+			padding: '0px',
+			border: '0px',
+			maxWidth: '100%',
+			zIndex: isHighlightSearchPanel ? 1060 : 1,
+			borderRadius: 10,
+		},
 	}
 
 	return (
-		<div className="mx-1 my-1 overflow-hidden">
-			<Row>
-				<Col xs={12} sm={12} md={8} lg={8} xl={8} style={style}>
+		<div className="mx-1 my-1 overflow-hidden h-100">
+			<Row
+				id="mainContainer"
+				className="d-flex w-100 justify-content-around mx-0 h-100"
+			>
+				<Col xs={12} sm={12} md={8} lg={8} xl={8}>
 					<MapContainer
 						pathMacAddress={pathMacAddress}
 						proccessedTrackingData={
@@ -114,7 +124,15 @@ const BrowserMainContainer = ({
 						activeActionButtons={activeActionButtons}
 					/>
 				</Col>
-				<Col xs={12} sm={12} md={4} lg={4} xl={4} style={style}>
+				<Col
+					xs={12}
+					sm={12}
+					md={4}
+					lg={4}
+					xl={4}
+					className="w-100 px-2 bg-white d-flex flex-column h-100"
+					style={style.searchPanel}
+				>
 					<InfoPrompt
 						searchKey={searchKey}
 						searchResult={searchResult}
@@ -130,16 +148,18 @@ const BrowserMainContainer = ({
 						keywords={keywords}
 						handleSearchTypeClick={handleSearchTypeClick}
 					/>
-					<SearchResultList
-						searchResult={searchResult}
-						searchKey={searchKey}
-						highlightSearchPanel={highlightSearchPanel}
-						showMobileMap={showMobileMap}
-						searchObjectArray={searchObjectArray}
-						pinColorArray={pinColorArray}
-						showFoundResult={showFoundResult}
-						ref={searchResultListRef}
-					/>
+					<div id="searchResult" style={style.searchResultDiv}>
+						<SearchResultList
+							searchResult={searchResult}
+							searchKey={searchKey}
+							highlightSearchPanel={highlightSearchPanel}
+							showMobileMap={showMobileMap}
+							searchObjectArray={searchObjectArray}
+							pinColorArray={pinColorArray}
+							showFoundResult={showFoundResult}
+							ref={searchResultListRef}
+						/>
+					</div>
 				</Col>
 			</Row>
 		</div>
