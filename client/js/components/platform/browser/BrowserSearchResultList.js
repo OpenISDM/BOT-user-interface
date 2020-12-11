@@ -51,7 +51,7 @@ const BrowserSearchResultList = ({
 }) => {
 	const locale = React.useContext(LocaleContext)
 
-	const listMaxHeight = '42vh'
+	const listMaxHeight = '60vh'
 
 	return (
 		<Fragment>

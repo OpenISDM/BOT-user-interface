@@ -232,6 +232,7 @@ export default {
 				attributes: [
 					[sequelize.fn('DISTINCT', sequelize.col('type')), 'type'],
 					'type_alias',
+					'object_type',
 				],
 				where: {
 					object_type: objectType,

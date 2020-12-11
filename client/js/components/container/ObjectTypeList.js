@@ -129,9 +129,13 @@ class ObjectTypeList extends React.Component {
 	}
 
 	render() {
-		const { searchObjectArray, pinColorArray } = this.props
-
 		const { locale } = this.context
+		const {
+			searchObjectArray,
+			pinColorArray,
+			deviceObjectTypes,
+			patientObjectTypes,
+		} = this.props
 
 		return (
 			<div>
@@ -155,7 +159,7 @@ class ObjectTypeList extends React.Component {
 								overflowY: 'auto',
 							}}
 						>
-							{this.props.objectTypeList.map((item, index) => {
+							{deviceObjectTypes.map((item, index) => {
 								const pinColorIndex = searchObjectArray.indexOf(item)
 								const element = (
 									<ListGroup.Item
@@ -194,7 +198,7 @@ class ObjectTypeList extends React.Component {
 								direction: 'rtl',
 							}}
 						>
-							{this.props.objectTypeList.map((item, index) => {
+							{patientObjectTypes.map((item, index) => {
 								const pinColorIndex = searchObjectArray.indexOf(item)
 								const element = (
 									<ListGroup.Item

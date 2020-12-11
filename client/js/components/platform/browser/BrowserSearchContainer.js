@@ -42,7 +42,8 @@ import PropTypes from 'prop-types'
 
 const BrowserSearchContainer = ({
 	searchKey,
-	objectTypeList,
+	patientObjectTypes,
+	deviceObjectTypes,
 	getSearchKey,
 	handleTouchMove,
 	clearSearchResult,
@@ -85,7 +86,8 @@ const BrowserSearchContainer = ({
 						getSearchKey={getSearchKey}
 						clearSearchResult={clearSearchResult}
 						hasGridButton={hasGridButton}
-						objectTypeList={objectTypeList || []}
+						patientObjectTypes={patientObjectTypes || []}
+						deviceObjectTypes={deviceObjectTypes || []}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 					/>
@@ -97,7 +99,8 @@ const BrowserSearchContainer = ({
 
 BrowserSearchContainer.propTypes = {
 	searchKey: PropTypes.object.isRequired,
-	objectTypeList: PropTypes.array.isRequired,
+	patientObjectTypes: PropTypes.array.isRequired,
+	deviceObjectTypes: PropTypes.array.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	handleTouchMove: PropTypes.func.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,

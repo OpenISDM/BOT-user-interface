@@ -60,7 +60,8 @@ class SearchContainer extends React.Component {
 		sectionIndex: '',
 		searchResult: [],
 		hasSearchableObjectData: false,
-		objectTypeList: [],
+		deviceObjectTypes: [],
+		patientObjectTypes: [],
 	}
 
 	componentDidMount = () => {
@@ -94,27 +95,37 @@ class SearchContainer extends React.Component {
 			})
 		}
 	}
+
 	/** Get the searchable object type. */
 	getData = async () => {
-		const { auth } = this.context
-
-		const res = await apiHelper.objectApiAgent.getObjectTable({
-			areas_id: auth.user.areas_id,
-			objectType: [config.OBJECT_TYPE.DEVICE],
+		const { locale, auth, stateReducer } = this.context
+		const [{ area }] = stateReducer
+		const res = await apiHelper.objectApiAgent.getAliases({
+			areaId: area.id,
+			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
 
 		if (res) {
 			const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
-			const objectTypeList = res.data.rows.reduce((objectTypeList, item) => {
-				const name = item[keywordType] ? item[keywordType] : item.type
-				const addToList = !objectTypeList.includes(name)
-				if (addToList) {
-					objectTypeList.push(name)
-				}
-				return objectTypeList
-			}, [])
+			const patientObjectTypes = res.data
+				.filter(
+					(item) =>
+						parseInt(item.object_type) === config.OBJECT_TYPE.PERSON &&
+						item.type === 'Patient' // TODO: Should put it on ENUM or Config
+				)
+				.map((item) => locale.texts[item.type.toUpperCase()])
+
+			const deviceObjectTypes = res.data
+				.filter(
+					(item) => parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
+				)
+				.map((item) => {
+					return item[keywordType] ? item[keywordType] : item.type
+				})
+
 			this.setState({
-				objectTypeList,
+				patientObjectTypes,
+				deviceObjectTypes,
 			})
 		}
 	}
@@ -131,11 +142,12 @@ class SearchContainer extends React.Component {
 			handleSearchTypeClick,
 		} = this.props
 
-		const { objectTypeList } = this.state
+		const { patientObjectTypes, deviceObjectTypes } = this.state
 
 		const propsGroup = {
 			searchKey,
-			objectTypeList,
+			patientObjectTypes,
+			deviceObjectTypes,
 			getSearchKey,
 			clearSearchResult,
 			handleShowResultListForMobile,

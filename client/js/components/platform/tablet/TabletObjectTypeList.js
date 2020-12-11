@@ -125,7 +125,7 @@ class TabletObjectTypeList extends React.Component {
 						</div>
 						<ScrollArea style={{ maxHeight: '40vh' }} smoothScrolling={true}>
 							<div className="d-inline-flex flex-column searchOption">
-								{this.props.objectTypeList.map((item, index) => {
+								{this.props.deviceObjectTypes.map((item, index) => {
 									return (
 										<Button
 											variant="outline-custom"
@@ -243,7 +243,7 @@ class TabletObjectTypeList extends React.Component {
 
 						<ScrollArea style={{ maxHeight: '50vh' }}>
 							<div className="d-inline-flex flex-column searchOption">
-								{this.props.objectTypeList.map((item, index) => {
+								{this.props.deviceObjectTypes.map((item, index) => {
 									return (
 										<Button
 											variant="outline-custom"

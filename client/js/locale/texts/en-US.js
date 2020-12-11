@@ -108,7 +108,7 @@ const en = {
 	TAGS: 'tags',
 	PATIENT_GENDER: 'Gender',
 	CHOOSE_GENDER: 'Choose gender',
-	PATIENT: 'patient',
+	PATIENT: 'Patient',
 	SCAN_TAG: 'Please Scan TAG',
 	ALREADY_CHOOSE: 'Already choose',
 	MAIN_AREA: 'Main area',
