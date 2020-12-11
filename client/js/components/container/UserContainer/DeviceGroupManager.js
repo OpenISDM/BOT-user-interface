@@ -8,6 +8,7 @@ import messageGenerator from '../../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../../config/wordMap'
 import EditListForm from '../../presentational/form/EditListForm'
 import DeleteAlertModal from '../../presentational/DeleteAlertModal'
+import config from '../../../config'
 
 class DeviceGroupManager extends React.Component {
 	static contextType = AppContext
