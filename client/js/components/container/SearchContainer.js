@@ -107,19 +107,27 @@ class SearchContainer extends React.Component {
 
 		if (res) {
 			const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
-			const personObjectTypes = res.data
-				.filter(
-					(item) => parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
-				)
-				.map((item) => item.type)
+			const personObjectTypes = [
+				...new Set(
+					res.data
+						.filter(
+							(item) => parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
+						)
+						.map((item) => item.type)
+				),
+			]
 
-			const deviceObjectTypes = res.data
-				.filter(
-					(item) => parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
-				)
-				.map((item) => {
-					return item[keywordType] ? item[keywordType] : item.type
-				})
+			const deviceObjectTypes = [
+				...new Set(
+					res.data
+						.filter(
+							(item) => parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
+						)
+						.map((item) => {
+							return item[keywordType] ? item[keywordType] : item.type
+						})
+				),
+			]
 
 			this.setState({
 				personObjectTypes,
