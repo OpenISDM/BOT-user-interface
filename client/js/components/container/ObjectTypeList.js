@@ -66,17 +66,14 @@ class ObjectTypeList extends React.Component {
 	}
 
 	handleClick = (e) => {
-		const itemName = e.target.textContent
-
+		const itemName = e.target.getAttribute('name')
 		const searchKey = {
 			type: OBJECT_TYPE,
 			value: itemName,
 		}
 
 		this.props.getSearchKey(searchKey)
-
 		this.addSearchHistory(searchKey)
-
 		this.checkInSearchHistory(itemName)
 	}
 
@@ -134,8 +131,15 @@ class ObjectTypeList extends React.Component {
 			searchObjectArray,
 			pinColorArray,
 			deviceObjectTypes,
-			patientObjectTypes,
+			personObjectTypes,
 		} = this.props
+
+		const style = {
+			scrollable: {
+				maxHeight: '250px',
+				overflowY: 'auto',
+			},
+		}
 
 		return (
 			<div>
@@ -155,8 +159,7 @@ class ObjectTypeList extends React.Component {
 					>
 						<ListGroup
 							style={{
-								maxHeight: '250px',
-								overflowY: 'auto',
+								...style.scrollable,
 							}}
 						>
 							{deviceObjectTypes.map((item, index) => {
@@ -193,12 +196,16 @@ class ObjectTypeList extends React.Component {
 					>
 						<ListGroup
 							style={{
-								maxHeight: '250px',
-								overflowY: 'auto',
+								...style.scrollable,
 								direction: 'rtl',
 							}}
 						>
-							{patientObjectTypes.map((item, index) => {
+							{personObjectTypes.map((item, index) => {
+								let itemString = `${item}`
+								const displayedItem = locale.texts[itemString.toUpperCase()]
+									? locale.texts[itemString.toUpperCase()]
+									: itemString
+
 								const pinColorIndex = searchObjectArray.indexOf(item)
 								const element = (
 									<ListGroup.Item
@@ -215,7 +222,7 @@ class ObjectTypeList extends React.Component {
 													: null,
 										}}
 									>
-										{item}
+										{displayedItem}
 									</ListGroup.Item>
 								)
 								return element

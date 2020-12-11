@@ -61,7 +61,7 @@ class SearchContainer extends React.Component {
 		searchResult: [],
 		hasSearchableObjectData: false,
 		deviceObjectTypes: [],
-		patientObjectTypes: [],
+		personObjectTypes: [],
 	}
 
 	componentDidMount = () => {
@@ -107,13 +107,11 @@ class SearchContainer extends React.Component {
 
 		if (res) {
 			const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
-			const patientObjectTypes = res.data
+			const personObjectTypes = res.data
 				.filter(
-					(item) =>
-						parseInt(item.object_type) === config.OBJECT_TYPE.PERSON &&
-						item.type === 'Patient' // TODO: Should put it on ENUM or Config
+					(item) => parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
 				)
-				.map((item) => locale.texts[item.type.toUpperCase()])
+				.map((item) => item.type)
 
 			const deviceObjectTypes = res.data
 				.filter(
@@ -124,7 +122,7 @@ class SearchContainer extends React.Component {
 				})
 
 			this.setState({
-				patientObjectTypes,
+				personObjectTypes,
 				deviceObjectTypes,
 			})
 		}
@@ -142,11 +140,11 @@ class SearchContainer extends React.Component {
 			handleSearchTypeClick,
 		} = this.props
 
-		const { patientObjectTypes, deviceObjectTypes } = this.state
+		const { personObjectTypes, deviceObjectTypes } = this.state
 
 		const propsGroup = {
 			searchKey,
-			patientObjectTypes,
+			personObjectTypes,
 			deviceObjectTypes,
 			getSearchKey,
 			clearSearchResult,

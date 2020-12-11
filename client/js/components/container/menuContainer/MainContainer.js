@@ -518,8 +518,8 @@ class MainContainer extends React.Component {
 							return searchableField.some((field) => {
 								if (item[field] && item[field] === key) {
 									item.keyword = key
-
 									item.searched = true
+
 									if (parseInt(item.object_type) === 0) {
 										item.searchedType = -1
 										if (!searchedObjectType.includes(-1)) {
