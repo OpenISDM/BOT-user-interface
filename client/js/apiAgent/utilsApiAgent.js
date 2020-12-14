@@ -42,8 +42,8 @@ import {
 import { post } from '../helper/httpClient'
 
 export default {
-	async getSearchableKeywords() {
-		return await post(utils.searchableKeyword)
+	async getSearchableKeywords({ areaId }) {
+		return await post(utils.searchableKeyword, { areaId })
 	},
 
 	async getImportData({ formOption }) {

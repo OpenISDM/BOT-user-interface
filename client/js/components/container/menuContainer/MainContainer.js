@@ -287,7 +287,10 @@ class MainContainer extends React.Component {
 	}
 
 	getKeywords = async () => {
-		const res = await apiHelper.utilsApiAgent.getSearchableKeywords()
+		const [{ area }] = this.context.stateReducer
+		const res = await apiHelper.utilsApiAgent.getSearchableKeywords({
+			areaId: area.id,
+		})
 		if (res) {
 			this.setState({
 				keywords: res.data.rows[0].keys,
