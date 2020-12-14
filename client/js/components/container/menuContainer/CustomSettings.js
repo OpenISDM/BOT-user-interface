@@ -78,6 +78,19 @@ class CustomSettings extends React.Component {
 	)
 
 	updateDeviceAliases = async () => {
+		const [{ area }] = this.context.stateReducer
+		const objectTypeList = this.state.changedIndex.map((index) => {
+			return this.state.deviceAliasesData[index]
+		})
+		await apiHelper.objectApiAgent.editAliases({
+			objectTypeList,
+			areaId: area.id,
+		})
+		this.setState({ changedIndex: [] })
+		this.showMessage()
+	}
+
+	updatePatientNickname = async () => {
 		const personList = this.state.changedIndex.map((index) => {
 			return this.state.patientAliasesData[index]
 		})
@@ -237,7 +250,10 @@ class CustomSettings extends React.Component {
 						</div>
 						<div className="color-black mb-2 font-size-120-percent">
 							<ButtonToolbar>
-								<PrimaryButton name={'SAVE'} onClick={this.updateDeviceAliases}>
+								<PrimaryButton
+									name={'SAVE'}
+									onClick={this.updatePatientNickname}
+								>
 									{locale.texts.SAVE}
 								</PrimaryButton>
 							</ButtonToolbar>
