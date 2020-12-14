@@ -51,9 +51,7 @@ export default class TabletMapContainer extends React.Component {
 			hasSearchKey,
 			geofenceConfig,
 			locationMonitorConfig,
-			searchedObjectType,
 			proccessedTrackingData,
-			showedObjects,
 			showPdfDownloadForm,
 			handleClickButton,
 			currentAreaId,
@@ -91,7 +89,6 @@ export default class TabletMapContainer extends React.Component {
 					locationMonitorConfig={this.props.locationMonitorConfig}
 					getSearchKey={this.props.getSearchKey}
 					areaId={area.id}
-					searchedObjectType={this.props.showedObjects}
 					mapConfig={config.mapConfig}
 					handleClosePath={this.props.handleClosePath}
 					handleShowPath={this.props.handleShowPath}

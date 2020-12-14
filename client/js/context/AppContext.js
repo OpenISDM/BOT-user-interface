@@ -52,6 +52,8 @@ const AppContextProvider = (props) => {
 		tableSelection: [],
 		trackingData: {},
 		objectFoundResults: {},
+		deviceObjectTypeVisible: true,
+		personObjectTypeVisible: true,
 	}
 
 	const stateReducer = React.useReducer(StateReducer, initialState)

@@ -104,6 +104,10 @@ const config = {
 		PERSON: 1,
 	},
 
+	OBJECT_TABLE_SUB_TYPE: {
+		PATIENT: 'Patient',
+	},
+
 	GENDER_OPTIONS: {
 		0: {
 			id: 0,
@@ -233,7 +237,7 @@ const config = {
 
 	ACTION_BUTTONS: {
 		DEVICE: 'DEVICE',
-		PATIENT: 'PATIENT',
+		PERSON: 'PERSON',
 	},
 
 	ASSIGNMENT: {
@@ -245,6 +249,16 @@ const config = {
 			ON_GOING: 0,
 			COMPLETED: 1,
 		},
+	},
+
+	SEARCHED_TYPE: {
+		ALL_DEVICES: 0,
+		ALL_PATIENTS: 1,
+		MY_DEVICES: 2,
+		MY_PATIENTS: 3,
+		OBJECT_TYPE_DEVICE: 4,
+		OBJECT_TYPE_PERSON: 5,
+		PIN_SELETION: 6,
 	},
 }
 

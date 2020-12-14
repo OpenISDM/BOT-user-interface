@@ -40,6 +40,10 @@ import config from '../../../config'
 import { Nav, Button } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
 import Map from '../../presentational/Map'
+import {
+	SET_DEVICE_OBJECT_TYPE_VISIBLE,
+	SET_PERSON_OBJECT_TYPE_VISIBLE,
+} from '../../../reducer/action'
 
 export default class TabletMapContainer extends React.Component {
 	static contextType = AppContext
@@ -50,12 +54,13 @@ export default class TabletMapContainer extends React.Component {
 		const {
 			hasSearchKey,
 			proccessedTrackingData,
-			showedObjects,
 			showPdfDownloadForm,
 			handleClickButton,
 			currentAreaId,
 		} = this.props
-		const [{ area }] = stateReducer
+		const [
+			{ area, deviceObjectTypeVisible, personObjectTypeVisible },
+		] = stateReducer
 		const style = {
 			title: {
 				color: 'grey',
@@ -117,7 +122,6 @@ export default class TabletMapContainer extends React.Component {
 								geofenceConfig={this.props.geofenceConfig}
 								getSearchKey={this.props.getSearchKey}
 								areaId={area.id}
-								searchedObjectType={showedObjects}
 								mapConfig={config.mapConfig}
 								handleClosePath={this.props.handleClosePath}
 								handleShowPath={this.props.handleShowPath}
@@ -160,26 +164,25 @@ export default class TabletMapContainer extends React.Component {
 									<Button
 										variant="primary"
 										className="mr-1 ml-2 text-capitalize"
-										onClick={handleClickButton}
-										name="searchedObjectType"
-										value={[-1, 0]}
-										active={
-											this.props.showedObjects.includes(0) ||
-											this.props.showedObjects.includes(-1)
-										}
+										onClick={() => {
+											dispatch({
+												type: SET_DEVICE_OBJECT_TYPE_VISIBLE,
+												value: !deviceObjectTypeVisible,
+											})
+										}}
+										value={[
+											config.SEARCHED_TYPE.ALL_DEVICES,
+											config.SEARCHED_TYPE.MY_DEVICES,
+											config.SEARCHED_TYPE.OBJECT_TYPE_DEVICE,
+											config.SEARCHED_TYPE.PIN_SELETION,
+										]}
 										disabled={
-											!(
-												this.props.searchedObjectType.includes(-1) ||
-												this.props.searchedObjectType.includes(0)
-											)
+											!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
 										}
 									>
-										{!(
-											this.props.showedObjects.includes(0) ||
-											this.props.showedObjects.includes(-1)
-										)
-											? locale.texts.SHOW_DEVICES
-											: locale.texts.HIDE_DEVICES}
+										{deviceObjectTypeVisible
+											? locale.texts.HIDE_DEVICES
+											: locale.texts.SHOW_DEVICES}
 									</Button>
 								</Nav.Item>
 							</AccessControl>
@@ -188,26 +191,25 @@ export default class TabletMapContainer extends React.Component {
 									<Button
 										variant="primary"
 										className="mr-1 ml-2 text-capitalize"
-										onClick={handleClickButton}
-										name="searchedObjectType"
-										value={[-2, 1, 2]}
-										active={
-											this.props.showedObjects.includes(1) ||
-											this.props.showedObjects.includes(2)
-										}
+										onClick={() => {
+											dispatch({
+												type: SET_PERSON_OBJECT_TYPE_VISIBLE,
+												value: !personObjectTypeVisible,
+											})
+										}}
+										value={[
+											config.SEARCHED_TYPE.ALL_PATIENTS,
+											config.SEARCHED_TYPE.MY_PATIENTS,
+											config.SEARCHED_TYPE.OBJECT_TYPE_PERSON,
+											config.SEARCHED_TYPE.PIN_SELETION,
+										]}
 										disabled={
-											!(
-												this.props.searchedObjectType.includes(1) ||
-												this.props.searchedObjectType.includes(2)
-											)
+											!activeActionButtons.includes(ACTION_BUTTONS.PERSON)
 										}
 									>
-										{!(
-											this.props.showedObjects.includes(1) ||
-											this.props.showedObjects.includes(2)
-										)
-											? locale.texts.SHOW_RESIDENTS
-											: locale.texts.HIDE_RESIDENTS}
+										{personObjectTypeVisible
+											? locale.texts.HIDE_RESIDENTS
+											: locale.texts.SHOW_RESIDENTS}
 									</Button>
 								</Nav.Item>
 							</AccessControl>

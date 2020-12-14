@@ -39,6 +39,8 @@ import {
 	SET_TABLE_SELECTION,
 	SET_TRACKING_DATA,
 	SET_OBJECT_FOUND_RESULTS,
+	SET_DEVICE_OBJECT_TYPE_VISIBLE,
+	SET_PERSON_OBJECT_TYPE_VISIBLE,
 } from './action'
 
 const StateReducer = (state, action) => {
@@ -72,6 +74,16 @@ const StateReducer = (state, action) => {
 			return {
 				...state,
 				objectFoundResults: action.value,
+			}
+		case SET_DEVICE_OBJECT_TYPE_VISIBLE:
+			return {
+				...state,
+				deviceObjectTypeVisible: action.value,
+			}
+		case SET_PERSON_OBJECT_TYPE_VISIBLE:
+			return {
+				...state,
+				personObjectTypeVisible: action.value,
 			}
 		default:
 			return state

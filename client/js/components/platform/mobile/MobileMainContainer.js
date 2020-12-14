@@ -47,8 +47,6 @@ const MobileMainContainer = ({
 	clearAlerts,
 	lbeaconPosition,
 	geofenceConfig,
-	searchedObjectType,
-	showedObjects,
 	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
@@ -57,7 +55,6 @@ const MobileMainContainer = ({
 	trackingData,
 	proccessedTrackingData,
 	hasSearchKey,
-	setShowedObjects,
 	pathMacAddress,
 	isHighlightSearchPanel,
 	locationMonitorConfig,
@@ -129,9 +126,6 @@ const MobileMainContainer = ({
 						lbeaconPosition={lbeaconPosition}
 						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
-						searchedObjectType={searchedObjectType}
-						showedObjects={showedObjects}
-						setShowedObjects={setShowedObjects}
 						currentAreaId={currentAreaId}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}

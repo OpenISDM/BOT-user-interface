@@ -88,9 +88,6 @@ class MapContainer extends React.Component {
 			case 'clearAlerts':
 				this.props.clearAlerts()
 				break
-			case 'searchedObjectType':
-				this.props.setShowedObjects(value)
-				break
 		}
 	}
 
@@ -110,8 +107,6 @@ class MapContainer extends React.Component {
 			hasSearchKey,
 			geofenceConfig,
 			locationMonitorConfig,
-			searchedObjectType,
-			showedObjects,
 			proccessedTrackingData,
 			handleClearButton,
 			pathMacAddress,
@@ -131,8 +126,6 @@ class MapContainer extends React.Component {
 			proccessedTrackingData,
 			hasSearchKey,
 			pathData,
-			showedObjects,
-			searchedObjectType,
 			showPdfDownloadForm,
 			handleClickButton,
 			pathMacAddress,

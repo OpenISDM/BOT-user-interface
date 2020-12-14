@@ -59,8 +59,6 @@ import {
 	PIN_SELETION,
 } from '../../../config/wordMap'
 
-const { MAX_SEARCH_OBJECT_NUM, ACTION_BUTTONS } = config
-
 class MainContainer extends React.Component {
 	static contextType = AppContext
 
@@ -85,12 +83,10 @@ class MainContainer extends React.Component {
 		pathMacAddress: '',
 		display: true,
 		showMobileMap: true,
-		searchedObjectType: [],
-		showedObjects: [],
 		currentAreaId: this.context.stateReducer[0].area.id,
 		searchObjectArray: [],
 		pinColorArray: config.mapConfig.iconColor.pinColorArray.filter(
-			(item, index) => index < MAX_SEARCH_OBJECT_NUM
+			(item, index) => index < config.MAX_SEARCH_OBJECT_NUM
 		),
 		groupIds: [],
 		activeActionButtons: [],
@@ -393,13 +389,7 @@ class MainContainer extends React.Component {
 	getResultBySearchKey = async (searchKey) => {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const {
-			searchedObjectType,
-			showedObjects,
-			trackingData,
-			pinColorArray,
-			groupIds,
-		} = this.state
+		const { trackingData, pinColorArray, groupIds } = this.state
 		let searchResult = []
 
 		const hasSearchKey = true
@@ -416,93 +406,68 @@ class MainContainer extends React.Component {
 
 		switch (searchKey.type) {
 			case ALL_DEVICES:
-				activeActionButtons.push(ACTION_BUTTONS.DEVICE)
 				searchObjectArray = []
 				searchResult = []
 				proccessedTrackingData.forEach((item) => {
-					if (parseInt(item.object_type) === 0) {
-						item.searchedType = 0
+					if (parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE) {
+						item.searchedType = config.SEARCHED_TYPE.ALL_DEVICES
 						searchResult.push(item)
 					}
 				})
-
-				if (!searchedObjectType.includes(0)) {
-					searchedObjectType.push(0)
-					showedObjects.push(0)
-				}
 				break
 
 			case ALL_PATIENTS:
-				activeActionButtons.push(ACTION_BUTTONS.PATIENT)
 				searchObjectArray = []
 				searchResult = []
 				proccessedTrackingData.forEach((item) => {
-					if (parseInt(item.object_type) !== 0) {
-						item.searchedType = 1
+					if (
+						parseInt(item.object_type) === config.OBJECT_TYPE.PERSON &&
+						item.type === config.OBJECT_TABLE_SUB_TYPE.PATIENT
+					) {
+						item.searchedType = config.SEARCHED_TYPE.ALL_PATIENTS
 						searchResult.push(item)
 					}
 				})
-
-				if (
-					!searchedObjectType.includes(1) ||
-					!searchedObjectType.includes(2)
-				) {
-					searchedObjectType.push(1)
-					searchedObjectType.push(2)
-					showedObjects.push(1)
-					showedObjects.push(2)
-				}
 				break
 
 			case MY_DEVICES:
 				searchObjectArray = []
 				proccessedTrackingData.forEach((item) => {
 					const isMyDevice =
-						parseInt(item.object_type) === 0 &&
+						parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE &&
 						groupIds &&
 						groupIds.includes(parseInt(item.list_id))
 
 					if (isMyDevice) {
 						item.searched = true
-						item.searchedType = -1
+						item.searchedType = config.SEARCHED_TYPE.MY_DEVICES
 						searchResult.push(item)
 					}
 				})
-
-				if (!searchedObjectType.includes(-1)) {
-					searchedObjectType.push(-1)
-					showedObjects.push(-1)
-				}
 				break
 
 			case MY_PATIENTS:
 				searchObjectArray = []
 				proccessedTrackingData.forEach((item) => {
 					const isMyPatient =
-						parseInt(item.object_type) !== 0 &&
+						parseInt(item.object_type) === config.OBJECT_TYPE.PERSON &&
+						item.type === config.OBJECT_TABLE_SUB_TYPE.PATIENT &&
 						groupIds &&
 						groupIds.includes(parseInt(item.list_id))
 
 					if (isMyPatient) {
 						item.searched = true
-						item.searchedType = -2
+						item.searchedType = config.SEARCHED_TYPE.MY_PATIENTS
 						searchResult.push(item)
 					}
 				})
-
-				if (!searchedObjectType.includes(-2)) {
-					searchedObjectType.push(-2)
-					showedObjects.push(-2)
-				}
 				break
 
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
-				searchedObjectType.length = 0
-				showedObjects.length = 0
 				if (!searchObjectArray.includes(searchKey.value)) {
 					searchObjectArray.push(searchKey.value)
-					if (searchObjectArray.length > MAX_SEARCH_OBJECT_NUM) {
+					if (searchObjectArray.length > config.MAX_SEARCH_OBJECT_NUM) {
 						searchObjectArray.shift()
 						pinColorArray.push(pinColorArray.shift())
 					}
@@ -520,18 +485,14 @@ class MainContainer extends React.Component {
 									item.keyword = key
 									item.searched = true
 
-									if (parseInt(item.object_type) === 0) {
-										item.searchedType = -1
-										if (!searchedObjectType.includes(-1)) {
-											searchedObjectType.push(-1)
-											showedObjects.push(-1)
-										}
-									} else if (parseInt(item.object_type) !== 0) {
-										item.searchedType = -2
-										if (!searchedObjectType.includes(-2)) {
-											searchedObjectType.push(-2)
-											showedObjects.push(-2)
-										}
+									if (
+										parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
+									) {
+										item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_DEVICE
+									} else if (
+										parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
+									) {
+										item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_PERSON
 									}
 									return true
 								}
@@ -549,51 +510,35 @@ class MainContainer extends React.Component {
 				proccessedTrackingData.forEach((item) => {
 					if (searchKey.value.includes(item.mac_address)) {
 						item.searched = true
-						item.searchedType = -1
+						item.searchedType = config.SEARCHED_TYPE.PIN_SELETION
 						searchResult.push(item)
 					}
 				})
 
-				if (!searchedObjectType.includes(-1)) {
-					searchedObjectType.push(-1)
-					showedObjects.push(-1)
-				}
 				break
 
 			default:
 				if (/^\s/.test(searchKey.value)) {
 					return
 				}
-				if (searchKey.value === '') {
-					return
-				}
+		}
 
-				searchObjectArray = []
-				proccessedTrackingData.forEach((item) => {
-					searchableField.forEach((field) => {
-						if (
-							item[field] &&
-							item[field]
-								.toLowerCase()
-								.indexOf(searchKey.value.toLowerCase()) >= 0
-						) {
-							item.searched = true
-							item.searchedType = -1
-							searchResult.push(item)
-						}
-					})
-				})
+		const showDeivceObject = searchResult.some(
+			(item) => parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
+		)
+		if (showDeivceObject) {
+			activeActionButtons.push(config.ACTION_BUTTONS.DEVICE)
+		}
 
-				if (!searchedObjectType.includes(-1)) {
-					searchedObjectType.push(-1)
-					showedObjects.push(-1)
-				}
+		const showPersonObject = searchResult.some(
+			(item) => parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
+		)
+		if (showPersonObject) {
+			activeActionButtons.push(config.ACTION_BUTTONS.PERSON)
 		}
 
 		this.setState({
 			proccessedTrackingData,
-			searchedObjectType,
-			showedObjects,
 			searchResult,
 			hasSearchKey,
 			searchKey,
@@ -621,27 +566,6 @@ class MainContainer extends React.Component {
 		})
 	}
 
-	setShowedObjects = (value) => {
-		const showedObjects = value.split(',').reduce((showedObjects, number) => {
-			number = parseInt(number)
-			if (!this.state.searchedObjectType.includes(number)) {
-				return showedObjects
-			} else if (this.state.showedObjects.includes(number)) {
-				const index = showedObjects.indexOf(number)
-				showedObjects = [
-					...showedObjects.slice(0, index),
-					...showedObjects.slice(index + 1),
-				]
-			} else {
-				showedObjects.push(number)
-			}
-			return showedObjects
-		}, Array.from(this.state.showedObjects))
-		this.setState({
-			showedObjects,
-		})
-	}
-
 	getGroupIdList = async () => {
 		const { auth, stateReducer } = this.context
 		const [{ area }] = stateReducer
@@ -660,7 +584,6 @@ class MainContainer extends React.Component {
 	}
 
 	handleSearchTypeClick = (searchKey) => {
-		this.setState({ showedObjects: [], searchedObjectType: [] })
 		if ([MY_PATIENTS, MY_DEVICES].includes(searchKey.type)) {
 			this.getGroupIdList()
 		}
@@ -689,8 +612,6 @@ class MainContainer extends React.Component {
 					clearSearchResult: !!this.state.hasSearchKey,
 					proccessedTrackingData: [],
 					display: true,
-					searchedObjectType: [],
-					showedObjects: [],
 					searchObjectArray: [],
 					showMobileMap: true,
 					activeActionButtons: [],
@@ -708,8 +629,6 @@ class MainContainer extends React.Component {
 			searchKey,
 			lbeaconPosition,
 			geofenceConfig,
-			searchedObjectType,
-			showedObjects,
 			showMobileMap,
 			clearSearchResult,
 			showPath,
@@ -729,7 +648,6 @@ class MainContainer extends React.Component {
 			getSearchKey,
 			setMonitor,
 			clearAlerts,
-			setShowedObjects,
 			handleShowResultListForMobile,
 			mapButtonHandler,
 			highlightSearchPanel,
@@ -744,8 +662,6 @@ class MainContainer extends React.Component {
 			clearAlerts,
 			lbeaconPosition,
 			geofenceConfig,
-			searchedObjectType,
-			showedObjects,
 			highlightSearchPanel,
 			showMobileMap,
 			clearSearchResult,
@@ -754,7 +670,6 @@ class MainContainer extends React.Component {
 			trackingData,
 			proccessedTrackingData,
 			showPath,
-			setShowedObjects,
 			handleShowResultListForMobile,
 			display,
 			pathMacAddress,

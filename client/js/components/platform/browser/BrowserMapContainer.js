@@ -40,6 +40,10 @@ import AccessControl from '../../authentication/AccessControl'
 import Map from '../../presentational/Map'
 import { CLEAR_SEARCH_RESULT } from '../../../config/wordMap'
 import PropTypes from 'prop-types'
+import {
+	SET_DEVICE_OBJECT_TYPE_VISIBLE,
+	SET_PERSON_OBJECT_TYPE_VISIBLE,
+} from '../../../reducer/action'
 
 class BrowserMapContainer extends React.Component {
 	static contextType = AppContext
@@ -54,9 +58,7 @@ class BrowserMapContainer extends React.Component {
 			lbeaconPosition,
 			geofenceConfig,
 			locationMonitorConfig,
-			searchedObjectType,
 			proccessedTrackingData,
-			showedObjects,
 			showPdfDownloadForm,
 			handleClickButton,
 			currentAreaId,
@@ -72,7 +74,10 @@ class BrowserMapContainer extends React.Component {
 			showPath,
 		} = this.props
 
-		const [{ area }] = stateReducer
+		const [
+			{ area, deviceObjectTypeVisible, personObjectTypeVisible },
+			dispatch,
+		] = stateReducer
 		const style = {
 			mapForMobile: {
 				border: 'solid 2px rgba(227, 222, 222, 0.619)',
@@ -111,7 +116,6 @@ class BrowserMapContainer extends React.Component {
 						locationMonitorConfig={locationMonitorConfig}
 						getSearchKey={getSearchKey}
 						areaId={area.id}
-						searchedObjectType={searchedObjectType}
 						mapConfig={mapConfig}
 						handleClosePath={handleClosePath}
 						handleShowPath={handleShowPath}
@@ -121,7 +125,6 @@ class BrowserMapContainer extends React.Component {
 						pinColorArray={pinColorArray}
 						searchKey={searchKey}
 						searchResultListRef={searchResultListRef}
-						showedObjects={showedObjects}
 						searchResult={searchResult}
 					/>
 				</div>
@@ -157,19 +160,25 @@ class BrowserMapContainer extends React.Component {
 								<Button
 									variant="primary"
 									className="mr-1 ml-2 text-capitalize"
-									onClick={handleClickButton}
-									name="searchedObjectType"
-									value={[-1, 0]}
-									active={
-										showedObjects.includes(0) || showedObjects.includes(-1)
-									}
+									onClick={() => {
+										dispatch({
+											type: SET_DEVICE_OBJECT_TYPE_VISIBLE,
+											value: !deviceObjectTypeVisible,
+										})
+									}}
+									value={[
+										config.SEARCHED_TYPE.ALL_DEVICES,
+										config.SEARCHED_TYPE.MY_DEVICES,
+										config.SEARCHED_TYPE.OBJECT_TYPE_DEVICE,
+										config.SEARCHED_TYPE.PIN_SELETION,
+									]}
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
 									}
 								>
-									{!(showedObjects.includes(0) || showedObjects.includes(-1))
-										? locale.texts.SHOW_DEVICES
-										: locale.texts.HIDE_DEVICES}
+									{deviceObjectTypeVisible
+										? locale.texts.HIDE_DEVICES
+										: locale.texts.SHOW_DEVICES}
 								</Button>
 							</Nav.Item>
 						</AccessControl>
@@ -178,19 +187,25 @@ class BrowserMapContainer extends React.Component {
 								<Button
 									variant="primary"
 									className="mr-1 ml-2 text-capitalize"
-									onClick={handleClickButton}
-									name="searchedObjectType"
-									value={[-2, 1, 2]}
-									active={
-										showedObjects.includes(1) || showedObjects.includes(2)
-									}
+									onClick={() => {
+										dispatch({
+											type: SET_PERSON_OBJECT_TYPE_VISIBLE,
+											value: !personObjectTypeVisible,
+										})
+									}}
+									value={[
+										config.SEARCHED_TYPE.ALL_PATIENTS,
+										config.SEARCHED_TYPE.MY_PATIENTS,
+										config.SEARCHED_TYPE.OBJECT_TYPE_PERSON,
+										config.SEARCHED_TYPE.PIN_SELETION,
+									]}
 									disabled={
-										!activeActionButtons.includes(ACTION_BUTTONS.PATIENT)
+										!activeActionButtons.includes(ACTION_BUTTONS.PERSON)
 									}
 								>
-									{!(showedObjects.includes(1) || showedObjects.includes(2))
-										? locale.texts.SHOW_RESIDENTS
-										: locale.texts.HIDE_RESIDENTS}
+									{personObjectTypeVisible
+										? locale.texts.HIDE_RESIDENTS
+										: locale.texts.SHOW_RESIDENTS}
 								</Button>
 							</Nav.Item>
 						</AccessControl>
@@ -254,13 +269,11 @@ class BrowserMapContainer extends React.Component {
 BrowserMapContainer.propTypes = {
 	mapConfig: PropTypes.object.isRequired,
 	proccessedTrackingData: PropTypes.array.isRequired,
-	searchedObjectType: PropTypes.array.isRequired,
 	searchResultListRef: PropTypes.object.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	searchObjectArray: PropTypes.array.isRequired,
 	pinColorArray: PropTypes.array.isRequired,
 	searchKey: PropTypes.object.isRequired,
-	showedObjects: PropTypes.array.isRequired,
 	searchResult: PropTypes.array.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
 	geofenceConfig: PropTypes.object.isRequired,

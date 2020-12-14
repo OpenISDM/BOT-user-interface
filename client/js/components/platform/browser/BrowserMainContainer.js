@@ -47,8 +47,6 @@ const BrowserMainContainer = ({
 	clearAlerts,
 	lbeaconPosition,
 	geofenceConfig,
-	searchedObjectType,
-	showedObjects,
 	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
@@ -57,7 +55,6 @@ const BrowserMainContainer = ({
 	trackingData,
 	proccessedTrackingData,
 	hasSearchKey,
-	setShowedObjects,
 	pathMacAddress,
 	isHighlightSearchPanel,
 	locationMonitorConfig,
@@ -114,9 +111,6 @@ const BrowserMainContainer = ({
 						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
 						clearAlerts={clearAlerts}
-						searchedObjectType={searchedObjectType}
-						showedObjects={showedObjects}
-						setShowedObjects={setShowedObjects}
 						currentAreaId={currentAreaId}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
@@ -173,8 +167,6 @@ BrowserMainContainer.propTypes = {
 	clearAlerts: PropTypes.func.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	geofenceConfig: PropTypes.object.isRequired,
-	searchedObjectType: PropTypes.array.isRequired,
-	showedObjects: PropTypes.array.isRequired,
 	highlightSearchPanel: PropTypes.func.isRequired,
 	showMobileMap: PropTypes.bool.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
@@ -183,7 +175,6 @@ BrowserMainContainer.propTypes = {
 	trackingData: PropTypes.array.isRequired,
 	proccessedTrackingData: PropTypes.array.isRequired,
 	hasSearchKey: PropTypes.bool.isRequired,
-	setShowedObjects: PropTypes.func.isRequired,
 	pathMacAddress: PropTypes.string.isRequired,
 	isHighlightSearchPanel: PropTypes.bool.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,

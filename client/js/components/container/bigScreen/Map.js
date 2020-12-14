@@ -239,7 +239,6 @@ class Map extends React.Component {
 					/** Show the ordered on location pin */
 					number:
 						this.props.mapConfig.iconOptionsInBigScreen.showNumber &&
-						// this.props.mapConfig.isObjectShowNumber.includes(item.searchedObjectType) &&
 						item.searched
 							? ++counter
 							: '',

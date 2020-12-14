@@ -48,8 +48,6 @@ const TabletMainContainer = ({
 	lbeaconPosition,
 	geofenceConfig,
 	authenticated,
-	searchedObjectType,
-	showedObjects,
 	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
@@ -59,7 +57,6 @@ const TabletMainContainer = ({
 	trackingData,
 	proccessedTrackingData,
 	hasSearchKey,
-	setShowedObjects,
 	pathMacAddress,
 	currentAreaId,
 }) => {
@@ -103,9 +100,6 @@ const TabletMainContainer = ({
 							authenticated={authenticated}
 							handleClosePath={handleClosePath}
 							handleShowPath={handleShowPath}
-							searchedObjectType={searchedObjectType}
-							showedObjects={showedObjects}
-							setShowedObjects={setShowedObjects}
 							currentAreaId={currentAreaId}
 						/>
 					</div>
