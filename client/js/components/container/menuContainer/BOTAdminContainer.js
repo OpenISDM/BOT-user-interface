@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        BOTAdmin.js
+        BOTAdminContainer.js
 
     File Description:
         BOT UI component
@@ -46,7 +46,7 @@ import MobilePageComponent from '../../platform/mobile/mobilePageComponent'
 import BrowserPageComponent from '../../platform/browser/BrowserPageComponent'
 import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
 
-class BOTAdmin extends React.Component {
+class BOTAdminContainer extends React.Component {
 	containerModule = BOTAdminModule
 
 	componentDidMount = () => {
@@ -85,4 +85,4 @@ class BOTAdmin extends React.Component {
 	}
 }
 
-export default BOTAdmin
+export default BOTAdminContainer

@@ -46,6 +46,8 @@ import PatientGroupManager from '../components/container/UserContainer/PatientGr
 import GeoFenceSettingBlock from '../components/container/GeoFenceSettingBlock'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
 import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
+import ObjectTable from '../components/presentational/ObjectTable'
+import PatientTable from '../components/presentational/PatientTable'
 import TrackingTable from '../components/container/TrackingTable'
 import TraceContainer from '../components/container/menuContainer/TraceContainer'
 import routes from '../config/routes/routes'
@@ -57,7 +59,6 @@ import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHist
 // import RolePermissionManagement from '../components/container/RolePermissionManagement'
 // import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
 // import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
-// import BOTAdmin from '../components/container/menuContainer/BOTAdminContainer'
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
@@ -280,6 +281,43 @@ export const BOTAdminModule = {
 	],
 }
 
+export const ObjectManagementModule = {
+	title: 'Object Management',
+	defaultActiveKey: 'device table',
+	tabList: [
+		{
+			name: 'device table',
+			permission: 'route:objectManagement',
+			component: (props) => <ObjectTable {...props} />,
+			platform: ['browser'],
+		},
+		{
+			name: 'patient table',
+			permission: 'route:objectManagement',
+			component: (props) => <PatientTable {...props} />,
+			platform: ['browser'],
+		},
+		{
+			name: 'staff table',
+			permission: 'route:objectManagement',
+			component: () => null,
+			platform: ['browser'],
+		},
+		{
+			name: 'vistor table',
+			permission: 'route:objectManagement',
+			component: () => null,
+			platform: ['browser'],
+		},
+		{
+			name: 'battery table',
+			permission: 'route:objectManagement',
+			component: (props) => <TrackingTable {...props} />,
+			platform: ['browser'],
+		},
+	],
+}
+
 export const navbarNavList = [
 	{
 		name: 'home',
@@ -291,8 +329,9 @@ export const navbarNavList = [
 		name: 'object management',
 		alias: 'objectManagement',
 		path: routes.OBJECT_MANAGEMENT,
+		moudle: ObjectManagementModule,
 		permission: 'route:objectManagement',
-		hasEvent: true,
+		platform: ['browser', 'tablet', 'mobile'],
 	},
 	{
 		name: 'BOT Admin',

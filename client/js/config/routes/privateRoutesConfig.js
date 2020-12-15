@@ -34,6 +34,7 @@
 
 import Loadable from 'react-loadable'
 import Loader from '../../components/presentational/Loader'
+import routes from './routes'
 
 // import MainContainer from '../../components/container/menuContainer/MainContainer';
 // import SystemSetting from '../../components/container/menuContainer/SystemSetting';
@@ -45,7 +46,6 @@ import Loader from '../../components/presentational/Loader'
 // import MonitorSettingContainer from "../../components/container/menuContainer/MonitorSettingContainer";
 // import ReportContainer from "../../components/container/menuContainer/ReportContainer";
 // import TrackingHistoryContainer from '../../components/container/menuContainer/TrackingHistoryContainer';
-import routes from './routes'
 // import BOTAdminContainer from '../../components/container/menuContainer/BOTAdminContainer';
 
 const ObjectManagementContainer = Loadable({

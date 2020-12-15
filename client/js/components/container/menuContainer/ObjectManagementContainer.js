@@ -1,71 +1,86 @@
-import React from 'react'
-import 'react-table/react-table.css'
-import { Nav, Tab } from 'react-bootstrap'
-import 'react-tabs/style/react-tabs.css'
-import { AppContext } from '../../../context/AppContext'
-import ObjectTable from '../../presentational/ObjectTable'
-import PatientTable from '../../presentational/PatientTable'
+/*
+    2020 © Copyright (c) BiDaE Technology Inc.
+    Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
 
+    Project Name:
+        BiDae Object Tracker (BOT)
+
+    File Name:
+        ObjectManagementContainer.js
+
+    File Description:
+        BOT UI component
+
+    Version:
+        1.0, 20200601
+
+    Abstract:
+        BeDIS uses LBeacons to deliver 3D coordinates and textual descriptions of
+        their locations to users' devices. Basically, a LBeacon is an inexpensive,
+        Bluetooth device. The 3D coordinates and location description of every
+        LBeacon are retrieved from BeDIS (Building/environment Data and Information
+        System) and stored locally during deployment and maintenance times. Once
+        initialized, each LBeacon broadcasts its coordinates and location
+        description to Bluetooth enabled user devices within its coverage area. It
+        also scans Bluetooth low-energy devices that advertise to announced their
+        presence and collect their Mac addresses.
+
+    Authors:
+        Tony Yeh, LT1stSoloMID@gmail.com
+        Wayne Kang, b05505028@ntu.edu.tw
+        Edward Chen, r08921a28@ntu.edu.tw
+        Joe Chou, jjoe100892@gmail.com
+*/
+
+import React, { Fragment } from 'react'
+import { ObjectManagementModule } from '../../../config/pageModules'
 import {
-	BOTContainer,
-	BOTNavLink,
-	BOTNav,
-	PageTitle,
-} from '../../../components/BOTComponent/styleComponent'
-import TrackingTable from '../../../components/container/TrackingTable'
+	isMobileOnly,
+	isTablet,
+	MobileOnlyView,
+	BrowserView,
+	TabletView,
+} from 'react-device-detect'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import MobilePageComponent from '../../platform/mobile/mobilePageComponent'
+import BrowserPageComponent from '../../platform/browser/BrowserPageComponent'
+import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
 
 class ObjectManagementContainer extends React.Component {
-	static contextType = AppContext
+	containerModule = ObjectManagementModule
 
-	defaultActiveKey = 'devices_table'
+	componentDidMount = () => {
+		/** set the scrollability in body disabled */
+		if (isMobileOnly || isTablet) {
+			const targetElement = document.querySelector('body')
+			enableBodyScroll(targetElement)
+		}
+	}
+
+	componentWillUnmount = () => {
+		const targetElement = document.querySelector('body')
+		disableBodyScroll(targetElement)
+	}
 
 	render() {
-		const { locale } = this.context
+		const { location } = this.props
+
+		this.containerModule.defaultActiveKey = location.state
+			? location.state.key
+			: this.containerModule.defaultActiveKey
 
 		return (
-			<BOTContainer>
-				<PageTitle>{locale.texts.OBJECT_MANAGEMENT}</PageTitle>
-				<Tab.Container defaultActiveKey={this.defaultActiveKey}>
-					<BOTNav>
-						<Nav.Item>
-							<BOTNavLink secondary eventKey="devices_table">
-								{locale.texts.DEVICE_FORM}
-							</BOTNavLink>
-						</Nav.Item>
-						<Nav.Item>
-							<BOTNavLink secondary eventKey="patients_table">
-								{locale.texts.PATIENT_FORM}
-							</BOTNavLink>
-						</Nav.Item>
-						<Nav.Item>
-							<BOTNavLink secondary eventKey="">
-								{locale.texts.STAFF_FORM}
-							</BOTNavLink>
-						</Nav.Item>
-						<Nav.Item>
-							<BOTNavLink secondary eventKey="''">
-								{locale.texts.VISTOR_FORM}
-							</BOTNavLink>
-						</Nav.Item>
-						<Nav.Item>
-							<BOTNavLink secondary eventKey="battery_table">
-								{locale.texts.BATTERY_FORM}
-							</BOTNavLink>
-						</Nav.Item>
-					</BOTNav>
-					<Tab.Content className="my-3">
-						<Tab.Pane eventKey="devices_table">
-							<ObjectTable />
-						</Tab.Pane>
-						<Tab.Pane eventKey="patients_table">
-							<PatientTable />
-						</Tab.Pane>
-						<Tab.Pane eventKey="battery_table">
-							<TrackingTable />
-						</Tab.Pane>
-					</Tab.Content>
-				</Tab.Container>
-			</BOTContainer>
+			<Fragment>
+				<BrowserView>
+					<BrowserPageComponent containerModule={this.containerModule} />
+				</BrowserView>
+				<TabletView>
+					<TabletPageComponent containerModule={this.containerModule} />
+				</TabletView>
+				<MobileOnlyView>
+					<MobilePageComponent containerModule={this.containerModule} />
+				</MobileOnlyView>
+			</Fragment>
 		)
 	}
 }
