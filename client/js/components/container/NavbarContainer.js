@@ -64,7 +64,7 @@ class NavbarContainer extends React.Component {
 	setCurrentArea = (selectedArea) => {
 		const { stateReducer } = this.context
 		const [{ area }, dispatch] = stateReducer
-		if (area && area.value !== selectedArea.value) {
+		if (area && selectedArea && area.value !== selectedArea.value) {
 			dispatch({
 				type: SET_AREA,
 				value: selectedArea,
