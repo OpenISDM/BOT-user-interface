@@ -283,34 +283,36 @@ export const BOTAdminModule = {
 
 export const ObjectManagementModule = {
 	title: 'Object Management',
-	defaultActiveKey: 'device table',
+	defaultActiveKey: 'Device Table',
+	permission: 'route:objectManagement',
+	path: routes.OBJECT_MANAGEMENT,
 	tabList: [
 		{
-			name: 'device table',
+			name: 'Device Table',
 			permission: 'route:objectManagement',
 			component: (props) => <ObjectTable {...props} />,
 			platform: ['browser'],
 		},
 		{
-			name: 'patient table',
+			name: 'Patient Table',
 			permission: 'route:objectManagement',
 			component: (props) => <PatientTable {...props} />,
 			platform: ['browser'],
 		},
 		{
-			name: 'staff table',
+			name: 'Staff Table',
 			permission: 'route:objectManagement',
 			component: () => null,
 			platform: ['browser'],
 		},
 		{
-			name: 'vistor table',
+			name: 'Vistor Table',
 			permission: 'route:objectManagement',
 			component: () => null,
 			platform: ['browser'],
 		},
 		{
-			name: 'battery table',
+			name: 'Battery Table',
 			permission: 'route:objectManagement',
 			component: (props) => <TrackingTable {...props} />,
 			platform: ['browser'],
@@ -329,7 +331,7 @@ export const navbarNavList = [
 		name: 'object management',
 		alias: 'objectManagement',
 		path: routes.OBJECT_MANAGEMENT,
-		moudle: ObjectManagementModule,
+		module: ObjectManagementModule,
 		permission: 'route:objectManagement',
 		platform: ['browser', 'tablet', 'mobile'],
 	},
