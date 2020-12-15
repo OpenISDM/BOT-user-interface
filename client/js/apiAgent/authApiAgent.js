@@ -49,9 +49,10 @@ async function sentResetPwdInstruction({ email }) {
 	})
 }
 
-async function resetPassword({ token, password }) {
+async function resetPassword({ token, account, password }) {
 	return await post(auth.resetPassword, {
 		token,
+		account,
 		password,
 	})
 }

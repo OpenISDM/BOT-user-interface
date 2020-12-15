@@ -209,13 +209,14 @@ export default {
 		return query
 	},
 
-	resetPassword: (email, hash) => {
+	resetPassword: (email, account, hash) => {
 		const text = `
 			UPDATE user_table
-			SET password = $2
-			WHERE email = $1;
+			SET password = $3
+			WHERE email = $1
+			AND name = $2;
 		`
-		const values = [email, hash]
+		const values = [email, account, hash]
 		const query = {
 			text,
 			values,
@@ -228,6 +229,7 @@ export default {
 		const text = `
 			SELECT
 				id,
+				name,
 				registered_timestamp
 			FROM user_table
 			WHERE email = LOWER($1)

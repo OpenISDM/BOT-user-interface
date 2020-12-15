@@ -40,16 +40,25 @@ const domain = `${dataSrcProtocol}://${dataSrcIP}`
 const resetPasswordInstruction = {
 	subject: 'BiDaE Object Tracker Password Assistance',
 
-	content: (token) => {
-		return `Greetings from BiDaE Object Tracker Service. We received a request to reset the password for the BOT account associated with this e-mail address. Click the link below to reset your password using our secure server:
+	content: (token, accountNameList) => {
+		const hasMultipleAccount = accountNameList && accountNameList.length > 1
+		const botAccountText = hasMultipleAccount ? 'BOT accounts' : 'BOT account'
+
+		return `
+        Dear User,
+
+        Greetings from BiDaE Object Tracker Service. 
+        We received a request to reset the password for the ${botAccountText} associated with this e-mail address. 
+
+        Your ${botAccountText}: [${accountNameList.join(', ')}]
+
+        Click the link below to reset your password using our secure server:
 		${domain}/resetpassword/new/${token}
 
         Sincerely,
-        The BOT Service Team
-
+        The BiDaE Service Team
         `
 	},
 }
 
 export default resetPasswordInstruction
-

@@ -42,7 +42,7 @@ import FormikFormGroup from '../presentational/FormikFormGroup'
 import { useHistory } from 'react-router-dom'
 import apiHelper from '../../helper/apiHelper'
 import PropTypes from 'prop-types'
-
+import { object, string, ref } from 'yup'
 import ImageWebp from '../utils/ImageWebp'
 
 const imageLength = 80
@@ -67,21 +67,32 @@ const ResetPassword = ({ match }) => {
 				<div className="title mt-1 mb-4">{locale.texts.SLOGAN}</div>
 			</div>
 			<Formik
+				enableReinitialize={true}
 				initialValues={{
-					new: '',
+					account: '',
+					password: '',
 					confirm: '',
 				}}
-				// validationSchema = {
-				//     Yup.object().shape({
-				// })}
+				validationSchema={object().shape({
+					account: string().required(locale.texts.USERNAME_IS_REQUIRED),
+					password: string().required(locale.texts.PASSWORD_IS_REQUIRED),
+					confirm: string().when('password', {
+						is: (val) => (val && val.length > 0 ? true : false),
+						then: string().oneOf(
+							[ref('password')],
+							locale.texts.PASSWORD_NOT_FIT
+						),
+					}),
+				})}
 				onSubmit={async (values) => {
 					await apiHelper.authApiAgent.resetPassword({
 						token,
-						password: values.new,
+						account: values.account,
+						password: values.password,
 					})
 					history.push('/resetpassword/success')
 				}}
-				render={({ status, isSubmitting }) => (
+				render={({ status, errors, touched, isSubmitting }) => (
 					<Form>
 						<Title page>{locale.texts.RESET_PASSWORD}</Title>
 						{status && (
@@ -91,14 +102,26 @@ const ResetPassword = ({ match }) => {
 							</div>
 						)}
 						<FormikFormGroup
+							type="text"
+							name="account"
+							error={errors.account}
+							className="mb-4"
+							label={locale.texts.USERNAME}
+							touched={touched.account}
+						/>
+						<FormikFormGroup
 							type="password"
-							name="new"
+							name="password"
+							error={errors.password}
+							touched={touched.password}
 							className="mb-4"
 							label={locale.texts.NEW_PASSWORD}
 						/>
 						<FormikFormGroup
 							type="password"
 							name="confirm"
+							error={errors.confirm}
+							touched={touched.confirm}
 							className="mb-4"
 							label={locale.texts.CHECK_PASSWORD}
 						/>

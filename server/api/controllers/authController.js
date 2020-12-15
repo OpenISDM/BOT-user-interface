@@ -183,7 +183,8 @@ export const sentResetPwdInstruction = (request, response) => {
 		.query(dbQueries.validateEmail(email))
 		.then((res) => {
 			if (res.rowCount != 0) {
-				const { id, password, registered_timestamp } = res.rows[0]
+				const accountNameList = res.rows.map((item) => item.name)
+				const { registered_timestamp } = res.rows[0]
 				const token = jwt.sign(
 					{
 						exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -197,7 +198,7 @@ export const sentResetPwdInstruction = (request, response) => {
 					from: process.env.EMAIL_SENDER_ADDRESS, // Sender address
 					to: email,
 					subject: resetPasswordInstruction.subject,
-					text: resetPasswordInstruction.content(token),
+					text: resetPasswordInstruction.content(token, accountNameList),
 				}
 
 				mailTransporter
@@ -235,7 +236,7 @@ export const verifyResetPwdToken = (request, response) => {
 }
 
 export const resetPassword = (request, response) => {
-	const { token, password } = request.body
+	const { token, account, password } = request.body
 
 	jwt.verify(token, encrypt.secret, (err, decoded) => {
 		if (err) {
@@ -246,7 +247,7 @@ export const resetPassword = (request, response) => {
 			const hash = encrypt.createHash(password)
 
 			pool
-				.query(dbQueries.resetPassword(email, hash))
+				.query(dbQueries.resetPassword(email, account, hash))
 				.then((res) => {
 					console.log('reset password succeed')
 					response.status(200).json()
