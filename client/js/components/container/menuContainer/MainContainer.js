@@ -563,27 +563,6 @@ class MainContainer extends React.Component {
 				if (searchKey.value === '') {
 					return
 				}
-
-				searchObjectArray = []
-				proccessedTrackingData.forEach((item) => {
-					searchableField.forEach((field) => {
-						if (
-							item[field] &&
-							item[field]
-								.toLowerCase()
-								.indexOf(searchKey.value.toLowerCase()) >= 0
-						) {
-							item.searched = true
-							item.searchedType = -1
-							searchResult.push(item)
-						}
-					})
-				})
-
-				if (!searchedObjectType.includes(-1)) {
-					searchedObjectType.push(-1)
-					showedObjects.push(-1)
-				}
 		}
 
 		this.setState({
