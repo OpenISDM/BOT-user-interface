@@ -36,20 +36,16 @@ import React from 'react'
 import { AppContext } from '../../context/AppContext'
 import { ButtonToolbar } from 'react-bootstrap'
 import config from '../../config'
-import ReactTable from 'react-table'
 import { geofenceConfigColumn } from '../../config/tables'
 import EditGeofenceConfig from '../presentational/form/EditGeofenceConfig'
-import styleConfig from '../../config/styleConfig'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import selecTableHOC from 'react-table/lib/hoc/selectTable'
 import messageGenerator from '../../helper/messageGenerator'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone } from '../../helper/utilities'
+import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import { SET_TABLE_SELECTION } from '../../reducer/action'
 import PropTypes from 'prop-types'
-
-const SelectTable = selecTableHOC(ReactTable)
 
 class GeoFenceSettingBlock extends React.Component {
 	static contextType = AppContext
@@ -64,8 +60,6 @@ class GeoFenceSettingBlock extends React.Component {
 		locale: this.context.locale.abbr,
 		isEdited: false,
 		path: '',
-		selection: [],
-		selectAll: false,
 		exIndex: 9999,
 	}
 
@@ -77,8 +71,6 @@ class GeoFenceSettingBlock extends React.Component {
 	componentDidUpdate = (prevProps, prevState) => {
 		if (this.state.exIndex !== this.props.nowIndex) {
 			this.setState({
-				selectAll: false,
-				selection: '',
 				exIndex: this.props.nowIndex,
 			})
 		}
@@ -106,12 +98,6 @@ class GeoFenceSettingBlock extends React.Component {
 			auth.user.areas_id
 		)
 
-		const columns = JSONClone(geofenceConfigColumn)
-
-		columns.forEach((field) => {
-			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-		})
-
 		const data = res.data.rows.map((item, index) => {
 			item.parsePerimeters.lbeacons[index]
 			item.key = index + 1
@@ -131,12 +117,10 @@ class GeoFenceSettingBlock extends React.Component {
 		this.setState(
 			{
 				data,
-				columns,
+				columns: geofenceConfigColumn,
 				show: false,
 				showDeleteConfirmation: false,
 				selectedData: null,
-				selection: '',
-				selectAll: false,
 			},
 			callback
 		)
@@ -170,10 +154,16 @@ class GeoFenceSettingBlock extends React.Component {
 	}
 
 	handleClose = () => {
+		const [, dispatch] = this.context.stateReducer
 		this.setState({
 			show: false,
 			showDeleteConfirmation: false,
 			selectedData: null,
+		})
+
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
 		})
 	}
 
@@ -181,76 +171,14 @@ class GeoFenceSettingBlock extends React.Component {
 		const configPackage = pack || {}
 		const { path, selectedData } = this.state
 		configPackage.type = config.monitorSettingUrlMap[this.props.type]
-
-		path === 'setGeofenceConfig'
-			? (configPackage.id = selectedData.id)
-			: (configPackage.id = this.state.selection)
+		configPackage.id = selectedData.id
 
 		await apiHelper.geofenceApis[path](configPackage)
 		const callback = () => messageGenerator.setSuccessMessage('save success')
 		this.getMonitorConfig(callback)
 	}
 
-	toggleSelection = (key) => {
-		let selection = [...this.state.selection]
-		key = key.split('-')[1] ? key.split('-')[1] : key
-		const keyIndex = selection.indexOf(key)
-		if (keyIndex >= 0) {
-			selection = [
-				...selection.slice(0, keyIndex),
-				...selection.slice(keyIndex + 1),
-			]
-		} else {
-			selection.push(key)
-		}
-		this.setState({
-			selection,
-		})
-	}
-
-	toggleAll = () => {
-		const selectAll = !this.state.selectAll
-		let selection = []
-		let rowsCount = 0
-
-		if (selectAll) {
-			const wrappedInstance = this.selectTable.getWrappedInstance()
-			const currentRecords = wrappedInstance.getResolvedState().sortedData
-			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
-			})
-		} else {
-			selection = []
-		}
-		this.setState({ selectAll, selection })
-	}
-
-	isSelected = (key) => {
-		return this.state.selection.includes(key)
-	}
-
 	render() {
-		const { selectAll, selectType } = this.state
-
-		const { toggleSelection, toggleAll, isSelected } = this
-
-		const extraProps = {
-			selectAll,
-			isSelected,
-			toggleAll,
-			toggleSelection,
-			selectType,
-		}
-
 		const { lbeaconsTable, isEdited } = this.state
 
 		const { locale } = this.context
@@ -278,29 +206,16 @@ class GeoFenceSettingBlock extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<SelectTable
-					keyField="id"
+				<BOTSelectTable
 					data={this.state.data}
 					columns={this.state.columns}
-					ref={(r) => (this.selectTable = r)}
-					className="-highlight"
-					minRows={0}
-					onSortedChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					{...extraProps}
-					{...styleConfig.reactTable}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: () => {
-								this.setState({
-									show: true,
-									selectedData: rowInfo.row._original,
-									isEdited: true,
-									path: 'setGeofenceConfig',
-								})
-							},
-						}
+					onClickCallback={(original) => {
+						this.setState({
+							show: true,
+							selectedData: original,
+							isEdited: true,
+							path: 'setGeofenceConfig',
+						})
 					}}
 				/>
 

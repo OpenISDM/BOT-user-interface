@@ -132,7 +132,7 @@ class BOTSelectTable extends React.Component {
 		const { stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
 		const { locale } = this.context
-		const { data } = this.props
+		const { data, onClickCallback = () => {} } = this.props
 
 		const { toggleSelection, toggleAll, isSelected } = this
 		const extraProps = {
@@ -171,6 +171,7 @@ class BOTSelectTable extends React.Component {
 									currentSelectedRow: rowInfo.original,
 								})
 								this.toggleSelection(rowInfo.original.id)
+								onClickCallback(rowInfo.original)
 							}
 						},
 					}
@@ -183,6 +184,7 @@ class BOTSelectTable extends React.Component {
 BOTSelectTable.propTypes = {
 	data: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
+	onClickCallback: PropTypes.func.isRequired,
 }
 
 export default BOTSelectTable
