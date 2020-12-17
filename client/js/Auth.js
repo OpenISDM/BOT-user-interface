@@ -64,9 +64,9 @@ class Auth extends React.Component {
 			actions.setStatus(res.data.message)
 			actions.setSubmitting(false)
 		} else {
-			const { userInfo } = res.data
-			if (userInfo.roles.includes('dev')) {
-				userInfo.permissions = Object.keys(permissionsTable).reduce(
+			const { userInfo: user } = res.data
+			if (user.roles.includes('dev')) {
+				user.permissions = Object.keys(permissionsTable).reduce(
 					(permissions, role) => {
 						permissionsTable[role].permission.forEach((item) => {
 							if (!permissions.includes(item)) {
@@ -78,7 +78,7 @@ class Auth extends React.Component {
 					[]
 				)
 			} else {
-				userInfo.permissions = userInfo.roles.reduce((permissions, role) => {
+				user.permissions = user.roles.reduce((permissions, role) => {
 					permissionsTable[role].permission.forEach((item) => {
 						if (!permissions.includes(item)) {
 							permissions.push(item)
@@ -88,18 +88,18 @@ class Auth extends React.Component {
 				}, [])
 			}
 
-			Cookies.set('authenticated', true)
-			Cookies.set('user', userInfo)
+			this.setCookies('authenticated', true)
+			this.setCookies('user', user)
 
 			dispatch({
 				type: SET_AREA,
-				value: { id: userInfo.main_area },
+				value: { id: user.main_area },
 			})
 
 			this.setState(
 				{
 					authenticated: true,
-					user: userInfo,
+					user,
 				},
 				callback
 			)

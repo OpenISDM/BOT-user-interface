@@ -100,6 +100,7 @@ export default {
 						SELECT *
 						FROM temp
 						WHERE temp.case IS NOT NULL
+						AND temp.keyword <> '' 
 					)
 			SELECT
 				user_info.name,
