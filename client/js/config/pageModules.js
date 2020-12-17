@@ -141,7 +141,6 @@ export const settingModule = {
 			name: 'monitor settings',
 			alias: 'monitor',
 			path: '/page/monitor',
-			module: monitorSettingModule,
 			permission: 'route:monitor',
 			platform: ['browser', 'tablet'],
 			component: (props) => <GeoFenceSettingBlock {...props} />,

@@ -114,8 +114,6 @@ const EditGeofenceConfig = ({
 						enable: selectedData ? selectedData.enable : 1,
 						geofenceName: selectedData ? selectedData.name : '',
 						area: selectedData ? selectedData.area : '',
-						start_time: selectedData ? selectedData.start_time : '',
-						end_time: selectedData ? selectedData.end_time : '',
 						p_lbeacon: selectedData
 							? selectedData.parsePerimeters.lbeacons
 							: [],
@@ -138,8 +136,6 @@ const EditGeofenceConfig = ({
 							.test('f_rssi', locale.texts.MUST_BE_NEGATIVE_NUMBER, (value) => {
 								if (value < 0) return true
 							}),
-						start_time: string().required(locale.texts.NAME_IS_REQUIRED),
-						end_time: string().required(locale.texts.NAME_IS_REQUIRED),
 						area: string().required(locale.texts.AREA_IS_REQUIRED),
 						p_lbeacon: array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
 						f_lbeacon: array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
@@ -147,6 +143,7 @@ const EditGeofenceConfig = ({
 					onSubmit={(values, { setStatus, setSubmitting }, error) => {
 						const monitorConfigPackage = {
 							...values,
+							name: values.geofenceName,
 							id: isEdited ? selectedData.id : '',
 							type,
 							perimeters: transferTypeToString(values.p_lbeacon, values.p_rssi),
@@ -209,7 +206,6 @@ const EditGeofenceConfig = ({
 									/>
 								</Col>
 							</Row>
-
 							<hr />
 							<Row noGutters>
 								<Col>
@@ -245,40 +241,6 @@ const EditGeofenceConfig = ({
 									/>
 								</Col>
 							</Row>
-							<Row noGutters>
-								<Col>
-									<small className="form-text text-muted">
-										{locale.texts.ENABLE_START_TIME}
-									</small>
-									<DateTimePicker
-										value={values.start_time}
-										getValue={(value) => {
-											setFieldValue('start_time', value.value)
-										}}
-										name="start_time"
-										start="0"
-										end="23"
-										error={errors.start_time}
-										error_tip={locale.texts.START_TIME_IS_REQUIRED}
-									/>
-								</Col>
-								<Col>
-									<small className="form-text text-muted">
-										{locale.texts.ENABLE_END_TIME}
-									</small>
-									<DateTimePicker
-										value={values.end_time}
-										getValue={(value) => {
-											setFieldValue('end_time', value.value)
-										}}
-										name="end_time"
-										start="0"
-										end="24"
-										error={errors.end_time}
-										error_tip={locale.texts.END_TIME_IS_REQUIRED}
-									/>
-								</Col>
-							</Row>
 							<hr />
 							<TypeGroup
 								type="perimeters"
@@ -291,7 +253,6 @@ const EditGeofenceConfig = ({
 								parseLbeaconsGroup={parseLbeaconsGroup}
 								lbeaconsTable={lbeaconsTable}
 							/>
-
 							<hr />
 							<TypeGroup
 								type="fences"

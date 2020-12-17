@@ -51,11 +51,9 @@ const deleteMonitorConfig = (monitorConfigPackage) => {
 
 const addGeofenceConfig = (monitorConfigPackage) => {
 	const {
-		type,
-		id,
 		name,
-		start_time,
-		end_time,
+		start_time = '00:00:00',
+		end_time = '23:59:59',
 		enable,
 		perimeters,
 		fences,
@@ -64,7 +62,7 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 	} = monitorConfigPackage
 
 	const text = `
-		INSERT INTO ${type}
+		INSERT INTO geo_fence_config
 			(
 				name,
 				start_time,
@@ -107,11 +105,8 @@ const addGeofenceConfig = (monitorConfigPackage) => {
 
 const setGeofenceConfig = (monitorConfigPackage) => {
 	const {
-		type,
 		id,
 		name,
-		start_time,
-		end_time,
 		enable,
 		perimeters,
 		fences,
@@ -124,20 +119,17 @@ const setGeofenceConfig = (monitorConfigPackage) => {
 		SET
 			name = $2,
 			area_id = $3,
-			start_time = $4,
-			end_time = $5,
-			enable = $6,
-			perimeters = $7,
-			fences = $8,
-			is_global_fence = $9
+			enable = $4,
+			perimeters = $5,
+			fences = $6,
+			is_global_fence = $7
 		WHERE id = $1;
 	`
+
 	const values = [
 		id,
 		name,
 		area_id,
-		start_time,
-		end_time,
 		enable,
 		perimeters,
 		fences,

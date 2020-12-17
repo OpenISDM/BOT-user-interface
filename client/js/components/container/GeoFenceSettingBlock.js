@@ -55,7 +55,6 @@ class GeoFenceSettingBlock extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		type: config.monitorSettingUrlMap[this.props.type],
 		data: [],
 		columns: [],
 		lbeaconsTable: [],
@@ -114,7 +113,7 @@ class GeoFenceSettingBlock extends React.Component {
 		})
 
 		const data = res.data.rows.map((item, index) => {
-			item.parsePerimeters.lbeacons[index] += ','
+			item.parsePerimeters.lbeacons[index]
 			item.key = index + 1
 			item.area = {
 				value: config.mapConfig.areaOptions[item.area_id],
@@ -252,8 +251,6 @@ class GeoFenceSettingBlock extends React.Component {
 			selectType,
 		}
 
-		const { type } = this.props
-
 		const { lbeaconsTable, isEdited } = this.state
 
 		const { locale } = this.context
@@ -261,9 +258,7 @@ class GeoFenceSettingBlock extends React.Component {
 		return (
 			<div>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="text-capitalize mr-2 mb-1"
@@ -315,7 +310,11 @@ class GeoFenceSettingBlock extends React.Component {
 					show={this.state.show}
 					handleClose={this.handleClose}
 					title={isEdited ? 'edit geofence config' : 'add geofence config'}
-					type={config.monitorSettingUrlMap[type]}
+					type={
+						config.monitorSettingUrlMap[
+							config.monitorSettingType.GEOFENCE_MONITOR
+						]
+					}
 					handleSubmit={this.handleSubmit}
 					lbeaconsTable={lbeaconsTable}
 					areaOptions={config.mapConfig.areaOptions}
