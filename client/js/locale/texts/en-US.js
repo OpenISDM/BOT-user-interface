@@ -45,7 +45,7 @@ const en = {
 	BOT_ADMIN: 'BOT admin',
 	CONTACT_TREE: 'contact tree',
 	MONITOR_MANAGEMENT: 'monitor management',
-	GEOFENCE: 'geofence',
+	GEOFENCE: 'Geo-fence',
 	OBJECT_MANAGEMENT: 'object management',
 	MANAGEMENT: 'management',
 	BIG_SCREEN: 'big screen',
@@ -346,7 +346,7 @@ const en = {
 	RETURNED_TO: 'returned to',
 	CHECKED_BY: 'checked by',
 	CONFIRMED_BY: 'confirmed by',
-	MOVEMENT_MONITOR: 'movement monitor',
+	MOVEMENT_MONITOR: 'Movement Monitor',
 	LONG_STAY_IN_DANGER_MONITOR: 'long stay in danger',
 	NOT_STAY_ROOM_MONITOR: 'not stay room',
 	GEOFENCE_MONITOR: 'geofence',
@@ -620,6 +620,7 @@ const en = {
 	PATIENT_ALIASES: 'Patient Aliases',
 	DEVICE_ALIASES: 'Device Aliases',
 	TRANSFER_LOCATION_ALIASES: 'Transfer Location Aliases',
+	EMERGENCY_ALERT: 'Emergency Alert',
 }
 
 export default en

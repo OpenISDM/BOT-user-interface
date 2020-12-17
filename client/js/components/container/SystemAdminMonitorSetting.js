@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        GeoFenceSettingBlock.js
+        BOTAdminMonitorSetting.js
 
     File Description:
         BOT UI component
@@ -47,7 +47,7 @@ import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
 import PropTypes from 'prop-types'
 
-class GeoFenceSettingBlock extends React.Component {
+class BOTAdminMonitorSetting extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -245,10 +245,10 @@ class GeoFenceSettingBlock extends React.Component {
 	}
 }
 
-GeoFenceSettingBlock.propTypes = {
+BOTAdminMonitorSetting.propTypes = {
 	handleShowPath: PropTypes.func.isRequired,
 	type: PropTypes.string.isRequired,
 	nowIndex: PropTypes.number.isRequired,
 }
 
-export default GeoFenceSettingBlock
+export default BOTAdminMonitorSetting

@@ -45,7 +45,7 @@ const tw = {
 	BOT_ADMIN: 'BOT 管理',
 	CONTACT_TREE: '匡列對象',
 	MONITOR_MANAGEMENT: '偵測裝置管理',
-	GEOFENCE: 'Geofence',
+	GEOFENCE: '電子圍籬',
 	OBJECT_MANAGEMENT: '追蹤物件管理',
 	MANAGEMENT: '管理',
 	BIG_SCREEN: '大螢幕',
@@ -606,6 +606,7 @@ const tw = {
 	PATIENT_ALIASES: '病人別名',
 	DEVICE_ALIASES: '儀器別名',
 	TRANSFER_LOCATION_ALIASES: '轉移地點別名',
+	EMERGENCY_ALERT: '緊急呼救',
 }
 
 export default tw

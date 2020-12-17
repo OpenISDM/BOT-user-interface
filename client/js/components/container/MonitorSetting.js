@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        BOTButton.js
+        MonitorSetting.js
 
     File Description:
         BOT UI component
@@ -32,22 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react'
-import { Button } from 'react-bootstrap'
-import PropTypes from 'prop-types'
+import React, { useContext } from 'react'
+import AuthContext from '../../context/AuthenticationContext'
+import BOTAdminMonitorSetting from './BOTAdminMonitorSetting'
+import SystemAdminMonitorSetting from './SystemAdminMonitorSetting'
 
-const BOTButton = ({ pressed = false, text = '', style, ...props }) => {
-	const variant = pressed ? 'primary' : 'outline-primary'
-
-	return (
-		<Button style={{ margin: '1px', ...style }} variant={variant} {...props}>
-			{text}
-		</Button>
-	)
+const MonitorSetting = ({}) => {
+	const { user } = useContext(AuthContext)
+	let component = <></>
+	if (user.roles.includes('dev')) {
+		component = <SystemAdminMonitorSetting />
+	} else if (user.roles.includes('care_provider')) {
+		component = <BOTAdminMonitorSetting />
+	}
+	return component
 }
 
-BOTButton.propTypes = {
-	pressed: PropTypes.bool,
-}
-
-export default BOTButton
+export default MonitorSetting

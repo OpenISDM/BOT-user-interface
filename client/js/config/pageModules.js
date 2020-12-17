@@ -43,7 +43,7 @@ import MyDeviceManager from '../components/container/UserContainer/MyDeviceManag
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
 import MyPatientManager from '../components/container/UserContainer/MyPatientManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
-import GeoFenceSettingBlock from '../components/container/GeoFenceSettingBlock'
+import MonitorSetting from '../components/container/MonitorSetting'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
 import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
 import ObjectTable from '../components/presentational/ObjectTable'
@@ -113,7 +113,7 @@ export const monitorSettingModule = {
 		// },
 		{
 			name: config.monitorSettingType.GEOFENCE_MONITOR,
-			component: (props) => <GeoFenceSettingBlock {...props} />,
+			component: (props) => <MonitorSetting {...props} />,
 		},
 	],
 }
@@ -143,7 +143,7 @@ export const settingModule = {
 			path: '/page/monitor',
 			permission: 'route:monitor',
 			platform: ['browser', 'tablet'],
-			component: (props) => <GeoFenceSettingBlock {...props} />,
+			component: (props) => <MonitorSetting {...props} />,
 		},
 		{
 			name: 'notification settings',
