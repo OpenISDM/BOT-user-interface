@@ -578,7 +578,7 @@ class Map extends React.Component {
 	}
 
 	/** Filter out undesired tracking data */
-	filterTrackingData = (proccessedTrackingData) => {
+	filterTrackingData = (proccessedTrackingData = []) => {
 		return proccessedTrackingData.filter((item) => {
 			return item.found && item.isMatchedObject
 		})

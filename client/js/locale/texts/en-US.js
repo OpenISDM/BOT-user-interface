@@ -74,7 +74,7 @@ const en = {
 	SHIFT_CHANGE_HISTORICAL_RECORD: 'Shift Change Historical Record',
 	REQUEST_OBJECT_TRACE: 'Request Object Trace',
 	SHIFT_CHANGE: 'shift change',
-	MONITOR_SETTINGS: 'monitor settings',
+	MONITOR_SETTINGS: 'Monitor Settings',
 	REPORT: 'Operation Supports',
 	RECORD: 'Operation Supports',
 	GATEWAY: 'gateway',
