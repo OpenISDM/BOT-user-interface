@@ -37,7 +37,6 @@ import { Modal, Button, Row, Col } from 'react-bootstrap'
 import Select from 'react-select'
 import { Formik, Field, Form } from 'formik'
 import { object, string, array } from 'yup'
-import DateTimePicker from '../../container/DateTimePicker'
 import { AppContext } from '../../../context/AppContext'
 import Switcher from '../../container/Switcher'
 import styleConfig from '../../../config/styleConfig'
@@ -45,6 +44,7 @@ import LocaleContext from '../../../context/LocaleContext'
 import FormikFormGroup from '../FormikFormGroup'
 import RadioButtonGroup from '../../container/RadioButtonGroup'
 import RadioButton from '../RadioButton'
+import BOTTimePicker from '../../BOTComponent/BOTTimePicker'
 
 const style = {
 	icon: {
@@ -61,9 +61,15 @@ const style = {
 		color: '#dc3545',
 	},
 }
+
 const lbeacon_error = {
 	f: '',
 	p: '',
+}
+
+const SWITCH = {
+	NO: 0,
+	YES: 1,
 }
 
 const EditGeofenceConfig = ({
@@ -111,18 +117,24 @@ const EditGeofenceConfig = ({
 					validateOnChange={false}
 					validateOnBlur={false}
 					initialValues={{
-						enable: selectedData ? selectedData.enable : 1,
+						enable:
+							selectedData && selectedData.enable
+								? selectedData.enable
+								: SWITCH.YES,
 						geofenceName: selectedData ? selectedData.name : '',
 						area: selectedData ? selectedData.area : '',
-						p_lbeacon: selectedData
-							? selectedData.parsePerimeters.lbeacons
-							: [],
-						f_lbeacon: selectedData ? selectedData.parseFences.lbeacons : [],
-						p_rssi: selectedData ? selectedData.parsePerimeters.rssi : '',
-						f_rssi: selectedData ? selectedData.parseFences.rssi : '',
+						p_lbeacon: selectedData ? selectedData.p_lbeacon : [],
+						f_lbeacon: selectedData ? selectedData.f_lbeacon : [],
+						p_rssi: selectedData ? selectedData.p_rssi : '',
+						f_rssi: selectedData ? selectedData.f_rssi : '',
 						selected_p_lbeacon: null,
 						selected_f_lbeacon: null,
-						isGlobal: selectedData ? selectedData.is_global_fence : 1,
+						isGlobal:
+							selectedData && selectedData.is_global_fence
+								? selectedData.is_global_fence
+								: SWITCH.NO,
+						start_time: selectedData ? selectedData.start_time : '00:00:00',
+						end_time: selectedData ? selectedData.end_time : '23:59:59',
 					}}
 					validationSchema={object().shape({
 						geofenceName: string().required(locale.texts.NAME_IS_REQUIRED),
@@ -140,17 +152,21 @@ const EditGeofenceConfig = ({
 						p_lbeacon: array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
 						f_lbeacon: array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
 					})}
-					onSubmit={(values, { setStatus, setSubmitting }, error) => {
+					onSubmit={(values) => {
 						const monitorConfigPackage = {
-							...values,
-							name: values.geofenceName,
-							id: isEdited ? selectedData.id : '',
-							type,
-							perimeters: transferTypeToString(values.p_lbeacon, values.p_rssi),
-							fences: transferTypeToString(values.f_lbeacon, values.f_rssi),
-							area_id: values.area.id,
 							action: isEdited ? 'set' : 'add',
+							name: values.geofenceName,
+							enable: values.enable,
+							start_time: values.start_time,
+							end_time: values.end_time,
+							area_id: values.area.id,
 							is_global_fence: values.isGlobal,
+							perimeters_number_uuid: values.p_lbeacon.length,
+							perimeters_uuid: values.p_lbeacon.join(','),
+							perimeters_rssi: values.p_rssi,
+							fences_number_uuid: values.f_lbeacon.length,
+							fences_uuid: values.f_lbeacon.join(','),
+							fences_rssi: values.f_rssi,
 						}
 						handleSubmit(monitorConfigPackage)
 					}}
@@ -191,13 +207,13 @@ const EditGeofenceConfig = ({
 													<Field
 														component={RadioButton}
 														name="isGlobal"
-														id={1}
+														id={SWITCH.YES}
 														label={locale.texts.YES}
 													/>
 													<Field
 														component={RadioButton}
 														name="isGlobal"
-														id={0}
+														id={SWITCH.NO}
 														label={locale.texts.NO}
 													/>
 												</div>
@@ -238,6 +254,34 @@ const EditGeofenceConfig = ({
 												}}
 											/>
 										)}
+									/>
+								</Col>
+							</Row>
+							<Row noGutters className="mb-3">
+								<Col>
+									<small className="form-text text-muted">
+										{locale.texts.ENABLE_START_TIME}
+									</small>
+									<BOTTimePicker
+										name="start_time"
+										style={{ width: '100%' }}
+										value={values.start_time}
+										onChange={(value) => {
+											setFieldValue('start_time', value)
+										}}
+									/>
+								</Col>
+								<Col>
+									<small className="form-text text-muted">
+										{locale.texts.ENABLE_END_TIME}
+									</small>
+									<BOTTimePicker
+										name="end_time"
+										style={{ width: '100%' }}
+										value={values.end_time}
+										onChange={(value) => {
+											setFieldValue('end_time', value)
+										}}
 									/>
 								</Col>
 							</Row>
@@ -306,30 +350,26 @@ const TypeGroup = ({
 
 	const lbeaconOptions_p = lbeaconsTable
 		.filter((item) => {
-			const uuid = item.uuid.replace(/-/g, '')
-			return !values.p_lbeacon.includes(uuid)
+			return !values.p_lbeacon.includes(item.uuid)
 		})
 		.reduce((options, item, index) => {
-			const uuid = item.uuid.replace(/-/g, '')
 			options.push({
 				id: item.id,
-				value: uuid,
-				label: `${item.description}[${uuid}]`,
+				value: item.uuid,
+				label: `${item.description}[${item.uuid}]`,
 			})
 			return options
 		}, [])
 
 	const lbeaconOptions_f = lbeaconsTable
 		.filter((item) => {
-			const uuid = item.uuid.replace(/-/g, '')
-			return !values.f_lbeacon.includes(uuid)
+			return !values.f_lbeacon.includes(item.uuid)
 		})
 		.reduce((options, item, index) => {
-			const uuid = item.uuid.replace(/-/g, '')
 			options.push({
 				id: item.id,
-				value: uuid,
-				label: `${item.description}[${uuid}]`,
+				value: item.uuid,
+				label: `${item.description}[${item.uuid}]`,
 			})
 			return options
 		}, [])
@@ -385,24 +425,7 @@ const TypeGroup = ({
 				<Col
 					lg={1}
 					className="d-flex align-items-center justify-content-center"
-				>
-					{/* <i
-                        className='fa fa-plus'
-                        name='add'
-                        style={style.icon.add}
-                        type={type}
-                        disabled={true}
-                        onClick={(e) => {
-                            let typeGroup = `${abbr}_lbeacon`
-                            if (!values[`selected_${typeGroup}`]) return
-                            let group = values[typeGroup]
-                            group.push(values[`selected_${typeGroup}`].value)
-                            setFieldValue(typeGroup, group)
-                            setFieldValue(`selected_${abbr}_lbeacon`, null)
-                        }}
-                    >
-                    </i> */}
-				</Col>
+				></Col>
 
 				<Col lg={11} className="pr-1">
 					<Select
@@ -413,14 +436,9 @@ const TypeGroup = ({
 						styles={styleConfig.reactSelect}
 						onChange={(value) => {
 							setFieldValue(`selected_${abbr}_lbeacon`, value)
-
 							const typeGroup = `${abbr}_lbeacon`
-							//  if (!values[`selected_${typeGroup}`]) return
 							const group = values[typeGroup]
 							group.push(value.value)
-							// let group = values[typeGroup]
-							// group.push(values[`selected_${typeGroup}`].value)
-							// console.log(group)
 							setFieldValue(typeGroup, group)
 							setFieldValue(`selected_${abbr}_lbeacon`, null)
 						}}

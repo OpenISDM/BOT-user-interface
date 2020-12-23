@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        geofenceApis.js
+        BOTTimePicker.js
 
     File Description:
         BOT UI component
@@ -32,34 +32,47 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { geofence } from '../dataSrc'
-import { post, put, del, patch } from '../helper/httpClient'
-import config from '../config'
+import React from 'react'
+import moment from 'moment'
+import TimePicker from 'rc-time-picker'
+import PropTypes from 'prop-types'
 
-const geofenceApis = {
-	async getGeofenceConfig({ areaId }) {
-		return await post(geofence, {
-			areaId,
-		})
-	},
+import 'rc-time-picker/assets/index.css'
 
-	async delete({ ids }) {
-		return await del(geofence, {
-			ids,
-		})
-	},
-
-	async add({ configPackage }) {
-		return await patch(geofence, {
-			configPackage,
-		})
-	},
-
-	async setGeofenceConfig({ configPackage }) {
-		return await put(geofence, {
-			configPackage,
-		})
-	},
+const covertToMoment = (value) => {
+	const [h, m, s] = value.split(':')
+	return moment()
+		.utcOffset(0)
+		.set({ hour: h, minute: m, second: s, millisecond: 0 })
 }
 
-export default geofenceApis
+const BOTTimePicker = ({
+	value,
+	onChange,
+	style,
+	showSecond = true,
+	isStringTypeValue = true,
+}) => {
+	return (
+		<TimePicker
+			style={style}
+			showSecond={showSecond}
+			defaultValue={
+				value && isStringTypeValue ? covertToMoment(value) : moment()
+			}
+			onChange={(momentValue) => {
+				const stringValue = momentValue.format('HH:mm:ss')
+				onChange(stringValue)
+			}}
+		/>
+	)
+}
+
+BOTTimePicker.propTypes = {
+	value: PropTypes.object,
+	showSecond: PropTypes.bool,
+	onChange: PropTypes.func,
+	style: PropTypes.object,
+}
+
+export default BOTTimePicker

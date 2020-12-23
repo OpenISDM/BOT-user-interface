@@ -33,6 +33,7 @@
 */
 
 import React from 'react'
+import _ from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { ButtonToolbar } from 'react-bootstrap'
 import config from '../../config'
@@ -52,15 +53,14 @@ class BOTAdminMonitorSetting extends React.Component {
 
 	state = {
 		data: [],
+		dataMap: {},
 		columns: [],
 		lbeaconsTable: [],
-		selectedData: null,
 		show: false,
 		showDeleteConfirmation: false,
 		locale: this.context.locale.abbr,
 		isEdited: false,
 		path: '',
-		exIndex: 9999,
 	}
 
 	componentDidMount = () => {
@@ -69,11 +69,6 @@ class BOTAdminMonitorSetting extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.state.exIndex !== this.props.nowIndex) {
-			this.setState({
-				exIndex: this.props.nowIndex,
-			})
-		}
 		if (this.context.locale.abbr !== prevState.locale) {
 			this.getMonitorConfig()
 			this.setState({
@@ -87,29 +82,33 @@ class BOTAdminMonitorSetting extends React.Component {
 		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
 			locale: locale.abbr,
 		})
+
 		this.setState({
 			lbeaconsTable: res.data.rows,
 		})
 	}
 
 	getMonitorConfig = async (callback) => {
-		const { auth, locale } = this.context
-		const res = await apiHelper.geofenceApis.getGeofenceConfig(
-			auth.user.areas_id
-		)
+		const { locale, stateReducer } = this.context
+		const [{ area }] = stateReducer
+		const res = await apiHelper.geofenceApis.getGeofenceConfig({
+			areaId: area.id,
+		})
 
-		const data = res.data.rows.map((item, index) => {
-			item.parsePerimeters.lbeacons[index]
+		const data = res.data.map((item, index) => {
 			item.key = index + 1
 			item.area = {
 				value: config.mapConfig.areaOptions[item.area_id],
 				label: locale.texts[config.mapConfig.areaOptions[item.area_id]],
 				id: item.area_id,
 			}
-			item.p_rssi = item.perimeters.split(',')[
-				item.perimeters.split(',').length - 2
-			]
-			item.f_rssi = item.fences.split(',')[item.fences.split(',').length - 2]
+			item.p_rssi = item.perimeters_rssi
+			item.f_rssi = item.fences_rssi
+			item.p_lbeacon =
+				item.perimeters_uuid &&
+				item.perimeters_uuid.split(',').filter((uuid) => uuid)
+			item.f_lbeacon =
+				item.fences_uuid && item.fences_uuid.split(',').filter((uuid) => uuid)
 
 			return item
 		})
@@ -117,10 +116,10 @@ class BOTAdminMonitorSetting extends React.Component {
 		this.setState(
 			{
 				data,
+				dataMap: _.keyBy(data, 'id'),
 				columns: geofenceConfigColumn,
 				show: false,
 				showDeleteConfirmation: false,
-				selectedData: null,
 			},
 			callback
 		)
@@ -139,7 +138,6 @@ class BOTAdminMonitorSetting extends React.Component {
 			case 'edit':
 				this.setState({
 					show: true,
-					selectedData: value.original,
 					isEdited: true,
 					path: 'setGeofenceConfig',
 				})
@@ -147,7 +145,6 @@ class BOTAdminMonitorSetting extends React.Component {
 			case 'delete':
 				this.setState({
 					showDeleteConfirmation: true,
-					path: 'delete',
 				})
 				break
 		}
@@ -158,7 +155,6 @@ class BOTAdminMonitorSetting extends React.Component {
 		this.setState({
 			show: false,
 			showDeleteConfirmation: false,
-			selectedData: null,
 		})
 
 		dispatch({
@@ -167,21 +163,27 @@ class BOTAdminMonitorSetting extends React.Component {
 		})
 	}
 
-	handleSubmit = async (pack) => {
+	handleSetSubmit = async (pack) => {
 		const configPackage = pack || {}
-		const { path, selectedData } = this.state
-		configPackage.type = config.monitorSettingUrlMap[this.props.type]
-		configPackage.id = selectedData.id
+		const { path } = this.state
 
-		await apiHelper.geofenceApis[path](configPackage)
+		await apiHelper.geofenceApis[path]({ configPackage })
+		const callback = () => messageGenerator.setSuccessMessage('save success')
+		this.getMonitorConfig(callback)
+	}
+
+	handleDeleteSubmit = async (pack) => {
+		const [{ tableSelection }] = this.context.stateReducer
+
+		await apiHelper.geofenceApis.delete({ ids: tableSelection })
 		const callback = () => messageGenerator.setSuccessMessage('save success')
 		this.getMonitorConfig(callback)
 	}
 
 	render() {
 		const { lbeaconsTable, isEdited } = this.state
-
-		const { locale } = this.context
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection }] = stateReducer
 
 		return (
 			<div>
@@ -205,6 +207,7 @@ class BOTAdminMonitorSetting extends React.Component {
 						</ButtonToolbar>
 					</AccessControl>
 				</div>
+
 				<hr />
 				<BOTSelectTable
 					data={this.state.data}
@@ -212,7 +215,6 @@ class BOTAdminMonitorSetting extends React.Component {
 					onClickCallback={(original) => {
 						this.setState({
 							show: true,
-							selectedData: original,
 							isEdited: true,
 							path: 'setGeofenceConfig',
 						})
@@ -221,7 +223,7 @@ class BOTAdminMonitorSetting extends React.Component {
 
 				<EditGeofenceConfig
 					handleShowPath={this.props.handleShowPath}
-					selectedData={this.state.selectedData}
+					selectedData={this.state.dataMap[tableSelection[0]]}
 					show={this.state.show}
 					handleClose={this.handleClose}
 					title={isEdited ? 'edit geofence config' : 'add geofence config'}
@@ -230,15 +232,16 @@ class BOTAdminMonitorSetting extends React.Component {
 							config.monitorSettingType.GEOFENCE_MONITOR
 						]
 					}
-					handleSubmit={this.handleSubmit}
+					handleSubmit={this.handleSetSubmit}
 					lbeaconsTable={lbeaconsTable}
 					areaOptions={config.mapConfig.areaOptions}
 					isEdited={this.state.isEdited}
 				/>
+
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
-					handleSubmit={this.handleSubmit}
+					handleSubmit={this.handleDeleteSubmit}
 				/>
 			</div>
 		)
