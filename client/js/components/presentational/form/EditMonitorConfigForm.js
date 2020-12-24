@@ -100,7 +100,6 @@ const EditMonitorConfigForm = ({
 											setFieldValue('enable', value)
 										}}
 										status={values.enable}
-										type={type}
 									/>
 								</Col>
 							</Row>

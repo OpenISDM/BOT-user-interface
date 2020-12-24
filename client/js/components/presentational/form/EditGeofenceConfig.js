@@ -33,12 +33,12 @@
 */
 
 import React from 'react'
-import { Modal, Button, Row, Col } from 'react-bootstrap'
 import Select from 'react-select'
+import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
 import { object, string, array } from 'yup'
 import { AppContext } from '../../../context/AppContext'
-import Switcher from '../../container/Switcher'
+import Switcher, { SWITCH_ENUM } from '../../container/Switcher'
 import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 import FormikFormGroup from '../FormikFormGroup'
@@ -66,24 +66,21 @@ const lbeacon_error = {
 	p: '',
 }
 
-const SWITCH = {
-	NO: 0,
-	YES: 1,
-}
-
 const EditGeofenceConfig = ({
-	selectedData,
-	isEdited,
 	show,
-	handleClose,
-	title,
-	handleSubmit,
-	type,
+	isEdited,
+	selectedData,
 	lbeaconsTable,
+	handleClose,
+	handleSubmit,
 }) => {
 	const appContext = React.useContext(AppContext)
 	const { locale, stateReducer } = appContext
 	const [{ area }] = stateReducer
+
+	const title = isEdited
+		? locale.texts.EDIT_GEOFENCE_CONFIG
+		: locale.texts.ADD_GEOFENCE_CONFIG
 
 	const currentLocationLabel =
 		locale.texts[config.mapConfig.areaOptions[area.id]]
@@ -103,32 +100,14 @@ const EditGeofenceConfig = ({
 					validateOnChange={false}
 					validateOnBlur={false}
 					initialValues={{
-						enable:
-							selectedData && selectedData.enable
-								? selectedData.enable
-								: SWITCH.YES,
-						geofenceName:
-							selectedData && selectedData.name ? selectedData.name : '',
-						p_lbeacon:
-							selectedData && selectedData.p_lbeacon
-								? selectedData.p_lbeacon
-								: [],
-						f_lbeacon:
-							selectedData && selectedData.f_lbeacon
-								? selectedData.f_lbeacon
-								: [],
-						p_rssi:
-							selectedData && selectedData.p_rssi ? selectedData.p_rssi : '',
-						f_rssi:
-							selectedData && selectedData.f_rssi ? selectedData.f_rssi : '',
-						start_time:
-							selectedData && selectedData.start_time
-								? selectedData.start_time
-								: '00:00:00',
-						end_time:
-							selectedData && selectedData.end_time
-								? selectedData.end_time
-								: '23:59:59',
+						enable: isEdited ? selectedData.enable : SWITCH_ENUM.ON,
+						geofenceName: isEdited ? selectedData.name : '',
+						p_lbeacon: isEdited ? selectedData.p_lbeacon : [],
+						f_lbeacon: isEdited ? selectedData.f_lbeacon : [],
+						p_rssi: isEdited ? selectedData.p_rssi : '',
+						f_rssi: isEdited ? selectedData.f_rssi : '',
+						start_time: isEdited ? selectedData.start_time : '00:00:00',
+						end_time: isEdited ? selectedData.end_time : '23:59:59',
 						selected_p_lbeacon: null,
 						selected_f_lbeacon: null,
 					}}
@@ -185,7 +164,6 @@ const EditGeofenceConfig = ({
 											setFieldValue('enable', value)
 										}}
 										status={values.enable}
-										type={type}
 									/>
 								</Col>
 							</Row>
@@ -298,7 +276,7 @@ const TypeGroup = ({
 		.filter((item) => {
 			return !values.p_lbeacon.includes(item.uuid)
 		})
-		.reduce((options, item, index) => {
+		.reduce((options, item) => {
 			options.push({
 				id: item.id,
 				value: item.uuid,
@@ -311,7 +289,7 @@ const TypeGroup = ({
 		.filter((item) => {
 			return !values.f_lbeacon.includes(item.uuid)
 		})
-		.reduce((options, item, index) => {
+		.reduce((options, item) => {
 			options.push({
 				id: item.id,
 				value: item.uuid,
@@ -321,19 +299,20 @@ const TypeGroup = ({
 		}, [])
 
 	const typeRssi = `${abbr}_rssi`
+
 	return (
 		<div className="form-group">
 			<small className="form-text">{title}</small>
+
 			<FormikFormGroup
 				type="text"
 				name={typeRssi}
 				label={locale.texts.RSSI}
-				error={error[typeRssi]}
-				touched={error[typeRssi]}
 				placeholder=""
 			/>
 
 			<small className="form-text text-muted">UUID</small>
+
 			{repository.map((item, index) => {
 				return item == 'undefined,' ? null : (
 					<Row noGutters className="py-1" key={index}>
@@ -368,25 +347,18 @@ const TypeGroup = ({
 				)
 			})}
 			<Row noGutters className="py-1">
-				<Col
-					lg={1}
-					className="d-flex align-items-center justify-content-center"
-				></Col>
-
+				<Col lg={1}></Col>
 				<Col lg={11} className="pr-1">
 					<Select
 						placeholder={locale.texts.SELECT_LBEACON}
 						name={`${abbr}_lbeacon`}
 						options={abbr == 'f' ? lbeaconOptions_f : lbeaconOptions_p}
-						value={values[`selected_${abbr}_lbeacon`]}
 						styles={styleConfig.reactSelect}
 						onChange={(value) => {
-							setFieldValue(`selected_${abbr}_lbeacon`, value)
 							const typeGroup = `${abbr}_lbeacon`
 							const group = values[typeGroup]
 							group.push(value.value)
 							setFieldValue(typeGroup, group)
-							setFieldValue(`selected_${abbr}_lbeacon`, null)
 						}}
 						components={{
 							IndicatorSeparator: () => null,

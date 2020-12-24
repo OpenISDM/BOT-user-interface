@@ -226,14 +226,9 @@ class BOTAdminMonitorSetting extends React.Component {
 				/>
 
 				<EditGeofenceConfig
-					selectedData={isEdited ? this.state.selectedItem : null}
+					selectedData={this.state.selectedItem}
 					show={this.state.show}
 					handleClose={this.handleClose}
-					title={
-						isEdited
-							? locale.texts.EDIT_GEOFENCE_CONFIG
-							: locale.texts.ADD_GEOFENCE_CONFIG
-					}
 					type={
 						config.monitorSettingUrlMap[
 							config.monitorSettingType.GEOFENCE_MONITOR

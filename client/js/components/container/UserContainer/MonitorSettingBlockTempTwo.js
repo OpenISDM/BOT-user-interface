@@ -226,7 +226,6 @@ class MonitorSettingBlock extends React.Component {
 												rightLabel="off"
 												onChange={this.handleSwitcherChange}
 												status={item.enable}
-												type={this.props.type}
 												subId={item.id}
 											/>
 										</Col>

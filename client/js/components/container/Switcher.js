@@ -35,34 +35,38 @@
 import React from 'react'
 import { AppContext } from '../../context/AppContext'
 
-const Switcher = ({ leftLabel, rightLabel, status, type, onChange, subId }) => {
-	const context = React.useContext(AppContext)
+export const SWITCH_ENUM = {
+	OFF: 0,
+	ON: 1,
+}
 
-	const { locale } = context
+const Switcher = ({ leftLabel, rightLabel, status, onChange, subId }) => {
+	const { locale } = React.useContext(AppContext)
+	status = parseInt(status)
 
 	return (
 		<div className="switch-field text-capitalize">
 			<input
 				type="radio"
-				id={type.replace(/ /g, '_') + '_left' + ':' + subId}
+				id={`left:${subId}`}
 				name="switch"
-				value={1}
+				value={SWITCH_ENUM.ON}
 				onChange={onChange}
-				checked={status == 1}
+				checked={status === SWITCH_ENUM.ON}
 			/>
-			<label htmlFor={type.replace(/ /g, '_') + '_left' + ':' + subId}>
+			<label htmlFor={`left:${subId}`}>
 				{locale.texts[leftLabel.toUpperCase()]}
 			</label>
 
 			<input
 				type="radio"
-				id={type.replace(/ /g, '_') + '_right' + ':' + subId}
+				id={`right:${subId}`}
 				name="switch"
-				value={0}
+				value={SWITCH_ENUM.OFF}
 				onChange={onChange}
-				checked={status == 0}
+				checked={status === SWITCH_ENUM.OFF}
 			/>
-			<label htmlFor={type.replace(/ /g, '_') + '_right' + ':' + subId}>
+			<label htmlFor={`right:${subId}`}>
 				{locale.texts[rightLabel.toUpperCase()]}
 			</label>
 		</div>
