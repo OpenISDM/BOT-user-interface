@@ -42,9 +42,8 @@ import Switcher from '../../container/Switcher'
 import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 import FormikFormGroup from '../FormikFormGroup'
-import RadioButtonGroup from '../../container/RadioButtonGroup'
-import RadioButton from '../RadioButton'
 import BOTTimePicker from '../../BOTComponent/BOTTimePicker'
+import config from '../../../config'
 
 const style = {
 	icon: {
@@ -77,27 +76,17 @@ const EditGeofenceConfig = ({
 	isEdited,
 	show,
 	handleClose,
-	areaOptions,
 	title,
 	handleSubmit,
 	type,
 	lbeaconsTable,
 }) => {
 	const appContext = React.useContext(AppContext)
+	const { locale, stateReducer } = appContext
+	const [{ area }] = stateReducer
 
-	const { auth, locale } = appContext
-
-	areaOptions = auth.user.areas_id
-		.filter((item) => {
-			return areaOptions[item]
-		})
-		.map((item) => {
-			return {
-				value: areaOptions[item],
-				label: locale.texts[areaOptions[item]],
-				id: item,
-			}
-		})
+	const currentLocationLabel =
+		locale.texts[config.mapConfig.areaOptions[area.id]]
 
 	return (
 		<Modal
@@ -108,10 +97,7 @@ const EditGeofenceConfig = ({
 			enforceFocus={false}
 			className="text-capitalize"
 		>
-			<Modal.Header closeButton>
-				{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
-			</Modal.Header>
-
+			<Modal.Header closeButton>{title}</Modal.Header>
 			<Modal.Body>
 				<Formik
 					validateOnChange={false}
@@ -121,20 +107,30 @@ const EditGeofenceConfig = ({
 							selectedData && selectedData.enable
 								? selectedData.enable
 								: SWITCH.YES,
-						geofenceName: selectedData ? selectedData.name : '',
-						area: selectedData ? selectedData.area : '',
-						p_lbeacon: selectedData ? selectedData.p_lbeacon : [],
-						f_lbeacon: selectedData ? selectedData.f_lbeacon : [],
-						p_rssi: selectedData ? selectedData.p_rssi : '',
-						f_rssi: selectedData ? selectedData.f_rssi : '',
+						geofenceName:
+							selectedData && selectedData.name ? selectedData.name : '',
+						p_lbeacon:
+							selectedData && selectedData.p_lbeacon
+								? selectedData.p_lbeacon
+								: [],
+						f_lbeacon:
+							selectedData && selectedData.f_lbeacon
+								? selectedData.f_lbeacon
+								: [],
+						p_rssi:
+							selectedData && selectedData.p_rssi ? selectedData.p_rssi : '',
+						f_rssi:
+							selectedData && selectedData.f_rssi ? selectedData.f_rssi : '',
+						start_time:
+							selectedData && selectedData.start_time
+								? selectedData.start_time
+								: '00:00:00',
+						end_time:
+							selectedData && selectedData.end_time
+								? selectedData.end_time
+								: '23:59:59',
 						selected_p_lbeacon: null,
 						selected_f_lbeacon: null,
-						isGlobal:
-							selectedData && selectedData.is_global_fence
-								? selectedData.is_global_fence
-								: SWITCH.NO,
-						start_time: selectedData ? selectedData.start_time : '00:00:00',
-						end_time: selectedData ? selectedData.end_time : '23:59:59',
 					}}
 					validationSchema={object().shape({
 						geofenceName: string().required(locale.texts.NAME_IS_REQUIRED),
@@ -148,19 +144,18 @@ const EditGeofenceConfig = ({
 							.test('f_rssi', locale.texts.MUST_BE_NEGATIVE_NUMBER, (value) => {
 								if (value < 0) return true
 							}),
-						area: string().required(locale.texts.AREA_IS_REQUIRED),
 						p_lbeacon: array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
 						f_lbeacon: array().required(locale.texts.ALEAST_CHOOSE_ONE_UUID),
 					})}
 					onSubmit={(values) => {
 						const monitorConfigPackage = {
+							id: isEdited ? selectedData.id : '',
 							action: isEdited ? 'set' : 'add',
 							name: values.geofenceName,
 							enable: values.enable,
 							start_time: values.start_time,
 							end_time: values.end_time,
-							area_id: values.area.id,
-							is_global_fence: values.isGlobal,
+							area_id: area.id,
 							perimeters_number_uuid: values.p_lbeacon.length,
 							perimeters_uuid: values.p_lbeacon.join(','),
 							perimeters_rssi: values.p_rssi,
@@ -173,7 +168,6 @@ const EditGeofenceConfig = ({
 					render={({
 						values,
 						errors,
-						status,
 						touched,
 						isSubmitting,
 						setFieldValue,
@@ -194,33 +188,6 @@ const EditGeofenceConfig = ({
 										type={type}
 									/>
 								</Col>
-								<Col>
-									<FormikFormGroup
-										name="isGlobal"
-										label={locale.texts.IS_GLOBAL_FENCE}
-										errors={errors.isGlobal}
-										touched={touched.isGlobal}
-										placeholder=""
-										component={() => (
-											<RadioButtonGroup value={parseInt(values.isGlobal)}>
-												<div className="d-flex justify-content-start form-group my-1">
-													<Field
-														component={RadioButton}
-														name="isGlobal"
-														id={SWITCH.YES}
-														label={locale.texts.YES}
-													/>
-													<Field
-														component={RadioButton}
-														name="isGlobal"
-														id={SWITCH.NO}
-														label={locale.texts.NO}
-													/>
-												</div>
-											</RadioButtonGroup>
-										)}
-									/>
-								</Col>
 							</Row>
 							<hr />
 							<Row noGutters>
@@ -236,24 +203,10 @@ const EditGeofenceConfig = ({
 								</Col>
 								<Col>
 									<FormikFormGroup
+										type="text"
 										label={locale.texts.AREA}
-										error={errors.area}
-										touched={touched.area}
-										placeholder=""
-										component={() => (
-											<Select
-												placeholder={locale.texts.SELECT_AREA}
-												name="area"
-												options={areaOptions || []}
-												value={values.area}
-												styles={styleConfig.reactSelect}
-												isDisabled={isEdited}
-												onChange={(value) => setFieldValue('area', value)}
-												components={{
-													IndicatorSeparator: () => null,
-												}}
-											/>
-										)}
+										placeholder={currentLocationLabel}
+										disabled={true}
 									/>
 								</Col>
 							</Row>
@@ -294,7 +247,6 @@ const EditGeofenceConfig = ({
 								values={values}
 								error={errors}
 								setFieldValue={setFieldValue}
-								parseLbeaconsGroup={parseLbeaconsGroup}
 								lbeaconsTable={lbeaconsTable}
 							/>
 							<hr />
@@ -306,7 +258,6 @@ const EditGeofenceConfig = ({
 								values={values}
 								error={errors}
 								setFieldValue={setFieldValue}
-								parseLbeaconsGroup={parseLbeaconsGroup}
 								lbeaconsTable={lbeaconsTable}
 							/>
 							<Modal.Footer>
@@ -331,10 +282,6 @@ const parseLbeaconsGroup = (type, index) => {
 	return [...type.slice(0, index), ...type.slice(index + 1)]
 }
 
-const transferTypeToString = (typeGroup, rssi) => {
-	return [typeGroup.length, ...typeGroup, rssi].join(',') + ','
-}
-
 const TypeGroup = ({
 	type,
 	abbr,
@@ -343,7 +290,6 @@ const TypeGroup = ({
 	values,
 	error,
 	setFieldValue,
-	parseLbeaconsGroup,
 	lbeaconsTable,
 }) => {
 	const locale = React.useContext(LocaleContext)

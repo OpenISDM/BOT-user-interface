@@ -33,7 +33,6 @@
 */
 
 import React from 'react'
-import _ from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { ButtonToolbar } from 'react-bootstrap'
 import config from '../../config'
@@ -48,12 +47,16 @@ import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
 import PropTypes from 'prop-types'
 
+const ACTION_ENUM = {
+	ADD: 'ADD',
+	DELETE: 'DELETE',
+}
+
 class BOTAdminMonitorSetting extends React.Component {
 	static contextType = AppContext
 
 	state = {
 		data: [],
-		dataMap: {},
 		columns: [],
 		lbeaconsTable: [],
 		show: false,
@@ -61,6 +64,7 @@ class BOTAdminMonitorSetting extends React.Component {
 		locale: this.context.locale.abbr,
 		isEdited: false,
 		path: '',
+		selectedItem: {},
 	}
 
 	componentDidMount = () => {
@@ -116,7 +120,6 @@ class BOTAdminMonitorSetting extends React.Component {
 		this.setState(
 			{
 				data,
-				dataMap: _.keyBy(data, 'id'),
 				columns: geofenceConfigColumn,
 				show: false,
 				showDeleteConfirmation: false,
@@ -128,21 +131,14 @@ class BOTAdminMonitorSetting extends React.Component {
 	handleClickButton = (e, value) => {
 		const { name } = e.target
 		switch (name) {
-			case 'add rule':
+			case ACTION_ENUM.ADD:
 				this.setState({
 					show: true,
 					isEdited: false,
 					path: 'add',
 				})
 				break
-			case 'edit':
-				this.setState({
-					show: true,
-					isEdited: true,
-					path: 'setGeofenceConfig',
-				})
-				break
-			case 'delete':
+			case ACTION_ENUM.DELETE:
 				this.setState({
 					showDeleteConfirmation: true,
 				})
@@ -151,11 +147,16 @@ class BOTAdminMonitorSetting extends React.Component {
 	}
 
 	handleClose = () => {
-		const [, dispatch] = this.context.stateReducer
+		this.cleanSelection()
+
 		this.setState({
 			show: false,
 			showDeleteConfirmation: false,
 		})
+	}
+
+	cleanSelection = () => {
+		const [, dispatch] = this.context.stateReducer
 
 		dispatch({
 			type: SET_TABLE_SELECTION,
@@ -163,27 +164,29 @@ class BOTAdminMonitorSetting extends React.Component {
 		})
 	}
 
+	submitCallback = () => {
+		this.cleanSelection()
+		messageGenerator.setSuccessMessage('save success')
+	}
+
 	handleSetSubmit = async (pack) => {
 		const configPackage = pack || {}
 		const { path } = this.state
 
 		await apiHelper.geofenceApis[path]({ configPackage })
-		const callback = () => messageGenerator.setSuccessMessage('save success')
-		this.getMonitorConfig(callback)
+		this.getMonitorConfig(this.submitCallback)
 	}
 
 	handleDeleteSubmit = async (pack) => {
 		const [{ tableSelection }] = this.context.stateReducer
 
 		await apiHelper.geofenceApis.delete({ ids: tableSelection })
-		const callback = () => messageGenerator.setSuccessMessage('save success')
-		this.getMonitorConfig(callback)
+		this.getMonitorConfig(this.submitCallback)
 	}
 
 	render() {
+		const { locale } = this.context
 		const { lbeaconsTable, isEdited } = this.state
-		const { locale, stateReducer } = this.context
-		const [{ tableSelection }] = stateReducer
 
 		return (
 			<div>
@@ -192,14 +195,14 @@ class BOTAdminMonitorSetting extends React.Component {
 						<ButtonToolbar>
 							<PrimaryButton
 								className="text-capitalize mr-2 mb-1"
-								name="add rule"
+								name={ACTION_ENUM.ADD}
 								onClick={this.handleClickButton}
 							>
 								{locale.texts.ADD_RULE}
 							</PrimaryButton>
 							<PrimaryButton
 								className="mr-2 mb-1"
-								name="delete"
+								name={ACTION_ENUM.DELETE}
 								onClick={this.handleClickButton}
 							>
 								{locale.texts.DELETE}
@@ -212,21 +215,25 @@ class BOTAdminMonitorSetting extends React.Component {
 				<BOTSelectTable
 					data={this.state.data}
 					columns={this.state.columns}
-					onClickCallback={(original) => {
+					onClickCallback={(selectedItem) => {
 						this.setState({
 							show: true,
 							isEdited: true,
 							path: 'setGeofenceConfig',
+							selectedItem,
 						})
 					}}
 				/>
 
 				<EditGeofenceConfig
-					handleShowPath={this.props.handleShowPath}
-					selectedData={this.state.dataMap[tableSelection[0]]}
+					selectedData={isEdited ? this.state.selectedItem : null}
 					show={this.state.show}
 					handleClose={this.handleClose}
-					title={isEdited ? 'edit geofence config' : 'add geofence config'}
+					title={
+						isEdited
+							? locale.texts.EDIT_GEOFENCE_CONFIG
+							: locale.texts.ADD_GEOFENCE_CONFIG
+					}
 					type={
 						config.monitorSettingUrlMap[
 							config.monitorSettingType.GEOFENCE_MONITOR
@@ -234,7 +241,6 @@ class BOTAdminMonitorSetting extends React.Component {
 					}
 					handleSubmit={this.handleSetSubmit}
 					lbeaconsTable={lbeaconsTable}
-					areaOptions={config.mapConfig.areaOptions}
 					isEdited={this.state.isEdited}
 				/>
 
@@ -249,7 +255,6 @@ class BOTAdminMonitorSetting extends React.Component {
 }
 
 BOTAdminMonitorSetting.propTypes = {
-	handleShowPath: PropTypes.func.isRequired,
 	type: PropTypes.string.isRequired,
 	nowIndex: PropTypes.number.isRequired,
 }
