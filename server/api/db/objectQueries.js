@@ -45,9 +45,9 @@ const getObject = (objectType, areas_id) => {
 			object_table.list_id,
 			object_table.type_alias,
 			JSON_BUILD_OBJECT(
-				'id', branches.id,
-				'name', branches.name,
-				'department', branches.department
+				'id', transfer_locations.id,
+				'name', transfer_locations.name,
+				'department', transfer_locations.department
 			) AS transferred_location,
 			object_table.mac_address,
 			object_table.monitor_type,
@@ -69,8 +69,8 @@ const getObject = (objectType, areas_id) => {
 		LEFT JOIN area_table
 		ON area_table.id = object_table.area_id
 
-		LEFT JOIN branches
-		ON branches.id = object_table.transferred_location
+		LEFT JOIN transfer_locations
+		ON transfer_locations.id = object_table.transferred_location
 
 		WHERE object_table.object_type IN (${objectType.map((type) => type)})
 		${areas_id ? `AND object_table.area_id IN (${areas_id.map((id) => id)})` : ''}
@@ -277,11 +277,11 @@ const editObjectPackage = (
 		item.transferred_location.label &&
 		item.transferred_location.label.split('-')
 
-	let branchQuery = null
+	let transferLocationsQuery = null
 	if (name && department) {
-		branchQuery = `
+		transferLocationsQuery = `
             (
-                SELECT id FROM branches WHERE name = '${name}' AND department = '${department}'
+                SELECT id FROM transfer_locations WHERE name = '${name}' AND department = '${department}'
             )`
 	}
 
@@ -289,7 +289,9 @@ const editObjectPackage = (
 		UPDATE object_table
 		SET
 			status = '${item.status}',
-			transferred_location = ${item.status === 'transferred' ? branchQuery : null},
+			transferred_location = ${
+				item.status === 'transferred' ? transferLocationsQuery : null
+			},
 			note_id = ${record_id},
 			reserved_timestamp = ${
 				item.status === 'reserve' ? `'${reservedTimestamp}'` : null

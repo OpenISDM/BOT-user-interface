@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        EditBranchForm.js
+        DeleteAlertModal.js
 
     File Description:
         BOT UI component

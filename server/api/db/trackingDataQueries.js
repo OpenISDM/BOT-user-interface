@@ -57,9 +57,9 @@ const getTrackingData = (areas_id) => {
 			object_table.type_alias,
 			object_table.list_id,
 			JSON_BUILD_OBJECT(
-				'id', branches.id,
-				'name', branches.name,
-				'department', branches.department
+				'id', transfer_locations.id,
+				'name', transfer_locations.name,
+				'department', transfer_locations.department
 			) AS transferred_location,
 			object_table.monitor_type,
 			object_table.nickname,
@@ -139,8 +139,8 @@ const getTrackingData = (areas_id) => {
 		) as notification
 		ON notification.mac_address = object_summary_table.mac_address
 
-		LEFT JOIN branches
-        ON object_table.transferred_location = branches.id
+		LEFT JOIN transfer_locations
+        ON object_table.transferred_location = transfer_locations.id
 
 		WHERE object_table.area_id IN (${areas_id.map((item) => item)})
 

@@ -2,8 +2,8 @@ import pkg from 'sequelize'
 import { sequelize } from '../connection'
 const { DataTypes } = pkg
 
-const Branches = sequelize.define(
-	'branches',
+const TransferLocations = sequelize.define(
+	'transfer_locations',
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -23,4 +23,4 @@ const Branches = sequelize.define(
 	}
 )
 
-export default Branches
+export default TransferLocations

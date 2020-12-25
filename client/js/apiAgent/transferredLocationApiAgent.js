@@ -47,9 +47,9 @@ export default {
 		})
 	},
 
-	async removeByIds({ branchIds }) {
+	async removeByIds({ transferLocationIds }) {
 		return await post(transferredLocation.removeByIds, {
-			branchIds,
+			transferLocationIds,
 		})
 	},
 }

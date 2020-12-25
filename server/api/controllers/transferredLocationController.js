@@ -32,13 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import Branches from '../db/model/branches'
+import TransferLocations from '../db/model/transferLocations'
 
 export default {
 	getAll: async (request, response) => {
 		try {
-			const branches = await Branches.findAll()
-			response.status(200).json(branches)
+			const res = await TransferLocations.findAll()
+			response.status(200).json(res)
 		} catch (e) {
 			console.log(`get all transferred Location failed: ${e}`)
 		}
@@ -47,22 +47,22 @@ export default {
 	addOne: async (request, response) => {
 		const { name, department } = request.body
 		try {
-			const branches = await Branches.upsert(
+			const res = await TransferLocations.upsert(
 				{ name, department }, // Record to upsert
 				{ returning: true } // Return upserted record
 			)
-			response.status(200).json(branches)
+			response.status(200).json(res)
 		} catch (e) {
 			console.log(`add transferred Location failed: ${e}`)
 		}
 	},
 
 	removeByIds: async (request, response) => {
-		const { branchIds } = request.body
+		const { transferLocationIds } = request.body
 		try {
-			const res = await Branches.destroy({
+			const res = await TransferLocations.destroy({
 				where: {
-					id: branchIds,
+					id: transferLocationIds,
 				},
 			})
 			response.status(200).json(res)

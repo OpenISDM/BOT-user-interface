@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        EditBranchForm.js
+        EditTransferLocationForm.js
 
     File Description:
         BOT UI component
@@ -51,13 +51,13 @@ const validationSchema = object().shape({
 		.required('Field is required'),
 })
 
-const EditBranchForm = ({
+const EditTransferLocationForm = ({
 	show,
 	actionName,
 	handleClose,
 	handleSubmit,
 	title,
-	branchOptions,
+	locationOptions,
 }) => {
 	const locale = React.useContext(LocaleContext)
 
@@ -95,7 +95,7 @@ const EditBranchForm = ({
 										name="name"
 										value={values.area}
 										onChange={(value) => setFieldValue('name', value)}
-										options={branchOptions}
+										options={locationOptions}
 										styles={styleConfig.reactSelect}
 										components={{
 											IndicatorSeparator: () => null,
@@ -131,13 +131,13 @@ const EditBranchForm = ({
 	)
 }
 
-EditBranchForm.propTypes = {
+EditTransferLocationForm.propTypes = {
 	show: PropTypes.bool,
 	actionName: PropTypes.string,
 	handleClose: PropTypes.func,
 	handleSubmit: PropTypes.func,
 	title: PropTypes.string,
-	branchOptions: PropTypes.object,
+	locationOptions: PropTypes.object,
 }
 
-export default EditBranchForm
+export default EditTransferLocationForm

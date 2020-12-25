@@ -37,7 +37,7 @@ import { TransferredLocationColumn } from '../../config/tables'
 import messageGenerator from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
-import EditBranchForm from '../presentational/form/EditBranchForm'
+import EditTransferLocationForm from '../presentational/form/EditTransferLocationForm'
 import DeleteAlertModal from '../presentational/DeleteAlertModal'
 import { ADD, DELETE, SAVE_SUCCESS } from '../../config/wordMap'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
@@ -48,7 +48,7 @@ class TranferredLocationManagement extends React.Component {
 
 	state = {
 		data: [],
-		branchOptions: [],
+		locationOptions: [],
 		showAddForm: false,
 		showDeleteModal: false,
 	}
@@ -61,11 +61,11 @@ class TranferredLocationManagement extends React.Component {
 		const { stateReducer } = this.context
 		const [, dispatch] = stateReducer
 		const res = await apiHelper.transferredLocationApiAgent.getAll()
-		const branchOptionsMap = {}
+		const locationOptionsMap = {}
 		const data = []
 
 		res.data.forEach((obj) => {
-			branchOptionsMap[obj.name] = {
+			locationOptionsMap[obj.name] = {
 				label: obj.name,
 				value: obj.name,
 			}
@@ -85,7 +85,7 @@ class TranferredLocationManagement extends React.Component {
 		this.setState(
 			{
 				data,
-				branchOptions: Object.values(branchOptionsMap),
+				locationOptions: Object.values(locationOptionsMap),
 				showAddForm: false,
 				showDeleteModal: false,
 			},
@@ -145,7 +145,7 @@ class TranferredLocationManagement extends React.Component {
 		const [{ tableSelection }] = stateReducer
 		try {
 			await apiHelper.transferredLocationApiAgent.removeByIds({
-				branchIds: tableSelection,
+				transferLocationIds: tableSelection,
 			})
 			const callback = () => {
 				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
@@ -158,7 +158,7 @@ class TranferredLocationManagement extends React.Component {
 
 	render() {
 		const { locale, stateReducer } = this.context
-		const { branchOptions, data } = this.state
+		const { locationOptions, data } = this.state
 		const [{ tableSelection }] = stateReducer
 
 		return (
@@ -177,13 +177,13 @@ class TranferredLocationManagement extends React.Component {
 				</div>
 				<hr />
 				<BOTSelectTable data={data} columns={TransferredLocationColumn} />
-				<EditBranchForm
+				<EditTransferLocationForm
 					show={this.state.showAddForm}
 					actionName={ADD}
 					handleClose={this.handleClose}
 					handleSubmit={this.handleAddSubmit}
 					title={locale.texts.CREATE_LOCATION}
-					branchOptions={branchOptions}
+					locationOptions={locationOptions}
 				/>
 				<DeleteAlertModal
 					show={this.state.showDeleteModal}
