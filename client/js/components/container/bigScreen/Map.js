@@ -142,7 +142,6 @@ class Map extends React.Component {
 		fontSize = '15px',
 		legendWidth = '250px'
 	) => {
-		// pinImage is imported
 		const { legendDescriptor } = this.props
 		const { locale } = this.context
 		let pins

@@ -37,7 +37,6 @@ import { AppContext } from '../../context/AppContext'
 import ReactTable from 'react-table'
 import styleConfig from '../../config/styleConfig'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
-import BindForm from '../presentational/form/BindForm'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import moment from 'moment'
 import EditPatientForm from '../presentational/form/EditPatientForm'
@@ -97,7 +96,6 @@ class PatientTable extends React.Component {
 		roomOptions: [],
 		objectFilter: [],
 		objectTable: [],
-		importData: [],
 		filteredData: [],
 		filterSelection: {},
 		locale: this.context.locale.abbr,
@@ -546,21 +544,6 @@ class PatientTable extends React.Component {
 					disableASN={this.state.disableASN}
 					areaTable={this.state.areaTable}
 					macOptions={this.state.macOptions}
-				/>
-				<BindForm
-					show={this.state.isShowBind}
-					bindCase={this.state.bindCase}
-					title={this.state.formTitle}
-					handleSubmit={this.handleSubmitForm}
-					formPath={this.state.formPath}
-					handleClose={this.handleClose}
-					objectTable={this.state.objectTable}
-					areaTable={this.state.areaTable}
-					macOptions={this.state.macOptions}
-					data={this.state.importData.reduce((dataMap, item) => {
-						dataMap[item.asset_control_number] = item
-						return dataMap
-					}, {})}
 				/>
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}

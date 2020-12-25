@@ -36,10 +36,6 @@ export default (app) => {
 		db.getTrackingTableByMacAddress
 	)
 
-	app.post('/data/getImportTable', db.getImportTable)
-
-	app.post('/data/getImportData', db.getImportData)
-
 	app.post('/data/addAssociation', db.addAssociation)
 
 	app.post('/data/addAssociation_Patient', db.addAssociation_Patient)
@@ -78,8 +74,6 @@ export default (app) => {
 
 	app.post('/user/editPassword', db.editPassword)
 
-	app.post('/data/getImportPatient', db.getImportPatient)
-
 	app.post('/user/getUserInfo', db.getUserInfo)
 
 	app.post('/user/addUserSearchHistory', db.addUserSearchHistory)
@@ -117,8 +111,6 @@ export default (app) => {
 	app.post('/test/deletePatient', db.deletePatient)
 
 	app.post('/test/deleteDevice', db.deleteDevice)
-
-	app.post('/test/deleteImportData', db.deleteImportData)
 
 	app.post('/test/deleteLBeacon', db.deleteLBeacon)
 

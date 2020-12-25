@@ -101,19 +101,6 @@ class DissociationForm extends React.Component {
 			if (item.asset_control_number === this.state.inputValue)
 				this.setState({ showDetail: true })
 		})
-
-		if (this.state.showDetail) {
-			const res = await apiHelper.utilsApiAgent.getImportData({
-				formOption: this.state.inputValue,
-			})
-
-			res.data.rows.forEach((item) => {
-				this.setState({
-					objectName: item.name,
-					objectType: item.type,
-				})
-			})
-		}
 	}
 
 	render() {

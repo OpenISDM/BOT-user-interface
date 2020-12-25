@@ -34,7 +34,6 @@
 
 import {
 	utils,
-	getImportData,
 	deleteDevice,
 	getTrackingTableByMacAddress,
 	trace,
@@ -44,10 +43,6 @@ import { post } from '../helper/httpClient'
 export default {
 	async getSearchableKeywords({ areaId }) {
 		return await post(utils.searchableKeyword, { areaId })
-	},
-
-	async getImportData({ formOption }) {
-		return await post(getImportData, { formOption })
 	},
 
 	async deleteDevice({ formOption }) {

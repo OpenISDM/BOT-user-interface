@@ -69,7 +69,6 @@ export const userAssignments = {
 	cancel: `${domain}/data/userAssignments/cancel`,
 }
 export const objectPackage = `${domain}/data/objectPackage`
-export const importedObject = `${domain}/data/importedObject`
 export const trace = {
 	locationHistory: `${domain}/data/trace/locationHistory`,
 	contactTree: `${domain}/data/trace/contactTree`,
@@ -112,7 +111,6 @@ export const utils = {
 	searchableKeyword: `${domain}/data/utils/searchableKeyword`,
 }
 export const deleteDevice = `${domain}/data/deleteDevice`
-export const getImportData = `${domain}/data/getImportData`
 export const getTrackingTableByMacAddress = `${domain}/data/getTrackingTableByMacAddress`
 
 export default {
@@ -123,7 +121,6 @@ export default {
 	userInfo,
 	object,
 	objectPackage,
-	importedObject,
 	trace,
 	area,
 	role,
@@ -138,7 +135,6 @@ export default {
 	pdfUrl,
 	utils,
 	deleteDevice,
-	getImportData,
 	deviceGruopDetailByAreaId,
 	getTrackingTableByMacAddress,
 }

@@ -46,7 +46,6 @@ import roleApiAgent from '../apiAgent/roleApiAgent'
 import areaApiAgent from '../apiAgent/areaApiAgent'
 import lbeaconApiAgent from '../apiAgent/lbeaconApiAgent'
 import gatewayApiAgent from '../apiAgent/gatewayApiAgent'
-import importedObjectApiAgent from '../apiAgent/importedObjectApiAgent'
 import fileApiAgent from '../apiAgent/fileApiAgent'
 import utilsApiAgent from '../apiAgent/utilsApiAgent'
 import userAssignmentsApiAgent from '../apiAgent/userAssignmentsApiAgent'
@@ -58,7 +57,6 @@ const apiHelper = {
 	fileApiAgent,
 	gatewayApiAgent,
 	geofenceApis,
-	importedObjectApiAgent,
 	lbeaconApiAgent,
 	monitor: monitorApis,
 	objectApiAgent,

@@ -37,7 +37,6 @@ import lbeaconRoutes from './dataRoutes/lbeaconRoutes'
 import gatewayRoutes from './dataRoutes/gatewayRoutes'
 import userRoutes from './dataRoutes/userRoutes'
 import objectRoutes from './dataRoutes/objectRoutes'
-import importedObjectRoutes from './dataRoutes/importedObjectRoutes'
 import locationHistoryRoutes from './dataRoutes/locationHistoryRoutes'
 import areaRoutes from './dataRoutes/areaRoutes'
 import fileRoutes from './dataRoutes/fileRoutes'
@@ -56,7 +55,6 @@ const dataRoutes = (app) => {
 	gatewayRoutes(app)
 	userRoutes(app)
 	objectRoutes(app)
-	importedObjectRoutes(app)
 	locationHistoryRoutes(app)
 	areaRoutes(app)
 	fileRoutes(app)

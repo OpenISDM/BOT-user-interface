@@ -39,7 +39,6 @@ import ReactTable from 'react-table'
 import styleConfig from '../../config/styleConfig'
 import selecTableHOC from 'react-table/lib/hoc/selectTable'
 import EditObjectForm from './form/EditObjectForm'
-import BindForm from '../presentational/form/BindForm'
 import DissociationForm from '../container/DissociationForm'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import Select from 'react-select'
@@ -97,7 +96,6 @@ class ObjectTable extends React.Component {
 		areaTable: [],
 		objectTable: [],
 		objectFilter: [],
-		importData: [],
 		filteredData: [],
 		filterSelection: {},
 		apiMethod: '',
@@ -110,7 +108,6 @@ class ObjectTable extends React.Component {
 		this.getData()
 		this.getAreaTable()
 		this.getIdleMacaddrSet()
-		this.getImportData()
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -273,22 +270,6 @@ class ObjectTable extends React.Component {
 				idleMacaddrSet,
 				macOptions,
 			})
-		}
-	}
-
-	getImportData = async (callback) => {
-		const { locale } = this.context
-
-		const res = await apiHelper.importedObjectApiAgent.getImportedObjectTable({
-			locale: locale.abbr,
-		})
-		if (res) {
-			this.setState(
-				{
-					importData: res.data.rows,
-				},
-				callback
-			)
 		}
 	}
 
@@ -667,22 +648,6 @@ class ObjectTable extends React.Component {
 					idleMacaddrSet={this.state.idleMacaddrSet}
 					associatedMacSet={this.state.associatedMacSet}
 					macOptions={this.state.macOptions}
-				/>
-				<BindForm
-					show={this.state.isShowBind}
-					bindCase={this.state.bindCase}
-					title={this.state.formTitle}
-					handleSubmit={this.handleSubmitForm}
-					formPath={this.state.formPath}
-					handleClose={this.handleClose}
-					objectTable={this.state.objectTable}
-					ImportData={this.state.importData}
-					areaTable={this.state.areaTable}
-					macOptions={this.state.macOptions}
-					data={this.state.importData.reduce((dataMap, item) => {
-						dataMap[item.asset_control_number] = item
-						return dataMap
-					}, {})}
 				/>
 				<DissociationForm
 					show={this.state.isShowEditImportTable}
