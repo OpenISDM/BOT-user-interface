@@ -57,8 +57,8 @@ module.exports = {
 	devtool: 'none',
 	output: {
 		path: path.join(__dirname, 'server/dist'),
-		filename: './js/[name].[chunkhash].js',
-		chunkFilename: './js/[name].[chunkhash].chunk.js',
+		filename: './js/[name].[hash].js',
+		chunkFilename: './js/[name].[hash].chunk.js',
 		publicPath: '/',
 	},
 	module: {
