@@ -320,21 +320,13 @@ class MainContainer extends React.Component {
 	getGeofenceConfig = async (callback) => {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
-
-		const res = await apiHelper.geofenceApis.getGeofenceConfig(area.id)
+		const res = await apiHelper.geofenceApis.getGeofenceConfig({
+			areaId: area.id,
+		})
 		if (res) {
-			const geofenceConfig = res.data.rows.reduce((config, rule) => {
-				if (!config[rule.area_id]) {
-					config[rule.area_id] = {
-						enable: rule.enable,
-						rules: [rule],
-					}
-				} else config[rule.area_id].rules.push(rule)
-				return config
-			}, {})
 			this.setState(
 				{
-					geofenceConfig,
+					geofenceConfig: res.data,
 				},
 				callback
 			)

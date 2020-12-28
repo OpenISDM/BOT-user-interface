@@ -40,7 +40,12 @@ import { AppContext } from '../../context/AppContext'
 import siteConfig from '../../../../site_module/siteConfig'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import { JSONClone, isEqual, isWebpSupported } from '../../helper/utilities'
+import {
+	JSONClone,
+	isEqual,
+	isWebpSupported,
+	getCoordinatesFromUUID,
+} from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
@@ -306,30 +311,24 @@ class Map extends React.Component {
 	createGeofenceMarkers = () => {
 		const { geofenceConfig } = this.props
 
-		const { stateReducer } = this.context
-
 		// this.calculateScale()
-
-		const [{ area }] = stateReducer
 
 		this.geoFenceLayer.clearLayers()
 
 		/** Create the markers of lbeacons of perimeters and fences
 		 *  and onto the map  */
-		if (geofenceConfig[area.id] && geofenceConfig[area.id].enable) {
-			;['parsePerimeters', 'parseFences'].forEach((type) => {
-				geofenceConfig[area.id].rules.forEach((rule) => {
-					if (rule.is_active) {
-						rule[type].coordinates.forEach((item) => {
-							L.circleMarker(
-								item,
-								this.iconOptions.geoFenceMarkerOptions
-							).addTo(this.geoFenceLayer)
-						})
-					}
-				})
-			})
-		}
+		geofenceConfig.forEach((config) => {
+			if (config.enable && config.is_active) {
+				L.circleMarker(
+					getCoordinatesFromUUID({ lBeaconUUID: config.perimeters_uuid }),
+					this.iconOptions.geoFenceMarkerOptions
+				).addTo(this.geoFenceLayer)
+				L.circleMarker(
+					getCoordinatesFromUUID({ lBeaconUUID: config.fences_uuid }),
+					this.iconOptions.geoFenceMarkerOptions
+				).addTo(this.geoFenceLayer)
+			}
+		})
 
 		/** Add the new markerslayers to the map */
 		this.geoFenceLayer.addTo(this.map)

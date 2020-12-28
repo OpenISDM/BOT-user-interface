@@ -156,3 +156,10 @@ export const convertStatusToText = (locale, status) => {
 		? locale.texts.RETURNED
 		: locale.texts[status.toUpperCase().replace(/ /g, '_')]
 }
+
+export const getCoordinatesFromUUID = ({ lBeaconUUID = '' }) => {
+	const uuid = lBeaconUUID.replaceAll('-', '')
+	const y = parseInt(uuid.slice(-8))
+	const x = parseInt(uuid.slice(12, 20))
+	return [y, x]
+}
