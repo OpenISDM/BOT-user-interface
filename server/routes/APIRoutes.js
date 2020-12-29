@@ -1,5 +1,4 @@
 import db from '../api_query'
-import mockup from '../api_query_mockup_v2'
 export default (app) => {
 	/** 給我帳號密碼 給你金鑰 **/
 	app.post('/api/1.0/auth/signin', db.get_api_key)
@@ -9,4 +8,7 @@ export default (app) => {
 
 	app.post('/api/1.0/tracing/history/people', db.get_people_history_data)
 	app.post('/api/1.0/tracing/realtime/people', db.get_people_realtime_data)
+
+	app.post('/api/1.0/tracing/history/object', db.get_object_history_data)
+	app.post('/api/1.0/tracing/realtime/object', db.get_object_realtime_data)
 }
