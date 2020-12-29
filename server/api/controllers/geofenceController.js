@@ -34,6 +34,17 @@
 
 import 'dotenv/config'
 import GeoFenceConfig from '../db/model/geoFenceConfig'
+import GeoFenceAreaConfig from '../db/model/geoFenceAreaConfig'
+import NotificationConfig from '../db/model/notificationConfig'
+
+const MONITOR_TYPE = {
+	NORMAL: 0,
+	GEO_FENCE: 1,
+	PANIC: 2,
+	ACTIVITY: 4,
+	LOCATION: 8,
+	BED_CLEARNESS: 16,
+}
 
 export default {
 	getGeofenceConfig: async (request, response) => {
@@ -137,6 +148,87 @@ export default {
 				}
 			)
 			response.status(200).json(res)
+		} catch (e) {
+			console.log('setGeofenceConfig error: ', e)
+		}
+	},
+
+	setGeofenceAreaConfig: async (request, response) => {
+		const { areaConfig } = request.body
+		try {
+			const {
+				area_id,
+				monitorDeviceNameListids = [],
+				monitorPatientNameListids = [],
+				montiorObjectTypes = [],
+				dayShift,
+				swingShift,
+				nightShift,
+			} = areaConfig
+
+			const queriedConfig = await GeoFenceAreaConfig.findOne({
+				where: { area_id },
+			})
+			if (queriedConfig) {
+				await GeoFenceAreaConfig.update(
+					{
+						monitored_object_types: montiorObjectTypes.join(),
+						monitored_patient_named_list_ids: monitorPatientNameListids.join(),
+						monitored_device_named_list_ids: monitorDeviceNameListids.join(),
+					},
+					{ where: { area_id } }
+				)
+			} else {
+				await GeoFenceAreaConfig.create({
+					area_id,
+					monitored_object_types: montiorObjectTypes.join(),
+					monitored_patient_named_list_ids: monitorPatientNameListids.join(),
+					monitored_device_named_list_ids: monitorDeviceNameListids.join(),
+				})
+			}
+
+			const shiftListPromises = [dayShift, swingShift, nightShift].map(
+				async (shift) => {
+					const {
+						name,
+						alert_last_sec,
+						active_alert_types,
+						enable,
+						start_time,
+						end_time,
+					} = shift
+
+					const queriedShift = await NotificationConfig.findOne({
+						where: {
+							area_id,
+							name,
+						},
+					})
+					if (queriedShift) {
+						return NotificationConfig.update({
+							alert_last_sec,
+							active_alert_types,
+							enable,
+							start_time,
+							end_time,
+						})
+					} else {
+						return NotificationConfig.create({
+							area_id,
+							name,
+							alert_last_sec,
+							active_alert_types,
+							enable,
+							start_time,
+							end_time,
+						})
+					}
+				}
+			)
+
+			await Promise.all(shiftListPromises)
+
+			response.status(200).json({ message: 'OK' })
 		} catch (e) {
 			console.log('setGeofenceConfig error: ', e)
 		}

@@ -89,6 +89,7 @@ export const file = {
 	},
 }
 export const geofence = `${domain}/data/geofence`
+export const geofenceArea = `${domain}/data/geofence/area`
 export const monitor = `${domain}/data/monitor`
 export const record = {
 	editedObject: `${domain}/data/record/editedObject`,
@@ -127,6 +128,7 @@ export default {
 	auth,
 	file,
 	geofence,
+	geofenceArea,
 	monitor,
 	record,
 	transferredLocation,

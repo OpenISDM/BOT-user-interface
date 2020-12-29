@@ -621,6 +621,10 @@ const en = {
 	DEVICE_ALIASES: 'Device Aliases',
 	TRANSFER_LOCATION_ALIASES: 'Transfer Location Aliases',
 	EMERGENCY_ALERT: 'Emergency Alert',
+
+	DAY_SHIFT: 'Day Shift',
+	SWING_SHIFT: 'Swing Shift',
+	NIGHT_SHIFT: 'Night Shift',
 }
 
 export default en

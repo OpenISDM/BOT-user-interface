@@ -607,6 +607,10 @@ const tw = {
 	DEVICE_ALIASES: '儀器別名',
 	TRANSFER_LOCATION_ALIASES: '轉移地點別名',
 	EMERGENCY_ALERT: '緊急呼救',
+
+	DAY_SHIFT: '早班',
+	SWING_SHIFT: '中班',
+	NIGHT_SHIFT: '晚班',
 }
 
 export default tw

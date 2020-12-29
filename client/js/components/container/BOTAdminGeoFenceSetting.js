@@ -32,17 +32,25 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { AppContext } from '../../context/AppContext'
 import { Row, Col, Form } from 'react-bootstrap'
 import BOTButton from '../BOTComponent/BOTButton'
 import BOTMap from '../BOTComponent/BOTMap'
 import config from '../../config'
+import apiHelper from '../../helper/apiHelper'
+import NoticiationTypeConfig from '../container/NoticiationTypeConfig'
 import PropTypes from 'prop-types'
 
 const AREAS = {
 	CURRENT_COVERED_AREA: 0,
 	GLOBAL_AREA: 1,
+}
+
+const SHIFT_NAME = {
+	DAY_SHIFT: 'DAY_SHIFT',
+	SWING_SHIFT: 'SWING_SHIFT',
+	NIGHT_SHIFT: 'NIGHT_SHIFT',
 }
 
 class BOTAdminGeoFenceSetting extends React.Component {
@@ -57,6 +65,43 @@ class BOTAdminGeoFenceSetting extends React.Component {
 	setCurrentPressedButton = (identity) => {
 		this.setState({
 			buttonSelected: identity,
+		})
+	}
+
+	submit = async () => {
+		const areaConfig = {
+			area_id: 3,
+			monitorDeviceNameListids: [4, 3, 2],
+			monitorPatientNameListids: [12, 23, 65],
+			montiorObjectTypes: ['Patient', 'Vistor', 'Staff'],
+			dayShift: {
+				name: SHIFT_NAME.DAY_SHIFT,
+				alert_last_sec: 0,
+				active_alert_types: 1,
+				enable: 1,
+				start_time: '00:00:00',
+				end_time: '10:00:00',
+			},
+			swingShift: {
+				name: SHIFT_NAME.SWING_SHIFT,
+				alert_last_sec: 0,
+				active_alert_types: 3,
+				enable: 1,
+				start_time: '10:00:00',
+				end_time: '16:00:00',
+			},
+			nightShift: {
+				name: SHIFT_NAME.NIGHT_SHIFT,
+				alert_last_sec: 0,
+				active_alert_types: 7,
+				enable: 1,
+				start_time: '16:00:00',
+				end_time: '23:59:59',
+			},
+		}
+
+		const res = await apiHelper.geofenceApis.setGeofenceAreaConfig({
+			areaConfig,
 		})
 	}
 
@@ -83,157 +128,53 @@ class BOTAdminGeoFenceSetting extends React.Component {
 						pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}
 						onClick={() => {
 							this.setCurrentPressedButton(AREAS.GLOBAL_AREA)
+							this.submit()
 						}}
 						text={locale.texts.WHOLE_SITE}
 					/>
 				</Row>
 				<hr />
+				<Row style={{ height: '350px' }}>
+					<BOTMap showGeoFence={true} />
+				</Row>
+				<hr />
+				<div
+					className="font-size-120-percent color-black d-flex justify-content-center"
+					style={{ paddingBottom: '5px' }}
+				>
+					Monitored Objects
+				</div>
+				<Form.Row>
+					<Form.Group as={Col} controlId="exampleForm.ControlSelect1">
+						<Form.Label> Devices</Form.Label>
+						<Form.Control as="select">
+							<option>All Devices</option>
+						</Form.Control>
+					</Form.Group>
+					<Form.Group as={Col} controlId="exampleForm.ControlSelect2">
+						<Form.Label> Patients</Form.Label>
+						<Form.Control as="select">
+							<option>All Patinets</option>
+						</Form.Control>
+					</Form.Group>
+					<Form.Group as={Col} controlId="exampleForm.ControlSelect3">
+						<Form.Label>Other </Form.Label>
+						<Form.Control as="select">
+							<option>Contractors</option>
+						</Form.Control>
+					</Form.Group>
+				</Form.Row>
+				<hr />
+				<div
+					className="font-size-120-percent color-black d-flex justify-content-center"
+					style={{ paddingBottom: '5px' }}
+				>
+					Alert
+				</div>
 				<Row>
-					<Col xs={12} sm={12} md={6} lg={6} xl={6}>
-						<BOTMap showGeoFence={true} />
-					</Col>
-					<Col xs={12} sm={12} md={6} lg={6} xl={6}>
-						<Form>
-							<Form.Group controlId="exampleForm.ControlSelect1">
-								<Form.Label>Monitored Devices</Form.Label>
-								<Form.Control as="select">
-									<option>All Devices</option>
-								</Form.Control>
-							</Form.Group>
-							<Form.Group controlId="exampleForm.ControlSelect2">
-								<Form.Label>Monitored Patients</Form.Label>
-								<Form.Control as="select">
-									<option>All Patinets</option>
-								</Form.Control>
-							</Form.Group>
-							<Form.Group controlId="exampleForm.ControlSelect3">
-								<Form.Label>Other Monitored Objects</Form.Label>
-								<Form.Control as="select">
-									<option>Contractors</option>
-								</Form.Control>
-							</Form.Group>
-						</Form>
-						<Form>
-							<Form.Group controlId="exampleForm.ControlSelect1">
-								<Form.Label>On Time</Form.Label>
-								<Form.Control as="select">
-									<option>Always</option>
-								</Form.Control>
-							</Form.Group>
-							<Form.Label>Alerts</Form.Label>
-							<Form.Group controlId="exampleForm.ControlSelect2">
-								<Form.Label>Clear/Reset</Form.Label>
-								<Form.Control as="select">
-									<option>Manually</option>
-								</Form.Control>
-							</Form.Group>
-							<Form.Group controlId="exampleForm.ControlSelect3">
-								<Form.Label>Other Monitored Objects</Form.Label>
-								<Form.Control as="select">
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-								</Form.Control>
-							</Form.Group>
-						</Form>
-						<Col>
-							<Row>
-								<Col>
-									<Form>
-										<Form.Label>Day Shift</Form.Label>
-										<Form>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'day-shift-1'}
-												label={'Message on GUI'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'day-shift-2'}
-												label={'Flashing Lights'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'day-shift-3'}
-												label={'Alert bells'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'day-shift-4'}
-												label={'Others'}
-											/>
-										</Form>
-									</Form>
-								</Col>
-								<Col>
-									<Form>
-										<Form.Label>Swing Shift</Form.Label>
-										<Form>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'swing-shift-1'}
-												label={'Message on GUI'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'swing-shift-2'}
-												label={'Flashing Lights'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'swing-shift-3'}
-												label={'Alert bells'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'swing-shift-4'}
-												label={'Others'}
-											/>
-										</Form>
-									</Form>
-								</Col>
-								<Col>
-									<Form>
-										<Form.Label>Night Shift</Form.Label>
-										<Form>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'night-shift-1'}
-												label={'Message on GUI'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'night-shift-2'}
-												label={'Flashing Lights'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'night-shift-3'}
-												label={'Alert bells'}
-											/>
-											<Form.Check
-												custom
-												type={'switch'}
-												id={'night-shift-4'}
-												label={'Others'}
-											/>
-										</Form>
-									</Form>
-								</Col>
-							</Row>
-						</Col>
-					</Col>
+					<NoticiationTypeConfig name={locale.texts.DAY_SHIFT} />
+					<NoticiationTypeConfig name={locale.texts.SWING_SHIFT} />
+					<NoticiationTypeConfig name={locale.texts.NIGHT_SHIFT} />
 				</Row>
 			</Col>
 		)
