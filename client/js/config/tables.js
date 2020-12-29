@@ -639,6 +639,17 @@ const geofenceConfigColumn = [
 			),
 	},
 	{
+		Header: 'is global fence',
+		accessor: 'is_global_fence',
+		width: 100,
+		Cell: (props) =>
+			props.value ? (
+				<i className="fas fa-circle" style={style.icon.circle}></i>
+			) : (
+				''
+			),
+	},
+	{
 		Header: 'area',
 		accessor: 'area.label',
 		width: 150,

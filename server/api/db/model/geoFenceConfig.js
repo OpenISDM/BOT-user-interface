@@ -28,6 +28,9 @@ const GeoFenceConfig = sequelize.define(
 		area_id: {
 			type: DataTypes.INTEGER,
 		},
+		is_global_fence: {
+			type: DataTypes.INTEGER,
+		},
 		perimeters_number_uuid: {
 			type: DataTypes.INTEGER,
 		},

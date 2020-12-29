@@ -42,6 +42,8 @@ import Switcher, { SWITCH_ENUM } from '../../container/Switcher'
 import styleConfig from '../../../config/styleConfig'
 import LocaleContext from '../../../context/LocaleContext'
 import FormikFormGroup from '../FormikFormGroup'
+import RadioButtonGroup from '../../container/RadioButtonGroup'
+import RadioButton from '../RadioButton'
 import BOTTimePicker from '../../BOTComponent/BOTTimePicker'
 import config from '../../../config'
 
@@ -100,7 +102,12 @@ const EditGeofenceConfig = ({
 					validateOnChange={false}
 					validateOnBlur={false}
 					initialValues={{
-						enable: isEdited ? selectedData.enable : SWITCH_ENUM.ON,
+						enable:
+							isEdited &&
+							selectedData &&
+							parseInt(selectedData.enable) === SWITCH_ENUM.ON
+								? SWITCH_ENUM.ON
+								: SWITCH_ENUM.OFF,
 						geofenceName: isEdited ? selectedData.name : '',
 						p_lbeacon: isEdited ? selectedData.p_lbeacon : [],
 						f_lbeacon: isEdited ? selectedData.f_lbeacon : [],
@@ -110,6 +117,11 @@ const EditGeofenceConfig = ({
 						end_time: isEdited ? selectedData.end_time : '23:59:59',
 						selected_p_lbeacon: null,
 						selected_f_lbeacon: null,
+						isGlobal:
+							selectedData &&
+							parseInt(selectedData.is_global_fence) === SWITCH_ENUM.ON
+								? SWITCH_ENUM.ON
+								: SWITCH_ENUM.OFF,
 					}}
 					validationSchema={object().shape({
 						geofenceName: string().required(locale.texts.NAME_IS_REQUIRED),
@@ -135,6 +147,7 @@ const EditGeofenceConfig = ({
 							start_time: values.start_time,
 							end_time: values.end_time,
 							area_id: area.id,
+							is_global_fence: values.isGlobal,
 							perimeters_number_uuid: values.p_lbeacon.length,
 							perimeters_uuid: values.p_lbeacon.join(','),
 							perimeters_rssi: values.p_rssi,
@@ -164,6 +177,33 @@ const EditGeofenceConfig = ({
 											setFieldValue('enable', value)
 										}}
 										status={values.enable}
+									/>
+								</Col>
+								<Col>
+									<FormikFormGroup
+										name="isGlobal"
+										label={locale.texts.IS_GLOBAL_FENCE}
+										errors={errors.isGlobal}
+										touched={touched.isGlobal}
+										placeholder=""
+										component={() => (
+											<RadioButtonGroup value={parseInt(values.isGlobal)}>
+												<div className="d-flex justify-content-start form-group my-1">
+													<Field
+														component={RadioButton}
+														name="isGlobal"
+														id={SWITCH_ENUM.ON}
+														label={locale.texts.YES}
+													/>
+													<Field
+														component={RadioButton}
+														name="isGlobal"
+														id={SWITCH_ENUM.OFF}
+														label={locale.texts.NO}
+													/>
+												</div>
+											</RadioButtonGroup>
+										)}
 									/>
 								</Col>
 							</Row>
