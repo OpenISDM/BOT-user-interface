@@ -75,7 +75,7 @@ const get_data = (
 ) => {
 	let text = `
     WITH ranges AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, payload,
+        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, 
             CASE WHEN LAG(uuid) OVER
                     (PARTITION BY mac_address
                         ORDER BY mac_address, record_timestamp) = uuid
@@ -88,8 +88,7 @@ const get_data = (
                 location_history_table.uuid AS uuid,
                 location_history_table.record_timestamp AS record_timestamp,
                 location_history_table.battery_voltage AS battery_voltage,
-				location_history_table.average_rssi AS average_rssi,
-				location_history_table.payload as payload
+				location_history_table.average_rssi AS average_rssi
             FROM location_history_table
 
             INNER JOIN object_table
@@ -122,7 +121,7 @@ const get_data = (
     )
 
     , groups AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, payload, r,
+        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r,
             SUM(r)
                 OVER (ORDER BY mac_address, record_timestamp) grp
         FROM ranges
@@ -139,8 +138,7 @@ const get_data = (
         AVG(groups.average_rssi) AS avg_rssi,
         MIN(groups.record_timestamp) AS start_time,
         MAX(groups.record_timestamp) AS end_time,
-		MAX(groups.record_timestamp) - MIN(groups.record_timestamp)  AS duration,
-		MIN(groups.payload) as payload
+		MAX(groups.record_timestamp) - MIN(groups.record_timestamp)  AS duration
     FROM groups
 
     INNER JOIN object_table
