@@ -49,5 +49,6 @@ export default (app) => {
 
 	app
 		.route('/data/geofence/area')
+		.get(geofenceController.getGeofenceAreaConfig)
 		.post(geofenceController.setGeofenceAreaConfig)
 }

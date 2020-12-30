@@ -98,7 +98,7 @@ class SearchContainer extends React.Component {
 
 	/** Get the searchable object type. */
 	getData = async () => {
-		const { locale, auth, stateReducer } = this.context
+		const { auth, stateReducer } = this.context
 		const [{ area }] = stateReducer
 		const res = await apiHelper.objectApiAgent.getAliases({
 			areaId: area.id,

@@ -608,9 +608,31 @@ const tw = {
 	TRANSFER_LOCATION_ALIASES: '轉移地點別名',
 	EMERGENCY_ALERT: '緊急呼救',
 
+	MONITORED_OBJECTS: '選取可監控物件',
+	ALERTS: '警報設置',
+
 	DAY_SHIFT: '早班',
 	SWING_SHIFT: '中班',
 	NIGHT_SHIFT: '晚班',
+
+	DEVICES: '儀器',
+	PATIENTS: '病人',
+	OTHER_OBJECT_TYPES: '其他物件類型',
+
+	CONTRACTORS: '約聘人員',
+	VISITORS: '訪客',
+
+	MONITOR_ON_TIME: '監測啟動',
+	ALERT_DEVICES_RESET: '警報裝置重置',
+	NOTIFICATION_OPTIONS: '通知類型',
+
+	SHOW_MESSAGE_ON_GUI: '介面上顯示通知訊息',
+	FLASH_LIGHTS: '閃爍警示燈',
+	ALERT_BELLS: '觸發警示鈴',
+	SEND_SMS: '發送簡訊',
+
+	KEEP_ALERTING_IN_SEC: '持續響鈴時間(秒)',
+	CLOSE_MANUALLY: '手動關閉',
 }
 
 export default tw

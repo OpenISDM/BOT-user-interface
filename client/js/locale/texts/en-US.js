@@ -622,9 +622,34 @@ const en = {
 	TRANSFER_LOCATION_ALIASES: 'Transfer Location Aliases',
 	EMERGENCY_ALERT: 'Emergency Alert',
 
+	MONITORED_OBJECTS: 'Monitored Objects',
+	ALERTS: 'Alerts',
+
 	DAY_SHIFT: 'Day Shift',
 	SWING_SHIFT: 'Swing Shift',
 	NIGHT_SHIFT: 'Night Shift',
+
+	DEVICES: 'Devices',
+	PATIENTS: 'Patients',
+	OTHER_OBJECT_TYPES: 'Other Object Types',
+
+	CONTRACTORS: 'Contractors',
+	VISITORS: 'Visitors',
+
+	MONITOR_ON_TIME: 'On Time',
+	ALERT_DEVICES_RESET: 'Devices Alert Reset',
+	NOTIFICATION_OPTIONS: 'Notification Types',
+
+	SHOW_MESSAGE_ON_GUI: 'Show Message on GUI',
+	FLASH_LIGHTS: 'Flash Lights',
+	ALERT_BELLS: 'Alert Bells',
+	SEND_SMS: 'Send SMS',
+
+	ON: 'ON',
+	OFF: 'OFF',
+
+	KEEP_ALERTING_IN_SEC: 'Keep Alerting in Seconds',
+	CLOSE_MANUALLY: 'Close Manually',
 }
 
 export default en

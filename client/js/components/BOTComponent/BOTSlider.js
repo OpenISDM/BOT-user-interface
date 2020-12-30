@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        geofenceApis.js
+        BOTSlider.js
 
     File Description:
         BOT UI component
@@ -32,46 +32,49 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { geofence, geofenceArea } from '../dataSrc'
-import { post, put, del, patch, get } from '../helper/httpClient'
-import config from '../config'
-
-const geofenceApis = {
-	async getGeofenceConfig({ areaId }) {
-		return await post(geofence, {
-			areaId,
-		})
-	},
-
-	async delete({ ids }) {
-		return await del(geofence, {
-			ids,
-		})
-	},
-
-	async add({ configPackage }) {
-		return await patch(geofence, {
-			configPackage,
-		})
-	},
-
-	async setGeofenceConfig({ configPackage }) {
-		return await put(geofence, {
-			configPackage,
-		})
-	},
-
-	async setGeofenceAreaConfig({ areaConfig }) {
-		return await post(geofenceArea, {
-			areaConfig,
-		})
-	},
-
-	async getGeofenceAreaConfig({ areaId }) {
-		return await get(geofenceArea, {
-			areaId,
-		})
-	},
+import 'rc-tooltip/assets/bootstrap.css'
+import React, { useState } from 'react'
+import Slider, { SliderTooltip } from 'rc-slider'
+const { Handle } = Slider
+const handle = (props) => {
+	const { value, dragging, index, ...restProps } = props
+	return (
+		<SliderTooltip
+			prefixCls="rc-slider-tooltip"
+			overlay={`${value}`}
+			visible={dragging}
+			placement="top"
+			key={index}
+		>
+			<Handle value={value} {...restProps} />
+		</SliderTooltip>
+	)
 }
 
-export default geofenceApis
+const BOTSlider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
+	const [value, setValue] = useState([defaultValue])
+	return (
+		<div
+			style={{
+				marginTop: '10px',
+				marginBottom: '10px',
+				marginLeft: '5px',
+				marginRight: '5px',
+			}}
+		>
+			<div style={{}}>{value}</div>
+			<Slider
+				min={min}
+				max={max}
+				defaultValue={defaultValue}
+				handle={handle}
+				onChange={(value) => {
+					setValue(value)
+					onChange()
+				}}
+			/>
+		</div>
+	)
+}
+
+export default BOTSlider

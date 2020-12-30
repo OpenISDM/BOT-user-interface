@@ -153,6 +153,24 @@ export default {
 		}
 	},
 
+	getGeofenceAreaConfig: async (request, response) => {
+		const { areaId } = request.query
+		try {
+			const areaConfig = await GeoFenceAreaConfig.findOne({
+				where: { area_id: areaId },
+			})
+			const geofenceNotificationConfigs = await NotificationConfig.findAll({
+				where: { area_id: areaId },
+			})
+			response.status(200).json({
+				areaConfig,
+				geofenceNotificationConfigs,
+			})
+		} catch (e) {
+			console.log('setGeofenceConfig error: ', e)
+		}
+	},
+
 	setGeofenceAreaConfig: async (request, response) => {
 		const { areaConfig } = request.body
 		try {
@@ -202,6 +220,7 @@ export default {
 						where: {
 							area_id,
 							name,
+							monitor_type: MONITOR_TYPE.GEO_FENCE,
 						},
 					})
 					if (queriedShift) {
@@ -221,6 +240,7 @@ export default {
 							enable,
 							start_time,
 							end_time,
+							monitor_type: MONITOR_TYPE.GEO_FENCE,
 						})
 					}
 				}

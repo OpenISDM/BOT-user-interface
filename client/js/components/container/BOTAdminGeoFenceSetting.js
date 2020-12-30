@@ -32,14 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { useContext } from 'react'
+import React from 'react'
+import { Row, Col } from 'react-bootstrap'
+import { Formik, Field } from 'formik'
+import { object, string, array } from 'yup'
+import Select from 'react-select'
 import { AppContext } from '../../context/AppContext'
-import { Row, Col, Form } from 'react-bootstrap'
+import FormikFormGroup from '../presentational/FormikFormGroup'
 import BOTButton from '../BOTComponent/BOTButton'
 import BOTMap from '../BOTComponent/BOTMap'
 import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
-import NoticiationTypeConfig from '../container/NoticiationTypeConfig'
+import NotificationTypeConfig from '../container/NotificationTypeConfig'
 import PropTypes from 'prop-types'
 
 const AREAS = {
@@ -58,6 +62,12 @@ class BOTAdminGeoFenceSetting extends React.Component {
 
 	state = {
 		buttonSelected: AREAS.CURRENT_COVERED_AREA,
+		personObjectTypes: [],
+		deviceObjectTypes: [],
+	}
+
+	componentDidMount = () => {
+		this.getData()
 	}
 
 	checkButtonIsPressed = (identity) => this.state.buttonSelected === identity
@@ -66,6 +76,14 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		this.setState({
 			buttonSelected: identity,
 		})
+	}
+
+	getData = async () => {
+		const [{ area }] = this.context.stateReducer
+		const res = await apiHelper.geofenceApis.getGeofenceAreaConfig({
+			areaId: area.id,
+		})
+		console.log(res.data)
 	}
 
 	submit = async () => {
@@ -112,70 +130,210 @@ class BOTAdminGeoFenceSetting extends React.Component {
 			(module) => parseInt(module.id) === parseInt(area.id)
 		)
 
-		const style = {}
+		const monitoredDevicesOptions = [
+			{
+				value: locale.texts.ALL_DEVICES,
+				label: locale.texts.ALL_DEVICES,
+				id: 1,
+			},
+		]
+
+		const monitoredPatientsOptions = [
+			{
+				value: locale.texts.ALL_PATIENTS,
+				label: locale.texts.ALL_PATIENTS,
+				id: 1,
+			},
+		]
+
+		const monitoredOtherObjectTypesOptions = [
+			{
+				value: locale.texts.CONTRACTORS,
+				label: locale.texts.CONTRACTORS,
+				id: 1,
+			},
+			{
+				value: locale.texts.VISITORS,
+				label: locale.texts.VISITORS,
+				id: 2,
+			},
+		]
+
+		const defaultShiftList = ['dayShift', 'swingShift', 'nightShift']
+		let defaultShiftMapValue = {}
+		defaultShiftList.forEach((key) => {
+			defaultShiftMapValue = {
+				...defaultShiftMapValue,
+				[`${key}_start_time`]: '00:00:00',
+				[`${key}_end_time`]: '23:59:59',
+				[`${key}_enable`]: 0,
+				[`${key}_alert_last_sec`]: 0,
+				[`${key}_flash_lights`]: 0,
+				[`${key}_alert_bells`]: 0,
+				[`${key}_msg_on_gui`]: 0,
+				[`${key}_send_sms`]: 0,
+			}
+		})
 
 		return (
 			<Col>
-				<Row>
-					<BOTButton
-						pressed={this.checkButtonIsPressed(AREAS.CURRENT_COVERED_AREA)}
-						onClick={() => {
-							this.setCurrentPressedButton(AREAS.CURRENT_COVERED_AREA)
-						}}
-						text={locale.texts[currentAreaModule.name]}
-					/>
-					<BOTButton
-						pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}
-						onClick={() => {
-							this.setCurrentPressedButton(AREAS.GLOBAL_AREA)
-							this.submit()
-						}}
-						text={locale.texts.WHOLE_SITE}
-					/>
-				</Row>
-				<hr />
-				<Row style={{ height: '350px' }}>
-					<BOTMap showGeoFence={true} />
-				</Row>
-				<hr />
-				<div
-					className="font-size-120-percent color-black d-flex justify-content-center"
-					style={{ paddingBottom: '5px' }}
-				>
-					Monitored Objects
-				</div>
-				<Form.Row>
-					<Form.Group as={Col} controlId="exampleForm.ControlSelect1">
-						<Form.Label> Devices</Form.Label>
-						<Form.Control as="select">
-							<option>All Devices</option>
-						</Form.Control>
-					</Form.Group>
-					<Form.Group as={Col} controlId="exampleForm.ControlSelect2">
-						<Form.Label> Patients</Form.Label>
-						<Form.Control as="select">
-							<option>All Patinets</option>
-						</Form.Control>
-					</Form.Group>
-					<Form.Group as={Col} controlId="exampleForm.ControlSelect3">
-						<Form.Label>Other </Form.Label>
-						<Form.Control as="select">
-							<option>Contractors</option>
-						</Form.Control>
-					</Form.Group>
-				</Form.Row>
-				<hr />
-				<div
-					className="font-size-120-percent color-black d-flex justify-content-center"
-					style={{ paddingBottom: '5px' }}
-				>
-					Alert
-				</div>
-				<Row>
-					<NoticiationTypeConfig name={locale.texts.DAY_SHIFT} />
-					<NoticiationTypeConfig name={locale.texts.SWING_SHIFT} />
-					<NoticiationTypeConfig name={locale.texts.NIGHT_SHIFT} />
-				</Row>
+				<Formik
+					enableReinitialize
+					validateOnChange={false}
+					validateOnBlur={false}
+					initialValues={{
+						devices: {},
+						patients: {},
+						otherObjectTypes: {},
+						...defaultShiftMapValue,
+					}}
+					validationSchema={null}
+					onSubmit={(values) => {}}
+					render={({
+						errors,
+						touched,
+						values,
+						setFieldValue,
+						isSubmitting,
+					}) => (
+						<>
+							<Row style={{ justifyContent: 'space-between' }}>
+								<div>
+									<BOTButton
+										pressed={this.checkButtonIsPressed(
+											AREAS.CURRENT_COVERED_AREA
+										)}
+										onClick={() => {
+											this.setCurrentPressedButton(AREAS.CURRENT_COVERED_AREA)
+										}}
+										text={locale.texts[currentAreaModule.name]}
+									/>
+									<BOTButton
+										pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}
+										onClick={() => {
+											this.setCurrentPressedButton(AREAS.GLOBAL_AREA)
+											this.submit()
+										}}
+										text={locale.texts.WHOLE_SITE}
+									/>
+								</div>
+
+								<BOTButton
+									pressed={true}
+									text={locale.texts.SAVE}
+									type="submit"
+									variant="primary"
+									disabled={isSubmitting}
+								/>
+							</Row>
+							<hr />
+							<Row style={{ height: '300px' }}>
+								<BOTMap showGeoFence={true} />
+							</Row>
+							<hr />
+							<div
+								className="font-size-120-percent color-black d-flex justify-content-center"
+								style={{ paddingBottom: '5px' }}
+							>
+								{locale.texts.MONITORED_OBJECTS}
+							</div>
+							<Row noGutters>
+								<Col>
+									<FormikFormGroup
+										type="text"
+										name="devices"
+										label={locale.texts.DEVICES}
+										error={errors.devices}
+										touched={touched.devices}
+										placeholder=""
+										component={() => (
+											<Select
+												placeholder=""
+												name="devices"
+												value={values.devices}
+												onChange={(value) => setFieldValue('devices', value)}
+												options={monitoredDevicesOptions}
+											/>
+										)}
+									/>
+								</Col>
+								<Col>
+									<FormikFormGroup
+										type="text"
+										name="patients"
+										label={locale.texts.PATIENTS}
+										error={errors.patients}
+										touched={touched.patients}
+										placeholder=""
+										component={() => (
+											<Select
+												placeholder=""
+												name="patients"
+												value={values.patients}
+												onChange={(value) => setFieldValue('patients', value)}
+												options={monitoredPatientsOptions}
+											/>
+										)}
+									/>
+								</Col>
+								<Col>
+									<FormikFormGroup
+										type="text"
+										name="otherObjectTypes"
+										label={locale.texts.OTHER_OBJECT_TYPES}
+										error={errors.otherObjectTypes}
+										touched={touched.otherObjectTypes}
+										placeholder=""
+										component={() => (
+											<Select
+												placeholder=""
+												name="otherObjectTypes"
+												value={values.otherObjectTypes}
+												onChange={(value) =>
+													setFieldValue('otherObjectTypes', value)
+												}
+												options={monitoredOtherObjectTypesOptions}
+											/>
+										)}
+									/>
+								</Col>
+							</Row>
+							<hr />
+							<div
+								className="font-size-120-percent color-black d-flex justify-content-center"
+								style={{ paddingBottom: '5px' }}
+							>
+								{locale.texts.ALERTS}
+							</div>
+							<Row>
+								<NotificationTypeConfig
+									values={values}
+									errors={errors}
+									touched={touched}
+									name={locale.texts.DAY_SHIFT}
+									prefix={defaultShiftList[0]}
+									setFieldValue={setFieldValue}
+								/>
+								<NotificationTypeConfig
+									values={values}
+									errors={errors}
+									touched={touched}
+									name={locale.texts.SWING_SHIFT}
+									prefix={defaultShiftList[1]}
+									setFieldValue={setFieldValue}
+								/>
+								<NotificationTypeConfig
+									values={values}
+									errors={errors}
+									touched={touched}
+									name={locale.texts.NIGHT_SHIFT}
+									prefix={defaultShiftList[2]}
+									setFieldValue={setFieldValue}
+								/>
+							</Row>
+						</>
+					)}
+				/>
 			</Col>
 		)
 	}
