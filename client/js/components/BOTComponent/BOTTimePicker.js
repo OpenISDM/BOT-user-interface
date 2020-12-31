@@ -59,8 +59,10 @@ const BOTTimePicker = ({
 				value && isStringTypeValue ? covertToMoment(value) : moment()
 			}
 			onChange={(momentValue) => {
-				const stringValue = momentValue.format('HH:mm:ss')
-				onChange(stringValue)
+				if (momentValue) {
+					const stringValue = momentValue.format('HH:mm:ss')
+					onChange(stringValue)
+				}
 			}}
 		/>
 	)

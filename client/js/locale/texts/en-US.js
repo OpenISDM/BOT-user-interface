@@ -635,6 +635,7 @@ const en = {
 
 	CONTRACTORS: 'Contractors',
 	VISITORS: 'Visitors',
+	STAFF: 'Staff',
 
 	MONITOR_ON_TIME: 'On Time',
 	ALERT_DEVICES_RESET: 'Devices Alert Reset',

@@ -70,7 +70,7 @@ const BOTSlider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
 				handle={handle}
 				onChange={(value) => {
 					setValue(value)
-					onChange()
+					onChange(value)
 				}}
 			/>
 		</div>

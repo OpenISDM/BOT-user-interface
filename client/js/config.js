@@ -106,6 +106,9 @@ const config = {
 
 	OBJECT_TABLE_SUB_TYPE: {
 		PATIENT: 'Patient',
+		VISITOR: 'Visitor',
+		CONTRACTOR: 'Contractor',
+		STAFF: 'Staff',
 	},
 
 	GENDER_OPTIONS: {
@@ -159,7 +162,7 @@ const config = {
 
 	AJAX_STATUS_MAP: {
 		LOADING: 'loading',
-		SUCCESS: 'succcess',
+		SUCCESS: 'success',
 		NO_RESULT: 'no result',
 		WAIT_FOR_SEARCH: 'wait for search',
 	},
@@ -259,6 +262,18 @@ const config = {
 		OBJECT_TYPE_DEVICE: 4,
 		OBJECT_TYPE_PERSON: 5,
 		PIN_SELETION: 6,
+	},
+
+	NOTIFICATION_ALERT_TYPES_ENUM: {
+		GUI: 1,
+		LIGHT: 2,
+		BELL: 4,
+		SMS: 8,
+	},
+
+	STATUS_ENUM: {
+		ENABLED: 1,
+		DISABLED: 0,
 	},
 }
 

@@ -32,15 +32,13 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
 import Select from 'react-select'
-import { object, string } from 'yup'
 import { AppContext } from '../../context/AppContext'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import BOTTimePicker from '../BOTComponent/BOTTimePicker'
 import BOTSlider from '../BOTComponent/BOTSlider'
-import styleConfig from '../../config/styleConfig'
 import PropTypes from 'prop-types'
 
 const NotificationTypeConfig = ({
@@ -78,15 +76,19 @@ const NotificationTypeConfig = ({
 		},
 	]
 
-	const hasEnable = parseInt(values[`${prefix}_enable`].value) === 1
+	const hasEnable = parseInt(values[`${prefix}_enable`]) === 1
 	const [showTimePicker, setShowTimePicker] = useState(hasEnable)
-	const onTimeValue = showTimePicker
-		? values[`${prefix}_enable`]
-		: onTimeOptions[0]
+	useEffect(() => {
+		setShowTimePicker(hasEnable)
+	}, [hasEnable])
+	let onTimeValue = showTimePicker ? onTimeOptions[1] : onTimeOptions[0]
 
 	const hasAlertLastSec = parseInt(values[`${prefix}_alert_last_sec`]) > 0
 	const [showSlider, setShowSlider] = useState(hasAlertLastSec)
-	const closeAlertDefaultValue = showSlider
+	useEffect(() => {
+		setShowSlider(hasAlertLastSec)
+	}, [hasAlertLastSec])
+	let closeAlertDefaultValue = showSlider
 		? closeAlertOptions[1]
 		: closeAlertOptions[0]
 
@@ -109,7 +111,7 @@ const NotificationTypeConfig = ({
 							value={onTimeValue}
 							onChange={(value) => {
 								setShowTimePicker(value.id === 2)
-								setFieldValue(`${prefix}_enable`, value)
+								setFieldValue(`${prefix}_enable`, value.value)
 							}}
 							options={onTimeOptions}
 						/>
@@ -159,31 +161,37 @@ const NotificationTypeConfig = ({
 								value={closeAlertDefaultValue}
 								onChange={(value) => {
 									setShowSlider(value.id === 2)
+									if (value.id === 1) {
+										setFieldValue(`${prefix}_alert_last_sec`, 0)
+									}
 								}}
 								options={closeAlertOptions}
 							/>
 							{showSlider ? (
 								<BOTSlider
-									onChange={(value) =>
+									defaultValue={parseInt(values[`${prefix}_alert_last_sec`])}
+									onChange={(value) => {
 										setFieldValue(`${prefix}_alert_last_sec`, value)
-									}
+									}}
 								/>
 							) : null}
 							<div style={{ paddingTop: '5px' }}>
 								<Form.Check
 									type={'switch'}
 									id={`${prefix}_flash_lights`}
+									checked={values[`${prefix}_flash_lights`]}
 									label={locale.texts.FLASH_LIGHTS}
-									onChange={(value) => {
-										setFieldValue(`${prefix}_flash_lights`, value)
+									onChange={(e) => {
+										setFieldValue(`${prefix}_flash_lights`, e.target.checked)
 									}}
 								/>
 								<Form.Check
 									type={'switch'}
 									id={`${prefix}_alert_bells`}
+									checked={values[`${prefix}_alert_bells`]}
 									label={locale.texts.ALERT_BELLS}
-									onChange={(value) => {
-										setFieldValue(`${prefix}_alert_bells`, value)
+									onChange={(e) => {
+										setFieldValue(`${prefix}_alert_bells`, e.target.checked)
 									}}
 								/>
 							</div>
@@ -201,18 +209,20 @@ const NotificationTypeConfig = ({
 							<Form.Check
 								type={'switch'}
 								id={`${prefix}_msg_on_gui`}
+								checked={values[`${prefix}_msg_on_gui`]}
 								label={locale.texts.SHOW_MESSAGE_ON_GUI}
-								onChange={(value) => {
-									setFieldValue(`${prefix}_msg_on_gui`, value)
+								onChange={(e) => {
+									setFieldValue(`${prefix}_msg_on_gui`, e.target.checked)
 								}}
 							/>
 
 							<Form.Check
 								type={'switch'}
 								id={`${prefix}_send_sms`}
+								checked={values[`${prefix}_send_sms`]}
 								label={locale.texts.SEND_SMS}
-								onChange={(value) => {
-									setFieldValue(`${prefix}_send_sms`, value)
+								onChange={(e) => {
+									setFieldValue(`${prefix}_send_sms`, e.target.checked)
 								}}
 							/>
 						</>

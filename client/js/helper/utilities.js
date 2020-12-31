@@ -34,6 +34,7 @@
 
 import moment from 'moment'
 import { NORMAL } from '../config/wordMap'
+import config from '../config'
 
 /** Compare two objects, including strings, deep objects  */
 export const isEqual = (obj1, obj2) => {
@@ -166,4 +167,22 @@ export const getCoordinatesFromUUID = ({ lBeaconUUID = '' }) => {
 	} else {
 		return [0, 0]
 	}
+}
+
+export const getBitValue = ({ status, bitValueEnum }) => {
+	return parseInt(status) === parseInt(config.STATUS_ENUM.ENABLED)
+		? bitValueEnum
+		: 0
+}
+
+export const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
+	// convert to binary
+	const targetResult = targetDecimal.toString(2)
+	const expectedResult = expectedDecimal.toString(2)
+
+	const targetBitValue =
+		targetResult[targetResult.length - expectedResult.length]
+	const expectedBitValue = expectedResult[0]
+
+	return targetBitValue === expectedBitValue
 }

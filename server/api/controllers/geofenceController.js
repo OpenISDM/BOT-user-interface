@@ -33,6 +33,7 @@
 */
 
 import 'dotenv/config'
+import { Op } from '../db/connection'
 import GeoFenceConfig from '../db/model/geoFenceConfig'
 import GeoFenceAreaConfig from '../db/model/geoFenceAreaConfig'
 import NotificationConfig from '../db/model/notificationConfig'
@@ -160,7 +161,11 @@ export default {
 				where: { area_id: areaId },
 			})
 			const geofenceNotificationConfigs = await NotificationConfig.findAll({
-				where: { area_id: areaId },
+				where: {
+					area_id: areaId,
+					monitor_type: MONITOR_TYPE.GEO_FENCE,
+					name: { [Op.ne]: null },
+				},
 			})
 			response.status(200).json({
 				areaConfig,
@@ -224,13 +229,22 @@ export default {
 						},
 					})
 					if (queriedShift) {
-						return NotificationConfig.update({
-							alert_last_sec,
-							active_alert_types,
-							enable,
-							start_time,
-							end_time,
-						})
+						return NotificationConfig.update(
+							{
+								alert_last_sec,
+								active_alert_types,
+								enable,
+								start_time,
+								end_time,
+							},
+							{
+								where: {
+									area_id,
+									name,
+									monitor_type: MONITOR_TYPE.GEO_FENCE,
+								},
+							}
+						)
 					} else {
 						return NotificationConfig.create({
 							area_id,

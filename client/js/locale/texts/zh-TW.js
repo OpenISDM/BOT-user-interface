@@ -621,6 +621,7 @@ const tw = {
 
 	CONTRACTORS: '約聘人員',
 	VISITORS: '訪客',
+	STAFF: '員工',
 
 	MONITOR_ON_TIME: '監測啟動',
 	ALERT_DEVICES_RESET: '警報裝置重置',
