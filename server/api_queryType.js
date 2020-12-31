@@ -244,6 +244,66 @@ const get_people_realtime_data = (key) => {
 	`
 }
 
+const get_object_realtime_data =(key, object_type)=>{
+	return `select 
+	object_summary_table.id  as object_id,
+	object_summary_table.mac_address  as mac_address,
+	object_table.name as object_name,
+	object_summary_table.updated_by_area  as area_id,
+	area_table.readable_name  as area_name,
+	object_summary_table.uuid as Lbeacon_uuid,
+	lbeacon_table.description  as Lbeacon_description,
+	object_summary_table.payload  as payload,
+	object_summary_table.last_reported_timestamp  as last_reported_timestamp
+	from api_key
+
+	inner join user_table on
+	user_table.id = api_key.id 
+
+	inner join object_table on 
+	object_table.area_id = user_table.main_area
+	and object_table.type ='${object_type}'
+
+	inner join object_summary_table on 
+	object_summary_table.mac_address = object_table.mac_address 
+
+	left join lbeacon_table on
+	object_summary_table.uuid = lbeacon_table.uuid
+
+	left join area_table on 
+	area_table .id = object_summary_table.updated_by_area 
+
+	where api_key.key ='${key}';
+	`
+}
+
+const get_object_history_data=( key, 
+	object_type,
+	start_time,
+	end_time,
+	count_limit,
+	sort_type
+	)=>{
+	return ``
+}
+
+const get_id_table_data=(key)=>{
+	return `
+	select
+		object_table.id as id,
+		object_table.mac_address as mac_address,
+		object_table.type as object_type,
+		object_table.name as name
+	from 
+		api_key
+	inner join user_table on
+		api_key.id = user_table.id
+	inner join object_table on
+		object_table.area_id = user_table.main_area
+	where
+		key = '${key}';`
+}
+
 export default {
 	confirmValidation,
 	setKey,
@@ -252,4 +312,7 @@ export default {
 	get_data,
 	get_people_realtime_data,
 	get_people_history_data,
+	get_object_realtime_data,
+	get_object_history_data,
+	get_id_table_data
 }
