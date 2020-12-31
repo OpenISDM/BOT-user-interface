@@ -82,6 +82,34 @@ async function get_people_history_data(request, response) {
 	}
 }
 
+async function get_object_realtime_data(request, response) {
+	const { key } = request.body
+
+	const matchRes = await match_key(key)
+
+	if (matchRes === 1) {
+		response.json(error_code.key_incorrect)
+	} else if (matchRes === 2) {
+		response.json(error_code.key_timeout)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
+
+async function get_object_history_data(request, response) {
+	const { key } = request.body
+	let { start_time, end_time, count_limit, sort_type } = request.body
+	const matchRes = await match_key(key)
+
+	if (matchRes === 1) {
+		
+	} else if (matchRes === 2) {
+		response.json(error_code.key_timeout)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
+
 const get_api_key = (request, response) => {
 	const { username, password } = request.body
 
@@ -334,4 +362,6 @@ export default {
 	get_history_data,
 	get_people_history_data,
 	get_people_realtime_data,
+	get_object_history_data,
+	get_object_realtime_data,
 }
