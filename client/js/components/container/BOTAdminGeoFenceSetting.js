@@ -78,6 +78,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 
 	componentDidMount = () => {
 		this.getData()
+		this.getNamedList()
 	}
 
 	checkButtonIsPressed = (identity) => this.state.buttonSelected === identity
@@ -86,6 +87,16 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		this.setState({
 			buttonSelected: identity,
 		})
+	}
+
+	getNamedList = async () => {
+		const [{ area }] = this.context.stateReducer
+		const res = await apiHelper.namedListApiAgent.getNamedList({
+			areaId: area.id,
+			type: 1,
+			isUserDefined: true,
+		})
+		console.log(res)
 	}
 
 	getData = async () => {

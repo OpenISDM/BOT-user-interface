@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        transferredLocationController.js
+        namedListController.js
 
     File Description:
         BOT UI component
@@ -32,42 +32,24 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { TransferLocations } from '../db/model'
+import 'dotenv/config'
+import { Op } from '../db/connection'
+import { NamedList, ObjectNamedListMappingTable } from '../db/model'
 
 export default {
-	getAll: async (request, response) => {
+	getNamedList: async (request, response) => {
+		const { areaId, type, isUserDefined } = request.query
 		try {
-			const res = await TransferLocations.findAll()
-			response.status(200).json(res)
-		} catch (e) {
-			console.log(`get all transferred Location failed: ${e}`)
-		}
-	},
-
-	addOne: async (request, response) => {
-		const { name, department } = request.body
-		try {
-			const res = await TransferLocations.upsert(
-				{ name, department }, // Record to upsert
-				{ returning: true } // Return upserted record
-			)
-			response.status(200).json(res)
-		} catch (e) {
-			console.log(`add transferred Location failed: ${e}`)
-		}
-	},
-
-	removeByIds: async (request, response) => {
-		const { transferLocationIds } = request.body
-		try {
-			const res = await TransferLocations.destroy({
-				where: {
-					id: transferLocationIds,
+			const res = await NamedList.findAll({
+				where: { area_id: areaId, type: type, is_user_defined: isUserDefined },
+				include: {
+					model: ObjectNamedListMappingTable,
+					attributes: ['id', 'object_id'],
 				},
 			})
 			response.status(200).json(res)
 		} catch (e) {
-			console.log(`remove transferred Locations failed: ${e}`)
+			console.log('getNamedList error: ', e)
 		}
 	},
 }

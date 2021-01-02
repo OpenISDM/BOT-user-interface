@@ -34,9 +34,11 @@
 
 import 'dotenv/config'
 import { Op } from '../db/connection'
-import GeoFenceConfig from '../db/model/geoFenceConfig'
-import GeoFenceAreaConfig from '../db/model/geoFenceAreaConfig'
-import NotificationConfig from '../db/model/notificationConfig'
+import {
+	GeoFenceConfig,
+	GeoFenceAreaConfig,
+	NotificationConfig,
+} from '../db/model'
 
 const MONITOR_TYPE = {
 	NORMAL: 0,
