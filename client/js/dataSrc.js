@@ -113,7 +113,7 @@ export const utils = {
 }
 export const deleteDevice = `${domain}/data/deleteDevice`
 export const getTrackingTableByMacAddress = `${domain}/data/getTrackingTableByMacAddress`
-export const getNamedList = `${domain}/data/namedList/getNamedList`
+export const namedList = `${domain}/data/namedList`
 
 export default {
 	trackingData,
@@ -140,5 +140,5 @@ export default {
 	deleteDevice,
 	deviceGruopDetailByAreaId,
 	getTrackingTableByMacAddress,
-	getNamedList,
+	namedList,
 }

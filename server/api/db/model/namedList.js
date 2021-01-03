@@ -10,13 +10,16 @@ const NamedList = sequelize.define(
 			primaryKey: true,
 			autoIncrement: true,
 		},
+		areaId: {
+			type: DataTypes.INTEGER,
+		},
 		name: {
 			type: DataTypes.STRING,
 		},
 		type: {
 			type: DataTypes.INTEGER,
 		},
-		is_user_defined: {
+		isUserDefined: {
 			type: DataTypes.BOOLEAN,
 		},
 	},

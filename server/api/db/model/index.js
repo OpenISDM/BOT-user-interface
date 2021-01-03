@@ -10,7 +10,7 @@ import Roles from './roles'
 import TransferLocations from './transferLocations'
 import UserAssignments, { UserAssignmentEnum } from './userAssignments'
 
-NamedList.hasMany(ObjectNamedListMappingTable)
+NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
 
 export {

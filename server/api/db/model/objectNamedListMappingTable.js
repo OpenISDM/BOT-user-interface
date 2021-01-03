@@ -5,16 +5,13 @@ const { DataTypes } = pkg
 const ObjectNamedListMappingTable = sequelize.define(
 	'object_named_list_mapping_table',
 	{
-		id: {
+		namedListId: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
-			autoIncrement: true,
 		},
-		named_list_id: {
+		objectId: {
 			type: DataTypes.INTEGER,
-		},
-		object_id: {
-			type: DataTypes.INTEGER,
+			primaryKey: true,
 		},
 	},
 	{

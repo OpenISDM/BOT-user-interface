@@ -33,7 +33,7 @@
 */
 
 import 'dotenv/config'
-import { Op } from '../db/connection'
+import { Op, updateOrCreate } from '../db/connection'
 import { NamedList, ObjectNamedListMappingTable } from '../db/model'
 
 export default {
@@ -41,15 +41,52 @@ export default {
 		const { areaId, type, isUserDefined } = request.query
 		try {
 			const res = await NamedList.findAll({
-				where: { area_id: areaId, type: type, is_user_defined: isUserDefined },
+				where: { areaId, type: type, isUserDefined },
 				include: {
 					model: ObjectNamedListMappingTable,
-					attributes: ['id', 'object_id'],
+					attributes: ['object_id'],
+					as: 'objectIds',
 				},
 			})
 			response.status(200).json(res)
 		} catch (e) {
 			console.log('getNamedList error: ', e)
+		}
+	},
+	setNamedList: async (request, response) => {
+		const { areaId, name, type, isUserDefined, objectIds } = request.body
+		try {
+			const { item } = await updateOrCreate({
+				model: NamedList,
+				where: { areaId, name, type, isUserDefined },
+				newItem: { areaId, name, type, isUserDefined },
+			})
+			const dataToBeAdded = objectIds.map((objectId) => {
+				return {
+					namedListId: item.id,
+					objectId,
+				}
+			})
+			const res = await ObjectNamedListMappingTable.bulkCreate(dataToBeAdded, {
+				updateOnDuplicate: ['namedListId', 'objectId'],
+			})
+
+			response.status(200).json(res)
+		} catch (e) {
+			console.log('setNamedList error: ', e)
+		}
+	},
+	removeNamedList: async (request, response) => {
+		const { id } = request.body
+		try {
+			const namedListPromise = NamedList.destroy({ where: { id } })
+			const objectMappingPromise = ObjectNamedListMappingTable.destroy({
+				where: { namedListId: id },
+			})
+			await Promise.all([namedListPromise, objectMappingPromise])
+			response.status(200).json('OK')
+		} catch (e) {
+			console.log('removeNamedList error: ', e)
 		}
 	},
 }

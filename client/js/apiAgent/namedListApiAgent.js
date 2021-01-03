@@ -32,15 +32,29 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { getNamedList } from '../dataSrc'
-import { get, post } from '../helper/httpClient'
+import { namedList } from '../dataSrc'
+import { get, post, del } from '../helper/httpClient'
 
 export default {
 	async getNamedList({ areaId, type, isUserDefined }) {
-		return await get(getNamedList, {
+		return await get(namedList, {
 			areaId,
 			type,
 			isUserDefined,
+		})
+	},
+	async setNamedList({ areaId, name, type, isUserDefined, objectIds }) {
+		return await post(namedList, {
+			areaId,
+			name,
+			type,
+			isUserDefined,
+			objectIds,
+		})
+	},
+	async removeNamedList({ id }) {
+		return await del(namedList, {
+			id,
 		})
 	},
 }
