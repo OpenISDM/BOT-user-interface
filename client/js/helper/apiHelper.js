@@ -50,6 +50,7 @@ import fileApiAgent from '../apiAgent/fileApiAgent'
 import utilsApiAgent from '../apiAgent/utilsApiAgent'
 import userAssignmentsApiAgent from '../apiAgent/userAssignmentsApiAgent'
 import namedListApiAgent from '../apiAgent/namedListApiAgent'
+import notificationApiAgent from '../apiAgent/notificationApiAgent'
 
 const apiHelper = {
 	areaApiAgent,
@@ -70,6 +71,7 @@ const apiHelper = {
 	utilsApiAgent,
 	userAssignmentsApiAgent,
 	namedListApiAgent,
+	notificationApiAgent,
 }
 
 export default apiHelper

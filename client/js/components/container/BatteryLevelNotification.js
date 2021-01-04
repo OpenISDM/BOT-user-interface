@@ -34,7 +34,7 @@
 
 import React from 'react'
 import NotificationBadge, { Effect } from 'react-notification-badge'
-import { Row, Dropdown } from 'react-bootstrap'
+import { Row, Dropdown, Modal, Button } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
@@ -48,29 +48,38 @@ class BatteryLevelNotification extends React.Component {
 		locale: this.context.locale.abbr,
 	}
 
-	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr !== prevState.locale) {
-			this.getTrackingData()
-		}
+	componentDidUpdate = (prevProps, prevState) => {}
+
+	componentWillUnmount = () => {
+		clearInterval(this.interval)
 	}
 
 	componentDidMount = () => {
 		this.getTrackingData()
+		this.interval = setInterval(
+			this.getTrackingData,
+			config.mapConfig.intervalTime
+		)
 	}
 
 	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
 
 		const [{ area }] = stateReducer
-		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
-			locale: locale.abbr,
-			user: auth.user,
+		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
-		this.setState({
-			data: res.data.filter((item) => item.battery_indicator === 2),
-			locale: this.context.locale.abbr,
-		})
+		console.log(res.data)
+		// const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+		// 	locale: locale.abbr,
+		// 	user: auth.user,
+		// 	areaId: area.id,
+		// })
+
+		// this.setState({
+		// 	data: res.data.filter((item) => item.battery_indicator === 3),
+		// 	locale: this.context.locale.abbr,
+		// })
 	}
 
 	render() {
@@ -97,69 +106,79 @@ class BatteryLevelNotification extends React.Component {
 		}
 
 		return (
-			<Dropdown>
-				<Dropdown.Toggle
-					variant="light"
-					id="battery-notice-btn"
-					bsPrefix="bot-dropdown-toggle"
-				>
-					<i className="fas fa-bell" style={style.icon}>
-						<NotificationBadge
-							count={data.length}
-							effect={Effect.SCALE}
-							style={{
-								top: '-28px',
-								right: '-10px',
-							}}
-						/>
-					</i>
-				</Dropdown.Toggle>
-				<Dropdown.Menu
-					alignRight
-					bsPrefix="bot-dropdown-menu-right dropdown-menu "
-				>
-					<div className="px-5 py-2" style={style.title}>
-						<Row>
-							<div className="d-inline-flex justify-content-start">
-								{locale.texts.BATTERY_NOTIFICATION}
-							</div>
-						</Row>
-					</div>
-					<div
-						className="overflow-hidden-scroll custom-scrollbar"
-						style={style.dropdown}
+			<>
+				<Dropdown>
+					<Dropdown.Toggle
+						variant="light"
+						id="battery-notice-btn"
+						bsPrefix="bot-dropdown-toggle"
 					>
-						{data.length !== 0 ? (
-							data.map((item) => {
-								return (
-									<Dropdown.Item
-										key={item.mac_address}
-										disabled
-										style={{ color: 'black' }}
-									>
-										<div
-											className={
-												null
-												// 'd-inline-flex justify-content-start text-left'
-											}
-											style={style.list}
+						<i className="fas fa-bell" style={style.icon}>
+							<NotificationBadge
+								count={data.length}
+								effect={Effect.SCALE}
+								style={{
+									top: '-28px',
+									right: '-10px',
+								}}
+							/>
+						</i>
+					</Dropdown.Toggle>
+					<Dropdown.Menu
+						alignRight
+						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+					>
+						<div className="px-5 py-2" style={style.title}>
+							<Row>
+								<div className="d-inline-flex justify-content-start">
+									{locale.texts.BATTERY_NOTIFICATION}
+								</div>
+							</Row>
+						</div>
+						<div
+							className="overflow-hidden-scroll custom-scrollbar"
+							style={style.dropdown}
+						>
+							{data.length !== 0 ? (
+								data.map((item) => {
+									return (
+										<Dropdown.Item
+											key={item.mac_address}
+											style={{ color: 'black' }}
 										>
-											<p className="d-inline-block mx-2">&#8729;</p>
-											{getDescription({ item, locale, keywordType: config })}
-											{locale.texts.BATTERY_VOLTAGE}:
-											{(item.battery_voltage / 10).toFixed(1)}
-										</div>
-									</Dropdown.Item>
-								)
-							})
-						) : (
-							<Dropdown.Item disabled>
-								{locale.texts.NO_NOTIFICATION}
-							</Dropdown.Item>
-						)}
-					</div>
-				</Dropdown.Menu>
-			</Dropdown>
+											<div style={style.list}>
+												<p className="d-inline-block mx-2">&#8729;</p>
+												{getDescription({ item, locale, keywordType: config })}
+												{locale.texts.BATTERY_VOLTAGE}:
+												{(item.battery_voltage / 10).toFixed(1)}
+											</div>
+										</Dropdown.Item>
+									)
+								})
+							) : (
+								<Dropdown.Item disabled>
+									{locale.texts.NO_NOTIFICATION}
+								</Dropdown.Item>
+							)}
+						</div>
+					</Dropdown.Menu>
+				</Dropdown>
+
+				<Modal show={false} onHide={() => {}} centered>
+					<Modal.Header closeButton>
+						<Modal.Title>Modal heading</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+					<Modal.Footer>
+						<Button variant="secondary" onClick={() => {}}>
+							Close
+						</Button>
+						<Button variant="primary" onClick={() => {}}>
+							Save Changes
+						</Button>
+					</Modal.Footer>
+				</Modal>
+			</>
 		)
 	}
 }

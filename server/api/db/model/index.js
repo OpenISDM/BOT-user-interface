@@ -9,9 +9,21 @@ import PatientGroupList from './patientGroupList'
 import Roles from './roles'
 import TransferLocations from './transferLocations'
 import UserAssignments, { UserAssignmentEnum } from './userAssignments'
+import NotificationTable from './notificationTable'
+import ObjectSummaryTable from './objectSummaryTable'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
+
+ObjectTable.hasOne(ObjectSummaryTable, {
+	foreignKey: 'mac_address',
+	sourceKey: 'mac_address',
+	as: 'extend',
+})
+ObjectSummaryTable.belongsTo(ObjectTable, {
+	foreignKey: 'mac_address',
+	targetKey: 'mac_address',
+})
 
 export {
 	DeviceGroupList,
@@ -25,5 +37,7 @@ export {
 	Roles,
 	TransferLocations,
 	UserAssignments,
+	NotificationTable,
+	ObjectSummaryTable,
 	UserAssignmentEnum,
 }
