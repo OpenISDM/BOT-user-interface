@@ -161,7 +161,17 @@ export default {
 		try {
 			const areaConfig = await GeoFenceAreaConfig.findOne({
 				where: { area_id: areaId },
+				raw: true,
 			})
+
+			// Because monitored_object_types stores 'single quote' for BOT server convenience
+			// So, We do this for client
+			const monitoredObjectTypes = `${areaConfig['monitored_object_types']}`
+			areaConfig['monitored_object_types'] = monitoredObjectTypes.replace(
+				/'/g,
+				''
+			)
+
 			const geofenceNotificationConfigs = await NotificationConfig.findAll({
 				where: {
 					area_id: areaId,
@@ -169,6 +179,7 @@ export default {
 					name: { [Op.ne]: null },
 				},
 			})
+
 			response.status(200).json({
 				areaConfig,
 				geofenceNotificationConfigs,
@@ -181,11 +192,11 @@ export default {
 	setGeofenceAreaConfig: async (request, response) => {
 		const { areaConfig } = request.body
 		try {
+			let { montiorObjectTypes = [] } = areaConfig
 			const {
 				area_id,
 				monitorDeviceNameListids = [],
 				monitorPatientNameListids = [],
-				montiorObjectTypes = [],
 				dayShift,
 				swingShift,
 				nightShift,
@@ -194,10 +205,15 @@ export default {
 			const queriedConfig = await GeoFenceAreaConfig.findOne({
 				where: { area_id },
 			})
+
+			// Because monitored_object_types stores 'single quote' for BOT server convenience
+			// So, We do this for GUI Server
+			montiorObjectTypes = `'${montiorObjectTypes.join("','")}'`
+
 			if (queriedConfig) {
 				await GeoFenceAreaConfig.update(
 					{
-						monitored_object_types: montiorObjectTypes.join(),
+						monitored_object_types: montiorObjectTypes,
 						monitored_patient_named_list_ids: monitorPatientNameListids.join(),
 						monitored_device_named_list_ids: monitorDeviceNameListids.join(),
 					},
@@ -206,7 +222,7 @@ export default {
 			} else {
 				await GeoFenceAreaConfig.create({
 					area_id,
-					monitored_object_types: montiorObjectTypes.join(),
+					monitored_object_types: montiorObjectTypes,
 					monitored_patient_named_list_ids: monitorPatientNameListids.join(),
 					monitored_device_named_list_ids: monitorDeviceNameListids.join(),
 				})

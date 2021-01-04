@@ -183,6 +183,11 @@ class BOTAdminGeoFenceSetting extends React.Component {
 				label: locale.texts.VISITORS,
 				id: 3,
 			},
+			{
+				value: config.OBJECT_TABLE_SUB_TYPE.PATIENT,
+				label: locale.texts.PATIENT,
+				id: 4,
+			},
 		]
 
 		const defaultShiftList = Object.values(SHIFT_NAME)
@@ -270,7 +275,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 									gui: values[`${defaultShiftList[0]}_msg_on_gui`],
 									sms: values[`${defaultShiftList[0]}_send_sms`],
 								}),
-								enable: values[`${defaultShiftList[0]}_enable`].value,
+								enable: values[`${defaultShiftList[0]}_enable`],
 								start_time: values[`${defaultShiftList[0]}_start_time`],
 								end_time: values[`${defaultShiftList[0]}_end_time`],
 							},
@@ -283,7 +288,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 									gui: values[`${defaultShiftList[1]}_msg_on_gui`],
 									sms: values[`${defaultShiftList[1]}_send_sms`],
 								}),
-								enable: values[`${defaultShiftList[1]}_enable`].value,
+								enable: values[`${defaultShiftList[1]}_enable`],
 								start_time: values[`${defaultShiftList[1]}_start_time`],
 								end_time: values[`${defaultShiftList[1]}_end_time`],
 							},
