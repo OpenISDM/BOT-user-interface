@@ -18,6 +18,9 @@ const GeoFenceAreaConfig = sequelize.define(
 		monitored_device_named_list_ids: {
 			type: DataTypes.STRING,
 		},
+		is_global_fence: {
+			type: DataTypes.INTEGER,
+		},
 	},
 	{
 		freezeTableName: true,
