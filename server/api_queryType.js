@@ -245,7 +245,7 @@ const get_people_realtime_data = (key) => {
 }
 
 const get_object_realtime_data = (key, object_type, object_id) => {
-	return `
+	let queryString = `
 	select 
 		object_table.name as object_name,
 		object_table.type  as object_type,
@@ -276,9 +276,18 @@ const get_object_realtime_data = (key, object_type, object_id) => {
 
 	where
 		object_table.object_type = '0'
-		and object_table.id in (414,383)
-		and object_table.type in ('紅外線烤燈');
 	`
+	if (object_id !== undefined) {
+		queryString += `and object_table.type in (${object_type.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	if (object_type !== undefined) {
+		queryString += `and object_table.type in (${object_type.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	return queryString
 }
 
 const get_object_history_data = (
@@ -290,7 +299,54 @@ const get_object_history_data = (
 	count_limit,
 	sort_type
 ) => {
-	return ``
+	let queryString = `select 
+	object_table.mac_address as mac_address,
+	object_table.id as object_id,
+	object_table."name" as object_name,
+	object_table.type as object_type,
+	location_history_table.record_timestamp as record_timestamp,
+	location_history_table.area_id as area_id,
+	location_history_table.uuid as Lbeacon_uuid,
+	Area_table."name" as area_name,
+	lbeacon_table.description as lbeacon_description
+from 
+	location_history_table
+	
+inner join object_table on
+object_table.id = location_history_table.object_id`
+	if (object_type !== undefined) {
+		queryString += `and object_table.type in (${object_type.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	if (object_id !== undefined) {
+		queryString += `and object_table.id in (${object_id.map(
+			(item) => `'${item}'`
+		)})`
+	}
+
+	queryString += `
+inner join user_table on
+user_table.main_area = object_table.area_id
+	
+inner join api_key on
+user_table.id = api_key.id
+and api_key.key = '${key}'
+
+left join lbeacon_table on
+location_history_table.uuid = lbeacon_table.uuid 
+
+left join area_table on 
+location_history_table.area_id = area_table.id 
+where 
+	location_history_table.record_timestamp > '${start_time}'
+	and	location_history_table.record_timestamp < '${end_time}'
+
+order by location_history_table.record_timestamp ${sort_type}
+
+limit ${count_limit};`
+
+	return queryString
 }
 
 const get_id_table_data = (key) => {
