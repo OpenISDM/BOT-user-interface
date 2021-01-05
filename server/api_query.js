@@ -84,11 +84,28 @@ async function get_people_history_data(request, response) {
 
 async function get_object_realtime_data(request, response) {
 	const { key } = request.body
-
+	let {object_id, object_type} = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === 1) {
-		response.json(error_code.key_incorrect)
+		try{
+			if(object_id !== undefined){
+				object_id = object_id.split(';').map(Number)
+			}
+			if(object_type !== undefined){
+				object_type = object_type.split(';')
+				console.log(object_type)
+			}
+			console.log(queryType.get_object_realtime_data(key,object_type,object_id))			
+			const data = await pool.query(queryType.get_object_realtime_data(key, object_type, object_id))
+			// data.rows.forEach(item)=>{
+			// 	item.last
+			// }
+			console.log('get realtime object data successful')
+			response.json(data.rows)
+		}catch(err){
+			console.log(`get realtime data failed : ${err}`)
+		}
 	} else if (matchRes === 2) {
 		response.json(error_code.key_timeout)
 	} else {

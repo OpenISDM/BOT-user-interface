@@ -278,7 +278,7 @@ const get_object_realtime_data = (key, object_type, object_id) => {
 		object_table.object_type = '0'
 	`
 	if (object_id !== undefined) {
-		queryString += `and object_table.type in (${object_type.map(
+		queryString += `and object_table.id in (${object_id.map(
 			(item) => `'${item}'`
 		)})`
 	}
