@@ -37,6 +37,7 @@ import _ from 'lodash'
 import { Op } from '../db/connection'
 import { NotificationTable, ObjectSummaryTable, ObjectTable } from '../db/model'
 import { findExpectedBitValue } from '../service/utilities'
+import { stopLightAlarm } from '../service/IPCService'
 
 const NOTIFICATION_ENUM = {
 	LOW_BATTERY: 'LOW_BATTERY',
@@ -155,6 +156,8 @@ export default {
 					},
 				}
 			)
+
+			stopLightAlarm({ notificationId })
 
 			response.status(200).json(res)
 		} catch (e) {
