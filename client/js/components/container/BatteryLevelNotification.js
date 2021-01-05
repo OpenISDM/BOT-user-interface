@@ -56,6 +56,14 @@ class BatteryLevelNotification extends React.Component {
 		clearInterval(this.interval)
 	}
 
+	componentDidUpdate = (prevProps, prevState) => {
+		if (prevState.showModal !== this.state.showModal) {
+			this.interval = this.state.showModal
+				? clearInterval(this.interval)
+				: setInterval(this.getTrackingData, config.mapConfig.intervalTime)
+		}
+	}
+
 	componentDidMount = () => {
 		this.getTrackingData()
 		this.interval = setInterval(
@@ -69,7 +77,6 @@ class BatteryLevelNotification extends React.Component {
 		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
-
 		if (res) {
 			this.setState({
 				emergency: res.data.emergency,
@@ -86,8 +93,8 @@ class BatteryLevelNotification extends React.Component {
 
 		if (res) {
 			await messageGenerator.setSuccessMessage('save success')
-
 			this.setState({
+				emergency: [],
 				currentItem: {},
 				showModal: false,
 			})
