@@ -33,25 +33,31 @@
 */
 
 import 'dotenv/config'
-import moment from 'moment-timezone'
-import { Op, sequelize } from '../db/connection'
-import {
-	NotificationTable,
-	NotificationConfig,
-	ObjectSummaryTable,
-	ObjectTable,
-} from '../db/model'
+import _ from 'lodash'
+import { Op } from '../db/connection'
+import { NotificationTable, ObjectSummaryTable, ObjectTable } from '../db/model'
+import { findExpectedBitValue } from '../service/utilities'
 
 const NOTIFICATION_ENUM = {
 	LOW_BATTERY: 'LOW_BATTERY',
-	SOS: 'SOS',
+	PANIC: 'PANIC',
+	GEO_FENCE: 'GEO_FENCE',
+}
+
+const MONITOR_TYPE = {
+	NORMAL: 0,
+	GEO_FENCE: 1,
+	PANIC: 2,
+	ACTIVITY: 4,
+	LOCATION: 8,
+	BED_CLEARNESS: 16,
 }
 
 export default {
 	getAllNotifications: async (request, response) => {
 		const { areaId } = request.query
 		try {
-			const objectTableQueried = await ObjectTable.findAll({
+			const objectTablePromise = ObjectTable.findAll({
 				where: {
 					area_id: areaId,
 				},
@@ -65,25 +71,28 @@ export default {
 				raw: true,
 			})
 
-			// const notificationConfigQueried = await NotificationConfig.findOne({
-			// 	where: {
-			// 		area_id: areaId,
-			// 		enable: 1,
-			// 		active_alert_types: sequelize.where(
-			// 			sequelize.literal('active_alert_types & 1'),
-			// 			1
-			// 		),
-			// 		start_time: {
-			// 			[Op.lte]: moment().format('hh:mm:ss'),
-			// 		},
-			// 		end_time: {
-			// 			[Op.gte]: moment().format('hh:mm:ss'),
-			// 		},
-			// 	},
-			// 	raw: true,
-			// })
+			const notificationTablePromise = NotificationTable.findAll({
+				where: {
+					area_id: areaId,
+					processed: 1, // meaning this notification is processed by BOT Server
+					web_processed: {
+						[Op.eq]: null,
+					},
+					violation_timestamp: {
+						[Op.gt]: new Date(Date.now() - 10 * 60 * 1000), // 10 mins
+					},
+				},
+				order: ['id'],
+			})
 
-			const lowBatteryData = objectTableQueried
+			const [objectTableQueried, notificationTableQueried] = await Promise.all([
+				objectTablePromise,
+				notificationTablePromise,
+			])
+
+			const objectTableMap = _.keyBy(objectTableQueried, 'mac_address')
+
+			const lowBattery = objectTableQueried
 				.filter((object) => {
 					const batteryVoltage = object[`extend.battery_voltage`]
 					return (
@@ -94,35 +103,60 @@ export default {
 				.map((object) => {
 					return {
 						type: NOTIFICATION_ENUM.LOW_BATTERY,
-						item: object,
+						object,
 					}
 				})
 
-			const sosData = objectTableQueried
-				.filter((object) => {
-					const objectType = parseInt(object.object_type)
-					const panicTimestamp = object[`extend.panic_violation_timestamp`]
-					return (
-						objectType !== 0 &&
-						moment().diff(panicTimestamp, 'second') <
-							process.env.PANIC_TIME_INTERVAL_IN_SEC
-					)
-				})
-				.map((object) => {
-					return {
-						type: NOTIFICATION_ENUM.SOS,
-						item: object,
-					}
-				})
+			const emergency = notificationTableQueried.map((notificaiton) => {
+				const macAddress = notificaiton['mac_address']
+				const monitortype = notificaiton['monitor_type']
+				let type = MONITOR_TYPE.NORMAL
+				if (
+					findExpectedBitValue({
+						targetDecimal: monitortype,
+						expectedDecimal: MONITOR_TYPE.PANIC,
+					})
+				) {
+					type = NOTIFICATION_ENUM.PANIC
+				} else if (
+					findExpectedBitValue({
+						targetDecimal: monitortype,
+						expectedDecimal: MONITOR_TYPE.GEO_FENCE,
+					})
+				) {
+					type = NOTIFICATION_ENUM.GEO_FENCE
+				}
 
-			//geo
-			// {
-			// 	type: 'geo'
-			// 	item: objectItem
-			// }
+				return {
+					type,
+					object: objectTableMap[macAddress],
+					notificaiton,
+				}
+			})
 
-			// response.status(200).json(notificationConfigQueried)
-			response.status(200).json([...lowBatteryData, ...sosData])
+			response.status(200).json({
+				emergency,
+				lowBattery,
+			})
+		} catch (e) {
+			console.log(e)
+		}
+	},
+	turnOffNotification: async (request, response) => {
+		const { notificationId } = request.body
+		try {
+			const res = await NotificationTable.update(
+				{
+					web_processed: 1, // Set 1 meaning the user manully turn of notification
+				},
+				{
+					where: {
+						id: notificationId,
+					},
+				}
+			)
+
+			response.status(200).json(res)
 		} catch (e) {
 			console.log(e)
 		}

@@ -507,6 +507,7 @@ const tw = {
 	NOTES: '註記',
 	NO_DATA_AVAILABE: '無資料顯示',
 	NO_NOTIFICATION: '無通知',
+	NO_ALERT: '無警報',
 	SUBMIT_TIMESTAMP: '儲存時間',
 	USER_NAME: '人員名稱',
 	DEVICES_FOUND_IN: '儀器位於',
@@ -606,7 +607,7 @@ const tw = {
 	PATIENT_ALIASES: '病人別名',
 	DEVICE_ALIASES: '儀器別名',
 	TRANSFER_LOCATION_ALIASES: '轉移地點別名',
-	EMERGENCY_ALERT: '緊急呼救',
+	EMERGENCY_ALERT: '緊急警報',
 
 	MONITORED_OBJECTS: '選取可監控物件',
 	ALERTS: '警報設置',
@@ -634,6 +635,8 @@ const tw = {
 
 	KEEP_ALERTING_IN_SEC: '持續響鈴時間(秒)',
 	CLOSE_MANUALLY: '手動關閉',
+
+	CLOSE_ALERT: '關閉警報',
 }
 
 export default tw

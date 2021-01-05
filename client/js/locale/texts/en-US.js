@@ -517,6 +517,7 @@ const en = {
 	NOTES: 'notes',
 	NO_DATA_AVAILABE: 'no data available',
 	NO_NOTIFICATION: 'no notification',
+	NO_ALERT: 'no alert',
 	USER_NAME: 'user name',
 	DEVICES_FOUND_IN: 'devices found in',
 	DEVICES_NOT_FOUND_IN: 'devices not found in',
@@ -651,6 +652,8 @@ const en = {
 
 	KEEP_ALERTING_IN_SEC: 'Keep Alerting in Seconds',
 	CLOSE_MANUALLY: 'Close Manually',
+
+	CLOSE_ALERT: 'Close Alert',
 }
 
 export default en

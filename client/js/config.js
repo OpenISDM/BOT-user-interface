@@ -275,6 +275,15 @@ const config = {
 		ENABLED: 1,
 		DISABLED: 0,
 	},
+
+	MONITOR_TYPE: {
+		NORMAL: 0,
+		GEO_FENCE: 1,
+		PANIC: 2,
+		ACTIVITY: 4,
+		LOCATION: 8,
+		BED_CLEARNESS: 16,
+	},
 }
 
 export default config

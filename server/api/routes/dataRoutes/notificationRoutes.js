@@ -42,4 +42,5 @@ export default (app) => {
 	app
 		.route('/data/notification')
 		.get(notificationController.getAllNotifications)
+		.post(notificationController.turnOffNotification)
 }

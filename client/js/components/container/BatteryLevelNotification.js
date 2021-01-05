@@ -39,16 +39,18 @@ import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
 import apiHelper from '../../helper/apiHelper'
+import messageGenerator from '../../helper/messageGenerator'
 
 class BatteryLevelNotification extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		data: [],
+		emergency: [],
+		lowBattery: [],
 		locale: this.context.locale.abbr,
+		currentItem: {},
+		showModal: false,
 	}
-
-	componentDidUpdate = (prevProps, prevState) => {}
 
 	componentWillUnmount = () => {
 		clearInterval(this.interval)
@@ -63,27 +65,37 @@ class BatteryLevelNotification extends React.Component {
 	}
 
 	getTrackingData = async () => {
-		const { auth, locale, stateReducer } = this.context
-
-		const [{ area }] = stateReducer
+		const [{ area }] = this.context.stateReducer
 		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
-		console.log(res.data)
-		// const res = await apiHelper.trackingDataApiAgent.getTrackingData({
-		// 	locale: locale.abbr,
-		// 	user: auth.user,
-		// 	areaId: area.id,
-		// })
 
-		// this.setState({
-		// 	data: res.data.filter((item) => item.battery_indicator === 3),
-		// 	locale: this.context.locale.abbr,
-		// })
+		if (res) {
+			this.setState({
+				emergency: res.data.emergency,
+				lowBattery: res.data.lowBattery,
+				locale: this.context.locale.abbr,
+			})
+		}
+	}
+
+	handleSubmit = async () => {
+		const res = await apiHelper.notificationApiAgent.turnOffNotification({
+			notificationId: this.state.currentItem.notificaiton.id,
+		})
+
+		if (res) {
+			await messageGenerator.setSuccessMessage('save success')
+
+			this.setState({
+				currentItem: {},
+				showModal: false,
+			})
+		}
 	}
 
 	render() {
-		const { data } = this.state
+		const { emergency, lowBattery, showModal, currentItem } = this.state
 		const { locale } = this.context
 		const style = {
 			list: {
@@ -115,7 +127,83 @@ class BatteryLevelNotification extends React.Component {
 					>
 						<i className="fas fa-bell" style={style.icon}>
 							<NotificationBadge
-								count={data.length}
+								count={emergency.length}
+								effect={Effect.SCALE}
+								style={{
+									top: '-28px',
+									right: '-10px',
+								}}
+							/>
+						</i>
+					</Dropdown.Toggle>
+					<Dropdown.Menu
+						alignRight
+						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+					>
+						<div className="px-5 py-2" style={style.title}>
+							<Row>
+								<div className="d-inline-flex justify-content-start">
+									{locale.texts.EMERGENCY_ALERT}
+								</div>
+							</Row>
+						</div>
+						<div
+							className="overflow-hidden-scroll custom-scrollbar"
+							style={style.dropdown}
+						>
+							{emergency.length !== 0 ? (
+								emergency.map(({ object, notificaiton }) => {
+									let monitorTypeString = ''
+									if (
+										parseInt(notificaiton.monitor_type) ===
+										config.MONITOR_TYPE.GEO_FENCE
+									) {
+										monitorTypeString = locale.texts.GEOFENCE_ALERT
+									} else if (
+										parseInt(notificaiton.monitor_type) ===
+										config.MONITOR_TYPE.PANIC
+									) {
+										monitorTypeString = locale.texts.EMERGENCY_ALERT
+									}
+
+									return (
+										<Dropdown.Item
+											key={object.mac_address}
+											style={{ color: 'black' }}
+											onClick={() => {
+												this.setState({
+													currentItem: {
+														monitorTypeString,
+														object,
+														notificaiton,
+													},
+													showModal: true,
+												})
+											}}
+										>
+											<div style={style.list}>
+												<p className="d-inline-block mx-2">&#8729;</p>
+												{monitorTypeString}: {object.name}
+											</div>
+										</Dropdown.Item>
+									)
+								})
+							) : (
+								<Dropdown.Item disabled>{locale.texts.NO_ALERT}</Dropdown.Item>
+							)}
+						</div>
+					</Dropdown.Menu>
+				</Dropdown>
+
+				<Dropdown style={{ marginLeft: '1px' }}>
+					<Dropdown.Toggle
+						variant="light"
+						id="battery-notice-btn"
+						bsPrefix="bot-dropdown-toggle"
+					>
+						<i className="fas fa-battery-quarter" style={style.icon}>
+							<NotificationBadge
+								count={lowBattery.length}
 								effect={Effect.SCALE}
 								style={{
 									top: '-28px',
@@ -139,18 +227,23 @@ class BatteryLevelNotification extends React.Component {
 							className="overflow-hidden-scroll custom-scrollbar"
 							style={style.dropdown}
 						>
-							{data.length !== 0 ? (
-								data.map((item) => {
+							{lowBattery.length !== 0 ? (
+								lowBattery.map(({ object }) => {
 									return (
 										<Dropdown.Item
-											key={item.mac_address}
+											disabled
+											key={object.mac_address}
 											style={{ color: 'black' }}
 										>
 											<div style={style.list}>
 												<p className="d-inline-block mx-2">&#8729;</p>
-												{getDescription({ item, locale, keywordType: config })}
+												{getDescription({
+													item: object,
+													locale,
+													keywordType: config,
+												})}
 												{locale.texts.BATTERY_VOLTAGE}:
-												{(item.battery_voltage / 10).toFixed(1)}
+												{(object['extend.battery_voltage'] / 10).toFixed(1)}
 											</div>
 										</Dropdown.Item>
 									)
@@ -164,17 +257,25 @@ class BatteryLevelNotification extends React.Component {
 					</Dropdown.Menu>
 				</Dropdown>
 
-				<Modal show={false} onHide={() => {}} centered>
+				<Modal
+					show={showModal}
+					onHide={() => {
+						this.setState({
+							showModal: false,
+							currentItem: {},
+						})
+					}}
+					centered
+				>
 					<Modal.Header closeButton>
-						<Modal.Title>Modal heading</Modal.Title>
+						<Modal.Title>{currentItem.monitorTypeString}</Modal.Title>
 					</Modal.Header>
-					<Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+					<Modal.Body>
+						{currentItem && currentItem.object && currentItem.object.name}
+					</Modal.Body>
 					<Modal.Footer>
-						<Button variant="secondary" onClick={() => {}}>
-							Close
-						</Button>
-						<Button variant="primary" onClick={() => {}}>
-							Save Changes
+						<Button variant="primary" onClick={this.handleSubmit}>
+							{locale.texts.CLOSE_ALERT}
 						</Button>
 					</Modal.Footer>
 				</Modal>
