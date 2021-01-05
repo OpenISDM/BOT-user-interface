@@ -62,6 +62,12 @@ const sort_type_define_error = {
 	error_message: 'get data fail : sort type must be desc or asc',
 	data: '',
 }
+
+const id_format_error = {
+	error_code:'260',
+	error_message : 'get data fail : input id must be integer or format error',
+	data: ''
+}
 export default {
 	get_key_success,
 	sha_256_incorrect,
@@ -73,4 +79,5 @@ export default {
 	Lbeacon_error,
 	count_error,
 	sort_type_define_error,
+	id_format_error
 }

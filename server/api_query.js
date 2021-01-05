@@ -86,11 +86,22 @@ async function get_object_realtime_data(request, response) {
 	const { key } = request.body
 	let { object_id, object_type } = request.body
 	const matchRes = await match_key(key)
+	let current = moment('2021-01-05T09:22:35.000Z')
+	let last = moment('2021-01-05T09:21:35.000Z')
 
+	console.log(current.isBefore(last) + 'bbbbbbbbbbbb')
 	if (matchRes === 1) {
 		try {
 			if (object_id !== undefined) {
-				object_id = object_id.split(';').map(Number)
+				const pattern = new RegExp('^[0-9]{1,}$')
+				object_id = object_id.split(';').map((item) => {
+					if (item.match(pattern) == null) {
+						response.json(error_code.id_format_error)
+						return undefined
+					}
+					return parseInt(item)
+				})
+				console.log(object_id)
 			}
 			if (object_type !== undefined) {
 				object_type = object_type.split(';')
@@ -101,6 +112,37 @@ async function get_object_realtime_data(request, response) {
 				queryType.get_object_realtime_data(key, object_type, object_id)
 			)
 			console.log('get realtime object data successful')
+			console.log('current time : ' + moment().format('HH:mm:ss'))
+			data.rows = data.rows.map((item) => {
+				if (
+					moment().isBefore(
+						moment(item.last_reported_timestamp).add(5, 'minute')
+					)
+				) {
+					console.log('aaaaaa')
+					return {
+						object_id: item.object_id,
+						mac_address: item.mac_address,
+						object_name: item.object_name,
+						object_type: item.object_type,
+						area_id: 'not found',
+						area_name: 'not found',
+						Lbeacon_description: 'not found',
+						Lbeacon_uuid: 'not found',
+					}
+				}
+				return {
+					object_id: item.object_id,
+					mac_address: item.mac_address,
+					object_name: item.object_name,
+					object_type: item.object_type,
+					area_id: item.area_id,
+					area_name: item.area_name,
+					Lbeacon_uuid: item.Lbeacon_uuid,
+					Lbeacon_description: item.Lbeacon_description,
+				}
+			})
+
 			response.json(data.rows)
 		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
@@ -146,8 +188,16 @@ async function get_object_history_data(request, response) {
 			object_type = object_type.split(';')
 			console.log(object_type)
 		}
+
 		if (object_id !== undefined) {
-			object_id = object_id.split(';').map(Number)
+			const pattern = new RegExp('^[0-9]{1,}$')
+			object_id = object_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item, 10)
+			})
 			console.log(object_id)
 		}
 

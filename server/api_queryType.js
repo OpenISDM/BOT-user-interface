@@ -254,7 +254,8 @@ const get_object_realtime_data = (key, object_type, object_id) => {
 		object_summary_table.updated_by_area as area_id,
 		area_table.name as area_name,
 		object_summary_table.uuid as Lbeacon_uuid,
-		lbeacon_table.description as Lbeacon_desciption
+		lbeacon_table.description as Lbeacon_desciption,
+		object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from 
 		object_table
 
