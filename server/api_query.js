@@ -84,26 +84,25 @@ async function get_people_history_data(request, response) {
 
 async function get_object_realtime_data(request, response) {
 	const { key } = request.body
-	let {object_id, object_type} = request.body
+	let { object_id, object_type } = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === 1) {
-		try{
-			if(object_id !== undefined){
+		try {
+			if (object_id !== undefined) {
 				object_id = object_id.split(';').map(Number)
 			}
-			if(object_type !== undefined){
+			if (object_type !== undefined) {
 				object_type = object_type.split(';')
 				console.log(object_type)
 			}
-			console.log(queryType.get_object_realtime_data(key,object_type,object_id))			
-			const data = await pool.query(queryType.get_object_realtime_data(key, object_type, object_id))
-			// data.rows.forEach(item)=>{
-			// 	item.last
-			// }
+
+			const data = await pool.query(
+				queryType.get_object_realtime_data(key, object_type, object_id)
+			)
 			console.log('get realtime object data successful')
 			response.json(data.rows)
-		}catch(err){
+		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
 		}
 	} else if (matchRes === 2) {
@@ -115,11 +114,64 @@ async function get_object_realtime_data(request, response) {
 
 async function get_object_history_data(request, response) {
 	const { key } = request.body
-	let { start_time, end_time, count_limit, sort_type } = request.body
+	let {
+		object_type,
+		object_id,
+		start_time,
+		end_time,
+		count_limit,
+		sort_type,
+	} = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === 1) {
-		
+		const error_msg = check_input_error(
+			start_time,
+			end_time,
+			sort_type,
+			count_limit
+		)
+
+		if (error_msg !== undefined) {
+			response.json(error_msg)
+			return
+		}
+
+		start_time = set_initial_time(start_time, 1)
+		end_time = set_initial_time(end_time, 0)
+		count_limit = set_count_limit(count_limit)
+		sort_type = set_sort_type(sort_type)
+
+		if (object_type !== undefined) {
+			object_type = object_type.split(';')
+			console.log(object_type)
+		}
+		if (object_id !== undefined) {
+			object_id = object_id.split(';').map(Number)
+			console.log(object_id)
+		}
+
+		try {
+			const data = await pool.query(
+				queryType.get_object_history_data(
+					key,
+					object_type,
+					object_id,
+					start_time,
+					end_time,
+					count_limit,
+					sort_type
+				)
+			)
+			data.rows.forEach((item) => {
+				item.record_timestamp = moment(item.record_timestamp).format(
+					timeDefaultFormat
+				)
+			})
+			response.json(data.rows)
+		} catch (err) {
+			console.log(`get object history data failed : ${err}`)
+		}
 	} else if (matchRes === 2) {
 		response.json(error_code.key_timeout)
 	} else {

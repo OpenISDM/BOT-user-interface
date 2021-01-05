@@ -315,18 +315,19 @@ from
 inner join object_table on
 object_table.id = location_history_table.object_id`
 	if (object_type !== undefined) {
-		queryString += `and object_table.type in (${object_type.map(
+		queryString += `\nand object_table.type in (${object_type.map(
 			(item) => `'${item}'`
 		)})`
 	}
 	if (object_id !== undefined) {
-		queryString += `and object_table.id in (${object_id.map(
+		queryString += `\nand object_table.id in (${object_id.map(
 			(item) => `'${item}'`
 		)})`
 	}
 
 	queryString += `
-inner join user_table on
+
+	inner join user_table on
 user_table.main_area = object_table.area_id
 	
 inner join api_key on
