@@ -21,7 +21,7 @@ const key_incorrect = {
 	data: '',
 }
 
-const key_timeout = {
+const key_unactive = {
 	error_code: '201',
 	error_message: 'get data fail : key is out of active time',
 	data: '',
@@ -72,7 +72,7 @@ export default {
 	get_key_success,
 	sha_256_incorrect,
 	key_incorrect,
-	key_timeout,
+	key_unactive,
 	start_time_error,
 	end_time_error,
 	mac_address_error,

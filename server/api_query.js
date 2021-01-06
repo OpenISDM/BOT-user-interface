@@ -27,7 +27,7 @@ async function get_id_table_data(request, response) {
 			console.log(`get id table data error : ${err}`)
 		}
 	} else if (matchRes === Authenticate.Unactivated) {
-		response.json(error_code.key_timeout)
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
@@ -52,7 +52,7 @@ async function get_people_realtime_data(request, response) {
 			console.log(`get realtime data failed : ${err}`)
 		}
 	} else if (matchRes === Authenticate.Unactivated) {
-		response.json(error_code.key_timeout)
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
@@ -102,7 +102,7 @@ async function get_people_history_data(request, response) {
 			console.log(`get people history data failed : ${err}`)
 		}
 	} else if (matchRes === Authenticate.Unactivated) {
-		response.json(error_code.key_timeout)
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
@@ -169,7 +169,7 @@ async function get_object_realtime_data(request, response) {
 			console.log(`get realtime data failed : ${err}`)
 		}
 	} else if (matchRes === Authenticate.Unactivated) {
-		response.json(error_code.key_timeout)
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
@@ -244,7 +244,7 @@ async function get_object_history_data(request, response) {
 			console.log(`get object history data failed : ${err}`)
 		}
 	} else if (matchRes === Authenticate.Unactivated) {
-		response.json(error_code.key_timeout)
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
@@ -372,7 +372,7 @@ async function get_history_data(request, response) {
 
 		response.json(data)
 	} else if (matchRes === Authenticate.Unactivated) {
-		response.json(error_code.key_timeout)
+		response.json(error_code.key_unactive)
 	} else {
 		// key fail match with user
 		response.json(error_code.key_incorrect)
