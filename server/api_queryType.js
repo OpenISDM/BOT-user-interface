@@ -68,21 +68,22 @@ const get_data = (
 	key,
 	start_time,
 	end_time,
-	tag,
+	object_id,
 	Lbeacon,
 	count_limit,
 	sort_type
 ) => {
 	let text = `
     WITH ranges AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, 
+        SELECT object_id, mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, 
             CASE WHEN LAG(uuid) OVER
                     (PARTITION BY mac_address
                         ORDER BY mac_address, record_timestamp) = uuid
                     THEN NULL ELSE 1 END r
         FROM
         (
-            SELECT
+			SELECT
+				location_history_table.object_id as object_id,
                 location_history_table.mac_address AS mac_address,
                 location_history_table.area_id AS area_id,
                 location_history_table.uuid AS uuid,
@@ -106,12 +107,13 @@ const get_data = (
             AND api_key.key = $3
             WHERE
                 record_timestamp > $1
-                AND record_timestamp < $2`
-	if (tag !== undefined) {
-		text += `  AND location_history_table.mac_address IN  (${tag.map(
-			(item) => `'${item}'`
+				AND record_timestamp < $2`
+	if (object_id !== undefined) {
+		text += ` and location_history_table.object_id in (${object_id.map(
+			(item) => `${item}`
 		)})`
 	}
+
 	if (Lbeacon !== undefined) {
 		text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
 			(item) => `'${item}'`
@@ -121,13 +123,14 @@ const get_data = (
     )
 
     , groups AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r,
+        SELECT object_id, mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r,
             SUM(r)
                 OVER (ORDER BY mac_address, record_timestamp) grp
         FROM ranges
     )
 
-    SELECT
+	SELECT
+		MIN(groups.object_id::TEXT) as object_id,
         MIN(groups.mac_address::TEXT) AS mac_address,
         MIN(object_table.name) AS name,
         MIN(groups.area_id) AS area_id,
@@ -150,7 +153,7 @@ const get_data = (
     INNER JOIN Lbeacon_table
     ON Lbeacon_table.uuid = groups.uuid
 
-    GROUP BY grp, groups.mac_address
+    GROUP BY grp, groups.object_id
     `
 
 	if (sort_type === 'desc') {
@@ -193,7 +196,7 @@ const get_people_history_data = (
 	
 	inner join object_table
 	on object_table.area_id = user_table.main_area
-	and object_table.type = 'Patient'
+	and object_table.object_type = '1'
 	
 	inner join location_history_table
 	on location_history_table.object_id = object_table.id
@@ -230,7 +233,7 @@ const get_people_realtime_data = (key) => {
 	
 	inner join object_table
 	on object_table.area_id = user_table.main_area
-	and object_table.type = 'Patient'
+	and object_table.object_type = '1'
 	
 	inner join object_summary_table
 	on object_summary_table.mac_address = object_table.mac_address
@@ -307,7 +310,7 @@ const get_object_history_data = (
 	object_table.type as object_type,
 	location_history_table.record_timestamp as record_timestamp,
 	location_history_table.area_id as area_id,
-	location_history_table.uuid as Lbeacon_uuid,
+	location_history_table.uuid as lbeacon_uuid,
 	Area_table."name" as area_name,
 	lbeacon_table.description as lbeacon_description
 from 

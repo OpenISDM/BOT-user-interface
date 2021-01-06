@@ -275,7 +275,7 @@ const get_api_key = (request, response) => {
 async function get_history_data(request, response) {
 	const { key } = request.body
 	let {
-		tag, // string
+		object_id, // string
 		Lbeacon, // string
 		start_time, // YYYY/MM/DD HH:mm:ss
 		end_time, // YYYY/MM/DD HH:mm:ss
@@ -306,19 +306,29 @@ async function get_history_data(request, response) {
 		sort_type = set_sort_type(sort_type)
 
 		//** TAG **//
-		if (tag !== undefined) {
-			tag = tag.split(',')
-			const pattern = new RegExp(
-				'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
-			)
-			tag.forEach((item) => {
+		// if (tag !== undefined) {
+		// 	tag = tag.split(',')
+		// 	const pattern = new RegExp(
+		// 		'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
+		// 	)
+		// 	tag.forEach((item) => {
+		// 		if (item.match(pattern) == null) {
+		// 			//judge format
+		// 			response.json(error_code.mac_address_error)
+		// 		}
+		// 	})
+		// }
+
+		//** Object id**//
+		if (object_id !== undefined) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			object_id = object_id.split(',').map((item) => {
 				if (item.match(pattern) == null) {
-					//judge format
-					response.json(error_code.mac_address_error)
+					response.json(error_code.id_format_error)
 				}
+				return parseInt(item, 10)
 			})
 		}
-
 		//** Lbeacon **//
 		if (Lbeacon !== undefined) {
 			Lbeacon = Lbeacon.split(',')
@@ -337,7 +347,7 @@ async function get_history_data(request, response) {
 			key,
 			start_time,
 			end_time,
-			tag,
+			object_id,
 			Lbeacon,
 			count_limit,
 			sort_type
