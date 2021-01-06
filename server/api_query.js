@@ -7,19 +7,26 @@ const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
 
+const Authenticate = {
+	Exception: 0,
+	Success: 1,
+	Unactivated: 2,
+	Fail: 3,
+}
+
 async function get_id_table_data(request, response) {
 	const { key } = request.body
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.Success) {
 		try {
 			const data = await pool.query(queryType.get_id_table_data(key))
 			response.json(data.rows)
 		} catch (err) {
 			console.log(`get id table data error : ${err}`)
 		}
-	} else if (matchRes === 2) {
+	} else if (matchRes === Authenticate.Unactivated) {
 		response.json(error_code.key_timeout)
 	} else {
 		response.json(error_code.key_incorrect)
@@ -31,7 +38,7 @@ async function get_people_realtime_data(request, response) {
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.Success) {
 		try {
 			const data = await pool.query(queryType.get_people_realtime_data(key))
 			data.rows.forEach((item) => {
@@ -44,7 +51,7 @@ async function get_people_realtime_data(request, response) {
 		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
 		}
-	} else if (matchRes === 2) {
+	} else if (matchRes === Authenticate.Unactivated) {
 		response.json(error_code.key_timeout)
 	} else {
 		response.json(error_code.key_incorrect)
@@ -56,7 +63,7 @@ async function get_people_history_data(request, response) {
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.Success) {
 		const error_msg = check_input_error(
 			start_time,
 			end_time,
@@ -94,7 +101,7 @@ async function get_people_history_data(request, response) {
 		} catch (err) {
 			console.log(`get people history data failed : ${err}`)
 		}
-	} else if (matchRes === 2) {
+	} else if (matchRes === Authenticate.Unactivated) {
 		response.json(error_code.key_timeout)
 	} else {
 		response.json(error_code.key_incorrect)
@@ -106,7 +113,7 @@ async function get_object_realtime_data(request, response) {
 	let { object_id, object_type } = request.body
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.Success) {
 		try {
 			if (object_id !== undefined) {
 				const pattern = new RegExp('^[0-9]{1,}$')
@@ -161,7 +168,7 @@ async function get_object_realtime_data(request, response) {
 		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
 		}
-	} else if (matchRes === 2) {
+	} else if (matchRes === Authenticate.Unactivated) {
 		response.json(error_code.key_timeout)
 	} else {
 		response.json(error_code.key_incorrect)
@@ -180,7 +187,7 @@ async function get_object_history_data(request, response) {
 	} = request.body
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.Success) {
 		const error_msg = check_input_error(
 			start_time,
 			end_time,
@@ -236,7 +243,7 @@ async function get_object_history_data(request, response) {
 		} catch (err) {
 			console.log(`get object history data failed : ${err}`)
 		}
-	} else if (matchRes === 2) {
+	} else if (matchRes === Authenticate.Unactivated) {
 		response.json(error_code.key_timeout)
 	} else {
 		response.json(error_code.key_incorrect)
@@ -304,7 +311,7 @@ async function get_history_data(request, response) {
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.Success) {
 		// matched
 
 		const error_msg = check_input_error(
@@ -364,7 +371,7 @@ async function get_history_data(request, response) {
 		})
 
 		response.json(data)
-	} else if (matchRes === 2) {
+	} else if (matchRes === Authenticate.Unactivated) {
 		response.json(error_code.key_timeout)
 	} else {
 		// key fail match with user
@@ -373,23 +380,24 @@ async function get_history_data(request, response) {
 }
 
 async function match_key(key) {
-	let matchFlag = 0 // flag = 0 when key error
-	return await pool
-		.query(queryType.getAllKeyQuery)
-		.then((res) => {
-			res.rows.forEach((item) => {
-				const vaildTime = moment(item.register_time).add(30, 'm')
-				if (moment().isBefore(moment(vaildTime)) && item.key === key) {
-					matchFlag = 1 //in time & key right
-				} else if (moment().isAfter(moment(vaildTime)) && item.key === key) {
-					matchFlag = 2 // out time & key right
+	let Flag = Authenticate.Fail
+	return await pool.query(queryType.getAllKeyQuery).then((res) => {
+		res.rows
+			.forEach((item) => {
+				const validTime = moment(item.register_time).add(30, 'm')
+
+				if (moment().isBefore(moment(validTime)) && item.key === key) {
+					Flag = Authenticate.Success
+				} else if (moment().isAfter(moment(validTime)) && item.key === key) {
+					Flag = Authenticate.Unactivated
 				}
+				return Flag
 			})
-			return matchFlag
-		})
-		.catch((err) => {
-			console.log(`match key fails ${err}`)
-		})
+			.catch((err) => {
+				console.log(`match exception : ${err}`)
+				Flag = Authenticate.Exception
+			})
+	})
 }
 
 function check_input_error(start_time, end_time, sort_type, count_limit) {
