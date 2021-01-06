@@ -654,6 +654,11 @@ const en = {
 	CLOSE_MANUALLY: 'Close Manually',
 
 	CLOSE_ALERT: 'Close Alert',
+
+	CREATE_DEVICE_LIST: 'Create Device List',
+	CREATE_PATIENT_LIST: 'Create Patient List',
+	VIEW_LIST: 'View List',
+	REVISE_LIST: 'Revise List',
 }
 
 export default en

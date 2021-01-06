@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        CheckboxOverlayTrigger.js
+        BOTOverlayTrigger.js
 
     File Description:
         BOT UI component
@@ -34,56 +34,42 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import styleConfig from '../../config/styleConfig'
-import BOTOverlayTrigger from './BOTOverlayTrigger'
+import { Popover, OverlayTrigger } from 'react-bootstrap'
 
-const CheckboxOverlayTrigger = ({
+const BOTOverlayTrigger = ({
 	popoverTitle,
 	popoverBody,
-	name,
-	onChange,
 	id,
-	disabled,
 	placement,
 	trigger,
-	checked,
+	innerElement = <></>,
 }) => {
 	return (
-		<BOTOverlayTrigger
+		<OverlayTrigger
 			trigger={trigger}
 			key={id}
 			placement={placement}
-			popoverBody={popoverBody}
-			popoverTitle={popoverTitle}
-			innerElement={
-				<div className="pretty p-default p-round" style={styleConfig.checkbox}>
-					<input
-						name={name}
-						id={id}
-						type="checkbox"
-						checked={checked}
-						onChange={onChange}
-						disabled={disabled}
-					/>
-					<div className="state p-primary" style={{ marginLeft: '20px' }}>
-						<label>{name}</label>
-					</div>
-				</div>
+			overlay={
+				<Popover id={`popover-positioned-${placement}`}>
+					<Popover.Content className="popover-content">
+						{popoverBody}
+					</Popover.Content>
+					<Popover.Title as="h3">{popoverTitle}</Popover.Title>
+				</Popover>
 			}
-		/>
+		>
+			{innerElement}
+		</OverlayTrigger>
 	)
 }
 
-CheckboxOverlayTrigger.propTypes = {
+BOTOverlayTrigger.propTypes = {
 	popoverTitle: PropTypes.string.isRequired,
 	popoverBody: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired,
-	onChange: PropTypes.func,
 	id: PropTypes.string.isRequired,
 	trigger: PropTypes.string.isRequired,
-	disabled: PropTypes.bool,
-	checked: PropTypes.bool,
 	placement: PropTypes.string.isRequired,
+	innerElement: PropTypes.element,
 }
 
-export default CheckboxOverlayTrigger
+export default BOTOverlayTrigger

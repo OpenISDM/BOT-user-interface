@@ -38,10 +38,10 @@ import { NamedList, ObjectNamedListMappingTable } from '../db/model'
 
 export default {
 	getNamedList: async (request, response) => {
-		const { areaId, type, isUserDefined } = request.query
+		const { areaId, types, isUserDefined } = request.query
 		try {
 			const res = await NamedList.findAll({
-				where: { areaId, type: type, isUserDefined },
+				where: { areaId, type: types, isUserDefined },
 				include: {
 					model: ObjectNamedListMappingTable,
 					attributes: ['object_id'],

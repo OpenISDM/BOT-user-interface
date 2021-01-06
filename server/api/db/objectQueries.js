@@ -77,8 +77,6 @@ const getObject = (objectType, areas_id) => {
 		ORDER BY
 			object_table.name ASC,
 			object_table.registered_timestamp DESC
-
-			;
 	`
 	return text
 }
