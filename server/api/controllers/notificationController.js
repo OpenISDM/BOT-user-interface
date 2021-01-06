@@ -80,7 +80,7 @@ export default {
 						[Op.eq]: null,
 					},
 					violation_timestamp: {
-						[Op.gt]: new Date(Date.now() - 10 * 60 * 1000), // 10 mins
+						[Op.gt]: new Date(Date.now() - 30 * 60 * 1000), // 30 mins
 					},
 				},
 				order: ['id'],
@@ -108,32 +108,37 @@ export default {
 					}
 				})
 
-			const emergency = notificationTableQueried.map((notificaiton) => {
-				const macAddress = notificaiton['mac_address']
-				const monitortype = notificaiton['monitor_type']
-				let type = MONITOR_TYPE.NORMAL
-				if (
-					findExpectedBitValue({
-						targetDecimal: monitortype,
-						expectedDecimal: MONITOR_TYPE.PANIC,
-					})
-				) {
-					type = NOTIFICATION_ENUM.PANIC
-				} else if (
-					findExpectedBitValue({
-						targetDecimal: monitortype,
-						expectedDecimal: MONITOR_TYPE.GEO_FENCE,
-					})
-				) {
-					type = NOTIFICATION_ENUM.GEO_FENCE
-				}
+			const emergency = notificationTableQueried
+				.map((notificaiton) => {
+					const macAddress = notificaiton['mac_address']
+					const monitortype = notificaiton['monitor_type']
+					let type = MONITOR_TYPE.NORMAL
+					if (
+						findExpectedBitValue({
+							targetDecimal: monitortype,
+							expectedDecimal: MONITOR_TYPE.PANIC,
+						})
+					) {
+						type = NOTIFICATION_ENUM.PANIC
+					} else if (
+						findExpectedBitValue({
+							targetDecimal: monitortype,
+							expectedDecimal: MONITOR_TYPE.GEO_FENCE,
+						})
+					) {
+						type = NOTIFICATION_ENUM.GEO_FENCE
+					}
 
-				return {
-					type,
-					object: objectTableMap[macAddress],
-					notificaiton,
-				}
-			})
+					// filter only registered object
+					if (objectTableMap[macAddress]) {
+						return {
+							type,
+							object: objectTableMap[macAddress],
+							notificaiton,
+						}
+					}
+				})
+				.filter((item) => item)
 
 			response.status(200).json({
 				emergency,
