@@ -327,7 +327,7 @@ async function get_history_data(request, response) {
 		//** Object id**//
 		if (object_id !== undefined) {
 			const pattern = new RegExp('^[0-9]{1,}$')
-			object_id = object_id.split(',').map((item) => {
+			object_id = object_id.split(';').map((item) => {
 				if (item.match(pattern) == null) {
 					response.json(error_code.id_format_error)
 				}
@@ -336,7 +336,7 @@ async function get_history_data(request, response) {
 		}
 		//** Lbeacon **//
 		if (Lbeacon !== undefined) {
-			Lbeacon = Lbeacon.split(',')
+			Lbeacon = Lbeacon.split(';')
 			const pattern = new RegExp(
 				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
 			)
