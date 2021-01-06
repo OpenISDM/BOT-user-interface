@@ -324,20 +324,6 @@ async function get_history_data(request, response) {
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
 
-		//** TAG **//
-		// if (tag !== undefined) {
-		// 	tag = tag.split(',')
-		// 	const pattern = new RegExp(
-		// 		'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
-		// 	)
-		// 	tag.forEach((item) => {
-		// 		if (item.match(pattern) == null) {
-		// 			//judge format
-		// 			response.json(error_code.mac_address_error)
-		// 		}
-		// 	})
-		// }
-
 		//** Object id**//
 		if (object_id !== undefined) {
 			const pattern = new RegExp('^[0-9]{1,}$')
