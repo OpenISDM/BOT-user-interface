@@ -7,23 +7,21 @@ const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
 
-async function get_id_table_data(request, response){
+async function get_id_table_data(request, response) {
 	const { key } = request.body
 
 	const matchRes = await match_key(key)
 
-	if(matchRes === 1){
-		try{
+	if (matchRes === 1) {
+		try {
 			const data = await pool.query(queryType.get_id_table_data(key))
 			response.json(data.rows)
-		}catch(err){
+		} catch (err) {
 			console.log(`get id table data error : ${err}`)
 		}
-	}
-	else if(matchRes === 2){
+	} else if (matchRes === 2) {
 		response.json(error_code.key_timeout)
-	}
-	else{
+	} else {
 		response.json(error_code.key_incorrect)
 	}
 }
