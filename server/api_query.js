@@ -86,10 +86,7 @@ async function get_object_realtime_data(request, response) {
 	const { key } = request.body
 	let { object_id, object_type } = request.body
 	const matchRes = await match_key(key)
-	let current = moment('2021-01-05T09:22:35.000Z')
-	let last = moment('2021-01-05T09:21:35.000Z')
 
-	console.log(current.isBefore(last) + 'bbbbbbbbbbbb')
 	if (matchRes === 1) {
 		try {
 			if (object_id !== undefined) {
@@ -111,15 +108,13 @@ async function get_object_realtime_data(request, response) {
 			const data = await pool.query(
 				queryType.get_object_realtime_data(key, object_type, object_id)
 			)
-			console.log('get realtime object data successful')
-			console.log('current time : ' + moment().format('HH:mm:ss'))
+
 			data.rows = data.rows.map((item) => {
 				if (
 					moment().isAfter(
 						moment(item.last_reported_timestamp).add(5, 'minute')
 					)
 				) {
-					console.log('aaaaaa')
 					return {
 						object_id: item.object_id,
 						mac_address: item.mac_address,
