@@ -124,11 +124,9 @@ async function get_object_realtime_data(request, response) {
 					}
 					return parseInt(item)
 				})
-				console.log(object_id)
 			}
 			if (object_type !== undefined) {
 				object_type = object_type.split(';')
-				console.log(object_type)
 			}
 
 			const data = await pool.query(
@@ -207,7 +205,6 @@ async function get_object_history_data(request, response) {
 
 		if (object_type !== undefined) {
 			object_type = object_type.split(';')
-			console.log(object_type)
 		}
 
 		if (object_id !== undefined) {
@@ -219,7 +216,6 @@ async function get_object_history_data(request, response) {
 				}
 				return parseInt(item, 10)
 			})
-			console.log(object_id)
 		}
 
 		try {
