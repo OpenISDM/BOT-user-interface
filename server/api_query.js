@@ -115,7 +115,7 @@ async function get_object_realtime_data(request, response) {
 			console.log('current time : ' + moment().format('HH:mm:ss'))
 			data.rows = data.rows.map((item) => {
 				if (
-					moment().isBefore(
+					moment().isAfter(
 						moment(item.last_reported_timestamp).add(5, 'minute')
 					)
 				) {
@@ -138,8 +138,8 @@ async function get_object_realtime_data(request, response) {
 					object_type: item.object_type,
 					area_id: item.area_id,
 					area_name: item.area_name,
-					Lbeacon_uuid: item.Lbeacon_uuid,
-					Lbeacon_description: item.Lbeacon_description,
+					lbeacon_uuid: item.lbeacon_uuid,
+					lbeacon_description: item.lbeacon_description,
 				}
 			})
 
