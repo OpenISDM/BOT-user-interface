@@ -43,7 +43,7 @@ import botFeaturesConfig from './config/botFeaturesConfig'
 import { NORMAL, BROKEN, TRANSFERRED } from './config/wordMap'
 
 const config = {
-	VERSION: `v${version} b.1986`,
+	VERSION: `v${version} b.1987`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 
@@ -106,6 +106,9 @@ const config = {
 
 	OBJECT_TABLE_SUB_TYPE: {
 		PATIENT: 'Patient',
+		VISITOR: 'Visitor',
+		CONTRACTOR: 'Contractor',
+		STAFF: 'Staff',
 	},
 
 	GENDER_OPTIONS: {
@@ -159,7 +162,7 @@ const config = {
 
 	AJAX_STATUS_MAP: {
 		LOADING: 'loading',
-		SUCCESS: 'succcess',
+		SUCCESS: 'success',
 		NO_RESULT: 'no result',
 		WAIT_FOR_SEARCH: 'wait for search',
 	},
@@ -259,6 +262,27 @@ const config = {
 		OBJECT_TYPE_DEVICE: 4,
 		OBJECT_TYPE_PERSON: 5,
 		PIN_SELETION: 6,
+	},
+
+	NOTIFICATION_ALERT_TYPES_ENUM: {
+		GUI: 1,
+		LIGHT: 2,
+		BELL: 4,
+		SMS: 8,
+	},
+
+	STATUS_ENUM: {
+		ENABLED: 1,
+		DISABLED: 0,
+	},
+
+	MONITOR_TYPE: {
+		NORMAL: 0,
+		GEO_FENCE: 1,
+		PANIC: 2,
+		ACTIVITY: 4,
+		LOCATION: 8,
+		BED_CLEARNESS: 16,
 	},
 }
 

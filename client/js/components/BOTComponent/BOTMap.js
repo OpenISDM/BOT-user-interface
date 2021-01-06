@@ -53,14 +53,14 @@ const generateGeoFenceLayer = (showGeoFence, geoFenceList) => {
 							lBeaconUUID: geoFence.fences_uuid,
 						})}
 						pathOptions={{ color: 'red', fillColor: 'red' }}
-						radius={700}
+						radius={900}
 					/>
 					<Circle
 						center={getCoordinatesFromUUID({
 							lBeaconUUID: geoFence.perimeters_uuid,
 						})}
 						pathOptions={{ color: 'orange', fillColor: 'orange' }}
-						radius={300}
+						radius={900}
 					/>
 				</>
 			)

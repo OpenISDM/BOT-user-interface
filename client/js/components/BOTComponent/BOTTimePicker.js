@@ -41,9 +41,7 @@ import 'rc-time-picker/assets/index.css'
 
 const covertToMoment = (value) => {
 	const [h, m, s] = value.split(':')
-	return moment()
-		.utcOffset(0)
-		.set({ hour: h, minute: m, second: s, millisecond: 0 })
+	return moment().set({ hour: h, minute: m, second: s, millisecond: 0 })
 }
 
 const BOTTimePicker = ({
@@ -61,8 +59,10 @@ const BOTTimePicker = ({
 				value && isStringTypeValue ? covertToMoment(value) : moment()
 			}
 			onChange={(momentValue) => {
-				const stringValue = momentValue.format('HH:mm:ss')
-				onChange(stringValue)
+				if (momentValue) {
+					const stringValue = momentValue.format('HH:mm:ss')
+					onChange(stringValue)
+				}
 			}}
 		/>
 	)

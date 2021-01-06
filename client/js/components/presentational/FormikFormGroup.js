@@ -39,6 +39,7 @@ import { FormFieldName } from '../BOTComponent/styleComponent'
 const FormikFormGroup = ({
 	name = 'default',
 	label,
+	centerLabel = false,
 	error,
 	touched,
 	type = 'text',
@@ -66,10 +67,12 @@ const FormikFormGroup = ({
 		},
 	}
 
+	const labelStyle = centerLabel ? { justifyContent: 'center' } : {}
+
 	return (
 		<div className={`form-group ${className}`} style={style.container}>
-			<FormFieldName className="d-flex justify-content-between">
-				<div>{label}</div>
+			<FormFieldName className="d-flex" style={labelStyle}>
+				<div style={{ textAlign: 'center' }}>{label}</div>
 				<div>{additionalComponent()}</div>
 			</FormFieldName>
 			{component ? (

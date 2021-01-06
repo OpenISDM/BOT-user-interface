@@ -34,47 +34,75 @@
 
 import React from 'react'
 import NotificationBadge, { Effect } from 'react-notification-badge'
-import { Row, Dropdown } from 'react-bootstrap'
+import { Row, Dropdown, Modal, Button } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
 import apiHelper from '../../helper/apiHelper'
+import messageGenerator from '../../helper/messageGenerator'
 
 class BatteryLevelNotification extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		data: [],
+		emergency: [],
+		lowBattery: [],
 		locale: this.context.locale.abbr,
+		currentItem: {},
+		showModal: false,
+	}
+
+	componentWillUnmount = () => {
+		clearInterval(this.interval)
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr !== prevState.locale) {
-			this.getTrackingData()
+		if (prevState.showModal !== this.state.showModal) {
+			this.interval = this.state.showModal
+				? clearInterval(this.interval)
+				: setInterval(this.getTrackingData, config.mapConfig.intervalTime)
 		}
 	}
 
 	componentDidMount = () => {
 		this.getTrackingData()
+		this.interval = setInterval(
+			this.getTrackingData,
+			config.mapConfig.intervalTime
+		)
 	}
 
 	getTrackingData = async () => {
-		const { auth, locale, stateReducer } = this.context
-
-		const [{ area }] = stateReducer
-		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
-			locale: locale.abbr,
-			user: auth.user,
+		const [{ area }] = this.context.stateReducer
+		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
-		this.setState({
-			data: res.data.filter((item) => item.battery_indicator === 2),
-			locale: this.context.locale.abbr,
+		if (res) {
+			this.setState({
+				emergency: res.data.emergency,
+				lowBattery: res.data.lowBattery,
+				locale: this.context.locale.abbr,
+			})
+		}
+	}
+
+	handleSubmit = async () => {
+		const res = await apiHelper.notificationApiAgent.turnOffNotification({
+			notificationId: this.state.currentItem.notificaiton.id,
 		})
+
+		if (res) {
+			await messageGenerator.setSuccessMessage('save success')
+			this.setState({
+				emergency: [],
+				currentItem: {},
+				showModal: false,
+			})
+		}
 	}
 
 	render() {
-		const { data } = this.state
+		const { emergency, lowBattery, showModal, currentItem } = this.state
 		const { locale } = this.context
 		const style = {
 			list: {
@@ -97,69 +125,168 @@ class BatteryLevelNotification extends React.Component {
 		}
 
 		return (
-			<Dropdown>
-				<Dropdown.Toggle
-					variant="light"
-					id="battery-notice-btn"
-					bsPrefix="bot-dropdown-toggle"
-				>
-					<i className="fas fa-bell" style={style.icon}>
-						<NotificationBadge
-							count={data.length}
-							effect={Effect.SCALE}
-							style={{
-								top: '-28px',
-								right: '-10px',
-							}}
-						/>
-					</i>
-				</Dropdown.Toggle>
-				<Dropdown.Menu
-					alignRight
-					bsPrefix="bot-dropdown-menu-right dropdown-menu "
-				>
-					<div className="px-5 py-2" style={style.title}>
-						<Row>
-							<div className="d-inline-flex justify-content-start">
-								{locale.texts.BATTERY_NOTIFICATION}
-							</div>
-						</Row>
-					</div>
-					<div
-						className="overflow-hidden-scroll custom-scrollbar"
-						style={style.dropdown}
+			<>
+				<Dropdown>
+					<Dropdown.Toggle
+						variant="light"
+						id="battery-notice-btn"
+						bsPrefix="bot-dropdown-toggle"
 					>
-						{data.length !== 0 ? (
-							data.map((item) => {
-								return (
-									<Dropdown.Item
-										key={item.mac_address}
-										disabled
-										style={{ color: 'black' }}
-									>
-										<div
-											className={
-												null
-												// 'd-inline-flex justify-content-start text-left'
-											}
-											style={style.list}
+						<i className="fas fa-bell" style={style.icon}>
+							<NotificationBadge
+								count={emergency.length}
+								effect={Effect.SCALE}
+								style={{
+									top: '-28px',
+									right: '-10px',
+								}}
+							/>
+						</i>
+					</Dropdown.Toggle>
+					<Dropdown.Menu
+						alignRight
+						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+					>
+						<div className="px-5 py-2" style={style.title}>
+							<Row>
+								<div className="d-inline-flex justify-content-start">
+									{locale.texts.EMERGENCY_ALERT}
+								</div>
+							</Row>
+						</div>
+						<div
+							className="overflow-hidden-scroll custom-scrollbar"
+							style={style.dropdown}
+						>
+							{emergency.length !== 0 ? (
+								emergency.map(({ object, notificaiton }) => {
+									let monitorTypeString = ''
+									if (
+										parseInt(notificaiton.monitor_type) ===
+										config.MONITOR_TYPE.GEO_FENCE
+									) {
+										monitorTypeString = locale.texts.GEOFENCE_ALERT
+									} else if (
+										parseInt(notificaiton.monitor_type) ===
+										config.MONITOR_TYPE.PANIC
+									) {
+										monitorTypeString = locale.texts.EMERGENCY_ALERT
+									}
+
+									return (
+										<Dropdown.Item
+											key={object.mac_address}
+											style={{ color: 'black' }}
+											onClick={() => {
+												this.setState({
+													currentItem: {
+														monitorTypeString,
+														object,
+														notificaiton,
+													},
+													showModal: true,
+												})
+											}}
 										>
-											<p className="d-inline-block mx-2">&#8729;</p>
-											{getDescription({ item, locale, keywordType: config })}
-											{locale.texts.BATTERY_VOLTAGE}:
-											{(item.battery_voltage / 10).toFixed(1)}
-										</div>
-									</Dropdown.Item>
-								)
-							})
-						) : (
-							<Dropdown.Item disabled>
-								{locale.texts.NO_NOTIFICATION}
-							</Dropdown.Item>
-						)}
-					</div>
-				</Dropdown.Menu>
-			</Dropdown>
+											<div style={style.list}>
+												<p className="d-inline-block mx-2">&#8729;</p>
+												{monitorTypeString}: {object.name}
+											</div>
+										</Dropdown.Item>
+									)
+								})
+							) : (
+								<Dropdown.Item disabled>{locale.texts.NO_ALERT}</Dropdown.Item>
+							)}
+						</div>
+					</Dropdown.Menu>
+				</Dropdown>
+
+				<Dropdown style={{ marginLeft: '1px' }}>
+					<Dropdown.Toggle
+						variant="light"
+						id="battery-notice-btn"
+						bsPrefix="bot-dropdown-toggle"
+					>
+						<i className="fas fa-battery-quarter" style={style.icon}>
+							<NotificationBadge
+								count={lowBattery.length}
+								effect={Effect.SCALE}
+								style={{
+									top: '-28px',
+									right: '-10px',
+								}}
+							/>
+						</i>
+					</Dropdown.Toggle>
+					<Dropdown.Menu
+						alignRight
+						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+					>
+						<div className="px-5 py-2" style={style.title}>
+							<Row>
+								<div className="d-inline-flex justify-content-start">
+									{locale.texts.BATTERY_NOTIFICATION}
+								</div>
+							</Row>
+						</div>
+						<div
+							className="overflow-hidden-scroll custom-scrollbar"
+							style={style.dropdown}
+						>
+							{lowBattery.length !== 0 ? (
+								lowBattery.map(({ object }) => {
+									return (
+										<Dropdown.Item
+											disabled
+											key={object.mac_address}
+											style={{ color: 'black' }}
+										>
+											<div style={style.list}>
+												<p className="d-inline-block mx-2">&#8729;</p>
+												{getDescription({
+													item: object,
+													locale,
+													keywordType: config,
+												})}
+												{locale.texts.BATTERY_VOLTAGE}:
+												{(object['extend.battery_voltage'] / 10).toFixed(1)}
+											</div>
+										</Dropdown.Item>
+									)
+								})
+							) : (
+								<Dropdown.Item disabled>
+									{locale.texts.NO_NOTIFICATION}
+								</Dropdown.Item>
+							)}
+						</div>
+					</Dropdown.Menu>
+				</Dropdown>
+
+				<Modal
+					show={showModal}
+					onHide={() => {
+						this.setState({
+							showModal: false,
+							currentItem: {},
+						})
+					}}
+					centered
+				>
+					<Modal.Header closeButton>
+						<Modal.Title>{currentItem.monitorTypeString}</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						{currentItem && currentItem.object && currentItem.object.name}
+					</Modal.Body>
+					<Modal.Footer>
+						<Button variant="primary" onClick={this.handleSubmit}>
+							{locale.texts.CLOSE_ALERT}
+						</Button>
+					</Modal.Footer>
+				</Modal>
+			</>
 		)
 	}
 }

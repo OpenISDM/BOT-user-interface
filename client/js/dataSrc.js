@@ -89,6 +89,7 @@ export const file = {
 	},
 }
 export const geofence = `${domain}/data/geofence`
+export const geofenceArea = `${domain}/data/geofence/area`
 export const monitor = `${domain}/data/monitor`
 export const record = {
 	editedObject: `${domain}/data/record/editedObject`,
@@ -112,6 +113,8 @@ export const utils = {
 }
 export const deleteDevice = `${domain}/data/deleteDevice`
 export const getTrackingTableByMacAddress = `${domain}/data/getTrackingTableByMacAddress`
+export const namedList = `${domain}/data/namedList`
+export const notification = `${domain}/data/notification`
 
 export default {
 	trackingData,
@@ -127,6 +130,7 @@ export default {
 	auth,
 	file,
 	geofence,
+	geofenceArea,
 	monitor,
 	record,
 	transferredLocation,
@@ -137,4 +141,6 @@ export default {
 	deleteDevice,
 	deviceGruopDetailByAreaId,
 	getTrackingTableByMacAddress,
+	namedList,
+	notification,
 }

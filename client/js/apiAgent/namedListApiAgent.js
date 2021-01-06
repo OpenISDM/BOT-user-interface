@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        connection.js
+        namedListApiAgent.js
 
     File Description:
         BOT UI component
@@ -32,43 +32,29 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import pkg from 'sequelize'
-import pg from 'pg'
-import { decrypt } from '../service/encrypt'
+import { namedList } from '../dataSrc'
+import { get, post, del } from '../helper/httpClient'
 
-const { Sequelize } = pkg
-
-export const { Op } = pkg
-
-export const sequelize = new Sequelize(
-	process.env.DB_DATABASE,
-	process.env.DB_USER,
-	decrypt(process.env.DB_PASS),
-	{
-		host: process.env.DB_HOST,
-		dialect: 'postgres',
-	}
-)
-
-const config = {
-	user: process.env.DB_USER,
-	host: process.env.DB_HOST,
-	database: process.env.DB_DATABASE,
-	password: decrypt(process.env.DB_PASS),
-	port: process.env.DB_PORT,
+export default {
+	async getNamedList({ areaId, type, isUserDefined }) {
+		return await get(namedList, {
+			areaId,
+			type,
+			isUserDefined,
+		})
+	},
+	async setNamedList({ areaId, name, type, isUserDefined, objectIds }) {
+		return await post(namedList, {
+			areaId,
+			name,
+			type,
+			isUserDefined,
+			objectIds,
+		})
+	},
+	async removeNamedList({ id }) {
+		return await del(namedList, {
+			id,
+		})
+	},
 }
-
-export const updateOrCreate = async ({ model, where, newItem }) => {
-	// First try to find the record
-	const foundItem = await model.findOne({ where })
-	if (!foundItem) {
-		// Item not found, create a new one
-		const item = await model.create(newItem)
-		return { item, created: true }
-	}
-	// Found an item, update it
-	const [, [item]] = await model.update(newItem, { where, returning: true })
-	return { item, created: false }
-}
-
-export default new pg.Pool(config)

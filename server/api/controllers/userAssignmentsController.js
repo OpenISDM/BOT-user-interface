@@ -34,11 +34,12 @@
 
 import 'dotenv/config'
 import { sequelize } from '../db/connection'
-import UserAssignments, {
+import {
+	UserAssignments,
+	DeviceGroupList,
+	PatientGroupList,
 	UserAssignmentEnum,
-} from '../db/model/userAssignments'
-import DeviceGroupList from '../db/model/deviceGroupList'
-import PatientGroupList from '../db/model/patientGroupList'
+} from '../db/model'
 
 export default {
 	getByUserId: async (request, response) => {

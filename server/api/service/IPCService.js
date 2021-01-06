@@ -56,6 +56,25 @@ export const reloadGeofenceConfig = (area_id) => {
 	}
 }
 
+export const stopLightAlarm = ({ notificationId }) => {
+	if (process.env.IPC_EXECUTION_PATH) {
+		exec(
+			process.env.IPC_EXECUTION_PATH,
+			`-p 9999 -c cmd_stop_light_alarm -n ${notificationId}`.split(' '),
+			function (err, data) {
+				if (err) {
+					console.log(`execute stop light alram failed ${err}`)
+				} else {
+					console.log('execute stop light alram succeed')
+				}
+			}
+		)
+	} else {
+		console.log('IPC has not set')
+	}
+}
+
 export default {
 	reloadGeofenceConfig,
+	stopLightAlarm,
 }

@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { geofence } from '../dataSrc'
-import { post, put, del, patch } from '../helper/httpClient'
+import { geofence, geofenceArea } from '../dataSrc'
+import { post, put, del, patch, get } from '../helper/httpClient'
 import config from '../config'
 
 const geofenceApis = {
@@ -58,6 +58,18 @@ const geofenceApis = {
 	async setGeofenceConfig({ configPackage }) {
 		return await put(geofence, {
 			configPackage,
+		})
+	},
+
+	async setGeofenceAreaConfig({ areaConfig }) {
+		return await post(geofenceArea, {
+			areaConfig,
+		})
+	},
+
+	async getGeofenceAreaConfig({ areaId }) {
+		return await get(geofenceArea, {
+			areaId,
 		})
 	},
 }

@@ -38,7 +38,7 @@ import { toast, Slide } from 'react-toastify'
 
 const setSuccessMessage = (msg) => {
 	return toast.success(<ToastMessage msg={msg} />, {
-		position: toast.POSITION.TOP_CENTER,
+		position: toast.POSITION.BOTTOM_CENTER,
 		autoClose: 1500,
 		className: 'color-black bg-green',
 		bodyClassName: 'd-flex justify-content-center',

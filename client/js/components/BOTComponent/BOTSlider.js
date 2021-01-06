@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        connection.js
+        BOTSlider.js
 
     File Description:
         BOT UI component
@@ -32,43 +32,49 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import pkg from 'sequelize'
-import pg from 'pg'
-import { decrypt } from '../service/encrypt'
-
-const { Sequelize } = pkg
-
-export const { Op } = pkg
-
-export const sequelize = new Sequelize(
-	process.env.DB_DATABASE,
-	process.env.DB_USER,
-	decrypt(process.env.DB_PASS),
-	{
-		host: process.env.DB_HOST,
-		dialect: 'postgres',
-	}
-)
-
-const config = {
-	user: process.env.DB_USER,
-	host: process.env.DB_HOST,
-	database: process.env.DB_DATABASE,
-	password: decrypt(process.env.DB_PASS),
-	port: process.env.DB_PORT,
+import 'rc-tooltip/assets/bootstrap.css'
+import React, { useState } from 'react'
+import Slider, { SliderTooltip } from 'rc-slider'
+const { Handle } = Slider
+const handle = (props) => {
+	const { value, dragging, index, ...restProps } = props
+	return (
+		<SliderTooltip
+			prefixCls="rc-slider-tooltip"
+			overlay={`${value}`}
+			visible={dragging}
+			placement="top"
+			key={index}
+		>
+			<Handle value={value} {...restProps} />
+		</SliderTooltip>
+	)
 }
 
-export const updateOrCreate = async ({ model, where, newItem }) => {
-	// First try to find the record
-	const foundItem = await model.findOne({ where })
-	if (!foundItem) {
-		// Item not found, create a new one
-		const item = await model.create(newItem)
-		return { item, created: true }
-	}
-	// Found an item, update it
-	const [, [item]] = await model.update(newItem, { where, returning: true })
-	return { item, created: false }
+const BOTSlider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
+	const [value, setValue] = useState([defaultValue])
+	return (
+		<div
+			style={{
+				marginTop: '10px',
+				marginBottom: '10px',
+				marginLeft: '5px',
+				marginRight: '5px',
+			}}
+		>
+			<div style={{}}>{value}</div>
+			<Slider
+				min={min}
+				max={max}
+				defaultValue={defaultValue}
+				handle={handle}
+				onChange={(value) => {
+					setValue(value)
+					onChange(value)
+				}}
+			/>
+		</div>
+	)
 }
 
-export default new pg.Pool(config)
+export default BOTSlider

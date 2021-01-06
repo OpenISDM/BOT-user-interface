@@ -133,7 +133,7 @@ class GatewayTable extends React.Component {
 
 	handleSubmitForm = async (formOption) => {
 		const callback = () => messageGenerator.setSuccessMessage('save success')
-		await apiHelper.utilsApiAgent.putGateway({
+		await apiHelper.gatewayApiAgent.putGateway({
 			formOption,
 		})
 		this.getData(callback)

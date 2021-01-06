@@ -517,6 +517,7 @@ const en = {
 	NOTES: 'notes',
 	NO_DATA_AVAILABE: 'no data available',
 	NO_NOTIFICATION: 'no notification',
+	NO_ALERT: 'no alert',
 	USER_NAME: 'user name',
 	DEVICES_FOUND_IN: 'devices found in',
 	DEVICES_NOT_FOUND_IN: 'devices not found in',
@@ -621,6 +622,38 @@ const en = {
 	DEVICE_ALIASES: 'Device Aliases',
 	TRANSFER_LOCATION_ALIASES: 'Transfer Location Aliases',
 	EMERGENCY_ALERT: 'Emergency Alert',
+
+	MONITORED_OBJECTS: 'Monitored Objects',
+	ALERTS: 'Alerts',
+
+	DAY_SHIFT: 'Day Shift',
+	SWING_SHIFT: 'Swing Shift',
+	NIGHT_SHIFT: 'Night Shift',
+
+	DEVICES: 'Devices',
+	PATIENTS: 'Patients',
+	OTHER_OBJECT_TYPES: 'Other Object Types',
+
+	CONTRACTORS: 'Contractors',
+	VISITORS: 'Visitors',
+	STAFF: 'Staff',
+
+	MONITOR_ON_TIME: 'On Time',
+	ALERT_DEVICES_RESET: 'Devices Alert Reset',
+	NOTIFICATION_OPTIONS: 'Notification Types',
+
+	SHOW_MESSAGE_ON_GUI: 'Show Message on GUI',
+	FLASH_LIGHTS: 'Flash Lights',
+	ALERT_BELLS: 'Alert Bells',
+	SEND_SMS: 'Send SMS',
+
+	ON: 'ON',
+	OFF: 'OFF',
+
+	KEEP_ALERTING_IN_SEC: 'Keep Alerting in Seconds',
+	CLOSE_MANUALLY: 'Close Manually',
+
+	CLOSE_ALERT: 'Close Alert',
 }
 
 export default en

@@ -39,7 +39,7 @@ import pool, { sequelize, Op } from '../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
 import { reloadGeofenceConfig } from '../service/IPCService'
-import ObjectTable from '../db/model/objectTable'
+import { ObjectTable } from '../db/model'
 
 export default {
 	getObject: (request, response) => {
