@@ -11,4 +11,6 @@ export default (app) => {
 
 	app.post('/api/1.0/tracing/history/object', db.get_object_history_data)
 	app.post('/api/1.0/tracing/realtime/object', db.get_object_realtime_data)
+
+	app.post('/api/1.0/tracing/id_table', db.get_id_table_data)
 }
