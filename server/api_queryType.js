@@ -284,17 +284,15 @@ const getObjectRealtimeQuery = (key, filter) => {
 	`
 }
 
-const getObjectIDFilter=(object_id)=>{
-	if(object_id){
-		return `\nand object_table.id in (${object_id.map(
-			(item) => `'${item}'`
-		)})`
+const getObjectIDFilter = (object_id) => {
+	if (object_id) {
+		return `\nand object_table.id in (${object_id.map((item) => `'${item}'`)})`
 	}
 	return ''
 }
 
-const getObjectTypeFilter=(object_type)=>{
-	if(object_type){
+const getObjectTypeFilter = (object_type) => {
+	if (object_type) {
 		return `\nand object_table.type in (${object_type.map(
 			(item) => `'${item}'`
 		)})`
@@ -377,5 +375,5 @@ export default {
 	getObjectRealtimeQuery,
 	getIDTableQuery,
 	getObjectIDFilter,
-	getObjectTypeFilter
+	getObjectTypeFilter,
 }

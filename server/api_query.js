@@ -133,7 +133,7 @@ async function getObjectRealtimeData(request, response) {
 			}
 
 			const data = await pool.query(
-				queryType.getObjectRealtimeQuery(key,  filter)
+				queryType.getObjectRealtimeQuery(key, filter)
 			)
 
 			response.json(data.rows)
@@ -354,9 +354,10 @@ async function getPatientDurationData(request, response) {
 
 async function match_key(key) {
 	let Flag = Authenticate.FAILED
-	return await pool.query(queryType.getAllKeyQuery).then((res) => {
-		res.rows
-			.forEach((item) => {
+	return await pool
+		.query(queryType.getAllKeyQuery)
+		.then((res) => {
+			res.rows.forEach((item) => {
 				const validTime = moment(item.register_time).add(30, 'm')
 
 				if (moment().isBefore(moment(validTime)) && item.key === key) {
@@ -366,10 +367,11 @@ async function match_key(key) {
 				}
 			})
 			return Flag
-	}).catch((err) => {
-		console.log(`match exception : ${err}`)
-		Flag = Authenticate.EXCEPTION
-	})
+		})
+		.catch((err) => {
+			console.log(`match exception : ${err}`)
+			Flag = Authenticate.EXCEPTION
+		})
 }
 
 function check_input_error(start_time, end_time, sort_type, count_limit) {
