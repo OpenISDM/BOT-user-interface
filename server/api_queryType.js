@@ -64,32 +64,32 @@ function setKey(user_id, username, hash) {
 const getAllKeyQuery = ' SELECT  * FROM api_key '
 const getAllUserQuery = ' SELECT  * FROM user_table	'
 
-const get_data = (
+const getPatientDurationQuery = (
 	key,
 	start_time,
 	end_time,
-	tag,
+	object_id,
 	Lbeacon,
 	count_limit,
 	sort_type
 ) => {
 	let text = `
     WITH ranges AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, payload,
+        SELECT object_id, mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, 
             CASE WHEN LAG(uuid) OVER
                     (PARTITION BY mac_address
                         ORDER BY mac_address, record_timestamp) = uuid
                     THEN NULL ELSE 1 END r
         FROM
         (
-            SELECT
+			SELECT
+				location_history_table.object_id as object_id,
                 location_history_table.mac_address AS mac_address,
                 location_history_table.area_id AS area_id,
                 location_history_table.uuid AS uuid,
                 location_history_table.record_timestamp AS record_timestamp,
                 location_history_table.battery_voltage AS battery_voltage,
-				location_history_table.average_rssi AS average_rssi,
-				location_history_table.payload as payload
+				location_history_table.average_rssi AS average_rssi
             FROM location_history_table
 
             INNER JOIN object_table
@@ -107,12 +107,13 @@ const get_data = (
             AND api_key.key = $3
             WHERE
                 record_timestamp > $1
-                AND record_timestamp < $2`
-	if (tag !== undefined) {
-		text += `  AND location_history_table.mac_address IN  (${tag.map(
-			(item) => `'${item}'`
+				AND record_timestamp < $2`
+	if (object_id !== undefined) {
+		text += ` and location_history_table.object_id in (${object_id.map(
+			(item) => `${item}`
 		)})`
 	}
+
 	if (Lbeacon !== undefined) {
 		text += `  AND location_history_table.uuid IN  (${Lbeacon.map(
 			(item) => `'${item}'`
@@ -122,13 +123,14 @@ const get_data = (
     )
 
     , groups AS (
-        SELECT mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, payload, r,
+        SELECT object_id, mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, r,
             SUM(r)
                 OVER (ORDER BY mac_address, record_timestamp) grp
         FROM ranges
     )
 
-    SELECT
+	SELECT
+		MIN(groups.object_id::TEXT) as object_id,
         MIN(groups.mac_address::TEXT) AS mac_address,
         MIN(object_table.name) AS name,
         MIN(groups.area_id) AS area_id,
@@ -139,8 +141,7 @@ const get_data = (
         AVG(groups.average_rssi) AS avg_rssi,
         MIN(groups.record_timestamp) AS start_time,
         MAX(groups.record_timestamp) AS end_time,
-		MAX(groups.record_timestamp) - MIN(groups.record_timestamp)  AS duration,
-		MIN(groups.payload) as payload
+		MAX(groups.record_timestamp) - MIN(groups.record_timestamp)  AS duration
     FROM groups
 
     INNER JOIN object_table
@@ -152,7 +153,7 @@ const get_data = (
     INNER JOIN Lbeacon_table
     ON Lbeacon_table.uuid = groups.uuid
 
-    GROUP BY grp, groups.mac_address
+    GROUP BY grp, groups.object_id
     `
 
 	if (sort_type === 'desc') {
@@ -171,7 +172,7 @@ const get_data = (
 	return query
 }
 
-const get_people_history_data = (
+const getPeopleHistoryQuery = (
 	key,
 	start_time,
 	end_time,
@@ -195,7 +196,7 @@ const get_people_history_data = (
 	
 	inner join object_table
 	on object_table.area_id = user_table.main_area
-	and object_table.type = 'Patient'
+	and object_table.object_type = '1'
 	
 	inner join location_history_table
 	on location_history_table.object_id = object_table.id
@@ -214,7 +215,7 @@ const get_people_history_data = (
 	limit ${count_limit};`
 }
 
-const get_people_realtime_data = (key) => {
+const getPeopleRealtimeQuery = (key) => {
 	return `select 
 	object_summary_table.id as object_id, 
 	object_summary_table.mac_address as mac_address, 
@@ -232,7 +233,7 @@ const get_people_realtime_data = (key) => {
 	
 	inner join object_table
 	on object_table.area_id = user_table.main_area
-	and object_table.type = 'Patient'
+	and object_table.object_type = '1'
 	
 	inner join object_summary_table
 	on object_summary_table.mac_address = object_table.mac_address
@@ -246,12 +247,133 @@ const get_people_realtime_data = (key) => {
 	`
 }
 
+const getObjectRealtimeQuery = (key, filter) => {
+	return `
+	select 
+		object_table.name as object_name,
+		object_table.type  as object_type,
+		object_table.mac_address as mac_address,
+		object_table.id as object_id,
+		object_summary_table.updated_by_area as area_id,
+		area_table.name as area_name,
+		object_summary_table.uuid as lbeacon_uuid,
+		lbeacon_table.description as lbeacon_description,
+		object_summary_table.last_reported_timestamp as last_reported_timestamp
+	from 
+		object_table
+
+	inner join object_summary_table on 
+		object_table.mac_address = object_summary_table.mac_address 
+
+	inner join user_table on 
+		user_table.main_area = object_table.area_id 
+
+	inner join api_key on
+		user_table.id = api_key.id
+		and api_key.key = '${key}'
+
+	left join lbeacon_table on
+		object_summary_table.uuid = lbeacon_table.uuid 
+
+	left join area_table on
+		object_summary_table.updated_by_area = area_table.id 
+
+	where
+		object_table.object_type = '0'
+		${filter}
+	`
+}
+
+const getObjectIDFilter = (object_id) => {
+	if (object_id) {
+		return `\nand object_table.id in (${object_id.map((item) => `'${item}'`)})`
+	}
+	return ''
+}
+
+const getObjectTypeFilter = (object_type) => {
+	if (object_type) {
+		return `\nand object_table.type in (${object_type.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	return ''
+}
+
+const getObjectHistoryQuery = (
+	key,
+	filter,
+	start_time,
+	end_time,
+	count_limit,
+	sort_type
+) => {
+	return `
+	select 
+		object_table.mac_address as mac_address,
+		object_table.id as object_id,
+		object_table."name" as object_name,
+		object_table.type as object_type,
+		location_history_table.record_timestamp as record_timestamp,
+		location_history_table.area_id as area_id,
+		location_history_table.uuid as lbeacon_uuid,
+		Area_table."name" as area_name,
+		lbeacon_table.description as lbeacon_description
+	from 
+		location_history_table
+	
+	inner join object_table on
+		object_table.id = location_history_table.object_id
+		${filter}
+
+	inner join user_table on
+		user_table.main_area = object_table.area_id
+	
+	inner join api_key on
+		user_table.id = api_key.id
+		and api_key.key = '${key}'
+
+	left join lbeacon_table on
+		location_history_table.uuid = lbeacon_table.uuid 
+
+	left join area_table on 
+		location_history_table.area_id = area_table.id 
+	where 
+		location_history_table.record_timestamp > '${start_time}'
+		and	location_history_table.record_timestamp < '${end_time}'
+	order by 
+		location_history_table.record_timestamp ${sort_type}
+	limit ${count_limit};`
+}
+
+const getIDTableQuery = (key) => {
+	return `
+	select
+		object_table.id as id,
+		object_table.mac_address as mac_address,
+		object_table.type as object_type,
+		object_table.name as name
+	from 
+		api_key
+	inner join user_table on
+		api_key.id = user_table.id
+	inner join object_table on
+		object_table.area_id = user_table.main_area
+	where
+		key = '${key}';`
+}
+
 export default {
 	confirmValidation,
 	setKey,
 	getAllKeyQuery,
 	getAllUserQuery,
-	get_data,
-	get_people_realtime_data,
-	get_people_history_data,
+	getPatientDurationQuery,
+	getPeopleRealtimeQuery,
+	getPeopleHistoryQuery,
+	getObjectHistoryQuery,
+	getObjectRealtimeQuery,
+	getIDTableQuery,
+	getObjectIDFilter,
+	getObjectTypeFilter,
 }
