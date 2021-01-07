@@ -14,7 +14,7 @@ const Authenticate = {
 	FAILED: 3,
 }
 
-async function get_id_table_data(request, response) {
+async function getIDTableData(request, response) {
 	const { key } = request.body
 
 	const matchRes = await match_key(key)
@@ -33,7 +33,7 @@ async function get_id_table_data(request, response) {
 	}
 }
 
-async function get_people_realtime_data(request, response) {
+async function getPeopleRealtimeData(request, response) {
 	const { key } = request.body
 
 	const matchRes = await match_key(key)
@@ -57,7 +57,7 @@ async function get_people_realtime_data(request, response) {
 		response.json(error_code.key_incorrect)
 	}
 }
-async function get_people_history_data(request, response) {
+async function getPeopleHistoryData(request, response) {
 	const { key } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
 
@@ -108,7 +108,7 @@ async function get_people_history_data(request, response) {
 	}
 }
 
-async function get_object_realtime_data(request, response) {
+async function getObjectRealtimeData(request, response) {
 	const { key } = request.body
 	let { object_id, object_type } = request.body
 	const matchRes = await match_key(key)
@@ -147,7 +147,7 @@ async function get_object_realtime_data(request, response) {
 	}
 }
 
-async function get_object_history_data(request, response) {
+async function getObjectHistoryData(request, response) {
 	const { key } = request.body
 	let {
 		object_type,
@@ -223,7 +223,7 @@ async function get_object_history_data(request, response) {
 	}
 }
 
-const get_api_key = (request, response) => {
+const getApiKey = (request, response) => {
 	const { username, password } = request.body
 
 	let getUserName = ''
@@ -271,7 +271,7 @@ const get_api_key = (request, response) => {
 		})
 }
 
-async function get_history_data(request, response) {
+async function getPatientDurationData(request, response) {
 	const { key } = request.body
 	let {
 		object_id, // string
@@ -467,11 +467,11 @@ function set_duration_time(time) {
 }
 
 export default {
-	get_api_key,
-	get_history_data,
-	get_people_history_data,
-	get_people_realtime_data,
-	get_object_history_data,
-	get_object_realtime_data,
-	get_id_table_data,
+	getApiKey,
+	getPatientDurationData,
+	getPeopleHistoryData,
+	getPeopleRealtimeData,
+	getObjectHistoryData,
+	getObjectRealtimeData,
+	getIDTableData,
 }
