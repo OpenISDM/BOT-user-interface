@@ -74,6 +74,8 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		deviceObjectTypes: [],
 		areaConfig: {},
 		geofenceNotificationConfigs: [],
+		deviceNameList: [],
+		patientNameList: [],
 	}
 
 	componentDidMount = () => {
@@ -90,14 +92,47 @@ class BOTAdminGeoFenceSetting extends React.Component {
 
 	getData = async () => {
 		const [{ area }] = this.context.stateReducer
-		const res = await apiHelper.geofenceApis.getGeofenceAreaConfig({
+		const geofenceAreaPromise = apiHelper.geofenceApis.getGeofenceAreaConfig({
 			areaId: area.id,
 		})
 
-		if (res) {
+		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({
+			areaId: area.id,
+			types: [config.NAMED_LIST_TYPE.DEVICE, config.NAMED_LIST_TYPE.PATIENT],
+			isUserDefined: true,
+		})
+
+		const [geofenceAreaRes, namedListRes] = await Promise.all([
+			geofenceAreaPromise,
+			namedListPromise,
+		])
+
+		if (geofenceAreaRes && namedListRes) {
+			let deviceNameList = []
+			let patientNameList = []
+			namedListRes.data.forEach((item) => {
+				item.objectIds = item.objectIds.map((i) => i.object_id)
+
+				if (parseInt(item.type) === config.NAMED_LIST_TYPE.DEVICE) {
+					deviceNameList.push({
+						value: item.id,
+						label: item.name,
+					})
+				}
+				if (parseInt(item.type) === config.NAMED_LIST_TYPE.PATIENT) {
+					patientNameList.push({
+						value: item.id,
+						label: item.name,
+					})
+				}
+			})
+
 			this.setState({
-				areaConfig: res.data.areaConfig,
-				geofenceNotificationConfigs: res.data.geofenceNotificationConfigs,
+				areaConfig: geofenceAreaRes.data.areaConfig,
+				geofenceNotificationConfigs:
+					geofenceAreaRes.data.geofenceNotificationConfigs,
+				deviceNameList,
+				patientNameList,
 			})
 		}
 	}
@@ -138,21 +173,26 @@ class BOTAdminGeoFenceSetting extends React.Component {
 			(module) => parseInt(module.id) === parseInt(area.id)
 		)
 
-		const { monitored_object_types } = this.state.areaConfig
+		const { deviceNameList, patientNameList } = this.state
+		const {
+			monitored_device_named_list_ids,
+			monitored_patient_named_list_ids,
+			monitored_object_types,
+		} = this.state.areaConfig
 
 		const monitoredDevicesOptions = [
+			...deviceNameList,
 			{
 				value: DEFAULT_CONSTRAINT_VALUE.MONITORED_DEVICE_ALL,
 				label: locale.texts.ALL_DEVICES,
-				id: 1,
 			},
 		]
 
 		const monitoredPatientsOptions = [
+			...patientNameList,
 			{
 				value: DEFAULT_CONSTRAINT_VALUE.MONITORED_PATIENT_ALL,
 				label: locale.texts.ALL_PATIENTS,
-				id: 2,
 			},
 		]
 
@@ -237,8 +277,14 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		}
 
 		const initialValues = {
-			devices: monitoredDevicesOptions[0],
-			patients: monitoredPatientsOptions[0],
+			devices: monitoredDevicesOptions.find(
+				(option) =>
+					parseInt(option.value) === parseInt(monitored_device_named_list_ids)
+			),
+			patients: monitoredPatientsOptions.find(
+				(option) =>
+					parseInt(option.value) === parseInt(monitored_patient_named_list_ids)
+			),
 			otherObjectTypes: currentObjectType,
 			...defaultShiftMapValue,
 		}
