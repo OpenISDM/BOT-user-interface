@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { namedList } from '../dataSrc'
+import { namedList, namedListObject } from '../dataSrc'
 import { get, post, del } from '../helper/httpClient'
 
 export default {
@@ -52,9 +52,21 @@ export default {
 			objectIds,
 		})
 	},
-	async removeNamedList({ id }) {
+	async removeNamedList({ namedListId }) {
 		return await del(namedList, {
-			id,
+			namedListId,
+		})
+	},
+	async addObject({ namedListId, objectId }) {
+		return await post(namedListObject, {
+			namedListId,
+			objectId,
+		})
+	},
+	async removeObject({ namedListId, objectId }) {
+		return await del(namedListObject, {
+			namedListId,
+			objectId,
 		})
 	},
 }

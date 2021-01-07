@@ -77,16 +77,48 @@ export default {
 		}
 	},
 	removeNamedList: async (request, response) => {
-		const { id } = request.body
+		const { namedListId } = request.body
 		try {
-			const namedListPromise = NamedList.destroy({ where: { id } })
+			const namedListPromise = NamedList.destroy({ where: { id: namedListId } })
 			const objectMappingPromise = ObjectNamedListMappingTable.destroy({
-				where: { namedListId: id },
+				where: { namedListId },
 			})
 			await Promise.all([namedListPromise, objectMappingPromise])
 			response.status(200).json('OK')
 		} catch (e) {
 			console.log('removeNamedList error: ', e)
+		}
+	},
+	addObject: async (request, response) => {
+		const { namedListId, objectId } = request.body
+		try {
+			const namedListQueried = await NamedList.findOne({
+				where: { id: namedListId },
+			})
+
+			if (namedListQueried) {
+				await updateOrCreate({
+					model: ObjectNamedListMappingTable,
+					where: { namedListId, objectId },
+					newItem: { namedListId, objectId },
+				})
+			}
+
+			response.status(200).json('OK')
+		} catch (e) {
+			console.log('addObject error: ', e)
+		}
+	},
+	removeObject: async (request, response) => {
+		const { namedListId, objectId } = request.body
+		try {
+			await ObjectNamedListMappingTable.destroy({
+				where: { namedListId, objectId },
+			})
+
+			response.status(200).json('OK')
+		} catch (e) {
+			console.log('addObject error: ', e)
 		}
 	},
 }

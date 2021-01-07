@@ -44,6 +44,7 @@ import BOTTable from '../../BOTComponent/BOTTable'
 import BOTButton from '../../BOTComponent/BOTButton'
 import config from '../../../config'
 import { SET_TABLE_SELECTION } from '../../../reducer/action'
+import DualListBox from '../../container/UserContainer/DualListBox'
 
 const pages = {
 	CREATE_DEVICE_LIST: 0,
@@ -106,13 +107,18 @@ class SearchSettings extends React.Component {
 
 	state = {
 		changedIndex: [],
-		buttonSelected: pages.VIEW_LIST,
+		buttonSelected: pages.REVISE_LIST,
 		objectMap: {},
-		deviceData: [],
-		patientData: [],
+		namedListMap: {},
+		allDeviceObjects: [],
+		allPatientObjects: [],
+		namedListDeviceObjects: [],
+		namedListPatientObjects: [],
 		namedListData: [],
 		listName: '',
 		currentNameListRow: null,
+		namedListOptions: [],
+		selectedNamedList: null,
 	}
 
 	componentDidMount = () => {
@@ -158,27 +164,45 @@ class SearchSettings extends React.Component {
 				return item
 			})
 
+			const namedListOptions = namedListRes.data.map((value) => {
+				return {
+					label: value.name,
+					value,
+				}
+			})
+
 			const objectMap = _.keyBy(objectRes.data.rows, 'id')
+			const namedListMap = _.keyBy(namedListRes.data, 'id')
 
-			const deviceData = objectRes.data.rows.filter((item) => {
-				return (
-					!objectIds.includes(item.id) &&
-					parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
-				)
-			})
+			let allDeviceObjects = []
+			const namedListDeviceObjects = objectRes.data.rows
+				.filter((item) => {
+					return parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
+				})
+				.filter((item) => {
+					allDeviceObjects.push(item)
+					return !objectIds.includes(item.id)
+				})
 
-			const patientData = objectRes.data.rows.filter((item) => {
-				return (
-					!objectIds.includes(item.id) &&
-					parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
-				)
-			})
+			let allPatientObjects = []
+			const namedListPatientObjects = objectRes.data.rows
+				.filter((item) => {
+					return parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
+				})
+				.filter((item) => {
+					allPatientObjects.push(item)
+					return !objectIds.includes(item.id)
+				})
 
 			this.setState({
+				namedListOptions,
 				objectMap,
+				namedListMap,
 				namedListData,
-				deviceData,
-				patientData,
+				namedListDeviceObjects,
+				namedListPatientObjects,
+				allDeviceObjects,
+				allPatientObjects,
 			})
 		}
 	}
@@ -194,14 +218,69 @@ class SearchSettings extends React.Component {
 			objectIds: tableSelection,
 		})
 
-		dispatch({
-			type: SET_TABLE_SELECTION,
-			value: [],
-		})
+		if (res) {
+			dispatch({
+				type: SET_TABLE_SELECTION,
+				value: [],
+			})
 
-		this.setState({ listName: '' }, () =>
-			messageGenerator.setSuccessMessage('save success')
-		)
+			this.setState({ listName: '' }, () =>
+				messageGenerator.setSuccessMessage('save success')
+			)
+		}
+	}
+
+	addObject = async (object) => {
+		const { selectedNamedList } = this.state
+		const { value } = selectedNamedList
+
+		try {
+			await apiHelper.namedListApiAgent.addObject({
+				namedListId: value.id,
+				objectId: object.id,
+			})
+			this.getObjectData()
+		} catch (e) {
+			console.log(`add object to name list failed ${e}`)
+		}
+	}
+
+	removeObject = async (object) => {
+		const { selectedNamedList } = this.state
+		const { value } = selectedNamedList
+
+		try {
+			await apiHelper.namedListApiAgent.removeObject({
+				namedListId: value.id,
+				objectId: object.id,
+			})
+			this.getObjectData()
+		} catch (e) {
+			console.log(`remove object to name list failed ${e}`)
+		}
+	}
+
+	removeNamedList = async () => {
+		const { selectedNamedList } = this.state
+		const { value } = selectedNamedList
+
+		try {
+			await apiHelper.namedListApiAgent.removeNamedList({
+				namedListId: value.id,
+			})
+			this.setState({
+				selectedNamedList: null,
+			})
+			this.getObjectData()
+		} catch (e) {
+			console.log(`remove object to name list failed ${e}`)
+		}
+	}
+
+	onSelectNamedList = (selectedNamedList) => {
+		this.setState({
+			selectedNamedList,
+		})
 	}
 
 	setCurrentPage = (identity) =>
@@ -254,7 +333,8 @@ class SearchSettings extends React.Component {
 			return item
 		})
 
-	checkToRenderSubPage = ({ values, locale }) => {
+	checkToRenderSubPage = ({ locale }) => {
+		const [{ area }] = this.context.stateReducer
 		let subPage
 
 		switch (this.state.buttonSelected) {
@@ -287,7 +367,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div style={{ marginTop: '10px' }}>
 							<BOTSelectTable
-								data={this.state.deviceData}
+								data={this.state.namedListDeviceObjects}
 								columns={COLUMNS.DEIVCE}
 							/>
 						</div>
@@ -323,7 +403,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div style={{ marginTop: '10px' }}>
 							<BOTSelectTable
-								data={this.state.patientData}
+								data={this.state.namedListPatientObjects}
 								columns={COLUMNS.PATIENT}
 							/>
 						</div>
@@ -352,6 +432,42 @@ class SearchSettings extends React.Component {
 				)
 				break
 			case pages.REVISE_LIST:
+				const {
+					namedListMap,
+					selectedNamedList,
+					allDeviceObjects,
+					allPatientObjects,
+					namedListOptions,
+				} = this.state
+				let items = []
+				let allItems = []
+				let selectedTitle = ''
+				let unselectedTitle = ''
+
+				if (selectedNamedList) {
+					const namedList = namedListMap[selectedNamedList.value.id]
+					if (namedList) {
+						items = namedList.objectIds
+					}
+					if (
+						parseInt(selectedNamedList.value.type) ===
+						config.NAMED_LIST_TYPE.DEVICE
+					) {
+						allItems = allDeviceObjects
+						selectedTitle = locale.texts.SELECTED_DEVICES
+						unselectedTitle = locale.texts.UNSELECTED_DEVICES
+					}
+
+					if (
+						parseInt(selectedNamedList.value.type) ===
+						config.NAMED_LIST_TYPE.PATIENT
+					) {
+						allItems = allPatientObjects
+						selectedTitle = locale.texts.SELECTED_PATIENTS
+						unselectedTitle = locale.texts.UNSELECTED_PATIENTS
+					}
+				}
+
 				subPage = (
 					<>
 						<div className="color-black mb-2 font-size-120-percent">
@@ -360,20 +476,28 @@ class SearchSettings extends React.Component {
 						<div className="d-flex">
 							<Button
 								style={{ marginRight: '5px' }}
-								onClick={() => {
-									// pop up windows to comfirm to delete named list
-								}}
+								disabled={!selectedNamedList}
+								onClick={this.removeNamedList}
 							>
 								{locale.texts.DELETE}
 							</Button>
 							<Select
 								className="flex-grow-1"
 								isClearable
-								value={[]}
-								onChange={this.selectDeviceGroup}
-								options={[]}
+								value={selectedNamedList}
+								onChange={this.onSelectNamedList}
+								options={namedListOptions}
 							/>
 						</div>
+						<DualListBox
+							allItems={allItems}
+							selectedItemList={items}
+							selectedGroupAreaId={area.id}
+							selectedTitle={selectedTitle}
+							unselectedTitle={unselectedTitle}
+							onSelect={this.addObject}
+							onUnselect={this.removeObject}
+						/>
 					</>
 				)
 				break

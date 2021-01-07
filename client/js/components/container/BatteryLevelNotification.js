@@ -66,10 +66,10 @@ class BatteryLevelNotification extends React.Component {
 
 	componentDidMount = () => {
 		this.getTrackingData()
-		this.interval = setInterval(
-			this.getTrackingData,
-			config.mapConfig.intervalTime
-		)
+		// this.interval = setInterval(
+		// 	this.getTrackingData,
+		// 	config.mapConfig.intervalTime
+		// )
 	}
 
 	getTrackingData = async () => {
