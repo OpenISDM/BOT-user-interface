@@ -642,6 +642,8 @@ const tw = {
 	CREATE_PATIENT_LIST: '新增病人清單',
 	VIEW_LIST: '檢視清單',
 	REVISE_LIST: '修改清單',
+
+	UNKNOWN: '未知',
 }
 
 export default tw

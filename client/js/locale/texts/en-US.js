@@ -659,6 +659,8 @@ const en = {
 	CREATE_PATIENT_LIST: 'Create Patient List',
 	VIEW_LIST: 'View List',
 	REVISE_LIST: 'Revise List',
+
+	UNKNOWN: 'Unknown',
 }
 
 export default en

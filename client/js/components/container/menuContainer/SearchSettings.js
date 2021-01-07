@@ -35,15 +35,15 @@
 import React from 'react'
 import _, { debounce } from 'lodash'
 import { Row, Col, Button, Form } from 'react-bootstrap'
+import Select from 'react-select'
 import { AppContext } from '../../../context/AppContext'
 import apiHelper from '../../../helper/apiHelper'
 import messageGenerator from '../../../helper/messageGenerator'
 import BOTSelectTable from '../../BOTComponent/BOTSelectTable'
+import BOTTable from '../../BOTComponent/BOTTable'
 import BOTButton from '../../BOTComponent/BOTButton'
 import config from '../../../config'
 import { SET_TABLE_SELECTION } from '../../../reducer/action'
-import { generateObjectSumString } from '../../../helper/utilities'
-import BOTOverlayTrigger from '../../presentational/BOTOverlayTrigger'
 
 const pages = {
 	CREATE_DEVICE_LIST: 0,
@@ -87,6 +87,18 @@ const COLUMNS = {
 			width: 'auto',
 		},
 	],
+	NAMED_LIST: [
+		{
+			Header: 'name',
+			accessor: 'name',
+			width: 'auto',
+		},
+		{
+			Header: 'type',
+			accessor: 'typeString',
+			width: 'auto',
+		},
+	],
 }
 
 class SearchSettings extends React.Component {
@@ -100,6 +112,7 @@ class SearchSettings extends React.Component {
 		patientData: [],
 		namedListData: [],
 		listName: '',
+		currentNameListRow: null,
 	}
 
 	componentDidMount = () => {
@@ -127,7 +140,7 @@ class SearchSettings extends React.Component {
 
 		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({
 			areaId: area.id,
-			types: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
+			types: [config.NAMED_LIST_TYPE.DEVICE, config.NAMED_LIST_TYPE.PATIENT],
 			isUserDefined: true,
 		})
 
@@ -170,31 +183,6 @@ class SearchSettings extends React.Component {
 		}
 	}
 
-	generateNameList = () => {
-		const objectMap = this.state.objectMap
-		return this.state.namedListData.map((nameList) => {
-			const { id, name, objectIds } = nameList
-			return (
-				<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
-					<BOTOverlayTrigger
-						popoverTitle={name}
-						popoverBody={generateObjectSumString({
-							objectMap,
-							objectIds,
-						})}
-						placement={'right'}
-						trigger={'hover'}
-						innerElement={
-							<div className="state p-primary" style={{ marginLeft: '20px' }}>
-								<label>{name}</label>
-							</div>
-						}
-					/>
-				</Row>
-			)
-		})
-	}
-
 	handleCreateSubmit = async ({ type }) => {
 		const [{ area, tableSelection }, dispatch] = this.context.stateReducer
 
@@ -228,6 +216,44 @@ class SearchSettings extends React.Component {
 
 	setListName = (listName) => this.setState({ listName })
 
+	generateObjectTableByNameList = () => {
+		const { currentNameListRow, objectMap } = this.state
+
+		const tableData = []
+		let objectColumns
+		if (currentNameListRow) {
+			objectColumns =
+				parseInt(currentNameListRow.type) === config.NAMED_LIST_TYPE.DEVICE
+					? COLUMNS.DEIVCE
+					: parseInt(currentNameListRow.type) === config.NAMED_LIST_TYPE.PATIENT
+					? COLUMNS.PATIENT
+					: null
+
+			currentNameListRow.objectIds.map((id) => {
+				tableData.push(objectMap[id])
+			})
+		}
+
+		if (objectColumns) {
+			return (
+				<div style={{ marginTop: '10px' }}>
+					<BOTTable data={tableData} columns={objectColumns} />
+				</div>
+			)
+		}
+	}
+
+	getNamedListWithLocale = (locale) =>
+		this.state.namedListData.map((item) => {
+			item.typeString =
+				parseInt(item.type) === config.NAMED_LIST_TYPE.DEVICE
+					? locale.texts.DEVICE
+					: parseInt(item.type) === config.NAMED_LIST_TYPE.PATIENT
+					? locale.texts.PATIENT
+					: locale.texts.UNKNOWN
+			return item
+		})
+
 	checkToRenderSubPage = ({ values, locale }) => {
 		let subPage
 
@@ -244,7 +270,7 @@ class SearchSettings extends React.Component {
 								disabled={this.checkSubmitButtonDisabled()}
 								onClick={() => {
 									this.handleCreateSubmit({
-										type: config.OBJECT_TYPE.DEVICE,
+										type: config.NAMED_LIST_TYPE.DEVICE,
 									})
 								}}
 							>
@@ -280,7 +306,7 @@ class SearchSettings extends React.Component {
 								disabled={this.checkSubmitButtonDisabled()}
 								onClick={() => {
 									this.handleCreateSubmit({
-										type: config.OBJECT_TYPE.PERSON,
+										type: config.NAMED_LIST_TYPE.PATIENT,
 									})
 								}}
 							>
@@ -311,7 +337,17 @@ class SearchSettings extends React.Component {
 							{locale.texts.VIEW_LIST}
 						</div>
 						<div className="d-flex"></div>
-						{this.generateNameList()}
+						<div style={{ marginTop: '10px' }}>
+							<BOTTable
+								data={this.getNamedListWithLocale(locale)}
+								columns={COLUMNS.NAMED_LIST}
+								onClickCallback={(currentNameListRow) => {
+									this.setState({ currentNameListRow })
+								}}
+								pageSize={6}
+							/>
+						</div>
+						{this.generateObjectTableByNameList()}
 					</>
 				)
 				break
@@ -325,18 +361,17 @@ class SearchSettings extends React.Component {
 							<Button
 								style={{ marginRight: '5px' }}
 								onClick={() => {
-									debugger
+									// pop up windows to comfirm to delete named list
 								}}
 							>
-								{locale.texts.CREATE}
+								{locale.texts.DELETE}
 							</Button>
-							<Form.Control
-								type="text"
-								value={this.state.listName}
-								onChange={(e) => {
-									console.log(e.target.value)
-								}}
-								placeholder={locale.texts.LIST_NAME}
+							<Select
+								className="flex-grow-1"
+								isClearable
+								value={[]}
+								onChange={this.selectDeviceGroup}
+								options={[]}
 							/>
 						</div>
 					</>
