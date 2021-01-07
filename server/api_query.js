@@ -125,11 +125,11 @@ async function getObjectRealtimeData(request, response) {
 					}
 					return parseInt(item)
 				})
-				filter = queryType.getObjectIDFilter(object_id)
+				filter += queryType.getObjectIDFilter(object_id)
 			}
 			if (object_type) {
 				object_type = object_type.split(';')
-				filter = queryType.getObjectTypeFilter(object_type)
+				filter += queryType.getObjectTypeFilter(object_type)
 			}
 
 			const data = await pool.query(
