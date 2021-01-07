@@ -32,10 +32,11 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import CheckboxOverlayTrigger from '../presentational/CheckboxOverlayTrigger'
 import PropTypes from 'prop-types'
+import { generateObjectSumString } from '../../helper/utilities'
 
 class AssignmentItems extends React.Component {
 	generateAssisments = (
@@ -55,53 +56,28 @@ class AssignmentItems extends React.Component {
 				return true
 			})
 			.map((group) => {
-				const { id, name } = group
+				const { id, name, items } = group
 				const checked =
 					assignedGroupListids.includes(id) || submitGroupListIds.includes(id)
 				return (
 					<Row style={{ marginTop: '5px', marginBottom: '5px' }} key={id}>
 						<CheckboxOverlayTrigger
 							popoverTitle={name}
-							popoverBody={this.generateAssismentsDetails(objectMap, group)}
+							popoverBody={generateObjectSumString({
+								objectMap,
+								objectIds: items,
+							})}
 							id={id}
 							name={name}
 							checked={checked}
 							placement={'right'}
 							onChange={handleChange}
-							label={name}
 							disabled={assignedGroupListids.includes(id)}
 							trigger={'hover'}
 						/>
 					</Row>
 				)
 			})
-	}
-
-	generateAssismentsDetails = (objectMap, gruop) => {
-		let itemsNameString = ''
-
-		const { items } = gruop
-		if (items) {
-			const itemMap = {}
-			items.forEach((id) => {
-				const object = objectMap[id]
-				if (object) {
-					const { name } = object
-					if (itemMap[name]) {
-						itemMap[name] += 1
-					} else {
-						itemMap[name] = 1
-					}
-				}
-			})
-			Object.keys(itemMap).forEach((itemKey) => {
-				itemsNameString = `${itemsNameString}${itemKey} : ${
-					itemMap[itemKey]
-				} ${String.fromCharCode(13, 10)}`
-			})
-		}
-
-		return itemsNameString
 	}
 
 	render() {

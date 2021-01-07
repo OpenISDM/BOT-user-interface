@@ -32,15 +32,16 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import ReactTable from 'react-table'
 import { AppContext } from '../../context/AppContext'
 import styleConfig from '../../config/styleConfig'
 import { JSONClone } from '../../helper/utilities'
 import PropTypes from 'prop-types'
 
-const BOTTable = ({ data, columns }) => {
-	const { locale } = React.useContext(AppContext)
+const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
+	const { locale } = useContext(AppContext)
+	const [selected, setSelected] = useState(null)
 
 	const newColumns = JSONClone(columns)
 	newColumns.forEach((field) => {
@@ -52,10 +53,31 @@ const BOTTable = ({ data, columns }) => {
 			{...styleConfig.reactTable}
 			columns={newColumns}
 			data={data}
-			pageSize={data.length}
+			pageSize={pageSize ? pageSize : data.length}
 			resizable={true}
 			freezeWhenExpanded={false}
-			showPagination={false}
+			showPagination={pageSize ? true : false}
+			getTrProps={(state, rowInfo) => {
+				if (onClickCallback && rowInfo && rowInfo.row) {
+					return {
+						onClick: (e) => {
+							if (rowInfo.index === selected) {
+								setSelected(null)
+								onClickCallback(null)
+							} else {
+								setSelected(rowInfo.index)
+								onClickCallback(rowInfo.original)
+							}
+						},
+						style: {
+							background: rowInfo.index === selected ? '#007bff' : 'white',
+							color: rowInfo.index === selected ? 'white' : 'black',
+						},
+					}
+				} else {
+					return {} // WORKAROUND: must have a empty object to return
+				}
+			}}
 		/>
 	)
 }
@@ -63,6 +85,8 @@ const BOTTable = ({ data, columns }) => {
 BOTTable.propTypes = {
 	data: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
+	onClickCallback: PropTypes.func,
+	pageSize: PropTypes.number.isRequired,
 }
 
 export default BOTTable

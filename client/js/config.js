@@ -104,6 +104,11 @@ const config = {
 		PERSON: 1,
 	},
 
+	NAMED_LIST_TYPE: {
+		DEVICE: 0,
+		PATIENT: 1,
+	},
+
 	OBJECT_TABLE_SUB_TYPE: {
 		PATIENT: 'Patient',
 		VISITOR: 'Visitor',

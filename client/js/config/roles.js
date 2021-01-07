@@ -80,6 +80,7 @@ const rules = {
 			'route:setting',
 			'route:BOTAdmin',
 			'route:customSettings',
+			'route:searchSettings',
 
 			'user:mydevice',
 			'user:mypatient',

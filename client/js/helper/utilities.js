@@ -186,3 +186,28 @@ export const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
 
 	return targetBitValue === expectedBitValue
 }
+
+export const generateObjectSumString = ({ objectMap = {}, objectIds = [] }) => {
+	let itemsNameString = ''
+	const itemMap = {}
+
+	objectIds.forEach((id) => {
+		const object = objectMap[id]
+		if (object) {
+			const { name } = object
+			if (itemMap[name]) {
+				itemMap[name] += 1
+			} else {
+				itemMap[name] = 1
+			}
+		}
+	})
+
+	Object.keys(itemMap).forEach((itemKey) => {
+		itemsNameString = `${itemsNameString}${itemKey} : ${
+			itemMap[itemKey]
+		} ${String.fromCharCode(13, 10)}`
+	})
+
+	return itemsNameString
+}

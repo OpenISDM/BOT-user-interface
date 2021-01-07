@@ -54,6 +54,7 @@ import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
 import Loader from '../components/presentational/Loader'
 import CustomSettings from '../components/container/menuContainer/CustomSettings'
+import SearchSettings from '../components/container/menuContainer/SearchSettings'
 import GetAssignments from '../components/container/GetAssignments'
 import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHistoricalRecord'
 // import RolePermissionManagement from '../components/container/RolePermissionManagement'
@@ -134,8 +135,8 @@ export const settingModule = {
 		},
 		{
 			name: 'search settings',
-			component: () => null,
-			permission: 'route:customSettings',
+			component: (props) => <SearchSettings {...props} />,
+			permission: 'route:searchSettings',
 		},
 		{
 			name: 'monitor settings',

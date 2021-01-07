@@ -157,7 +157,7 @@ class BOTSelectTable extends React.Component {
 				columns={columns}
 				ref={(r) => (this.selectTable = r)}
 				className="-highlight text-none"
-				style={{ maxHeight: '70vh' }}
+				style={{ maxHeight: '80vh' }}
 				onPageChange={() => null}
 				onSortedChange={() => null}
 				NoDataComponent={() => null}

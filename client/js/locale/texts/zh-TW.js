@@ -637,6 +637,13 @@ const tw = {
 	CLOSE_MANUALLY: '手動關閉',
 
 	CLOSE_ALERT: '關閉警報',
+
+	CREATE_DEVICE_LIST: '新增儀器清單',
+	CREATE_PATIENT_LIST: '新增病人清單',
+	VIEW_LIST: '檢視清單',
+	REVISE_LIST: '修改清單',
+
+	UNKNOWN: '未知',
 }
 
 export default tw

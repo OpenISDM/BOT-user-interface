@@ -36,10 +36,10 @@ import { namedList } from '../dataSrc'
 import { get, post, del } from '../helper/httpClient'
 
 export default {
-	async getNamedList({ areaId, type, isUserDefined }) {
+	async getNamedList({ areaId, types, isUserDefined }) {
 		return await get(namedList, {
 			areaId,
-			type,
+			types,
 			isUserDefined,
 		})
 	},

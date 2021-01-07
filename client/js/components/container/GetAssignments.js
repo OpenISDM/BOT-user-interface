@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react'
+import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 import _, { debounce } from 'lodash'
 import { AppContext } from '../../context/AppContext'

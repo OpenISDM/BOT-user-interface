@@ -47,7 +47,6 @@ const pages = {
 	COVERED_AREA_PROFILE: 0,
 	DEVICE_ALIASES: 1,
 	PATIENT_ALIASES: 2,
-	TRANSFER_LOCATION_ALIASES: 3,
 }
 class CustomSettings extends React.Component {
 	static contextType = AppContext
@@ -265,16 +264,6 @@ class CustomSettings extends React.Component {
 					</>
 				)
 				break
-			case pages.TRANSFER_LOCATION_ALIASES:
-				subPage = (
-					<>
-						<div className="color-black mb-2 font-size-120-percent">
-							{locale.texts.TRANSFER_LOCATION_ALIASES}
-						</div>
-					</>
-				)
-				break
-
 			default:
 				break
 		}
@@ -324,18 +313,6 @@ class CustomSettings extends React.Component {
 									this.setCurrentPage(pages.PATIENT_ALIASES)
 								}}
 								text={locale.texts.PATIENT_ALIASES}
-								block
-							/>
-						</Row>
-						<Row style={style.rowContainer}>
-							<BOTButton
-								pressed={this.checkButtonIsPressed(
-									pages.TRANSFER_LOCATION_ALIASES
-								)}
-								onClick={() => {
-									this.setCurrentPage(pages.TRANSFER_LOCATION_ALIASES)
-								}}
-								text={locale.texts.TRANSFER_LOCATION_ALIASES}
 								block
 							/>
 						</Row>
