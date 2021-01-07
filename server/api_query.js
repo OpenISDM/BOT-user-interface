@@ -21,7 +21,7 @@ async function get_id_table_data(request, response) {
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
-			const data = await pool.query(queryType.get_id_table_data(key))
+			const data = await pool.query(queryType.getIDTableQuery(key))
 			response.json(data.rows)
 		} catch (err) {
 			console.log(`get id table data error : ${err}`)
@@ -40,7 +40,7 @@ async function get_people_realtime_data(request, response) {
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
-			const data = await pool.query(queryType.get_people_realtime_data(key))
+			const data = await pool.query(queryType.getPeopleRealtimeQuery(key))
 			data.rows.forEach((item) => {
 				item.last_reported_timestamp = moment(
 					item.last_reported_timtstamp
@@ -83,7 +83,7 @@ async function get_people_history_data(request, response) {
 
 		try {
 			const data = await pool.query(
-				queryType.get_people_history_data(
+				queryType.getPeopleHistoryQuery(
 					key,
 					start_time,
 					end_time,
@@ -115,7 +115,8 @@ async function get_object_realtime_data(request, response) {
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
-			if (object_id !== undefined) {
+			let filter = ''
+			if (object_id) {
 				const pattern = new RegExp('^[0-9]{1,}$')
 				object_id = object_id.split(';').map((item) => {
 					if (item.match(pattern) == null) {
@@ -124,43 +125,16 @@ async function get_object_realtime_data(request, response) {
 					}
 					return parseInt(item)
 				})
+				filter = queryType.getObjectIDFilter(object_id)
 			}
-			if (object_type !== undefined) {
+			if (object_type) {
 				object_type = object_type.split(';')
+				filter = queryType.getObjectTypeFilter(object_type)
 			}
 
 			const data = await pool.query(
-				queryType.get_object_realtime_data(key, object_type, object_id)
+				queryType.getObjectRealtimeQuery(key,  filter)
 			)
-
-			data.rows = data.rows.map((item) => {
-				if (
-					moment().isAfter(
-						moment(item.last_reported_timestamp).add(5, 'minute')
-					)
-				) {
-					return {
-						object_id: item.object_id,
-						mac_address: item.mac_address,
-						object_name: item.object_name,
-						object_type: item.object_type,
-						area_id: 'not found',
-						area_name: 'not found',
-						Lbeacon_description: 'not found',
-						Lbeacon_uuid: 'not found',
-					}
-				}
-				return {
-					object_id: item.object_id,
-					mac_address: item.mac_address,
-					object_name: item.object_name,
-					object_type: item.object_type,
-					area_id: item.area_id,
-					area_name: item.area_name,
-					lbeacon_uuid: item.lbeacon_uuid,
-					lbeacon_description: item.lbeacon_description,
-				}
-			})
 
 			response.json(data.rows)
 		} catch (err) {
@@ -203,8 +177,11 @@ async function get_object_history_data(request, response) {
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
 
+		let filter = ''
 		if (object_type !== undefined) {
 			object_type = object_type.split(';')
+
+			filter += queryType.getObjectTypeFilter(object_type)
 		}
 
 		if (object_id !== undefined) {
@@ -216,14 +193,14 @@ async function get_object_history_data(request, response) {
 				}
 				return parseInt(item, 10)
 			})
-		}
 
+			filter += queryType.getObjectIDFilter(object_id)
+		}
 		try {
 			const data = await pool.query(
-				queryType.get_object_history_data(
+				queryType.getObjectHistoryQuery(
 					key,
-					object_type,
-					object_id,
+					filter,
 					start_time,
 					end_time,
 					count_limit,
@@ -387,12 +364,11 @@ async function match_key(key) {
 				} else if (moment().isAfter(moment(validTime)) && item.key === key) {
 					Flag = Authenticate.UNACTIVATED
 				}
-				return Flag
 			})
-			.catch((err) => {
-				console.log(`match exception : ${err}`)
-				Flag = Authenticate.EXCEPTION
-			})
+			return Flag
+	}).catch((err) => {
+		console.log(`match exception : ${err}`)
+		Flag = Authenticate.EXCEPTION
 	})
 }
 
@@ -455,7 +431,7 @@ async function get_history_data_from_db(
 ) {
 	return await pool
 		.query(
-			queryType.get_data(
+			queryType.getPatientDurationQuery(
 				key,
 				start_time,
 				end_time,

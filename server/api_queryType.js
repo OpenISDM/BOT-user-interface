@@ -64,7 +64,7 @@ function setKey(user_id, username, hash) {
 const getAllKeyQuery = ' SELECT  * FROM api_key '
 const getAllUserQuery = ' SELECT  * FROM user_table	'
 
-const get_data = (
+const getPatientDurationQuery = (
 	key,
 	start_time,
 	end_time,
@@ -172,7 +172,7 @@ const get_data = (
 	return query
 }
 
-const get_people_history_data = (
+const getPeopleHistoryQuery = (
 	key,
 	start_time,
 	end_time,
@@ -215,7 +215,7 @@ const get_people_history_data = (
 	limit ${count_limit};`
 }
 
-const get_people_realtime_data = (key) => {
+const getPeopleRealtimeQuery = (key) => {
 	return `select 
 	object_summary_table.id as object_id, 
 	object_summary_table.mac_address as mac_address, 
@@ -247,8 +247,8 @@ const get_people_realtime_data = (key) => {
 	`
 }
 
-const get_object_realtime_data = (key, object_type, object_id) => {
-	let queryString = `
+const getObjectRealtimeQuery = (key, filter) => {
+	return `
 	select 
 		object_table.name as object_name,
 		object_table.type  as object_type,
@@ -280,81 +280,75 @@ const get_object_realtime_data = (key, object_type, object_id) => {
 
 	where
 		object_table.object_type = '0'
+		${filter}
 	`
-	if (object_id !== undefined) {
-		queryString += `and object_table.id in (${object_id.map(
-			(item) => `'${item}'`
-		)})`
-	}
-	if (object_type !== undefined) {
-		queryString += `and object_table.type in (${object_type.map(
-			(item) => `'${item}'`
-		)})`
-	}
-	return queryString
 }
 
-const get_object_history_data = (
+const getObjectIDQuery=(object_id)=>{
+	if(object_id){
+		return `\nand object_table.id in (${object_id.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	return ''
+}
+
+const getObjectTypeQuery=(object_type)=>{
+	if(object_type){
+		return `\nand object_table.type in (${object_type.map(
+			(item) => `'${item}'`
+		)})`
+	}
+	return ''
+}
+
+const getObjectHistoryQuery = (
 	key,
-	object_type,
-	object_id,
+	filter,
 	start_time,
 	end_time,
 	count_limit,
 	sort_type
 ) => {
-	let queryString = `select 
-	object_table.mac_address as mac_address,
-	object_table.id as object_id,
-	object_table."name" as object_name,
-	object_table.type as object_type,
-	location_history_table.record_timestamp as record_timestamp,
-	location_history_table.area_id as area_id,
-	location_history_table.uuid as lbeacon_uuid,
-	Area_table."name" as area_name,
-	lbeacon_table.description as lbeacon_description
-from 
-	location_history_table
+	return `
+	select 
+		object_table.mac_address as mac_address,
+		object_table.id as object_id,
+		object_table."name" as object_name,
+		object_table.type as object_type,
+		location_history_table.record_timestamp as record_timestamp,
+		location_history_table.area_id as area_id,
+		location_history_table.uuid as lbeacon_uuid,
+		Area_table."name" as area_name,
+		lbeacon_table.description as lbeacon_description
+	from 
+		location_history_table
 	
-inner join object_table on
-object_table.id = location_history_table.object_id`
-	if (object_type !== undefined) {
-		queryString += `\nand object_table.type in (${object_type.map(
-			(item) => `'${item}'`
-		)})`
-	}
-	if (object_id !== undefined) {
-		queryString += `\nand object_table.id in (${object_id.map(
-			(item) => `'${item}'`
-		)})`
-	}
-
-	queryString += `
+	inner join object_table on
+		object_table.id = location_history_table.object_id
+		${filter}
 
 	inner join user_table on
-user_table.main_area = object_table.area_id
+		user_table.main_area = object_table.area_id
 	
-inner join api_key on
-user_table.id = api_key.id
-and api_key.key = '${key}'
+	inner join api_key on
+		user_table.id = api_key.id
+		and api_key.key = '${key}'
 
-left join lbeacon_table on
-location_history_table.uuid = lbeacon_table.uuid 
+	left join lbeacon_table on
+		location_history_table.uuid = lbeacon_table.uuid 
 
-left join area_table on 
-location_history_table.area_id = area_table.id 
-where 
-	location_history_table.record_timestamp > '${start_time}'
-	and	location_history_table.record_timestamp < '${end_time}'
-
-order by location_history_table.record_timestamp ${sort_type}
-
-limit ${count_limit};`
-
-	return queryString
+	left join area_table on 
+		location_history_table.area_id = area_table.id 
+	where 
+		location_history_table.record_timestamp > '${start_time}'
+		and	location_history_table.record_timestamp < '${end_time}'
+	order by 
+		location_history_table.record_timestamp ${sort_type}
+	limit ${count_limit};`
 }
 
-const get_id_table_data = (key) => {
+const getIDTableQuery = (key) => {
 	return `
 	select
 		object_table.id as id,
@@ -376,10 +370,12 @@ export default {
 	setKey,
 	getAllKeyQuery,
 	getAllUserQuery,
-	get_data,
-	get_people_realtime_data,
-	get_people_history_data,
-	get_object_realtime_data,
-	get_object_history_data,
-	get_id_table_data,
+	getPatientDurationQuery,
+	getPeopleRealtimeQuery,
+	getPeopleHistoryQuery,
+	getObjectHistoryQuery,
+	getObjectRealtimeQuery,
+	getIDTableQuery,
+	getObjectIDQuery,
+	getObjectTypeQuery
 }
