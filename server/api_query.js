@@ -7,14 +7,40 @@ const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
 
-async function get_people_realtime_data(request, response) {
+const Authenticate = {
+	EXCEPTION: 0,
+	SUCCESS: 1,
+	UNACTIVATED: 2,
+	FAILED: 3,
+}
+
+async function getIDTableData(request, response) {
 	const { key } = request.body
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.SUCCESS) {
 		try {
-			const data = await pool.query(queryType.get_people_realtime_data(key))
+			const data = await pool.query(queryType.getIDTableQuery(key))
+			response.json(data.rows)
+		} catch (err) {
+			console.log(`get id table data error : ${err}`)
+		}
+	} else if (matchRes === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
+
+async function getPeopleRealtimeData(request, response) {
+	const { key } = request.body
+
+	const matchRes = await match_key(key)
+
+	if (matchRes === Authenticate.SUCCESS) {
+		try {
+			const data = await pool.query(queryType.getPeopleRealtimeQuery(key))
 			data.rows.forEach((item) => {
 				item.last_reported_timestamp = moment(
 					item.last_reported_timtstamp
@@ -25,19 +51,19 @@ async function get_people_realtime_data(request, response) {
 		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
 		}
-	} else if (matchRes === 2) {
-		response.json(error_code.key_timeout)
+	} else if (matchRes === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
 }
-async function get_people_history_data(request, response) {
+async function getPeopleHistoryData(request, response) {
 	const { key } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.SUCCESS) {
 		const error_msg = check_input_error(
 			start_time,
 			end_time,
@@ -57,7 +83,7 @@ async function get_people_history_data(request, response) {
 
 		try {
 			const data = await pool.query(
-				queryType.get_people_history_data(
+				queryType.getPeopleHistoryQuery(
 					key,
 					start_time,
 					end_time,
@@ -75,14 +101,129 @@ async function get_people_history_data(request, response) {
 		} catch (err) {
 			console.log(`get people history data failed : ${err}`)
 		}
-	} else if (matchRes === 2) {
-		response.json(error_code.key_timeout)
+	} else if (matchRes === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
 	} else {
 		response.json(error_code.key_incorrect)
 	}
 }
 
-const get_api_key = (request, response) => {
+async function getObjectRealtimeData(request, response) {
+	const { key } = request.body
+	let { object_id, object_type } = request.body
+	const matchRes = await match_key(key)
+
+	if (matchRes === Authenticate.SUCCESS) {
+		try {
+			let filter = ''
+			if (object_id) {
+				const pattern = new RegExp('^[0-9]{1,}$')
+				object_id = object_id.split(';').map((item) => {
+					if (item.match(pattern) == null) {
+						response.json(error_code.id_format_error)
+						return undefined
+					}
+					return parseInt(item)
+				})
+				filter += queryType.getObjectIDFilter(object_id)
+			}
+			if (object_type) {
+				object_type = object_type.split(';')
+				filter += queryType.getObjectTypeFilter(object_type)
+			}
+
+			const data = await pool.query(
+				queryType.getObjectRealtimeQuery(key, filter)
+			)
+
+			response.json(data.rows)
+		} catch (err) {
+			console.log(`get realtime data failed : ${err}`)
+		}
+	} else if (matchRes === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
+
+async function getObjectHistoryData(request, response) {
+	const { key } = request.body
+	let {
+		object_type,
+		object_id,
+		start_time,
+		end_time,
+		count_limit,
+		sort_type,
+	} = request.body
+	const matchRes = await match_key(key)
+
+	if (matchRes === Authenticate.SUCCESS) {
+		const error_msg = check_input_error(
+			start_time,
+			end_time,
+			sort_type,
+			count_limit
+		)
+
+		if (error_msg !== undefined) {
+			response.json(error_msg)
+			return
+		}
+
+		start_time = set_initial_time(start_time, 1)
+		end_time = set_initial_time(end_time, 0)
+		count_limit = set_count_limit(count_limit)
+		sort_type = set_sort_type(sort_type)
+
+		let filter = ''
+		if (object_type !== undefined) {
+			object_type = object_type.split(';')
+
+			filter += queryType.getObjectTypeFilter(object_type)
+		}
+
+		if (object_id !== undefined) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			object_id = object_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item, 10)
+			})
+
+			filter += queryType.getObjectIDFilter(object_id)
+		}
+		try {
+			const data = await pool.query(
+				queryType.getObjectHistoryQuery(
+					key,
+					filter,
+					start_time,
+					end_time,
+					count_limit,
+					sort_type
+				)
+			)
+			data.rows.forEach((item) => {
+				item.record_timestamp = moment(item.record_timestamp).format(
+					timeDefaultFormat
+				)
+			})
+			response.json(data.rows)
+		} catch (err) {
+			console.log(`get object history data failed : ${err}`)
+		}
+	} else if (matchRes === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
+
+const getApiKey = (request, response) => {
 	const { username, password } = request.body
 
 	let getUserName = ''
@@ -130,10 +271,10 @@ const get_api_key = (request, response) => {
 		})
 }
 
-async function get_history_data(request, response) {
+async function getPatientDurationData(request, response) {
 	const { key } = request.body
 	let {
-		tag, // string
+		object_id, // string
 		Lbeacon, // string
 		start_time, // YYYY/MM/DD HH:mm:ss
 		end_time, // YYYY/MM/DD HH:mm:ss
@@ -143,7 +284,7 @@ async function get_history_data(request, response) {
 
 	const matchRes = await match_key(key)
 
-	if (matchRes === 1) {
+	if (matchRes === Authenticate.SUCCESS) {
 		// matched
 
 		const error_msg = check_input_error(
@@ -163,23 +304,19 @@ async function get_history_data(request, response) {
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
 
-		//** TAG **//
-		if (tag !== undefined) {
-			tag = tag.split(',')
-			const pattern = new RegExp(
-				'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
-			)
-			tag.forEach((item) => {
+		//** Object id**//
+		if (object_id !== undefined) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			object_id = object_id.split(';').map((item) => {
 				if (item.match(pattern) == null) {
-					//judge format
-					response.json(error_code.mac_address_error)
+					response.json(error_code.id_format_error)
 				}
+				return parseInt(item, 10)
 			})
 		}
-
 		//** Lbeacon **//
 		if (Lbeacon !== undefined) {
-			Lbeacon = Lbeacon.split(',')
+			Lbeacon = Lbeacon.split(';')
 			const pattern = new RegExp(
 				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
 			)
@@ -195,7 +332,7 @@ async function get_history_data(request, response) {
 			key,
 			start_time,
 			end_time,
-			tag,
+			object_id,
 			Lbeacon,
 			count_limit,
 			sort_type
@@ -207,8 +344,8 @@ async function get_history_data(request, response) {
 		})
 
 		response.json(data)
-	} else if (matchRes === 2) {
-		response.json(error_code.key_timeout)
+	} else if (matchRes === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
 	} else {
 		// key fail match with user
 		response.json(error_code.key_incorrect)
@@ -216,22 +353,24 @@ async function get_history_data(request, response) {
 }
 
 async function match_key(key) {
-	let matchFlag = 0 // flag = 0 when key error
+	let Flag = Authenticate.FAILED
 	return await pool
 		.query(queryType.getAllKeyQuery)
 		.then((res) => {
 			res.rows.forEach((item) => {
-				const vaildTime = moment(item.register_time).add(30, 'm')
-				if (moment().isBefore(moment(vaildTime)) && item.key === key) {
-					matchFlag = 1 //in time & key right
-				} else if (moment().isAfter(moment(vaildTime)) && item.key === key) {
-					matchFlag = 2 // out time & key right
+				const validTime = moment(item.register_time).add(30, 'm')
+
+				if (moment().isBefore(moment(validTime)) && item.key === key) {
+					Flag = Authenticate.SUCCESS
+				} else if (moment().isAfter(moment(validTime)) && item.key === key) {
+					Flag = Authenticate.UNACTIVATED
 				}
 			})
-			return matchFlag
+			return Flag
 		})
 		.catch((err) => {
-			console.log(`match key fails ${err}`)
+			console.log(`match exception : ${err}`)
+			Flag = Authenticate.EXCEPTION
 		})
 }
 
@@ -294,7 +433,7 @@ async function get_history_data_from_db(
 ) {
 	return await pool
 		.query(
-			queryType.get_data(
+			queryType.getPatientDurationQuery(
 				key,
 				start_time,
 				end_time,
@@ -330,8 +469,11 @@ function set_duration_time(time) {
 }
 
 export default {
-	get_api_key,
-	get_history_data,
-	get_people_history_data,
-	get_people_realtime_data,
+	getApiKey,
+	getPatientDurationData,
+	getPeopleHistoryData,
+	getPeopleRealtimeData,
+	getObjectHistoryData,
+	getObjectRealtimeData,
+	getIDTableData,
 }

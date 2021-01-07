@@ -21,7 +21,7 @@ const key_incorrect = {
 	data: '',
 }
 
-const key_timeout = {
+const key_unactive = {
 	error_code: '201',
 	error_message: 'get data fail : key is out of active time',
 	data: '',
@@ -62,15 +62,22 @@ const sort_type_define_error = {
 	error_message: 'get data fail : sort type must be desc or asc',
 	data: '',
 }
+
+const id_format_error = {
+	error_code:'260',
+	error_message : 'get data fail : input id must be integer or format error',
+	data: ''
+}
 export default {
 	get_key_success,
 	sha_256_incorrect,
 	key_incorrect,
-	key_timeout,
+	key_unactive,
 	start_time_error,
 	end_time_error,
 	mac_address_error,
 	Lbeacon_error,
 	count_error,
 	sort_type_define_error,
+	id_format_error
 }
