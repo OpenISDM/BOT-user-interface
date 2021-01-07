@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        BatteryLevelNotification.js
+        NavNotification.js
 
     File Description:
         BOT UI component
@@ -41,7 +41,7 @@ import { getDescription } from '../../helper/descriptionGenerator'
 import apiHelper from '../../helper/apiHelper'
 import messageGenerator from '../../helper/messageGenerator'
 
-class BatteryLevelNotification extends React.Component {
+class NavNotification extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -292,4 +292,4 @@ class BatteryLevelNotification extends React.Component {
 	}
 }
 
-export default BatteryLevelNotification
+export default NavNotification

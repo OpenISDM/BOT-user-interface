@@ -40,7 +40,7 @@ import config from '../../config'
 import AccessControl from '../authentication/AccessControl'
 import { AppContext } from '../../context/AppContext'
 import Select from 'react-select'
-import BatteryLevelNotification from './BatteryLevelNotification'
+import NavNotification from './NavNotification'
 import { navbarNavList } from '../../config/pageModules'
 import styleConfig from '../../config/styleConfig'
 import { BOTNavLink } from '../BOTComponent/styleComponent'
@@ -232,7 +232,7 @@ class NavbarContainer extends React.Component {
 								permission="user:batteryNotice"
 								platform={['browser', 'tablet']}
 							>
-								<BatteryLevelNotification />
+								<NavNotification />
 							</AccessControl>
 							<Dropdown
 								className="mx-1 font-weight-500"
