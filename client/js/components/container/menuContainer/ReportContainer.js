@@ -42,7 +42,7 @@ import {
 	TabletView,
 } from 'react-device-detect'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
-import MobilePageComponent from '../../platform/mobile/mobilePageComponent'
+import MobilePageComponent from '../../platform/mobile/MobilePageComponent'
 import BrowserPageComponent from '../../platform/browser/BrowserPageComponent'
 import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
 
