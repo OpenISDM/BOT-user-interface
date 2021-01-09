@@ -51,7 +51,7 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 	return prev
 }, {})
 
-module.exports = {
+const webpackConfig = {
 	entry: './client/index.js',
 	mode: 'production',
 	devtool: 'none',
@@ -117,11 +117,6 @@ module.exports = {
 	},
 	plugins: [
 		new CleanWebpackPlugin(),
-
-		/** Webpack tool for analyzing the package size */
-		new BundleAnalyzerPlugin({
-			analyzerMode: 'disabled',
-		}),
 
 		new HtmlWebPackPlugin({
 			template: './client/index.html',
@@ -203,3 +198,9 @@ module.exports = {
 		},
 	},
 }
+
+if (process.env.npm_config_report) {
+	webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = webpackConfig

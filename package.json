@@ -13,7 +13,7 @@
 		"encrypt": "node ./tools/createEncrypt.js",
 		"webp": "node ./tools/webpCovertor.js",
 		"lint": "eslint . --fix && prettier --write .",
-		"analyze": "npm_config_report=true webpack --mode production --config webpack.config.prod.cjs -r esm",
+		"analyze": "cross-env NODE_ENV=production npm_config_report=true npm run build",
 		"newman": "newman run ./server/test/real_data/bot_demo_site.postman_collection.json"
 	},
 	"keywords": [],
@@ -84,6 +84,7 @@
 		"connect-pg-simple": "^6.0.1",
 		"cookie-parser": "^1.4.4",
 		"cors": "^2.8.5",
+		"cross-env": "^7.0.3",
 		"csv": "^5.3.0",
 		"csv-writer": "^1.6.0",
 		"csvtojson": "^2.0.10",
