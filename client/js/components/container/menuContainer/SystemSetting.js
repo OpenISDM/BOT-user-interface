@@ -44,10 +44,9 @@ import {
 	TabletView,
 } from 'react-device-detect'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
-import MobilePageComponent from '../../platform/mobile/mobilePageComponent'
+import MobilePageComponent from '../../platform/mobile/MobilePageComponent'
 import BrowserPageComponent from '../../platform/browser/BrowserPageComponent'
 import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
-import locale from 'antd/lib/date-picker/locale/en_US'
 
 class SystemSetting extends React.Component {
 	containerModule = settingModule
