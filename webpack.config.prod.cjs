@@ -37,11 +37,11 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { GenerateSW } = require('workbox-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 	.BundleAnalyzerPlugin
 const TerserPlugin = require('terser-webpack-plugin')
+
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
@@ -152,8 +152,6 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: './css/[name].[contenthash].css',
 		}),
-
-		new GenerateSW(),
 
 		new CopyWebpackPlugin({
 			patterns: [
