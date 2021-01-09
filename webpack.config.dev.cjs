@@ -34,8 +34,10 @@
 
 /* eslint-disable import/no-commonjs */
 const HtmlWebPackPlugin = require('html-webpack-plugin')
+const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const webpack = require('webpack')
 const dotenv = require('dotenv')
@@ -112,7 +114,10 @@ module.exports = {
 		new HtmlWebPackPlugin({
 			template: './client/index.html',
 			filename: './index.html',
+			alwaysWriteToDisk: true, // this option was added by html-webpack-harddisk-plugin
 		}),
+
+		new HtmlWebpackHarddiskPlugin(),
 
 		/** Include the env parameters as web page parameters */
 		new webpack.DefinePlugin({
@@ -121,6 +126,13 @@ module.exports = {
 
 		new MiniCssExtractPlugin({
 			filename: './css/[name].[contenthash].css',
+		}),
+
+		new CopyWebpackPlugin({
+			patterns: [
+				{ from: 'client/img/logo', to: 'imgs/logo' },
+				'client/manifest.webmanifest',
+			],
 		}),
 	],
 	optimization: {
