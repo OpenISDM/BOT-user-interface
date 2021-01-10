@@ -52,6 +52,7 @@ import UtilRoutes from './api/routes/UtilRoutes'
 import shouldCompress from './api/config/compression'
 import redirect from './api/middlewares/redirect'
 import APIRoutes from './routes/APIRoutes'
+import { attach } from './websocket'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -102,7 +103,10 @@ APIRoutes(app)
 const httpServer = http.createServer(app)
 const httpsServer = https.createServer(credentials, app)
 
-/** Initiate HTTPS server */
+attach(httpServer)
+attach(httpsServer)
+
+/** Initiate HTTP server */
 httpServer.listen(httpPort, () => {
 	console.log(`HTTP Server running on PORT ${httpPort}`)
 })

@@ -41,6 +41,7 @@ import AccessControl from '../authentication/AccessControl'
 import { AppContext } from '../../context/AppContext'
 import Select from 'react-select'
 import NavNotification from './NavNotification'
+import SocketNotifciation from './SocketNotifciation'
 import { navbarNavList } from '../../config/pageModules'
 import styleConfig from '../../config/styleConfig'
 import { BOTNavLink } from '../BOTComponent/styleComponent'
@@ -228,6 +229,7 @@ class NavbarContainer extends React.Component {
 						</Nav>
 
 						<Nav>
+							<SocketNotifciation />
 							<AccessControl
 								permission="user:batteryNotice"
 								platform={['browser', 'tablet']}
