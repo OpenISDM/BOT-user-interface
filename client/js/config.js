@@ -176,7 +176,7 @@ const config = {
 
 	DEFAULT_ROLE: ['system_admin'],
 
-	ROLES_SELECTION: ['system_admin', 'care_provider', 'dev'],
+	ROLES_SELECTION: ['system_admin', 'care_provider'],
 
 	HEALTH_STATUS_MAP: {
 		0: NORMAL,
