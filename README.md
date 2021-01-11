@@ -94,8 +94,13 @@ In ./client/js/dataSrc.js, there are the list of requests used in UI code. The d
   21621
 
 ```javascript
-			bounds: [
-				[0, 0], // left-bottom point coordinate
-				[5405, 21621], // right-upper point coordinate
-			],
+   bounds: [
+    [0, 0], // left-bottom point coordinate
+    [5405, 21621], // right-upper point coordinate
+   ],
 ```
+
+### Set up IPC
+
+Copy cmdServerIPC.exe from BOT Server build to ipc folder which default path is ipc/
+Please make sure all necessary *.dll files should be included in that folder such as "libEncrypt.dll".
