@@ -9,8 +9,8 @@ export default (app) => {
 	app.post('/api/1.0/tracing/history/people', db.getPeopleHistoryData)
 	app.post('/api/1.0/tracing/realtime/people', db.getPeopleRealtimeData)
 
-	app.post('/api/1.0/tracing/history/object', db.getObjectHistoryData)
-	app.post('/api/1.0/tracing/realtime/object', db.getObjectRealtimeData)
+	app.post('/api/1.0/tracing/history/device', db.getObjectHistoryData)
+	app.post('/api/1.0/tracing/realtime/device', db.getObjectRealtimeData)
 
 	app.post('/api/1.0/tracing/id_table', db.getIDTableData)
 }
