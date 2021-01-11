@@ -38,7 +38,6 @@ import bodyParser from 'body-parser'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 import https from 'https'
-import http from 'http'
 import session from 'express-session'
 import compression from 'compression'
 
@@ -50,18 +49,13 @@ import authRoutes from './api/routes/dataRoutes/authRoutes'
 import UIRoutes from './api/routes/UIRoutes'
 import UtilRoutes from './api/routes/UtilRoutes'
 import shouldCompress from './api/config/compression'
-import redirect from './api/middlewares/redirect'
 import APIRoutes from './routes/APIRoutes'
+import { attach } from './websocket'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const httpsPort = process.env.HTTPS_PORT
-const httpPort = process.env.HTTP_PORT
 const app = express()
-
-if (process.env.ENABLE_HTTP_REDIRECT === 'true') {
-	app.use(redirect)
-}
 
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
@@ -99,18 +93,13 @@ dataRoutes(app)
 
 APIRoutes(app)
 
-const httpServer = http.createServer(app)
 const httpsServer = https.createServer(credentials, app)
 
-/** Initiate HTTPS server */
-httpServer.listen(httpPort, () => {
-	console.log(`HTTP Server running on PORT ${httpPort}`)
-})
+attach(httpsServer)
 
 /** Initiate HTTPS server */
 httpsServer.listen(httpsPort, () => {
 	console.log(`HTTPS Server running on PORT ${httpsPort}`)
 })
 
-httpServer.timeout = parseInt(process.env.SERVER_TIMEOUT)
 httpsServer.timeout = parseInt(process.env.SERVER_TIMEOUT)

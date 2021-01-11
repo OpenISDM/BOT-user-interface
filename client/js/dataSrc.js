@@ -32,9 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const dataSrcIP = process.env.DATASRC_IP
-const dataSrcProtocol = parseInt(process.env.ENABLE_HTTP) ? 'http' : 'https'
-const domain = `${dataSrcProtocol}://${dataSrcIP}`
+const hostname = window.location.hostname
+const domain = `https://${hostname}`
 
 export const trackingData = `${domain}/data/trackingData`
 export const lbeacon = `${domain}/data/lbeacon`

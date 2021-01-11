@@ -37,11 +37,11 @@ const HtmlWebPackPlugin = require('html-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const { GenerateSW } = require('workbox-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 	.BundleAnalyzerPlugin
 const TerserPlugin = require('terser-webpack-plugin')
+
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
@@ -51,7 +51,7 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 	return prev
 }, {})
 
-module.exports = {
+const webpackConfig = {
 	entry: './client/index.js',
 	mode: 'production',
 	devtool: 'none',
@@ -118,11 +118,6 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin(),
 
-		/** Webpack tool for analyzing the package size */
-		new BundleAnalyzerPlugin({
-			analyzerMode: 'disabled',
-		}),
-
 		new HtmlWebPackPlugin({
 			template: './client/index.html',
 			filename: './index.html',
@@ -152,8 +147,6 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: './css/[name].[contenthash].css',
 		}),
-
-		new GenerateSW(),
 
 		new CopyWebpackPlugin({
 			patterns: [
@@ -205,3 +198,9 @@ module.exports = {
 		},
 	},
 }
+
+if (process.env.npm_config_report) {
+	webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
+module.exports = webpackConfig

@@ -43,7 +43,7 @@ import botFeaturesConfig from './config/botFeaturesConfig'
 import { NORMAL, BROKEN, TRANSFERRED } from './config/wordMap'
 
 const config = {
-	VERSION: `v${version} b.1987`,
+	VERSION: `v${version} b.1988`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 
@@ -176,7 +176,7 @@ const config = {
 
 	DEFAULT_ROLE: ['system_admin'],
 
-	ROLES_SELECTION: ['system_admin', 'care_provider', 'dev'],
+	ROLES_SELECTION: ['system_admin', 'care_provider'],
 
 	HEALTH_STATUS_MAP: {
 		0: NORMAL,

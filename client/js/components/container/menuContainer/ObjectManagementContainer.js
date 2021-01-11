@@ -42,7 +42,7 @@ import {
 	TabletView,
 } from 'react-device-detect'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
-import MobilePageComponent from '../../platform/mobile/mobilePageComponent'
+import MobilePageComponent from '../../platform/mobile/MobilePageComponent'
 import BrowserPageComponent from '../../platform/browser/BrowserPageComponent'
 import TabletPageComponent from '../../platform/tablet/TabletPageComponent'
 
@@ -52,14 +52,14 @@ class ObjectManagementContainer extends React.Component {
 	componentDidMount = () => {
 		/** set the scrollability in body disabled */
 		if (isMobileOnly || isTablet) {
-			const targetElement = document.querySelector('body')
-			enableBodyScroll(targetElement)
+			// const targetElement = document.querySelector('body')
+			// enableBodyScroll(targetElement)
 		}
 	}
 
 	componentWillUnmount = () => {
-		const targetElement = document.querySelector('body')
-		disableBodyScroll(targetElement)
+		// const targetElement = document.querySelector('body')
+		// disableBodyScroll(targetElement)
 	}
 
 	render() {

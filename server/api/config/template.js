@@ -33,9 +33,9 @@
 */
 
 import 'dotenv/config'
-const dataSrcIP = process.env.DATASRC_IP
+const hostname = process.env.HOSTNAME
 const dataSrcProtocol = process.env.DATASRC_PROTOCOL || 'https'
-const domain = `${dataSrcProtocol}://${dataSrcIP}`
+const domain = `${dataSrcProtocol}://${hostname}`
 
 const resetPasswordInstruction = {
 	subject: 'BiDaE Object Tracker Password Assistance',
@@ -47,8 +47,8 @@ const resetPasswordInstruction = {
 		return `
         Dear User,
 
-        Greetings from BiDaE Object Tracker Service. 
-        We received a request to reset the password for the ${botAccountText} associated with this e-mail address. 
+        Greetings from BiDaE Object Tracker Service.
+        We received a request to reset the password for the ${botAccountText} associated with this e-mail address.
 
         Your ${botAccountText}: [${accountNameList.join(', ')}]
 

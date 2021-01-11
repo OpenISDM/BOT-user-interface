@@ -166,11 +166,8 @@ export default {
 
 			// Because monitored_object_types stores 'single quote' for BOT server convenience
 			// So, We do this for client
-			const monitoredObjectTypes = `${areaConfig['monitored_object_types']}`
-			areaConfig['monitored_object_types'] = monitoredObjectTypes.replace(
-				/'/g,
-				''
-			)
+			const monitoredObjectTypes = `${areaConfig.monitored_object_types}`
+			areaConfig.monitored_object_types = monitoredObjectTypes.replace(/'/g, '')
 
 			const geofenceNotificationConfigs = await NotificationConfig.findAll({
 				where: {
@@ -263,18 +260,17 @@ export default {
 								},
 							}
 						)
-					} else {
-						return NotificationConfig.create({
-							area_id,
-							name,
-							alert_last_sec,
-							active_alert_types,
-							enable,
-							start_time,
-							end_time,
-							monitor_type: MONITOR_TYPE.GEO_FENCE,
-						})
 					}
+					return NotificationConfig.create({
+						area_id,
+						name,
+						alert_last_sec,
+						active_alert_types,
+						enable,
+						start_time,
+						end_time,
+						monitor_type: MONITOR_TYPE.GEO_FENCE,
+					})
 				}
 			)
 

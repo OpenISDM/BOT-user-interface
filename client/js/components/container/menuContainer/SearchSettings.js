@@ -107,7 +107,7 @@ class SearchSettings extends React.Component {
 
 	state = {
 		changedIndex: [],
-		buttonSelected: pages.REVISE_LIST,
+		buttonSelected: pages.VIEW_LIST,
 		objectMap: {},
 		namedListMap: {},
 		allDeviceObjects: [],
@@ -136,8 +136,8 @@ class SearchSettings extends React.Component {
 		}
 	)
 
-	getObjectData = async () => {
-		const [{ area }] = this.context.stateReducer
+	getObjectData = async (callback) => {
+		const [{ area }, dispatch] = this.context.stateReducer
 
 		const objectDataPromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: [area.id],
@@ -174,7 +174,7 @@ class SearchSettings extends React.Component {
 			const objectMap = _.keyBy(objectRes.data.rows, 'id')
 			const namedListMap = _.keyBy(namedListRes.data, 'id')
 
-			let allDeviceObjects = []
+			const allDeviceObjects = []
 			const namedListDeviceObjects = objectRes.data.rows
 				.filter((item) => {
 					return parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
@@ -184,7 +184,7 @@ class SearchSettings extends React.Component {
 					return !objectIds.includes(item.id)
 				})
 
-			let allPatientObjects = []
+			const allPatientObjects = []
 			const namedListPatientObjects = objectRes.data.rows
 				.filter((item) => {
 					return parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
@@ -194,7 +194,12 @@ class SearchSettings extends React.Component {
 					return !objectIds.includes(item.id)
 				})
 
-			this.setState({
+			dispatch({
+				type: SET_TABLE_SELECTION,
+				value: [],
+			})
+
+			const state = {
 				namedListOptions,
 				objectMap,
 				namedListMap,
@@ -203,12 +208,20 @@ class SearchSettings extends React.Component {
 				namedListPatientObjects,
 				allDeviceObjects,
 				allPatientObjects,
-			})
+				listName: '',
+				selectedNamedList: null,
+			}
+
+			if (callback) {
+				this.setState(state, callback)
+			} else {
+				this.setState(state)
+			}
 		}
 	}
 
 	handleCreateSubmit = async ({ type }) => {
-		const [{ area, tableSelection }, dispatch] = this.context.stateReducer
+		const [{ area, tableSelection }] = this.context.stateReducer
 
 		const res = await apiHelper.namedListApiAgent.setNamedList({
 			areaId: area.id,
@@ -219,12 +232,7 @@ class SearchSettings extends React.Component {
 		})
 
 		if (res) {
-			dispatch({
-				type: SET_TABLE_SELECTION,
-				value: [],
-			})
-
-			this.setState({ listName: '' }, () =>
+			this.getObjectData(() =>
 				messageGenerator.setSuccessMessage('save success')
 			)
 		}
@@ -234,14 +242,15 @@ class SearchSettings extends React.Component {
 		const { selectedNamedList } = this.state
 		const { value } = selectedNamedList
 
-		try {
-			await apiHelper.namedListApiAgent.addObject({
-				namedListId: value.id,
-				objectId: object.id,
-			})
-			this.getObjectData()
-		} catch (e) {
-			console.log(`add object to name list failed ${e}`)
+		const res = await apiHelper.namedListApiAgent.addObject({
+			namedListId: value.id,
+			objectId: object.id,
+		})
+
+		if (res) {
+			this.getObjectData(() =>
+				messageGenerator.setSuccessMessage('save success')
+			)
 		}
 	}
 
@@ -249,14 +258,15 @@ class SearchSettings extends React.Component {
 		const { selectedNamedList } = this.state
 		const { value } = selectedNamedList
 
-		try {
-			await apiHelper.namedListApiAgent.removeObject({
-				namedListId: value.id,
-				objectId: object.id,
-			})
-			this.getObjectData()
-		} catch (e) {
-			console.log(`remove object to name list failed ${e}`)
+		const res = await apiHelper.namedListApiAgent.removeObject({
+			namedListId: value.id,
+			objectId: object.id,
+		})
+
+		if (res) {
+			this.getObjectData(() =>
+				messageGenerator.setSuccessMessage('save success')
+			)
 		}
 	}
 
@@ -264,16 +274,14 @@ class SearchSettings extends React.Component {
 		const { selectedNamedList } = this.state
 		const { value } = selectedNamedList
 
-		try {
-			await apiHelper.namedListApiAgent.removeNamedList({
-				namedListId: value.id,
-			})
-			this.setState({
-				selectedNamedList: null,
-			})
-			this.getObjectData()
-		} catch (e) {
-			console.log(`remove object to name list failed ${e}`)
+		const res = await apiHelper.namedListApiAgent.removeNamedList({
+			namedListId: value.id,
+		})
+
+		if (res) {
+			this.getObjectData(() =>
+				messageGenerator.setSuccessMessage('save success')
+			)
 		}
 	}
 
@@ -286,6 +294,7 @@ class SearchSettings extends React.Component {
 	setCurrentPage = (identity) =>
 		this.setState({
 			changedIndex: [],
+			currentNameListRow: null,
 			buttonSelected: identity,
 		})
 
@@ -308,7 +317,7 @@ class SearchSettings extends React.Component {
 					? COLUMNS.PATIENT
 					: null
 
-			currentNameListRow.objectIds.map((id) => {
+			currentNameListRow.objectIds.forEach((id) => {
 				tableData.push(objectMap[id])
 			})
 		}
@@ -334,10 +343,15 @@ class SearchSettings extends React.Component {
 		})
 
 	checkToRenderSubPage = ({ locale }) => {
-		const [{ area }] = this.context.stateReducer
+		const {
+			buttonSelected,
+			listName,
+			namedListDeviceObjects,
+			namedListPatientObjects,
+		} = this.state
 		let subPage
 
-		switch (this.state.buttonSelected) {
+		switch (buttonSelected) {
 			case pages.CREATE_DEVICE_LIST:
 				subPage = (
 					<>
@@ -358,7 +372,7 @@ class SearchSettings extends React.Component {
 							</Button>
 							<Form.Control
 								type="text"
-								value={this.state.listName}
+								value={listName}
 								onChange={(e) => {
 									this.setListName(e.target.value)
 								}}
@@ -367,7 +381,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div style={{ marginTop: '10px' }}>
 							<BOTSelectTable
-								data={this.state.namedListDeviceObjects}
+								data={namedListDeviceObjects}
 								columns={COLUMNS.DEIVCE}
 							/>
 						</div>
@@ -394,7 +408,7 @@ class SearchSettings extends React.Component {
 							</Button>
 							<Form.Control
 								type="text"
-								value={this.state.listName}
+								value={listName}
 								onChange={(e) => {
 									this.setListName(e.target.value)
 								}}
@@ -403,7 +417,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div style={{ marginTop: '10px' }}>
 							<BOTSelectTable
-								data={this.state.namedListPatientObjects}
+								data={namedListPatientObjects}
 								columns={COLUMNS.PATIENT}
 							/>
 						</div>
@@ -432,80 +446,85 @@ class SearchSettings extends React.Component {
 				)
 				break
 			case pages.REVISE_LIST:
-				const {
-					namedListMap,
-					selectedNamedList,
-					allDeviceObjects,
-					allPatientObjects,
-					namedListOptions,
-				} = this.state
-				let items = []
-				let allItems = []
-				let selectedTitle = ''
-				let unselectedTitle = ''
-
-				if (selectedNamedList) {
-					const namedList = namedListMap[selectedNamedList.value.id]
-					if (namedList) {
-						items = namedList.objectIds
-					}
-					if (
-						parseInt(selectedNamedList.value.type) ===
-						config.NAMED_LIST_TYPE.DEVICE
-					) {
-						allItems = allDeviceObjects
-						selectedTitle = locale.texts.SELECTED_DEVICES
-						unselectedTitle = locale.texts.UNSELECTED_DEVICES
-					}
-
-					if (
-						parseInt(selectedNamedList.value.type) ===
-						config.NAMED_LIST_TYPE.PATIENT
-					) {
-						allItems = allPatientObjects
-						selectedTitle = locale.texts.SELECTED_PATIENTS
-						unselectedTitle = locale.texts.UNSELECTED_PATIENTS
-					}
-				}
-
-				subPage = (
-					<>
-						<div className="color-black mb-2 font-size-120-percent">
-							{locale.texts.REVISE_LIST}
-						</div>
-						<div className="d-flex">
-							<Button
-								style={{ marginRight: '5px' }}
-								disabled={!selectedNamedList}
-								onClick={this.removeNamedList}
-							>
-								{locale.texts.DELETE}
-							</Button>
-							<Select
-								className="flex-grow-1"
-								isClearable
-								value={selectedNamedList}
-								onChange={this.onSelectNamedList}
-								options={namedListOptions}
-							/>
-						</div>
-						<DualListBox
-							allItems={allItems}
-							selectedItemList={items}
-							selectedGroupAreaId={area.id}
-							selectedTitle={selectedTitle}
-							unselectedTitle={unselectedTitle}
-							onSelect={this.addObject}
-							onUnselect={this.removeObject}
-						/>
-					</>
-				)
+				subPage = this.generateReviseList({ locale })
 				break
 			default:
 				break
 		}
 
 		return subPage
+	}
+
+	generateReviseList = ({ locale }) => {
+		const [{ area }] = this.context.stateReducer
+		const {
+			namedListMap,
+			selectedNamedList,
+			allDeviceObjects,
+			allPatientObjects,
+			namedListOptions,
+		} = this.state
+		let items = []
+		let allItems = []
+		let selectedTitle = ''
+		let unselectedTitle = ''
+
+		if (selectedNamedList) {
+			const namedList = namedListMap[selectedNamedList.value.id]
+			if (namedList) {
+				items = namedList.objectIds
+			}
+
+			if (
+				parseInt(selectedNamedList.value.type) === config.NAMED_LIST_TYPE.DEVICE
+			) {
+				allItems = allDeviceObjects
+				selectedTitle = locale.texts.SELECTED_DEVICES
+				unselectedTitle = locale.texts.UNSELECTED_DEVICES
+			}
+
+			if (
+				parseInt(selectedNamedList.value.type) ===
+				config.NAMED_LIST_TYPE.PATIENT
+			) {
+				allItems = allPatientObjects
+				selectedTitle = locale.texts.SELECTED_PATIENTS
+				unselectedTitle = locale.texts.UNSELECTED_PATIENTS
+			}
+		}
+
+		return (
+			<>
+				<div className="color-black mb-2 font-size-120-percent">
+					{locale.texts.REVISE_LIST}
+				</div>
+				<div className="d-flex">
+					<Button
+						style={{ marginRight: '5px' }}
+						disabled={!selectedNamedList}
+						onClick={this.removeNamedList}
+					>
+						{locale.texts.DELETE}
+					</Button>
+					<Select
+						className="flex-grow-1"
+						isClearable
+						value={selectedNamedList}
+						onChange={this.onSelectNamedList}
+						options={namedListOptions}
+					/>
+				</div>
+				<DualListBox
+					allItems={allItems}
+					selectedItemList={items}
+					selectedGroupAreaId={area.id}
+					selectedTitle={selectedTitle}
+					unselectedTitle={unselectedTitle}
+					onSelect={this.addObject}
+					onUnselect={this.removeObject}
+				/>
+			</>
+		)
 	}
 
 	render() {

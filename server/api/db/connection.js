@@ -47,7 +47,14 @@ export const sequelize = new Sequelize(
 	{
 		host: process.env.DB_HOST,
 		dialect: 'postgres',
+		logging: process.env.DB_LOGGING === 'true',
 	}
+)
+
+export const pgClient = new pg.Client(
+	`postgres://${process.env.DB_USER}:${decrypt(process.env.DB_PASS)}@${
+		process.env.DB_HOST
+	}:5432/${process.env.DB_DATABASE}`
 )
 
 const config = {
