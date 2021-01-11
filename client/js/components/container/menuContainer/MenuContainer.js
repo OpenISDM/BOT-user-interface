@@ -18,14 +18,14 @@ class MenuContainer extends React.Component {
 	componentDidMount = () => {
 		/** set the scrollability in body disabled */
 		if (isMobileOnly || isTablet) {
-			const targetElement = document.querySelector('body')
-			enableBodyScroll(targetElement)
+			// const targetElement = document.querySelector('body')
+			// enableBodyScroll(targetElement)
 		}
 	}
 
 	componentWillUnmount = () => {
-		const targetElement = document.querySelector('body')
-		disableBodyScroll(targetElement)
+		// const targetElement = document.querySelector('body')
+		// disableBodyScroll(targetElement)
 	}
 
 	render() {

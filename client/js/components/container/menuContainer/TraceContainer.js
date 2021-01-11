@@ -104,8 +104,8 @@ class TraceContainer extends React.Component {
 	componentDidMount = () => {
 		/** disable the scrollability in body*/
 		if (!isBrowser) {
-			const targetElement = document.querySelector('body')
-			enableBodyScroll(targetElement)
+			// const targetElement = document.querySelector('body')
+			// enableBodyScroll(targetElement)
 		}
 
 		this.getObjectTable()
@@ -127,8 +127,8 @@ class TraceContainer extends React.Component {
 	}
 
 	componentWillUnmount = () => {
-		const targetElement = document.querySelector('body')
-		disableBodyScroll(targetElement)
+		// const targetElement = document.querySelector('body')
+		// disableBodyScroll(targetElement)
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {

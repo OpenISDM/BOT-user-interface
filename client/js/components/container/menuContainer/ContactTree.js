@@ -47,13 +47,13 @@ import BrowserContactTree from '../../platform/browser/BrowserContactTree'
 class ContactTree extends React.Component {
 	componentDidMount = () => {
 		/** set the scrollability in body disabled */
-		const targetElement = document.querySelector('body')
-		enableBodyScroll(targetElement)
+		// const targetElement = document.querySelector('body')
+		// enableBodyScroll(targetElement)
 	}
 
 	componentWillUnmount = () => {
-		const targetElement = document.querySelector('body')
-		disableBodyScroll(targetElement)
+		// const targetElement = document.querySelector('body')
+		// disableBodyScroll(targetElement)
 	}
 
 	render() {
