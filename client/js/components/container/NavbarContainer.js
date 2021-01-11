@@ -229,7 +229,6 @@ class NavbarContainer extends React.Component {
 						</Nav>
 
 						<Nav>
-							<SocketNotifciation />
 							<AccessControl
 								permission="user:batteryNotice"
 								platform={['browser', 'tablet']}
