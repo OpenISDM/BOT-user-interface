@@ -33,11 +33,6 @@
 */
 import Loadable from 'react-loadable'
 import routes from './routes'
-// import SigninPage from '../../components/authentication/SigninPage';
-// import ForgetPassword from '../../components/authentication/ForgetPassword';
-// import ResetPassword from '../../components/authentication/ResetPassword';
-// import ResetPasswordResult from '../../components/authentication/ResetPasswordResult';
-// import SentPwdInstructionResult from '../../components/authentication/SentPwdInstructionResult';
 import Loader from '../../components/presentational/Loader'
 
 const ForgetPassword = Loadable({

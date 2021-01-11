@@ -37,30 +37,23 @@ import AuthenticationContext from './context/AuthenticationContext'
 import Cookies from 'js-cookie'
 import config from './config'
 import permissionsTable from './config/roles'
-import { AppContext } from './context/AppContext'
 import { SET_AREA } from './reducer/action'
 import apiHelper from './helper/apiHelper'
 import PropTypes from 'prop-types'
 
 class Auth extends React.Component {
-	static contextType = AppContext
+	constructor() {
+		super()
 
-	state = {
-		authenticated: false,
-		user: config.DEFAULT_USER,
+		this.getCookies = this.getCookies.bind(this)
+
+		this.state = {
+			authenticated: this.getCookies('authenticated'),
+			user: this.getCookies('user') || {},
+		}
 	}
 
-	componentDidMount = () => {
-		this.setState({
-			authenticated: !!this.getCookies('authenticated'),
-			user:
-				this.getCookies('authenticated') && this.getCookies('user')
-					? { ...this.getCookies('user') }
-					: config.DEFAULT_USER,
-		})
-	}
-
-	login = async (userInfo, { actions, dispatch, callback, locale }) => {
+	login = async (userInfo, { actions, dispatch, callback }) => {
 		const { username, password } = userInfo
 		const res = await apiHelper.authApiAgent.login({
 			username,
@@ -284,7 +277,8 @@ class Auth extends React.Component {
 			setKeywordType: this.setKeywordType,
 			setListId: this.setListId,
 		}
-
+		console.log('Auth.render', this.state.authenticated)
+		console.log('Auth.render', this.state.user)
 		return (
 			<AuthenticationContext.Provider value={authProviderValue}>
 				{this.props.children}

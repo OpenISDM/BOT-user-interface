@@ -32,12 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import config from '../../config'
 import LocaleContext from '../../context/LocaleContext'
 import AuthContext from '../../context/AuthenticationContext'
-import { Formik, Form, ErrorMessage } from 'formik'
+import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import {
 	CenterContainer,
@@ -82,18 +82,11 @@ const SigninPage = () => {
 				onSubmit={(values, actions) => {
 					const callback = () => history.push('/')
 					const { stateReducer, locale } = appContext
-					const [{}, dispatch] = stateReducer
+					const [, dispatch] = stateReducer
 
 					auth.login(values, { actions, dispatch, callback, locale })
 				}}
-				render={({
-					values,
-					errors,
-					status,
-					touched,
-					isSubmitting,
-					setFieldValue,
-				}) => (
+				render={({ errors, status, touched, isSubmitting }) => (
 					<Form>
 						{status && (
 							<div className="alert alert-danger mb-2 warning">

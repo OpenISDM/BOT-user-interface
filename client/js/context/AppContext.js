@@ -38,6 +38,7 @@ import LocaleContext from './LocaleContext'
 import Locale from '../locale/Locale'
 import Auth from '../Auth'
 import StateReducer from '../reducer/StateReducer'
+import PropTypes from 'prop-types'
 
 export const AppContext = React.createContext()
 
@@ -76,6 +77,14 @@ const CombinedContext = (props) => {
 			</Auth>
 		</Locale>
 	)
+}
+
+AppContextProvider.propTypes = {
+	children: PropTypes.node.isRequired,
+}
+
+CombinedContext.propTypes = {
+	children: PropTypes.node.isRequired,
 }
 
 export default CombinedContext
