@@ -36,11 +36,11 @@ import React, { Fragment } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import NavbarContainer from '../container/NavbarContainer'
 import privateRoutes from '../../config/routes/privateRoutesConfig'
-import AuthContext from '../../context/AuthenticationContext'
+import { AppContext } from '../../context/AppContext'
 import routes from '../../config/routes/routes'
 
 const PrivateRoutes = () => {
-	const auth = React.useContext(AuthContext)
+	const { auth } = React.useContext(AppContext)
 
 	const { pathname } = window.location
 

@@ -210,6 +210,7 @@ class UserProfile extends React.Component {
 						{locale.texts.PRIMARY_AREA}:{' '}
 						{areaTable.length !== 0 &&
 							auth.user.main_area &&
+							areaTable[auth.user.main_area] &&
 							locale.texts[areaTable[auth.user.main_area].name]}
 					</div>
 					<div>
