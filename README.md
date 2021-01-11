@@ -65,7 +65,7 @@ npm run server
 ```bash
 ngrok http -subdomain=bidae-tech -bind-tls=true https://localhost
 or
-ngrok http -subdomain=bidae-tech -bind-tls=true 80
+ngrok http -subdomain=bidae-tech -bind-tls=true 443
 ```
 
 ## Usage Guide
