@@ -46,11 +46,18 @@ class Auth extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		authenticated: !!Cookies.get('authenticated'),
-		user:
-			Cookies.get('authenticated') && Cookies.get('user')
-				? { ...JSON.parse(Cookies.get('user')) }
-				: config.DEFAULT_USER,
+		authenticated: false,
+		user: config.DEFAULT_USER,
+	}
+
+	componentDidMount = () => {
+		this.setState({
+			authenticated: !!this.getCookies('authenticated'),
+			user:
+				this.getCookies('authenticated') && this.getCookies('user')
+					? { ...this.getCookies('user') }
+					: config.DEFAULT_USER,
+		})
 	}
 
 	login = async (userInfo, { actions, dispatch, callback, locale }) => {
@@ -158,7 +165,12 @@ class Auth extends React.Component {
 	}
 
 	setCookies = (key, value) => {
-		Cookies.set(key, value)
+		Cookies.set(key, JSON.stringify(value))
+	}
+
+	getCookies = (key) => {
+		const value = Cookies.get(key)
+		return value ? JSON.parse(value) : null
 	}
 
 	setSearchHistory = (searchHistory) => {
@@ -205,10 +217,10 @@ class Auth extends React.Component {
 			userId: this.state.user.id,
 			localeName: abbr,
 		})
-		const cookie = Cookies.get('user')
+		const cookie = this.getCookies('user')
 		if (cookie) {
-			Cookies.set('user', {
-				...JSON.parse(cookie),
+			this.setCookies('user', {
+				...cookie,
 				locale: abbr,
 			})
 		}
@@ -220,10 +232,10 @@ class Auth extends React.Component {
 			keywordTypeId,
 		})
 		const callback = () => {
-			const cookie = Cookies.get('user')
+			const cookie = this.getCookies('user')
 			if (cookie) {
-				Cookies.set('user', {
-					...JSON.parse(cookie),
+				this.setCookies('user', {
+					...cookie,
 					keyword_type: keywordTypeId,
 				})
 			}
