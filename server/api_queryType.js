@@ -257,13 +257,13 @@ const getObjectRealtimeQuery = (key, filter) => {
 		object_summary_table.updated_by_area as area_id,
 		area_table.name as area_name,
 		object_summary_table.uuid as lbeacon_uuid,
-		lbeacon_table.description as lbeacon_description,
-		object_summary_table.last_reported_timestamp as last_reported_timestamp
+		lbeacon_table.description as lbeacon_description
 	from 
 		object_table
 
 	inner join object_summary_table on 
-		object_table.mac_address = object_summary_table.mac_address 
+		object_table.mac_address = object_summary_table.mac_address
+		and object_summary_table.last_reported_timestamp + interval '5' minute > now()
 
 	inner join user_table on 
 		user_table.main_area = object_table.area_id 
