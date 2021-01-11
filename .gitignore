@@ -117,9 +117,3 @@ server/dist
 
 # Mac OS X
 .DS_Store
-
-# SSL
-*.crt
-*.pem
-*.cert
-*.key

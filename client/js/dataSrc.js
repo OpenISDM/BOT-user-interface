@@ -33,8 +33,7 @@
 */
 
 const hostname = window.location.hostname
-const protocol = window.location.protocol
-const domain = `${protocol}//${hostname}`
+const domain = `https://${hostname}`
 
 export const trackingData = `${domain}/data/trackingData`
 export const lbeacon = `${domain}/data/lbeacon`
