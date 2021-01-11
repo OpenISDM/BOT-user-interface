@@ -117,3 +117,11 @@ server/dist
 
 # Mac OS X
 .DS_Store
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
