@@ -96,7 +96,7 @@ class MainContainer extends React.Component {
 
 	componentDidMount = () => {
 		/** set the scrollability in body disabled */
-		disableBodyScroll(document.querySelector('body'))
+		// disableBodyScroll(document.querySelector('body'))
 		this.getTrackingData()
 		this.getKeywords()
 		this.getLbeaconPosition()
