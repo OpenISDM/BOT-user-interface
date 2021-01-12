@@ -42,6 +42,7 @@ import PropTypes from 'prop-types'
 const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
 	const { locale } = useContext(AppContext)
 	const [selected, setSelected] = useState(null)
+	const [hovered, setHovered] = useState(null)
 
 	const newColumns = JSONClone(columns)
 	newColumns.forEach((field) => {
@@ -53,14 +54,15 @@ const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
 			{...styleConfig.reactTable}
 			columns={newColumns}
 			data={data}
-			pageSize={pageSize ? pageSize : data.length}
+			pageSize={pageSize || data.length}
 			resizable={true}
 			freezeWhenExpanded={false}
-			showPagination={pageSize ? true : false}
+			showPagination={!!pageSize}
 			getTrProps={(state, rowInfo) => {
-				if (onClickCallback && rowInfo && rowInfo.row) {
-					return {
-						onClick: (e) => {
+				let canClick = {}
+				if (onClickCallback) {
+					canClick = {
+						onClick: () => {
 							if (rowInfo.index === selected) {
 								setSelected(null)
 								onClickCallback(null)
@@ -69,14 +71,30 @@ const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
 								onClickCallback(rowInfo.original)
 							}
 						},
+					}
+				}
+
+				if (rowInfo && rowInfo.row) {
+					return {
+						...canClick,
+						onMouseEnter: () => {
+							setHovered(rowInfo.index)
+						},
+						onMouseLeave: () => {
+							setHovered(null)
+						},
 						style: {
-							background: rowInfo.index === selected ? '#007bff' : 'white',
+							background:
+								rowInfo.index === selected
+									? '#007bff'
+									: rowInfo.index === hovered
+									? '#b3daff'
+									: 'white',
 							color: rowInfo.index === selected ? 'white' : 'black',
 						},
 					}
-				} else {
-					return {} // WORKAROUND: must have a empty object to return
 				}
+				return {} // WORKAROUND: must have a empty object to return
 			}}
 		/>
 	)
