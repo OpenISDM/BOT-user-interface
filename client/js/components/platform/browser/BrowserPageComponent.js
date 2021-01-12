@@ -35,13 +35,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Tab, ListGroup } from 'react-bootstrap'
 import { BOTSideNav } from '../../BOTComponent/styleComponent'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 import PropTypes from 'prop-types'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
 	const { tabList, title, defaultActiveKey, permission } = containerModule
-	const locale = useContext(LocaleContext)
+	const { locale } = useContext(AppContext)
 	const [key, setKey] = useState(defaultActiveKey)
 
 	useEffect(() => {

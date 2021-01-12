@@ -40,7 +40,6 @@ import { object, string, array } from 'yup'
 import { AppContext } from '../../../context/AppContext'
 import Switcher, { SWITCH_ENUM } from '../../container/Switcher'
 import styleConfig from '../../../config/styleConfig'
-import LocaleContext from '../../../context/LocaleContext'
 import FormikFormGroup from '../FormikFormGroup'
 import RadioButtonGroup from '../../container/RadioButtonGroup'
 import RadioButton from '../RadioButton'
@@ -310,7 +309,7 @@ const TypeGroup = ({
 	setFieldValue,
 	lbeaconsTable,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	const lbeaconOptions_p = lbeaconsTable
 		.filter((item) => {

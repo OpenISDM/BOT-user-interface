@@ -33,8 +33,8 @@
 */
 
 import React from 'react'
-import AuthContext from '../../context/AuthenticationContext'
 import { isBrowser, isMobile, isTablet } from 'react-device-detect'
+import AuthContext from '../../context/AuthenticationContext'
 import PropTypes from 'prop-types'
 
 const AccessControl = ({ permission, children, platform = [true] }) => {

@@ -39,9 +39,7 @@ import LBeaconTable from '../components/container/LBeaconTable'
 import GatewayTable from '../components/container/GatewayTable'
 import AdminManagementContainer from '../components/container/UserContainer/AdminManagementContainer'
 import config from '../config'
-import MyDeviceManager from '../components/container/UserContainer/MyDeviceManager'
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
-import MyPatientManager from '../components/container/UserContainer/MyPatientManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
 import MonitorSetting from '../components/container/MonitorSetting'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
@@ -69,31 +67,6 @@ const TransferredLocationManagement = Loadable({
 		),
 	loading: Loader,
 })
-
-export const userContainerModule = {
-	title: 'user profile',
-	defaultActiveKey: 'user profile',
-	tabList: [
-		{
-			name: 'user profile',
-			path: 'userProfile',
-			href: '#UserProfile',
-			component: (props) => <UserProfile {...props} />,
-		},
-		{
-			name: 'devices management',
-			path: 'devicesManagement',
-			href: '#DevicesManagement',
-			component: (props) => <MyDeviceManager {...props} />,
-		},
-		{
-			name: 'patient management',
-			path: 'patientManagement',
-			href: '#PatientManagement',
-			component: (props) => <MyPatientManager {...props} />,
-		},
-	],
-}
 
 export const monitorSettingModule = {
 	title: 'monitor setting',

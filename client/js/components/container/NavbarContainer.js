@@ -238,8 +238,7 @@ class NavbarContainer extends React.Component {
 							<Dropdown
 								className="mx-1 font-weight-500"
 								onSelect={(e) => {
-									const callback = () => auth.setLocale(e)
-									locale.setLocale(e, callback)
+									auth.setLocale(e)
 								}}
 							>
 								<Dropdown.Toggle

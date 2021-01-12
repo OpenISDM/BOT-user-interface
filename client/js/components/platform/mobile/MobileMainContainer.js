@@ -33,21 +33,14 @@
 */
 
 import React from 'react'
-import SearchResultList from '../../presentational/SearchResultList'
 import SearchContainer from '../../container/SearchContainer'
-import { Row, Col } from 'react-bootstrap'
-import AuthenticationContext from '../../../context/AuthenticationContext'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import MapContainer from '../../container/MapContainer'
 
 const MobileMainContainer = ({
-	handleClearButton,
 	getSearchKey,
-	setMonitor,
-	clearAlerts,
 	lbeaconPosition,
 	geofenceConfig,
-	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
 	searchKey,
@@ -56,19 +49,16 @@ const MobileMainContainer = ({
 	proccessedTrackingData,
 	hasSearchKey,
 	pathMacAddress,
-	isHighlightSearchPanel,
 	locationMonitorConfig,
 	currentAreaId,
 	searchObjectArray = [],
 	pinColorArray,
 	handleClick,
-	showFoundResult,
 	keywords,
 	display,
 	handleShowResultListForMobile,
 }) => {
-	const auth = React.useContext(AuthenticationContext)
-	const locale = React.useContext(LocaleContext)
+	const { auth } = React.useContext(AppContext)
 
 	const style = {
 		searchPanelForMobile: {

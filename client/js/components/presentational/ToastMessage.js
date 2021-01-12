@@ -33,10 +33,10 @@
 */
 
 import React from 'react'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 
 const ToastMessage = ({ msg, hint = '' }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 	return (
 		<div className="text-capitalize">
 			{locale.texts[msg.toUpperCase().replace(/ /g, '_')] + hint}

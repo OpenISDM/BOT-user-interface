@@ -36,7 +36,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import apiHelper from '../../../helper/apiHelper'
 import FormikFormGroup from '../FormikFormGroup'
 import PropTypes from 'prop-types'
@@ -49,7 +49,7 @@ const style = {
 }
 
 const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal

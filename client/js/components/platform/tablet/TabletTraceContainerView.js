@@ -57,7 +57,7 @@ import Select from 'react-select'
 import IconButton from '../../BOTComponent/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
-import LocaleContext from '../../../context/LocaleContext'
+import AppContext from '../../../context/AppContext'
 
 momentLocalizer()
 
@@ -78,7 +78,7 @@ const TabletTraceContainerView = React.forwardRef(
 		},
 		ref
 	) => {
-		const locale = React.useContext(LocaleContext)
+		const { locale } = React.useContext(AppContext)
 		const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
 		const initialValues = getInitialValues()
 

@@ -35,6 +35,10 @@
 import moment from 'moment'
 import { NORMAL } from '../config/wordMap'
 import config from '../config'
+import permissionsTable from '../config/roles'
+import generalTexts from '../locale/text'
+import supportedLocale from '../locale/supportedLocale'
+import siteModuleTexts from '../../../site_module/locale/text'
 
 /** Compare two objects, including strings, deep objects  */
 export const isEqual = (obj1, obj2) => {
@@ -164,9 +168,8 @@ export const getCoordinatesFromUUID = ({ lBeaconUUID = '' }) => {
 		const y = parseInt(uuid.slice(-8))
 		const x = parseInt(uuid.slice(12, 20))
 		return [y, x]
-	} else {
-		return [0, 0]
 	}
+	return [0, 0]
 }
 
 export const getBitValue = ({ status, bitValueEnum }) => {
@@ -211,3 +214,23 @@ export const generateObjectSumString = ({ objectMap = {}, objectIds = [] }) => {
 
 	return itemsNameString
 }
+
+export const getPermissionsByRoles = ({ roles = [] }) => {
+	let permissions = []
+	roles.forEach((role) => {
+		permissions = [...permissions, ...permissionsTable[role].permission]
+	})
+	return [...new Set(permissions)]
+}
+
+export const localePackage = Object.values(supportedLocale).reduce(
+	(localeMap, locale) => {
+		localeMap[locale.abbr] = locale
+		localeMap[locale.abbr].texts = {
+			...generalTexts[locale.abbr],
+			...siteModuleTexts[locale.abbr],
+		}
+		return localeMap
+	},
+	{}
+)

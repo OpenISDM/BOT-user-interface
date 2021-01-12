@@ -40,11 +40,11 @@ import {
 	BOTNav,
 	BOTNavLink,
 } from '../../BOTComponent/styleComponent'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 
 const TabletPageComponent = ({ containerModule, setMessage }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 	const { tabList, title, defaultActiveKey } = containerModule
 	return (
 		<BOTContainer>

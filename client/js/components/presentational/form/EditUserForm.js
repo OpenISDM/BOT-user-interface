@@ -41,7 +41,7 @@ import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
 import FormikFormGroup from '../FormikFormGroup'
 import styleConfig from '../../../config/styleConfig'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import { emailValidation } from '../../../helper/validation'
 import PropTypes from 'prop-types'
 
@@ -55,11 +55,10 @@ const EditUserForm = ({
 	data,
 	areaTable,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 	const areaOptions = areaTable.map((area) => {
 		return {
 			value: area.name,
-			// label: locale.texts[area.name.toUpperCase().replace(/ /g, '_')],
 			label: locale.texts[area.name],
 			id: area.id,
 		}

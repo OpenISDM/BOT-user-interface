@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import styleConfig from '../../../config/styleConfig'
 import BOTInput from '../../presentational/BOTInput'
 import { ButtonToolbar } from 'react-bootstrap'
@@ -50,7 +50,7 @@ const BrowserObjectTableView = ({
 	handleClickButton,
 	selection,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 	return (
 		<div className="d-flex justify-content-between my-4">
 			<div className="d-flex justify-content-start">

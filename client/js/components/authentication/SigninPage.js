@@ -35,8 +35,6 @@
 import React from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import config from '../../config'
-import LocaleContext from '../../context/LocaleContext'
-import AuthContext from '../../context/AuthenticationContext'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import {
@@ -52,9 +50,9 @@ import ImageWebp from '../utils/ImageWebp'
 const imageLength = 80
 
 const SigninPage = () => {
-	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthContext)
 	const appContext = React.useContext(AppContext)
+	const { stateReducer, locale, auth } = appContext
+	const [, dispatch] = stateReducer
 
 	const history = useHistory()
 	return (
@@ -81,9 +79,6 @@ const SigninPage = () => {
 				})}
 				onSubmit={(values, actions) => {
 					const callback = () => history.push('/')
-					const { stateReducer, locale } = appContext
-					const [, dispatch] = stateReducer
-
 					auth.login(values, { actions, dispatch, callback, locale })
 				}}
 				render={({ errors, status, touched, isSubmitting }) => (
@@ -130,8 +125,7 @@ const SigninPage = () => {
 							</div>
 							<Dropdown
 								onSelect={(e) => {
-									const callback = () => auth.setLocale(e)
-									locale.setLocale(e, callback)
+									auth.setLocale(e)
 								}}
 								drop="up"
 							>
