@@ -50,9 +50,7 @@ const TabletMainContainer = ({
 	clearSearchResult,
 	searchKey,
 	searchResult,
-	trackingData,
 	proccessedTrackingData,
-	hasSearchKey,
 	pathMacAddress,
 }) => {
 	const auth = React.useContext(AuthenticationContext)
@@ -78,12 +76,7 @@ const TabletMainContainer = ({
 					<div className="d-flex" style={style.MapAndQrcode}>
 						<MapContainer
 							pathMacAddress={pathMacAddress}
-							proccessedTrackingData={
-								proccessedTrackingData.length == 0
-									? trackingData
-									: proccessedTrackingData
-							}
-							hasSearchKey={hasSearchKey}
+							proccessedTrackingData={proccessedTrackingData}
 							searchResult={searchResult}
 							handleClearButton={handleClearButton}
 							getSearchKey={getSearchKey}
@@ -116,7 +109,6 @@ const TabletMainContainer = ({
 					style={style.searchPanelForTablet}
 				>
 					<SearchContainer
-						hasSearchKey={hasSearchKey}
 						clearSearchResult={clearSearchResult}
 						auth={auth}
 						getSearchKey={getSearchKey}

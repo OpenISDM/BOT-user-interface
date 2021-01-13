@@ -53,6 +53,7 @@ const AppContextProvider = (props) => {
 		objectFoundResults: {},
 		deviceObjectTypeVisible: true,
 		personObjectTypeVisible: true,
+		openedNotification: {},
 	}
 
 	const stateReducer = React.useReducer(StateReducer, initialState)

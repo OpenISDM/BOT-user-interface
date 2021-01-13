@@ -45,9 +45,7 @@ const MobileMainContainer = ({
 	clearSearchResult,
 	searchKey,
 	searchResult,
-	trackingData,
 	proccessedTrackingData,
-	hasSearchKey,
 	pathMacAddress,
 	locationMonitorConfig,
 	searchObjectArray = [],
@@ -87,7 +85,6 @@ const MobileMainContainer = ({
 					style={style.searchPanelForMobile}
 				>
 					<SearchContainer
-						hasSearchKey={hasSearchKey}
 						clearSearchResult={clearSearchResult}
 						auth={auth}
 						getSearchKey={getSearchKey}
@@ -99,12 +96,7 @@ const MobileMainContainer = ({
 				<div style={style.mapForMobile} className="m-1">
 					<MapContainer
 						pathMacAddress={pathMacAddress}
-						proccessedTrackingData={
-							proccessedTrackingData.length == 0
-								? trackingData
-								: proccessedTrackingData
-						}
-						hasSearchKey={hasSearchKey}
+						proccessedTrackingData={proccessedTrackingData}
 						searchKey={searchKey}
 						searchResult={searchResult}
 						handleClearButton={handleClick}

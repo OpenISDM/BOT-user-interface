@@ -52,7 +52,6 @@ export default class TabletMapContainer extends React.Component {
 		const { locale, stateReducer, auth } = this.context
 
 		const {
-			hasSearchKey,
 			proccessedTrackingData,
 			showPdfDownloadForm,
 			handleClickButton,
@@ -113,7 +112,6 @@ export default class TabletMapContainer extends React.Component {
 						<div style={style.mapBlockForTablet}>
 							<Map
 								pathMacAddress={this.props.pathMacAddress}
-								hasSearchKey={hasSearchKey}
 								colorPanel={this.props.colorPanel}
 								proccessedTrackingData={this.props.proccessedTrackingData}
 								lbeaconPosition={this.props.lbeaconPosition}
@@ -138,7 +136,6 @@ export default class TabletMapContainer extends React.Component {
 									className="mr-1 ml-2 text-capitalize"
 									onClick={handleClickButton}
 									name="clear"
-									disabled={!hasSearchKey}
 								>
 									{locale.texts.CLEAR}
 								</Button>
@@ -150,7 +147,7 @@ export default class TabletMapContainer extends React.Component {
 										className="mr-1 ml-2 text-capitalize"
 										onClick={handleClickButton}
 										name="save"
-										disabled={!this.props.hasSearchKey || showPdfDownloadForm}
+										disabled={showPdfDownloadForm}
 									>
 										{locale.texts.SAVE}
 									</Button>

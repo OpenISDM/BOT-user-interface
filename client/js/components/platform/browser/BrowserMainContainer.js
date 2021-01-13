@@ -32,13 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react'
+import React, { useEffect, useContext } from 'react'
 import SearchResultList from '../../presentational/SearchResultList'
 import SearchContainer from '../../container/SearchContainer'
 import { Row, Col } from 'react-bootstrap'
 import InfoPrompt from '../../presentational/InfoPrompt'
 import AuthenticationContext from '../../../context/AuthenticationContext'
 import MapContainer from '../../container/MapContainer'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import PropTypes from 'prop-types'
 
 const BrowserMainContainer = ({
@@ -50,9 +51,7 @@ const BrowserMainContainer = ({
 	clearSearchResult,
 	searchKey,
 	searchResult,
-	trackingData,
 	proccessedTrackingData,
-	hasSearchKey,
 	pathMacAddress,
 	isHighlightSearchPanel,
 	locationMonitorConfig,
@@ -64,15 +63,20 @@ const BrowserMainContainer = ({
 	activeActionButtons,
 	handleSearchTypeClick,
 }) => {
-	const auth = React.useContext(AuthenticationContext)
+	const auth = useContext(AuthenticationContext)
 
 	const searchResultListRef = React.useRef(null)
 
-	const style = {
-		searchResultDiv: {
-			display: hasSearchKey ? null : 'none',
-		},
+	useEffect(() => {
+		// componentDidMount is here!
+		disableBodyScroll(document.querySelector('mainContainer'))
+		return () => {
+			// componentWillUnmount is here!
+			enableBodyScroll(document.querySelector('mainContainer'))
+		}
+	}, [])
 
+	const style = {
 		searchPanel: {
 			margin: '0px',
 			padding: '0px',
@@ -92,12 +96,7 @@ const BrowserMainContainer = ({
 				<Col xs={12} sm={12} md={8} lg={8} xl={8}>
 					<MapContainer
 						pathMacAddress={pathMacAddress}
-						proccessedTrackingData={
-							proccessedTrackingData.length === 0
-								? trackingData
-								: proccessedTrackingData
-						}
-						hasSearchKey={hasSearchKey}
+						proccessedTrackingData={proccessedTrackingData}
 						searchKey={searchKey}
 						searchResult={searchResult}
 						handleClearButton={handleClick}
@@ -127,7 +126,6 @@ const BrowserMainContainer = ({
 						handleClick={handleClick}
 					/>
 					<SearchContainer
-						hasSearchKey={hasSearchKey}
 						clearSearchResult={clearSearchResult}
 						auth={auth}
 						getSearchKey={getSearchKey}
@@ -136,7 +134,7 @@ const BrowserMainContainer = ({
 						keywords={keywords}
 						handleSearchTypeClick={handleSearchTypeClick}
 					/>
-					<div id="searchResult" style={style.searchResultDiv}>
+					<div id="searchResult">
 						<SearchResultList
 							searchResult={searchResult}
 							searchKey={searchKey}
@@ -164,9 +162,7 @@ BrowserMainContainer.propTypes = {
 	clearSearchResult: PropTypes.bool.isRequired,
 	searchKey: PropTypes.object.isRequired,
 	searchResult: PropTypes.array.isRequired,
-	trackingData: PropTypes.array.isRequired,
 	proccessedTrackingData: PropTypes.array.isRequired,
-	hasSearchKey: PropTypes.bool.isRequired,
 	pathMacAddress: PropTypes.string.isRequired,
 	isHighlightSearchPanel: PropTypes.bool.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,

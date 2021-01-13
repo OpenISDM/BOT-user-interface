@@ -53,7 +53,6 @@ class SearchContainer extends React.Component {
 
 	state = {
 		isShowSectionTitle: false,
-		hasSearchKey: false,
 		isShowSearchOption: false,
 		searchKey: '',
 		sectionTitleList: [],
@@ -71,7 +70,7 @@ class SearchContainer extends React.Component {
 	componentDidUpdate = (prepProps) => {
 		/** Refresh the search result automatically
 		 *  This feature can be adjust by the user by changing the boolean value in config */
-		if (this.state.refreshSearchResult && this.state.hasSearchKey) {
+		if (this.state.refreshSearchResult) {
 			this.props.getSearchKey(this.state.searchKey)
 		}
 		if (
@@ -80,14 +79,6 @@ class SearchContainer extends React.Component {
 		) {
 			this.setState({
 				searchKey: '',
-			})
-		}
-		if (
-			prepProps.hasSearchKey !== this.props.hasSearchKey &&
-			prepProps.hasSearchKey
-		) {
-			this.setState({
-				hasSearchKey: this.props.hasSearchKey,
 			})
 		}
 	}
@@ -181,7 +172,6 @@ SearchContainer.propTypes = {
 	searchKey: PropTypes.object.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
-	hasSearchKey: PropTypes.bool.isRequired,
 }
 
 export default SearchContainer

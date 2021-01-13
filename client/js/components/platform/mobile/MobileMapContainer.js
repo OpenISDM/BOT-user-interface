@@ -48,7 +48,6 @@ export default class TabletMapContainer extends React.Component {
 		const { locale, stateReducer, auth } = this.context
 
 		const {
-			hasSearchKey,
 			geofenceConfig,
 			locationMonitorConfig,
 			proccessedTrackingData,
@@ -80,7 +79,6 @@ export default class TabletMapContainer extends React.Component {
 			<div style={style.mapForMobile}>
 				<Map
 					pathMacAddress={this.props.pathMacAddress}
-					hasSearchKey={hasSearchKey}
 					colorPanel={this.props.colorPanel}
 					proccessedTrackingData={proccessedTrackingData}
 					lbeaconPosition={this.props.lbeaconPosition}

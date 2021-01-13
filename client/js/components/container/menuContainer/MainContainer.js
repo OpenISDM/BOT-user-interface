@@ -31,6 +31,8 @@
         Edward Chen, r08921a28@ntu.edu.tw
         Joe Chou, jjoe100892@gmail.com
 */
+
+import _ from 'lodash'
 import React, { Fragment } from 'react'
 import 'react-table/react-table.css'
 import config from '../../../config'
@@ -60,11 +62,11 @@ class MainContainer extends React.Component {
 
 	state = {
 		trackingData: [],
+		trackingDataMap: {},
 		proccessedTrackingData: [],
 		lbeaconPosition: [],
 		geofenceConfig: null,
 		locationMonitorConfig: null,
-		hasSearchKey: false,
 		searchKey: {
 			type: null,
 			value: null,
@@ -98,19 +100,11 @@ class MainContainer extends React.Component {
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
-		const isTrackingDataChange = !isEqual(
-			this.state.trackingData,
-			prevState.trackingData
-		)
-
-		const { stateReducer } = this.context
+		const [{ shouldUpdateTrackingData }] = this.context.stateReducer
+		const { trackingData } = this.state
 
 		/** stop getTrackingData when editing object status  */
-		if (
-			stateReducer[0].shouldUpdateTrackingData !==
-			this.state.shouldUpdateTrackingData
-		) {
-			const [{ shouldUpdateTrackingData }] = stateReducer
+		if (shouldUpdateTrackingData !== this.state.shouldUpdateTrackingData) {
 			this.interval = shouldUpdateTrackingData
 				? setInterval(this.getTrackingData, config.mapConfig.intervalTime)
 				: clearInterval(this.interval)
@@ -120,23 +114,15 @@ class MainContainer extends React.Component {
 		}
 
 		/** refresh search result if the search results are change */
-		if (isTrackingDataChange && this.state.hasSearchKey) {
-			// if (isTrackingDataChange) {
-			this.handleRefreshSearchResult()
+		const isTrackingDataChange = !isEqual(trackingData, prevState.trackingData)
+		if (isTrackingDataChange) {
+			const { searchKey } = this.state
+			this.getSearchKey(searchKey)
 		}
 	}
 
 	componentWillUnmount = () => {
 		clearInterval(this.interval)
-	}
-
-	/** get the latest search results */
-	handleRefreshSearchResult = () => {
-		const { searchKey } = this.state
-
-		if (searchKey.type != null) {
-			this.getSearchKey(searchKey)
-		}
 	}
 
 	/** Get tracking data from database.
@@ -153,9 +139,12 @@ class MainContainer extends React.Component {
 			areaId: area.id,
 		})
 
+		const trackingDataMap = _.keyBy(trackingData, 'id')
+
 		if (trackingData) {
 			this.setState({
 				trackingData,
+				trackingDataMap,
 			})
 		}
 	}
@@ -275,10 +264,15 @@ class MainContainer extends React.Component {
 	 *  7. multiple selected object(gridbutton)(disable now)
 	 */
 	getResultBySearchKey = async (searchKey) => {
-		// const { stateReducer } = this.context
-		// const [{ openedNotification }] = stateReducer
-		const { trackingData, pinColorArray, groupIds } = this.state
-		const hasSearchKey = true
+		const { stateReducer } = this.context
+		const [{ openedNotification }] = stateReducer
+		const { object: notifiedObject } = openedNotification
+		const {
+			trackingData,
+			trackingDataMap,
+			pinColorArray,
+			groupIds,
+		} = this.state
 
 		let searchResult = []
 		let { searchObjectArray } = this.state
@@ -407,6 +401,10 @@ class MainContainer extends React.Component {
 				}
 		}
 
+		if (notifiedObject) {
+			searchResult.push(trackingDataMap[notifiedObject.id])
+		}
+
 		const showDeivceObject = searchResult.some(
 			(item) => parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
 		)
@@ -421,14 +419,16 @@ class MainContainer extends React.Component {
 			activeActionButtons.push(config.ACTION_BUTTONS.PERSON)
 		}
 
+		const clearSearchResult = searchKey.value === null
+
 		this.setState({
 			proccessedTrackingData,
 			searchResult,
-			hasSearchKey,
 			searchKey,
 			searchObjectArray,
 			pinColorArray,
 			activeActionButtons,
+			clearSearchResult,
 		})
 	}
 
@@ -457,14 +457,13 @@ class MainContainer extends React.Component {
 
 			case CLEAR_SEARCH_RESULT:
 				this.setState({
-					hasSearchKey: false,
 					searchKey: {
 						type: null,
 						value: null,
 					},
 					searchResult: [],
 					colorPanel: null,
-					clearSearchResult: !!this.state.hasSearchKey,
+					clearSearchResult: true,
 					proccessedTrackingData: [],
 					searchObjectArray: [],
 					activeActionButtons: [],
@@ -475,8 +474,6 @@ class MainContainer extends React.Component {
 
 	render() {
 		const {
-			hasSearchKey,
-			trackingData,
 			proccessedTrackingData,
 			searchResult,
 			searchKey,
@@ -502,7 +499,6 @@ class MainContainer extends React.Component {
 		} = this
 
 		const propsGroup = {
-			hasSearchKey,
 			getSearchKey,
 			lbeaconPosition,
 			geofenceConfig,
@@ -510,7 +506,6 @@ class MainContainer extends React.Component {
 			clearSearchResult,
 			searchKey,
 			searchResult,
-			trackingData,
 			proccessedTrackingData,
 			showPath,
 			pathMacAddress,

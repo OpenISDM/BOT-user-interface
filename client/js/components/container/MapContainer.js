@@ -41,6 +41,7 @@ import TabletMapContainer from '../platform/tablet/TabletMapContainer'
 import MobileMapContainer from '../platform/mobile/MobileMapContainer'
 import BrowserMapContainer from '../platform/browser/BrowserMapContainer'
 import { CLEAR_SEARCH_RESULT } from '../../config/wordMap'
+import PropTypes from 'prop-types'
 
 class MapContainer extends React.Component {
 	static contextType = AppContext
@@ -50,12 +51,12 @@ class MapContainer extends React.Component {
 		showConfirmForm: false,
 	}
 
-	handleSubmit = (e) => {
+	handleSubmit = () => {
 		// do nothing
 	}
 
 	handleClickButton = (e) => {
-		const { name, value } = e.target
+		const { name } = e.target
 
 		switch (name) {
 			case CLEAR_SEARCH_RESULT:
@@ -90,11 +91,8 @@ class MapContainer extends React.Component {
 
 	render() {
 		const { handleClickButton } = this
-
 		const { pathData, showPdfDownloadForm } = this.state
-
 		const {
-			hasSearchKey,
 			geofenceConfig,
 			locationMonitorConfig,
 			proccessedTrackingData,
@@ -112,7 +110,6 @@ class MapContainer extends React.Component {
 
 		const propsGroup = {
 			proccessedTrackingData,
-			hasSearchKey,
 			pathData,
 			showPdfDownloadForm,
 			handleClickButton,
@@ -154,6 +151,23 @@ class MapContainer extends React.Component {
 			</Fragment>
 		)
 	}
+}
+
+MapContainer.propTypes = {
+	geofenceConfig: PropTypes.object,
+	locationMonitorConfig: PropTypes.object,
+	proccessedTrackingData: PropTypes.array,
+	handleClearButton: PropTypes.func,
+	pathMacAddress: PropTypes.array,
+	searchResult: PropTypes.array,
+	lbeaconPosition: PropTypes.array,
+	searchObjectArray: PropTypes.array,
+	pinColorArray: PropTypes.array,
+	searchKey: PropTypes.object,
+	getSearchKey: PropTypes.func.isRequired,
+	searchResultListRef: PropTypes.node,
+	activeActionButtons: PropTypes.array,
+	handleClick: PropTypes.func,
 }
 
 export default MapContainer

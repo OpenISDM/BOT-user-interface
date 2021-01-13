@@ -41,8 +41,6 @@ class MapContainer extends React.Component {
 	static contextType = AppContext
 
 	render() {
-		const { hasSearchKey } = this.props
-
 		const style = {
 			mapBlock: {
 				border: 'solid 2px rgba(227, 222, 222, 0.619)',
@@ -62,7 +60,6 @@ class MapContainer extends React.Component {
 			>
 				<div style={style.mapBlock}>
 					<Map
-						hasSearchKey={hasSearchKey}
 						colorPanel={this.props.colorPanel}
 						proccessedTrackingData={this.props.proccessedTrackingData}
 						lbeaconPosition={this.props.lbeaconPosition}

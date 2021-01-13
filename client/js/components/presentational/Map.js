@@ -41,7 +41,6 @@ import siteConfig from '../../../../site_module/siteConfig'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
 import {
-	JSONClone,
 	isEqual,
 	isWebpSupported,
 	getCoordinatesFromUUID,
@@ -461,7 +460,7 @@ class Map extends React.Component {
 
 		const numberSheet = {}
 
-		this.filterTrackingData(JSONClone(searchResult)).forEach((item) => {
+		this.filterTrackingData(searchResult).forEach((item) => {
 			const checkToShowDevice =
 				parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE &&
 				deviceObjectTypeVisible
@@ -586,8 +585,8 @@ class Map extends React.Component {
 	}
 
 	/** Filter out undesired tracking data */
-	filterTrackingData = (proccessedTrackingData = []) => {
-		return proccessedTrackingData.filter((item) => {
+	filterTrackingData = (data = []) => {
+		return data.filter((item) => {
 			return item.found && item.isMatchedObject
 		})
 	}

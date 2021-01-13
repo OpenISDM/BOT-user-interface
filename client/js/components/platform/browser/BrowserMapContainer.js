@@ -54,7 +54,6 @@ class BrowserMapContainer extends React.Component {
 		const {
 			pathMacAddress,
 			colorPanel,
-			hasSearchKey,
 			lbeaconPosition,
 			geofenceConfig,
 			locationMonitorConfig,
@@ -107,7 +106,6 @@ class BrowserMapContainer extends React.Component {
 				<div className="p-1 border-grey">
 					<Map
 						pathMacAddress={pathMacAddress}
-						hasSearchKey={hasSearchKey}
 						colorPanel={colorPanel}
 						proccessedTrackingData={proccessedTrackingData}
 						lbeaconPosition={lbeaconPosition}
@@ -134,7 +132,6 @@ class BrowserMapContainer extends React.Component {
 								className="mr-1 ml-2 text-capitalize"
 								onClick={handleClickButton}
 								name={CLEAR_SEARCH_RESULT}
-								disabled={!hasSearchKey}
 							>
 								{locale.texts.CLEAR}
 							</Button>
@@ -147,7 +144,7 @@ class BrowserMapContainer extends React.Component {
 									onClick={handleClickButton}
 									name="save"
 									value={1}
-									disabled={!hasSearchKey || showPdfDownloadForm}
+									disabled={showPdfDownloadForm}
 								>
 									{locale.texts.SAVE}
 								</Button>
@@ -278,7 +275,6 @@ BrowserMapContainer.propTypes = {
 	pathMacAddress: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	activeActionButtons: PropTypes.array.isRequired,
-	hasSearchKey: PropTypes.bool.isRequired,
 	showPdfDownloadForm: PropTypes.bool.isRequired,
 	handleClickButton: PropTypes.func.isRequired,
 	colorPanel: PropTypes.object.isRequired,
