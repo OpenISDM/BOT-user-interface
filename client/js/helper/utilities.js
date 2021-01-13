@@ -55,7 +55,7 @@ export const isEqual = (obj1, obj2) => {
 export const JSONClone = (arr) => {
 	if (arr == null) return arr
 	return arr.map((object) => {
-		return Object.assign({}, object)
+		return JSON.parse(JSON.stringify(object))
 	})
 }
 

@@ -56,7 +56,6 @@ export default class TabletMapContainer extends React.Component {
 			proccessedTrackingData,
 			showPdfDownloadForm,
 			handleClickButton,
-			currentAreaId,
 		} = this.props
 		const [
 			{ area, deviceObjectTypeVisible, personObjectTypeVisible },
@@ -111,7 +110,6 @@ export default class TabletMapContainer extends React.Component {
 								/>
 							</div>
 						</div>
-						{console.log(currentAreaId)}
 						<div style={style.mapBlockForTablet}>
 							<Map
 								pathMacAddress={this.props.pathMacAddress}
@@ -126,7 +124,6 @@ export default class TabletMapContainer extends React.Component {
 								handleClosePath={this.props.handleClosePath}
 								handleShowPath={this.props.handleShowPath}
 								showPath={this.props.showPath}
-								currentAreaId={currentAreaId}
 							/>
 						</div>
 					</div>

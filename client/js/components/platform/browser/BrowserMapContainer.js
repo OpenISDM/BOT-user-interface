@@ -61,7 +61,6 @@ class BrowserMapContainer extends React.Component {
 			proccessedTrackingData,
 			showPdfDownloadForm,
 			handleClickButton,
-			currentAreaId,
 			searchObjectArray,
 			pinColorArray,
 			searchKey,
@@ -120,7 +119,6 @@ class BrowserMapContainer extends React.Component {
 						handleClosePath={handleClosePath}
 						handleShowPath={handleShowPath}
 						showPath={showPath}
-						currentAreaId={currentAreaId}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						searchKey={searchKey}
@@ -279,7 +277,6 @@ BrowserMapContainer.propTypes = {
 	geofenceConfig: PropTypes.object.isRequired,
 	pathMacAddress: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
-	currentAreaId: PropTypes.number.isRequired,
 	activeActionButtons: PropTypes.array.isRequired,
 	hasSearchKey: PropTypes.bool.isRequired,
 	showPdfDownloadForm: PropTypes.bool.isRequired,

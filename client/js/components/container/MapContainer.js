@@ -35,14 +35,7 @@
 import React, { Fragment } from 'react'
 import PdfDownloadForm from './PdfDownloadForm'
 import { AppContext } from '../../context/AppContext'
-import {
-	BrowserView,
-	TabletView,
-	MobileOnlyView,
-	CustomView,
-	isMobile,
-	isTablet,
-} from 'react-device-detect'
+import { BrowserView, TabletView, MobileOnlyView } from 'react-device-detect'
 import GeneralConfirmForm from '../presentational/form/GeneralConfirmForm'
 import TabletMapContainer from '../platform/tablet/TabletMapContainer'
 import MobileMapContainer from '../platform/mobile/MobileMapContainer'
@@ -58,7 +51,7 @@ class MapContainer extends React.Component {
 	}
 
 	handleSubmit = (e) => {
-		this.props.setMonitor(this.state.type, this.handleCloseModal)
+		// do nothing
 	}
 
 	handleClickButton = (e) => {
@@ -85,9 +78,6 @@ class MapContainer extends React.Component {
 					type: name,
 				})
 				break
-			case 'clearAlerts':
-				this.props.clearAlerts()
-				break
 		}
 	}
 
@@ -111,9 +101,7 @@ class MapContainer extends React.Component {
 			handleClearButton,
 			pathMacAddress,
 			searchResult,
-			setMonitor,
 			lbeaconPosition,
-			currentAreaId,
 			searchObjectArray,
 			pinColorArray,
 			searchKey,
@@ -132,10 +120,8 @@ class MapContainer extends React.Component {
 			searchResult,
 			handleClearButton,
 			geofenceConfig,
-			setMonitor,
 			locationMonitorConfig,
 			lbeaconPosition,
-			currentAreaId,
 			searchObjectArray,
 			pinColorArray,
 			searchKey,

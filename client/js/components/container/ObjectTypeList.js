@@ -55,14 +55,6 @@ class ObjectTypeList extends React.Component {
 				searchKey: '',
 			})
 		}
-		if (
-			prepProps.hasGridButton != this.props.hasGridButton &&
-			this.props.hasGridButton
-		) {
-			this.setState({
-				searchKey: '',
-			})
-		}
 	}
 
 	handleClick = (e) => {
@@ -201,7 +193,7 @@ class ObjectTypeList extends React.Component {
 							}}
 						>
 							{personObjectTypes.map((item, index) => {
-								let itemString = `${item}`
+								const itemString = `${item}`
 								const displayedItem = locale.texts[itemString.toUpperCase()]
 									? locale.texts[itemString.toUpperCase()]
 									: itemString

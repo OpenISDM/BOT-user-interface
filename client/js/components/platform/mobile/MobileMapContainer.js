@@ -54,7 +54,6 @@ export default class TabletMapContainer extends React.Component {
 			proccessedTrackingData,
 			showPdfDownloadForm,
 			handleClickButton,
-			currentAreaId,
 			authenticated,
 			searchObjectArray,
 			pinColorArray,
@@ -93,7 +92,6 @@ export default class TabletMapContainer extends React.Component {
 					handleClosePath={this.props.handleClosePath}
 					handleShowPath={this.props.handleShowPath}
 					showPath={this.props.showPath}
-					currentAreaId={currentAreaId}
 					searchObjectArray={searchObjectArray}
 					pinColorArray={pinColorArray}
 					searchKey={searchKey}

@@ -43,8 +43,6 @@ import PropTypes from 'prop-types'
 
 const BrowserMainContainer = ({
 	getSearchKey,
-	setMonitor,
-	clearAlerts,
 	lbeaconPosition,
 	geofenceConfig,
 	highlightSearchPanel,
@@ -58,7 +56,6 @@ const BrowserMainContainer = ({
 	pathMacAddress,
 	isHighlightSearchPanel,
 	locationMonitorConfig,
-	currentAreaId,
 	searchObjectArray,
 	pinColorArray,
 	handleClick,
@@ -106,12 +103,9 @@ const BrowserMainContainer = ({
 						handleClearButton={handleClick}
 						handleClick={handleClick}
 						getSearchKey={getSearchKey}
-						setMonitor={setMonitor}
 						lbeaconPosition={lbeaconPosition}
 						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
-						clearAlerts={clearAlerts}
-						currentAreaId={currentAreaId}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						searchResultListRef={searchResultListRef}
@@ -163,8 +157,6 @@ const BrowserMainContainer = ({
 BrowserMainContainer.propTypes = {
 	handleClearButton: PropTypes.func.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
-	setMonitor: PropTypes.func.isRequired,
-	clearAlerts: PropTypes.func.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	geofenceConfig: PropTypes.object.isRequired,
 	highlightSearchPanel: PropTypes.func.isRequired,
@@ -178,7 +170,6 @@ BrowserMainContainer.propTypes = {
 	pathMacAddress: PropTypes.string.isRequired,
 	isHighlightSearchPanel: PropTypes.bool.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
-	currentAreaId: PropTypes.number.isRequired,
 	searchObjectArray: PropTypes.array.isRequired,
 	pinColorArray: PropTypes.array.isRequired,
 	handleClick: PropTypes.func.isRequired,

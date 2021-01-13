@@ -61,7 +61,6 @@ class Searchbar extends React.Component {
 			value: this.state.value,
 		}
 		this.props.getSearchKey(searchKey)
-		if (isMobileOnly) this.props.handleShowResultListForMobile()
 	}
 
 	handleChange = (e) => {

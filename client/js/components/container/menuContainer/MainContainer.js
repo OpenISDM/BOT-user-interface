@@ -35,11 +35,7 @@ import React, { Fragment } from 'react'
 import 'react-table/react-table.css'
 import config from '../../../config'
 import { AppContext } from '../../../context/AppContext'
-import { toast } from 'react-toastify'
-import ToastNotification from '../../presentational/ToastNotification'
 import { BrowserView, MobileOnlyView, TabletView } from 'react-device-detect'
-import { disableBodyScroll } from 'body-scroll-lock'
-import messageGenerator from '../../../helper/messageGenerator'
 import TabletMainContainer from '../../platform/tablet/TabletMainContainer'
 import MobileMainContainer from '../../platform/mobile/MobileMainContainer'
 import BrowserMainContainer from '../../platform/browser/BrowserMainContainer'
@@ -68,7 +64,6 @@ class MainContainer extends React.Component {
 		lbeaconPosition: [],
 		geofenceConfig: null,
 		locationMonitorConfig: null,
-		violatedObjects: {},
 		hasSearchKey: false,
 		searchKey: {
 			type: null,
@@ -81,9 +76,6 @@ class MainContainer extends React.Component {
 		shouldUpdateTrackingData: true,
 		showPath: false,
 		pathMacAddress: '',
-		display: true,
-		showMobileMap: true,
-		currentAreaId: this.context.stateReducer[0].area.id,
 		searchObjectArray: [],
 		pinColorArray: config.mapConfig.iconColor.pinColorArray.filter(
 			(item, index) => index < config.MAX_SEARCH_OBJECT_NUM
@@ -92,11 +84,7 @@ class MainContainer extends React.Component {
 		activeActionButtons: [],
 	}
 
-	errorToast = null
-
 	componentDidMount = () => {
-		/** set the scrollability in body disabled */
-		// disableBodyScroll(document.querySelector('body'))
 		this.getTrackingData()
 		this.getKeywords()
 		this.getLbeaconPosition()
@@ -131,83 +119,11 @@ class MainContainer extends React.Component {
 			})
 		}
 
-		if (!isEqual(prevState.currentAreaId, stateReducer[0].area.id)) {
-			this.setState({
-				currentAreaId: stateReducer[0].area.id,
-			})
-		}
-
 		/** refresh search result if the search results are change */
 		if (isTrackingDataChange && this.state.hasSearchKey) {
+			// if (isTrackingDataChange) {
 			this.handleRefreshSearchResult()
 		}
-
-		/** send toast if there are latest violated notification */
-		const newViolatedObject = Object.keys(this.state.violatedObjects).filter(
-			(item) => !Object.keys(prevState.violatedObjects).includes(item)
-		)
-		if (newViolatedObject.length !== 0) {
-			newViolatedObject.forEach((item) => {
-				this.getToastNotification(this.state.violatedObjects[item])
-			})
-		}
-	}
-
-	getToastNotification = (item) => {
-		item.notification.forEach((event) => {
-			const toastId = `${item.mac_address}-${event.type}`
-			const toastOptions = {
-				hideProgressBar: true,
-				autoClose: false,
-				onClose: this.onCloseToast,
-				toastId,
-			}
-			this.getToastType(event.type, item, toastOptions, event.time)
-		})
-	}
-
-	getToastType = (type, data, option, time) => {
-		return toast[config.toastMonitorMap[type]](
-			<ToastNotification data={data} time={time} type={type} />,
-			option
-		)
-	}
-
-	onCloseToast = (toast) => {
-		const mac_address = toast.data ? toast.data.mac_address : toast.mac_address
-		const monitor_type = toast.type
-		const toastId = `${mac_address}-${monitor_type}`
-		const violatedObjects = this.state.violatedObjects
-		delete violatedObjects[toastId]
-
-		// axios
-		// 	.post(dataSrc.checkoutViolation, {
-		// 		mac_address,
-		// 		monitor_type,
-		// 	})
-		// 	.then(() => {
-		// 		this.setState({
-		// 			violatedObjects,
-		// 		})
-		// 	})
-		// 	.catch((err) => {
-		// 		console.log(`checkout violation fail: ${err}`)
-		// 	})
-	}
-
-	/** Clear the recorded violated object */
-	clearAlerts = () => {
-		Object.values(this.state.violatedObjects).forEach((item) => {
-			item.notification.forEach((event) => {
-				const dismissedObj = {
-					mac_address: item.mac_address,
-					type: event.type,
-				}
-
-				this.onCloseToast(dismissedObj)
-			})
-		})
-		toast.dismiss()
 	}
 
 	componentWillUnmount = () => {
@@ -223,66 +139,24 @@ class MainContainer extends React.Component {
 		}
 	}
 
-	/** set the geofence and location monitor enable */
-	setMonitor = () => {
-		// comment
-	}
-	// setMonitor = (type, callback) => {
-	// 	const { stateReducer } = this.context
-	// 	const [{ area }] = stateReducer
-	// 	const configName = `${config.monitor[type].name}Config`
-	// 	const triggerMonitorFunctionName = `get${configName.replace(
-	// 		/^\w/,
-	// 		(chr) => {
-	// 			return chr.toUpperCase()
-	// 		}
-	// 	)}`
-	// 	const cloneConfig = JSONClone(this.state[configName])
-	// 	const enable = +!cloneConfig[area.id].enable
-	// 	retrieveDataHelper.setMonitorEnable(
-	// 	    enable,
-	// 	    area.id,
-	// 	    config.monitor[type].api
-	// 	)
-	// 	.then(res => {
-	// 	    console.log(`set ${type} enable succeed`)
-	// 	    setTimeout(() => this[triggerMonitorFunctionName](callback), 1000)
-	// 	})
-	// 	.catch(err => {
-	// 	    console.log(`set ${type} enable failed ${err}`)
-	// 	})
-	// }
-
 	/** Get tracking data from database.
 	 *  Once get the tracking data, violated objects would be collected. */
 	getTrackingData = async () => {
 		const { auth, locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
 
-		try {
-			const {
-				data: trackingData,
-			} = await apiHelper.trackingDataApiAgent.getTrackingData({
-				locale: locale.abbr,
-				user: auth.user,
-				areaId: area.id,
-			})
+		const {
+			data: trackingData,
+		} = await apiHelper.trackingDataApiAgent.getTrackingData({
+			locale: locale.abbr,
+			user: auth.user,
+			areaId: area.id,
+		})
 
+		if (trackingData) {
 			this.setState({
 				trackingData,
 			})
-			/** dismiss error message when the database is connected */
-			if (this.errorToast) {
-				this.errorToast = null
-				toast.dismiss(this.errorToast)
-			}
-		} catch (e) {
-			console.log(`get tracking data failed ${e}`)
-
-			/** sent error message when database is not connected */
-			if (!this.errorToast) {
-				this.errorToast = messageGenerator.setErrorMessage()
-			}
 		}
 	}
 
@@ -291,6 +165,7 @@ class MainContainer extends React.Component {
 		const res = await apiHelper.utilsApiAgent.getSearchableKeywords({
 			areaId: area.id,
 		})
+
 		if (res) {
 			this.setState({
 				keywords: res.data.rows[0].keys,
@@ -305,6 +180,7 @@ class MainContainer extends React.Component {
 		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
 			locale: locale.abbr,
 		})
+
 		if (res) {
 			const lbeaconPosition = res.data.rows.map((item) => {
 				item.coordinate = createLbeaconCoordinate(item.uuid).toString()
@@ -317,24 +193,42 @@ class MainContainer extends React.Component {
 	}
 
 	/** Retrieve geofence data from database */
-	getGeofenceConfig = async (callback) => {
+	getGeofenceConfig = async () => {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const res = await apiHelper.geofenceApis.getGeofenceConfig({
+
+		const {
+			data: geofenceConfig,
+		} = await apiHelper.geofenceApis.getGeofenceConfig({
 			areaId: area.id,
 		})
-		if (res) {
-			this.setState(
-				{
-					geofenceConfig: res.data,
-				},
-				callback
-			)
+
+		if (geofenceConfig) {
+			this.setState({
+				geofenceConfig,
+			})
 		}
 	}
 
+	getGroupIdList = async () => {
+		const { auth, stateReducer } = this.context
+		const [{ area }] = stateReducer
+		const userId = auth.user.id
+
+		const {
+			data: groupIds,
+		} = await apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId({
+			areaId: area.id,
+			userId,
+		})
+
+		this.setState({
+			groupIds,
+		})
+	}
+
 	/** Retrieve location monitor data from database */
-	getLocationMonitorConfig = async (callback) => {
+	getLocationMonitorConfig = async () => {
 		const { auth } = this.context
 
 		const res = await apiHelper.monitor.getMonitorConfig(
@@ -342,6 +236,7 @@ class MainContainer extends React.Component {
 			auth.user.areas_id,
 			true
 		)
+
 		if (res) {
 			const locationMonitorConfig = res.data.reduce((config, rule) => {
 				config[rule.area_id] = {
@@ -357,12 +252,10 @@ class MainContainer extends React.Component {
 				}
 				return config
 			}, {})
-			this.setState(
-				{
-					locationMonitorConfig,
-				},
-				callback
-			)
+
+			this.setState({
+				locationMonitorConfig,
+			})
 		}
 	}
 
@@ -382,22 +275,17 @@ class MainContainer extends React.Component {
 	 *  7. multiple selected object(gridbutton)(disable now)
 	 */
 	getResultBySearchKey = async (searchKey) => {
-		const { stateReducer } = this.context
-		const [{ area }] = stateReducer
+		// const { stateReducer } = this.context
+		// const [{ openedNotification }] = stateReducer
 		const { trackingData, pinColorArray, groupIds } = this.state
-		let searchResult = []
-
 		const hasSearchKey = true
 
+		let searchResult = []
 		let { searchObjectArray } = this.state
 
-		const proccessedTrackingData = JSONClone(trackingData).filter(
-			(item) => parseInt(item.area_id) === parseInt(area.id)
-		)
-
 		const searchableField = config.SEARCHABLE_FIELD
-
 		const activeActionButtons = []
+		const proccessedTrackingData = JSONClone(trackingData)
 
 		switch (searchKey.type) {
 			case ALL_DEVICES:
@@ -489,6 +377,7 @@ class MainContainer extends React.Component {
 									) {
 										item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_PERSON
 									}
+
 									return true
 								}
 								return false
@@ -549,35 +438,6 @@ class MainContainer extends React.Component {
 		})
 	}
 
-	handleShowResultListForMobile = () => {
-		this.setState({
-			display: false,
-		})
-	}
-
-	mapButtonHandler = () => {
-		this.setState({
-			showMobileMap: !this.state.showMobileMap,
-		})
-	}
-
-	getGroupIdList = async () => {
-		const { auth, stateReducer } = this.context
-		const [{ area }] = stateReducer
-		const userId = auth.user.id
-
-		const {
-			data: groupIds,
-		} = await apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId({
-			areaId: area.id,
-			userId,
-		})
-
-		this.setState({
-			groupIds,
-		})
-	}
-
 	handleSearchTypeClick = (searchKey) => {
 		if ([MY_PATIENTS, MY_DEVICES].includes(searchKey.type)) {
 			this.getGroupIdList()
@@ -606,9 +466,7 @@ class MainContainer extends React.Component {
 					colorPanel: null,
 					clearSearchResult: !!this.state.hasSearchKey,
 					proccessedTrackingData: [],
-					display: true,
 					searchObjectArray: [],
-					showMobileMap: true,
 					activeActionButtons: [],
 				})
 				break
@@ -624,14 +482,11 @@ class MainContainer extends React.Component {
 			searchKey,
 			lbeaconPosition,
 			geofenceConfig,
-			showMobileMap,
 			clearSearchResult,
 			showPath,
-			display,
 			pathMacAddress,
 			isHighlightSearchPanel,
 			locationMonitorConfig,
-			currentAreaId,
 			searchObjectArray,
 			pinColorArray,
 			showFoundResult,
@@ -641,10 +496,6 @@ class MainContainer extends React.Component {
 
 		const {
 			getSearchKey,
-			setMonitor,
-			clearAlerts,
-			handleShowResultListForMobile,
-			mapButtonHandler,
 			highlightSearchPanel,
 			handleClick,
 			handleSearchTypeClick,
@@ -653,25 +504,18 @@ class MainContainer extends React.Component {
 		const propsGroup = {
 			hasSearchKey,
 			getSearchKey,
-			setMonitor,
-			clearAlerts,
 			lbeaconPosition,
 			geofenceConfig,
 			highlightSearchPanel,
-			showMobileMap,
 			clearSearchResult,
 			searchKey,
 			searchResult,
 			trackingData,
 			proccessedTrackingData,
 			showPath,
-			handleShowResultListForMobile,
-			display,
 			pathMacAddress,
-			mapButtonHandler,
 			isHighlightSearchPanel,
 			locationMonitorConfig,
-			currentAreaId,
 			searchObjectArray,
 			pinColorArray,
 			handleClick,

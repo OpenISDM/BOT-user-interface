@@ -57,6 +57,7 @@ class Map extends React.Component {
 	state = {
 		shouldUpdateTrackingData: true,
 		objectInfo: [],
+		currentAreaId: null,
 	}
 
 	map = null
@@ -76,20 +77,28 @@ class Map extends React.Component {
 		this.initMap()
 	}
 
-	componentDidUpdate = (prevProps) => {
+	componentDidUpdate = (prevProps, prevState) => {
+		const [{ area }] = this.context.stateReducer
+
 		if (this.state.shouldUpdateTrackingData) {
 			this.handleObjectMarkers()
 		}
 
 		if (
 			!isEqual(prevProps.lbeaconPosition, this.props.lbeaconPosition) ||
-			!isEqual(prevProps.currentAreaId, this.context.stateReducer[0].area.id) ||
+			!isEqual(prevState.currentAreaId, area.id) ||
 			!isEqual(prevProps.authenticated, this.props.authenticated)
 		) {
 			this.createLbeaconMarkers(
 				this.props.lbeaconPosition,
 				this.lbeaconsPosition
 			)
+		}
+
+		if (!isEqual(prevState.currentAreaId, area.id)) {
+			this.setState({
+				currentAreaId: area.id,
+			})
 		}
 
 		if (!isEqual(prevProps.geofenceConfig, this.props.geofenceConfig)) {
@@ -637,7 +646,6 @@ Map.propTypes = {
 	pathMacAddress: PropTypes.object.isRequired,
 	areaId: PropTypes.number.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
-	currentAreaId: PropTypes.number.isRequired,
 	authenticated: PropTypes.bool.isRequired,
 }
 
