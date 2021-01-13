@@ -81,7 +81,7 @@ class TrackingTable extends React.Component {
 
 		if (res) {
 			this.setMessage('clear')
-			const column = JSONClone(trackingTableColumn)
+			const column = trackingTableColumn
 
 			column.forEach((field) => {
 				field.headerStyle = {
@@ -105,7 +105,7 @@ class TrackingTable extends React.Component {
 
 			this.setState({
 				trackingData: res.data,
-				trackingColunm: column,
+				trackingColunm: trackingTableColumn,
 				locale: locale.abbr,
 			})
 		} else {

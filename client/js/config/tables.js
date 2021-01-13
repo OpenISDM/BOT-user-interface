@@ -233,16 +233,6 @@ const trackingTableColumn = [
 			)),
 	},
 	{
-		Header: 'Panic',
-		accessor: 'panic',
-		width: 60,
-		style: style.column,
-		Cell: (props) =>
-			props.value ? (
-				<i className="fas fa-exclamation" style={style.icon.exclamation}></i>
-			) : null,
-	},
-	{
 		Header: 'Alert',
 		accessor: 'geofence_type',
 		width: 60,
