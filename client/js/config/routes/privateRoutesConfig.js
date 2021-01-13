@@ -36,32 +36,11 @@ import Loadable from 'react-loadable'
 import Loader from '../../components/presentational/Loader'
 import routes from './routes'
 
-// import MainContainer from '../../components/container/menuContainer/MainContainer';
-// import SystemSetting from '../../components/container/menuContainer/SystemSetting';
-// import ObjectManagementContainer from '../../components/container/menuContainer/ObjectManagementContainer';
-// import UserContainer from '../../components/container/menuContainer/UserContainer';
-// import About from '../../components/container/About';
-// import ContactTree from '../../components/container/menuContainer/ContactTree';
-// import BigScreenContainer from "../../components/container/bigScreen/BigScreenContainer";
-// import MonitorSettingContainer from "../../components/container/menuContainer/MonitorSettingContainer";
-// import ReportContainer from "../../components/container/menuContainer/ReportContainer";
-// import TrackingHistoryContainer from '../../components/container/menuContainer/TrackingHistoryContainer';
-// import BOTAdminContainer from '../../components/container/menuContainer/BOTAdminContainer';
-
 const ObjectManagementContainer = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "ObjectManagementContainer" */
 			'../../components/container/menuContainer/ObjectManagementContainer'
-		),
-	loading: Loader,
-})
-
-const UserContainer = Loadable({
-	loader: () =>
-		import(
-			/* webpackChunkName: "UserContainer" */
-			'../../components/container/menuContainer/UserContainer'
 		),
 	loading: Loader,
 })
@@ -127,11 +106,6 @@ const privateRoutesConfig = [
 		component: ObjectManagementContainer,
 		exact: true,
 	},
-	{
-		path: routes.USER_SETTINGS,
-		component: UserContainer,
-		exact: true,
-	},
 	// {
 	//     path: routes.BIG_SCREEN,
 	//     component: BigScreenContainer,
@@ -150,11 +124,6 @@ const privateRoutesConfig = [
 	// {
 	//     path: routes.CONTACT_TREE,
 	//     component: ContactTree,
-	//     exact: true,
-	// },
-	// {
-	//     path: routes.MONITOR_SETTINGS,
-	//     component: MonitorSettingContainer,
 	//     exact: true,
 	// },
 	{
