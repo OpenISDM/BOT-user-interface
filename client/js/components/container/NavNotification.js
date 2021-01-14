@@ -34,7 +34,7 @@
 
 import React from 'react'
 import NotificationBadge, { Effect } from 'react-notification-badge'
-import { Row, Dropdown, Button, Form } from 'react-bootstrap'
+import { Row, Dropdown, Button } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
@@ -139,7 +139,7 @@ class NavNotification extends React.Component {
 					</Dropdown.Toggle>
 					<Dropdown.Menu
 						flip={false}
-						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+						bsPrefix="bot-dropdown-menu-right dropdown-menu"
 					>
 						<div className="px-5 py-2" style={style.title}>
 							<Row>
@@ -205,7 +205,7 @@ class NavNotification extends React.Component {
 						id="battery-notice-btn"
 						bsPrefix="bot-dropdown-toggle"
 					>
-						<i className="fas fa-battery-quarter" style={style.icon}>
+						<i className="fas fa-battery-quarter" style={{ color: '#ff6600' }}>
 							<NotificationBadge
 								count={lowBattery.length}
 								effect={Effect.SCALE}

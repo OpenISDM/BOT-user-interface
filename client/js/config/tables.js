@@ -66,8 +66,8 @@ const style = {
 		full: {
 			color: 'green',
 		},
-		half: {
-			color: 'orange',
+		quarter: {
+			color: '#ff6600',
 		},
 		empty: {
 			color: 'red',
@@ -226,7 +226,7 @@ const trackingTableColumn = [
 				<i className="fas fa-battery-full" style={style.battery.full}></i>
 			)) ||
 			(props.value === 2 && (
-				<i className="fas fa-battery-half" style={style.battery.half}></i>
+				<i className="fas fa-battery-quarter" style={style.battery.quarter}></i>
 			)) ||
 			(props.value === 1 && (
 				<i className="fas fa-battery-empty" style={style.battery.empty}></i>
