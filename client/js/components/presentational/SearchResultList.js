@@ -294,7 +294,7 @@ class SearchResultList extends React.Component {
 		const objectPackage = {
 			userId: auth.user.id,
 			record: values.record,
-			id: this.state.selectedObjectData.id,
+			id: this.state.selectedObjectData[0].id, // TODO: Johnson, should be more clear
 		}
 
 		await apiHelper.record.addPatientRecord({
