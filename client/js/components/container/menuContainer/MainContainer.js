@@ -56,6 +56,7 @@ import {
 	SEARCH_HISTORY,
 	PIN_SELETION,
 } from '../../../config/wordMap'
+import { SET_OPENED_NOTIFICATION } from '../../../reducer/action'
 
 class MainContainer extends React.Component {
 	static contextType = AppContext
@@ -445,6 +446,7 @@ class MainContainer extends React.Component {
 	}
 
 	handleClick = (e) => {
+		const [, dispatch] = this.context.stateReducer
 		const name = e.target.name || e.target.getAttribute('name')
 		const value = e.target.getAttribute('value')
 
@@ -467,6 +469,10 @@ class MainContainer extends React.Component {
 					proccessedTrackingData: [],
 					searchObjectArray: [],
 					activeActionButtons: [],
+				})
+				dispatch({
+					type: SET_OPENED_NOTIFICATION,
+					value: {},
 				})
 				break
 		}
