@@ -33,33 +33,60 @@
 */
 
 import React, { Fragment } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import { shiftChangeCheckTableColumn } from '../../config/tables'
-
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import BOTMap from '../BOTComponent/BOTMap'
 import PropTypes from 'prop-types'
 
 class ShiftChangeCheckList extends React.Component {
 	static contextType = AppContext
+
+	state = {
+		currentHoveredObject: null,
+	}
+
+	handleOnMouseEnterCallback = (currentHoveredObject) => {
+		this.setState({
+			currentHoveredObject,
+		})
+	}
+
+	handleOnMouseLeaveCallback = () => {
+		this.setState({
+			currentHoveredObject: null,
+		})
+	}
 
 	render() {
 		const { locale, stateReducer } = this.context
 		const { show, handleClose, handleSubmit } = this.props
 		const [{ objectFoundResults }] = stateReducer
 		const { totalResults = [] } = objectFoundResults
+		const { currentHoveredObject } = this.state
+		const objectList = currentHoveredObject ? [currentHoveredObject] : []
 
 		return (
 			<>
-				<Modal show={show} size="xl" onHide={handleClose}>
+				<Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
 					<Modal.Header className="d-flex flex-column text-capitalize">
 						<div>{locale.texts.SHIFT_CHANGE_CHECK_LIST}</div>
 					</Modal.Header>
 					<Modal.Body>
-						<BOTSelectTable
-							data={totalResults}
-							columns={shiftChangeCheckTableColumn}
-						/>
+						<Row>
+							<Col md={5}>
+								<BOTMap objectList={objectList} />
+							</Col>
+							<Col md={7}>
+								<BOTSelectTable
+									data={totalResults}
+									columns={shiftChangeCheckTableColumn}
+									onMouseEnterCallback={this.handleOnMouseEnterCallback}
+									onMouseLeaveCallback={this.handleOnMouseLeaveCallback}
+								/>
+							</Col>
+						</Row>
 					</Modal.Body>
 					<Modal.Footer>
 						<Button variant="outline-secondary" onClick={handleClose}>
