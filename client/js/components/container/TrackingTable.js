@@ -33,22 +33,18 @@
 */
 
 import React from 'react'
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
 import { AppContext } from '../../context/AppContext'
 import { trackingTableColumn } from '../../config/tables'
 import { toast } from 'react-toastify'
 import messageGenerator from '../../helper/messageGenerator'
-import styleConfig from '../../config/styleConfig'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone } from '../../helper/utilities'
+import BOTTable from '../BOTComponent/BOTTable'
 
 class TrackingTable extends React.Component {
 	static contextType = AppContext
 
 	state = {
 		trackingData: [],
-		trackingColunm: [],
 		tabIndex: 0,
 		locale: this.context.locale.abbr,
 	}
@@ -81,30 +77,15 @@ class TrackingTable extends React.Component {
 
 		if (res) {
 			this.setMessage('clear')
-			const column = JSONClone(trackingTableColumn)
-			column.forEach((field) => {
-				field.headerStyle = {
-					textAlign: 'left',
-					textTransform: 'capitalize',
-				}
-				if (field.accessor === '_id') {
-					field.headerStyle = {
-						textAlign: 'center',
-					}
-				}
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
-
-			res.data.forEach((item, index) => {
+			const trackingData = res.data.map((item, index) => {
 				item.status = locale.texts[item.status.toUpperCase()]
 				item.transferred_location = ''
 				item._id = index + 1
+				return item
 			})
 
 			this.setState({
-				trackingData: res.data,
-				trackingColunm: trackingTableColumn,
+				trackingData,
 				locale: locale.abbr,
 			})
 		} else {
@@ -131,14 +112,10 @@ class TrackingTable extends React.Component {
 
 	render() {
 		return (
-			<ReactTable
+			<BOTTable
 				style={{ maxHeight: '85vh' }}
 				data={this.state.trackingData}
-				columns={this.state.trackingColunm}
-				resizable={true}
-				freezeWhenExpanded={false}
-				{...styleConfig.reactTable}
-				// pageSize={this.state.trackingData.length}
+				columns={trackingTableColumn}
 			/>
 		)
 	}

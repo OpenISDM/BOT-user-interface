@@ -39,19 +39,31 @@ import styleConfig from '../../config/styleConfig'
 import { JSONClone } from '../../helper/utilities'
 import PropTypes from 'prop-types'
 
-const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
+import 'react-table/react-table.css'
+
+const BOTTable = ({ data, columns, onClickCallback, pageSize, style }) => {
 	const { locale } = useContext(AppContext)
 	const [selected, setSelected] = useState(null)
 	const [hovered, setHovered] = useState(null)
 
 	const newColumns = JSONClone(columns)
 	newColumns.forEach((field) => {
+		field.headerStyle = {
+			textAlign: 'left',
+			textTransform: 'capitalize',
+		}
+		if (field.accessor === '_id') {
+			field.headerStyle = {
+				textAlign: 'center',
+			}
+		}
 		field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 	})
 
 	return (
 		<ReactTable
 			{...styleConfig.reactTable}
+			style={style}
 			columns={newColumns}
 			data={data}
 			pageSize={pageSize || data.length}
@@ -105,6 +117,7 @@ BOTTable.propTypes = {
 	columns: PropTypes.array.isRequired,
 	onClickCallback: PropTypes.func,
 	pageSize: PropTypes.number.isRequired,
+	style: PropTypes.object.isRequired,
 }
 
 export default BOTTable

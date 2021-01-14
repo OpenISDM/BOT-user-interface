@@ -34,19 +34,18 @@
 
 import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import ReactTable from 'react-table'
 import { userInfoTableColumn } from '../../../config/tables'
 import EditUserForm from '../../presentational/form/EditUserForm'
 import { AppContext } from '../../../context/AppContext'
 import DeleteUserForm from './DeleteUserForm'
 import DeleteConfirmationForm from '../../presentational/DeleteConfirmationForm'
 import messageGenerator from '../../../helper/messageGenerator'
-import styleConfig from '../../../config/styleConfig'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import config from '../../../config'
 import apiHelper from '../../../helper/apiHelper'
-import { JSONClone, formatTime } from '../../../helper/utilities'
+import { formatTime } from '../../../helper/utilities'
+import BOTTable from '../../BOTComponent/BOTTable'
 
 const Fragment = React.Fragment
 
@@ -57,7 +56,6 @@ class AdminManagementContainer extends React.Component {
 		showAddUserForm: false,
 		showDeleteUserForm: false,
 		data: [],
-		columns: [],
 		selectedUser: null,
 		roleName: [],
 		title: '',
@@ -85,12 +83,6 @@ class AdminManagementContainer extends React.Component {
 			locale: locale.abbr,
 		})
 		if (res) {
-			const columns = JSONClone(userInfoTableColumn)
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
-
 			const data = res.data.rows.map((item, index) => {
 				item._id = index + 1
 				item.roles = item.role_type
@@ -110,7 +102,6 @@ class AdminManagementContainer extends React.Component {
 			this.setState(
 				{
 					data,
-					columns,
 					showModifyUserInfo: false,
 					showAddUserForm: false,
 					showDeleteUserForm: false,
@@ -200,17 +191,13 @@ class AdminManagementContainer extends React.Component {
 		})
 	}
 
-	onRowClick = (state, rowInfo) => {
-		return {
-			onClick: () => {
-				this.setState({
-					showAddUserForm: true,
-					selectedUser: rowInfo.original,
-					title: 'edit user',
-					api: 'setUser',
-				})
-			},
-		}
+	onRowClick = (original) => {
+		this.setState({
+			showAddUserForm: true,
+			selectedUser: original,
+			title: 'edit user',
+			api: 'setUser',
+		})
 	}
 
 	handleClick = (e) => {
@@ -257,13 +244,11 @@ class AdminManagementContainer extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<ReactTable
+				<BOTTable
 					data={this.state.data}
-					columns={this.state.columns}
-					className="-highlight text-none"
+					columns={userInfoTableColumn}
 					style={{ maxHeight: '75vh' }}
-					{...styleConfig.reactTable}
-					getTrProps={this.onRowClick}
+					onClickCallback={this.onRowClick}
 				/>
 
 				<EditUserForm

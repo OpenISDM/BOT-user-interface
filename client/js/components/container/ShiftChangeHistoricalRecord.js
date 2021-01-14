@@ -32,15 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react'
-import ReactTable from 'react-table'
+import React from 'react'
 import { shiftChangeRecordTableColumn } from '../../config/tables'
 import { AppContext } from '../../context/AppContext'
-import styleConfig from '../../config/styleConfig'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
-import { JSONClone, formatTime } from '../../helper/utilities'
+import { formatTime } from '../../helper/utilities'
 import messageGenerator from '../../helper/messageGenerator'
+import BOTTable from '../BOTComponent/BOTTable'
 class ShiftChangeHistoricalRecord extends React.Component {
 	static contextType = AppContext
 
@@ -69,60 +68,40 @@ class ShiftChangeHistoricalRecord extends React.Component {
 		)
 
 		if (res) {
-			const columns = JSONClone(shiftChangeRecordTableColumn)
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
-
-			const data = res.data.rows
-			data.forEach((item) => {
+			const data = res.data.rows.map((item) => {
 				item.shift =
 					item.shift &&
 					locale.texts[item.shift.toUpperCase().replace(/ /g, '_')]
 				item.submit_timestamp = formatTime(item.submit_timestamp)
+				return item
 			})
 
 			this.setState({
-				data: res.data.rows,
-				columns,
+				data,
 				locale: locale.abbr,
 			})
 		}
 	}
 
-	render() {
+	handleOnClick = async (original) => {
 		const { locale } = this.context
+		if (original.file_path) {
+			await apiHelper.fileApiAgent.getFile({
+				path: original.file_path,
+			})
+		} else {
+			messageGenerator.setErrorMessage(locale.texts.FILE_URL_NOT_FOUND, 2000)
+		}
+	}
 
+	render() {
 		return (
-			<Fragment>
-				<div className="mb-2">
-					<ReactTable
-						keyField="id"
-						data={this.state.data}
-						columns={this.state.columns}
-						className="-highlight text-none"
-						style={{ maxHeight: '75vh' }}
-						{...styleConfig.reactTable}
-						getTrProps={(state, rowInfo) => {
-							return {
-								onClick: () => {
-									if (rowInfo.original.file_path) {
-										apiHelper.fileApiAgent.getFile({
-											path: rowInfo.original.file_path,
-										})
-									} else {
-										messageGenerator.setErrorMessage(
-											locale.texts.FILE_URL_NOT_FOUND,
-											2000
-										)
-									}
-								},
-							}
-						}}
-					/>
-				</div>
-			</Fragment>
+			<BOTTable
+				data={this.state.data}
+				columns={shiftChangeRecordTableColumn}
+				style={{ maxHeight: '75vh' }}
+				onClickCallback={this.handleOnClick}
+			/>
 		)
 	}
 }
