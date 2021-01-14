@@ -137,6 +137,7 @@ class BOTSelectTable extends React.Component {
 			onClickCallback = () => {
 				// do nothing.
 			},
+			pageSize,
 		} = this.props
 
 		const { toggleSelection, toggleAll, isSelected } = this
@@ -166,8 +167,8 @@ class BOTSelectTable extends React.Component {
 				onPageChange={() => null}
 				onSortedChange={() => null}
 				NoDataComponent={() => null}
-				showPagination={false}
-				pageSize={data.length}
+				showPagination={!!pageSize}
+				pageSize={pageSize || data.length}
 				getTrProps={(state, rowInfo) => {
 					return {
 						onClick: (e) => {
@@ -190,6 +191,7 @@ BOTSelectTable.propTypes = {
 	data: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
 	onClickCallback: PropTypes.func.isRequired,
+	pageSize: PropTypes.number.isRequired,
 }
 
 export default BOTSelectTable

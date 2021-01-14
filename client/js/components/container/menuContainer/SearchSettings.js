@@ -383,6 +383,7 @@ class SearchSettings extends React.Component {
 							<BOTSelectTable
 								data={namedListDeviceObjects}
 								columns={COLUMNS.DEIVCE}
+								pageSize={25}
 							/>
 						</div>
 					</>
@@ -419,6 +420,7 @@ class SearchSettings extends React.Component {
 							<BOTSelectTable
 								data={namedListPatientObjects}
 								columns={COLUMNS.PATIENT}
+								pageSize={25}
 							/>
 						</div>
 					</>
