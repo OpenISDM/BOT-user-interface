@@ -48,7 +48,7 @@ const style = {
 	},
 }
 
-const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
+const GeneralConfirmForm = ({ show, handleClose, title }) => {
 	const { locale } = React.useContext(AppContext)
 
 	return (
@@ -80,8 +80,6 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 						if (!res.data.confirmation) {
 							setStatus(res.data.message)
 							setSubmitting(false)
-						} else {
-							handleSubmit()
 						}
 					}}
 					render={({ errors, status, touched, isSubmitting }) => (
@@ -124,7 +122,6 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 GeneralConfirmForm.propTypes = {
 	show: PropTypes.bool,
 	handleClose: PropTypes.func,
-	handleSubmit: PropTypes.func,
 	title: PropTypes.string,
 	authenticatedRoles: PropTypes.string,
 }

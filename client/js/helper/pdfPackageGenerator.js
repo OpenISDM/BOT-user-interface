@@ -339,23 +339,56 @@ const pdfPackageGenerator = {
 					'devices found',
 					locale,
 					'',
-					data.foundResult.length !== 0
+					data.devicesResult.found.length !== 0
 				)
 				const foundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
-					data.foundResult,
+					data.devicesResult.found,
 					locale
 				)
 				const notFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
 					'devices not found',
 					locale,
 					'',
-					data.notFoundResult.length !== 0
+					data.devicesResult.notFound.length !== 0
 				)
 				const notFoundResultList = pdfPackageGenerator.pdfFormat.getBodyItem.getDataContent(
-					data.notFoundResult,
+					data.devicesResult.notFound,
 					locale
 				)
-				return foundTitle + foundResultList + notFoundTitle + notFoundResultList
+				const patientFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+					'patients found',
+					locale,
+					'',
+					data.patientsReslut.found.length !== 0
+				)
+
+				const patientFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
+					data.patientsReslut.found,
+					locale
+				)
+
+				const patientNotFoundTitle = pdfPackageGenerator.pdfFormat.getBodyItem.getBodyTitle(
+					'patients not found',
+					locale,
+					'',
+					data.patientsReslut.notFound.length !== 0
+				)
+
+				const patientNotFoundList = pdfPackageGenerator.pdfFormat.getBodyItem.getPatientContent(
+					data.patientsReslut.notFound,
+					locale
+				)
+
+				return (
+					foundTitle +
+					foundResultList +
+					notFoundTitle +
+					notFoundResultList +
+					patientFoundTitle +
+					patientFoundList +
+					patientNotFoundTitle +
+					patientNotFoundList
+				)
 			},
 
 			patientRecord: ({ data, locale }) => {

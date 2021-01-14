@@ -41,6 +41,10 @@ import TabletMapContainer from '../platform/tablet/TabletMapContainer'
 import MobileMapContainer from '../platform/mobile/MobileMapContainer'
 import BrowserMapContainer from '../platform/browser/BrowserMapContainer'
 import { CLEAR_SEARCH_RESULT } from '../../config/wordMap'
+import config from '../../config'
+import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
+import apiHelper from '../../helper/apiHelper'
+
 import PropTypes from 'prop-types'
 
 class MapContainer extends React.Component {
@@ -49,10 +53,7 @@ class MapContainer extends React.Component {
 	state = {
 		showPdfDownloadForm: false,
 		showConfirmForm: false,
-	}
-
-	handleSubmit = () => {
-		// do nothing
+		savePath: '',
 	}
 
 	handleClickButton = (e) => {
@@ -63,9 +64,7 @@ class MapContainer extends React.Component {
 				this.props.handleClick(e)
 				break
 			case 'save':
-				this.setState({
-					showPdfDownloadForm: true,
-				})
+				this.sendSearchResultToBackend()
 				break
 			case 'geofence':
 				this.setState({
@@ -87,6 +86,55 @@ class MapContainer extends React.Component {
 			showPdfDownloadForm: false,
 			showConfirmForm: false,
 		})
+	}
+
+	sendSearchResultToBackend = async () => {
+		const data = {
+			devicesResult: {
+				found: [],
+				notFound: [],
+			},
+			patientsReslut: {
+				found: [],
+				notFound: [],
+			},
+		}
+
+		for (const item of this.props.searchResult) {
+			if (parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE) {
+				item.found
+					? data.devicesResult.found.push(item)
+					: data.devicesResult.notFound.push(item)
+			} else if (item.type === config.OBJECT_TABLE_SUB_TYPE.PATIENT) {
+				item.found
+					? data.patientsReslut.found.push(item)
+					: data.patientsReslut.notFound.push(item)
+			}
+		}
+
+		const { locale, auth } = this.context
+		const pdfPackage = pdfPackageGenerator.getPdfPackage({
+			option: 'searchResult',
+			user: auth.user,
+			data,
+			locale,
+		})
+
+		const searResultInfo = {
+			userInfo: auth.user,
+			pdfPackage,
+		}
+
+		const res = await apiHelper.fileApiAgent.getPDF({
+			...searResultInfo,
+		})
+
+		if (res) {
+			this.setState({
+				savePath: res.data,
+				showPdfDownloadForm: true,
+			})
+		}
 	}
 
 	render() {
@@ -140,12 +188,11 @@ class MapContainer extends React.Component {
 				</MobileOnlyView>
 				<PdfDownloadForm
 					show={this.state.showPdfDownloadForm}
-					data={searchResult}
+					savePath={this.state.savePath}
 					handleClose={this.handleCloseModal}
 				/>
 				<GeneralConfirmForm
 					show={this.state.showConfirmForm}
-					handleSubmit={this.handleSubmit}
 					handleClose={this.handleCloseModal}
 				/>
 			</Fragment>

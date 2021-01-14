@@ -35,13 +35,11 @@
 import React from 'react'
 import Modal from 'react-bootstrap/Modal'
 import { Button, Row } from 'react-bootstrap'
-import axios from 'axios'
-import dataSrc from '../../dataSrc'
+import { pdfUrl } from '../../dataSrc'
 import QRCode from 'qrcode.react'
-import config from '../../config'
 import { AppContext } from '../../context/AppContext'
-import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import apiHelper from '../../helper/apiHelper'
+import PropTypes from 'prop-types'
 
 class PdfDownloadForm extends React.Component {
 	static contextType = AppContext
@@ -49,91 +47,28 @@ class PdfDownloadForm extends React.Component {
 	state = {
 		show: false,
 		savePath: '',
-		data: null,
-		alreadyUpdate: false,
-		hasData: false,
-		isDone: false,
-	}
-
-	sendSearchResultToBackend = async (searchResultInfo, callBack) => {
-		const res = await apiHelper.fileApiAgent.getPDF({
-			...searchResultInfo,
-		})
-		if (res) {
-			callBack(res.data)
-		}
-	}
-
-	componentDidUpdate = (preProps) => {
-		if (this.props.show && !this.state.show) {
-			const data = {
-				foundResult: [],
-				notFoundResult: [],
-			}
-
-			for (const item of this.props.data) {
-				item.found
-					? data.foundResult.push(item)
-					: data.notFoundResult.push(item)
-			}
-
-			const { locale, auth, stateReducer } = this.context
-			const [{ area }] = stateReducer
-			// let pdfPackage = config.getPdfPackage('searchResult', auth.user, data, locale, area.id)
-
-			const pdfPackage = pdfPackageGenerator.getPdfPackage({
-				option: 'searchResult',
-				user: auth.user,
-				data,
-				locale,
-				// signature: authentication,
-				// additional: {
-				//     shift: values.shift,
-				//     area: locale.texts[config.mapConfig.areaOptions[auth.user.areas_id[0]]],
-				//     name: auth.user.name
-				// }
-			})
-
-			const searResultInfo = {
-				userInfo: auth.user,
-				pdfPackage,
-			}
-
-			this.sendSearchResultToBackend(searResultInfo, (path) => {
-				this.setState({
-					savePath: path,
-					data: this.props.data,
-					show: this.props.show,
-					alreadyUpdate: true,
-					isDone: true,
-					hasData: true,
-				})
-			})
-		}
 	}
 
 	handleClose = () => {
 		this.props.handleClose()
 		this.setState({
 			show: false,
-			alreadyUpdate: false,
-			isDone: false,
 		})
 	}
-	PdfDownloader = () => {
-		apiHelper.fileApiAgent.getFile({
-			path: this.state.savePath,
+
+	PdfDownloader = async () => {
+		await apiHelper.fileApiAgent.getFile({
+			path: this.props.savePath,
 		})
 	}
 
 	render() {
-		const { hasData, savePath } = this.state
-
+		const { savePath, show } = this.props
 		const { locale } = this.context
 
 		return (
 			<Modal
-				show={this.state.show}
+				show={show}
 				onHide={this.handleClose}
 				className="text-capitalize"
 				size="sm"
@@ -143,7 +78,7 @@ class PdfDownloadForm extends React.Component {
 				</Modal.Header>
 				<Modal.Body className="d-flex flex-column">
 					<Row className="d-flex justify-content-center mb-2">
-						{hasData && <QRCode value={dataSrc.pdfUrl(savePath)} size={128} />}
+						<QRCode value={pdfUrl(savePath)} size={128} />
 					</Row>
 					<Row className="d-flex justify-content-center mb-2">
 						<Button
@@ -153,14 +88,17 @@ class PdfDownloadForm extends React.Component {
 						>
 							{locale.texts.DOWNLOAD}
 						</Button>
-						<a ref="download" download style={{ display: 'none' }}>
-							hi
-						</a>
 					</Row>
 				</Modal.Body>
 			</Modal>
 		)
 	}
+}
+
+PdfDownloadForm.propTypes = {
+	handleClose: PropTypes.func,
+	show: PropTypes.bool,
+	savePath: PropTypes.string,
 }
 
 export default PdfDownloadForm
