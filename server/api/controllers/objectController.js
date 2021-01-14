@@ -237,6 +237,9 @@ export default {
 				where: {
 					object_type: objectType,
 					area_id: areaId,
+					type_alias: {
+						[Op.ne]: null,
+					},
 				},
 				order: [['type', 'ASC']],
 			})

@@ -57,7 +57,7 @@ class CustomSettings extends React.Component {
 		patientAliasesData: [],
 		patientAliasesColumns: [],
 		changedIndex: [],
-		buttonSelected: pages.COVERED_AREA_PROFILE,
+		buttonSelected: pages.DEVICE_ALIASES,
 	}
 
 	componentDidMount = () => {
@@ -76,6 +76,16 @@ class CustomSettings extends React.Component {
 		}
 	)
 
+	reload = async () => {
+		const aliasesPromise = this.getDeviceAliases()
+		const patientPromise = this.getPatientData()
+
+		await Promise.all([aliasesPromise, patientPromise])
+
+		this.setState({ changedIndex: [] })
+		this.showMessage()
+	}
+
 	updateDeviceAliases = async () => {
 		const [{ area }] = this.context.stateReducer
 		const objectTypeList = this.state.changedIndex.map((index) => {
@@ -85,8 +95,8 @@ class CustomSettings extends React.Component {
 			objectTypeList,
 			areaId: area.id,
 		})
-		this.setState({ changedIndex: [] })
-		this.showMessage()
+
+		this.reload()
 	}
 
 	updatePatientNickname = async () => {
@@ -96,8 +106,8 @@ class CustomSettings extends React.Component {
 		await apiHelper.objectApiAgent.editNickname({
 			personList,
 		})
-		this.setState({ changedIndex: [] })
-		this.showMessage()
+
+		this.reload()
 	}
 
 	setCurrentPage = (identity) => {
