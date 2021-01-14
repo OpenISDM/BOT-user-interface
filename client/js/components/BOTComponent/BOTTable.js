@@ -85,12 +85,12 @@ const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
 						},
 						style: {
 							background:
-								rowInfo.index === selected
+								rowInfo && rowInfo.index === selected
 									? '#007bff'
 									: rowInfo.index === hovered
 									? '#b3daff'
 									: 'white',
-							color: rowInfo.index === selected ? 'white' : 'black',
+							color: rowInfo && rowInfo.index === selected ? 'white' : 'black',
 						},
 					}
 				}

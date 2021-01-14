@@ -192,7 +192,7 @@ class BOTSelectTable extends React.Component {
 						},
 						style: {
 							background:
-								rowInfo.index === this.state.currentHoveredRowIndex
+								rowInfo && rowInfo.index === this.state.currentHoveredRowIndex
 									? '#b3daff'
 									: 'white',
 						},
