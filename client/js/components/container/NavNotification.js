@@ -66,7 +66,7 @@ class NavNotification extends React.Component {
 	}
 
 	getTrackingData = async () => {
-		const [{ area }] = this.context.stateReducer
+		const [{ area }, dispatch] = this.context.stateReducer
 		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
@@ -77,6 +77,13 @@ class NavNotification extends React.Component {
 				lowBattery: res.data.lowBattery,
 				locale: this.context.locale.abbr,
 			})
+
+			if (res.data.emergency.length === 0) {
+				dispatch({
+					type: SET_OPENED_NOTIFICATION,
+					value: {},
+				})
+			}
 		}
 	}
 
