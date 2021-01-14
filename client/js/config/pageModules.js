@@ -47,6 +47,7 @@ import ShiftChangeRecord from '../components/container/UserContainer/ShiftChange
 import ObjectTable from '../components/presentational/ObjectTable'
 import PatientTable from '../components/presentational/PatientTable'
 import TrackingTable from '../components/container/TrackingTable'
+import BatteryStatusTable from '../components/container/BatteryStatusTable'
 import TraceContainer from '../components/container/menuContainer/TraceContainer'
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
@@ -287,7 +288,7 @@ export const ObjectManagementModule = {
 		{
 			name: 'Battery Table',
 			permission: 'route:objectManagement',
-			component: (props) => <TrackingTable {...props} />,
+			component: (props) => <BatteryStatusTable {...props} />,
 			platform: ['browser'],
 		},
 	],
