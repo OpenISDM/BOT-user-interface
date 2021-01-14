@@ -209,7 +209,6 @@ class SearchSettings extends React.Component {
 				allDeviceObjects,
 				allPatientObjects,
 				listName: '',
-				selectedNamedList: null,
 			}
 
 			if (callback) {
@@ -295,6 +294,7 @@ class SearchSettings extends React.Component {
 		this.setState({
 			changedIndex: [],
 			currentNameListRow: null,
+			selectedNamedList: null,
 			buttonSelected: identity,
 		})
 
