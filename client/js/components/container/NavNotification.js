@@ -42,6 +42,7 @@ import apiHelper from '../../helper/apiHelper'
 import messageGenerator from '../../helper/messageGenerator'
 import { withRouter } from 'react-router-dom'
 import { SET_OPENED_NOTIFICATION } from '../../reducer/action'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 
 class NavNotification extends React.Component {
@@ -112,7 +113,7 @@ class NavNotification extends React.Component {
 		const style = {
 			list: {
 				height: '40px',
-				width: '500px',
+				width: '600px',
 				justifyContent: 'space-between',
 			},
 			title: {
@@ -171,6 +172,12 @@ class NavNotification extends React.Component {
 										monitorTypeString = locale.texts.EMERGENCY_ALERT
 									}
 
+									const violationTimestamp = moment(
+										notificaiton.violation_timestamp
+									)
+										.locale(locale.abbr)
+										.format('YYYY-MM-DD HH:mm:ss')
+
 									return (
 										<Dropdown.Item
 											key={index}
@@ -190,7 +197,8 @@ class NavNotification extends React.Component {
 										>
 											<Row style={style.list}>
 												<Button variant="light" disabled={true}>
-													&#8729;{monitorTypeString}: {object.name}
+													&#8729;{monitorTypeString}: {object.name},{' '}
+													{violationTimestamp}
 												</Button>
 												<Button variant="primary" onClick={this.handleSubmit}>
 													{locale.texts.CLOSE_ALERT}
