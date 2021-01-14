@@ -81,8 +81,7 @@ class TrackingTable extends React.Component {
 
 		if (res) {
 			this.setMessage('clear')
-			const column = trackingTableColumn
-
+			const column = JSONClone(trackingTableColumn)
 			column.forEach((field) => {
 				field.headerStyle = {
 					textAlign: 'left',

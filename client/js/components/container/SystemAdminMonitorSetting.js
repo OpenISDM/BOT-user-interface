@@ -128,7 +128,7 @@ class BOTAdminMonitorSetting extends React.Component {
 		)
 	}
 
-	handleClickButton = (e, value) => {
+	handleClickButton = (e) => {
 		const { name } = e.target
 		switch (name) {
 			case ACTION_ENUM.ADD:
@@ -177,7 +177,7 @@ class BOTAdminMonitorSetting extends React.Component {
 		this.getMonitorConfig(this.submitCallback)
 	}
 
-	handleDeleteSubmit = async (pack) => {
+	handleDeleteSubmit = async () => {
 		const [{ tableSelection }] = this.context.stateReducer
 
 		await apiHelper.geofenceApis.delete({ ids: tableSelection })
@@ -186,7 +186,7 @@ class BOTAdminMonitorSetting extends React.Component {
 
 	render() {
 		const { locale } = this.context
-		const { lbeaconsTable, isEdited } = this.state
+		const { lbeaconsTable } = this.state
 
 		return (
 			<div>
