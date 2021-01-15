@@ -217,7 +217,7 @@ const getPeopleHistoryQuery = (
 
 const getPeopleRealtimeQuery = (key, filter) => {
 	return `select 
-	object_summary_table.id as object_id, 
+	object_table.id as object_id, 
 	object_summary_table.mac_address as mac_address, 
 	object_table.name as object_name, 
 	object_summary_table.updated_by_area as area_id, 
