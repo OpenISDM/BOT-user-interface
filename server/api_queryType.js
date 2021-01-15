@@ -174,6 +174,7 @@ const getPatientDurationQuery = (
 
 const getPeopleHistoryQuery = (
 	key,
+	filter,
 	start_time,
 	end_time,
 	count_limit,
@@ -198,9 +199,11 @@ const getPeopleHistoryQuery = (
 	on object_table.area_id = user_table.main_area
 	and object_table.object_type = '1'
 	
+
 	inner join location_history_table
 	on location_history_table.object_id = object_table.id
-	
+	${filter}
+
 	left join lbeacon_table
 	on lbeacon_table.uuid = location_history_table.uuid
 	
