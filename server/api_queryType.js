@@ -300,6 +300,22 @@ const getObjectTypeFilter = (object_type) => {
 	return ''
 }
 
+const getAreaIDFilterFromObejectSummaryTable = (area_id)=>{
+	if(area_id){
+		return `\n and object_summary_table.updated_by_area in (${area_id.map(
+			(item)=>`'${item}'`
+	)})`
+	}
+}
+
+const getAreaIDFilterFromLocationHistoryTable = (area_id) =>{
+	if(area_id){
+		return `\n and location_history_table.area_id in (${area_id.map(
+			(item)=>`'${item}'`
+		)})`
+	}
+}
+
 const getObjectHistoryQuery = (
 	key,
 	filter,
@@ -376,4 +392,6 @@ export default {
 	getIDTableQuery,
 	getObjectIDFilter,
 	getObjectTypeFilter,
+	getAreaIDFilterFromLocationHistoryTable,
+	getAreaIDFilterFromObejectSummaryTable,
 }
