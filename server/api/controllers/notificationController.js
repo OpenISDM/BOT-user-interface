@@ -75,7 +75,6 @@ export default {
 			const notificationTablePromise = NotificationTable.findAll({
 				where: {
 					area_id: areaId,
-					processed: 1, // meaning this notification is processed by BOT Server
 					web_processed: {
 						[Op.eq]: null,
 					},
