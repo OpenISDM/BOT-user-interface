@@ -215,7 +215,7 @@ const getPeopleHistoryQuery = (
 	limit ${count_limit};`
 }
 
-const getPeopleRealtimeQuery = (key) => {
+const getPeopleRealtimeQuery = (key, filter) => {
 	return `select 
 	object_summary_table.id as object_id, 
 	object_summary_table.mac_address as mac_address, 
@@ -237,13 +237,37 @@ const getPeopleRealtimeQuery = (key) => {
 	
 	inner join object_summary_table
 	on object_summary_table.mac_address = object_table.mac_address
-	
+	${filter}
+
 	left join lbeacon_table
 	on object_summary_table.uuid = lbeacon_table.uuid
 	
 	left join area_table
 	on area_table.id = object_summary_table.updated_by_area
 	where api_key.key = '${key}';
+	`
+}
+
+const getAreaIDQuery = () =>{
+	return `
+	select 
+		area_table.id as area_id,
+		area_table.readable_name  as area_name
+	from 
+		area_table 
+	where
+		not (area_table.id = '9999')  
+	`
+}
+
+const getObjectTypeQuery = ()=>{
+	return `
+	select 
+		distinct object_table.type as object_type
+	from 
+		object_table
+	where
+		object_table.object_type = '0'
 	`
 }
 
@@ -394,4 +418,6 @@ export default {
 	getObjectTypeFilter,
 	getAreaIDFilterFromLocationHistoryTable,
 	getAreaIDFilterFromObejectSummaryTable,
+	getObjectTypeQuery,
+	getAreaIDQuery,
 }
