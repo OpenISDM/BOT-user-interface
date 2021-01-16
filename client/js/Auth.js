@@ -34,27 +34,30 @@
 
 import React from 'react'
 import AuthenticationContext from './context/AuthenticationContext'
-import Cookies from 'js-cookie'
 import config from './config'
 import { SET_AREA } from './reducer/action'
 import apiHelper from './helper/apiHelper'
 import PropTypes from 'prop-types'
 import supportedLocale from './locale/supportedLocale'
-import { getPermissionsByRoles, localePackage } from './helper/utilities'
+import {
+	getPermissionsByRoles,
+	localePackage,
+	getCookies,
+	setCookies,
+	removeCookies,
+} from './helper/utilities'
 
 class Auth extends React.Component {
 	constructor() {
 		super()
 
-		this.getCookies = this.getCookies.bind(this)
-
-		const locale = this.getCookies('user')
-			? localePackage[this.getCookies('user').locale]
+		const locale = getCookies('user')
+			? localePackage[getCookies('user').locale]
 			: localePackage[config.DEFAULT_LOCALE]
 
 		this.state = {
-			authenticated: this.getCookies('authenticated'),
-			user: this.getCookies('user') || {},
+			authenticated: getCookies('authenticated'),
+			user: getCookies('user') || {},
 			locale: {
 				supportedLocale,
 				...locale,
@@ -76,7 +79,7 @@ class Auth extends React.Component {
 			const { userInfo: user } = res.data
 			user.permissions = getPermissionsByRoles({ roles: user.roles })
 
-			this.setCookies('authenticated', true)
+			setCookies('authenticated', true)
 			this.setUserCookies(user)
 
 			dispatch({
@@ -98,8 +101,8 @@ class Auth extends React.Component {
 		await apiHelper.authApiAgent.logout()
 
 		const callback = () => {
-			Cookies.remove('authenticated')
-			Cookies.remove('user')
+			removeCookies('authenticated')
+			removeCookies('user')
 		}
 
 		this.setState(
@@ -142,7 +145,7 @@ class Auth extends React.Component {
 			searchHistory: user.searchHistory,
 		}
 
-		this.setCookies('user', toBeStored)
+		setCookies('user', toBeStored)
 	}
 
 	setArea = async (areas_id, callback) => {
@@ -166,16 +169,6 @@ class Auth extends React.Component {
 
 	handleAuthentication = () => {
 		// handleAuthentication
-	}
-
-	setCookies = (key, value) => {
-		const encodedData = btoa(encodeURI(JSON.stringify(value)))
-		Cookies.set(key, encodedData)
-	}
-
-	getCookies = (key) => {
-		const encodedData = Cookies.get(key)
-		return encodedData ? JSON.parse(decodeURI(atob(encodedData))) : null
 	}
 
 	setSearchHistory = (searchHistory) => {
@@ -227,7 +220,7 @@ class Auth extends React.Component {
 		})
 
 		const callback = () => {
-			const cookie = this.getCookies('user')
+			const cookie = getCookies('user')
 			if (cookie) {
 				this.setUserCookies({
 					...cookie,
@@ -254,7 +247,7 @@ class Auth extends React.Component {
 		})
 
 		const callback = () => {
-			const cookie = this.getCookies('user')
+			const cookie = getCookies('user')
 			if (cookie) {
 				this.setUserCookies({
 					...cookie,
@@ -284,7 +277,6 @@ class Auth extends React.Component {
 			handleAuthentication: this.handleAuthentication,
 			setSearchHistory: this.setSearchHistory,
 			setUserInfo: this.setUserInfo,
-			setCookies: this.setCookies,
 			setLocale: this.setLocale,
 			setArea: this.setArea,
 			setKeywordType: this.setKeywordType,

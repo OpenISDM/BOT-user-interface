@@ -33,6 +33,7 @@
 */
 
 import moment from 'moment'
+import Cookies from 'js-cookie'
 import { NORMAL } from '../config/wordMap'
 import config from '../config'
 import permissionsTable from '../config/roles'
@@ -234,3 +235,17 @@ export const localePackage = Object.values(supportedLocale).reduce(
 	},
 	{}
 )
+
+export const setCookies = (key, value) => {
+	const encodedData = btoa(encodeURI(JSON.stringify(value)))
+	Cookies.set(key, encodedData)
+}
+
+export const getCookies = (key) => {
+	const encodedData = Cookies.get(key)
+	return encodedData ? JSON.parse(decodeURI(atob(encodedData))) : null
+}
+
+export const removeCookies = (key) => {
+	Cookies.remove(key)
+}
