@@ -115,21 +115,6 @@ class Auth extends React.Component {
 		)
 	}
 
-	signup = async (values, callback) => {
-		const { name, email, password, roles, area } = values
-
-		await apiHelper.userApiAgent.signup({
-			name: name.toLowerCase(),
-			email: email.toLowerCase(),
-			password,
-			roles,
-			area_id: area.id,
-			...values,
-		})
-
-		callback()
-	}
-
 	setUserCookies = async (user) => {
 		const toBeStored = {
 			name: user.name,
@@ -272,7 +257,6 @@ class Auth extends React.Component {
 		const authProviderValue = {
 			...this.state,
 			login: this.login,
-			signup: this.signup,
 			logout: this.logout,
 			handleAuthentication: this.handleAuthentication,
 			setSearchHistory: this.setSearchHistory,

@@ -48,18 +48,13 @@ export default {
 		})
 	},
 
-	async signup({ name, email, password, roles, area_id, ...values }) {
+	async addUser({ user }) {
 		return await post(userPath, {
-			name,
-			email,
-			password,
-			roles,
-			area_id,
-			...values,
+			user,
 		})
 	},
 
-	async setUser({ user }) {
+	async setUserInfo({ user }) {
 		return await put(userPath, {
 			user,
 		})

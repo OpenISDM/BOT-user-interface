@@ -39,7 +39,7 @@ import EditUserForm from '../../presentational/form/EditUserForm'
 import { AppContext } from '../../../context/AppContext'
 import DeleteUserForm from './DeleteUserForm'
 import DeleteConfirmationForm from '../../presentational/DeleteConfirmationForm'
-import messageGenerator from '../../../helper/messageGenerator'
+import { setSuccessMessage } from '../../../helper/messageGenerator'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import config from '../../../config'
@@ -136,13 +136,25 @@ class AdminManagementContainer extends React.Component {
 		}
 	}
 
-	handleSubmit = (values) => {
+	handleSubmit = async (values) => {
+		const { api } = this.state
+		switch (api) {
+			case 'addUser':
+				this.handleAddUserSubmit(values)
+				break
+			case 'setUserInfo':
+				this.handleSetUserSubmit(values)
+				break
+		}
+	}
+
+	handleSetUserSubmit = async (values) => {
 		const { auth } = this.context
-		const { api, selectedUser } = this.state
+		const { selectedUser } = this.state
 		const user = {
 			...auth.user,
 			...values,
-			id: selectedUser ? selectedUser.id : null,
+			id: selectedUser.id,
 			areas_id: auth.user.areas_id,
 			main_area: values.area.id,
 		}
@@ -153,29 +165,40 @@ class AdminManagementContainer extends React.Component {
 		if (!user.areas_id.includes(user.area.id)) {
 			user.areas_id.push(user.area.id)
 		}
-		const callback = () => {
-			messageGenerator.setSuccessMessage('save success')
-		}
 
-		auth[api](user, () => {
-			this.getUserList(callback)
-		})
+		await apiHelper.userApiAgent.setUserInfo({ user })
+
+		this.getUserList(() => setSuccessMessage('save success'))
 	}
 
-	handleDeleteUserSubmit = (e) => {
+	handleAddUserSubmit = async (values) => {
+		const { name, email, password, roles, area } = values
+		const user = {
+			name: name.toLowerCase(),
+			email: email.toLowerCase(),
+			password,
+			roles,
+			area_id: area.id,
+		}
+
+		await apiHelper.userApiAgent.addUser({ user })
+
+		this.getUserList(() => setSuccessMessage('save success'))
+	}
+
+	handleWarningChecked = (e) => {
 		this.setState({
 			showDeleteConfirmation: true,
 			deleteUserName: e.name.label,
 		})
 	}
 
-	handleWarningChecked = async () => {
+	handleDeleteUserSubmit = async () => {
 		const res = await apiHelper.userApiAgent.deleteUser({
 			username: this.state.deleteUserName,
 		})
 		if (res) {
-			const callback = () => messageGenerator.setSuccessMessage('save success')
-			this.getUserList(callback)
+			this.getUserList(() => setSuccessMessage('save success'))
 		}
 	}
 
@@ -196,7 +219,7 @@ class AdminManagementContainer extends React.Component {
 			showAddUserForm: true,
 			selectedUser: original,
 			title: 'edit user',
-			api: 'setUser',
+			api: 'setUserInfo',
 		})
 	}
 
@@ -206,7 +229,7 @@ class AdminManagementContainer extends React.Component {
 				this.setState({
 					showAddUserForm: true,
 					title: 'add user',
-					api: 'signup',
+					api: 'addUser',
 				})
 				break
 			case 'delete user':
@@ -267,13 +290,13 @@ class AdminManagementContainer extends React.Component {
 					title={locale.texts.DELETE_USER}
 					handleClose={this.handleClose}
 					data={this.state.data}
-					handleSubmit={this.handleDeleteUserSubmit}
+					handleSubmit={this.handleWarningChecked}
 				/>
 
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
-					handleSubmit={this.handleWarningChecked}
+					handleSubmit={this.handleDeleteUserSubmit}
 					message={locale.texts.ARE_YOU_SURE_TO_DELETE}
 				/>
 			</Fragment>

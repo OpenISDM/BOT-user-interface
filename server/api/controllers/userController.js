@@ -52,7 +52,8 @@ export default {
 	},
 
 	addUser: (request, response) => {
-		const { name, password, email, roles, area_id } = request.body
+		const { user } = request.body
+		const { name, password, email, roles, area_id } = user
 		const hash = encrypt.createHash(password)
 		const signupPackage = {
 			name: name.toLowerCase(),
@@ -78,23 +79,23 @@ export default {
 								response.status(200).json(res)
 							})
 							.catch((err) => {
-								console.log(`sinup failed ${err}`)
+								console.log(`addUser failed ${err}`)
 							})
 					})
 					.catch((err) => {
-						console.log(`signup failed ${err}`)
+						console.log(`addUser failed ${err}`)
 					})
 			} else {
-				console.log('signup failed : repeat username')
+				console.log('addUser failed : repeat username')
 			}
 		})
 	},
 
-	editUserInfo: (request, response) => {
+	setUserInfo: (request, response) => {
 		const { user } = request.body
 
 		pool
-			.query(dbQueries.editUserInfo(user))
+			.query(dbQueries.setUserInfo(user))
 			.then((res) => {
 				console.log('edit user info succeed')
 				response.status(200).json(res)
