@@ -40,8 +40,6 @@ import { Formik } from 'formik'
 import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
-import 'react-tabs/style/react-tabs.css'
-import ReactTable from 'react-table'
 import moment from 'moment'
 import {
 	BOTNavLink,
@@ -49,6 +47,7 @@ import {
 	NoDataFoundDiv,
 	PrimaryButton,
 } from '../../BOTComponent/styleComponent'
+import BOTTable from '../../BOTComponent/BOTTable'
 import Loader from '../../presentational/Loader'
 import Select from 'react-select'
 import IconButton from '../../BOTComponent/IconButton'
@@ -312,14 +311,11 @@ const BrowseTraceContainerView = React.forwardRef(
 
 							<hr />
 							{data.length !== 0 ? (
-								<ReactTable
-									keyField="id"
+								<BOTTable
 									data={data}
 									columns={columns}
-									className="-highlight"
 									style={{ maxHeight: '65vh' }}
-									{...styleConfig.reactTable}
-									getTrProps={onRowClick}
+									onClickCallback={onRowClick}
 								/>
 							) : (
 								<NoDataFoundDiv>

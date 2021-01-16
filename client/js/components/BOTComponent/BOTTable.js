@@ -40,6 +40,7 @@ import { JSONClone } from '../../helper/utilities'
 import PropTypes from 'prop-types'
 
 import 'react-table/react-table.css'
+import 'react-tabs/style/react-tabs.css'
 
 const BOTTable = ({ data, columns, onClickCallback, pageSize, style }) => {
 	const { locale } = useContext(AppContext)
