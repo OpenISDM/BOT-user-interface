@@ -56,7 +56,7 @@ const siteConfig = {
 			],
 		},
 		BIDAE_TECH: {
-			id: 1,
+			id: 4,
 			name: 'BIDAE_TECH',
 			hasMap: 1,
 			url: BIDAE_TECH_MAP,
