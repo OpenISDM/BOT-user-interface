@@ -103,8 +103,8 @@ class EditObjectForm extends React.Component {
 		const { locale } = this.context
 		const {
 			title,
-			selectedRowData,
-			objectTable,
+			selectedRowData = {},
+			objectList = [],
 			show,
 			handleClose,
 			disableASN,
@@ -125,34 +125,29 @@ class EditObjectForm extends React.Component {
 		})
 
 		const {
-			id,
-			name,
-			type,
-			status = '',
-			asset_control_number,
-			mac_address,
-			transferred_location,
-			area_name,
-			nickname,
+			id = '',
+			name = '',
+			type = '',
+			status,
+			asset_control_number = '',
+			mac_address = '',
+			transferred_location = '',
+			area_name = '',
+			nickname = '',
+			monitor_type = [],
+			isBind = false,
 		} = selectedRowData
 
 		const initialValues = {
 			name: name || '',
 			type: type || '',
 			asset_control_number: asset_control_number || '',
-			mac_address: selectedRowData.isBind
-				? { label: mac_address, value: mac_address }
-				: null,
-			status: selectedRowData.length !== 0 ? status.value : NORMAL,
+			mac_address: isBind ? { label: mac_address, value: mac_address } : null,
+			status: status ? status.value : NORMAL,
 			area: area_name || '',
-			monitorType:
-				selectedRowData.length !== 0
-					? selectedRowData.monitor_type === 0
-						? []
-						: selectedRowData.monitor_type.split('/')
-					: [],
+			monitorType: monitor_type.length > 0 ? monitor_type.split('/') : [],
 			transferred_location:
-				status.value === TRANSFERRED ? transferred_location : null,
+				status && status.value === TRANSFERRED ? transferred_location : null,
 			nickname: nickname || '',
 		}
 
@@ -170,7 +165,7 @@ class EditObjectForm extends React.Component {
 						}
 						const alreadyUsedNumber =
 							!disableASN &&
-							objectTable
+							objectList
 								.map((item) => item.asset_control_number.toUpperCase())
 								.includes(value.toUpperCase())
 						if (alreadyUsedNumber) {
@@ -203,7 +198,7 @@ class EditObjectForm extends React.Component {
 						if (
 							!obj ||
 							isEmpty(obj) ||
-							compareString(selectedRowData.mac_address, macWithColons)
+							compareString(mac_address, macWithColons)
 						) {
 							return true
 						}
@@ -346,7 +341,7 @@ class EditObjectForm extends React.Component {
 													}}
 													options={macOptions}
 													isSearchable={true}
-													isDisabled={selectedRowData.isBind}
+													isDisabled={isBind}
 													styles={styleConfig.reactSelect}
 													placeholder=""
 													components={{
@@ -398,7 +393,7 @@ class EditObjectForm extends React.Component {
 											onClick={handleClick}
 											variant="link"
 											name={DISASSOCIATE}
-											disabled={!selectedRowData.isBind}
+											disabled={!isBind}
 										>
 											{locale.texts.DISSOCIATE}
 										</Button>
@@ -434,11 +429,11 @@ EditObjectForm.propTypes = {
 	disableASN: PropTypes.bool.isRequired,
 	idleMacaddrSet: PropTypes.array.isRequired,
 	associatedMacSet: PropTypes.array.isRequired,
-	objectTable: PropTypes.array.isRequired,
 	areaTable: PropTypes.array.isRequired,
 	title: PropTypes.string.isRequired,
 	handleClose: PropTypes.func.isRequired,
 	show: PropTypes.bool.isRequired,
+	objectList: PropTypes.array.isRequired,
 }
 
 export default EditObjectForm

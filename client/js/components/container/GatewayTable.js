@@ -34,22 +34,18 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
-import selecTableHOC from 'react-table/lib/hoc/selectTable'
-import config from '../../config'
+import { keyBy } from 'lodash'
 import { gatewayTableColumn } from '../../config/tables'
 import { AppContext } from '../../context/AppContext'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import styleConfig from '../../config/styleConfig'
-import messageGenerator from '../../helper/messageGenerator'
-const SelectTable = selecTableHOC(ReactTable)
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import EditGatewayForm from '../presentational/form/EditGatewayForm'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone, formatTime } from '../../helper/utilities'
-import PropTypes from 'prop-types'
+import { formatTime } from '../../helper/utilities'
+import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import { SET_TABLE_SELECTION } from '../../reducer/action'
 
 class GatewayTable extends React.Component {
 	static contextType = AppContext
@@ -57,14 +53,9 @@ class GatewayTable extends React.Component {
 	state = {
 		locale: this.context.locale.abbr,
 		data: [],
-		columns: [],
+		dataMap: {},
 		showDeleteConfirmation: false,
-		selectedRowData: '',
 		showEdit: false,
-		selection: [],
-		selectAll: false,
-		selectType: '',
-		disable: true,
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -76,160 +67,74 @@ class GatewayTable extends React.Component {
 
 	componentDidMount = () => {
 		this.getData()
-		this.getGatewayDataInterval = setInterval(
-			this.getData,
-			config.getGatewayDataIntervalTime
-		)
-	}
-
-	componentWillUnmount = () => {
-		clearInterval(this.getGatewayDataInterval)
 	}
 
 	getData = async (callback) => {
-		const { locale } = this.context
+		const { locale, stateReducer } = this.context
+		const [, dispatch] = stateReducer
 		const res = await apiHelper.gatewayApiAgent.getGatewayTable({
 			locale: locale.code,
 		})
 
-		this.props.setMessage('clear')
-		const column = JSONClone(gatewayTableColumn)
-		column.forEach((field) => {
-			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-		})
-		const data = res.data.rows.map((row) => {
-			row.last_report_timestamp = formatTime(row.last_report_timestamp)
-			row.registered_timestamp = formatTime(row.registered_timestamp)
-			return row
-		})
-		this.setState(
-			{
-				data,
-				columns: column,
-				locale: locale.abbr,
-				selection: [],
-				selectAll: false,
-				showDeleteConfirmation: false,
-				showEdit: false,
-			},
-			callback
-		)
+		if (res) {
+			const data = res.data.rows.map((row) => {
+				row.last_report_timestamp = formatTime(row.last_report_timestamp)
+				row.registered_timestamp = formatTime(row.registered_timestamp)
+				return row
+			})
 
-		if (!res) {
-			this.props.setMessage('error', 'connect to database failed', true)
+			const dataMap = keyBy(data, 'id')
+
+			this.setState(
+				{
+					data,
+					dataMap,
+					locale: locale.abbr,
+					showDeleteConfirmation: false,
+					showEdit: false,
+				},
+				callback
+			)
 		}
+
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
+		})
 	}
 
 	handleClose = () => {
 		this.setState({
 			showDeleteConfirmation: false,
-			selectedRowData: '',
 			showEdit: false,
-			selection: [],
-			selectAll: false,
-			selectType: '',
 		})
 	}
 
 	handleSubmitForm = async (formOption) => {
-		const callback = () => messageGenerator.setSuccessMessage('save success')
-		await apiHelper.gatewayApiAgent.putGateway({
+		const res = await apiHelper.gatewayApiAgent.putGateway({
 			formOption,
 		})
-		this.getData(callback)
-	}
-
-	toggleSelection = (key) => {
-		let selection = [...this.state.selection]
-		selection !== ''
-			? this.setState({ disable: true })
-			: this.setState({ disable: false })
-		key = key.split('-')[1] ? key.split('-')[1] : key
-		const keyIndex = selection.indexOf(key)
-		if (keyIndex >= 0) {
-			selection = [
-				...selection.slice(0, keyIndex),
-				...selection.slice(keyIndex + 1),
-			]
-		} else {
-			selection.push(key)
+		if (res) {
+			this.getData(() => setSuccessMessage('save success'))
 		}
-		this.setState({
-			selection,
-		})
-	}
-
-	toggleAll = () => {
-		const selectAll = !this.state.selectAll
-		let selection = []
-		let rowsCount = 0
-		if (selectAll) {
-			const wrappedInstance = this.selectTable.getWrappedInstance()
-			const currentRecords = wrappedInstance.getResolvedState().sortedData
-			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
-			})
-		} else {
-			selection = []
-		}
-		selection === ''
-			? this.setState({ disable: true })
-			: this.setState({ disable: false })
-		this.setState({ selectAll, selection })
-	}
-
-	isSelected = (key) => {
-		return this.state.selection.includes(key)
 	}
 
 	deleteRecordGateway = async () => {
-		const idPackage = []
-		const deleteArray = []
-		let deleteCount = 0
-		this.state.data.forEach((item) => {
-			this.state.selection.forEach((itemSelect) => {
-				if (itemSelect === item.id) {
-					deleteArray.push(deleteCount.toString())
-				}
-			})
-			deleteCount += 1
-		})
-		this.setState({ selectAll: false })
-		deleteArray.forEach((item) => {
-			if (this.state.data[item]) {
-				idPackage.push(parseInt(this.state.data[item].id))
-			}
+		const [{ tableSelection }] = this.context.stateReducer
+
+		const ids = tableSelection.map((id) => id)
+		await apiHelper.gatewayApiAgent.deleteGateway({
+			ids,
 		})
 
-		await apiHelper.gatewayApiAgent.deleteGateway({
-			idPackage,
-		})
-		const callback = () => messageGenerator.setSuccessMessage('save success')
-		this.getData(callback)
-		this.setState({ selection: [] })
+		this.getData(() => setSuccessMessage('save success'))
 	}
 
 	render() {
-		const { selectAll, selectType } = this.state
-		const { toggleSelection, toggleAll, isSelected } = this
-		const extraProps = {
-			selectAll,
-			isSelected,
-			toggleAll,
-			toggleSelection,
-			selectType,
-		}
-
-		const { locale } = this.context
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection = [] }] = stateReducer
+		const { dataMap } = this.state
+		const selectedData = dataMap[tableSelection[0]]
 
 		return (
 			<Fragment>
@@ -240,11 +145,10 @@ class GatewayTable extends React.Component {
 								className="mb-1 text-capitalize mr-2"
 								onClick={() => {
 									this.setState({
-										deleteObjectType: 'gateway',
 										showDeleteConfirmation: true,
 									})
 								}}
-								disabled={this.state.selection.length === 0}
+								disabled={tableSelection.length === 0}
 							>
 								{locale.texts.DELETE}
 							</PrimaryButton>
@@ -252,42 +156,19 @@ class GatewayTable extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<SelectTable
-					keyField="id"
+				<BOTSelectTable
 					data={this.state.data}
-					columns={this.state.columns}
-					{...styleConfig.reactTable}
-					ref={(r) => (this.selectTable = r)}
-					className="-highlight"
-					style={{ maxHeight: '75vh' }}
-					onSortedChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					onPageChange={() => {
+					columns={gatewayTableColumn}
+					onClickCallback={() => {
 						this.setState({
-							selectAll: false,
-							selection: '',
+							showEdit: true,
 						})
-					}}
-					{...extraProps}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: (e, handleOriginal) => {
-								this.setState({
-									selectedRowData: rowInfo.original,
-									showEdit: true,
-								})
-								if (handleOriginal) {
-									handleOriginal()
-								}
-							},
-						}
 					}}
 				/>
 				<EditGatewayForm
 					show={this.state.showEdit}
 					title="add comment"
-					selectedObjectData={this.state.selectedRowData}
+					selectedObjectData={selectedData}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
 				/>
@@ -299,10 +180,6 @@ class GatewayTable extends React.Component {
 			</Fragment>
 		)
 	}
-}
-
-GatewayTable.propTypes = {
-	setMessage: PropTypes.func.isRequired,
 }
 
 export default GatewayTable

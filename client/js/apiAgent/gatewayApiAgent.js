@@ -42,8 +42,8 @@ export default {
 		})
 	},
 
-	async deleteGateway({ idPackage }) {
-		return await del(gateway, { idPackage })
+	async deleteGateway({ ids }) {
+		return await del(gateway, { ids })
 	},
 
 	async putGateway({ formOption }) {

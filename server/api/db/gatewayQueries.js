@@ -48,10 +48,10 @@ const getAllGateway = `
 	ORDER BY ip_address DESC
 `
 
-const deleteGateway = (idPackage) => {
+const deleteGateway = (ids) => {
 	const query = `
 		DELETE FROM gateway_table
-		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
+		WHERE id IN (${ids.map((id) => `'${id}'`)});
 	`
 	return query
 }

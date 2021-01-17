@@ -33,24 +33,18 @@
 */
 
 import React from 'react'
-import { ButtonToolbar, Row } from 'react-bootstrap'
+import { keyBy } from 'lodash'
 import { AppContext } from '../../context/AppContext'
-import ReactTable from 'react-table'
-import styleConfig from '../../config/styleConfig'
-import selecTableHOC from 'react-table/lib/hoc/selectTable'
+import { Row, Col, ButtonToolbar } from 'react-bootstrap'
 import EditObjectForm from './form/EditObjectForm'
 import DissociationForm from '../container/DissociationForm'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import Select from 'react-select'
-import BOTInput from '../presentational/BOTInput'
 import dataSrc from '../../dataSrc'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
-import AccessControl from '../authentication/AccessControl'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { objectTableColumn } from '../../config/tables'
 import apiHelper from '../../helper/apiHelper'
 import { transferMonitorTypeToString } from '../../helper/dataTransfer'
-import moment from 'moment'
 import {
 	ADD,
 	UNBIND,
@@ -58,41 +52,26 @@ import {
 	DEVICE,
 	SAVE_SUCCESS,
 	DISASSOCIATE,
-	SEARCH_BAR,
 } from '../../config/wordMap'
-import {
-	JSONClone,
-	formatTime,
-	compareString,
-	includes,
-	filterByField,
-} from '../../helper/utilities'
+import { formatTime } from '../../helper/utilities'
 import config from '../../config'
-
-const SelectTable = selecTableHOC(ReactTable)
+import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import BOTObjectFilterBar from '../BOTComponent/BOTObjectFilterBar'
+import { SET_TABLE_SELECTION } from '../../reducer/action'
 
 class ObjectTable extends React.Component {
 	static contextType = AppContext
 
-	selectTableRef = React.createRef()
-
 	state = {
-		tabIndex: '',
 		isShowEdit: false,
-		selectedRowData: '',
-		selection: [],
-		selectAll: false,
 		isShowBind: false,
 		showDeleteConfirmation: false,
 		isShowEditImportTable: false,
-		bindCase: 0,
-		warningSelect: 0,
 		formPath: '',
 		formTitle: '',
 		disableASN: false,
-		done: false,
 		data: [],
-		columns: [],
+		dataMap: {},
 		areaTable: [],
 		objectTable: [],
 		objectFilter: [],
@@ -105,90 +84,35 @@ class ObjectTable extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.getData()
-		this.getAreaTable()
-		this.getIdleMacaddrSet()
+		this.loadData()
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (this.context.locale.abbr !== prevState.locale) {
-			this.getRefresh()
+			this.loadData()
 		}
 	}
 
-	getRefresh = () => {
-		this.getAreaTable()
-		this.getIdleMacaddrSet()
-
-		const columns = JSONClone(objectTableColumn)
-		const { locale } = this.context
-
-		columns.forEach((field) => {
-			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-		})
-
-		this.state.data.forEach((item) => {
-			item.area_name.label = locale.texts[item.area_name.value]
-			item.registered_timestamp = moment(item.registered_timestamp._i)
-				.locale(this.context.locale.abbr)
-				.format('lll')
-			item.area_name.label = item.area_name.label ? null : '*site module error*'
-		})
-
-		this.state.filteredData.forEach((item) => {
-			item.area_name.label = locale.texts[item.area_name.value]
-
-			item.registered_timestamp = moment(item.registered_timestamp._i)
-				.locale(this.context.locale.abbr)
-				.format('lll')
-			item.area_name.label = item.area_name.label ? null : '*site module error*'
-		})
-
-		this.setState({
-			columns,
-			locale: this.context.locale.abbr,
-		})
-	}
-
-	getAreaTable = async () => {
-		const { locale } = this.context
-
-		const res = await apiHelper.areaApiAgent.getAreaTable()
-		if (res) {
-			const areaSelection = res.data.rows.map((area) => {
-				return {
-					value: area.name,
-					label: locale.texts[area.name],
-				}
-			})
-			this.setState({
-				areaTable: res.data.rows,
-				areaSelection,
-				filterSelection: {
-					...this.state.filterSelection,
-					areaSelection,
-				},
-			})
-		}
-	}
-
-	getData = async (callback) => {
+	loadData = async (callback) => {
 		const { locale, auth } = this.context
 
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const objectTablePromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
-		if (res) {
-			const columns = JSONClone(objectTableColumn)
+
+		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
+		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
+
+		const [objectTableRes, areaTableRes, idleMacRes] = await Promise.all([
+			objectTablePromise,
+			areaTablePromise,
+			idleMacPromise,
+		])
+
+		if (objectTableRes && areaTableRes && idleMacRes) {
 			const typeList = {}
-
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
-
-			const data = res.data.rows
+			const data = objectTableRes.data.rows
 				.filter((item) => parseInt(item.object_type) === 0)
 				.map((item) => {
 					item.monitor_type = transferMonitorTypeToString(item, 'object')
@@ -225,51 +149,55 @@ class ObjectTable extends React.Component {
 					return item
 				})
 
+			const dataMap = keyBy(data, 'id')
+
 			const associatedMacSet = [
 				...new Set(
-					res.data.rows.map((item) => {
+					objectTableRes.data.rows.map((item) => {
 						return item.mac_address
 					})
 				),
 			]
 
-			this.getIdleMacaddrSet()
+			const areaSelection = areaTableRes.data.rows.map((area) => {
+				return {
+					value: area.name,
+					label: locale.texts[area.name],
+				}
+			})
 
-			this.setState(
-				{
-					data,
-					isShowEdit: false,
-					isShowBind: false,
-					showDeleteConfirmation: false,
-					disableASN: false,
-					filteredData: data,
-					columns,
-					objectTable: res.data.rows,
-					filterSelection: {
-						...this.state.filterSelection,
-						typeList,
-					},
-					associatedMacSet,
-				},
-				callback
-			)
-		}
-	}
-
-	getIdleMacaddrSet = async () => {
-		const res = await apiHelper.objectApiAgent.getIdleMacaddr()
-		if (res) {
-			const idleMacaddrSet = res.data.rows[0].mac_set
+			const idleMacaddrSet = idleMacRes.data.rows[0].mac_set
 			const macOptions = idleMacaddrSet.map((mac) => {
 				return {
 					label: mac,
 					value: mac.replace(/:/g, ''),
 				}
 			})
-			this.setState({
-				idleMacaddrSet,
-				macOptions,
-			})
+
+			this.setState(
+				{
+					data,
+					filteredData: data,
+					dataMap,
+					isShowEdit: false,
+					isShowBind: false,
+					showDeleteConfirmation: false,
+					disableASN: false,
+					objectTable: objectTableRes.data.rows,
+					filterSelection: {
+						...this.state.filterSelection,
+						typeList,
+						areaSelection,
+					},
+					associatedMacSet,
+					areaTable: areaTableRes.data.rows,
+					areaSelection,
+					idleMacaddrSet,
+					macOptions,
+					locale: locale.abbr,
+				},
+				callback
+			)
 		}
 	}
 
@@ -333,9 +261,9 @@ class ObjectTable extends React.Component {
 
 		if (res) {
 			const callback = () => {
-				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+				setSuccessMessage(SAVE_SUCCESS)
 			}
-			this.getData(callback)
+			this.getObjectTable(callback)
 		}
 	}
 
@@ -348,56 +276,10 @@ class ObjectTable extends React.Component {
 
 		if (res) {
 			const callback = () => {
-				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+				setSuccessMessage(SAVE_SUCCESS)
 			}
-			this.getData(callback)
+			this.getObjectTable(callback)
 		}
-	}
-
-	toggleSelection = (key) => {
-		let selection = [...this.state.selection]
-		key = key.split('-')[1] ? key.split('-')[1] : key
-		const keyIndex = selection.indexOf(key)
-		if (keyIndex >= 0) {
-			selection = [
-				...selection.slice(0, keyIndex),
-				...selection.slice(keyIndex + 1),
-			]
-		} else {
-			selection.push(key)
-		}
-		this.setState({
-			selection,
-		})
-	}
-
-	toggleAll = () => {
-		const selectAll = !this.state.selectAll
-		let selection = []
-		let rowsCount = 0
-		if (selectAll) {
-			const wrappedInstance = this.selectTable.getWrappedInstance()
-			const currentRecords = wrappedInstance.getResolvedState().sortedData
-			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
-			})
-		} else {
-			selection = []
-		}
-		this.setState({ selectAll, selection })
-	}
-
-	isSelected = (key) => {
-		return this.state.selection.includes(key)
 	}
 
 	handleClickButton = (e) => {
@@ -419,14 +301,12 @@ class ObjectTable extends React.Component {
 			case UNBIND:
 				this.setState({
 					isShowBind: true,
-					bindCase: 1,
 					apiMethod: 'post',
 				})
 				break
 			case DELETE:
 				this.setState({
 					showDeleteConfirmation: true,
-					warningSelect: 1,
 					action: DELETE,
 					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 				})
@@ -442,60 +322,13 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	addObjectFilter = (key, attribute, source) => {
-		const objectFilter = this.state.objectFilter.filter(
-			(filter) => source !== filter.source
-		)
-
-		objectFilter.push({
-			key,
-			attribute,
-			source,
-		})
-
-		this.filterObjects(objectFilter)
-	}
-
-	removeObjectFilter = (source) => {
-		const objectFilter = this.state.objectFilter.filter(
-			(filter) => source !== filter.source
-		)
-
-		this.filterObjects(objectFilter)
-	}
-
-	filterObjects = (objectFilter) => {
-		const filteredData = objectFilter.reduce((acc, curr) => {
-			let callback
-			if (curr.source === SEARCH_BAR) {
-				callback = includes
-			} else {
-				callback = compareString
-			}
-			return filterByField(callback, acc, curr.key, curr.attribute)
-		}, this.state.data)
-
-		this.setState({
-			objectFilter,
-			filteredData,
-		})
-	}
-
 	render() {
-		const { selectedRowData, selectAll, selectType } = this.state
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection = [] }, dispatch] = stateReducer
+		const { dataMap } = this.state
+		const selectedData = dataMap[tableSelection[0]]
 
-		const { toggleSelection, toggleAll, isSelected } = this
-
-		const extraProps = {
-			selectAll,
-			isSelected,
-			toggleAll,
-			toggleSelection,
-			selectType,
-		}
-
-		const { locale } = this.context
-		const typeSelection = this.state.filterSelection.typeList
+		const typeOptions = this.state.filterSelection.typeList
 			? Object.values(this.state.filterSelection.typeList)
 			: null
 
@@ -507,142 +340,60 @@ class ObjectTable extends React.Component {
 		})
 
 		return (
-			<div>
-				<Row className="d-flex justify-content-between my-4">
-					<div className="d-flex justify-content-start">
-						<BOTInput
-							className="mx-2 w-30-view min-height-regular"
-							placeholder={locale.texts.SEARCH}
-							getSearchKey={(key) => {
-								this.addObjectFilter(
-									key,
-									[
-										'name',
-										'type',
-										'area',
-										'status',
-										'macAddress',
-										'acn',
-										'transferred_location',
-									],
-									'search bar'
-								)
+			<>
+				<Col>
+					<Row className="d-flex justify-content-between">
+						<BOTObjectFilterBar
+							onFilterUpdated={({ objectFilter, filteredData }) => {
+								this.setState({
+									objectFilter,
+									filteredData,
+								})
+								dispatch({
+									type: SET_TABLE_SELECTION,
+									value: [],
+								})
 							}}
-							clearSearchResult={null}
+							oldObjectFilter={this.state.objectFilter}
+							objectList={this.state.data}
+							typeOptions={typeOptions}
+							areaOptions={this.state.filterSelection.areaSelection}
+							statusOptions={statusOptions}
 						/>
-						<AccessControl platform={['browser']}>
-							<Select
-								name="Select Type"
-								className="mx-2 w-30-view min-height-regular"
-								styles={styleConfig.reactSelectFilter}
-								onChange={(value) => {
-									if (value) {
-										this.addObjectFilter(value.label, ['type'], 'type select')
-									} else {
-										this.removeObjectFilter('type select')
-									}
-								}}
-								options={typeSelection || []}
-								isClearable={true}
-								isSearchable={true}
-								placeholder={locale.texts.TYPE}
-							/>
-							<Select
-								name="Select Area"
-								className="mx-2 w-30-view min-height-regular"
-								styles={styleConfig.reactSelectFilter}
-								onChange={(value) => {
-									if (value) {
-										this.addObjectFilter(value.label, ['area'], 'area select')
-									} else {
-										this.removeObjectFilter('area select')
-									}
-								}}
-								options={this.state.filterSelection.areaSelection || []}
-								isClearable={true}
-								isSearchable={true}
-								placeholder={locale.texts.AREA}
-							/>
-							<Select
-								name="Select Status"
-								className="mx-2 w-30-view min-height-regular"
-								styles={styleConfig.reactSelectFilter}
-								onChange={(value) => {
-									if (value) {
-										this.addObjectFilter(
-											value.label,
-											['status'],
-											'status select'
-										)
-									} else {
-										this.removeObjectFilter('status select')
-									}
-								}}
-								options={statusOptions || []}
-								isClearable={true}
-								isSearchable={true}
-								placeholder={locale.texts.STATUS}
-							/>
-						</AccessControl>
-					</div>
-					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
 								{locale.texts.ADD_DEVICE}
 							</PrimaryButton>
-							<PrimaryButton
-								name={DELETE}
-								onClick={this.handleClickButton}
-								disabled={this.state.selection.length === 0}
-							>
+							<PrimaryButton name={DELETE} onClick={this.handleClickButton}>
 								{locale.texts.DELETE_DEVICE}
 							</PrimaryButton>
 						</ButtonToolbar>
-					</AccessControl>
-				</Row>
+					</Row>
+				</Col>
+
 				<hr />
-				<SelectTable
-					keyField="id"
+				<BOTSelectTable
 					data={this.state.filteredData}
-					columns={this.state.columns}
-					ref={(r) => (this.selectTable = r)}
-					className="-highlight text-none"
+					columns={objectTableColumn}
 					style={{ maxHeight: '70vh' }}
-					onPageChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					onSortedChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					{...extraProps}
-					{...styleConfig.reactTable}
-					NoDataComponent={() => null}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: (e) => {
-								if (!e.target.type) {
-									this.setState({
-										isShowEdit: true,
-										selectedRowData: rowInfo.original,
-										formTitle: 'edit object',
-										disableASN: true,
-										apiMethod: 'put',
-									})
-								}
-							},
-						}
+					onClickCallback={() => {
+						this.setState({
+							isShowEdit: true,
+							formTitle: 'edit object',
+							disableASN: true,
+							apiMethod: 'put',
+						})
 					}}
 				/>
 				<EditObjectForm
 					show={this.state.isShowEdit}
 					title={this.state.formTitle}
-					selectedRowData={selectedRowData || ''}
+					selectedRowData={selectedData}
 					handleClick={this.handleClickButton}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
 					formPath={this.state.formPath}
-					data={this.state.data}
-					objectTable={this.state.objectTable}
+					objectList={this.state.data}
 					disableASN={this.state.disableASN}
 					areaTable={this.state.areaTable}
 					idleMacaddrSet={this.state.idleMacaddrSet}
@@ -655,10 +406,10 @@ class ObjectTable extends React.Component {
 					selectedRowData={this.state.selectedRowData || 'handleAllDelete'}
 					handleSubmitForm={this.handleSubmitForm}
 					formPath={'xx'}
-					objectTable={this.state.objectTable}
+					objectList={this.state.data}
 					refreshData={this.state.refreshData}
 					handleClose={this.handleClose}
-					data={this.state.objectTable.reduce((dataMap, item) => {
+					dataMapByMac={this.state.data.reduce((dataMap, item) => {
 						dataMap[item.mac_address] = item
 						return dataMap
 					}, {})}
@@ -669,7 +420,7 @@ class ObjectTable extends React.Component {
 					message={this.state.message}
 					handleSubmit={this.objectMultipleDelete}
 				/>
-			</div>
+			</>
 		)
 	}
 }

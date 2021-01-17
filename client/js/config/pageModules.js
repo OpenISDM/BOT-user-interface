@@ -38,7 +38,6 @@ import UserProfile from '../components/container/UserContainer/UserProfile'
 import LBeaconTable from '../components/container/LBeaconTable'
 import GatewayTable from '../components/container/GatewayTable'
 import AdminManagementContainer from '../components/container/UserContainer/AdminManagementContainer'
-import config from '../config'
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
 import MonitorSetting from '../components/container/MonitorSetting'
@@ -58,7 +57,6 @@ import GetAssignments from '../components/container/GetAssignments'
 import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHistoricalRecord'
 // import RolePermissionManagement from '../components/container/RolePermissionManagement'
 // import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
-// import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
@@ -68,30 +66,6 @@ const TransferredLocationManagement = Loadable({
 		),
 	loading: Loader,
 })
-
-export const monitorSettingModule = {
-	title: 'monitor setting',
-	path: routes.MONITOR_SETTINGS,
-	defaultActiveKey: '', // to be assigned
-	tabList: [
-		// {
-		//     name: config.monitorSettingType.MOVEMENT_MONITOR,
-		//     component: (props) => <MonitorSettingBlock {...props}/>
-		// },
-		// {
-		//     name: config.monitorSettingType.LONG_STAY_IN_DANGER_MONITOR,
-		//     component: (props) => <MonitorSettingBlock {...props}/>
-		// },
-		// {
-		//     name: config.monitorSettingType.NOT_STAY_ROOM_MONITOR,
-		//     component: (props) => <MonitorSettingBlock {...props}/>
-		// },
-		{
-			name: config.monitorSettingType.GEOFENCE_MONITOR,
-			component: (props) => <MonitorSetting {...props} />,
-		},
-	],
-}
 
 export const settingModule = {
 	title: 'settings',
@@ -341,13 +315,6 @@ export const navbarNavList = [
 	//     permission: 'route:trackingHistory',
 	// },
 	// {
-	//     name: "monitor setting",
-	//     alias: "monitor",
-	//     path: "/page/monitor",
-	//     module: monitorSettingModule,
-	//     permission: "route:monitor",
-	//     platform: ['browser', 'tablet']
-	// },
 	// {
 	//     name: 'contact tree',
 	//     alias: 'contactTree',

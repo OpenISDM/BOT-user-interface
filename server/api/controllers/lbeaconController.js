@@ -67,9 +67,9 @@ export default {
 	},
 
 	deleteLBeacon: async (request, response) => {
-		const { idPackage } = request.body
+		const { ids } = request.body
 		try {
-			const res = pool.query(dbQueries.deleteLBeacon(idPackage))
+			const res = pool.query(dbQueries.deleteLBeacon(ids))
 			console.log('delete LBeacon record succeed')
 			response.status(200).json(res)
 		} catch (e) {

@@ -37,7 +37,7 @@ import AuthContext from '../../context/AuthenticationContext'
 import BOTAdminMonitorSetting from './BOTAdminMonitorSetting'
 import SystemAdminMonitorSetting from './SystemAdminMonitorSetting'
 
-const MonitorSetting = ({}) => {
+const MonitorSetting = () => {
 	const { user } = useContext(AuthContext)
 	let component = <></>
 	if (user.roles.includes('dev')) {

@@ -45,7 +45,7 @@ import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { object, string } from 'yup'
 import { AppContext } from '../../context/AppContext'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
 
@@ -97,7 +97,7 @@ class DissociationForm extends React.Component {
 		this.setState({
 			showDetail: false,
 		})
-		this.props.data.forEach((item) => {
+		this.props.dataMapByMac.forEach((item) => {
 			if (item.asset_control_number === this.state.inputValue)
 				this.setState({ showDetail: true })
 		})
@@ -106,7 +106,7 @@ class DissociationForm extends React.Component {
 	render() {
 		const { locale } = this.context
 
-		const { title, data, selectedObjectData, show } = this.props
+		const { title, dataMapByMac, selectedObjectData, show } = this.props
 		return (
 			<Modal
 				show={show}
@@ -143,7 +143,7 @@ class DissociationForm extends React.Component {
 														this.setState({
 															returnFlag: false,
 														})
-														this.props.objectTable.forEach((item) => {
+														this.props.objectList.forEach((item) => {
 															if (value === item.mac_address) {
 																this.setState({
 																	returnFlag: true,
@@ -189,7 +189,7 @@ class DissociationForm extends React.Component {
 												}
 											}
 										} else {
-											this.props.objectTable.forEach((item) => {
+											this.props.objectList.forEach((item) => {
 												if (value === item.mac_address) {
 													this.setState({
 														returnFlag: true,
@@ -208,8 +208,10 @@ class DissociationForm extends React.Component {
 
 										if (this.state.returnFlag === true) {
 											this.setState({
-												objectName: data[this.state.valueForDataArray].name,
-												objectType: data[this.state.valueForDataArray].type,
+												objectName:
+													dataMapByMac[this.state.valueForDataArray].name,
+												objectType:
+													dataMapByMac[this.state.valueForDataArray].type,
 												showDetail: true,
 												inputValue: value,
 												returnFlag: false,
@@ -228,8 +230,7 @@ class DissociationForm extends React.Component {
 								),
 						})}
 						onSubmit={(values) => {
-							const callback = () =>
-								messageGenerator.setSuccessMessage('save success')
+							const callback = () => setSuccessMessage('save success')
 							this.handleSubmit(values.mac)
 							callback()
 						}}
@@ -327,11 +328,11 @@ class DissociationForm extends React.Component {
 DissociationForm.propTypes = {
 	show: PropTypes.bool.isRequired,
 	title: PropTypes.string.isRequired,
-	objectTable: PropTypes.object.isRequired,
+	objectList: PropTypes.object.isRequired,
 	selectedObjectData: PropTypes.object.isRequired,
 	handleClose: PropTypes.func.isRequired,
 	refreshData: PropTypes.func.isRequired,
-	data: PropTypes.array.isRequired,
+	dataMapByMac: PropTypes.array.isRequired,
 }
 
 export default DissociationForm
