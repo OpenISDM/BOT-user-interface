@@ -373,6 +373,7 @@ async function getPatientDurationData(request, response) {
 	let {
 		object_id, // string
 		Lbeacon, // string
+		area_id,
 		start_time, // YYYY/MM/DD HH:mm:ss
 		end_time, // YYYY/MM/DD HH:mm:ss
 		count_limit, //
@@ -400,6 +401,7 @@ async function getPatientDurationData(request, response) {
 		end_time = set_initial_time(end_time, 0)
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
+		let filter =''
 
 		//** Object id**//
 		if (object_id !== undefined) {
@@ -410,6 +412,7 @@ async function getPatientDurationData(request, response) {
 				}
 				return parseInt(item, 10)
 			})
+			filter += queryType.getObjectIDFilter(object_id)
 		}
 		//** Lbeacon **//
 		if (Lbeacon !== undefined) {
@@ -423,14 +426,26 @@ async function getPatientDurationData(request, response) {
 					response.json(error_code.Lbeacon_error)
 				}
 			})
+			filter += queryType.getLBeaconUUIDFilter(Lbeacon)
+		}
+
+		if (area_id) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			area_id = area_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item)
+			})
+			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
 		}
 
 		const data = await get_history_data_from_db(
 			key,
 			start_time,
 			end_time,
-			object_id,
-			Lbeacon,
+			filter,
 			count_limit,
 			sort_type
 		)
@@ -523,8 +538,7 @@ async function get_history_data_from_db(
 	key,
 	start_time,
 	end_time,
-	tag,
-	Lbeacon,
+	filter,
 	count_limit,
 	sort_type
 ) {
@@ -534,8 +548,7 @@ async function get_history_data_from_db(
 				key,
 				start_time,
 				end_time,
-				tag,
-				Lbeacon,
+				filter,
 				count_limit,
 				sort_type
 			)
