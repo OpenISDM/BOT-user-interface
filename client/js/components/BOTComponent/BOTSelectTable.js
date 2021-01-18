@@ -189,7 +189,7 @@ class BOTSelectTable extends React.Component {
 				}}
 				NoDataComponent={() => null}
 				showPagination={true}
-				pageSize={10}
+				pageSize={20}
 				showPaginationTop={true}
 				getTrProps={(state, rowInfo) => {
 					let canClick = {}

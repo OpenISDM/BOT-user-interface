@@ -33,47 +33,29 @@
 */
 
 import React, { Fragment } from 'react'
+import { keyBy } from 'lodash'
+import { Row, Col, ButtonToolbar } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
-import ReactTable from 'react-table'
-import styleConfig from '../../config/styleConfig'
-import selecTableHOC from 'react-table/lib/hoc/selectTable'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import moment from 'moment'
 import EditPatientForm from '../presentational/form/EditPatientForm'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { patientTableColumn } from '../../config/tables'
 import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
-import {
-	JSONClone,
-	formatTime,
-	compareString,
-	includes,
-	filterByField,
-} from '../../helper/utilities'
-import {
-	MobileOnlyView,
-	TabletView,
-	CustomView,
-	isMobile,
-	isTablet,
-} from 'react-device-detect'
-import BrowserObjectTableView from '../platform/browser/BrowserObjectTableView'
-import TabletObjectTableView from '../platform/tablet/TableObjectTableView'
-import MobileObjectTableView from '../platform/mobile/MobileObjectTableView'
+import { formatTime } from '../../helper/utilities'
 import { transferMonitorTypeToString } from '../../helper/dataTransfer'
 import {
 	ADD,
-	BIND,
 	UNBIND,
 	DELETE,
 	PERSON,
 	SAVE_SUCCESS,
 	DISASSOCIATE,
-	SEARCH_BAR,
 } from '../../config/wordMap'
-
-const SelectTable = selecTableHOC(ReactTable)
+import { PrimaryButton } from '../BOTComponent/styleComponent'
+import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import BOTObjectFilterBar from '../BOTComponent/BOTObjectFilterBar'
+import { SET_TABLE_SELECTION } from '../../reducer/action'
 
 class PatientTable extends React.Component {
 	static contextType = AppContext
@@ -82,14 +64,11 @@ class PatientTable extends React.Component {
 		isShowBind: false,
 		isPatientShowEdit: false,
 		showDeleteConfirmation: false,
-		selectedRowData: '',
-		selectAll: false,
-		selection: [],
 		formPath: '',
 		formTitle: '',
 		disableASN: false,
-		done: false,
 		data: [],
+		dataMap: {},
 		columns: [],
 		areaTable: [],
 		physicianList: [],
@@ -98,151 +77,129 @@ class PatientTable extends React.Component {
 		objectTable: [],
 		filteredData: [],
 		filterSelection: {},
+		idleMacaddrSet: [],
 		locale: this.context.locale.abbr,
+		associatedMacSet: [],
 	}
 
 	componentDidMount = () => {
-		this.getData()
-		this.getAreaTable()
+		this.loadData()
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
 		if (this.context.locale.abbr !== prevState.locale) {
-			this.getRefresh()
-			this.setState({
-				locale: this.context.locale.abbr,
-			})
+			this.loadData()
 		}
 	}
 
-	getRefresh = () => {
-		this.getAreaTable()
-		const columns = JSONClone(patientTableColumn)
-		const { locale } = this.context
-
-		columns.forEach((field) => {
-			field.Header = this.context.locale.texts[
-				field.Header.toUpperCase().replace(/ /g, '_')
-			]
-		})
-
-		this.state.data.forEach((item) => {
-			item.area_name.label = locale.texts[item.area_name.value]
-			// item.object_type.label =
-			// 	locale.texts[item.object_type.value.toUpperCase()]
-			item.registered_timestamp = moment(item.registered_timestamp._i)
-				.locale(this.context.locale.abbr)
-				.format('lll')
-			if (!item.area_name.label) {
-				item.area_name.label = '*site module error*'
-			}
-		})
-
-		this.state.filteredData.forEach((item) => {
-			item.area_name.label = locale.texts[item.area_name.value]
-			// item.object_type.label =
-			// 	locale.texts[item.object_type.value.toUpperCase()]
-			item.registered_timestamp = moment(item.registered_timestamp._i)
-				.locale(this.context.locale.abbr)
-				.format('lll')
-			if (!item.area_name.label) {
-				item.area_name.label = '*site module error*'
-			}
-		})
-
-		this.setState({
-			columns,
-			locale: this.context.locale.abbr,
-		})
-	}
-
-	getData = async (callback) => {
+	loadData = async (callback) => {
 		const { locale, auth } = this.context
 
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const objectTablePromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectType: [config.OBJECT_TYPE.PERSON],
 		})
+		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
+		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
 
-		if (res) {
-			const columns = JSONClone(patientTableColumn)
+		const [
+			patientObjectTableRes,
+			areaTableRes,
+			idleMacRes,
+		] = await Promise.all([
+			objectTablePromise,
+			areaTablePromise,
+			idleMacPromise,
+		])
 
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
+		if (patientObjectTableRes && areaTableRes && idleMacRes) {
+			const typeList = {}
+			const data = patientObjectTableRes.data.rows.map((item) => {
+				item.monitor_type = transferMonitorTypeToString(item, 'object')
 
-			const data = res.data.rows.map((item) => {
-				item.area_name = {
-					value: item.area_name,
-					label: locale.texts[item.area_name] || '*site module error*',
-					id: item.area_id,
+				item.status = {
+					value: item.status,
+					label: item.status ? locale.texts[item.status.toUpperCase()] : null,
 				}
-				item.monitor_type = transferMonitorTypeToString(item)
+				item.transferred_location = item.transferred_location.id && {
+					value: `${item.transferred_location.name}-${item.transferred_location.department}`,
+					label: `${item.transferred_location.name}-${item.transferred_location.department}`,
+				}
+
 				item.isBind = item.mac_address ? 1 : 0
 				item.mac_address = item.mac_address
 					? item.mac_address
 					: locale.texts.NON_BINDING
+
+				if (!Object.keys(typeList).includes(item.type)) {
+					typeList[item.type] = {
+						value: item.type,
+						label: item.type,
+					}
+				}
+
+				item.monitor_type = transferMonitorTypeToString(item)
+
+				item.area_name = {
+					value: item.area_name,
+					label: locale.texts[item.area_name],
+					id: item.area_id,
+				}
 
 				item.registered_timestamp = formatTime(item.registered_timestamp)
 
 				return item
 			})
 
-			this.getIdleMacaddrSet()
-			this.setState(
-				{
-					data,
-					isShowEdit: false,
-					isShowBind: false,
-					showDeleteConfirmation: false,
-					isPatientShowEdit: false,
-					disableASN: false,
-					columns,
-					objectTable: res.data.rows,
-					locale: locale.abbr,
-					filteredData: data,
-				},
-				callback
-			)
-		}
-	}
+			const dataMap = keyBy(data, 'id')
 
-	getIdleMacaddrSet = async () => {
-		const res = await apiHelper.objectApiAgent.getIdleMacaddr()
-		if (res) {
-			const idleMacaddrSet = res.data.rows[0].mac_set
+			const associatedMacSet = [
+				...new Set(
+					patientObjectTableRes.data.rows.map((item) => {
+						return item.mac_address
+					})
+				),
+			]
+
+			const areaSelection = areaTableRes.data.rows.map((area) => {
+				return {
+					value: area.name,
+					label: locale.texts[area.name],
+				}
+			})
+
+			const idleMacaddrSet = idleMacRes.data.rows[0].mac_set
 			const macOptions = idleMacaddrSet.map((mac) => {
 				return {
 					label: mac,
 					value: mac.replace(/:/g, ''),
 				}
 			})
-			this.setState({
-				idleMacaddrSet,
-				macOptions,
-			})
-		}
-	}
 
-	getAreaTable = async () => {
-		const { locale } = this.context
-		const res = await apiHelper.areaApiAgent.getAreaTable()
-		if (res) {
-			const areaSelection = res.data.rows.map((area) => {
-				return {
-					value: area.name,
-					label: locale.texts[area.name],
-				}
-			})
-			this.setState({
-				areaTable: res.data.rows,
-				areaSelection,
-				filterSelection: {
-					...this.state.filterSelection,
+			this.setState(
+				{
+					data,
+					filteredData: data,
+					dataMap,
+					isShowEdit: false,
+					isShowBind: false,
+					showDeleteConfirmation: false,
+					disableASN: false,
+					objectTable: patientObjectTableRes.data.rows,
+					filterSelection: {
+						...this.state.filterSelection,
+						typeList,
+						areaSelection,
+					},
+					associatedMacSet,
+					areaTable: areaTableRes.data.rows,
 					areaSelection,
+					idleMacaddrSet,
+					macOptions,
+					locale: locale.abbr,
 				},
-			})
+				callback
+			)
 		}
 	}
 
@@ -251,108 +208,8 @@ class PatientTable extends React.Component {
 			isShowBind: false,
 			isPatientShowEdit: false,
 			showDeleteConfirmation: false,
-			selectedRowData: '',
 			disableASN: false,
 		})
-	}
-
-	handleSubmitForm = async (formOption) => {
-		const { apiMethod } = this.state
-
-		await apiHelper.objectApiAgent[apiMethod]({
-			formOption,
-			mode: PERSON,
-		})
-		const callback = () => {
-			messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-		}
-		this.getData(callback)
-	}
-
-	toggleSelection = (key) => {
-		let selection = [...this.state.selection]
-		key = key.split('-')[1] ? key.split('-')[1] : key
-		const keyIndex = selection.indexOf(key)
-		if (keyIndex >= 0) {
-			selection = [
-				...selection.slice(0, keyIndex),
-				...selection.slice(keyIndex + 1),
-			]
-		} else {
-			selection.push(key)
-		}
-		this.setState({
-			selection,
-		})
-	}
-
-	toggleAll = () => {
-		const selectAll = !this.state.selectAll
-		let selection = []
-		let rowsCount = 0
-		if (selectAll) {
-			const wrappedInstance = this.selectTable.getWrappedInstance()
-			const currentRecords = wrappedInstance.getResolvedState().sortedData
-			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
-			})
-		} else {
-			selection = []
-		}
-		this.setState({ selectAll, selection })
-	}
-
-	isSelected = (key) => {
-		return this.state.selection.includes(key)
-	}
-
-	handleClickButton = (e) => {
-		const { name } = e.target
-		const { locale } = this.context
-
-		switch (name) {
-			case ADD:
-				this.setState({
-					isPatientShowEdit: true,
-					formTitle: name,
-					selectedRowData: [],
-					disableASN: false,
-					apiMethod: 'post',
-				})
-				break
-			case UNBIND:
-				this.setState({
-					isShowBind: true,
-					bindCase: 1,
-					apiMethod: 'post',
-				})
-				break
-			case DELETE:
-				this.setState({
-					showDeleteConfirmation: true,
-					warningSelect: 1,
-					action: DELETE,
-					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
-				})
-				break
-
-			case DISASSOCIATE:
-				this.setState({
-					showDeleteConfirmation: true,
-					action: DISASSOCIATE,
-					message: locale.texts.ARE_YOU_SURE_TO_DISASSOCIATE,
-				})
-				break
-		}
 	}
 
 	objectMultipleDelete = async () => {
@@ -380,8 +237,6 @@ class PatientTable extends React.Component {
 					deleteCount += 1
 				})
 
-				this.setState({ selectAll: false })
-
 				deleteArray.forEach((item) => {
 					if (this.state.data[item]) {
 						formOption.push({
@@ -397,142 +252,135 @@ class PatientTable extends React.Component {
 					formOption,
 				})
 
-				this.setState({ selectAll: false, selection: [] })
-
 				break
 		}
 
 		if (res) {
-			const callback = () => {
-				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-			}
-			this.getData(callback)
+			this.getData(() => setSuccessMessage(SAVE_SUCCESS))
 		}
 	}
 
-	addObjectFilter = (key, attribute, source) => {
-		const objectFilter = this.state.objectFilter.filter(
-			(filter) => source !== filter.source
-		)
-
-		objectFilter.push({
-			key,
-			attribute,
-			source,
+	handleSubmitForm = async (formOption) => {
+		const { apiMethod } = this.state
+		const res = await apiHelper.objectApiAgent[apiMethod]({
+			formOption,
+			mode: PERSON,
 		})
-
-		this.filterObjects(objectFilter)
+		if (res) {
+			this.getData(() => setSuccessMessage(SAVE_SUCCESS))
+		}
 	}
 
-	removeObjectFilter = (source) => {
-		const objectFilter = this.state.objectFilter.filter(
-			(filter) => source !== filter.source
-		)
+	handleClickButton = (e) => {
+		const { name } = e.target
+		const { locale } = this.context
 
-		this.filterObjects(objectFilter)
-	}
+		switch (name) {
+			case ADD:
+				this.setState({
+					isPatientShowEdit: true,
+					formTitle: name,
+					selectedRowData: [],
+					disableASN: false,
+					apiMethod: 'post',
+				})
+				break
+			case UNBIND:
+				this.setState({
+					isShowBind: true,
+					apiMethod: 'post',
+				})
+				break
+			case DELETE:
+				this.setState({
+					showDeleteConfirmation: true,
+					action: DELETE,
+					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
+				})
+				break
 
-	filterObjects = (objectFilter) => {
-		const filteredData = objectFilter.reduce((acc, curr) => {
-			let callback
-			if (curr.source === SEARCH_BAR) {
-				callback = includes
-			} else {
-				callback = compareString
-			}
-			return filterByField(callback, acc, curr.key, curr.attribute)
-		}, this.state.data)
-
-		this.setState({
-			objectFilter,
-			filteredData,
-		})
+			case DISASSOCIATE:
+				this.setState({
+					showDeleteConfirmation: true,
+					action: DISASSOCIATE,
+					message: locale.texts.ARE_YOU_SURE_TO_DISASSOCIATE,
+				})
+				break
+		}
 	}
 
 	render() {
-		const {
-			selectedRowData,
-			selectAll,
-			selectType,
-			filterSelection,
-			selection,
-		} = this.state
-
-		const {
-			toggleSelection,
-			toggleAll,
-			isSelected,
-			addObjectFilter,
-			removeObjectFilter,
-			handleClickButton,
-			handleClick,
-		} = this
-
-		const extraProps = {
-			selectAll,
-			isSelected,
-			toggleAll,
-			toggleSelection,
-			selectType,
-		}
-
-		const propsGroup = {
-			addObjectFilter,
-			removeObjectFilter,
-			filterSelection,
-			handleClickButton,
-			handleClick,
-			selection,
-		}
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection = [] }, dispatch] = stateReducer
+		const { dataMap } = this.state
+		const selectedData = dataMap[tableSelection[0]]
 
 		return (
-			<Fragment>
-				<CustomView condition={!isTablet && !isMobile}>
-					<BrowserObjectTableView {...propsGroup} />
-				</CustomView>
-				<TabletView>
-					<TabletObjectTableView {...propsGroup} />
-				</TabletView>
-				<MobileOnlyView>
-					<MobileObjectTableView {...propsGroup} />
-				</MobileOnlyView>
+			<>
+				<Col>
+					<Row className="d-flex justify-content-between">
+						<BOTObjectFilterBar
+							onFilterUpdated={({ objectFilter, filteredData }) => {
+								this.setState({
+									objectFilter,
+									filteredData,
+								})
+								dispatch({
+									type: SET_TABLE_SELECTION,
+									value: [],
+								})
+							}}
+							oldObjectFilter={this.state.objectFilter}
+							objectList={this.state.data}
+							selectionList={[
+								{
+									label: locale.texts.SEARCH,
+									attribute: [
+										'name',
+										'area',
+										'macAddress',
+										'acn',
+										'sex',
+										'monitor_type',
+									],
+									source: 'search bar',
+								},
+								{
+									label: locale.texts.AREA,
+									options: this.state.filterSelection.areaSelection,
+									attribute: ['area'],
+									source: 'area select',
+								},
+							]}
+						/>
+						<ButtonToolbar>
+							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
+								{locale.texts.ADD_PATIENT}
+							</PrimaryButton>
+							<PrimaryButton name={DELETE} onClick={this.handleClickButton}>
+								{locale.texts.DELETE_PATIENT}
+							</PrimaryButton>
+						</ButtonToolbar>
+					</Row>
+				</Col>
 				<hr />
-				<SelectTable
-					keyField="id"
+				<BOTSelectTable
 					data={this.state.filteredData}
-					columns={this.state.columns}
-					ref={(r) => (this.selectTable = r)}
-					className="-highlight text-none"
-					style={{ maxHeight: '70vh' }}
-					onPageChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					onSortedChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					{...extraProps}
-					{...styleConfig.reactTable}
-					NoDataComponent={() => null}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: (e) => {
-								if (!e.target.type) {
-									this.setState({
-										isPatientShowEdit: true,
-										selectedRowData: rowInfo.original,
-										formTitle: 'edit info',
-										disableASN: true,
-										apiMethod: 'put',
-									})
-								}
-							},
-						}
+					columns={patientTableColumn}
+					style={{ maxHeight: '80vh' }}
+					onClickCallback={() => {
+						this.setState({
+							isPatientShowEdit: true,
+							formTitle: 'edit info',
+							disableASN: true,
+							apiMethod: 'put',
+						})
 					}}
 				/>
 				<EditPatientForm
 					show={this.state.isPatientShowEdit}
 					title={this.state.formTitle}
-					selectedRowData={selectedRowData || ''}
+					selectedRowData={selectedData}
 					handleSubmit={this.handleSubmitForm}
 					handleClick={this.handleClickButton}
 					formPath={this.state.formPath}
@@ -551,7 +399,7 @@ class PatientTable extends React.Component {
 					message={this.state.message}
 					handleSubmit={this.objectMultipleDelete}
 				/>
-			</Fragment>
+			</>
 		)
 	}
 }

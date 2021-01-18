@@ -32,9 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { useContext } from 'react'
+import React from 'react'
 import Select from 'react-select'
-import { AppContext } from '../../context/AppContext'
 import styleConfig from '../../config/styleConfig'
 import BOTInput from '../presentational/BOTInput'
 import { compareString, includes, filterByField } from '../../helper/utilities'
@@ -83,132 +82,72 @@ const BOTObjectFilterBar = ({
 	},
 	oldObjectFilter = [],
 	objectList = [],
-	typeOptions = [],
-	areaOptions = [],
-	statusOptions = [],
+	selectionList = [],
 }) => {
-	const { locale } = useContext(AppContext)
-
-	return (
-		<div className="d-flex justify-content-start">
-			<BOTInput
-				className="mx-2 w-30-view min-height-regular"
-				placeholder={locale.texts.SEARCH}
-				getSearchKey={(key) => {
-					filterObjectList({
-						key,
-						attribute: [
-							'name',
-							'type',
-							'area',
-							'status',
-							'macAddress',
-							'acn',
-							'transferred_location',
-						],
-						source: 'search bar',
-						oldObjectFilter,
-						objectList,
-						onFilterUpdated,
-					})
-				}}
-				clearSearchResult={null}
-			/>
-			<Select
-				name="Select Type"
-				className="mx-2 w-30-view min-height-regular"
-				styles={styleConfig.reactSelectFilter}
-				onChange={(value) => {
-					if (value) {
+	const elements = selectionList.map(
+		({ label, attribute, source, options }, index) => {
+			if (options) {
+				return (
+					<Select
+						key={index}
+						name={label}
+						className="mx-2 w-30-view min-height-regular"
+						styles={styleConfig.reactSelectFilter}
+						onChange={(value) => {
+							if (value) {
+								filterObjectList({
+									key: value.label,
+									attribute,
+									source,
+									oldObjectFilter,
+									objectList,
+									onFilterUpdated,
+								})
+							} else {
+								filterObjectList({
+									source,
+									oldObjectFilter,
+									objectList,
+									onFilterUpdated,
+								})
+							}
+						}}
+						options={options}
+						isClearable={true}
+						isSearchable={true}
+						placeholder={label}
+					/>
+				)
+			}
+			return (
+				<BOTInput
+					key={index}
+					className="mx-2 w-30-view min-height-regular"
+					placeholder={label}
+					getSearchKey={(key) => {
 						filterObjectList({
-							key: value.label,
-							attribute: ['type'],
-							source: 'type select',
+							key,
+							attribute,
+							source,
 							oldObjectFilter,
 							objectList,
 							onFilterUpdated,
 						})
-					} else {
-						filterObjectList({
-							source: 'type select',
-							oldObjectFilter,
-							objectList,
-							onFilterUpdated,
-						})
-					}
-				}}
-				options={typeOptions}
-				isClearable={true}
-				isSearchable={true}
-				placeholder={locale.texts.TYPE}
-			/>
-			<Select
-				name="Select Area"
-				className="mx-2 w-30-view min-height-regular"
-				styles={styleConfig.reactSelectFilter}
-				onChange={(value) => {
-					if (value) {
-						filterObjectList({
-							key: value.label,
-							attribute: ['area'],
-							source: 'area select',
-							oldObjectFilter,
-							objectList,
-							onFilterUpdated,
-						})
-					} else {
-						filterObjectList({
-							source: 'area select',
-							oldObjectFilter,
-							objectList,
-							onFilterUpdated,
-						})
-					}
-				}}
-				options={areaOptions}
-				isClearable={true}
-				isSearchable={true}
-				placeholder={locale.texts.AREA}
-			/>
-			<Select
-				name="Select Status"
-				className="mx-2 w-30-view min-height-regular"
-				styles={styleConfig.reactSelectFilter}
-				onChange={(value) => {
-					if (value) {
-						filterObjectList({
-							key: value.label,
-							attribute: ['status'],
-							source: 'status select',
-							oldObjectFilter,
-							objectList,
-							onFilterUpdated,
-						})
-					} else {
-						filterObjectList({
-							source: 'status select',
-							oldObjectFilter,
-							objectList,
-							onFilterUpdated,
-						})
-					}
-				}}
-				options={statusOptions}
-				isClearable={true}
-				isSearchable={true}
-				placeholder={locale.texts.STATUS}
-			/>
-		</div>
+					}}
+					clearSearchResult={null}
+				/>
+			)
+		}
 	)
+
+	return <div className="d-flex justify-content-start">{elements}</div>
 }
 
 BOTObjectFilterBar.propTypes = {
 	onFilterUpdated: PropTypes.func.isRequired,
 	oldObjectFilter: PropTypes.array.isRequired,
 	objectList: PropTypes.array.isRequired,
-	typeOptions: PropTypes.array.isRequired,
-	areaOptions: PropTypes.array.isRequired,
-	statusOptions: PropTypes.array.isRequired,
+	selectionList: PropTypes.array.isRequired,
 }
 
 export default BOTObjectFilterBar

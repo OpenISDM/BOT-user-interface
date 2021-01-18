@@ -37,15 +37,14 @@ import { Modal, Button, Row, Col } from 'react-bootstrap'
 import Select from 'react-select'
 import config from '../../../config'
 import { AppContext } from '../../../context/AppContext'
-import Creatable, { makeCreatableSelect } from 'react-select/creatable'
-import { Formik, Field, Form } from 'formik'
+import Creatable from 'react-select/creatable'
+import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import CheckboxGroup from '../../container/CheckboxGroup'
-import Checkbox from '../Checkbox'
 import FormikFormGroup from '../FormikFormGroup'
 import styleConfig from '../../../config/styleConfig'
 import { DISASSOCIATE } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
+import PropTypes from 'prop-types'
 
 const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
@@ -60,10 +59,17 @@ class EditPatientForm extends React.Component {
 
 		const {
 			title,
-			selectedRowData,
+			selectedRowData = {},
 			physicianList = [],
 			show,
 			handleClose,
+			areaTable,
+			disableASN,
+			objectTable,
+			macOptions,
+			handleSubmit,
+			roomOptions,
+			handleClick,
 		} = this.props
 
 		const {
@@ -71,12 +77,12 @@ class EditPatientForm extends React.Component {
 			area_name,
 			mac_address,
 			asset_control_number,
-			object_type,
-			monitor_type = [],
 			room,
+			physician_id,
+			physicianIDNumber,
 		} = selectedRowData
 
-		const areaOptions = this.props.areaTable.map((area) => {
+		const areaOptions = areaTable.map((area) => {
 			return {
 				value: area.name,
 				label: locale.texts[area.name.toUpperCase().replace(/ /g, '_')],
@@ -97,7 +103,7 @@ class EditPatientForm extends React.Component {
 		})
 
 		physicianList.map((user) => {
-			selectedRowData.physician_id == user.id
+			return physician_id === user.id
 				? (selectedRowData.physician = {
 						value: user.id,
 						label: user.name,
@@ -114,25 +120,15 @@ class EditPatientForm extends React.Component {
 					<Formik
 						initialValues={{
 							area: area_name || '',
-
 							physician: '',
-
 							name: name || '',
-
 							mac_address: selectedRowData.isBind
 								? {
 										label: mac_address,
 										value: mac_address,
 								  }
 								: null,
-
 							asset_control_number: asset_control_number || '',
-
-							// gender: object_type || '',
-
-							monitorType:
-								selectedRowData.length != 0 ? monitor_type.split('/') : [],
-
 							room: room
 								? {
 										value: room,
@@ -144,23 +140,19 @@ class EditPatientForm extends React.Component {
 							name: string()
 								.required(locale.texts.NAME_IS_REQUIRED)
 								.max(40, locale.texts.LIMIT_IN_FOURTY_CHARACTER),
-
 							area: string().required(locale.texts.AREA_IS_REQUIRED),
-
 							// gender: string().required(locale.texts.GENDER_IS_REQUIRED),
-
 							asset_control_number: string()
 								.required(locale.texts.NUMBER_IS_REQUIRED)
 								.test(
 									'asset_control_number',
 									locale.texts.THE_ID_IS_ALREADY_USED,
 									(value) => {
-										if (value == undefined) return false
-
-										if (!this.props.disableASN) {
+										if (value === undefined) return false
+										if (!disableASN) {
 											if (value != null) {
 												if (
-													this.props.objectTable
+													objectTable
 														.map((item) =>
 															item.asset_control_number.toUpperCase()
 														)
@@ -183,53 +175,42 @@ class EditPatientForm extends React.Component {
 									locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
 									(obj) => {
 										console.log(obj)
-										if (obj == undefined) return true
+										if (obj === undefined) return true
 										if (obj == null || isEmpty(obj)) return true
-										if (selectedRowData.length == 0) return true
+										if (selectedRowData.length === 0) return true
 										return macaddrValidation(obj.label)
 									}
 								),
 						})}
-						onSubmit={(values, { setStatus, setSubmitting }) => {
-							const monitor_type = values.monitorType
-								? values.monitorType
-										.filter((item) => item)
-										.reduce((sum, item) => {
-											sum += parseInt(monitorTypeMap[item])
-											return sum
-										}, 0)
-								: 0
-
-							physicianList.map((item) => {
-								if (values.physician)
-									item.name == values.physician.value
-										? (values.physician.value = item.id)
-										: null
-							})
+						onSubmit={(values) => {
+							// physicianList.map((item) => {
+							// 	if (values.physician)
+							// 		return item.name === values.physician.value
+							// 			? (values.physician.value = item.id)
+							// 			: null
+							// })
 
 							const postOption = {
 								...values,
 								name: values.name.trim(),
 								area_id: values.area.id,
 								// gender_id: values.gender.value,
-								monitor_type,
 								room: values.room ? values.room.label : '',
 								object_type: config.OBJECT_TYPE.PERSON,
 								physicianIDNumber: values.physician
 									? values.physician.value
-									: this.props.physicianIDNumber,
+									: physicianIDNumber,
 								mac_address:
 									isEmpty(values.mac_address) || values.mac_address == null
 										? null
 										: values.mac_address.label,
 							}
 
-							this.props.handleSubmit(postOption)
+							handleSubmit(postOption)
 						}}
 						render={({
 							values,
 							errors,
-							status,
 							touched,
 							isSubmitting,
 							setFieldValue,
@@ -278,7 +259,7 @@ class EditPatientForm extends React.Component {
 											error={errors.asset_control_number}
 											touched={touched.asset_control_number}
 											placeholder=""
-											disabled={this.props.disableASN}
+											disabled={disableASN}
 										/>
 									</Col>
 									<Col>
@@ -296,7 +277,7 @@ class EditPatientForm extends React.Component {
 														obj.label = obj.value.match(/.{1,2}/g).join(':')
 														setFieldValue('mac_address', obj)
 													}}
-													options={this.props.macOptions}
+													options={macOptions}
 													isSearchable={true}
 													isDisabled={selectedRowData.isBind}
 													styles={styleConfig.reactSelect}
@@ -370,7 +351,7 @@ class EditPatientForm extends React.Component {
 											styles={styleConfig.reactSelect}
 											value={values.room}
 											onChange={(value) => setFieldValue('room', value)}
-											options={this.props.roomOptions || []}
+											options={roomOptions || []}
 											components={{
 												IndicatorSeparator: () => null,
 											}}
@@ -378,40 +359,10 @@ class EditPatientForm extends React.Component {
 									)}
 								/>
 								<hr />
-								<FormikFormGroup
-									name="monitorType"
-									label={locale.texts.MONITOR_TYPE}
-									error={errors.monitorType}
-									touched={touched.monitorType}
-									component={() => (
-										<CheckboxGroup
-											id="monitorType"
-											label={locale.texts.MONITOR_TYPE}
-											value={values.monitorType}
-											onChange={setFieldValue}
-										>
-											{Object.keys(config.monitorType)
-												.filter((key) =>
-													config.monitorTypeMap.patient.includes(parseInt(key))
-												)
-												.map((key, index) => {
-													return (
-														<Field
-															key={index}
-															component={Checkbox}
-															name="checkboxGroup"
-															id={config.monitorType[key]}
-															label={config.monitorType[key]}
-														/>
-													)
-												})}
-										</CheckboxGroup>
-									)}
-								/>
 								<Modal.Footer>
 									<div className="mr-auto">
 										<Button
-											onClick={this.props.handleClick}
+											onClick={handleClick}
 											variant="link"
 											name={DISASSOCIATE}
 											disabled={!selectedRowData.isBind}
@@ -440,6 +391,21 @@ class EditPatientForm extends React.Component {
 			</Modal>
 		)
 	}
+}
+
+EditPatientForm.propTypes = {
+	title: PropTypes.string,
+	selectedRowData: PropTypes.object,
+	physicianList: PropTypes.array,
+	areaTable: PropTypes.array,
+	show: PropTypes.bool,
+	handleClose: PropTypes.func,
+	disableASN: PropTypes.bool,
+	objectTable: PropTypes.array,
+	macOptions: PropTypes.array,
+	handleSubmit: PropTypes.func,
+	roomOptions: PropTypes.array,
+	handleClick: PropTypes.func,
 }
 
 export default EditPatientForm

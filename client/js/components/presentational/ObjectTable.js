@@ -98,62 +98,59 @@ class ObjectTable extends React.Component {
 
 		const objectTablePromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
-			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
+			objectType: [config.OBJECT_TYPE.DEVICE],
 		})
-
 		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
 		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
 
-		const [objectTableRes, areaTableRes, idleMacRes] = await Promise.all([
+		const [deviceObjectTableRes, areaTableRes, idleMacRes] = await Promise.all([
 			objectTablePromise,
 			areaTablePromise,
 			idleMacPromise,
 		])
 
-		if (objectTableRes && areaTableRes && idleMacRes) {
+		if (deviceObjectTableRes && areaTableRes && idleMacRes) {
 			const typeList = {}
-			const data = objectTableRes.data.rows
-				.filter((item) => parseInt(item.object_type) === 0)
-				.map((item) => {
-					item.monitor_type = transferMonitorTypeToString(item, 'object')
+			const data = deviceObjectTableRes.data.rows.map((item) => {
+				item.monitor_type = transferMonitorTypeToString(item, 'object')
 
-					item.status = {
-						value: item.status,
-						label: item.status ? locale.texts[item.status.toUpperCase()] : null,
+				item.status = {
+					value: item.status,
+					label: item.status ? locale.texts[item.status.toUpperCase()] : null,
+				}
+				item.transferred_location = item.transferred_location.id && {
+					value: `${item.transferred_location.name}-${item.transferred_location.department}`,
+					label: `${item.transferred_location.name}-${item.transferred_location.department}`,
+				}
+
+				item.isBind = item.mac_address ? 1 : 0
+				item.mac_address = item.mac_address
+					? item.mac_address
+					: locale.texts.NON_BINDING
+
+				if (!Object.keys(typeList).includes(item.type)) {
+					typeList[item.type] = {
+						value: item.type,
+						label: item.type,
 					}
-					item.transferred_location = item.transferred_location.id && {
-						value: `${item.transferred_location.name}-${item.transferred_location.department}`,
-						label: `${item.transferred_location.name}-${item.transferred_location.department}`,
-					}
+				}
 
-					item.isBind = item.mac_address ? 1 : 0
-					item.mac_address = item.mac_address
-						? item.mac_address
-						: locale.texts.NON_BINDING
+				item.area_name = {
+					value: item.area_name,
+					label: locale.texts[item.area_name],
+					id: item.area_id,
+				}
 
-					if (!Object.keys(typeList).includes(item.type)) {
-						typeList[item.type] = {
-							value: item.type,
-							label: item.type,
-						}
-					}
+				item.registered_timestamp = formatTime(item.registered_timestamp)
 
-					item.area_name = {
-						value: item.area_name,
-						label: locale.texts[item.area_name],
-						id: item.area_id,
-					}
-
-					item.registered_timestamp = formatTime(item.registered_timestamp)
-
-					return item
-				})
+				return item
+			})
 
 			const dataMap = keyBy(data, 'id')
 
 			const associatedMacSet = [
 				...new Set(
-					objectTableRes.data.rows.map((item) => {
+					deviceObjectTableRes.data.rows.map((item) => {
 						return item.mac_address
 					})
 				),
@@ -183,7 +180,7 @@ class ObjectTable extends React.Component {
 					isShowBind: false,
 					showDeleteConfirmation: false,
 					disableASN: false,
-					objectTable: objectTableRes.data.rows,
+					objectTable: deviceObjectTableRes.data.rows,
 					filterSelection: {
 						...this.state.filterSelection,
 						typeList,
@@ -204,9 +201,9 @@ class ObjectTable extends React.Component {
 	handleClose = () => {
 		this.setState({
 			isShowBind: false,
+			isShowEdit: false,
 			showDeleteConfirmation: false,
 			isShowEditImportTable: false,
-			isShowEdit: false,
 			disableASN: false,
 		})
 	}
@@ -237,8 +234,6 @@ class ObjectTable extends React.Component {
 					deleteCount += 1
 				})
 
-				this.setState({ selectAll: false })
-
 				deleteArray.forEach((item) => {
 					if (this.state.data[item]) {
 						formOption.push({
@@ -254,16 +249,11 @@ class ObjectTable extends React.Component {
 					formOption,
 				})
 
-				this.setState({ selectAll: false, selection: [] })
-
 				break
 		}
 
 		if (res) {
-			const callback = () => {
-				setSuccessMessage(SAVE_SUCCESS)
-			}
-			this.getObjectTable(callback)
+			this.getObjectTable(() => setSuccessMessage(SAVE_SUCCESS))
 		}
 	}
 
@@ -273,12 +263,8 @@ class ObjectTable extends React.Component {
 			formOption,
 			mode: DEVICE,
 		})
-
 		if (res) {
-			const callback = () => {
-				setSuccessMessage(SAVE_SUCCESS)
-			}
-			this.getObjectTable(callback)
+			this.getObjectTable(() => setSuccessMessage(SAVE_SUCCESS))
 		}
 	}
 
@@ -356,9 +342,39 @@ class ObjectTable extends React.Component {
 							}}
 							oldObjectFilter={this.state.objectFilter}
 							objectList={this.state.data}
-							typeOptions={typeOptions}
-							areaOptions={this.state.filterSelection.areaSelection}
-							statusOptions={statusOptions}
+							selectionList={[
+								{
+									label: locale.texts.SEARCH,
+									attribute: [
+										'name',
+										'type',
+										'area',
+										'status',
+										'macAddress',
+										'acn',
+										'transferred_location',
+									],
+									source: 'search bar',
+								},
+								{
+									label: locale.texts.TYPE,
+									options: typeOptions,
+									attribute: ['type'],
+									source: 'type select',
+								},
+								{
+									label: locale.texts.AREA,
+									options: this.state.filterSelection.areaSelection,
+									attribute: ['area'],
+									source: 'area select',
+								},
+								{
+									label: locale.texts.STATUS,
+									options: statusOptions,
+									attribute: ['status'],
+									source: 'status select',
+								},
+							]}
 						/>
 						<ButtonToolbar>
 							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
@@ -375,7 +391,7 @@ class ObjectTable extends React.Component {
 				<BOTSelectTable
 					data={this.state.filteredData}
 					columns={objectTableColumn}
-					style={{ maxHeight: '70vh' }}
+					style={{ maxHeight: '80vh' }}
 					onClickCallback={() => {
 						this.setState({
 							isShowEdit: true,
