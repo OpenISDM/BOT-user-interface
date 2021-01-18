@@ -34,16 +34,15 @@
 
 import React from 'react'
 import AuthenticationContext from './AuthenticationContext'
-import LocaleContext from './LocaleContext'
-import Locale from '../locale/Locale'
 import Auth from '../Auth'
 import StateReducer from '../reducer/StateReducer'
+import PropTypes from 'prop-types'
 
 export const AppContext = React.createContext()
 
 const AppContextProvider = (props) => {
 	const auth = React.useContext(AuthenticationContext)
-	const locale = React.useContext(LocaleContext)
+	const { locale } = auth
 
 	const initialState = {
 		area: { id: parseInt(auth.user.main_area) },
@@ -54,6 +53,7 @@ const AppContextProvider = (props) => {
 		objectFoundResults: {},
 		deviceObjectTypeVisible: true,
 		personObjectTypeVisible: true,
+		openedNotification: {},
 	}
 
 	const stateReducer = React.useReducer(StateReducer, initialState)
@@ -70,12 +70,18 @@ const AppContextProvider = (props) => {
 
 const CombinedContext = (props) => {
 	return (
-		<Locale>
-			<Auth>
-				<AppContextProvider>{props.children}</AppContextProvider>
-			</Auth>
-		</Locale>
+		<Auth>
+			<AppContextProvider>{props.children}</AppContextProvider>
+		</Auth>
 	)
+}
+
+AppContextProvider.propTypes = {
+	children: PropTypes.node.isRequired,
+}
+
+CombinedContext.propTypes = {
+	children: PropTypes.node.isRequired,
 }
 
 export default CombinedContext

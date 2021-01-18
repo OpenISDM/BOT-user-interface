@@ -33,42 +33,28 @@
 */
 
 import React from 'react'
-import SearchResultList from '../../presentational/SearchResultList'
 import SearchContainer from '../../container/SearchContainer'
-import { Row, Col } from 'react-bootstrap'
-import AuthenticationContext from '../../../context/AuthenticationContext'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import MapContainer from '../../container/MapContainer'
 
 const MobileMainContainer = ({
-	handleClearButton,
 	getSearchKey,
-	setMonitor,
-	clearAlerts,
 	lbeaconPosition,
 	geofenceConfig,
-	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
 	searchKey,
 	searchResult,
-	trackingData,
 	proccessedTrackingData,
-	hasSearchKey,
 	pathMacAddress,
-	isHighlightSearchPanel,
 	locationMonitorConfig,
-	currentAreaId,
 	searchObjectArray = [],
 	pinColorArray,
 	handleClick,
-	showFoundResult,
 	keywords,
 	display,
-	handleShowResultListForMobile,
 }) => {
-	const auth = React.useContext(AuthenticationContext)
-	const locale = React.useContext(LocaleContext)
+	const { auth } = React.useContext(AppContext)
 
 	const style = {
 		searchPanelForMobile: {
@@ -99,11 +85,9 @@ const MobileMainContainer = ({
 					style={style.searchPanelForMobile}
 				>
 					<SearchContainer
-						hasSearchKey={hasSearchKey}
 						clearSearchResult={clearSearchResult}
 						auth={auth}
 						getSearchKey={getSearchKey}
-						handleShowResultListForMobile={handleShowResultListForMobile}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 						keywords={keywords}
@@ -112,12 +96,7 @@ const MobileMainContainer = ({
 				<div style={style.mapForMobile} className="m-1">
 					<MapContainer
 						pathMacAddress={pathMacAddress}
-						proccessedTrackingData={
-							proccessedTrackingData.length == 0
-								? trackingData
-								: proccessedTrackingData
-						}
-						hasSearchKey={hasSearchKey}
+						proccessedTrackingData={proccessedTrackingData}
 						searchKey={searchKey}
 						searchResult={searchResult}
 						handleClearButton={handleClick}
@@ -126,34 +105,10 @@ const MobileMainContainer = ({
 						lbeaconPosition={lbeaconPosition}
 						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
-						currentAreaId={currentAreaId}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 					/>
 				</div>
-				{/* <ButtonGroup style={{marginTop:'5px',marginBottom:'5px'}}>
-                    <Button
-                        variant='outline-primary'
-                        onClick={mapButtonHandler}
-                    >
-                        {showMobileMap ? locale.texts.HIDE_MAP : locale.texts.SHOW_MAP}
-                    </Button>
-                    <Button
-                        variant='outline-primary'
-                        onClick={handleClearButton}
-                    >
-                        {locale.texts.NEW_SEARCH}
-                    </Button>
-                </ButtonGroup>
-                <div className='d-flex justify-content-center'>
-                    <SearchResultList
-                        searchResult={searchResult}
-                        searchKey={searchKey}
-                        highlightSearchPanel={highlightSearchPanel}
-                        handleShowPath={handleShowPath}
-                        showMobileMap={showMobileMap}
-                    />
-                </div> */}
 			</div>
 		</div>
 	)

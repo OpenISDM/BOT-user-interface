@@ -34,7 +34,7 @@
 
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 import PropTypes from 'prop-types'
 
 const DeleteAlertModal = ({
@@ -44,7 +44,7 @@ const DeleteAlertModal = ({
 	title,
 	actionName = 'DELETE',
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal show={show} onHide={handleClose}>

@@ -37,14 +37,13 @@ import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import Select from 'react-select'
 import { object, string } from 'yup'
-import axios from 'axios'
-import dataSrc from '../../../dataSrc'
 import FormikFormGroup from '../../presentational/FormikFormGroup'
 import styleConfig from '../../../config/styleConfig'
-import LocaleContext from '../../../context/LocaleContext'
-import messageGenerator from '../../../helper/messageGenerator'
+import { AppContext } from '../../../context/AppContext'
+import PropTypes from 'prop-types'
+
 const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	const userOptions = data.map((item) => {
 		return {
@@ -65,13 +64,12 @@ const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
 					validationSchema={object().shape({
 						name: string().required(locale.texts.NAME_IS_REQUIRED),
 					})}
-					onSubmit={(values, { setStatus, setSubmitting }) => {
+					onSubmit={(values) => {
 						handleSubmit(values)
 					}}
 					render={({
 						values,
 						errors,
-						status,
 						touched,
 						isSubmitting,
 						setFieldValue,
@@ -113,6 +111,14 @@ const DeleteUserForm = ({ show, title, data, handleClose, handleSubmit }) => {
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+DeleteUserForm.propTypes = {
+	show: PropTypes.bool,
+	title: PropTypes.string,
+	data: PropTypes.array,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
 }
 
 export default DeleteUserForm

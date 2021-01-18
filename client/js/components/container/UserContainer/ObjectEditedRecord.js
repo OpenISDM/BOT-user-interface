@@ -32,26 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Fragment } from 'react'
-import ReactTable from 'react-table'
+import React from 'react'
 import { editObjectRecordTableColumn } from '../../../config/tables'
 import { AppContext } from '../../../context/AppContext'
-import styleConfig from '../../../config/styleConfig'
 import apiHelper from '../../../helper/apiHelper'
 import config from '../../../config'
-import {
-	JSONClone,
-	formatTime,
-	convertStatusToText,
-} from '../../../helper/utilities'
+import { formatTime, convertStatusToText } from '../../../helper/utilities'
 import messageGenerator from '../../../helper/messageGenerator'
+import BOTTable from '../../BOTComponent/BOTTable'
 
 class ObjectEditedRecord extends React.Component {
 	static contextType = AppContext
 
 	state = {
 		data: [],
-		columns: [],
 		locale: this.context.locale.abbr,
 	}
 
@@ -72,12 +66,6 @@ class ObjectEditedRecord extends React.Component {
 			locale.abbr
 		)
 		if (res) {
-			const columns = JSONClone(editObjectRecordTableColumn)
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
-
 			const data = res.data.rows.map((item, index) => {
 				item._id = index + 1
 				item.new_status = convertStatusToText(locale, item.new_status)
@@ -87,43 +75,31 @@ class ObjectEditedRecord extends React.Component {
 
 			this.setState({
 				data,
-				columns,
 				locale: locale.abbr,
 			})
 		}
 	}
 
-	render() {
+	handleOnClickCallback = async (original) => {
 		const { locale } = this.context
+		if (original.file_path) {
+			await apiHelper.fileApiAgent.getFile({
+				path: original.file_path,
+			})
+		} else {
+			messageGenerator.setErrorMessage(locale.texts.FILE_URL_NOT_FOUND, 2000)
+		}
+	}
 
+	render() {
 		return (
-			<Fragment>
-				<ReactTable
-					keyField="_id"
-					data={this.state.data}
-					columns={this.state.columns}
-					className="-highlight text-none"
-					style={{ maxHeight: '75vh' }}
-					{...styleConfig.reactTable}
-					pageSize={100}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: () => {
-								if (rowInfo.original.file_path) {
-									apiHelper.fileApiAgent.getFile({
-										path: rowInfo.original.file_path,
-									})
-								} else {
-									messageGenerator.setErrorMessage(
-										locale.texts.FILE_URL_NOT_FOUND,
-										2000
-									)
-								}
-							},
-						}
-					}}
-				/>
-			</Fragment>
+			<BOTTable
+				data={this.state.data}
+				columns={editObjectRecordTableColumn}
+				style={{ maxHeight: '75vh' }}
+				pageSize={100}
+				onClickCallback={this.handleOnClickCallback}
+			/>
 		)
 	}
 }

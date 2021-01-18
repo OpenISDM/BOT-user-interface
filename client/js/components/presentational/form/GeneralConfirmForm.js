@@ -36,7 +36,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import apiHelper from '../../../helper/apiHelper'
 import FormikFormGroup from '../FormikFormGroup'
 import PropTypes from 'prop-types'
@@ -48,8 +48,8 @@ const style = {
 	},
 }
 
-const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
-	const locale = React.useContext(LocaleContext)
+const GeneralConfirmForm = ({ show, handleClose, title }) => {
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal
@@ -80,8 +80,6 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 						if (!res.data.confirmation) {
 							setStatus(res.data.message)
 							setSubmitting(false)
-						} else {
-							handleSubmit()
 						}
 					}}
 					render={({ errors, status, touched, isSubmitting }) => (
@@ -124,7 +122,6 @@ const GeneralConfirmForm = ({ show, handleClose, handleSubmit, title }) => {
 GeneralConfirmForm.propTypes = {
 	show: PropTypes.bool,
 	handleClose: PropTypes.func,
-	handleSubmit: PropTypes.func,
 	title: PropTypes.string,
 	authenticatedRoles: PropTypes.string,
 }

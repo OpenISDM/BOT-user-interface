@@ -75,7 +75,6 @@ export default {
 			const notificationTablePromise = NotificationTable.findAll({
 				where: {
 					area_id: areaId,
-					processed: 1, // meaning this notification is processed by BOT Server
 					web_processed: {
 						[Op.eq]: null,
 					},
@@ -83,7 +82,7 @@ export default {
 						[Op.gt]: new Date(Date.now() - 30 * 60 * 1000), // 30 mins
 					},
 				},
-				order: ['id'],
+				order: [['id', 'DESC']],
 			})
 
 			const [objectTableQueried, notificationTableQueried] = await Promise.all([
@@ -95,7 +94,7 @@ export default {
 
 			const lowBattery = objectTableQueried
 				.filter((object) => {
-					const batteryVoltage = object[`extend.battery_voltage`]
+					const batteryVoltage = object['extend.battery_voltage']
 					return (
 						batteryVoltage > 0 &&
 						batteryVoltage <= parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
@@ -110,8 +109,8 @@ export default {
 
 			const emergency = notificationTableQueried
 				.map((notificaiton) => {
-					const macAddress = notificaiton['mac_address']
-					const monitortype = notificaiton['monitor_type']
+					const macAddress = notificaiton.mac_address
+					const monitortype = notificaiton.monitor_type
 					let type = MONITOR_TYPE.NORMAL
 					if (
 						findExpectedBitValue({
@@ -137,6 +136,7 @@ export default {
 							notificaiton,
 						}
 					}
+					return null
 				})
 				.filter((item) => item)
 

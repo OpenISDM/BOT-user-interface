@@ -34,23 +34,19 @@
 
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import LocaleContext from '../../../context/LocaleContext'
-import { Formik, Field, Form } from 'formik'
+import { AppContext } from '../../../context/AppContext'
+import { Formik, Form } from 'formik'
 import FormikFormGroup from '../FormikFormGroup'
-/**
- * EditLbeaconForm will update if user selects one of the object table.
- * The selected object data will transfer from ObjectMangentContainer to EditLbeaconForm
- */
+import PropTypes from 'prop-types'
 
 const EditLbeaconForm = ({
 	title,
-	selectedObjectData,
+	selectedObjectData = {},
 	show,
 	handleClose,
 	handleSubmit,
 }) => {
-	const locale = React.useContext(LocaleContext)
-
+	const { locale } = React.useContext(AppContext)
 	const { uuid, description, comment } = selectedObjectData
 
 	return (
@@ -79,7 +75,7 @@ const EditLbeaconForm = ({
 						}
 						handleSubmit(lbeaconSettingPackage)
 					}}
-					render={({ values, errors, status, touched, isSubmitting }) => (
+					render={({ errors, touched, isSubmitting }) => (
 						<Form>
 							<FormikFormGroup
 								type="text"
@@ -118,6 +114,14 @@ const EditLbeaconForm = ({
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+EditLbeaconForm.propTypes = {
+	title: PropTypes.string,
+	selectedObjectData: PropTypes.object,
+	show: PropTypes.bool,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
 }
 
 export default EditLbeaconForm

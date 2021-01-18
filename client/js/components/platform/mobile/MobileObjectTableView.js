@@ -33,7 +33,7 @@
 */
 
 import React, { Fragment } from 'react'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import styleConfig from '../../../config/styleConfig'
 import BOTInput from '../../presentational/BOTInput'
 import { ButtonToolbar } from 'react-bootstrap'
@@ -49,7 +49,7 @@ const MobileObjectTableView = ({
 	selection,
 	handleClick,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Fragment>
@@ -104,7 +104,7 @@ const MobileObjectTableView = ({
 					className="text-capitalize mr-2 mb-1"
 					name="delete"
 					onClick={handleClickButton}
-					disabled={selection.length == 0}
+					disabled={selection.length === 0}
 				>
 					{locale.texts.DELETE}
 				</PrimaryButton>

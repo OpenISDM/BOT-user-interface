@@ -34,26 +34,38 @@
 
 import React from 'react'
 import AuthenticationContext from './context/AuthenticationContext'
-import Cookies from 'js-cookie'
 import config from './config'
-import permissionsTable from './config/roles'
-import { AppContext } from './context/AppContext'
 import { SET_AREA } from './reducer/action'
 import apiHelper from './helper/apiHelper'
 import PropTypes from 'prop-types'
+import supportedLocale from './locale/supportedLocale'
+import {
+	getPermissionsByRoles,
+	localePackage,
+	getCookies,
+	setCookies,
+	removeCookies,
+} from './helper/utilities'
 
 class Auth extends React.Component {
-	static contextType = AppContext
+	constructor() {
+		super()
 
-	state = {
-		authenticated: !!Cookies.get('authenticated'),
-		user:
-			Cookies.get('authenticated') && Cookies.get('user')
-				? { ...JSON.parse(Cookies.get('user')) }
-				: config.DEFAULT_USER,
+		const locale = getCookies('user')
+			? localePackage[getCookies('user').locale]
+			: localePackage[config.DEFAULT_LOCALE]
+
+		this.state = {
+			authenticated: getCookies('authenticated'),
+			user: getCookies('user') || {},
+			locale: {
+				supportedLocale,
+				...locale,
+			},
+		}
 	}
 
-	login = async (userInfo, { actions, dispatch, callback, locale }) => {
+	login = async (userInfo, { actions, dispatch, callback }) => {
 		const { username, password } = userInfo
 		const res = await apiHelper.authApiAgent.login({
 			username,
@@ -65,31 +77,10 @@ class Auth extends React.Component {
 			actions.setSubmitting(false)
 		} else {
 			const { userInfo: user } = res.data
-			if (user.roles.includes('dev')) {
-				user.permissions = Object.keys(permissionsTable).reduce(
-					(permissions, role) => {
-						permissionsTable[role].permission.forEach((item) => {
-							if (!permissions.includes(item)) {
-								permissions.push(item)
-							}
-						})
-						return permissions
-					},
-					[]
-				)
-			} else {
-				user.permissions = user.roles.reduce((permissions, role) => {
-					permissionsTable[role].permission.forEach((item) => {
-						if (!permissions.includes(item)) {
-							permissions.push(item)
-						}
-					})
-					return permissions
-				}, [])
-			}
+			user.permissions = getPermissionsByRoles({ roles: user.roles })
 
-			this.setCookies('authenticated', true)
-			this.setCookies('user', user)
+			setCookies('authenticated', true)
+			this.setUserCookies(user)
 
 			dispatch({
 				type: SET_AREA,
@@ -108,33 +99,38 @@ class Auth extends React.Component {
 
 	logout = async () => {
 		await apiHelper.authApiAgent.logout()
-		Cookies.remove('authenticated')
-		Cookies.remove('user')
-		this.setState({
-			authenticated: false,
-			user: config.DEFAULT_USER,
-			accessToken: '',
-		})
+
+		const callback = () => {
+			removeCookies('authenticated')
+			removeCookies('user')
+		}
+
+		this.setState(
+			{
+				authenticated: false,
+				user: config.DEFAULT_USER,
+				accessToken: '',
+			},
+			callback
+		)
 	}
 
-	signup = async (values, callback) => {
-		const { name, email, password, roles, area } = values
+	setUserCookies = async (user) => {
+		const toBeStored = {
+			name: user.name,
+			roles: user.roles,
+			permissions: user.permissions,
+			freqSearchCount: user.freqSearchCount,
+			id: user.id,
+			areas_id: user.areas_id,
+			main_area: user.main_area,
+			locale: user.locale,
+			keyword_type: user.keyword_type,
+			list_id: user.list_id,
+			searchHistory: user.searchHistory,
+		}
 
-		await apiHelper.userApiAgent.signup({
-			name: name.toLowerCase(),
-			email: email.toLowerCase(),
-			password,
-			roles,
-			area_id: area.id,
-			...values,
-		})
-
-		callback()
-	}
-
-	setUser = async (user, callback) => {
-		await apiHelper.userApiAgent.setUser({ user })
-		callback()
+		setCookies('user', toBeStored)
 	}
 
 	setArea = async (areas_id, callback) => {
@@ -142,8 +138,11 @@ class Auth extends React.Component {
 			...this.state.user,
 			areas_id,
 		}
+
 		await apiHelper.userApiAgent.setArea({ user })
-		this.setCookies('user', user)
+
+		this.setUserCookies(user)
+
 		this.setState(
 			{
 				...this.state,
@@ -157,47 +156,46 @@ class Auth extends React.Component {
 		// handleAuthentication
 	}
 
-	setCookies = (key, value) => {
-		Cookies.set(key, value)
-	}
-
 	setSearchHistory = (searchHistory) => {
-		const userInfo = {
+		const user = {
 			...this.state.user,
 			searchHistory,
 		}
-		this.setCookies('user', userInfo)
-		this.setState({
-			...this.state,
-			user: {
-				...this.state.user,
-				searchHistory,
-			},
-		})
-	}
 
-	setMyDevice = (myDevice) => {
-		this.setState({
-			...this.state,
-			user: {
-				...this.state.user,
-				myDevice,
+		const callback = () => {
+			this.setUserCookies(user)
+		}
+
+		this.setState(
+			{
+				...this.state,
+				user: {
+					...this.state.user,
+					searchHistory,
+				},
 			},
-		})
+			callback
+		)
 	}
 
 	setUserInfo = (status, value) => {
-		this.setState({
-			...this.state,
-			user: {
+		const callback = () => {
+			this.setUserCookies({
 				...this.state.user,
 				[status]: value,
+			})
+		}
+
+		this.setState(
+			{
+				...this.state,
+				user: {
+					...this.state.user,
+					[status]: value,
+				},
 			},
-		})
-		this.setCookies('user', {
-			...this.state.user,
-			[status]: value,
-		})
+			callback
+		)
 	}
 
 	setLocale = async (abbr) => {
@@ -205,13 +203,26 @@ class Auth extends React.Component {
 			userId: this.state.user.id,
 			localeName: abbr,
 		})
-		const cookie = Cookies.get('user')
-		if (cookie) {
-			Cookies.set('user', {
-				...JSON.parse(cookie),
-				locale: abbr,
-			})
+
+		const callback = () => {
+			const cookie = getCookies('user')
+			if (cookie) {
+				this.setUserCookies({
+					...cookie,
+					locale: abbr,
+				})
+			}
 		}
+
+		this.setState(
+			{
+				locale: {
+					supportedLocale,
+					...localePackage[abbr],
+				},
+			},
+			callback
+		)
 	}
 
 	setKeywordType = async (keywordTypeId) => {
@@ -219,11 +230,12 @@ class Auth extends React.Component {
 			userId: this.state.user.id,
 			keywordTypeId,
 		})
+
 		const callback = () => {
-			const cookie = Cookies.get('user')
+			const cookie = getCookies('user')
 			if (cookie) {
-				Cookies.set('user', {
-					...JSON.parse(cookie),
+				this.setUserCookies({
+					...cookie,
 					keyword_type: keywordTypeId,
 				})
 			}
@@ -241,36 +253,17 @@ class Auth extends React.Component {
 		)
 	}
 
-	setListId = async (id) => {
-		await apiHelper.userApiAgent.editListId({
-			userId: this.state.user.id,
-			listId: id,
-		})
-		this.setState({
-			...this.state,
-			user: {
-				...this.state.user,
-				list_id: id,
-			},
-		})
-	}
-
 	render() {
 		const authProviderValue = {
 			...this.state,
 			login: this.login,
-			signup: this.signup,
 			logout: this.logout,
 			handleAuthentication: this.handleAuthentication,
 			setSearchHistory: this.setSearchHistory,
-			setMyDevice: this.setMyDevice,
 			setUserInfo: this.setUserInfo,
-			setCookies: this.setCookies,
 			setLocale: this.setLocale,
-			setUser: this.setUser,
 			setArea: this.setArea,
 			setKeywordType: this.setKeywordType,
-			setListId: this.setListId,
 		}
 
 		return (

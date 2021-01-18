@@ -36,7 +36,7 @@ import React from 'react'
 import { Col, Button } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
 import { AppContext } from '../../../context/AppContext'
-import { MobileOnlyView, TabletView, isMobileOnly } from 'react-device-detect'
+import { MobileOnlyView, TabletView } from 'react-device-detect'
 import ScrollArea from 'react-scrollbar'
 
 class TabletObjectTypeList extends React.Component {
@@ -55,20 +55,11 @@ class TabletObjectTypeList extends React.Component {
 				searchKey: '',
 			})
 		}
-		if (
-			prepProps.hasGridButton != this.props.hasGridButton &&
-			this.props.hasGridButton
-		) {
-			this.setState({
-				searchKey: '',
-			})
-		}
 	}
 
 	handleClick = (e) => {
 		const itemName = e.target.name.toLowerCase()
 		this.getSearchKey(itemName)
-		if (isMobileOnly) this.props.handleShowResultListForMobile()
 	}
 
 	getSearchKey = (itemName) => {

@@ -36,7 +36,7 @@ import React, { Fragment } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
 import SearchResultListGroup from '../../presentational/SearchResultListGroup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import { Title } from '../../BOTComponent/styleComponent'
 import PropTypes from 'prop-types'
 
@@ -49,9 +49,9 @@ const BrowserSearchResultList = ({
 	pinColorArray,
 	searchKey,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
-	const listMaxHeight = '60vh'
+	const listMaxHeight = '45vh'
 
 	return (
 		<Fragment>

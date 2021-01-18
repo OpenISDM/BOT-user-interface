@@ -39,7 +39,7 @@ import { object, string } from 'yup'
 import FormikFormGroup from '../FormikFormGroup'
 import Creatable from 'react-select/creatable'
 import styleConfig from '../../../config/styleConfig'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import PropTypes from 'prop-types'
 
 const validationSchema = object().shape({
@@ -59,7 +59,7 @@ const EditTransferLocationForm = ({
 	title,
 	locationOptions,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal show={show} onHide={handleClose}>

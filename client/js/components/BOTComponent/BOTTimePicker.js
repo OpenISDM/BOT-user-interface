@@ -73,6 +73,7 @@ BOTTimePicker.propTypes = {
 	showSecond: PropTypes.bool,
 	onChange: PropTypes.func,
 	style: PropTypes.object,
+	isStringTypeValue: PropTypes.bool,
 }
 
 export default BOTTimePicker

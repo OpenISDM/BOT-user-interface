@@ -164,7 +164,7 @@ export default {
 		`
 	},
 
-	editUserInfo: (user) => {
+	setUserInfo: (user) => {
 		return `
 
 			DELETE FROM user_role

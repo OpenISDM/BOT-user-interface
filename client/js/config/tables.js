@@ -66,8 +66,8 @@ const style = {
 		full: {
 			color: 'green',
 		},
-		half: {
-			color: 'orange',
+		quarter: {
+			color: '#ff6600',
 		},
 		empty: {
 			color: 'red',
@@ -226,21 +226,11 @@ const trackingTableColumn = [
 				<i className="fas fa-battery-full" style={style.battery.full}></i>
 			)) ||
 			(props.value === 2 && (
-				<i className="fas fa-battery-half" style={style.battery.half}></i>
+				<i className="fas fa-battery-quarter" style={style.battery.quarter}></i>
 			)) ||
 			(props.value === 1 && (
 				<i className="fas fa-battery-empty" style={style.battery.empty}></i>
 			)),
-	},
-	{
-		Header: 'Panic',
-		accessor: 'panic',
-		width: 60,
-		style: style.column,
-		Cell: (props) =>
-			props.value ? (
-				<i className="fas fa-exclamation" style={style.icon.exclamation}></i>
-			) : null,
 	},
 	{
 		Header: 'Alert',
@@ -589,15 +579,9 @@ const shiftChangeRecordTableColumn = [
 		accessor: 'shift',
 		width: 140,
 	},
-	// {
-	// 	Header: 'list name',
-	// 	accessor: 'list_name',
-	// 	width: 200,
-	// },
 	{
 		Header: 'submit timestamp',
 		accessor: 'submit_timestamp',
-		// width: 200,
 	},
 ]
 

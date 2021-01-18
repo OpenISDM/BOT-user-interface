@@ -35,7 +35,7 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
 import config from '../../config'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 import { Formik, Form } from 'formik'
 import { CenterContainer, Title } from '../BOTComponent/styleComponent'
 import FormikFormGroup from '../presentational/FormikFormGroup'
@@ -48,7 +48,7 @@ import ImageWebp from '../utils/ImageWebp'
 const imageLength = 80
 
 const ResetPassword = ({ match }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 	const history = useHistory()
 
 	const { token } = match.params
@@ -77,7 +77,7 @@ const ResetPassword = ({ match }) => {
 					account: string().required(locale.texts.USERNAME_IS_REQUIRED),
 					password: string().required(locale.texts.PASSWORD_IS_REQUIRED),
 					confirm: string().when('password', {
-						is: (val) => (val && val.length > 0 ? true : false),
+						is: (val) => !!(val && val.length > 0),
 						then: string().oneOf(
 							[ref('password')],
 							locale.texts.PASSWORD_NOT_FIT

@@ -34,23 +34,19 @@
 
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
-import LocaleContext from '../../../context/LocaleContext'
-import { Formik, Field, Form } from 'formik'
+import { AppContext } from '../../../context/AppContext'
+import { Formik, Form } from 'formik'
 import FormikFormGroup from '../FormikFormGroup'
-/**
- * EditGatewayForm will update if user selects one of the object table.
- * The selected object data will transfer from ObjectMangentContainer to EditGatewayForm
- */
+import PropTypes from 'prop-types'
 
 const EditGatewayForm = ({
 	title,
-	selectedObjectData,
+	selectedObjectData = {},
 	show,
 	handleClose,
 	handleSubmit,
 }) => {
-	const locale = React.useContext(LocaleContext)
-
+	const { locale } = React.useContext(AppContext)
 	const { uuid, description, comment } = selectedObjectData
 
 	return (
@@ -78,7 +74,7 @@ const EditGatewayForm = ({
 						}
 						handleSubmit(settingPackage)
 					}}
-					render={({ values, errors, status, touched, isSubmitting }) => (
+					render={({ isSubmitting }) => (
 						<Form>
 							<FormikFormGroup
 								type="text"
@@ -100,6 +96,14 @@ const EditGatewayForm = ({
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+EditGatewayForm.propTypes = {
+	title: PropTypes.string,
+	selectedObjectData: PropTypes.object,
+	show: PropTypes.bool,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
 }
 
 export default EditGatewayForm

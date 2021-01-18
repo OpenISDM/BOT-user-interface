@@ -35,7 +35,6 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import BOTSearchbar from '../../presentational/BOTSearchbar'
-import config from '../../../config'
 import FrequentSearch from '../../container/FrequentSearch'
 import ObjectTypeList from '../../container/ObjectTypeList'
 import PropTypes from 'prop-types'
@@ -47,7 +46,6 @@ const BrowserSearchContainer = ({
 	getSearchKey,
 	handleTouchMove,
 	clearSearchResult,
-	hasGridButton,
 	searchObjectArray,
 	pinColorArray,
 	keywords,
@@ -85,7 +83,6 @@ const BrowserSearchContainer = ({
 					<ObjectTypeList
 						getSearchKey={getSearchKey}
 						clearSearchResult={clearSearchResult}
-						hasGridButton={hasGridButton}
 						personObjectTypes={personObjectTypes || []}
 						deviceObjectTypes={deviceObjectTypes || []}
 						searchObjectArray={searchObjectArray}
@@ -104,7 +101,6 @@ BrowserSearchContainer.propTypes = {
 	getSearchKey: PropTypes.func.isRequired,
 	handleTouchMove: PropTypes.func.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
-	hasGridButton: PropTypes.bool.isRequired,
 	searchObjectArray: PropTypes.array.isRequired,
 	pinColorArray: PropTypes.array.isRequired,
 	keywords: PropTypes.array.isRequired,

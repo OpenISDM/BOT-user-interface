@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 
 class ToggleSwitch extends React.Component {
 	state = {
@@ -49,7 +49,7 @@ class ToggleSwitch extends React.Component {
 	}
 
 	render() {
-		const locale = this.context.texts
+		const { locale } = React.useContext(AppContext)
 
 		return (
 			<form className="switch-field text-capitalize">
@@ -92,7 +92,5 @@ class ToggleSwitch extends React.Component {
 		)
 	}
 }
-
-ToggleSwitch.contextType = LocaleContext
 
 export default ToggleSwitch

@@ -39,8 +39,6 @@ const routes = {
 
 	OBJECT_MANAGEMENT: '/page/objectManagement',
 
-	USER_SETTINGS: '/page/userSetting',
-
 	BIG_SCREEN: '/page/bigScreen',
 
 	ABOUT: '/page/about',

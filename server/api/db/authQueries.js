@@ -100,7 +100,8 @@ export default {
 						SELECT *
 						FROM temp
 						WHERE temp.case IS NOT NULL
-						AND temp.keyword <> '' 
+                        AND temp.keyword <> ''
+                        LIMIT 10
 					)
 			SELECT
 				user_info.name,

@@ -34,23 +34,18 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
+import { keyBy } from 'lodash'
 import EditLbeaconForm from '../presentational/form/EditLbeaconForm'
-import selecTableHOC from 'react-table/lib/hoc/selectTable'
-import config from '../../config'
 import { lbeaconTableColumn } from '../../config/tables'
 import { AppContext } from '../../context/AppContext'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import styleConfig from '../../config/styleConfig'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
-import { JSONClone, formatTime } from '../../helper/utilities'
-import PropTypes from 'prop-types'
-
-const SelectTable = selecTableHOC(ReactTable)
+import { formatTime } from '../../helper/utilities'
+import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import { SET_TABLE_SELECTION } from '../../reducer/action'
 
 class LbeaconTable extends React.Component {
 	static contextType = AppContext
@@ -58,14 +53,9 @@ class LbeaconTable extends React.Component {
 	state = {
 		locale: this.context.locale.abbr,
 		data: [],
-		columns: [],
+		dataMap: {},
 		showDeleteConfirmation: false,
-		selectedRowData: '',
 		showEdit: false,
-		selection: [],
-		selectAll: false,
-		selectType: '',
-		disable: true,
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -77,166 +67,74 @@ class LbeaconTable extends React.Component {
 
 	componentDidMount = () => {
 		this.getData()
-		this.getLbeaconDataInterval = setInterval(
-			this.getData,
-			config.getLbeaconDataIntervalTime
-		)
-	}
-
-	componentWillUnmount = () => {
-		clearInterval(this.getLbeaconDataInterval)
 	}
 
 	getData = async (callback) => {
-		const { locale } = this.context
-
+		const { locale, stateReducer } = this.context
+		const [, dispatch] = stateReducer
 		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
 			locale: locale.code,
 		})
 
 		if (res) {
-			this.props.setMessage('clear')
-			const column = JSONClone(lbeaconTableColumn)
-			column.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
 			const data = res.data.rows.map((row) => {
 				row.last_report_timestamp = formatTime(row.last_report_timestamp)
 				return row
 			})
+
+			const dataMap = keyBy(data, 'id')
+
 			this.setState(
 				{
 					data,
-					columns: column,
-					showEdit: false,
-					showDeleteConfirmation: false,
-					selectedRowData: '',
-					selectAll: false,
-					selectType: '',
-					selection: [],
+					dataMap,
 					locale: locale.abbr,
+					showDeleteConfirmation: false,
+					showEdit: false,
 				},
 				callback
 			)
-		} else {
-			this.props.setMessage('error', 'connect to database failed', true)
 		}
+
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
+		})
 	}
 
 	handleClose = () => {
 		this.setState({
 			showDeleteConfirmation: false,
-			selectedRowData: '',
 			showEdit: false,
-			selectAll: false,
-			selectType: '',
 		})
 	}
 
 	handleSubmitForm = async (formOption) => {
 		const res = await apiHelper.lbeaconApiAgent.putLbeacon({ formOption })
 		if (res) {
-			this.getData(() => messageGenerator.setSuccessMessage('save success'))
+			this.getData(() => setSuccessMessage('save success'))
 		}
-	}
-
-	toggleSelection = (key) => {
-		let selection = [...this.state.selection]
-		selection !== ''
-			? this.setState({ disable: true })
-			: this.setState({ disable: false })
-		key = key.split('-')[1] ? key.split('-')[1] : key
-		const keyIndex = selection.indexOf(key)
-		if (keyIndex >= 0) {
-			selection = [
-				...selection.slice(0, keyIndex),
-				...selection.slice(keyIndex + 1),
-			]
-		} else {
-			selection.push(key)
-		}
-		this.setState({
-			selection,
-		})
-	}
-
-	toggleAll = () => {
-		const selectAll = !this.state.selectAll
-		let selection = []
-		let rowsCount = 0
-		if (selectAll) {
-			const wrappedInstance = this.selectTable.getWrappedInstance()
-			const currentRecords = wrappedInstance.getResolvedState().sortedData
-			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
-			})
-		} else {
-			selection = []
-		}
-		selection === ''
-			? this.setState({ disable: true })
-			: this.setState({ disable: false })
-		this.setState({ selectAll, selection })
-	}
-
-	isSelected = (key) => {
-		return this.state.selection.includes(key)
 	}
 
 	deleteRecord = async () => {
-		const idPackage = []
-		const deleteArray = []
-		let deleteCount = 0
-		this.setState({ selectAll: false })
-		this.state.data.forEach((item) => {
-			this.state.selection.forEach((itemSelect) => {
-				if (itemSelect === item.id) {
-					deleteArray.push(deleteCount.toString())
-				}
-			})
-			deleteCount += 1
-		})
+		const [{ tableSelection }] = this.context.stateReducer
 
-		deleteArray.forEach((item) => {
-			if (this.state.data[item]) {
-				idPackage.push(parseInt(this.state.data[item].id))
-			}
-		})
-		await apiHelper.lbeaconApiAgent.deleteLbeacon({ idPackage })
-		this.getData(() => {
-			this.props.setMessage('success', 'delete lbeacon success')
-		})
-		this.setState({ selection: [] })
+		const ids = tableSelection.map((id) => id)
+		await apiHelper.lbeaconApiAgent.deleteLbeacon({ ids })
+
+		this.getData(() => setSuccessMessage('save success'))
 	}
 
 	render() {
-		const { locale } = this.context
-		const { selectAll, selectType } = this.state
-		const { toggleSelection, toggleAll, isSelected } = this
-		const extraProps = {
-			selectAll,
-			isSelected,
-			toggleAll,
-			toggleSelection,
-			selectType,
-		}
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection = [] }] = stateReducer
+		const { dataMap } = this.state
+		const selectedData = dataMap[tableSelection[0]]
 
 		return (
 			<Fragment>
 				<div className="d-flex justify-content-start">
-					<AccessControl
-						platform={['browser', 'tablet']}
-					>
+					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
 							<PrimaryButton
 								className="mb-1 text-capitalize mr-2"
@@ -245,7 +143,7 @@ class LbeaconTable extends React.Component {
 										showDeleteConfirmation: true,
 									})
 								}}
-								disabled={this.state.selection.length === 0}
+								disabled={tableSelection.length === 0}
 							>
 								{locale.texts.DELETE}
 							</PrimaryButton>
@@ -253,39 +151,19 @@ class LbeaconTable extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<SelectTable
-					keyField="id"
+				<BOTSelectTable
 					data={this.state.data}
-					columns={this.state.columns}
-					ref={(r) => (this.selectTable = r)}
-					className="-highlight"
-					style={{ maxHeight: '75vh' }}
-					onSortedChange={() => {
-						this.setState({ selectAll: false, selection: '' })
-					}}
-					onPageChange={() => {
+					columns={lbeaconTableColumn}
+					onClickCallback={() => {
 						this.setState({
-							selectAll: false,
-							selection: '',
+							showEdit: true,
 						})
-					}}
-					{...styleConfig.reactTable}
-					{...extraProps}
-					getTrProps={(state, rowInfo) => {
-						return {
-							onClick: () => {
-								this.setState({
-									selectedRowData: rowInfo.original,
-									showEdit: true,
-								})
-							},
-						}
 					}}
 				/>
 				<EditLbeaconForm
 					show={this.state.showEdit}
 					title={'edit lbeacon'}
-					selectedObjectData={this.state.selectedRowData}
+					selectedObjectData={selectedData}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
 				/>
@@ -297,10 +175,6 @@ class LbeaconTable extends React.Component {
 			</Fragment>
 		)
 	}
-}
-
-LbeaconTable.propTypes = {
-	setMessage: PropTypes.func.isRequired,
 }
 
 export default LbeaconTable

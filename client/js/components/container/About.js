@@ -35,10 +35,10 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import config from '../../config'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 
 const About = () => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Container fluid className="mt-5">

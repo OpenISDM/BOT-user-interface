@@ -33,9 +33,10 @@
 */
 
 import 'dotenv/config'
+import _ from 'lodash'
 import dbQueries from '../db/objectQueries'
 import recordQueries from '../db/recordQueries'
-import pool, { sequelize, Op } from '../db/connection'
+import pool, { sequelize } from '../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
 import { reloadGeofenceConfig } from '../service/IPCService'
@@ -228,7 +229,7 @@ export default {
 	getAliases: async (request, response) => {
 		const { objectType, areaId } = request.query
 		try {
-			const alias = await ObjectTable.findAll({
+			const queriredData = await ObjectTable.findAll({
 				attributes: [
 					[sequelize.fn('DISTINCT', sequelize.col('type')), 'type'],
 					'type_alias',
@@ -239,9 +240,13 @@ export default {
 					area_id: areaId,
 				},
 				order: [['type', 'ASC']],
+				raw: true,
 			})
+
+			const res = _.uniqBy(queriredData, 'type')
+
 			console.log('get object type alias succeed')
-			response.status(200).json(alias)
+			response.status(200).json(res)
 		} catch (e) {
 			console.log(`get object type alias failed ${e}`)
 		}

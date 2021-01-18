@@ -34,12 +34,16 @@
 
 import React from 'react'
 import NotificationBadge, { Effect } from 'react-notification-badge'
-import { Row, Dropdown, Modal, Button } from 'react-bootstrap'
+import { Row, Dropdown, Button } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
 import apiHelper from '../../helper/apiHelper'
 import messageGenerator from '../../helper/messageGenerator'
+import { withRouter } from 'react-router-dom'
+import { SET_OPENED_NOTIFICATION } from '../../reducer/action'
+import moment from 'moment'
+import PropTypes from 'prop-types'
 
 class NavNotification extends React.Component {
 	static contextType = AppContext
@@ -48,20 +52,10 @@ class NavNotification extends React.Component {
 		emergency: [],
 		lowBattery: [],
 		locale: this.context.locale.abbr,
-		currentItem: {},
-		showModal: false,
 	}
 
 	componentWillUnmount = () => {
 		clearInterval(this.interval)
-	}
-
-	componentDidUpdate = (prevProps, prevState) => {
-		if (prevState.showModal !== this.state.showModal) {
-			this.interval = this.state.showModal
-				? clearInterval(this.interval)
-				: setInterval(this.getTrackingData, config.mapConfig.intervalTime)
-		}
 	}
 
 	componentDidMount = () => {
@@ -73,46 +67,54 @@ class NavNotification extends React.Component {
 	}
 
 	getTrackingData = async () => {
-		const [{ area }] = this.context.stateReducer
+		const [{ area }, dispatch] = this.context.stateReducer
 		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
+
 		if (res) {
 			this.setState({
 				emergency: res.data.emergency,
 				lowBattery: res.data.lowBattery,
 				locale: this.context.locale.abbr,
 			})
+
+			if (res.data.emergency.length === 0) {
+				dispatch({
+					type: SET_OPENED_NOTIFICATION,
+					value: {},
+				})
+			}
 		}
 	}
 
 	handleSubmit = async () => {
+		const [{ openedNotification }, dispatch] = this.context.stateReducer
+		const { notificaiton } = openedNotification
+
 		const res = await apiHelper.notificationApiAgent.turnOffNotification({
-			notificationId: this.state.currentItem.notificaiton.id,
+			notificationId: notificaiton.id,
 		})
 
 		if (res) {
 			await messageGenerator.setSuccessMessage('save success')
-			this.setState({
-				emergency: [],
-				currentItem: {},
-				showModal: false,
+			dispatch({
+				type: SET_OPENED_NOTIFICATION,
+				value: {},
 			})
 		}
 	}
 
 	render() {
-		const { emergency, lowBattery, showModal, currentItem } = this.state
-		const { locale } = this.context
+		const { history } = this.props
+		const { emergency, lowBattery } = this.state
+		const { locale, stateReducer } = this.context
+		const [, dispatch] = stateReducer
 		const style = {
 			list: {
-				wordBreak: 'keep-all',
-				zIndex: 1,
-				overFlow: 'hidden scroll',
-			},
-			dropdown: {
-				maxHeight: '300px',
-				marginBottom: 5,
+				height: '40px',
+				width: '600px',
+				justifyContent: 'space-between',
 			},
 			title: {
 				background: '#8080801a',
@@ -144,8 +146,8 @@ class NavNotification extends React.Component {
 						</i>
 					</Dropdown.Toggle>
 					<Dropdown.Menu
-						alignRight
-						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+						flip={false}
+						bsPrefix="bot-dropdown-menu-right dropdown-menu"
 					>
 						<div className="px-5 py-2" style={style.title}>
 							<Row>
@@ -154,12 +156,9 @@ class NavNotification extends React.Component {
 								</div>
 							</Row>
 						</div>
-						<div
-							className="overflow-hidden-scroll custom-scrollbar"
-							style={style.dropdown}
-						>
+						<div className="overflow-hidden-scroll custom-scrollbar">
 							{emergency.length !== 0 ? (
-								emergency.map(({ object, notificaiton }) => {
+								emergency.map(({ object, notificaiton }, index) => {
 									let monitorTypeString = ''
 									if (
 										parseInt(notificaiton.monitor_type) ===
@@ -173,25 +172,38 @@ class NavNotification extends React.Component {
 										monitorTypeString = locale.texts.EMERGENCY_ALERT
 									}
 
+									const violationTimestamp = moment(
+										notificaiton.violation_timestamp
+									)
+										.locale(locale.abbr)
+										.format('YYYY-MM-DD HH:mm:ss')
+
 									return (
 										<Dropdown.Item
-											key={object.mac_address}
+											key={index}
 											style={{ color: 'black' }}
-											onClick={() => {
-												this.setState({
-													currentItem: {
+											onMouseEnter={() => {
+												dispatch({
+													type: SET_OPENED_NOTIFICATION,
+													value: {
 														monitorTypeString,
 														object,
 														notificaiton,
 													},
-													showModal: true,
 												})
+
+												history.push('/')
 											}}
 										>
-											<div style={style.list}>
-												<p className="d-inline-block mx-2">&#8729;</p>
-												{monitorTypeString}: {object.name}
-											</div>
+											<Row style={style.list}>
+												<Button variant="light" disabled={true}>
+													&#8729;{monitorTypeString}: {object.name},{' '}
+													{violationTimestamp}
+												</Button>
+												<Button variant="primary" onClick={this.handleSubmit}>
+													{locale.texts.CLOSE_ALERT}
+												</Button>
+											</Row>
 										</Dropdown.Item>
 									)
 								})
@@ -208,7 +220,7 @@ class NavNotification extends React.Component {
 						id="battery-notice-btn"
 						bsPrefix="bot-dropdown-toggle"
 					>
-						<i className="fas fa-battery-quarter" style={style.icon}>
+						<i className="fas fa-battery-quarter" style={{ color: '#ff6600' }}>
 							<NotificationBadge
 								count={lowBattery.length}
 								effect={Effect.SCALE}
@@ -230,10 +242,7 @@ class NavNotification extends React.Component {
 								</div>
 							</Row>
 						</div>
-						<div
-							className="overflow-hidden-scroll custom-scrollbar"
-							style={style.dropdown}
-						>
+						<div className="overflow-hidden-scroll custom-scrollbar">
 							{lowBattery.length !== 0 ? (
 								lowBattery.map(({ object }) => {
 									return (
@@ -264,32 +273,13 @@ class NavNotification extends React.Component {
 						</div>
 					</Dropdown.Menu>
 				</Dropdown>
-
-				<Modal
-					show={showModal}
-					onHide={() => {
-						this.setState({
-							showModal: false,
-							currentItem: {},
-						})
-					}}
-					centered
-				>
-					<Modal.Header closeButton>
-						<Modal.Title>{currentItem.monitorTypeString}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						{currentItem && currentItem.object && currentItem.object.name}
-					</Modal.Body>
-					<Modal.Footer>
-						<Button variant="primary" onClick={this.handleSubmit}>
-							{locale.texts.CLOSE_ALERT}
-						</Button>
-					</Modal.Footer>
-				</Modal>
 			</>
 		)
 	}
 }
 
-export default NavNotification
+NavNotification.propTypes = {
+	history: PropTypes.func,
+}
+
+export default withRouter(NavNotification)

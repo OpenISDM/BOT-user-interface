@@ -33,15 +33,9 @@
 */
 
 import React from 'react'
-import { Col, Row, ListGroup, Modal, Button } from 'react-bootstrap'
-
-import axios from 'axios'
-import Cookies from 'js-cookie'
-import LocaleContext from '../../../context/LocaleContext'
-import dataSrc from '../../../dataSrc'
-import AddableList from './AddableList'
-
-const Fragment = React.Fragment
+import { Modal, Button } from 'react-bootstrap'
+import { AppContext } from '../../../context/AppContext'
+import PropTypes from 'prop-types'
 
 class RemoveUserConfirm extends React.Component {
 	constructor() {
@@ -76,7 +70,7 @@ class RemoveUserConfirm extends React.Component {
 	}
 
 	render() {
-		const locale = this.context
+		const { locale } = React.useContext(AppContext)
 
 		return (
 			<Modal show={this.props.show} onHide={this.closeModifyUserInfo}>
@@ -99,6 +93,12 @@ class RemoveUserConfirm extends React.Component {
 		)
 	}
 }
-RemoveUserConfirm.contextType = LocaleContext
+
+RemoveUserConfirm.propTypes = {
+	onClose: PropTypes.func,
+	onSubmit: PropTypes.func,
+	user: PropTypes.object,
+	show: PropTypes.bool,
+}
 
 export default RemoveUserConfirm

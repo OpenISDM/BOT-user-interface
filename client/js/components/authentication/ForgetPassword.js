@@ -35,7 +35,7 @@
 import React from 'react'
 import { Button } from 'react-bootstrap'
 import config from '../../config'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import {
@@ -52,7 +52,7 @@ import ImageWebp from '../utils/ImageWebp'
 const imageLength = 80
 
 const ForgetPassword = () => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 	const history = useHistory()
 
 	return (

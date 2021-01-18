@@ -40,7 +40,7 @@ import DateTimePicker from '../../container/DateTimePicker'
 import Switcher from '../../container/Switcher'
 import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 const EditMonitorConfigForm = ({
 	selectedData,
 	isEdited,
@@ -51,7 +51,7 @@ const EditMonitorConfigForm = ({
 	title,
 	type,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal

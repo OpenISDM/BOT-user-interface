@@ -41,6 +41,7 @@ import {
 	SET_OBJECT_FOUND_RESULTS,
 	SET_DEVICE_OBJECT_TYPE_VISIBLE,
 	SET_PERSON_OBJECT_TYPE_VISIBLE,
+	SET_OPENED_NOTIFICATION,
 } from './action'
 
 const StateReducer = (state, action) => {
@@ -84,6 +85,11 @@ const StateReducer = (state, action) => {
 			return {
 				...state,
 				personObjectTypeVisible: action.value,
+			}
+		case SET_OPENED_NOTIFICATION:
+			return {
+				...state,
+				openedNotification: action.value,
 			}
 		default:
 			return state

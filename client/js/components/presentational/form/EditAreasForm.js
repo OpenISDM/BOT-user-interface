@@ -36,14 +36,11 @@ import React from 'react'
 import { Modal, Button, ListGroup } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 
-import LocaleContext from '../../../context/LocaleContext'
-import config from '../../../config'
-import AuthenticationContext from '../../../context/AuthenticationContext'
+import { AppContext } from '../../../context/AppContext'
 import { Title } from '../../BOTComponent/styleComponent'
 
 const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
-	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthenticationContext)
+	const { auth, locale } = React.useContext(AppContext)
 
 	return (
 		<Modal
@@ -63,14 +60,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
 					onSubmit={(values) => {
 						handleSubmit(values)
 					}}
-					render={({
-						values,
-						errors,
-						status,
-						touched,
-						isSubmitting,
-						setFieldValue,
-					}) => (
+					render={({ values, isSubmitting, setFieldValue }) => (
 						<Form>
 							<Title sub>{locale.texts.SELECTED_AREAS}</Title>
 							<ListGroup>
@@ -107,7 +97,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
 								{Object.values(areaTable)
 									.filter((area) => {
 										return (
-											auth.user.main_area != area.id &&
+											auth.user.main_area !== area.id &&
 											!values.areas_id.includes(area.id)
 										)
 									})

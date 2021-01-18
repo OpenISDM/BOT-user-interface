@@ -33,12 +33,21 @@
 */
 
 import React, { useContext, useEffect, useState } from 'react'
-import { MapContainer, ImageOverlay, LayerGroup, Circle } from 'react-leaflet'
-import { CRS } from 'leaflet'
+import {
+	MapContainer,
+	ImageOverlay,
+	LayerGroup,
+	Circle,
+	Marker,
+} from 'react-leaflet'
+import L, { CRS } from 'leaflet'
+import 'leaflet.markercluster'
+import '../../config/leafletAwesomeNumberMarkers'
 import siteConfig from '../../../../site_module/siteConfig'
 import config from '../../config'
 import { AppContext } from '../../context/AppContext'
 import { isWebpSupported, getCoordinatesFromUUID } from '../../helper/utilities'
+import { macAddressToCoordinate } from '../../helper/dataTransfer'
 import apiHelper from '../../helper/apiHelper'
 import PropTypes from 'prop-types'
 
@@ -70,7 +79,28 @@ const generateGeoFenceLayer = (showGeoFence, geoFenceList) => {
 	return <LayerGroup>{circles}</LayerGroup>
 }
 
-const BOTMap = ({ showGeoFence = false }) => {
+const generateMarkersLayer = ({ objectList = [] }) => {
+	let markers
+	if (objectList.length > 0) {
+		markers = objectList.map((object, index) => {
+			/** Calculate the position of the object  */
+			const position = macAddressToCoordinate(
+				object.mac_address,
+				object.currentPosition,
+				object.updated_by_n_lbeacons,
+				60
+			)
+
+			const option = new L.AwesomeNumberMarkers(config.mapConfig.iconOptions)
+
+			return <Marker key={index} position={position} icon={option} />
+		})
+	}
+
+	return <LayerGroup>{markers}</LayerGroup>
+}
+
+const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 	const { auth, stateReducer } = useContext(AppContext)
 	const [{ area }] = stateReducer
 	const [geoFenceList, setGeoFenceList] = useState([])
@@ -112,6 +142,7 @@ const BOTMap = ({ showGeoFence = false }) => {
 			}}
 		>
 			{generateGeoFenceLayer(showGeoFence, geoFenceList)}
+			{generateMarkersLayer({ objectList })}
 			<ImageOverlay bounds={mapProps.bounds} url={url} />
 		</MapContainer>
 	)
@@ -119,6 +150,7 @@ const BOTMap = ({ showGeoFence = false }) => {
 
 BOTMap.propTypes = {
 	showGeoFence: PropTypes.bool,
+	objectList: PropTypes.array,
 }
 
 export default BOTMap

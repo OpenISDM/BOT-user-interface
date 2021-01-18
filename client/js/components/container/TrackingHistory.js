@@ -1,14 +1,12 @@
 import React from 'react'
 import dataSrc from '../../dataSrc'
 import axios from 'axios'
-import 'react-table/react-table.css'
 import { Formik } from 'formik'
 import { object, string } from 'yup'
 import { Button, Row, Col, Nav } from 'react-bootstrap'
-import styleConfig from '../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
 import { AppContext } from '../../context/AppContext'
-import ReactTable from 'react-table'
+import BOTTable from '../BOTComponent/BOTTable'
 import {
 	locationHistoryByMacColumns,
 	locationHistoryByUUIDColumns,
@@ -36,7 +34,7 @@ class TrackingHistory extends React.Component {
 	defaultActiveKey = 'mac'
 
 	componentDidUpdate = (prevProps, prevState) => {
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			this.setState({
 				locale: this.context.locale.abbr,
 			})
@@ -72,7 +70,7 @@ class TrackingHistory extends React.Component {
 				mode: fields.mode,
 			})
 			.then((res) => {
-				if (res.data.rowCount == 0) {
+				if (res.data.rowCount === 0) {
 					setStatus(locale.texts.NO_DATA_FOUND)
 					setSubmitting(false)
 					return
@@ -82,8 +80,8 @@ class TrackingHistory extends React.Component {
 				let additionalData = null
 				switch (fields.mode) {
 					case 'mac':
-						res.data.rows.map((pt) => {
-							if (pt.uuid != prevUUID) {
+						res.data.rows.forEach((pt) => {
+							if (pt.uuid !== prevUUID) {
 								data.push({
 									uuid: pt.uuid,
 									startTime: moment(pt.record_timestamp)
@@ -99,7 +97,7 @@ class TrackingHistory extends React.Component {
 								.locale(locale.abbr)
 								.format(timeValidatedFormat)
 						})
-						if (res.data.rowCount != 0) {
+						if (res.data.rowCount !== 0) {
 							additionalData = {
 								name: res.data.rows[0].name,
 								area: res.data.rows[0].area,
@@ -111,7 +109,7 @@ class TrackingHistory extends React.Component {
 							item.id = index + 1
 							return item
 						})
-						if (res.data.rowCount != 0) {
+						if (res.data.rowCount !== 0) {
 							additionalData = {
 								description: res.data.rows[0].description,
 								area: res.data.rows[0].area,
@@ -161,7 +159,7 @@ class TrackingHistory extends React.Component {
 								'mode',
 								locale.texts.MAC_ADDRESS_FORMAT_IS_NOT_CORRECT,
 								(value) => {
-									if (value == undefined) return false
+									if (value === undefined) return false
 									const pattern = new RegExp(
 										'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
 									)
@@ -175,7 +173,7 @@ class TrackingHistory extends React.Component {
 								'uuid',
 								locale.texts.LBEACON_FORMAT_IS_NOT_CORRECT,
 								(value) => {
-									if (value == undefined) return false
+									if (value === undefined) return false
 									const pattern = new RegExp(
 										'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
 									)
@@ -223,7 +221,7 @@ class TrackingHistory extends React.Component {
 								<BOTNavLink
 									className=""
 									eventKey="mac"
-									onClick={(e) => {
+									onClick={() => {
 										setFieldValue('key', '')
 										setFieldValue('mode', 'mac')
 										setFieldValue('startTime', '')
@@ -236,7 +234,7 @@ class TrackingHistory extends React.Component {
 											additionalData: null,
 										})
 									}}
-									active={values.mode == 'mac'}
+									active={values.mode === 'mac'}
 								>
 									{locale.texts.MAC_ADDRESS}
 								</BOTNavLink>
@@ -257,7 +255,7 @@ class TrackingHistory extends React.Component {
 											additionalData: null,
 										})
 									}}
-									active={values.mode == 'uuid'}
+									active={values.mode === 'uuid'}
 								>
 									{locale.texts.LBEACON}
 								</BOTNavLink>
@@ -266,7 +264,7 @@ class TrackingHistory extends React.Component {
 						<div className="my-2">
 							<Row>
 								<Col lg={4}>
-									{values.mode == 'mac' && (
+									{values.mode === 'mac' && (
 										<FormikFormGroup
 											type="text"
 											name="key"
@@ -278,7 +276,7 @@ class TrackingHistory extends React.Component {
 											label="mac address"
 										/>
 									)}
-									{values.mode == 'uuid' && (
+									{values.mode === 'uuid' && (
 										<FormikFormGroup
 											type="text"
 											name="key"
@@ -330,12 +328,12 @@ class TrackingHistory extends React.Component {
 										<FormikFormGroup
 											type="text"
 											value={
-												values.mode == 'mac'
+												values.mode === 'mac'
 													? additionalData.name
 													: locale.texts[additionalData.area]
 											}
 											label={
-												values.mode == 'mac'
+												values.mode === 'mac'
 													? locale.texts.NAME
 													: locale.texts.AREA
 											}
@@ -356,43 +354,37 @@ class TrackingHistory extends React.Component {
 							)}
 							<hr />
 							{isSubmitting && <Loader />}
-							{this.state.data.length != 0 ? (
-								<ReactTable
-									keyField="id"
+							{this.state.data.length !== 0 ? (
+								<BOTTable
 									data={this.state.data}
 									columns={this.state.columns}
-									className="-highlight mt-4"
 									style={{
 										maxHeight: '65vh',
 										minHeight: '30vh',
 									}}
 									pageSize={this.state.data.length}
-									{...styleConfig.reactTable}
-									getTrProps={(state, rowInfo, column, instance) => {
+									onClickCallback={(original) => {
 										return {
-											onClick: (e) => {
+											onClick: () => {
 												switch (values.mode) {
 													case 'mac':
-														setFieldValue('key', rowInfo.original.uuid)
+														setFieldValue('key', original.uuid)
 														setFieldValue('mode', 'uuid')
-														setFieldValue(
-															'startTime',
-															rowInfo.original.startTime
-														)
-														setFieldValue('endTime', rowInfo.original.endTime)
+														setFieldValue('startTime', original.startTime)
+														setFieldValue('endTime', original.endTime)
 														setSubmitting(true)
 														this.getLocationHistory(
 															{
 																...values,
-																...rowInfo.original,
-																key: rowInfo.original.uuid,
+																...original,
+																key: original.uuid,
 																mode: 'uuid',
 															},
 															setSubmitting
 														)
 														break
 													case 'uuid':
-														setFieldValue('key', rowInfo.original.mac_address)
+														setFieldValue('key', original.mac_address)
 														setFieldValue('mode', 'mac')
 														setFieldValue('startTime', values.startTime)
 														setFieldValue('endTime', values.endTime)
@@ -400,8 +392,8 @@ class TrackingHistory extends React.Component {
 														this.getLocationHistory(
 															{
 																...values,
-																...rowInfo.original,
-																key: rowInfo.original.mac_address,
+																...original,
+																key: original.mac_address,
 																mode: 'mac',
 															},
 															setSubmitting

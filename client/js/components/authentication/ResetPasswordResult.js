@@ -32,32 +32,17 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React, { Component } from 'react'
-import { Modal, Image, Button } from 'react-bootstrap'
-import config from '../../config'
-import LocaleContext from '../../context/LocaleContext'
-import AuthContext from '../../context/AuthenticationContext'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import {
-	CenterContainer,
-	PageTitle,
-	Title,
-} from '../BOTComponent/styleComponent'
-import styleConfig from '../../config/styleConfig'
-import FormikFormGroup from '../presentational/FormikFormGroup'
-import { Link, useHistory } from 'react-router-dom'
-import { set } from 'js-cookie'
-import apiHelper from '../../helper/apiHelper'
-
+import React from 'react'
+import { AppContext } from '../../context/AppContext'
+import { CenterContainer } from '../BOTComponent/styleComponent'
+import { Link } from 'react-router-dom'
 import styleSheet from '../../config/styleSheet'
 
 const imageLength = 160
 
-const ResetPasswordResult = ({ match }) => {
-	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthContext)
-	const history = useHistory()
+const ResetPasswordResult = () => {
+	const { locale } = React.useContext(AppContext)
+
 	return (
 		<CenterContainer
 			style={{

@@ -35,15 +35,12 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import Select from 'react-select'
-import * as Yup from 'yup'
-import axios from 'axios'
-import dataSrc from '../../../dataSrc'
 import FormikFormGroup from '../../presentational/FormikFormGroup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
+import PropTypes from 'prop-types'
 
 const SignatureForm = ({ show, title, handleClose, handleSubmit }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal
@@ -61,17 +58,10 @@ const SignatureForm = ({ show, title, handleClose, handleSubmit }) => {
 					initialValues={{
 						name: '',
 					}}
-					onSubmit={(values, { setStatus, setSubmitting }) => {
+					onSubmit={(values) => {
 						handleSubmit(values)
 					}}
-					render={({
-						values,
-						errors,
-						status,
-						touched,
-						isSubmitting,
-						setFieldValue,
-					}) => (
+					render={({ errors, touched, isSubmitting }) => (
 						<Form className="text-capitalize">
 							<FormikFormGroup
 								type="text"
@@ -95,6 +85,13 @@ const SignatureForm = ({ show, title, handleClose, handleSubmit }) => {
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+SignatureForm.propTypes = {
+	show: PropTypes.bool,
+	title: PropTypes.string,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
 }
 
 export default SignatureForm

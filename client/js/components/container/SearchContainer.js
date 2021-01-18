@@ -53,7 +53,6 @@ class SearchContainer extends React.Component {
 
 	state = {
 		isShowSectionTitle: false,
-		hasSearchKey: false,
 		isShowSearchOption: false,
 		searchKey: '',
 		sectionTitleList: [],
@@ -71,11 +70,7 @@ class SearchContainer extends React.Component {
 	componentDidUpdate = (prepProps) => {
 		/** Refresh the search result automatically
 		 *  This feature can be adjust by the user by changing the boolean value in config */
-		if (
-			this.state.refreshSearchResult &&
-			this.state.hasSearchKey &&
-			!this.props.hasGridButton
-		) {
+		if (this.state.refreshSearchResult) {
 			this.props.getSearchKey(this.state.searchKey)
 		}
 		if (
@@ -84,14 +79,6 @@ class SearchContainer extends React.Component {
 		) {
 			this.setState({
 				searchKey: '',
-			})
-		}
-		if (
-			prepProps.hasSearchKey !== this.props.hasSearchKey &&
-			prepProps.hasSearchKey
-		) {
-			this.setState({
-				hasSearchKey: this.props.hasSearchKey,
 			})
 		}
 	}
@@ -141,7 +128,6 @@ class SearchContainer extends React.Component {
 			searchKey,
 			getSearchKey,
 			clearSearchResult,
-			handleShowResultListForMobile,
 			searchObjectArray,
 			pinColorArray,
 			keywords,
@@ -156,7 +142,6 @@ class SearchContainer extends React.Component {
 			deviceObjectTypes,
 			getSearchKey,
 			clearSearchResult,
-			handleShowResultListForMobile,
 			searchObjectArray,
 			pinColorArray,
 			keywords,
@@ -184,12 +169,9 @@ SearchContainer.propTypes = {
 	keywords: PropTypes.array.isRequired,
 	pinColorArray: PropTypes.array.isRequired,
 	searchObjectArray: PropTypes.array.isRequired,
-	handleShowResultListForMobile: PropTypes.array.isRequired,
 	searchKey: PropTypes.object.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
-	hasSearchKey: PropTypes.bool.isRequired,
-	hasGridButton: PropTypes.bool.isRequired,
 }
 
 export default SearchContainer

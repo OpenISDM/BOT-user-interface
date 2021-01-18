@@ -41,7 +41,6 @@ import siteConfig from '../../../../site_module/siteConfig'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
 import {
-	JSONClone,
 	isEqual,
 	isWebpSupported,
 	getCoordinatesFromUUID,
@@ -57,6 +56,7 @@ class Map extends React.Component {
 	state = {
 		shouldUpdateTrackingData: true,
 		objectInfo: [],
+		currentAreaId: null,
 	}
 
 	map = null
@@ -76,20 +76,28 @@ class Map extends React.Component {
 		this.initMap()
 	}
 
-	componentDidUpdate = (prevProps) => {
+	componentDidUpdate = (prevProps, prevState) => {
+		const [{ area }] = this.context.stateReducer
+
 		if (this.state.shouldUpdateTrackingData) {
 			this.handleObjectMarkers()
 		}
 
 		if (
 			!isEqual(prevProps.lbeaconPosition, this.props.lbeaconPosition) ||
-			!isEqual(prevProps.currentAreaId, this.context.stateReducer[0].area.id) ||
+			!isEqual(prevState.currentAreaId, area.id) ||
 			!isEqual(prevProps.authenticated, this.props.authenticated)
 		) {
 			this.createLbeaconMarkers(
 				this.props.lbeaconPosition,
 				this.lbeaconsPosition
 			)
+		}
+
+		if (!isEqual(prevState.currentAreaId, area.id)) {
+			this.setState({
+				currentAreaId: area.id,
+			})
 		}
 
 		if (!isEqual(prevProps.geofenceConfig, this.props.geofenceConfig)) {
@@ -452,7 +460,7 @@ class Map extends React.Component {
 
 		const numberSheet = {}
 
-		this.filterTrackingData(JSONClone(searchResult)).forEach((item) => {
+		this.filterTrackingData(searchResult).forEach((item) => {
 			const checkToShowDevice =
 				parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE &&
 				deviceObjectTypeVisible
@@ -577,8 +585,8 @@ class Map extends React.Component {
 	}
 
 	/** Filter out undesired tracking data */
-	filterTrackingData = (proccessedTrackingData = []) => {
-		return proccessedTrackingData.filter((item) => {
+	filterTrackingData = (data = []) => {
+		return data.filter((item) => {
 			return item.found && item.isMatchedObject
 		})
 	}
@@ -637,7 +645,6 @@ Map.propTypes = {
 	pathMacAddress: PropTypes.object.isRequired,
 	areaId: PropTypes.number.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
-	currentAreaId: PropTypes.number.isRequired,
 	authenticated: PropTypes.bool.isRequired,
 }
 

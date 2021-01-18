@@ -37,7 +37,7 @@ import { Button, Col, Row } from 'react-bootstrap'
 import ScrollArea from 'react-scrollbar'
 import AccessControl from '../../authentication/AccessControl'
 import SearchResultListGroup from '../../presentational/SearchResultListGroup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 import { Title } from '../../BOTComponent/styleComponent'
 
 const MobileSearchResultList = ({
@@ -49,7 +49,7 @@ const MobileSearchResultList = ({
 	showNotFoundResult,
 	onSelect,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	const style = {
 		noResultDiv: {

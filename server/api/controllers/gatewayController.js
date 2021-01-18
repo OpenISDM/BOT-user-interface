@@ -48,9 +48,9 @@ export default {
 	},
 
 	deleteGateway: async (request, response) => {
-		const { idPackage } = request.body
+		const { ids } = request.body
 		try {
-			const res = await pool.query(dbQueries.deleteGateway(idPackage))
+			const res = await pool.query(dbQueries.deleteGateway(ids))
 			console.log('delete Gateway record succeed')
 			response.status(200).json(res)
 		} catch (e) {

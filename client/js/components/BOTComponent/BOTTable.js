@@ -39,28 +39,43 @@ import styleConfig from '../../config/styleConfig'
 import { JSONClone } from '../../helper/utilities'
 import PropTypes from 'prop-types'
 
-const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
+import 'react-table/react-table.css'
+import 'react-tabs/style/react-tabs.css'
+
+const BOTTable = ({ data, columns, onClickCallback, pageSize, style }) => {
 	const { locale } = useContext(AppContext)
 	const [selected, setSelected] = useState(null)
+	const [hovered, setHovered] = useState(null)
 
 	const newColumns = JSONClone(columns)
 	newColumns.forEach((field) => {
+		field.headerStyle = {
+			textAlign: 'left',
+			textTransform: 'capitalize',
+		}
+		if (field.accessor === '_id') {
+			field.headerStyle = {
+				textAlign: 'center',
+			}
+		}
 		field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 	})
 
 	return (
 		<ReactTable
 			{...styleConfig.reactTable}
+			style={style}
 			columns={newColumns}
 			data={data}
-			pageSize={pageSize ? pageSize : data.length}
+			pageSize={pageSize || data.length}
 			resizable={true}
 			freezeWhenExpanded={false}
-			showPagination={pageSize ? true : false}
+			showPagination={!!pageSize}
 			getTrProps={(state, rowInfo) => {
-				if (onClickCallback && rowInfo && rowInfo.row) {
-					return {
-						onClick: (e) => {
+				let canClick = {}
+				if (onClickCallback) {
+					canClick = {
+						onClick: () => {
 							if (rowInfo.index === selected) {
 								setSelected(null)
 								onClickCallback(null)
@@ -69,14 +84,30 @@ const BOTTable = ({ data, columns, onClickCallback, pageSize }) => {
 								onClickCallback(rowInfo.original)
 							}
 						},
+					}
+				}
+
+				if (rowInfo && rowInfo.row) {
+					return {
+						...canClick,
+						onMouseEnter: () => {
+							setHovered(rowInfo.index)
+						},
+						onMouseLeave: () => {
+							setHovered(null)
+						},
 						style: {
-							background: rowInfo.index === selected ? '#007bff' : 'white',
-							color: rowInfo.index === selected ? 'white' : 'black',
+							background:
+								rowInfo && rowInfo.index === selected
+									? '#007bff'
+									: rowInfo.index === hovered
+									? '#b3daff'
+									: 'white',
+							color: rowInfo && rowInfo.index === selected ? 'white' : 'black',
 						},
 					}
-				} else {
-					return {} // WORKAROUND: must have a empty object to return
 				}
+				return {} // WORKAROUND: must have a empty object to return
 			}}
 		/>
 	)
@@ -87,6 +118,7 @@ BOTTable.propTypes = {
 	columns: PropTypes.array.isRequired,
 	onClickCallback: PropTypes.func,
 	pageSize: PropTypes.number.isRequired,
+	style: PropTypes.object.isRequired,
 }
 
 export default BOTTable

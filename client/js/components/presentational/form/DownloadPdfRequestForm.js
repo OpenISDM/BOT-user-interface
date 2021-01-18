@@ -35,8 +35,8 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import dataSrc from '../../../dataSrc'
-import LocaleContext from '../../../context/LocaleContext'
+import { pdfUrl } from '../../../dataSrc'
+import { AppContext } from '../../../context/AppContext'
 
 const style = {
 	modal: {
@@ -51,17 +51,17 @@ const style = {
 }
 
 const DownloadPdfRequestForm = ({ handleClose, pdfPath, show }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	const handleClickButton = (e) => {
 		const { name } = e.target
+		const link = document.createElement('a')
 		switch (name) {
 			case 'view':
-				window.open(dataSrc.pdfUrl(pdfPath))
+				window.open(pdfUrl(pdfPath))
 				break
 			case 'download':
-				var link = document.createElement('a')
-				link.href = dataSrc.pdfUrl(pdfPath)
+				link.href = pdfUrl(pdfPath)
 				link.download = ''
 				link.click()
 				break
@@ -101,10 +101,9 @@ const DownloadPdfRequestForm = ({ handleClose, pdfPath, show }) => {
 								</Button>
 								<Button
 									variant="primary"
-									className="text-capitalize"
+									className="text-capitalize mx-3"
 									onClick={handleClickButton}
 									name="view"
-									className="mx-3"
 								>
 									{locale.texts.VIEW}
 								</Button>

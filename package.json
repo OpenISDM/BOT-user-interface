@@ -91,7 +91,7 @@
 		"html-pdf": "^2.2.0",
 		"imagemin": "^7.0.1",
 		"imagemin-webp": "^6.0.0",
-		"js-cookie": "^2.2.0",
+		"js-cookie": "^2.2.1",
 		"json2csv": "^5.0.0",
 		"jsonwebtoken": "^8.5.1",
 		"leaflet": "^1.7.1",

@@ -33,16 +33,12 @@
 */
 
 import React from 'react'
-import { Modal, Button, Row, Col } from 'react-bootstrap'
-import { Formik, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { Modal, Button } from 'react-bootstrap'
+import { Formik, Form } from 'formik'
 import { AppContext } from '../../../context/AppContext'
 import Select from 'react-select'
 import FormikFormGroup from '../FormikFormGroup'
-import { FormFieldName } from '../../BOTComponent/styleComponent'
-import apiHelper from '../../../helper/apiHelper'
 import styleConfig from '../../../config/styleConfig'
-import LocaleContext from '../../../context/LocaleContext'
 
 const EditListForm = ({
 	show,
@@ -51,7 +47,7 @@ const EditListForm = ({
 	title,
 	areaOptions,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal show={show} onHide={handleClose}>
@@ -70,7 +66,6 @@ const EditListForm = ({
 					render={({
 						values,
 						errors,
-						status,
 						touched,
 						isSubmitting,
 						setFieldValue,

@@ -34,8 +34,6 @@
 
 import React from 'react'
 import { Container } from 'react-bootstrap'
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
 import { AppContext } from '../../context/AppContext'
 import { Tabs, Tab, TabList, TabPanel } from 'react-tabs'
 import { trackingTableColumn } from '../../config/tables'
@@ -44,14 +42,12 @@ import { toast } from 'react-toastify'
 import LBeaconTable from './LBeaconTable'
 import GatewayTable from './GatewayTable'
 import messageGenerator from '../../helper/messageGenerator'
-import { JSONClone } from '../../helper/utilities'
-
+import BOTTable from '../BOTComponent/BOTTable'
 class SystemStatus extends React.Component {
 	static contextType = AppContext
 
 	state = {
 		trackingData: [],
-		trackingColunm: [],
 		tabIndex: 0,
 		locale: this.context.locale.lang,
 	}
@@ -87,21 +83,12 @@ class SystemStatus extends React.Component {
 		})
 		if (res) {
 			this.setMessage('clear')
-			const column = JSONClone(trackingTableColumn)
-			column.forEach((field) => {
-				field.headerStyle = {
-					textAlign: 'left',
-				}
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
 			res.data.forEach((item) => {
 				item.status = locale.texts[item.status.toUpperCase()]
 				item.transferred_location = ''
 			})
 			this.setState({
 				trackingData: res.data,
-				trackingColunm: column,
 			})
 		} else {
 			this.setMessage('error', 'connect to database failed', true)
@@ -165,28 +152,13 @@ class SystemStatus extends React.Component {
 						/>
 					</TabPanel>
 					<TabPanel>
-						<ReactTable
+						<BOTTable
 							style={{ height: '75vh' }}
 							data={this.state.trackingData}
-							columns={this.state.trackingColunm}
-							pageSizeOptions={[5, 10]}
-							resizable={true}
-							freezeWhenExpanded={false}
+							columns={trackingTableColumn}
 						/>
 					</TabPanel>
 				</Tabs>
-				{/* <EditLbeaconForm
-                    show= {this.state.showEdit}
-                    title={'edit lbeacon'}
-                    selectedObjectData={this.state.selectedRowData}
-                    handleSubmit={this.handleSubmitForm}
-                    handleClose={this.handleClose}
-                />
-                <DeleteConfirmationForm
-                    show={this.state.showDeleteConfirmation}
-                    handleClose={this.handleClose}
-                    handleSubmit={this.handleSubmitDeleteConfirmForm}
-                /> */}
 			</Container>
 		)
 	}

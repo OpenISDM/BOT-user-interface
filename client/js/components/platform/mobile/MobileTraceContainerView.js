@@ -35,13 +35,12 @@
 import React, { Fragment } from 'react'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
-import 'react-table/react-table.css'
 import { Formik } from 'formik'
 import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
-import ReactTable from 'react-table'
+import BOTTable from '../../BOTComponent/BOTTable'
 import moment from 'moment'
 import {
 	BOTNavLink,
@@ -57,7 +56,8 @@ import Select from 'react-select'
 import IconButton from '../../BOTComponent/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
+import PropTypes from 'prop-types'
 
 momentLocalizer()
 
@@ -78,7 +78,7 @@ const MobileTraceContainerView = React.forwardRef(
 		},
 		ref
 	) => {
-		const locale = React.useContext(LocaleContext)
+		const { locale } = React.useContext(AppContext)
 		const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
 		const initialValues = getInitialValues()
 
@@ -88,7 +88,7 @@ const MobileTraceContainerView = React.forwardRef(
 					<PageTitle>
 						{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
 					</PageTitle>
-					{data.length != 0 && (
+					{data.length !== 0 && (
 						<div>
 							<IconButton
 								iconName="fas fa-download"
@@ -149,26 +149,18 @@ const MobileTraceContainerView = React.forwardRef(
 							breadIndex + 1
 						)
 					}}
-					render={({
-						values,
-						errors,
-						status,
-						touched,
-						isSubmitting,
-						setFieldValue,
-						submitForm,
-					}) => (
+					render={({ values, errors, status, setFieldValue, submitForm }) => (
 						<Fragment>
 							<Breadcrumb className="my-2">
 								{histories.map((history, index) => {
 									return (
-										<Breadcrumb.Item>
+										<Breadcrumb.Item key={index}>
 											<div
 												key={index}
 												className="d-inline-block"
 												style={{
 													color:
-														breadIndex == index
+														breadIndex === index
 															? styleSheet.theme
 															: styleSheet.black,
 												}}
@@ -193,7 +185,7 @@ const MobileTraceContainerView = React.forwardRef(
 										<Nav.Item key={index}>
 											<BOTNavLink
 												eventKey={nav.mode}
-												active={values.mode == nav.mode}
+												active={values.mode === nav.mode}
 												onClick={handleClick}
 												name="nav"
 											>
@@ -335,18 +327,15 @@ const MobileTraceContainerView = React.forwardRef(
 								</div>
 							</div>
 
-							{status == config.AJAX_STATUS_MAP.LOADING && <Loader />}
+							{status === config.AJAX_STATUS_MAP.LOADING && <Loader />}
 
 							<hr />
-							{data.length != 0 ? (
-								<ReactTable
-									keyField="id"
+							{data.length !== 0 ? (
+								<BOTTable
 									data={data}
 									columns={columns}
-									className="-highlight"
 									style={{ maxHeight: '65vh' }}
-									{...styleConfig.reactTable}
-									getTrProps={onRowClick}
+									onClickCallback={onRowClick}
 								/>
 							) : (
 								<NoDataFoundDiv>
@@ -360,5 +349,19 @@ const MobileTraceContainerView = React.forwardRef(
 		)
 	}
 )
+
+MobileTraceContainerView.propTypes = {
+	getInitialValues: PropTypes.array,
+	breadIndex: PropTypes.number,
+	data: PropTypes.array,
+	histories: PropTypes.array,
+	navList: PropTypes.array,
+	handleClick: PropTypes.func,
+	options: PropTypes.array,
+	columns: PropTypes.array,
+	getLocationHistory: PropTypes.func,
+	onRowClick: PropTypes.func,
+	title: PropTypes.string,
+}
 
 export default MobileTraceContainerView

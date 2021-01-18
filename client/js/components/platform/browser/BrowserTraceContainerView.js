@@ -40,24 +40,21 @@ import { Formik } from 'formik'
 import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
-import 'react-tabs/style/react-tabs.css'
-import ReactTable from 'react-table'
 import moment from 'moment'
 import {
 	BOTNavLink,
 	BOTNav,
 	NoDataFoundDiv,
-	BOTContainer,
 	PrimaryButton,
-	PageTitle,
 } from '../../BOTComponent/styleComponent'
+import BOTTable from '../../BOTComponent/BOTTable'
 import Loader from '../../presentational/Loader'
 import Select from 'react-select'
-
 import IconButton from '../../BOTComponent/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
+import PropTypes from 'prop-types'
 
 momentLocalizer()
 
@@ -74,18 +71,17 @@ const BrowseTraceContainerView = React.forwardRef(
 			columns,
 			getLocationHistory,
 			onRowClick,
-			title,
 		},
 		ref
 	) => {
-		const locale = React.useContext(LocaleContext)
+		const { locale } = React.useContext(AppContext)
 		const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
 		const initialValues = getInitialValues()
 
 		return (
 			<div>
 				<div className="d-flex justify-content-between">
-					{data.length != 0 && (
+					{data.length !== 0 && (
 						<div>
 							<IconButton
 								iconName="fas fa-download"
@@ -112,7 +108,6 @@ const BrowseTraceContainerView = React.forwardRef(
 					validateOnBlur={false}
 					validationSchema={object().shape({
 						key: object().nullable().required(locale.texts.REQUIRED),
-
 						startTime: string()
 							.nullable()
 							.required(locale.texts.START_TIME_IS_REQUIRED)
@@ -124,7 +119,6 @@ const BrowseTraceContainerView = React.forwardRef(
 									return moment(test, timeValidatedFormat, true).isValid()
 								}
 							),
-
 						endTime: string()
 							.nullable()
 							.required(locale.texts.END_TIME_IS_REQUIRED)
@@ -157,7 +151,7 @@ const BrowseTraceContainerView = React.forwardRef(
 												className="d-inline-block"
 												style={{
 													color:
-														breadIndex == index
+														breadIndex === index
 															? styleSheet.theme
 															: styleSheet.black,
 												}}
@@ -182,7 +176,7 @@ const BrowseTraceContainerView = React.forwardRef(
 										<Nav.Item key={index}>
 											<BOTNavLink
 												eventKey={nav.name}
-												active={values.mode == nav.name}
+												active={values.mode === nav.name}
 												onClick={handleClick}
 												name="nav"
 											>
@@ -313,18 +307,15 @@ const BrowseTraceContainerView = React.forwardRef(
 								</div>
 							</div>
 
-							{status == config.AJAX_STATUS_MAP.LOADING && <Loader />}
+							{status === config.AJAX_STATUS_MAP.LOADING && <Loader />}
 
 							<hr />
-							{data.length != 0 ? (
-								<ReactTable
-									keyField="id"
+							{data.length !== 0 ? (
+								<BOTTable
 									data={data}
 									columns={columns}
-									className="-highlight"
 									style={{ maxHeight: '65vh' }}
-									{...styleConfig.reactTable}
-									getTrProps={onRowClick}
+									onClickCallback={onRowClick}
 								/>
 							) : (
 								<NoDataFoundDiv>
@@ -338,5 +329,18 @@ const BrowseTraceContainerView = React.forwardRef(
 		)
 	}
 )
+
+BrowseTraceContainerView.propTypes = {
+	getInitialValues: PropTypes.object,
+	breadIndex: PropTypes.number,
+	data: PropTypes.array,
+	histories: PropTypes.array,
+	navList: PropTypes.array,
+	handleClick: PropTypes.func,
+	options: PropTypes.array,
+	columns: PropTypes.array,
+	getLocationHistory: PropTypes.array,
+	onRowClick: PropTypes.func,
+}
 
 export default BrowseTraceContainerView

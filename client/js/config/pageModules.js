@@ -38,10 +38,7 @@ import UserProfile from '../components/container/UserContainer/UserProfile'
 import LBeaconTable from '../components/container/LBeaconTable'
 import GatewayTable from '../components/container/GatewayTable'
 import AdminManagementContainer from '../components/container/UserContainer/AdminManagementContainer'
-import config from '../config'
-import MyDeviceManager from '../components/container/UserContainer/MyDeviceManager'
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
-import MyPatientManager from '../components/container/UserContainer/MyPatientManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
 import MonitorSetting from '../components/container/MonitorSetting'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
@@ -49,6 +46,7 @@ import ShiftChangeRecord from '../components/container/UserContainer/ShiftChange
 import ObjectTable from '../components/presentational/ObjectTable'
 import PatientTable from '../components/presentational/PatientTable'
 import TrackingTable from '../components/container/TrackingTable'
+import BatteryStatusTable from '../components/container/BatteryStatusTable'
 import TraceContainer from '../components/container/menuContainer/TraceContainer'
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
@@ -59,7 +57,6 @@ import GetAssignments from '../components/container/GetAssignments'
 import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHistoricalRecord'
 // import RolePermissionManagement from '../components/container/RolePermissionManagement'
 // import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
-// import MonitorSettingBlock from '../components/container/MonitorSettingBlock'
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
@@ -69,55 +66,6 @@ const TransferredLocationManagement = Loadable({
 		),
 	loading: Loader,
 })
-
-export const userContainerModule = {
-	title: 'user profile',
-	defaultActiveKey: 'user profile',
-	tabList: [
-		{
-			name: 'user profile',
-			path: 'userProfile',
-			href: '#UserProfile',
-			component: (props) => <UserProfile {...props} />,
-		},
-		{
-			name: 'devices management',
-			path: 'devicesManagement',
-			href: '#DevicesManagement',
-			component: (props) => <MyDeviceManager {...props} />,
-		},
-		{
-			name: 'patient management',
-			path: 'patientManagement',
-			href: '#PatientManagement',
-			component: (props) => <MyPatientManager {...props} />,
-		},
-	],
-}
-
-export const monitorSettingModule = {
-	title: 'monitor setting',
-	path: routes.MONITOR_SETTINGS,
-	defaultActiveKey: '', // to be assigned
-	tabList: [
-		// {
-		//     name: config.monitorSettingType.MOVEMENT_MONITOR,
-		//     component: (props) => <MonitorSettingBlock {...props}/>
-		// },
-		// {
-		//     name: config.monitorSettingType.LONG_STAY_IN_DANGER_MONITOR,
-		//     component: (props) => <MonitorSettingBlock {...props}/>
-		// },
-		// {
-		//     name: config.monitorSettingType.NOT_STAY_ROOM_MONITOR,
-		//     component: (props) => <MonitorSettingBlock {...props}/>
-		// },
-		{
-			name: config.monitorSettingType.GEOFENCE_MONITOR,
-			component: (props) => <MonitorSetting {...props} />,
-		},
-	],
-}
 
 export const settingModule = {
 	title: 'settings',
@@ -314,7 +262,7 @@ export const ObjectManagementModule = {
 		{
 			name: 'Battery Table',
 			permission: 'route:objectManagement',
-			component: (props) => <TrackingTable {...props} />,
+			component: (props) => <BatteryStatusTable {...props} />,
 			platform: ['browser'],
 		},
 	],
@@ -367,13 +315,6 @@ export const navbarNavList = [
 	//     permission: 'route:trackingHistory',
 	// },
 	// {
-	//     name: "monitor setting",
-	//     alias: "monitor",
-	//     path: "/page/monitor",
-	//     module: monitorSettingModule,
-	//     permission: "route:monitor",
-	//     platform: ['browser', 'tablet']
-	// },
 	// {
 	//     name: 'contact tree',
 	//     alias: 'contactTree',

@@ -36,10 +36,10 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { object, string } from 'yup'
-import LocaleContext from '../../../context/LocaleContext'
+import { AppContext } from '../../../context/AppContext'
 
 const EditPwdForm = ({ show, handleClose, handleSubmit }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	let new_password_store = ''
 
@@ -69,25 +69,17 @@ const EditPwdForm = ({ show, handleClose, handleSubmit }) => {
 								'check_password',
 								locale.texts.PASSWORD_NOT_FIT,
 								(value) => {
-									if (value == new_password_store) {
+									if (value === new_password_store) {
 										return true
 									}
 									return false
 								}
 							),
 					})}
-					onSubmit={(values, { setStatus, setSubmitting }) => {
+					onSubmit={(values) => {
 						handleSubmit(values)
 					}}
-					render={({
-						values,
-						errors,
-						status,
-						touched,
-						isSubmitting,
-						setFieldValue,
-						submitForm,
-					}) => (
+					render={({ errors, touched, isSubmitting }) => (
 						<Form className="text-capitalize">
 							<div className="form-group">
 								<small id="TextIDsmall" className="form-text text-muted ">

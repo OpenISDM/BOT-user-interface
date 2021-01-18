@@ -37,12 +37,11 @@ import { Modal, Image, Button } from 'react-bootstrap'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { object, string } from 'yup'
 import config from '../../config'
-import LocaleContext from '../../context/LocaleContext'
-import AuthenticationContext from '../../context/AuthenticationContext'
+import { AppContext } from '../../context/AppContext'
+import PropTypes from 'prop-types'
 
 const SiginForm = ({ show, handleClose }) => {
-	const locale = React.useContext(LocaleContext)
-	const auth = React.useContext(AuthenticationContext)
+	const { locale, auth } = React.useContext(AppContext)
 
 	return (
 		<Modal
@@ -71,7 +70,7 @@ const SiginForm = ({ show, handleClose }) => {
 					onSubmit={(values, actions) => {
 						auth.signin(values, actions, handleClose)
 					}}
-					render={({ values, errors, status, touched, isSubmitting }) => (
+					render={({ errors, status, touched, isSubmitting }) => (
 						<Form>
 							{status && (
 								<div className={'alert alert-danger mb-2 warning'}>
@@ -126,6 +125,11 @@ const SiginForm = ({ show, handleClose }) => {
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+SiginForm.propTypes = {
+	show: PropTypes.bool,
+	handleClose: PropTypes.func,
 }
 
 export default SiginForm

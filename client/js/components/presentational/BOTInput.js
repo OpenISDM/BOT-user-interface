@@ -33,7 +33,8 @@
 */
 
 import React from 'react'
-import { Form, Button } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 class BOTInput extends React.Component {
 	state = {
@@ -42,7 +43,7 @@ class BOTInput extends React.Component {
 
 	componentDidUpdate = (prepProps) => {
 		if (
-			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			!prepProps.clearSearchResult
 		) {
 			this.setState({
@@ -60,7 +61,7 @@ class BOTInput extends React.Component {
 
 	handleKeyPress = (e) => {
 		/* Disable key press 'Enter' event */
-		if (e.which == 13) {
+		if (parseInt(e.which) === 13) {
 			e.preventDefault()
 		}
 	}
@@ -100,6 +101,15 @@ class BOTInput extends React.Component {
 			</Form>
 		)
 	}
+}
+
+BOTInput.propTypes = {
+	clearSearchResult: PropTypes.object,
+	placeholder: PropTypes.string,
+	error: PropTypes.object,
+	example: PropTypes.string,
+	name: PropTypes.string,
+	getSearchKey: PropTypes.func,
 }
 
 export default BOTInput

@@ -35,7 +35,7 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import LocaleContext from '../../context/LocaleContext'
+import { AppContext } from '../../context/AppContext'
 import PropTypes from 'prop-types'
 
 const DeleteConfirmationForm = ({
@@ -44,7 +44,7 @@ const DeleteConfirmationForm = ({
 	show,
 	message,
 }) => {
-	const locale = React.useContext(LocaleContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<Modal show={show} centered={true} onHide={handleClose} size="md">

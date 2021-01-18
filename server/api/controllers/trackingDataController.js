@@ -113,7 +113,7 @@ const getTrackingData = (request, response) => {
 				/** Set the boolean if its rssi is below the specific rssi threshold  */
 				const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
 				/** Flag the object that satisfied the time period and rssi threshold */
-				item.found = isInTheTimePeriod && isMatchRssi
+				item.found = !isInTheTimePeriod && isMatchRssi
 
 				/** Set the residence time of the object */
 				item.residence_time = item.found
@@ -135,20 +135,17 @@ const getTrackingData = (request, response) => {
 
 				/** Flag the object's battery volumn is limiting */
 				if (
-					item.battery_voltage >=
-						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
-					item.found
+					item.battery_voltage > parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
 				) {
 					item.battery_indicator = 3
 				} else if (
-					item.battery_voltage <
+					item.battery_voltage <=
 						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
-					item.battery_voltage > 0 &&
-					item.found
+					item.battery_voltage > 16
 				) {
 					item.battery_indicator = 2
-				} else {
-					item.battery_indicator = 0
+				} else if (item.battery_voltage <= 16) {
+					item.battery_indicator = 1
 				}
 
 				const newItem = new Map(Object.entries(item))

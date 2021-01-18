@@ -63,7 +63,6 @@ const SearchResultListGroup = ({
 	searchKey,
 }) => {
 	const { locale, auth, stateReducer } = React.useContext(AppContext)
-	
 	const numberSheet = {}
 
 	const onMouseOver = (e, value) => {

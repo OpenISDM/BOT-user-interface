@@ -51,10 +51,10 @@ const getLbeaconTable = `
 	ORDER BY ip_address DESC
 `
 
-const deleteLBeacon = (idPackage) => {
+const deleteLBeacon = (ids) => {
 	const query = `
 		DELETE FROM lbeacon_table
-		WHERE id IN (${idPackage.map((item) => `'${item}'`)});
+		WHERE id IN (${ids.map((id) => `'${id}'`)});
 	`
 	return query
 }

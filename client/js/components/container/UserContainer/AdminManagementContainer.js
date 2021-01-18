@@ -34,19 +34,18 @@
 
 import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import ReactTable from 'react-table'
 import { userInfoTableColumn } from '../../../config/tables'
 import EditUserForm from '../../presentational/form/EditUserForm'
 import { AppContext } from '../../../context/AppContext'
 import DeleteUserForm from './DeleteUserForm'
 import DeleteConfirmationForm from '../../presentational/DeleteConfirmationForm'
-import messageGenerator from '../../../helper/messageGenerator'
-import styleConfig from '../../../config/styleConfig'
+import { setSuccessMessage } from '../../../helper/messageGenerator'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import config from '../../../config'
 import apiHelper from '../../../helper/apiHelper'
-import { JSONClone, formatTime } from '../../../helper/utilities'
+import { formatTime } from '../../../helper/utilities'
+import BOTTable from '../../BOTComponent/BOTTable'
 
 const Fragment = React.Fragment
 
@@ -57,7 +56,6 @@ class AdminManagementContainer extends React.Component {
 		showAddUserForm: false,
 		showDeleteUserForm: false,
 		data: [],
-		columns: [],
 		selectedUser: null,
 		roleName: [],
 		title: '',
@@ -85,12 +83,6 @@ class AdminManagementContainer extends React.Component {
 			locale: locale.abbr,
 		})
 		if (res) {
-			const columns = JSONClone(userInfoTableColumn)
-			columns.forEach((field) => {
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
-			})
-
 			const data = res.data.rows.map((item, index) => {
 				item._id = index + 1
 				item.roles = item.role_type
@@ -110,7 +102,6 @@ class AdminManagementContainer extends React.Component {
 			this.setState(
 				{
 					data,
-					columns,
 					showModifyUserInfo: false,
 					showAddUserForm: false,
 					showDeleteUserForm: false,
@@ -145,13 +136,25 @@ class AdminManagementContainer extends React.Component {
 		}
 	}
 
-	handleSubmit = (values) => {
+	handleSubmit = async (values) => {
+		const { api } = this.state
+		switch (api) {
+			case 'addUser':
+				this.handleAddUserSubmit(values)
+				break
+			case 'setUserInfo':
+				this.handleSetUserSubmit(values)
+				break
+		}
+	}
+
+	handleSetUserSubmit = async (values) => {
 		const { auth } = this.context
-		const { api, selectedUser } = this.state
+		const { selectedUser } = this.state
 		const user = {
 			...auth.user,
 			...values,
-			id: selectedUser ? selectedUser.id : null,
+			id: selectedUser.id,
 			areas_id: auth.user.areas_id,
 			main_area: values.area.id,
 		}
@@ -162,29 +165,40 @@ class AdminManagementContainer extends React.Component {
 		if (!user.areas_id.includes(user.area.id)) {
 			user.areas_id.push(user.area.id)
 		}
-		const callback = () => {
-			messageGenerator.setSuccessMessage('save success')
-		}
 
-		auth[api](user, () => {
-			this.getUserList(callback)
-		})
+		await apiHelper.userApiAgent.setUserInfo({ user })
+
+		this.getUserList(() => setSuccessMessage('save success'))
 	}
 
-	handleDeleteUserSubmit = (e) => {
+	handleAddUserSubmit = async (values) => {
+		const { name, email, password, roles, area } = values
+		const user = {
+			name: name.toLowerCase(),
+			email: email.toLowerCase(),
+			password,
+			roles,
+			area_id: area.id,
+		}
+
+		await apiHelper.userApiAgent.addUser({ user })
+
+		this.getUserList(() => setSuccessMessage('save success'))
+	}
+
+	handleWarningChecked = (e) => {
 		this.setState({
 			showDeleteConfirmation: true,
 			deleteUserName: e.name.label,
 		})
 	}
 
-	handleWarningChecked = async () => {
+	handleDeleteUserSubmit = async () => {
 		const res = await apiHelper.userApiAgent.deleteUser({
 			username: this.state.deleteUserName,
 		})
 		if (res) {
-			const callback = () => messageGenerator.setSuccessMessage('save success')
-			this.getUserList(callback)
+			this.getUserList(() => setSuccessMessage('save success'))
 		}
 	}
 
@@ -200,17 +214,13 @@ class AdminManagementContainer extends React.Component {
 		})
 	}
 
-	onRowClick = (state, rowInfo) => {
-		return {
-			onClick: () => {
-				this.setState({
-					showAddUserForm: true,
-					selectedUser: rowInfo.original,
-					title: 'edit user',
-					api: 'setUser',
-				})
-			},
-		}
+	onRowClick = (original) => {
+		this.setState({
+			showAddUserForm: true,
+			selectedUser: original,
+			title: 'edit user',
+			api: 'setUserInfo',
+		})
 	}
 
 	handleClick = (e) => {
@@ -219,7 +229,7 @@ class AdminManagementContainer extends React.Component {
 				this.setState({
 					showAddUserForm: true,
 					title: 'add user',
-					api: 'signup',
+					api: 'addUser',
 				})
 				break
 			case 'delete user':
@@ -257,13 +267,11 @@ class AdminManagementContainer extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<ReactTable
+				<BOTTable
 					data={this.state.data}
-					columns={this.state.columns}
-					className="-highlight text-none"
+					columns={userInfoTableColumn}
 					style={{ maxHeight: '75vh' }}
-					{...styleConfig.reactTable}
-					getTrProps={this.onRowClick}
+					onClickCallback={this.onRowClick}
 				/>
 
 				<EditUserForm
@@ -282,13 +290,13 @@ class AdminManagementContainer extends React.Component {
 					title={locale.texts.DELETE_USER}
 					handleClose={this.handleClose}
 					data={this.state.data}
-					handleSubmit={this.handleDeleteUserSubmit}
+					handleSubmit={this.handleWarningChecked}
 				/>
 
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
-					handleSubmit={this.handleWarningChecked}
+					handleSubmit={this.handleDeleteUserSubmit}
 					message={locale.texts.ARE_YOU_SURE_TO_DELETE}
 				/>
 			</Fragment>

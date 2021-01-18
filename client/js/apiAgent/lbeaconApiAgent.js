@@ -48,9 +48,9 @@ export default {
 		})
 	},
 
-	async deleteLbeacon({ idPackage }) {
+	async deleteLbeacon({ ids }) {
 		return await del(lbeacon, {
-			idPackage,
+			ids,
 		})
 	},
 }

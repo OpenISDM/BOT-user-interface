@@ -54,7 +54,7 @@ export default (app) => {
 		.get(userController.getAllUser)
 		.delete(userController.deleteUser)
 		.post(userController.addUser)
-		.put(userController.editUserInfo)
+		.put(userController.setUserInfo)
 
 	app.route('/data/user/area/secondary').post(userController.editSecondaryArea)
 

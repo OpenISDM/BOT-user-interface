@@ -35,14 +35,11 @@
 import React from 'react'
 import SearchResultList from '../../presentational/SearchResultList'
 import SearchContainer from '../../container/SearchContainer'
-import { Row, Col } from 'react-bootstrap'
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
 const TabletMainContainer = ({
 	handleClearButton,
 	getSearchKey,
-	setMonitor,
-	clearAlerts,
 	handleClosePath,
 	handleShowPath,
 	lbeaconPosition,
@@ -51,14 +48,10 @@ const TabletMainContainer = ({
 	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
-	hasGridButton,
 	searchKey,
 	searchResult,
-	trackingData,
 	proccessedTrackingData,
-	hasSearchKey,
 	pathMacAddress,
-	currentAreaId,
 }) => {
 	const auth = React.useContext(AuthenticationContext)
 
@@ -83,24 +76,16 @@ const TabletMainContainer = ({
 					<div className="d-flex" style={style.MapAndQrcode}>
 						<MapContainer
 							pathMacAddress={pathMacAddress}
-							proccessedTrackingData={
-								proccessedTrackingData.length == 0
-									? trackingData
-									: proccessedTrackingData
-							}
-							hasSearchKey={hasSearchKey}
+							proccessedTrackingData={proccessedTrackingData}
 							searchResult={searchResult}
 							handleClearButton={handleClearButton}
 							getSearchKey={getSearchKey}
-							setMonitor={setMonitor}
 							lbeaconPosition={lbeaconPosition}
 							geofenceConfig={geofenceConfig}
-							clearAlerts={clearAlerts}
 							searchKey={searchKey}
 							authenticated={authenticated}
 							handleClosePath={handleClosePath}
 							handleShowPath={handleShowPath}
-							currentAreaId={currentAreaId}
 						/>
 					</div>
 
@@ -124,9 +109,7 @@ const TabletMainContainer = ({
 					style={style.searchPanelForTablet}
 				>
 					<SearchContainer
-						hasSearchKey={hasSearchKey}
 						clearSearchResult={clearSearchResult}
-						hasGridButton={hasGridButton}
 						auth={auth}
 						getSearchKey={getSearchKey}
 					/>

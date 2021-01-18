@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        TrackingTable.js
+        BatteryStatusTable.js
 
     File Description:
         BOT UI component
@@ -40,7 +40,7 @@ import messageGenerator from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
 import BOTTable from '../BOTComponent/BOTTable'
 
-class TrackingTable extends React.Component {
+class BatteryStatusTable extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -121,4 +121,4 @@ class TrackingTable extends React.Component {
 	}
 }
 
-export default TrackingTable
+export default BatteryStatusTable
