@@ -32,21 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import {
-	utils,
-	deleteDevice,
-	getTrackingTableByMacAddress,
-	trace,
-} from '../dataSrc'
+import { utils, getTrackingTableByMacAddress, trace } from '../dataSrc'
 import { post } from '../helper/httpClient'
 
 export default {
 	async getSearchableKeywords({ areaId }) {
 		return await post(utils.searchableKeyword, { areaId })
-	},
-
-	async deleteDevice({ formOption }) {
-		return await post(deleteDevice, { formOption })
 	},
 
 	async getTrackingTableByMacAddress({ object_mac_address }) {

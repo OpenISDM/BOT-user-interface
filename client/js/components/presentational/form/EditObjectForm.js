@@ -108,7 +108,6 @@ class EditObjectForm extends React.Component {
 			show,
 			handleClose,
 			disableASN,
-			// idleMacaddrSet = [],
 			associatedMacSet = [],
 			handleSubmit,
 			macOptions,
@@ -395,7 +394,7 @@ class EditObjectForm extends React.Component {
 											name={DISASSOCIATE}
 											disabled={!isBind}
 										>
-											{locale.texts.DISSOCIATE}
+											{locale.texts.REPLACE_TAG}
 										</Button>
 									</div>
 									<div>
@@ -427,7 +426,6 @@ EditObjectForm.propTypes = {
 	handleClick: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	disableASN: PropTypes.bool.isRequired,
-	idleMacaddrSet: PropTypes.array.isRequired,
 	associatedMacSet: PropTypes.array.isRequired,
 	areaTable: PropTypes.array.isRequired,
 	title: PropTypes.string.isRequired,

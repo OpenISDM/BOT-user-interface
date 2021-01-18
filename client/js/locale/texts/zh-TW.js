@@ -234,7 +234,7 @@ const tw = {
 		'請輸入您註冊使用者帳號時所填寫的電子信箱,系統將會寄出重設密碼的連結到您的信箱.',
 	SEND_RESET_INSTRUCTION: '要求重設密碼',
 	DETAIL: '詳細資料',
-	NON_BINDING: '尚未綁定信標',
+	NON_BINDING: '尚未綁定標籤',
 	GENERATE_RECORD: '產生報表',
 	CREATE_LOCATION: '新增轉移地點',
 
@@ -250,7 +250,6 @@ const tw = {
 	TAG_ID: '標籤編號',
 	MONITOR_TYPE: '監控類別',
 	ACN: '財編',
-	LOCATION: '地點',
 	PATIENT_HISTORICAL_RECORD: '歷史報告',
 	RSSI_THRESHOLD: 'RSSI設定',
 	LAST_FOUR_DIGITS_IN_ACN: '產編後四碼',
@@ -262,8 +261,8 @@ const tw = {
 	DELAY_BY: '延後',
 	SHIFT: '班別',
 	DAY_SHIFT: '早班',
-	SWING_SHIFT: '小夜班',
-	NIGHT_SHIFT: '大夜班',
+	SWING_SHIFT: '中班',
+	NIGHT_SHIFT: '晚班',
 	SELECT_SHIFT: '選擇班別',
 	SELECT_AREA: '選擇地區',
 	SELECT_USER: '選擇使用者',
@@ -612,11 +611,6 @@ const tw = {
 	MONITORED_OBJECTS: '選取可監控物件',
 	ALERTS: '警報設置',
 
-	DAY_SHIFT: '早班',
-	SWING_SHIFT: '中班',
-	NIGHT_SHIFT: '晚班',
-
-	DEVICES: '儀器',
 	PATIENTS: '病人',
 	OTHER_OBJECT_TYPES: '其他物件類型',
 
@@ -644,6 +638,8 @@ const tw = {
 	REVISE_LIST: '修改清單',
 
 	UNKNOWN: '未知',
+
+	REPLACE_TAG: '更換標籤',
 }
 
 export default tw

@@ -142,7 +142,9 @@ class BOTSelectTable extends React.Component {
 		const { locale } = this.context
 		const {
 			data,
-			onClickCallback,
+			onClickCallback = () => {
+				// do nothing.
+			},
 			onSortedChangeCallback = () => {
 				// do nothing.
 			},
@@ -173,12 +175,16 @@ class BOTSelectTable extends React.Component {
 			<SelectTable
 				{...extraProps}
 				{...styleConfig.reactTable}
-				keyField="id"
-				data={data}
-				columns={columns}
 				ref={(r) => (this.selectTable = r)}
-				className="-highlight text-none"
-				style={{ maxHeight: '80vh' }}
+				keyField="id"
+				style={this.props.style}
+				columns={columns}
+				data={data}
+				showPagination={true}
+				pageSize={20}
+				showPaginationTop={true}
+				resizable={true}
+				freezeWhenExpanded={false}
 				onPageChange={() => {
 					this.clearSelection()
 					onPageChangeCallback()
@@ -188,24 +194,15 @@ class BOTSelectTable extends React.Component {
 					onSortedChangeCallback()
 				}}
 				NoDataComponent={() => null}
-				showPagination={true}
-				pageSize={20}
-				showPaginationTop={true}
 				getTrProps={(state, rowInfo) => {
-					let canClick = {}
-					if (onClickCallback) {
-						canClick = {
-							onClick: () => {
-								this.setState({
-									currentSelectedRow: rowInfo.original,
-								})
-								this.toggleSelection(rowInfo.original.id)
-								onClickCallback(rowInfo.original)
-							},
-						}
-					}
 					return {
-						...canClick,
+						onClick: () => {
+							this.setState({
+								currentSelectedRow: rowInfo.original,
+							})
+							this.toggleSelection(rowInfo.original.id)
+							onClickCallback(rowInfo.original)
+						},
 						onMouseEnter: () => {
 							onMouseEnterCallback(rowInfo.original)
 						},
@@ -220,6 +217,7 @@ class BOTSelectTable extends React.Component {
 }
 
 BOTSelectTable.propTypes = {
+	style: PropTypes.object,
 	data: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
 	onClickCallback: PropTypes.func,

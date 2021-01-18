@@ -36,50 +36,43 @@ import React from 'react'
 import { keyBy } from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { Row, Col, ButtonToolbar } from 'react-bootstrap'
-import EditObjectForm from './form/EditObjectForm'
-import DissociationForm from '../container/DissociationForm'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import dataSrc from '../../dataSrc'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import { setSuccessMessage } from '../../helper/messageGenerator'
-import { objectTableColumn } from '../../config/tables'
 import apiHelper from '../../helper/apiHelper'
-import { transferMonitorTypeToString } from '../../helper/dataTransfer'
-import {
-	ADD,
-	UNBIND,
-	DELETE,
-	DEVICE,
-	SAVE_SUCCESS,
-	DISASSOCIATE,
-} from '../../config/wordMap'
+import { ADD, DELETE, SAVE_SUCCESS, DISASSOCIATE } from '../../config/wordMap'
 import { formatTime } from '../../helper/utilities'
 import config from '../../config'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
+import BOTTable from '../BOTComponent/BOTTable'
 import BOTObjectFilterBar from '../BOTComponent/BOTObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
+import PropTypes from 'prop-types'
+
+export const SELECTION = {
+	TYPE: 'type',
+	AREA: 'area',
+	STATUS: 'status',
+}
 
 class ObjectTable extends React.Component {
 	static contextType = AppContext
 
 	state = {
+		locale: this.context.locale.abbr,
 		isShowEdit: false,
-		isShowBind: false,
 		showDeleteConfirmation: false,
-		isShowEditImportTable: false,
-		formPath: '',
+		selectedRowData: {},
 		formTitle: '',
 		disableASN: false,
 		data: [],
 		dataMap: {},
 		areaTable: [],
-		objectTable: [],
 		objectFilter: [],
 		filteredData: [],
 		filterSelection: {},
 		apiMethod: '',
 		idleMacaddrSet: [],
-		locale: this.context.locale.abbr,
 		associatedMacSet: [],
 	}
 
@@ -95,10 +88,11 @@ class ObjectTable extends React.Component {
 
 	loadData = async (callback) => {
 		const { locale, auth } = this.context
+		const { objectType = [] } = this.props
 
 		const objectTablePromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
-			objectType: [config.OBJECT_TYPE.DEVICE],
+			objectType,
 		})
 		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
 		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
@@ -112,8 +106,6 @@ class ObjectTable extends React.Component {
 		if (deviceObjectTableRes && areaTableRes && idleMacRes) {
 			const typeList = {}
 			const data = deviceObjectTableRes.data.rows.map((item) => {
-				item.monitor_type = transferMonitorTypeToString(item, 'object')
-
 				item.status = {
 					value: item.status,
 					label: item.status ? locale.texts[item.status.toUpperCase()] : null,
@@ -176,11 +168,6 @@ class ObjectTable extends React.Component {
 					data,
 					filteredData: data,
 					dataMap,
-					isShowEdit: false,
-					isShowBind: false,
-					showDeleteConfirmation: false,
-					disableASN: false,
-					objectTable: deviceObjectTableRes.data.rows,
 					filterSelection: {
 						...this.state.filterSelection,
 						typeList,
@@ -192,79 +179,71 @@ class ObjectTable extends React.Component {
 					idleMacaddrSet,
 					macOptions,
 					locale: locale.abbr,
+					isShowEdit: false,
+					isMultiSelection: false,
+					showDeleteConfirmation: false,
+					disableASN: false,
 				},
 				callback
 			)
+
+			this.clearSelection()
 		}
 	}
 
 	handleClose = () => {
 		this.setState({
-			isShowBind: false,
 			isShowEdit: false,
+			isMultiSelection: false,
 			showDeleteConfirmation: false,
-			isShowEditImportTable: false,
 			disableASN: false,
 		})
+		this.clearSelection()
 	}
 
-	objectMultipleDelete = async () => {
+	handleSubmitAction = async () => {
+		const [{ tableSelection }] = this.context.stateReducer
+		const { dataMap, selectedRowData } = this.state
 		const formOption = []
-		const deleteArray = []
-		let deleteCount = 0
 		let res = null
 
 		switch (this.state.action) {
 			case DISASSOCIATE:
 				res = await apiHelper.objectApiAgent.disassociate({
 					formOption: {
-						id: this.state.selectedRowData.id,
+						id: selectedRowData.id,
 					},
 				})
-
 				break
 
 			case DELETE:
-				this.state.data.forEach((item) => {
-					this.state.selection.forEach((itemSelect) => {
-						if (itemSelect === item.id) {
-							deleteArray.push(deleteCount.toString())
-						}
+				tableSelection.forEach((id) => {
+					formOption.push({
+						id,
+						mac_address: dataMap[id].isBind ? dataMap[id].mac_address : null,
 					})
-					deleteCount += 1
-				})
-
-				deleteArray.forEach((item) => {
-					if (this.state.data[item]) {
-						formOption.push({
-							id: this.state.data[item].id,
-							mac_address: this.state.data[item].isBind
-								? this.state.data[item].mac_address
-								: null,
-						})
-					}
 				})
 
 				res = await apiHelper.objectApiAgent.deleteObject({
 					formOption,
 				})
-
 				break
 		}
 
 		if (res) {
-			this.getObjectTable(() => setSuccessMessage(SAVE_SUCCESS))
+			this.loadData(() => setSuccessMessage(SAVE_SUCCESS))
 		}
 	}
 
 	handleSubmitForm = async (formOption) => {
 		const { apiMethod } = this.state
+		const { objectApiMode } = this.props
 		const res = await apiHelper.objectApiAgent[apiMethod]({
 			formOption,
-			mode: DEVICE,
+			mode: objectApiMode,
 		})
 		if (res) {
-			this.getObjectTable(() => setSuccessMessage(SAVE_SUCCESS))
+			this.loadData(() => setSuccessMessage(SAVE_SUCCESS))
 		}
 	}
 
@@ -277,24 +256,8 @@ class ObjectTable extends React.Component {
 				this.setState({
 					isShowEdit: true,
 					formTitle: name,
-					selectedRowData: [],
-					formPath: dataSrc.addObject,
 					disableASN: false,
 					apiMethod: 'post',
-				})
-				break
-
-			case UNBIND:
-				this.setState({
-					isShowBind: true,
-					apiMethod: 'post',
-				})
-				break
-			case DELETE:
-				this.setState({
-					showDeleteConfirmation: true,
-					action: DELETE,
-					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 				})
 				break
 
@@ -308,11 +271,50 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	render() {
+	handleDeleteAction = () => {
+		const { isMultiSelection } = this.state
 		const { locale, stateReducer } = this.context
-		const [{ tableSelection = [] }, dispatch] = stateReducer
-		const { dataMap } = this.state
-		const selectedData = dataMap[tableSelection[0]]
+		const [{ tableSelection }] = stateReducer
+		if (isMultiSelection) {
+			let state = {}
+			if (tableSelection.length > 0) {
+				state = {
+					action: DELETE,
+					showDeleteConfirmation: true,
+					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
+				}
+			} else {
+				state = {
+					isMultiSelection: false,
+				}
+			}
+
+			this.setState(state)
+		} else {
+			this.setState({
+				isMultiSelection: true,
+			})
+		}
+	}
+
+	clearSelection = () => {
+		const [, dispatch] = this.context.stateReducer
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
+		})
+	}
+
+	render() {
+		const {
+			filteredAttribute = [],
+			enabledSelection = [],
+			columns = [],
+			EditedForm,
+			addText,
+			deleteText,
+		} = this.props
+		const { locale } = this.context
 
 		const typeOptions = this.state.filterSelection.typeList
 			? Object.values(this.state.filterSelection.typeList)
@@ -325,6 +327,30 @@ class ObjectTable extends React.Component {
 			}
 		})
 
+		const selectionMap = {}
+		selectionMap[SELECTION.TYPE] = {
+			label: locale.texts.TYPE,
+			options: typeOptions,
+			attribute: ['type'],
+			source: 'type select',
+		}
+		selectionMap[SELECTION.AREA] = {
+			label: locale.texts.AREA,
+			options: this.state.filterSelection.areaSelection,
+			attribute: ['area'],
+			source: 'area select',
+		}
+		selectionMap[SELECTION.STATUS] = {
+			label: locale.texts.STATUS,
+			options: statusOptions,
+			attribute: ['status'],
+			source: 'status select',
+		}
+
+		const enabledSelectionList = enabledSelection.map(
+			(selection) => selectionMap[selection]
+		)
+
 		return (
 			<>
 				<Col>
@@ -335,109 +361,89 @@ class ObjectTable extends React.Component {
 									objectFilter,
 									filteredData,
 								})
-								dispatch({
-									type: SET_TABLE_SELECTION,
-									value: [],
-								})
+								this.clearSelection()
 							}}
 							oldObjectFilter={this.state.objectFilter}
 							objectList={this.state.data}
 							selectionList={[
 								{
 									label: locale.texts.SEARCH,
-									attribute: [
-										'name',
-										'type',
-										'area',
-										'status',
-										'macAddress',
-										'acn',
-										'transferred_location',
-									],
+									attribute: filteredAttribute,
 									source: 'search bar',
 								},
-								{
-									label: locale.texts.TYPE,
-									options: typeOptions,
-									attribute: ['type'],
-									source: 'type select',
-								},
-								{
-									label: locale.texts.AREA,
-									options: this.state.filterSelection.areaSelection,
-									attribute: ['area'],
-									source: 'area select',
-								},
-								{
-									label: locale.texts.STATUS,
-									options: statusOptions,
-									attribute: ['status'],
-									source: 'status select',
-								},
+								...enabledSelectionList,
 							]}
 						/>
 						<ButtonToolbar>
 							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
-								{locale.texts.ADD_DEVICE}
+								{locale.texts[addText]}
 							</PrimaryButton>
-							<PrimaryButton name={DELETE} onClick={this.handleClickButton}>
-								{locale.texts.DELETE_DEVICE}
+							<PrimaryButton name={DELETE} onClick={this.handleDeleteAction}>
+								{locale.texts[deleteText]}
 							</PrimaryButton>
 						</ButtonToolbar>
 					</Row>
 				</Col>
-
 				<hr />
-				<BOTSelectTable
-					data={this.state.filteredData}
-					columns={objectTableColumn}
-					style={{ maxHeight: '80vh' }}
-					onClickCallback={() => {
-						this.setState({
-							isShowEdit: true,
-							formTitle: 'edit object',
-							disableASN: true,
-							apiMethod: 'put',
-						})
-					}}
-				/>
-				<EditObjectForm
+				{this.state.isMultiSelection ? (
+					<BOTSelectTable
+						data={this.state.filteredData}
+						columns={columns}
+						style={{ maxHeight: '80vh' }}
+					/>
+				) : (
+					<BOTTable
+						data={this.state.filteredData}
+						columns={columns}
+						style={{ maxHeight: '80vh' }}
+						onClickCallback={(selectedRowData) => {
+							if (selectedRowData) {
+								this.setState({
+									isShowEdit: true,
+									formTitle: 'edit object',
+									disableASN: true,
+									apiMethod: 'put',
+									selectedRowData,
+								})
+							}
+						}}
+					/>
+				)}
+
+				<EditedForm
 					show={this.state.isShowEdit}
 					title={this.state.formTitle}
-					selectedRowData={selectedData}
+					selectedRowData={this.state.selectedRowData}
 					handleClick={this.handleClickButton}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
-					formPath={this.state.formPath}
 					objectList={this.state.data}
 					disableASN={this.state.disableASN}
 					areaTable={this.state.areaTable}
-					idleMacaddrSet={this.state.idleMacaddrSet}
 					associatedMacSet={this.state.associatedMacSet}
 					macOptions={this.state.macOptions}
 				/>
-				<DissociationForm
-					show={this.state.isShowEditImportTable}
-					title={this.state.formTitle}
-					selectedRowData={this.state.selectedRowData || 'handleAllDelete'}
-					handleSubmitForm={this.handleSubmitForm}
-					formPath={'xx'}
-					objectList={this.state.data}
-					refreshData={this.state.refreshData}
-					handleClose={this.handleClose}
-					dataMapByMac={this.state.data.reduce((dataMap, item) => {
-						dataMap[item.mac_address] = item
-						return dataMap
-					}, {})}
-				/>
+
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
 					message={this.state.message}
-					handleSubmit={this.objectMultipleDelete}
+					handleSubmit={this.handleSubmitAction}
 				/>
 			</>
 		)
 	}
 }
+
+ObjectTable.propTypes = {
+	objectType: PropTypes.array.isRequired,
+	filteredAttribute: PropTypes.array.isRequired,
+	enabledSelection: PropTypes.array.isRequired,
+	columns: PropTypes.array.isRequired,
+	EditedForm: PropTypes.node.isRequired,
+	objectApiMode: PropTypes.string.isRequired,
+	addText: PropTypes.string.isRequired,
+	deleteText: PropTypes.string.isRequired,
+}
+
 export default ObjectTable

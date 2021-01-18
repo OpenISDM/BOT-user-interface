@@ -43,7 +43,7 @@ import PatientGroupManager from '../components/container/UserContainer/PatientGr
 import MonitorSetting from '../components/container/MonitorSetting'
 import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
 import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
-import ObjectTable from '../components/presentational/ObjectTable'
+import DeviceTable from '../components/presentational/DeviceTable'
 import PatientTable from '../components/presentational/PatientTable'
 import TrackingTable from '../components/container/TrackingTable'
 import BatteryStatusTable from '../components/container/BatteryStatusTable'
@@ -238,7 +238,7 @@ export const ObjectManagementModule = {
 		{
 			name: 'Device Table',
 			permission: 'route:objectManagement',
-			component: (props) => <ObjectTable {...props} />,
+			component: (props) => <DeviceTable {...props} />,
 			platform: ['browser'],
 		},
 		{

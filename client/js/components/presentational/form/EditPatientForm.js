@@ -367,7 +367,7 @@ class EditPatientForm extends React.Component {
 											name={DISASSOCIATE}
 											disabled={!selectedRowData.isBind}
 										>
-											{locale.texts.UNBIND}
+											{locale.texts.REPLACE_TAG}
 										</Button>
 									</div>
 									<div>

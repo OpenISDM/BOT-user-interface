@@ -110,7 +110,6 @@ export const pdfUrl = (path) => {
 export const utils = {
 	searchableKeyword: `${domain}/data/utils/searchableKeyword`,
 }
-export const deleteDevice = `${domain}/data/deleteDevice`
 export const getTrackingTableByMacAddress = `${domain}/data/getTrackingTableByMacAddress`
 export const namedList = `${domain}/data/namedList`
 export const namedListObject = `${domain}/data/namedList/object`
@@ -138,7 +137,6 @@ export default {
 	patientGroupList,
 	pdfUrl,
 	utils,
-	deleteDevice,
 	deviceGruopDetailByAreaId,
 	getTrackingTableByMacAddress,
 	namedList,

@@ -167,14 +167,14 @@ const en = {
 	SIGN_OUT: 'sign out',
 	LOG_IN: 'log in',
 	LOG_OUT: 'log out',
-	ON: 'on',
-	OFF: 'off',
+	ON: 'ON',
+	OFF: 'OFF',
 	SHIFT_CHANGE_RECORD: 'shift change record',
 	SHOW_DEVICES: 'show devices',
 	HIDE_DEVICES: 'hide devices',
 	SHOW: 'show',
 	DEVICE: 'device',
-	DEVICES: 'devices',
+	DEVICES: 'Devices',
 	DOWNLOAD: 'download',
 	DELETE: 'delete',
 	DELETE_LBEACON: 'delete LBeacon',
@@ -252,7 +252,6 @@ const en = {
 	LBEACON: 'lbeacon',
 	MONITOR_TYPE: 'monitor type',
 	ACN: 'ACN',
-	LOCATION: 'location',
 	PATIENT_HISTORICAL_RECORD: 'historical record',
 	RSSI_THRESHOLD: 'RSSI threshold',
 	LAST_FOUR_DIGITS_IN_ACN: 'last 4 digits in ACN',
@@ -263,9 +262,9 @@ const en = {
 	HIDE_NOTE: 'hide note',
 	DELAY_BY: 'delay by',
 	SHIFT: 'shift',
-	DAY_SHIFT: 'day shift',
-	SWING_SHIFT: 'swing shift',
-	NIGHT_SHIFT: 'night shift',
+	DAY_SHIFT: 'Day shift',
+	SWING_SHIFT: 'Swing shift',
+	NIGHT_SHIFT: 'Night shift',
 	SELECT_SHIFT: 'select shift',
 	SELECT_AREA: 'select area',
 	SELECT_USER: 'select user',
@@ -626,11 +625,6 @@ const en = {
 	MONITORED_OBJECTS: 'Monitored Objects',
 	ALERTS: 'Alerts',
 
-	DAY_SHIFT: 'Day Shift',
-	SWING_SHIFT: 'Swing Shift',
-	NIGHT_SHIFT: 'Night Shift',
-
-	DEVICES: 'Devices',
 	PATIENTS: 'Patients',
 	OTHER_OBJECT_TYPES: 'Other Object Types',
 
@@ -647,9 +641,6 @@ const en = {
 	ALERT_BELLS: 'Alert Bells',
 	SEND_SMS: 'Send SMS',
 
-	ON: 'ON',
-	OFF: 'OFF',
-
 	KEEP_ALERTING_IN_SEC: 'Keep Alerting in Seconds',
 	CLOSE_MANUALLY: 'Close Manually',
 
@@ -661,6 +652,8 @@ const en = {
 	REVISE_LIST: 'Revise List',
 
 	UNKNOWN: 'Unknown',
+
+	REPLACE_TAG: 'Replace Tag',
 }
 
 export default en
