@@ -21,8 +21,20 @@ async function getIDTableData(request, response) {
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
-			const data = await pool.query(queryType.getIDTableQuery(key))
-			response.json(data.rows)
+			const ObjectTable = await pool.query(queryType.getIDTableQuery(key))
+			const AreaTable = await pool.query(queryType.getAreaIDQuery())
+			const ObjectType = await pool.query(queryType.getObjectTypeQuery())
+
+			const data = {
+				object_id_table: ObjectTable.rows,
+				area_id_table: AreaTable.rows,
+				object_types: ObjectType.rows.map((item) => {
+					return item.object_type
+				}),
+			}
+			response.json(data)
+			//const data = await pool.query(queryType.getIDTableQuery(key))
+			//response.json(data.rows)
 		} catch (err) {
 			console.log(`get id table data error : ${err}`)
 		}
@@ -35,12 +47,38 @@ async function getIDTableData(request, response) {
 
 async function getPeopleRealtimeData(request, response) {
 	const { key } = request.body
-
+	let { object_id, area_id } = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
-			const data = await pool.query(queryType.getPeopleRealtimeQuery(key))
+			let filter = ''
+			if (area_id) {
+				const pattern = new RegExp('^[0-9]{1,}$')
+				area_id = area_id.split(';').map((item) => {
+					if (item.match(pattern) == null) {
+						response.json(error_code.id_format_error)
+						return undefined
+					}
+					return parseInt(item)
+				})
+				filter += queryType.getAreaIDFilterFromObejectSummaryTable(area_id)
+			}
+			if (object_id) {
+				const pattern = new RegExp('^[0-9]{1,}$')
+				object_id = object_id.split(';').map((item) => {
+					if (item.match(pattern) == null) {
+						response.json(error_code.id_format_error)
+						return undefined
+					}
+					return parseInt(item)
+				})
+				filter += queryType.getObjectIDFilter(object_id)
+			}
+			console.log(queryType.getPeopleRealtimeQuery(key, filter))
+			const data = await pool.query(
+				queryType.getPeopleRealtimeQuery(key, filter)
+			)
 			data.rows.forEach((item) => {
 				item.last_reported_timestamp = moment(
 					item.last_reported_timtstamp
@@ -59,7 +97,14 @@ async function getPeopleRealtimeData(request, response) {
 }
 async function getPeopleHistoryData(request, response) {
 	const { key } = request.body
-	let { start_time, end_time, count_limit, sort_type } = request.body
+	let {
+		area_id,
+		object_id,
+		start_time,
+		end_time,
+		count_limit,
+		sort_type,
+	} = request.body
 
 	const matchRes = await match_key(key)
 
@@ -81,10 +126,36 @@ async function getPeopleHistoryData(request, response) {
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
 
+		let filter = ''
+		if (object_id) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			object_id = object_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item)
+			})
+			filter += queryType.getObjectIDFilter(object_id)
+		}
+
+		if (area_id) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			area_id = area_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item)
+			})
+			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
+		}
+
 		try {
 			const data = await pool.query(
 				queryType.getPeopleHistoryQuery(
 					key,
+					filter,
 					start_time,
 					end_time,
 					count_limit,
@@ -110,7 +181,7 @@ async function getPeopleHistoryData(request, response) {
 
 async function getObjectRealtimeData(request, response) {
 	const { key } = request.body
-	let { object_id, object_type } = request.body
+	let { object_id, object_type, area_id } = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
@@ -130,6 +201,18 @@ async function getObjectRealtimeData(request, response) {
 			if (object_type) {
 				object_type = object_type.split(';')
 				filter += queryType.getObjectTypeFilter(object_type)
+			}
+
+			if (area_id) {
+				const pattern = new RegExp('^[0-9]{1,}$')
+				area_id = area_id.split(';').map((item) => {
+					if (item.match(pattern) == null) {
+						response.json(error_code.id_format_error)
+						return undefined
+					}
+					return parseInt(item)
+				})
+				filter += queryType.getAreaIDFilterFromObejectSummaryTable(area_id)
 			}
 
 			const data = await pool.query(
@@ -152,6 +235,7 @@ async function getObjectHistoryData(request, response) {
 	let {
 		object_type,
 		object_id,
+		area_id,
 		start_time,
 		end_time,
 		count_limit,
@@ -196,6 +280,19 @@ async function getObjectHistoryData(request, response) {
 
 			filter += queryType.getObjectIDFilter(object_id)
 		}
+
+		if (area_id) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			area_id = area_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item)
+			})
+			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
+		}
+
 		try {
 			const data = await pool.query(
 				queryType.getObjectHistoryQuery(
@@ -276,6 +373,7 @@ async function getPatientDurationData(request, response) {
 	let {
 		object_id, // string
 		Lbeacon, // string
+		area_id,
 		start_time, // YYYY/MM/DD HH:mm:ss
 		end_time, // YYYY/MM/DD HH:mm:ss
 		count_limit, //
@@ -303,6 +401,7 @@ async function getPatientDurationData(request, response) {
 		end_time = set_initial_time(end_time, 0)
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
+		let filter = ''
 
 		//** Object id**//
 		if (object_id !== undefined) {
@@ -313,6 +412,7 @@ async function getPatientDurationData(request, response) {
 				}
 				return parseInt(item, 10)
 			})
+			filter += queryType.getObjectIDFilter(object_id)
 		}
 		//** Lbeacon **//
 		if (Lbeacon !== undefined) {
@@ -326,14 +426,26 @@ async function getPatientDurationData(request, response) {
 					response.json(error_code.Lbeacon_error)
 				}
 			})
+			filter += queryType.getLBeaconUUIDFilter(Lbeacon)
+		}
+
+		if (area_id) {
+			const pattern = new RegExp('^[0-9]{1,}$')
+			area_id = area_id.split(';').map((item) => {
+				if (item.match(pattern) == null) {
+					response.json(error_code.id_format_error)
+					return undefined
+				}
+				return parseInt(item)
+			})
+			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
 		}
 
 		const data = await get_history_data_from_db(
 			key,
 			start_time,
 			end_time,
-			object_id,
-			Lbeacon,
+			filter,
 			count_limit,
 			sort_type
 		)
@@ -426,8 +538,7 @@ async function get_history_data_from_db(
 	key,
 	start_time,
 	end_time,
-	tag,
-	Lbeacon,
+	filter,
 	count_limit,
 	sort_type
 ) {
@@ -437,8 +548,7 @@ async function get_history_data_from_db(
 				key,
 				start_time,
 				end_time,
-				tag,
-				Lbeacon,
+				filter,
 				count_limit,
 				sort_type
 			)
