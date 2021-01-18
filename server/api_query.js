@@ -401,7 +401,7 @@ async function getPatientDurationData(request, response) {
 		end_time = set_initial_time(end_time, 0)
 		count_limit = set_count_limit(count_limit)
 		sort_type = set_sort_type(sort_type)
-		let filter =''
+		let filter = ''
 
 		//** Object id**//
 		if (object_id !== undefined) {

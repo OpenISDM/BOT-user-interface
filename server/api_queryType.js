@@ -64,7 +64,14 @@ function setKey(user_id, username, hash) {
 const getAllKeyQuery = ' SELECT  * FROM api_key '
 const getAllUserQuery = ' SELECT  * FROM user_table	'
 
-const getPatientDurationQuery=(key, start_time, end_time, filter, count_limit, sort_type)=>{
+const getPatientDurationQuery = (
+	key,
+	start_time,
+	end_time,
+	filter,
+	count_limit,
+	sort_type
+) => {
 	return `
 		WITH ranges AS (
 			SELECT object_id, mac_address, area_id, uuid, record_timestamp, battery_voltage, average_rssi, 
@@ -221,7 +228,7 @@ const getPeopleRealtimeQuery = (key, filter) => {
 	`
 }
 
-const getAreaIDQuery = () =>{
+const getAreaIDQuery = () => {
 	return `
 	select 
 		area_table.id as area_id,
@@ -233,7 +240,7 @@ const getAreaIDQuery = () =>{
 	`
 }
 
-const getObjectTypeQuery = ()=>{
+const getObjectTypeQuery = () => {
 	return `
 	select 
 		distinct object_table.type as object_type
@@ -288,8 +295,8 @@ const getObjectIDFilter = (object_id) => {
 	return ''
 }
 
-const getLBeaconUUIDFilter = (uuids)=>{
-	if(uuids){
+const getLBeaconUUIDFilter = (uuids) => {
+	if (uuids) {
 		return `\nand location_history_table.uuid in  (${uuids.map(
 			(item) => `'${item}'`
 		)})`
@@ -306,18 +313,18 @@ const getObjectTypeFilter = (object_type) => {
 	return ''
 }
 
-const getAreaIDFilterFromObejectSummaryTable = (area_id)=>{
-	if(area_id){
+const getAreaIDFilterFromObejectSummaryTable = (area_id) => {
+	if (area_id) {
 		return `\n and object_summary_table.updated_by_area in (${area_id.map(
-			(item)=>`'${item}'`
-	)})`
+			(item) => `'${item}'`
+		)})`
 	}
 }
 
-const getAreaIDFilterFromLocationHistoryTable = (area_id) =>{
-	if(area_id){
+const getAreaIDFilterFromLocationHistoryTable = (area_id) => {
+	if (area_id) {
 		return `\n and location_history_table.area_id in (${area_id.map(
-			(item)=>`'${item}'`
+			(item) => `'${item}'`
 		)})`
 	}
 }
