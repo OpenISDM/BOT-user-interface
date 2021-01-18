@@ -381,7 +381,8 @@ const getIDTableQuery = (key) => {
 		object_table.id as id,
 		object_table.mac_address as mac_address,
 		object_table.type as object_type,
-		object_table.name as name
+		object_table.name as name,
+		object_table.area_id as area_id
 	from 
 		api_key
 	inner join user_table on
