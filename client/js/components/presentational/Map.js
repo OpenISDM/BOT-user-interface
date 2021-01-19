@@ -153,12 +153,19 @@ class Map extends React.Component {
 		const areaOption = areaOptions[auth.user.main_area]
 
 		/** set the map's config */
-		const { bounds, hasMap } = areaModules[areaOption]
-
-		const url =
-			isWebpSupported() && areaModules[areaOption].urlWebp
-				? areaModules[areaOption].urlWebp
-				: areaModules[areaOption].url
+		let bounds = [
+			[0, 0],
+			[1000, 1000],
+		]
+		let url = null
+		const currentAreaModules = areaModules[areaOption]
+		if (currentAreaModules) {
+			bounds = currentAreaModules.bounds
+			url =
+				isWebpSupported() && currentAreaModules.urlWebp
+					? currentAreaModules.urlWebp
+					: currentAreaModules.url
+		}
 
 		this.mapOptions.maxBounds = bounds.map((latLng, index) =>
 			latLng.map((axis) => axis + this.mapOptions.maxBoundsOffset[index])
@@ -179,7 +186,7 @@ class Map extends React.Component {
 			})
 		})
 
-		if (hasMap) {
+		if (url && bounds) {
 			const image = L.imageOverlay(url, bounds)
 			this.map.addLayer(image)
 			this.map.fitBounds(bounds)
@@ -201,18 +208,25 @@ class Map extends React.Component {
 		const areaOption = areaOptions[area.id]
 
 		/** set the map's config */
-		const { bounds, hasMap } = areaModules[areaOption]
-
-		const url =
-			isWebpSupported() && areaModules[areaOption].urlWebp
-				? areaModules[areaOption].urlWebp
-				: areaModules[areaOption].url
+		let bounds = [
+			[0, 0],
+			[1000, 1000],
+		]
+		let url = null
+		const currentAreaModules = areaModules[areaOption]
+		if (currentAreaModules) {
+			bounds = currentAreaModules.bounds
+			url =
+				isWebpSupported() && currentAreaModules.urlWebp
+					? currentAreaModules.urlWebp
+					: currentAreaModules.url
+		}
 
 		mapOptions.maxBounds = bounds.map((latLng, index) =>
 			latLng.map((axis) => axis + mapOptions.maxBoundsOffset[index])
 		)
 
-		if (hasMap) {
+		if (url && bounds) {
 			this.image.setUrl(url)
 			this.image.setBounds(bounds)
 			this.map.fitBounds(bounds)
