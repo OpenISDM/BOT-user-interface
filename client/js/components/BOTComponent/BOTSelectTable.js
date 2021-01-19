@@ -53,6 +53,7 @@ class BOTSelectTable extends React.Component {
 		data: [],
 		columns: [],
 		currentSelectedRow: {},
+		currentHoveredRowIndex: null,
 		selectAll: false,
 	}
 
@@ -138,6 +139,10 @@ class BOTSelectTable extends React.Component {
 		})
 	}
 
+	setHoveredRow = (currentHoveredRowIndex) => {
+		this.setState({ currentHoveredRowIndex })
+	}
+
 	render() {
 		const { locale } = this.context
 		const {
@@ -204,10 +209,18 @@ class BOTSelectTable extends React.Component {
 							onClickCallback(rowInfo.original)
 						},
 						onMouseEnter: () => {
+							this.setHoveredRow(rowInfo.index)
 							onMouseEnterCallback(rowInfo.original)
 						},
 						onMouseLeave: () => {
+							this.setHoveredRow(null)
 							onMouseLeaveCallback(rowInfo.original)
+						},
+						style: {
+							background:
+								rowInfo && rowInfo.index === this.state.currentHoveredRowIndex
+									? '#b3daff'
+									: 'white',
 						},
 					}
 				}}
