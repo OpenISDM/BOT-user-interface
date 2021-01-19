@@ -371,7 +371,7 @@ async function getPatientDurationData(request, response) {
 	const { key } = request.body
 	let {
 		object_id, // string
-		Lbeacon, // string
+		lbeacon, // string
 		area_id,
 		start_time, // YYYY/MM/DD HH:mm:ss
 		end_time, // YYYY/MM/DD HH:mm:ss
@@ -414,18 +414,18 @@ async function getPatientDurationData(request, response) {
 			filter += queryType.getObjectIDFilter(object_id)
 		}
 		//** Lbeacon **//
-		if (Lbeacon !== undefined) {
-			Lbeacon = Lbeacon.split(';')
+		if (lbeacon !== undefined) {
+			lbeacon = lbeacon.split(';')
 			const pattern = new RegExp(
 				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
 			)
-			Lbeacon.forEach((item) => {
+			lbeacon.forEach((item) => {
 				if (item.match(pattern) == null) {
 					//judge format
 					response.json(error_code.Lbeacon_error)
 				}
 			})
-			filter += queryType.getLBeaconUUIDFilter(Lbeacon)
+			filter += queryType.getLBeaconUUIDFilter(lbeacon)
 		}
 
 		if (area_id) {
