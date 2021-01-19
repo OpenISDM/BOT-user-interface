@@ -59,7 +59,7 @@ const EditUserForm = ({
 	const areaOptions = areaTable.map((area) => {
 		return {
 			value: area.name,
-			label: locale.texts[area.name],
+			label: area.readable_name,
 			id: area.id,
 		}
 	})

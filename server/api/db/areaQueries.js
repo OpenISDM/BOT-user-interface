@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-export const getAreaTable = 'SELECT id, name FROM area_table'
+export const getAreaTable = 'SELECT * FROM area_table'
 
 export default {
 	getAreaTable,

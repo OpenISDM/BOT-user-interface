@@ -48,18 +48,24 @@ import { BOTNavLink } from '../BOTComponent/styleComponent'
 import routes from '../../config/routes/routes'
 import { SET_AREA } from '../../reducer/action'
 import ImageWebp from '../utils/ImageWebp'
+import apiHelper from '../../helper/apiHelper'
 
 class NavbarContainer extends React.Component {
 	static contextType = AppContext
 
 	state = {
 		showShiftChange: false,
+		areaOptions: [],
 	}
 
 	navList = navbarNavList
 
 	handleClick = () => {
 		// console.log(e)
+	}
+
+	componentDidMount = () => {
+		this.getAreaTable()
 	}
 
 	setCurrentArea = (selectedArea) => {
@@ -73,6 +79,22 @@ class NavbarContainer extends React.Component {
 		}
 	}
 
+	getAreaTable = async () => {
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
+			const areaOptions = res.data.rows.map((area) => {
+				return {
+					id: area.id,
+					value: area.readable_name,
+					label: area.readable_name,
+				}
+			})
+			this.setState({
+				areaOptions,
+			})
+		}
+	}
+
 	render = () => {
 		const style = {
 			navbar: {
@@ -81,22 +103,13 @@ class NavbarContainer extends React.Component {
 		}
 
 		const { locale, auth, stateReducer } = this.context
-
 		const [{ area }, dispatch] = stateReducer
-
-		const AREA_MODULE = config.mapConfig.AREA_MODULES
-
-		const options = Object.values(AREA_MODULE)
-			.filter((module) => auth.user.areas_id.includes(module.id))
-			.map((module) => {
-				return {
-					value: module.name,
-					label: locale.texts[module.name],
-					id: module.id,
-				}
-			})
-		const selectedArea = options.filter((module) => module.id === area.id)[0]
+		const { areaOptions } = this.state
+		const selectedArea = areaOptions.find(
+			(areaOption) => areaOption.id === area.id
+		)
 		this.setCurrentArea(selectedArea)
+
 		return (
 			<div>
 				<Navbar
@@ -113,14 +126,14 @@ class NavbarContainer extends React.Component {
 								alt="LOGO"
 								src={config.LOGO}
 								srcWebp={config.LOGO_WEBP}
-								width={30}
+								width={40}
 								className="d-inline-block align-top px-1"
 							/>
 							<Select
 								placeholder={locale.texts.SELECT_LOCATION}
 								name="select"
 								value={selectedArea}
-								options={options || []}
+								options={areaOptions}
 								onChange={(value) => {
 									dispatch({
 										type: SET_AREA,

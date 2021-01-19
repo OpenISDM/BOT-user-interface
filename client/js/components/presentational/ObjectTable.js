@@ -151,7 +151,7 @@ class ObjectTable extends React.Component {
 			const areaSelection = areaTableRes.data.rows.map((area) => {
 				return {
 					value: area.name,
-					label: locale.texts[area.name],
+					label: area.readable_name,
 				}
 			})
 

@@ -223,7 +223,7 @@ class UserProfile extends React.Component {
 								)
 							})
 							.map((area) => {
-								return locale.texts[area.name]
+								return area.readable_name
 							})
 							.join('/')}
 					</div>

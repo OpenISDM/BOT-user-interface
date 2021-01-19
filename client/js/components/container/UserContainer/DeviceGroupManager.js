@@ -110,21 +110,18 @@ class DeviceGroupManager extends React.Component {
 	}
 
 	getAreaTable = async () => {
-		const { locale } = this.context
-		try {
-			const res = await apiHelper.areaApiAgent.getAreaTable()
+		const res = await apiHelper.areaApiAgent.getAreaTable()
+		if (res) {
 			const areaOptions = res.data.rows.map((area) => {
 				return {
 					id: area.id,
 					value: area.name,
-					label: locale.texts[area.name],
+					label: area.readable_name,
 				}
 			})
 			this.setState({
 				areaOptions,
 			})
-		} catch (e) {
-			console.log(`get area table failed ${e}`)
 		}
 	}
 

@@ -86,7 +86,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
 													setFieldValue('areas_id', areasId)
 												}}
 											>
-												{locale.texts[area.name]}
+												{area.readable_name}
 											</ListGroup.Item>
 										)
 										return element
@@ -115,7 +115,7 @@ const EditAreasForm = ({ show, handleClose, handleSubmit, areaTable }) => {
 													setFieldValue('areas_id', areasId)
 												}}
 											>
-												{locale.texts[area.name]}
+												{area.readable_name}
 											</ListGroup.Item>
 										)
 										return element
