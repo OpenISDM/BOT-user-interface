@@ -159,15 +159,23 @@ export default {
 	getGeofenceAreaConfig: async (request, response) => {
 		const { areaId } = request.query
 		try {
-			const areaConfig = await GeoFenceAreaConfig.findOne({
+			let areaConfig = await GeoFenceAreaConfig.findOne({
 				where: { area_id: areaId },
 				raw: true,
 			})
 
 			// Because monitored_object_types stores 'single quote' for BOT server convenience
 			// So, We do this for client
-			const monitoredObjectTypes = `${areaConfig.monitored_object_types}`
-			areaConfig.monitored_object_types = monitoredObjectTypes.replace(/'/g, '')
+			if (areaConfig) {
+				const monitoredObjectTypes = `${areaConfig.monitored_object_types}`
+				areaConfig.monitored_object_types = monitoredObjectTypes.replace(
+					/'/g,
+					''
+				)
+			} else {
+				areaConfig = {}
+				areaConfig.monitored_object_types = ''
+			}
 
 			const geofenceNotificationConfigs = await NotificationConfig.findAll({
 				where: {
@@ -182,7 +190,7 @@ export default {
 				geofenceNotificationConfigs,
 			})
 		} catch (e) {
-			console.log('setGeofenceConfig error: ', e)
+			console.log('getGeofenceAreaConfig error: ', e)
 		}
 	},
 
@@ -278,7 +286,7 @@ export default {
 
 			response.status(200).json({ message: 'OK' })
 		} catch (e) {
-			console.log('setGeofenceConfig error: ', e)
+			console.log('setGeofenceAreaConfig error: ', e)
 		}
 	},
 }
