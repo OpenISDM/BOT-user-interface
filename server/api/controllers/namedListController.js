@@ -33,7 +33,7 @@
 */
 
 import 'dotenv/config'
-import { Op, updateOrCreate } from '../db/connection'
+import { updateOrCreate } from '../db/connection'
 import { NamedList, ObjectNamedListMappingTable } from '../db/model'
 
 export default {
