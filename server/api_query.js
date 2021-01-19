@@ -555,7 +555,6 @@ async function get_history_data_from_db(
 		.then((res) => {
 			console.log('get_data success')
 			res.rows.forEach((item) => {
-				item.area_name = item.readable_name
 				item.duration.hours = set_duration_time(item.duration.hours)
 				item.duration.minutes = set_duration_time(item.duration.minutes)
 				item.duration.seconds = set_duration_time(item.duration.seconds)
