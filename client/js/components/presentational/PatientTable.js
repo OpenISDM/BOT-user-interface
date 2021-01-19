@@ -40,7 +40,6 @@ import { patientTableColumn } from '../../config/tables'
 import { PERSON } from '../../config/wordMap'
 
 const PatientTable = () => {
-	console.log(PERSON)
 	return (
 		<ObjectTable
 			objectType={[config.OBJECT_TYPE.PERSON]}
