@@ -33,19 +33,18 @@
 */
 
 import generalTexts from './text'
-import siteModuleTexts from '../../../site_module/locale/text'
 import React from 'react'
 import LocaleContext from '../context/LocaleContext'
 import config from '../config'
 import Cookies from 'js-cookie'
 import supportedLocale from './supportedLocale'
+import PropTypes from 'prop-types'
 
 const localePackage = Object.values(supportedLocale).reduce(
 	(localeMap, locale) => {
 		localeMap[locale.abbr] = locale
 		localeMap[locale.abbr].texts = {
 			...generalTexts[locale.abbr],
-			...siteModuleTexts[locale.abbr],
 		}
 		return localeMap
 	},
@@ -81,6 +80,10 @@ class Locale extends React.Component {
 			</LocaleContext.Provider>
 		)
 	}
+}
+
+Locale.propTypes = {
+	children: PropTypes.node.isRequired,
 }
 
 export default Locale

@@ -39,7 +39,6 @@ import config from '../config'
 import permissionsTable from '../config/roles'
 import generalTexts from '../locale/text'
 import supportedLocale from '../locale/supportedLocale'
-import siteModuleTexts from '../../../site_module/locale/text'
 
 /** Compare two objects, including strings, deep objects  */
 export const isEqual = (obj1, obj2) => {
@@ -229,7 +228,6 @@ export const localePackage = Object.values(supportedLocale).reduce(
 		localeMap[locale.abbr] = locale
 		localeMap[locale.abbr].texts = {
 			...generalTexts[locale.abbr],
-			...siteModuleTexts[locale.abbr],
 		}
 		return localeMap
 	},
