@@ -260,8 +260,8 @@ const getObjectRealtimeQuery = (key, filter) => {
 		object_table.id as object_id,
 		object_summary_table.updated_by_area as area_id,
 		area_table.name as area_name,
-		object_summary_table.uuid as lbeacon_uuid,
-		lbeacon_table.description as lbeacon_description
+		object_summary_table.uuid as Lbeacon_uuid,
+		lbeacon_table.description as Lbeacon_description
 	from 
 		object_table
 
@@ -345,9 +345,9 @@ const getObjectHistoryQuery = (
 		object_table.type as object_type,
 		location_history_table.record_timestamp as record_timestamp,
 		location_history_table.area_id as area_id,
-		location_history_table.uuid as lbeacon_uuid,
+		location_history_table.uuid as Lbeacon_uuid,
 		Area_table."name" as area_name,
-		lbeacon_table.description as lbeacon_description
+		lbeacon_table.description as Lbeacon_description
 	from 
 		location_history_table
 	
