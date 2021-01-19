@@ -4,7 +4,6 @@ import queryType from './api_queryType'
 import pool from './api/db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-import { tw } from '../site_module/locale/text'
 import encrypt from './api/service/encrypt'
 
 const Authenticate = {
@@ -556,7 +555,7 @@ async function get_history_data_from_db(
 		.then((res) => {
 			console.log('get_data success')
 			res.rows.forEach((item) => {
-				item.area_name = tw[item.area_name.toUpperCase().replace(/ /g, '_')]
+				item.area_name = item.readable_name
 				item.duration.hours = set_duration_time(item.duration.hours)
 				item.duration.minutes = set_duration_time(item.duration.minutes)
 				item.duration.seconds = set_duration_time(item.duration.seconds)
