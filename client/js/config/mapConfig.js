@@ -32,7 +32,6 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import siteConfig from '../../../site_module/siteConfig'
 import viewConfig from './viewConfig'
 import { monitorTypeChecker } from '../helper/dataTransfer'
 import { NORMAL, RESERVE, RETURNED } from './wordMap'
@@ -372,13 +371,6 @@ const mapConfig = {
 		}
 		return mapConfig.iconColor.pinColorArray[item.pinColor]
 	},
-
-	areaOptions: Object.keys(siteConfig.areaModules).reduce((res, item) => {
-		res[siteConfig.areaModules[item].id] = item
-		return res
-	}, {}),
-
-	AREA_MODULES: siteConfig.areaModules,
 
 	/* For test. To start object tracking*/
 	startInteval: true,

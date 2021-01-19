@@ -37,18 +37,14 @@ import L from 'leaflet'
 import 'leaflet.markercluster'
 import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
-import siteConfig from '../../../../site_module/siteConfig'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import {
-	isEqual,
-	isWebpSupported,
-	getCoordinatesFromUUID,
-} from '../../helper/utilities'
+import { isEqual, getCoordinatesFromUUID } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
+import { mapPrefix } from '../../dataSrc'
 
 class Map extends React.Component {
 	static contextType = AppContext
@@ -133,10 +129,8 @@ class Map extends React.Component {
 
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
-		const { auth } = this.context
+		const [{ area }] = this.context.stateReducer
 		const { mapConfig } = this.props
-		const { areaOptions } = mapConfig
-		const { areaModules } = siteConfig
 
 		if (isBrowser) {
 			this.mapOptions = mapConfig.browserMapOptions
@@ -149,23 +143,8 @@ class Map extends React.Component {
 			this.iconOptions = mapConfig.iconOptionsInMobile
 		}
 
-		/** Error handler of the user's auth area does not include the group of sites */
-		const areaOption = areaOptions[auth.user.main_area]
-
-		/** set the map's config */
-		let bounds = [
-			[0, 0],
-			[1000, 1000],
-		]
-		let url = null
-		const currentAreaModules = areaModules[areaOption]
-		if (currentAreaModules) {
-			bounds = currentAreaModules.bounds
-			url =
-				isWebpSupported() && currentAreaModules.urlWebp
-					? currentAreaModules.urlWebp
-					: currentAreaModules.url
-		}
+		const { bounds, map_image_path } = area
+		const url = map_image_path ? mapPrefix + map_image_path : null
 
 		this.mapOptions.maxBounds = bounds.map((latLng, index) =>
 			latLng.map((axis) => axis + this.mapOptions.maxBoundsOffset[index])
@@ -201,26 +180,9 @@ class Map extends React.Component {
 	/** Set the overlay image when changing area */
 	setMap = () => {
 		const [{ area }] = this.context.stateReducer
-		const { areaModules } = siteConfig
-		const { areaOptions, mapOptions } = this.props.mapConfig
-
-		/** Error handler of the user's auth area does not include the group of sites */
-		const areaOption = areaOptions[area.id]
-
-		/** set the map's config */
-		let bounds = [
-			[0, 0],
-			[1000, 1000],
-		]
-		let url = null
-		const currentAreaModules = areaModules[areaOption]
-		if (currentAreaModules) {
-			bounds = currentAreaModules.bounds
-			url =
-				isWebpSupported() && currentAreaModules.urlWebp
-					? currentAreaModules.urlWebp
-					: currentAreaModules.url
-		}
+		const { mapOptions } = this.props.mapConfig
+		const { bounds, map_image_path } = area
+		const url = map_image_path ? mapPrefix + map_image_path : null
 
 		mapOptions.maxBounds = bounds.map((latLng, index) =>
 			latLng.map((axis) => axis + mapOptions.maxBoundsOffset[index])

@@ -33,8 +33,9 @@
 */
 
 const hostname = window.location.hostname
-const domain = `https://${hostname}`
 
+export const domain = `https://${hostname}`
+export const mapPrefix = `${domain}/map/`
 export const trackingData = `${domain}/data/trackingData`
 export const lbeacon = `${domain}/data/lbeacon`
 export const gateway = `${domain}/data/gateway`
@@ -116,6 +117,8 @@ export const namedListObject = `${domain}/data/namedList/object`
 export const notification = `${domain}/data/notification`
 
 export default {
+	domain,
+	mapPrefix,
 	trackingData,
 	lbeacon,
 	gateway,

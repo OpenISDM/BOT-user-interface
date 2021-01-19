@@ -93,7 +93,7 @@ class BOTAdminMonitorSetting extends React.Component {
 	}
 
 	getMonitorConfig = async (callback) => {
-		const { locale, stateReducer } = this.context
+		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
 		const res = await apiHelper.geofenceApis.getGeofenceConfig({
 			areaId: area.id,
@@ -102,9 +102,9 @@ class BOTAdminMonitorSetting extends React.Component {
 		const data = res.data.map((item, index) => {
 			item.key = index + 1
 			item.area = {
-				value: config.mapConfig.areaOptions[item.area_id],
-				label: locale.texts[config.mapConfig.areaOptions[item.area_id]],
-				id: item.area_id,
+				value: area.value,
+				label: area.label,
+				id: area.id,
 			}
 			item.p_rssi = item.perimeters_rssi
 			item.f_rssi = item.fences_rssi

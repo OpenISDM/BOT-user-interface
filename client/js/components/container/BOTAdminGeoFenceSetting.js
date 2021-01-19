@@ -35,7 +35,6 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import { object, string, array } from 'yup'
 import Select from 'react-select'
 import { AppContext } from '../../context/AppContext'
 import FormikFormGroup from '../presentational/FormikFormGroup'
@@ -45,9 +44,8 @@ import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
 import { getBitValue, findExpectedBitValue } from '../../helper/utilities'
 import NotificationTypeConfig from '../container/NotificationTypeConfig'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../config/wordMap'
-import PropTypes from 'prop-types'
 
 const AREAS = {
 	CURRENT_COVERED_AREA: 0,
@@ -108,8 +106,8 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		])
 
 		if (geofenceAreaRes && namedListRes) {
-			let deviceNameList = []
-			let patientNameList = []
+			const deviceNameList = []
+			const patientNameList = []
 			namedListRes.data.forEach((item) => {
 				item.objectIds = item.objectIds.map((i) => i.object_id)
 
@@ -141,8 +139,10 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		const res = await apiHelper.geofenceApis.setGeofenceAreaConfig({
 			areaConfig: submitValue,
 		})
-		await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-		this.getData()
+		if (res) {
+			await setSuccessMessage(SAVE_SUCCESS)
+			this.getData()
+		}
 	}
 
 	caculateAlertTypes = ({ bell, light, gui, sms }) => {
@@ -169,10 +169,6 @@ class BOTAdminGeoFenceSetting extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const currentAreaModule = Object.values(config.mapConfig.AREA_MODULES).find(
-			(module) => parseInt(module.id) === parseInt(area.id)
-		)
-
 		const { deviceNameList, patientNameList } = this.state
 		const {
 			monitored_device_named_list_ids,
@@ -361,7 +357,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 											onClick={() => {
 												this.setCurrentPressedButton(AREAS.CURRENT_COVERED_AREA)
 											}}
-											text={locale.texts[currentAreaModule.name]}
+											text={area.label}
 										/>
 										{/* <BOTButton
 											pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}

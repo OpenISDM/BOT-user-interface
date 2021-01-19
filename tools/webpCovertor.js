@@ -38,7 +38,7 @@ import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const imagePath = path.join(__dirname, '..', 'site_module', 'img', 'map')
+const imagePath = path.join(__dirname, '..', 'server', 'map')
 
 const convertImages = async () => {
 	const files = [`${imagePath}/*.{jpg,png}`]
