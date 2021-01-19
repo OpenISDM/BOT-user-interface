@@ -129,6 +129,7 @@ class Map extends React.Component {
 
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
+		console.log('initMap')
 		const [{ area }] = this.context.stateReducer
 		const { mapConfig } = this.props
 
@@ -143,7 +144,7 @@ class Map extends React.Component {
 			this.iconOptions = mapConfig.iconOptionsInMobile
 		}
 
-		const { bounds, map_image_path } = area
+		const { bounds = [], map_image_path } = area
 		const url = map_image_path ? mapPrefix + map_image_path : null
 
 		this.mapOptions.maxBounds = bounds.map((latLng, index) =>
@@ -179,9 +180,10 @@ class Map extends React.Component {
 
 	/** Set the overlay image when changing area */
 	setMap = () => {
+		console.log('setMap')
 		const [{ area }] = this.context.stateReducer
 		const { mapOptions } = this.props.mapConfig
-		const { bounds, map_image_path } = area
+		const { bounds = [], map_image_path } = area
 		const url = map_image_path ? mapPrefix + map_image_path : null
 
 		mapOptions.maxBounds = bounds.map((latLng, index) =>
