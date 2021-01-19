@@ -125,3 +125,9 @@ server/dist
 *.exe
 *.o
 *.so
+
+# BOT Map images
+server/map/*
+
+# Keep track gitkeep files
+!.gitkeep
