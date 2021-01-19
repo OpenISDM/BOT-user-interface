@@ -131,7 +131,7 @@ class AdminManagementContainer extends React.Component {
 		const res = await apiHelper.areaApiAgent.getAreaTable()
 		if (res) {
 			this.setState({
-				areaTable: res.data.rows,
+				areaTable: res.data,
 			})
 		}
 	}

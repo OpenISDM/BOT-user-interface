@@ -148,7 +148,7 @@ class ObjectTable extends React.Component {
 				),
 			]
 
-			const areaSelection = areaTableRes.data.rows.map((area) => {
+			const areaSelection = areaTableRes.data.map((area) => {
 				return {
 					value: area.name,
 					label: area.readable_name,
@@ -174,7 +174,7 @@ class ObjectTable extends React.Component {
 						areaSelection,
 					},
 					associatedMacSet,
-					areaTable: areaTableRes.data.rows,
+					areaTable: areaTableRes.data,
 					areaSelection,
 					idleMacaddrSet,
 					macOptions,

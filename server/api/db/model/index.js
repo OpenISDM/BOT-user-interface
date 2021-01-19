@@ -11,6 +11,7 @@ import TransferLocations from './transferLocations'
 import UserAssignments, { UserAssignmentEnum } from './userAssignments'
 import NotificationTable from './notificationTable'
 import ObjectSummaryTable from './objectSummaryTable'
+import AreaTable from './areaTable'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -39,5 +40,6 @@ export {
 	UserAssignments,
 	NotificationTable,
 	ObjectSummaryTable,
+	AreaTable,
 	UserAssignmentEnum,
 }

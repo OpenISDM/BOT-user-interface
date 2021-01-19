@@ -33,19 +33,15 @@
 */
 
 import 'dotenv/config'
-import { getAreaTable } from '../db/areaQueries'
-import pool from '../db/connection'
+import { AreaTable } from '../db/model'
 
 export default {
-	getAreaTable: (request, response) => {
-		pool
-			.query(getAreaTable)
-			.then((res) => {
-				console.log('get area table succeed')
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`get area table failed ${err}`)
-			})
+	getAreaTable: async (request, response) => {
+		try {
+			const res = await AreaTable.findAll()
+			response.status(200).json(res)
+		} catch (e) {
+			console.log('getAreaTable error: ', e)
+		}
 	},
 }

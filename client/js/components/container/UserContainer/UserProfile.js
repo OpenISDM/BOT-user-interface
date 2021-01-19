@@ -61,7 +61,7 @@ class UserProfile extends React.Component {
 	getAreaTable = async () => {
 		const res = await apiHelper.areaApiAgent.getAreaTable()
 		if (res) {
-			const areaTable = res.data.rows.reduce((table, area) => {
+			const areaTable = res.data.reduce((table, area) => {
 				table[area.id] = area
 				return table
 			}, {})

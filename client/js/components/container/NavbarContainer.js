@@ -82,7 +82,7 @@ class NavbarContainer extends React.Component {
 	getAreaTable = async () => {
 		const res = await apiHelper.areaApiAgent.getAreaTable()
 		if (res) {
-			const areaOptions = res.data.rows.map((area) => {
+			const areaOptions = res.data.map((area) => {
 				return {
 					id: area.id,
 					value: area.readable_name,

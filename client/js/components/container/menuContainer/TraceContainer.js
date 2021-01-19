@@ -204,7 +204,7 @@ class TraceContainer extends React.Component {
 	getAreaTable = async () => {
 		const res = await apiHelper.areaApiAgent.getAreaTable()
 		if (res) {
-			const area = res.data.rows.map((area) => {
+			const area = res.data.map((area) => {
 				return {
 					value: area.id,
 					label: area.readable_name,
