@@ -117,7 +117,6 @@ export default class TabletMapContainer extends React.Component {
 								lbeaconPosition={this.props.lbeaconPosition}
 								geofenceConfig={this.props.geofenceConfig}
 								getSearchKey={this.props.getSearchKey}
-								areaId={area.id}
 								mapConfig={config.mapConfig}
 								handleClosePath={this.props.handleClosePath}
 								handleShowPath={this.props.handleShowPath}

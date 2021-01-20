@@ -112,7 +112,6 @@ class BrowserMapContainer extends React.Component {
 						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
 						getSearchKey={getSearchKey}
-						areaId={area.id}
 						mapConfig={mapConfig}
 						handleClosePath={handleClosePath}
 						handleShowPath={handleShowPath}
