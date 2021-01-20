@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import _ from 'lodash'
+import { keyBy } from 'lodash'
 import React, { Fragment } from 'react'
 import 'react-table/react-table.css'
 import config from '../../../config'
@@ -140,7 +140,7 @@ class MainContainer extends React.Component {
 			areaId: area.id,
 		})
 
-		const trackingDataMap = _.keyBy(trackingData, 'id')
+		const trackingDataMap = keyBy(trackingData, 'id')
 
 		if (trackingData) {
 			this.setState({

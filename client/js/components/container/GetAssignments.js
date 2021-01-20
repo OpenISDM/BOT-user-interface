@@ -34,7 +34,7 @@
 
 import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import _, { debounce } from 'lodash'
+import { keyBy, debounce } from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import apiHelper from '../../helper/apiHelper'
@@ -154,8 +154,8 @@ class GetAssignments extends React.Component {
 			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(
 				area.id
 			)
-			const patientGroupMap = _.keyBy(res.data.gruopList, 'id')
-			const patientObjectMap = _.keyBy(res.data.objectList, 'id')
+			const patientGroupMap = keyBy(res.data.gruopList, 'id')
+			const patientObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
 				patientGroupMap,
 				objectMap: { ...this.state.objectMap, ...patientObjectMap },
@@ -171,8 +171,8 @@ class GetAssignments extends React.Component {
 
 		try {
 			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
-			const deviceGroupMap = _.keyBy(res.data.gruopList, 'id')
-			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
+			const deviceGroupMap = keyBy(res.data.gruopList, 'id')
+			const deviceObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
 				deviceGroupMap,
 				objectMap: { ...this.state.objectMap, ...deviceObjectMap },

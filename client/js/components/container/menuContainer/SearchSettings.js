@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import _, { debounce } from 'lodash'
+import { debounce, keyBy } from 'lodash'
 import { Row, Col, Button, Form } from 'react-bootstrap'
 import Select from 'react-select'
 import { AppContext } from '../../../context/AppContext'
@@ -171,8 +171,8 @@ class SearchSettings extends React.Component {
 				}
 			})
 
-			const objectMap = _.keyBy(objectRes.data.rows, 'id')
-			const namedListMap = _.keyBy(namedListRes.data, 'id')
+			const objectMap = keyBy(objectRes.data.rows, 'id')
+			const namedListMap = keyBy(namedListRes.data, 'id')
 
 			const allDeviceObjects = []
 			const namedListDeviceObjects = objectRes.data.rows

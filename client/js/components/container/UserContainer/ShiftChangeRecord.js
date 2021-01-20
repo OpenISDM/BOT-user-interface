@@ -34,7 +34,7 @@
 
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
-import _ from 'lodash'
+import { keyBy } from 'lodash'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
@@ -117,8 +117,8 @@ class ShiftChangeRecord extends React.Component {
 			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(
 				area.id
 			)
-			const patientGruopMap = _.keyBy(res.data.gruopList, 'id')
-			const patientObjectMap = _.keyBy(res.data.objectList, 'id')
+			const patientGruopMap = keyBy(res.data.gruopList, 'id')
+			const patientObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
 				patientGruopMap,
 				objectMap: { ...this.state.objectMap, ...patientObjectMap },
@@ -134,8 +134,8 @@ class ShiftChangeRecord extends React.Component {
 
 		try {
 			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
-			const deviceGroupMap = _.keyBy(res.data.gruopList, 'id')
-			const deviceObjectMap = _.keyBy(res.data.objectList, 'id')
+			const deviceGroupMap = keyBy(res.data.gruopList, 'id')
+			const deviceObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
 				deviceGroupMap,
 				objectMap: { ...this.state.objectMap, ...deviceObjectMap },
