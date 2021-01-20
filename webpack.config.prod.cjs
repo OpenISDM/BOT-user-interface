@@ -41,6 +41,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 	.BundleAnalyzerPlugin
 const TerserPlugin = require('terser-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const webpack = require('webpack')
 const dotenv = require('dotenv')
@@ -64,10 +65,14 @@ const webpackConfig = {
 	module: {
 		rules: [
 			{
+				loader: 'babel-loader',
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
+				query: {
+					plugins: ['lodash'],
+					presets: [
+						['@babel/preset-env', { modules: false, targets: { node: 4 } }],
+					],
 				},
 			},
 			{
@@ -156,6 +161,10 @@ const webpackConfig = {
 		}),
 
 		new webpack.IgnorePlugin(/\.\/locale/, /moment/),
+
+		new LodashModuleReplacementPlugin({
+			shorthands: true,
+		}),
 	],
 	optimization: {
 		minimize: true,
