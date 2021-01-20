@@ -75,9 +75,9 @@ input {
 	border-color: rgba(227, 222, 222, 1);
 }
 
-a:hover {
-	/* font-weight: 700 */
-}
+// a:hover {
+// 	font-weight: 700
+// }
 
 /** React-bootstrap List */
 .list-group .active {
@@ -128,9 +128,10 @@ a:hover {
 	background: rgba(227, 222, 222, 0.2);
 }
 
-.list-group-item.action {
-	/* font-weight: 700 */
-}
+// .list-group-item.action {
+// 	font-weight: 700
+// }
+
 .list-group-item-action:focus,
 .list-group-item-action:hover {
 	background-color: white;
@@ -159,9 +160,9 @@ a:hover {
 	font-size: 1rem;
 }
 
-.navbar-brand:hover {
-	/* font-weight: 700; */
-}
+// .navbar-brand:hover {
+// 	font-weight: 700;
+// }
 
 .navbar-light .navbar-toggler {
 	border: none;
@@ -456,9 +457,9 @@ button.close {
 	box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.15);
 }
 
-.rt-td {
-	/* margin: 5px 0px */
-}
+// .rt-td {
+// 	margin: 5px 0px
+// }
 
 .rt-th {
 	border-right: 2px solid;
