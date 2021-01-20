@@ -247,3 +247,7 @@ export const getCookies = (key) => {
 export const removeCookies = (key) => {
 	Cookies.remove(key)
 }
+
+export const delay = ({ callback, second = 1 }) => {
+	return setTimeout(callback, second * 1000)
+}

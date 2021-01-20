@@ -42,7 +42,11 @@ import BOTButton from '../BOTComponent/BOTButton'
 import BOTMap from '../BOTComponent/BOTMap'
 import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
-import { getBitValue, findExpectedBitValue } from '../../helper/utilities'
+import {
+	getBitValue,
+	findExpectedBitValue,
+	delay,
+} from '../../helper/utilities'
 import NotificationTypeConfig from '../container/NotificationTypeConfig'
 import { setSuccessMessage } from '../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../config/wordMap'
@@ -135,13 +139,18 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		}
 	}
 
-	handleSubmit = async (submitValue) => {
+	handleSubmit = async (submitValue, actions) => {
 		const res = await apiHelper.geofenceApis.setGeofenceAreaConfig({
 			areaConfig: submitValue,
 		})
 		if (res) {
 			await setSuccessMessage(SAVE_SUCCESS)
-			this.getData()
+			await this.getData()
+			delay({
+				callback: () => {
+					actions.setSubmitting(false)
+				},
+			})
 		}
 	}
 
@@ -291,12 +300,15 @@ class BOTAdminGeoFenceSetting extends React.Component {
 					validateOnChange={false}
 					validateOnBlur={false}
 					initialValues={initialValues}
-					onSubmit={(values) => {
+					onSubmit={(values, actions) => {
 						const submitValue = {
 							area_id: area.id,
-							monitorDeviceNameListids: [values.devices.value],
-							monitorPatientNameListids: [values.patients.value],
-							montiorObjectTypes: [values.otherObjectTypes.value],
+							monitorDeviceNameListids: values &&
+								values.devices && [values.devices.value],
+							monitorPatientNameListids: values &&
+								values.patients && [values.patients.value],
+							montiorObjectTypes: values &&
+								values.otherObjectTypes && [values.otherObjectTypes.value],
 							dayShift: {
 								name: SHIFT_NAME.DAY_SHIFT,
 								alert_last_sec: values[`${defaultShiftList[0]}_alert_last_sec`],
@@ -337,7 +349,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 								end_time: values[`${defaultShiftList[2]}_end_time`],
 							},
 						}
-						this.handleSubmit(submitValue)
+						this.handleSubmit(submitValue, actions)
 					}}
 					render={({
 						errors,
