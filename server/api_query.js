@@ -74,7 +74,6 @@ async function getPeopleRealtimeData(request, response) {
 				})
 				filter += queryType.getObjectIDFilter(object_id)
 			}
-			console.log(queryType.getPeopleRealtimeQuery(key, filter))
 			const data = await pool.query(
 				queryType.getPeopleRealtimeQuery(key, filter)
 			)
@@ -346,7 +345,7 @@ const getApiKey = (request, response) => {
 								response.json(
 									error_code.get_key_success(
 										hash,
-										moment().add(30, 'm').locale('en').format('LT')
+										moment().add(30, 'm').format(timeDefaultFormat)
 									)
 								)
 								console.log('get Key success')

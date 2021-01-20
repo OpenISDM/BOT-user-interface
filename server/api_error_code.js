@@ -1,11 +1,18 @@
 function get_key_success(key, time) {
-	const text = {
+	return {
 		error_code: '0',
 		error_message: 'get key success',
 		key,
-		note: 'validity period of key until : ' + time,
+		valid_time: time,
 	}
-	return text
+}
+
+function get_value_success(rows){
+	return {
+		error_code : '0',
+		error_message : 'get data success',
+		data : rows
+	}
 }
 
 const sha_256_incorrect = {
@@ -70,6 +77,7 @@ const id_format_error = {
 }
 export default {
 	get_key_success,
+	get_value_success,
 	sha_256_incorrect,
 	key_incorrect,
 	key_unactive,
