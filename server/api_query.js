@@ -114,7 +114,7 @@ async function getPeopleRealtimeData(request, response) {
 				).format(timeDefaultFormat)
 			})
 			console.log('get realtime data successful')
-			response.json(data.rows)
+			response.json(CheckIsNullResponse(data.rows))
 		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
 		}
@@ -197,7 +197,7 @@ async function getPeopleHistoryData(request, response) {
 					timeDefaultFormat
 				)
 			})
-			response.json(data.rows)
+			response.json(CheckIsNullResponse(data.rows))
 		} catch (err) {
 			console.log(`get people history data failed : ${err}`)
 		}
@@ -206,6 +206,13 @@ async function getPeopleHistoryData(request, response) {
 	} else {
 		response.json(error_code.key_incorrect)
 	}
+}
+
+function CheckIsNullResponse(rows){
+	if(rows){
+		return error_code.get_value_success(rows)
+	}
+	return error_code.get_null_value(rows)
 }
 
 async function getObjectRealtimeData(request, response) {
