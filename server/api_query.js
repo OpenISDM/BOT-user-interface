@@ -69,33 +69,41 @@ async function getIDTableData(request, response) {
 
 async function getPeopleRealtimeData(request, response) {
 	const { key } = request.body
-	let { object_id, area_id } = request.body
+	let { object_id, object_type, area_id } = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
 			let filter = ''
-			if (area_id) {
-				const pattern = new RegExp('^[0-9]{1,}$')
-				area_id = area_id.split(';').map((item) => {
-					if (item.match(pattern) == null) {
-						response.json(error_code.id_format_error)
-						return undefined
+
+			if(object_id){
+				object_id.map(item=>{
+					if(typeof item === 'string' && item.match(IntegerRegExp)){
+						return parseInt(item ,10)
 					}
-					return parseInt(item)
-				})
-				filter += queryType.getAreaIDFilterFromObejectSummaryTable(area_id)
-			}
-			if (object_id) {
-				const pattern = new RegExp('^[0-9]{1,}$')
-				object_id = object_id.split(';').map((item) => {
-					if (item.match(pattern) == null) {
-						response.json(error_code.id_format_error)
-						return undefined
+					else if(Number.isInteger(item)){
+						return item
 					}
-					return parseInt(item)
+					response.json(error_code.id_format_error)
+					return undefined
 				})
 				filter += queryType.getObjectIDFilter(object_id)
+			}
+			if(object_type){
+				filter += queryType.getObjectTypeFilter(object_type)
+			}
+			if(area_id){
+				area_id.map(item=>{
+					if(typeof item === 'string' && item.match(IntegerRegExp)){
+						return parseInt(item ,10)
+					}
+					else if(Number.isInteger(item)){
+						return item
+					}
+					response.json(error_code.id_format_error)
+					return undefined
+				})
+				filter += queryType.getAreaIDFilter(area_id)
 			}
 			const data = await pool.query(
 				queryType.getPeopleRealtimeQuery(key, filter)
