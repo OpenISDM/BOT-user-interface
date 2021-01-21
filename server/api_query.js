@@ -413,101 +413,6 @@ const getApiKey = (request, response) => {
 		})
 }
 
-async function getPatientDurationData(request, response) {
-	const { key } = request.body
-	let {
-		object_id, // string
-		lbeacon, // string
-		area_id,
-		start_time, // YYYY/MM/DD HH:mm:ss
-		end_time, // YYYY/MM/DD HH:mm:ss
-		count_limit, //
-		sort_type,
-	} = request.body
-
-	const matchRes = await match_key(key)
-
-	if (matchRes === Authenticate.SUCCESS) {
-		// matched
-
-		const error_msg = check_input_error(
-			start_time,
-			end_time,
-			sort_type,
-			count_limit
-		)
-
-		if (error_msg !== undefined) {
-			response.json(error_msg)
-			return
-		}
-
-		start_time = set_initial_time(start_time, 1)
-		end_time = set_initial_time(end_time, 0)
-		count_limit = set_count_limit(count_limit)
-		sort_type = set_sort_type(sort_type)
-		let filter = ''
-
-		//** Object id**//
-		if (object_id !== undefined) {
-			const pattern = new RegExp('^[0-9]{1,}$')
-			object_id = object_id.split(';').map((item) => {
-				if (item.match(pattern) == null) {
-					response.json(error_code.id_format_error)
-				}
-				return parseInt(item, 10)
-			})
-			filter += queryType.getObjectIDFilter(object_id)
-		}
-		//** Lbeacon **//
-		if (lbeacon !== undefined) {
-			lbeacon = lbeacon.split(';')
-			const pattern = new RegExp(
-				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
-			)
-			lbeacon.forEach((item) => {
-				if (item.match(pattern) == null) {
-					//judge format
-					response.json(error_code.Lbeacon_error)
-				}
-			})
-			filter += queryType.getLBeaconUUIDFilter(lbeacon)
-		}
-
-		if (area_id) {
-			const pattern = new RegExp('^[0-9]{1,}$')
-			area_id = area_id.split(';').map((item) => {
-				if (item.match(pattern) == null) {
-					response.json(error_code.id_format_error)
-					return undefined
-				}
-				return parseInt(item)
-			})
-			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
-		}
-
-		const data = await get_history_data_from_db(
-			key,
-			start_time,
-			end_time,
-			filter,
-			count_limit,
-			sort_type
-		)
-
-		data.forEach((item) => {
-			item.start_time = moment(item.start_time).format(timeDefaultFormat)
-			item.end_time = moment(item.end_time).format(timeDefaultFormat)
-		})
-
-		response.json(data)
-	} else if (matchRes === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		// key fail match with user
-		response.json(error_code.key_incorrect)
-	}
-}
 
 async function match_key(key) {
 	let Flag = Authenticate.FAILED
@@ -579,52 +484,31 @@ function set_time_format(time) {
 function DateIsValid(time) {
 	return moment(time, timeDefaultFormat, true).isValid()
 }
-async function get_history_data_from_db(
-	key,
-	start_time,
-	end_time,
-	filter,
-	count_limit,
-	sort_type
-) {
-	return await pool
-		.query(
-			queryType.getPatientDurationQuery(
-				key,
-				start_time,
-				end_time,
-				filter,
-				count_limit,
-				sort_type
-			)
-		) //get area id
-		.then((res) => {
-			console.log('get_data success')
-			res.rows.forEach((item) => {
-				item.duration.hours = set_duration_time(item.duration.hours)
-				item.duration.minutes = set_duration_time(item.duration.minutes)
-				item.duration.seconds = set_duration_time(item.duration.seconds)
-				item.duration.milliseconds = set_duration_time(
-					item.duration.milliseconds
-				)
-			})
-			return res.rows
-		})
-		.catch((err) => {
-			console.log(`get_data fails ${err}`)
-		})
-}
 
-function set_duration_time(time) {
-	if (time === undefined) {
-		return 0
+function SetFilter(object_id, object_type, area_id){
+	let filter = ''
+
+	if(object_id){
+		if(Array.isArray(object_id)){
+			return error_code.id_format_error
+		}
+		
 	}
-	return time
+	if(object_type){
+		if(Array.isArray(object_type)){
+			return error_code.id_format_error
+		}
+	}
+	if(area_id){
+		if(Array.isArray(area_id)){
+			return error_code.id_format_error
+		}
+	}
+	return filter
 }
 
 export default {
 	getApiKey,
-	getPatientDurationData,
 	getPeopleHistoryData,
 	getPeopleRealtimeData,
 	getObjectHistoryData,
