@@ -83,6 +83,24 @@ const id_format_error = {
 	error_message: 'get data fail : input id must be integer or format error',
 	data: '',
 }
+
+const object_id_error={
+	error_code: '261',
+	error_message : 'get data fail : object_id input must be a integer array',
+	data: '',
+}
+
+const object_type_error ={
+	error_code : '262',
+	error_message: 'get data fail : object_type input must be a string array',
+	data:'',
+}
+
+const area_id_error = {
+	error_code:'263',
+	error_message : 'get data fail : area_id input must be a integer array',
+	data: '',
+}
 export default {
 	get_key_success,
 	get_value_success,
@@ -97,4 +115,7 @@ export default {
 	sort_type_define_error,
 	id_format_error,
 	get_null_value,
+	object_id_error,
+	area_id_error,
+	object_id_error
 }
