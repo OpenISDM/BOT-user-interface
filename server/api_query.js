@@ -231,39 +231,41 @@ async function getObjectRealtimeData(request, response) {
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
 			let filter = ''
-			if (object_id) {
-				const pattern = new RegExp('^[0-9]{1,}$')
-				object_id = object_id.split(';').map((item) => {
-					if (item.match(pattern) == null) {
-						response.json(error_code.id_format_error)
-						return undefined
+			if(object_id){
+				object_id.map(item=>{
+					if(typeof item === 'string' && item.match(IntegerRegExp)){
+						return parseInt(item ,10)
 					}
-					return parseInt(item)
+					else if(Number.isInteger(item)){
+						return item
+					}
+					response.json(error_code.id_format_error)
+					return undefined
 				})
 				filter += queryType.getObjectIDFilter(object_id)
 			}
-			if (object_type) {
-				object_type = object_type.split(';')
+			if(object_type){
 				filter += queryType.getObjectTypeFilter(object_type)
 			}
-
-			if (area_id) {
-				const pattern = new RegExp('^[0-9]{1,}$')
-				area_id = area_id.split(';').map((item) => {
-					if (item.match(pattern) == null) {
-						response.json(error_code.id_format_error)
-						return undefined
+			if(area_id){
+				area_id.map(item=>{
+					if(typeof item === 'string' && item.match(IntegerRegExp)){
+						return parseInt(item ,10)
 					}
-					return parseInt(item)
+					else if(Number.isInteger(item)){
+						return item
+					}
+					response.json(error_code.id_format_error)
+					return undefined
 				})
-				filter += queryType.getAreaIDFilterFromObejectSummaryTable(area_id)
+				filter += queryType.getAreaIDFilter(area_id)
 			}
 
 			const data = await pool.query(
 				queryType.getObjectRealtimeQuery(key, filter)
 			)
 
-			response.json(data.rows)
+			response.json(CheckIsNullResponse(data.rows))
 		} catch (err) {
 			console.log(`get realtime data failed : ${err}`)
 		}
@@ -306,35 +308,34 @@ async function getObjectHistoryData(request, response) {
 		sort_type = set_sort_type(sort_type)
 
 		let filter = ''
-		if (object_type !== undefined) {
-			object_type = object_type.split(';')
-
-			filter += queryType.getObjectTypeFilter(object_type)
-		}
-
-		if (object_id !== undefined) {
-			const pattern = new RegExp('^[0-9]{1,}$')
-			object_id = object_id.split(';').map((item) => {
-				if (item.match(pattern) == null) {
-					response.json(error_code.id_format_error)
-					return undefined
+		if(object_id){
+			object_id.map(item=>{
+				if(typeof item === 'string' && item.match(IntegerRegExp)){
+					return parseInt(item ,10)
 				}
-				return parseInt(item, 10)
+				else if(Number.isInteger(item)){
+					return item
+				}
+				response.json(error_code.id_format_error)
+				return undefined
 			})
-
 			filter += queryType.getObjectIDFilter(object_id)
 		}
-
-		if (area_id) {
-			const pattern = new RegExp('^[0-9]{1,}$')
-			area_id = area_id.split(';').map((item) => {
-				if (item.match(pattern) == null) {
-					response.json(error_code.id_format_error)
-					return undefined
+		if(object_type){
+			filter += queryType.getObjectTypeFilter(object_type)
+		}
+		if(area_id){
+			area_id.map(item=>{
+				if(typeof item === 'string' && item.match(IntegerRegExp)){
+					return parseInt(item ,10)
 				}
-				return parseInt(item)
+				else if(Number.isInteger(item)){
+					return item
+				}
+				response.json(error_code.id_format_error)
+				return undefined
 			})
-			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
+			filter += queryType.getAreaIDFilter(area_id)
 		}
 
 		try {
@@ -353,7 +354,7 @@ async function getObjectHistoryData(request, response) {
 					timeDefaultFormat
 				)
 			})
-			response.json(data.rows)
+			response.json(CheckIsNullResponse(data.rows))
 		} catch (err) {
 			console.log(`get object history data failed : ${err}`)
 		}

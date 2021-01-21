@@ -202,8 +202,8 @@ const getPeopleRealtimeQuery = (key, filter) => {
 	object_summary_table.mac_address as mac_address, 
 	object_summary_table.updated_by_area as area_id, 
 	area_table.readable_name as area_name,
-	object_summary_table.uuid as Lbeacon_uuid,
-	lbeacon_table.description as Lbeacon_description, 
+	object_summary_table.uuid as lbeacon_uuid,
+	lbeacon_table.description as lbeacon_description, 
 	object_summary_table.payload as payload,
 	object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from api_key
@@ -254,14 +254,15 @@ const getObjectTypeQuery = (type) => {
 const getObjectRealtimeQuery = (key, filter) => {
 	return `
 	select 
-		object_table.name as object_name,
-		object_table.type  as object_type,
-		object_table.mac_address as mac_address,
 		object_table.id as object_id,
+		object_table.name as object_name,
+		object_table.mac_address as mac_address,
+		object_table.type  as object_type,
 		object_summary_table.updated_by_area as area_id,
 		area_table.readable_name as area_name,
-		object_summary_table.uuid as Lbeacon_uuid,
-		lbeacon_table.description as Lbeacon_description
+		object_summary_table.uuid as lbeacon_uuid,
+		lbeacon_table.description as lbeacon_description,
+		object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from 
 		object_table
 
@@ -294,8 +295,6 @@ const getObjectIDFilter = (object_id) => {
 	}
 	return ''
 }
-
-
 
 const getLBeaconUUIDFilter = (uuids) => {
 	if (uuids) {
@@ -331,15 +330,15 @@ const getObjectHistoryQuery = (
 ) => {
 	return `
 	select 
-		object_table.mac_address as mac_address,
 		object_table.id as object_id,
 		object_table."name" as object_name,
+		object_table.mac_address as mac_address,
 		object_table.type as object_type,
-		location_history_table.record_timestamp as record_timestamp,
 		location_history_table.area_id as area_id,
-		location_history_table.uuid as Lbeacon_uuid,
 		area_table.readable_name as area_name,
-		lbeacon_table.description as Lbeacon_description
+		location_history_table.uuid as lbeacon_uuid,
+		lbeacon_table.description as lbeacon_description,
+		location_history_table.record_timestamp as record_timestamp
 	from 
 		location_history_table
 	
