@@ -129,6 +129,7 @@ async function getPeopleHistoryData(request, response) {
 	let {
 		area_id,
 		object_id,
+		object_type,
 		start_time,
 		end_time,
 		count_limit,
@@ -156,31 +157,38 @@ async function getPeopleHistoryData(request, response) {
 		sort_type = set_sort_type(sort_type)
 
 		let filter = ''
-		if (object_id) {
-			const pattern = new RegExp('^[0-9]{1,}$')
-			object_id = object_id.split(';').map((item) => {
-				if (item.match(pattern) == null) {
-					response.json(error_code.id_format_error)
-					return undefined
+		if(object_id){
+			object_id.map(item=>{
+				if(typeof item === 'string' && item.match(IntegerRegExp)){
+					return parseInt(item ,10)
 				}
-				return parseInt(item)
+				else if(Number.isInteger(item)){
+					return item
+				}
+				response.json(error_code.id_format_error)
+				return undefined
 			})
 			filter += queryType.getObjectIDFilter(object_id)
 		}
-
-		if (area_id) {
-			const pattern = new RegExp('^[0-9]{1,}$')
-			area_id = area_id.split(';').map((item) => {
-				if (item.match(pattern) == null) {
-					response.json(error_code.id_format_error)
-					return undefined
+		if(object_type){
+			filter += queryType.getObjectTypeFilter(object_type)
+		}
+		if(area_id){
+			area_id.map(item=>{
+				if(typeof item === 'string' && item.match(IntegerRegExp)){
+					return parseInt(item ,10)
 				}
-				return parseInt(item)
+				else if(Number.isInteger(item)){
+					return item
+				}
+				response.json(error_code.id_format_error)
+				return undefined
 			})
-			filter += queryType.getAreaIDFilterFromLocationHistoryTable(area_id)
+			filter += queryType.getAreaIDFilter(area_id)
 		}
 
 		try {
+			console.log(queryType.getPeopleHistoryQuery(key,filter,start_time,end_time,count_limit, sort_type))
 			const data = await pool.query(
 				queryType.getPeopleHistoryQuery(
 					key,
@@ -209,7 +217,7 @@ async function getPeopleHistoryData(request, response) {
 }
 
 function CheckIsNullResponse(rows){
-	if(rows){
+	if(rows.length > 0){
 		return error_code.get_value_success(rows)
 	}
 	return error_code.get_null_value(rows)

@@ -18,7 +18,7 @@ function get_value_success(rows){
 function get_null_value(rows){
 	return {
 		error_code : '101',
-		error_message : 'success to post, but there is no match data after filter',
+		error_message : 'success to post, but there is no match data with filter',
 		data : rows
 	}
 }

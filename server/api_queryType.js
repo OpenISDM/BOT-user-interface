@@ -159,14 +159,14 @@ const getPeopleHistoryQuery = (
 ) => {
 	return `select 
 	location_history_table.object_id as object_id,
-	location_history_table.mac_address as mac_address,
 	object_table.name as name,
+	location_history_table.mac_address as mac_address,
 	location_history_table.area_id as area_id,
 	area_table.readable_name as area_name,
-	location_history_table.uuid as Lbeacon_uuid,
-	lbeacon_table.description as Lbeacon_description,
-	location_history_table.record_timestamp as record_timestamp,
-	location_history_table.payload as payload
+	location_history_table.uuid as lbeacon_uuid,
+	lbeacon_table.description as lbeacon_description,
+	location_history_table.payload as payload,
+	location_history_table.record_timestamp as record_timestamp
 	from api_key
 	
 	inner join user_table
@@ -175,11 +175,10 @@ const getPeopleHistoryQuery = (
 	inner join object_table
 	on object_table.area_id = user_table.main_area
 	and object_table.object_type = '1'
-	
+	${filter}
 
 	inner join location_history_table
 	on location_history_table.object_id = object_table.id
-	${filter}
 
 	left join lbeacon_table
 	on lbeacon_table.uuid = location_history_table.uuid
@@ -190,6 +189,7 @@ const getPeopleHistoryQuery = (
 	where api_key.key = '${key}' and 
 		  record_timestamp > '${start_time}' and
 		  record_timestamp < '${end_time}'
+		  
 
 	order by record_timestamp ${sort_type}
 	limit ${count_limit};`
@@ -198,8 +198,8 @@ const getPeopleHistoryQuery = (
 const getPeopleRealtimeQuery = (key, filter) => {
 	return `select 
 	object_table.id as object_id, 
-	object_summary_table.mac_address as mac_address, 
 	object_table.name as object_name, 
+	object_summary_table.mac_address as mac_address, 
 	object_summary_table.updated_by_area as area_id, 
 	area_table.readable_name as area_name,
 	object_summary_table.uuid as Lbeacon_uuid,
@@ -315,30 +315,9 @@ const getObjectTypeFilter = (object_type) => {
 	return ''
 }
 
-const getAreaIDFilterFromObejectSummaryTable = (area_id) => {
-	if (area_id) {
-		return `\n and object_summary_table.updated_by_area in (${area_id.map(
-			(item) => {
-				if(Number.isInteger(item)){
-					return `'${item}'`
-				}
-				return '${item}'
-			}
-		)})`
-	}
-}
-
 const getAreaIDFilter=(area_id)=>{
 	if(area_id){
 		return `\n and object_table.area_id in (${area_id.map((item=>`'${item}'`))})`
-	}
-}
-
-const getAreaIDFilterFromLocationHistoryTable = (area_id) => {
-	if (area_id) {
-		return `\n and location_history_table.area_id in (${area_id.map(
-			(item) => `${item}`
-		)})`
 	}
 }
 
@@ -420,8 +399,6 @@ export default {
 	getIDTableQuery,
 	getObjectIDFilter,
 	getObjectTypeFilter,
-	getAreaIDFilterFromLocationHistoryTable,
-	getAreaIDFilterFromObejectSummaryTable,
 	getObjectTypeQuery,
 	getAreaIDQuery,
 	getLBeaconUUIDFilter,
