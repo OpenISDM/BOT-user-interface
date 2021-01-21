@@ -186,7 +186,7 @@ class BOTSelectTable extends React.Component {
 				columns={columns}
 				data={data}
 				showPagination={true}
-				pageSize={20}
+				pageSize={15}
 				showPaginationTop={true}
 				resizable={true}
 				freezeWhenExpanded={false}

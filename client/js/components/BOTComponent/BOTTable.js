@@ -67,7 +67,7 @@ const BOTTable = ({ data, columns, onClickCallback, style }) => {
 			style={style}
 			columns={newColumns}
 			data={data}
-			pageSize={20}
+			pageSize={15}
 			showPagination={true}
 			showPaginationTop={true}
 			resizable={true}
