@@ -40,7 +40,7 @@ import styleSheet from '../../config/styleSheet'
 const imageLength = 160
 
 const SentPwdInstructionResult = () => {
-	const locale = React.useContext(AppContext)
+	const { locale } = React.useContext(AppContext)
 
 	return (
 		<CenterContainer
