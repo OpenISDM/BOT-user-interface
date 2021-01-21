@@ -6,6 +6,7 @@ import pool from './api/db/connection'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import encrypt from './api/service/encrypt'
 
+const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 const Authenticate = {
 	EXCEPTION: 0,
 	SUCCESS: 1,
@@ -15,21 +16,43 @@ const Authenticate = {
 
 async function getIDTableData(request, response) {
 	const { key } = request.body
-
+	let { area_id } = request.body
 	const matchRes = await match_key(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
+		let filter =''
+		if(area_id){
+			area_id.map(item=>{
+				if(typeof item === 'string' && item.match(IntegerRegExp)){
+					return parseInt(item ,10)
+				}
+				else if(Number.isInteger(item)){
+					return item
+				}
+				response.json(error_code.id_format_error)
+				return undefined
+			})
+			filter += queryType.getAreaIDFilter(area_id)
+		}
 		try {
-			const ObjectTable = await pool.query(queryType.getIDTableQuery(key))
+			console.log(queryType.getIDTableQuery(key,filter))
+			const ObjectTable = await pool.query(queryType.getIDTableQuery(key, filter))
 			const AreaTable = await pool.query(queryType.getAreaIDQuery())
-			const ObjectType = await pool.query(queryType.getObjectTypeQuery())
-
+			// object_type = 0, will get device object type
+			const ObjectType = await pool.query(queryType.getObjectTypeQuery(0))
+			// object_type = 1, will get people object type
+			const PeopleType = await pool.query(queryType.getObjectTypeQuery(1))
 			const data = {
-				object_id_table: ObjectTable.rows,
-				area_id_table: AreaTable.rows,
-				object_types: ObjectType.rows.map((item) => {
-					return item.object_type
-				}),
+				area_table: AreaTable.rows,
+				object_types: {
+					people_type: PeopleType.rows.map((item) => {
+						return item.object_type
+					}),
+					device_type: ObjectType.rows.map((item) => {
+						return item.object_type
+					}),
+				},
+				object_table: ObjectTable.rows,
 			}
 			response.json(data)
 			//const data = await pool.query(queryType.getIDTableQuery(key))

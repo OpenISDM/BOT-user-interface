@@ -12,5 +12,5 @@ export default (app) => {
 	app.post('/api/1.0/tracing/history/device', db.getObjectHistoryData)
 	app.post('/api/1.0/tracing/realtime/device', db.getObjectRealtimeData)
 
-	app.post('/api/1.0/tracing/id_table', db.getIDTableData)
+	app.post('/api/1.0/tracing/objectlist', db.getIDTableData)
 }

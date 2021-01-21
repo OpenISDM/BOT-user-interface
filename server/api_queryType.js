@@ -240,14 +240,14 @@ const getAreaIDQuery = () => {
 	`
 }
 
-const getObjectTypeQuery = () => {
+const getObjectTypeQuery = (type) => {
 	return `
 	select 
 		distinct object_table.type as object_type
 	from 
 		object_table
 	where
-		object_table.object_type = '0'
+		object_table.object_type = '${type}'
 	`
 }
 
@@ -295,6 +295,8 @@ const getObjectIDFilter = (object_id) => {
 	return ''
 }
 
+
+
 const getLBeaconUUIDFilter = (uuids) => {
 	if (uuids) {
 		return `\nand location_history_table.uuid in  (${uuids.map(
@@ -316,15 +318,34 @@ const getObjectTypeFilter = (object_type) => {
 const getAreaIDFilterFromObejectSummaryTable = (area_id) => {
 	if (area_id) {
 		return `\n and object_summary_table.updated_by_area in (${area_id.map(
-			(item) => `'${item}'`
+			(item) => {
+				if(Number.isInteger(item)){
+					return `'${item}'`
+				}
+				return '${item}'
+			}
 		)})`
+	}
+}
+
+const getAreaIDFilter=(area_id)=>{
+	if(area_id){
+		return `\n and object_table.area_id in (${area_id.map((item=>`'${item}'`))})`
+		// return `\n and object_table.area_id in (${area_id.map(
+		// 	(item) => {
+		// 		if(Number.isInteger(item)){
+		// 			return `'${item}'`
+		// 		}
+		// 		return `${item}`
+		// 	}
+		// )})`
 	}
 }
 
 const getAreaIDFilterFromLocationHistoryTable = (area_id) => {
 	if (area_id) {
 		return `\n and location_history_table.area_id in (${area_id.map(
-			(item) => `'${item}'`
+			(item) => `${item}`
 		)})`
 	}
 }
@@ -375,7 +396,7 @@ const getObjectHistoryQuery = (
 	limit ${count_limit};`
 }
 
-const getIDTableQuery = (key) => {
+const getIDTableQuery = (key, filter) => {
 	return `
 	select
 		object_table.id as id,
@@ -390,7 +411,8 @@ const getIDTableQuery = (key) => {
 	inner join object_table on
 		object_table.area_id = user_table.main_area
 	where
-		key = '${key}';`
+		key = '${key}'
+		${filter};`
 }
 
 export default {
@@ -411,4 +433,5 @@ export default {
 	getObjectTypeQuery,
 	getAreaIDQuery,
 	getLBeaconUUIDFilter,
+	getAreaIDFilter
 }

@@ -15,6 +15,14 @@ function get_value_success(rows){
 	}
 }
 
+function get_null_value(rows){
+	return {
+		error_code : '101',
+		error_message : 'success to post, but there is no match data after filter',
+		data : rows
+	}
+}
+
 const sha_256_incorrect = {
 	error_code: '100',
 	error_message:
@@ -88,4 +96,5 @@ export default {
 	count_error,
 	sort_type_define_error,
 	id_format_error,
+	get_null_value,
 }
