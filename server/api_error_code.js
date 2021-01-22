@@ -27,79 +27,79 @@ const sha_256_incorrect = {
 	error_code: '100',
 	error_message:
 		'get key fail : error data , this key cannot match any account',
-	data: '',
+	data: [],
 }
 
 const key_incorrect = {
 	error_code: '200',
 	error_message: 'get data fail : key is incorrect',
-	data: '',
+	data: [],
 }
 
 const key_unactive = {
 	error_code: '201',
 	error_message: 'get data fail : key is out of active time',
-	data: '',
+	data: [],
 }
 
 const start_time_error = {
 	error_code: '210',
 	error_message: 'get data fail : start time format error',
-	data: '',
+	data: [],
 }
 
 const end_time_error = {
 	error_code: '211',
 	error_message: 'get data fail : end time format error',
-	data: '',
+	data: [],
 }
 
 const mac_address_error = {
 	error_code: '220',
 	error_message: 'get data fail : mac address of TAG format error',
-	data: '',
+	data: [],
 }
 
 const Lbeacon_error = {
 	error_code: '230',
 	error_message: 'get data fail : UUID of LBeacon format error',
-	data: '',
+	data: [],
 }
 
 const count_error = {
 	error_code: '240',
 	error_message: 'get data fail : count limit must be a number',
-	data: '',
+	data: [],
 }
 
 const sort_type_define_error = {
 	error_code: '250',
 	error_message: 'get data fail : sort type must be desc or asc',
-	data: '',
+	data: [],
 }
 
 const id_format_error = {
 	error_code: '260',
 	error_message: 'get data fail : input id must be integer or format error',
-	data: '',
+	data: [],
 }
 
 const object_id_error={
 	error_code: '261',
 	error_message : 'get data fail : object_id input must be a integer array',
-	data: '',
+	data: [],
 }
 
 const object_type_error ={
 	error_code : '262',
 	error_message: 'get data fail : object_type input must be a string array',
-	data:'',
+	data:[],
 }
 
 const area_id_error = {
 	error_code:'263',
 	error_message : 'get data fail : area_id input must be a integer array',
-	data: '',
+	data: [],
 }
 export default {
 	get_key_success,
@@ -117,5 +117,5 @@ export default {
 	get_null_value,
 	object_id_error,
 	area_id_error,
-	object_id_error
+	object_type_error,
 }
