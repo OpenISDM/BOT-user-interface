@@ -1,10 +1,10 @@
 import error_code from './api_error_code'
 import moment from 'moment-timezone'
 import queryType from './api_queryType'
-import pool from './api/db/connection'
+import pool from '../../api/db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-import encrypt from './api/service/encrypt'
+import encrypt from '../../api/service/encrypt'
 
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 const Authenticate = {

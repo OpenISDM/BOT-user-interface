@@ -1,5 +1,5 @@
-import api_v1 from '../api_query'
-import api_v0 from '../api_v1.0/api_query_v1.0'
+import api_v1 from '../APIQueries/api_v1.1/api_query'
+import api_v0 from '../APIQueries/api_v1.0/api_query'
 export default (app) => {
 	/** 給我帳號密碼 給你金鑰 **/
 	app.post('/api/1.1/auth/signin', api_v1.getApiKey)

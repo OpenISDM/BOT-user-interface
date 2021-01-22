@@ -1,8 +1,8 @@
-import error_code from './api_error_code_v1.0'
+import error_code from './api_error_code'
 import moment from 'moment-timezone'
-import queryType from './api_queryType_v1.0'
-import pool from '../api/db/connection'
-import encrypt from '../api/service/encrypt'
+import queryType from './api_queryType'
+import pool from '../../api/db/connection'
+import encrypt from '../../api/service/encrypt'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 
 const get_api_key = (request, response) => {
