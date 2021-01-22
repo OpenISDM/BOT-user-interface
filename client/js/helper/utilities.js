@@ -51,12 +51,23 @@ export const isEqual = (obj1, obj2) => {
 	return JSON.stringify(obj1) === JSON.stringify(obj2)
 }
 
-/** Deep clone for json format */
+export const isSameValue = (firstValue, secondValue) => {
+	const firstValueString = `${firstValue}`
+	const secondValueString = `${secondValue}`
+	return firstValueString === secondValueString
+}
+
+/** Clone for json format */
 export const JSONClone = (arr) => {
 	if (arr == null) return arr
 	return arr.map((object) => {
 		return Object.assign({}, object)
 	})
+}
+
+/** Fastest object deep clone */
+export const deepClone = (objects) => {
+	return JSON.parse(JSON.stringify(objects))
 }
 
 /** Check whether the platform supports Webp */

@@ -43,7 +43,7 @@ import MobileMainContainer from '../../platform/mobile/MobileMainContainer'
 import BrowserMainContainer from '../../platform/browser/BrowserMainContainer'
 import apiHelper from '../../../helper/apiHelper'
 import { createLbeaconCoordinate } from '../../../helper/dataTransfer'
-import { isEqual, JSONClone } from '../../../helper/utilities'
+import { isEqual, deepClone, isSameValue } from '../../../helper/utilities'
 import {
 	SWITCH_SEARCH_LIST,
 	CLEAR_SEARCH_RESULT,
@@ -54,6 +54,7 @@ import {
 	OBJECT_TYPE,
 	NOT_STAY_ROOM_MONITOR,
 	SEARCH_HISTORY,
+	SEARCH_BAR,
 	PIN_SELETION,
 } from '../../../config/wordMap'
 import { SET_OPENED_NOTIFICATION } from '../../../reducer/action'
@@ -276,11 +277,11 @@ class MainContainer extends React.Component {
 		} = this.state
 
 		let searchResult = []
+		let suggestions = []
 		let { searchObjectArray } = this.state
 
-		const searchableField = config.SEARCHABLE_FIELD
 		const activeActionButtons = []
-		const proccessedTrackingData = JSONClone(trackingData)
+		const proccessedTrackingData = deepClone(trackingData)
 
 		switch (searchKey.type) {
 			case ALL_DEVICES:
@@ -351,37 +352,25 @@ class MainContainer extends React.Component {
 					}
 				}
 
-				for (let index = searchObjectArray.length - 1; index >= 0; index--) {
-					const singleSearchObjectArray = []
-
-					singleSearchObjectArray.push(searchObjectArray[index])
-
-					const moreSearchResult = proccessedTrackingData.filter((item) => {
-						return singleSearchObjectArray.some((key) => {
-							return searchableField.some((field) => {
-								if (item[field] && item[field] === key) {
-									item.keyword = key
-									item.searched = true
-
-									if (
-										parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
-									) {
-										item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_DEVICE
-									} else if (
-										parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
-									) {
-										item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_PERSON
-									}
-
-									return true
-								}
-								return false
-							})
-						})
+				searchResult = proccessedTrackingData.filter((item) => {
+					const result = searchObjectArray.some((keyword) => {
+						return this.checkSearchableFields({ item, keyword })
 					})
+					if (result) {
+						this.appendSearchedType(item)
+					}
+					return result
+				})
+				break
 
-					searchResult = searchResult.concat(moreSearchResult)
-				}
+			case SEARCH_BAR:
+				searchObjectArray = []
+				suggestions = searchKey.value
+				searchResult = proccessedTrackingData.filter((item) => {
+					return suggestions.some((keyword) => {
+						return this.checkSearchableFields({ item, keyword })
+					})
+				})
 				break
 
 			case PIN_SELETION:
@@ -393,7 +382,6 @@ class MainContainer extends React.Component {
 						searchResult.push(item)
 					}
 				})
-
 				break
 
 			default:
@@ -431,6 +419,27 @@ class MainContainer extends React.Component {
 			activeActionButtons,
 			clearSearchResult,
 		})
+	}
+
+	checkSearchableFields = ({ item, keyword }) => {
+		const searchableField = config.SEARCHABLE_FIELD
+		return searchableField.some((field) => {
+			if (item[field] && item[field] === keyword) {
+				item.keyword = keyword
+				item.searched = true
+				return true
+			}
+			return false
+		})
+	}
+
+	appendSearchedType = (item) => {
+		if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
+			item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_DEVICE
+		}
+		if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
+			item.searchedType = config.SEARCHED_TYPE.OBJECT_TYPE_PERSON
+		}
 	}
 
 	highlightSearchPanel = (boolean) => {

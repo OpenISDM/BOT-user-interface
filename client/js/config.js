@@ -200,9 +200,9 @@ const config = {
 	SHIFT_OPTIONS: ['day shift', 'swing shift', 'night shift'],
 
 	SEARCHABLE_FIELD: [
+		'name',
 		'type',
 		'asset_control_number',
-		'name',
 		'nickname',
 		'location_description',
 		'type_alias',

@@ -90,7 +90,7 @@ class BOTSearchbar extends React.Component {
 
 		let type
 		let searchKey = {}
-		const value = this.state.value
+		const { value, suggestions } = this.state
 
 		if (this.props.suggestData.includes(value)) {
 			type = SEARCH_HISTORY
@@ -103,7 +103,7 @@ class BOTSearchbar extends React.Component {
 			type = SEARCH_BAR
 			searchKey = {
 				type,
-				value,
+				value: suggestions,
 			}
 		}
 
