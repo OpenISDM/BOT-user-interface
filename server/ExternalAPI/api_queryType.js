@@ -160,7 +160,7 @@ const get_data = (
 }
 //#endregion
 
-//#region 
+//#region api v1.1
 const getPeopleHistoryQuery = (
 	key,
 	filter,
@@ -218,6 +218,9 @@ const getPeopleRealtimeQuery = (key, filter) => {
 	area_table.readable_name as area_name,
 	object_summary_table.uuid as lbeacon_uuid,
 	lbeacon_table.description as lbeacon_description, 
+	object_summary_table.base_x as position_x,
+	object_summary_table.base_y as position_y,
+	object_summary_table.battery_voltage as battery_voltage,
 	object_summary_table.payload as payload,
 	object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from api_key
@@ -276,6 +279,9 @@ const getObjectRealtimeQuery = (key, filter) => {
 		area_table.readable_name as area_name,
 		object_summary_table.uuid as lbeacon_uuid,
 		lbeacon_table.description as lbeacon_description,
+		object_summary_table.base_x as position_x,
+		object_summary_table.base_y as position_y,
+		object_summary_table.battery_voltage as battery_voltage,
 		object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from 
 		object_table
