@@ -1,4 +1,13 @@
-function get_key_success(key, time) {
+function get_key_success_v0(key, time){
+	return {
+		error_code : '0',
+		error_message : 'get key success',
+		key,
+		note: 'validity period of key until : ' + time,
+	}
+}
+
+function get_key_success_v1(key, time) {
 	return {
 		error_code: '0',
 		error_message: 'get key success',
@@ -102,7 +111,8 @@ const area_id_error = {
 	data: [],
 }
 export default {
-	get_key_success,
+	get_key_success_v0,
+	get_key_success_v1,
 	get_value_success,
 	sha_256_incorrect,
 	key_incorrect,

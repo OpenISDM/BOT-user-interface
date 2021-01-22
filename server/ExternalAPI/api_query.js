@@ -1,11 +1,240 @@
 import error_code from './api_error_code'
 import moment from 'moment-timezone'
 import queryType from './api_queryType'
-import pool from '../../api/db/connection'
+import pool from '../api/db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-import encrypt from '../../api/service/encrypt'
+import encrypt from '../api/service/encrypt'
 
+//#region api v1.0
+const get_api_key_v0 = (request, response) => {
+	const { username, password } = request.body
+
+	let getUserName = ''
+	pool
+		.query(queryType.getAllUserQuery) //verification by sha256
+		.then((res) => {
+			res.rows.map((item) => {
+				if (
+					username == item.username_sha256 &&
+					password == item.password_sha256
+				) {
+					getUserName = item.name
+				}
+			})
+			if (getUserName != '') {
+				//already match user name
+				pool
+					.query(queryType.confirmValidation(getUserName))
+					.then((res) => {
+						console.log('confirm validation succeed')
+
+						const hash = encrypt.createHash(password)
+
+						pool
+							.query(queryType.setKey(res.rows[0].user_id, getUserName, hash))
+							.then((res) => {
+								response.json(
+									error_code.get_key_success_v0(
+										hash,
+										moment().add(30, 'm').locale('en').format('LT')
+									)
+								)
+								console.log('get Key success')
+							})
+							.catch((err) => {
+								console.log(`set Key failer ${err}`)
+							})
+					})
+					.catch((err) => {
+						console.log(`confirm validation fails ${err}`)
+					})
+			} else {
+				response.json(error_code.sha_256_incorrect)
+			}
+		})
+		.catch((err) => {
+			console.log(`get user fails ${err}`)
+		})
+}
+
+async function get_history_data(request, response) {
+	let {
+		key,
+		tag, // string
+		Lbeacon, // string
+		start_time, // YYYY/MM/DD HH:mm:ss
+		end_time, // YYYY/MM/DD HH:mm:ss
+		count_limit, //
+		sort_type,
+	} = request.body
+
+	let matchRes = Promise.resolve(match_key_v0(key))
+	await matchRes.then(function (result) {
+		matchRes = result
+	})
+
+	if (matchRes == 1) {
+		// matched
+
+		//** Time **//
+
+		if (start_time != undefined) {
+			// verification by format
+			if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
+				response.json(error_code.start_time_error)
+			} else {
+				// if format right then convert to utc
+				start_time = time_format(start_time)
+			}
+		} else {
+			// set default WHEN no input
+			start_time = moment(moment().subtract(1, 'day')).format()
+		}
+
+		if (end_time != undefined) {
+			if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
+				response.json(error_code.end_time_error)
+			} else {
+				end_time = time_format(end_time)
+			}
+		} else {
+			end_time = moment(moment()).format()
+		}
+
+		//** TAG **//
+		if (tag != undefined) {
+			tag = tag.split(',')
+			const pattern = new RegExp(
+				'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
+			)
+			tag.map((item) => {
+				if (item.match(pattern) == null) {
+					//judge format
+					response.json(error_code.mac_address_error)
+				}
+			})
+		}
+
+		//** Lbeacon **//
+		if (Lbeacon != undefined) {
+			Lbeacon = Lbeacon.split(',')
+			const pattern = new RegExp(
+				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
+			)
+			Lbeacon.map((item) => {
+				if (item.match(pattern) == null) {
+					//judge format
+					response.json(error_code.Lbeacon_error)
+				}
+			})
+		}
+
+		//set default when no input
+		if (count_limit == undefined) {
+			count_limit = 10
+		} else {
+			isNaN(count_limit) ? response.json(error_code.count_error) : null
+		}
+
+		//0=DESC 1=ASC  : default=0
+		if (sort_type == undefined) {
+			sort_type = 'desc'
+		} else if (sort_type != 'desc' && sort_type != 'asc') {
+			response.json(error_code.sort_type_define_error)
+		}
+
+		let data = await get_data(
+			key,
+			start_time,
+			end_time,
+			tag,
+			Lbeacon,
+			count_limit,
+			sort_type
+		)
+
+		data.map((item) => {
+			item.start_time = moment(item.start_time).format(timeDefaultFormat)
+			item.end_time = moment(item.end_time).format(timeDefaultFormat)
+		})
+
+		response.json(data)
+	} else if (matchRes == 2) {
+		response.json(error_code.key_timeout)
+	} else {
+		// key fail match with user
+		response.json(error_code.key_incorrect)
+	}
+}
+
+async function match_key_v0(key) {
+	let matchFlag = 0 // flag = 0 when key error
+	return await pool
+		.query(queryType.getAllKeyQuery)
+		.then((res) => {
+			res.rows.map((item) => {
+				const vaildTime = moment(item.register_time).add(30, 'm')
+				if (moment().isBefore(moment(vaildTime)) && item.key == key) {
+					matchFlag = 1 //in time & key right
+				} else if (moment().isAfter(moment(vaildTime)) && item.key == key) {
+					matchFlag = 2 // out time & key right
+				}
+			})
+			return matchFlag
+		})
+		.catch((err) => {
+			console.log(`match key fails ${err}`)
+		})
+}
+
+async function get_data(
+	key,
+	start_time,
+	end_time,
+	tag,
+	Lbeacon,
+	count_limit,
+	sort_type
+) {
+	return await pool
+		.query(
+			queryType.get_data(
+				key,
+				start_time,
+				end_time,
+				tag,
+				Lbeacon,
+				count_limit,
+				sort_type
+			)
+		) //get area id
+		.then((res) => {
+			console.log('get_data success')
+			res.rows.map((item) => {
+				//item.area_name = tw[item.area_name.toUpperCase().replace(/ /g, '_')]
+				item.duration.hours == undefined ? (item.duration.hours = 0) : null
+				item.duration.minutes == undefined ? (item.duration.minutes = 0) : null
+				item.duration.seconds == undefined ? (item.duration.seconds = 0) : null
+				item.duration.milliseconds == undefined
+					? (item.duration.milliseconds = 0)
+					: null
+			})
+			return res.rows
+		})
+		.catch((err) => {
+			console.log(`get_data fails ${err}`)
+		})
+}
+
+function time_format(time) {
+	if (time != undefined) {
+		return moment(time, timeDefaultFormat).format()
+	}
+}
+//#endregion
+
+//#region api v1.1
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 const Authenticate = {
 	EXCEPTION: 0,
@@ -21,7 +250,7 @@ const ObjectTypeQuery = {
 
 async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
-	const matchRes = await match_key(key)
+	const matchRes = await CheckKey(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		let filter = ''
@@ -49,9 +278,13 @@ async function getIDTableData(request, response) {
 			)
 			const AreaTable = await pool.query(queryType.getAreaIDQuery())
 			// object_type = 0, will get device object type
-			const ObjectType = await pool.query(queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE))
+			const ObjectType = await pool.query(
+				queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
+			)
 			// object_type = 1, will get people object type
-			const PeopleType = await pool.query(queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE))
+			const PeopleType = await pool.query(
+				queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE)
+			)
 			const data = {
 				area_table: AreaTable.rows,
 				object_types: {
@@ -79,7 +312,7 @@ async function getIDTableData(request, response) {
 
 async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
-	const matchRes = await match_key(key)
+	const matchRes = await CheckKey(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
@@ -111,7 +344,7 @@ async function getPeopleHistoryData(request, response) {
 	const { key, area_id, object_id, object_type } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
 
-	const matchRes = await match_key(key)
+	const matchRes = await CheckKey(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		const error_msg = check_input_error(
@@ -177,7 +410,7 @@ function CheckIsNullResponse(rows) {
 
 async function getObjectRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
-	const matchRes = await match_key(key)
+	const matchRes = await CheckKey(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
@@ -205,7 +438,7 @@ async function getObjectRealtimeData(request, response) {
 async function getObjectHistoryData(request, response) {
 	const { key, object_type, object_id, area_id } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
-	const matchRes = await match_key(key)
+	const matchRes = await CheckKey(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
 		const error_msg = check_input_error(
@@ -281,7 +514,7 @@ const getApiKey = (request, response) => {
 							.query(queryType.setKey(res.rows[0].user_id, getUserName, hash))
 							.then(() => {
 								response.json(
-									error_code.get_key_success(
+									error_code.get_key_success_v1(
 										hash,
 										moment().add(30, 'm').format(timeDefaultFormat)
 									)
@@ -304,7 +537,7 @@ const getApiKey = (request, response) => {
 		})
 }
 
-async function match_key(key) {
+async function CheckKey(key) {
 	let Flag = Authenticate.FAILED
 	return await pool
 		.query(queryType.getAllKeyQuery)
@@ -421,12 +654,19 @@ function SetFilter(object_id, object_type, area_id) {
 	filter += queryType.getObjectIDFilter(object_id)
 	return filter
 }
-
+//#endregion
 export default {
+	//#region api v1.0
+	get_api_key_v0,
+	get_history_data,
+	//#endregion
+
+	//#region api v1.1
 	getApiKey,
 	getPeopleHistoryData,
 	getPeopleRealtimeData,
 	getObjectHistoryData,
 	getObjectRealtimeData,
 	getIDTableData,
+	//#endregion
 }
