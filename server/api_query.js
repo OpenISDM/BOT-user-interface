@@ -20,13 +20,12 @@ async function getIDTableData(request, response) {
 	const matchRes = await match_key(key)
 
 	if (matchRes === Authenticate.SUCCESS) {
-		let filter =''
-		if(area_id){
-			area_id.map(item=>{
-				if(typeof item === 'string' && item.match(IntegerRegExp)){
-					return parseInt(item ,10)
-				}
-				else if(Number.isInteger(item)){
+		let filter = ''
+		if (area_id) {
+			area_id.map((item) => {
+				if (typeof item === 'string' && item.match(IntegerRegExp)) {
+					return parseInt(item, 10)
+				} else if (Number.isInteger(item)) {
 					return item
 				}
 				response.json(error_code.id_format_error)
@@ -35,8 +34,10 @@ async function getIDTableData(request, response) {
 			filter += queryType.getAreaIDFilter(area_id)
 		}
 		try {
-			console.log(queryType.getIDTableQuery(key,filter))
-			const ObjectTable = await pool.query(queryType.getIDTableQuery(key, filter))
+			console.log(queryType.getIDTableQuery(key, filter))
+			const ObjectTable = await pool.query(
+				queryType.getIDTableQuery(key, filter)
+			)
 			const AreaTable = await pool.query(queryType.getAreaIDQuery())
 			// object_type = 0, will get device object type
 			const ObjectType = await pool.query(queryType.getObjectTypeQuery(0))
@@ -76,12 +77,15 @@ async function getPeopleRealtimeData(request, response) {
 		try {
 			let filter = ''
 
-			if(object_id){
-				object_id.map(item=>{
-					if(typeof item === 'string' && item.match(IntegerRegExp)){
-						return parseInt(item ,10)
-					}
-					else if(Number.isInteger(item)){
+			if (object_id) {
+				if (!Array.isArray(object_id)) {
+					response.json(error_code.object_id_error)
+					return
+				}
+				object_id.map((item) => {
+					if (typeof item === 'string' && item.match(IntegerRegExp)) {
+						return parseInt(item, 10)
+					} else if (Number.isInteger(item)) {
 						return item
 					}
 					response.json(error_code.id_format_error)
@@ -89,15 +93,22 @@ async function getPeopleRealtimeData(request, response) {
 				})
 				filter += queryType.getObjectIDFilter(object_id)
 			}
-			if(object_type){
+			if (object_type) {
+				if (!Array.isArray(object_type)) {
+					response.json(error_code.object_type_error)
+					return
+				}
 				filter += queryType.getObjectTypeFilter(object_type)
 			}
-			if(area_id){
-				area_id.map(item=>{
-					if(typeof item === 'string' && item.match(IntegerRegExp)){
-						return parseInt(item ,10)
-					}
-					else if(Number.isInteger(item)){
+			if (area_id) {
+				if (!Array.isArray(area_id)) {
+					response.json(error_code.area_id_error)
+					return
+				}
+				area_id.map((item) => {
+					if (typeof item === 'string' && item.match(IntegerRegExp)) {
+						return parseInt(item, 10)
+					} else if (Number.isInteger(item)) {
 						return item
 					}
 					response.json(error_code.id_format_error)
@@ -157,12 +168,15 @@ async function getPeopleHistoryData(request, response) {
 		sort_type = set_sort_type(sort_type)
 
 		let filter = ''
-		if(object_id){
-			object_id.map(item=>{
-				if(typeof item === 'string' && item.match(IntegerRegExp)){
-					return parseInt(item ,10)
-				}
-				else if(Number.isInteger(item)){
+		if (object_id) {
+			if (!Array.isArray(object_id)) {
+				response.json(error_code.object_id_error)
+				return
+			}
+			object_id.map((item) => {
+				if (typeof item === 'string' && item.match(IntegerRegExp)) {
+					return parseInt(item, 10)
+				} else if (Number.isInteger(item)) {
 					return item
 				}
 				response.json(error_code.id_format_error)
@@ -170,15 +184,22 @@ async function getPeopleHistoryData(request, response) {
 			})
 			filter += queryType.getObjectIDFilter(object_id)
 		}
-		if(object_type){
+		if (object_type) {
+			if (!Array.isArray(object_type)) {
+				response.json(error_code.object_type_error)
+				return
+			}
 			filter += queryType.getObjectTypeFilter(object_type)
 		}
-		if(area_id){
-			area_id.map(item=>{
-				if(typeof item === 'string' && item.match(IntegerRegExp)){
-					return parseInt(item ,10)
-				}
-				else if(Number.isInteger(item)){
+		if (area_id) {
+			if (!Array.isArray(area_id)) {
+				response.json(error_code.area_id_error)
+				return
+			}
+			area_id.map((item) => {
+				if (typeof item === 'string' && item.match(IntegerRegExp)) {
+					return parseInt(item, 10)
+				} else if (Number.isInteger(item)) {
 					return item
 				}
 				response.json(error_code.id_format_error)
@@ -188,7 +209,6 @@ async function getPeopleHistoryData(request, response) {
 		}
 
 		try {
-			console.log(queryType.getPeopleHistoryQuery(key,filter,start_time,end_time,count_limit, sort_type))
 			const data = await pool.query(
 				queryType.getPeopleHistoryQuery(
 					key,
@@ -216,8 +236,8 @@ async function getPeopleHistoryData(request, response) {
 	}
 }
 
-function CheckIsNullResponse(rows){
-	if(rows.length > 0){
+function CheckIsNullResponse(rows) {
+	if (rows.length > 0) {
 		return error_code.get_value_success(rows)
 	}
 	return error_code.get_null_value(rows)
@@ -231,12 +251,15 @@ async function getObjectRealtimeData(request, response) {
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
 			let filter = ''
-			if(object_id){
-				object_id.map(item=>{
-					if(typeof item === 'string' && item.match(IntegerRegExp)){
-						return parseInt(item ,10)
-					}
-					else if(Number.isInteger(item)){
+			if (object_id) {
+				if (!Array.isArray(object_id)) {
+					response.json(error_code.object_id_error)
+					return
+				}
+				object_id.map((item) => {
+					if (typeof item === 'string' && item.match(IntegerRegExp)) {
+						return parseInt(item, 10)
+					} else if (Number.isInteger(item)) {
 						return item
 					}
 					response.json(error_code.id_format_error)
@@ -244,15 +267,22 @@ async function getObjectRealtimeData(request, response) {
 				})
 				filter += queryType.getObjectIDFilter(object_id)
 			}
-			if(object_type){
+			if (object_type) {
+				if (!Array.isArray(object_type)) {
+					response.json(error_code.object_type_error)
+					return
+				}
 				filter += queryType.getObjectTypeFilter(object_type)
 			}
-			if(area_id){
-				area_id.map(item=>{
-					if(typeof item === 'string' && item.match(IntegerRegExp)){
-						return parseInt(item ,10)
-					}
-					else if(Number.isInteger(item)){
+			if (area_id) {
+				if (!Array.isArray(area_id)) {
+					response.json(error_code.area_id_error)
+					return
+				}
+				area_id.map((item) => {
+					if (typeof item === 'string' && item.match(IntegerRegExp)) {
+						return parseInt(item, 10)
+					} else if (Number.isInteger(item)) {
 						return item
 					}
 					response.json(error_code.id_format_error)
@@ -308,12 +338,15 @@ async function getObjectHistoryData(request, response) {
 		sort_type = set_sort_type(sort_type)
 
 		let filter = ''
-		if(object_id){
-			object_id.map(item=>{
-				if(typeof item === 'string' && item.match(IntegerRegExp)){
-					return parseInt(item ,10)
-				}
-				else if(Number.isInteger(item)){
+		if (object_id) {
+			if (!Array.isArray(object_id)) {
+				response.json(error_code.object_id_error)
+				return
+			}
+			object_id.map((item) => {
+				if (typeof item === 'string' && item.match(IntegerRegExp)) {
+					return parseInt(item, 10)
+				} else if (Number.isInteger(item)) {
 					return item
 				}
 				response.json(error_code.id_format_error)
@@ -321,15 +354,22 @@ async function getObjectHistoryData(request, response) {
 			})
 			filter += queryType.getObjectIDFilter(object_id)
 		}
-		if(object_type){
+		if (object_type) {
+			if (!Array.isArray(object_type)) {
+				response.json(error_code.object_type_error)
+				return
+			}
 			filter += queryType.getObjectTypeFilter(object_type)
 		}
-		if(area_id){
-			area_id.map(item=>{
-				if(typeof item === 'string' && item.match(IntegerRegExp)){
-					return parseInt(item ,10)
-				}
-				else if(Number.isInteger(item)){
+		if (area_id) {
+			if (!Array.isArray(area_id)) {
+				response.json(error_code.area_id_error)
+				return
+			}
+			area_id.map((item) => {
+				if (typeof item === 'string' && item.match(IntegerRegExp)) {
+					return parseInt(item, 10)
+				} else if (Number.isInteger(item)) {
 					return item
 				}
 				response.json(error_code.id_format_error)
@@ -413,7 +453,6 @@ const getApiKey = (request, response) => {
 		})
 }
 
-
 async function match_key(key) {
 	let Flag = Authenticate.FAILED
 	return await pool
@@ -485,23 +524,22 @@ function DateIsValid(time) {
 	return moment(time, timeDefaultFormat, true).isValid()
 }
 
-function SetFilter(object_id, object_type, area_id){
+function SetFilter(object_id, object_type, area_id) {
 	let filter = ''
 
-	if(object_id){
-		if(Array.isArray(object_id)){
-			return error_code.id_format_error
-		}
-		
-	}
-	if(object_type){
-		if(Array.isArray(object_type)){
-			return error_code.id_format_error
+	if (object_id) {
+		if (!Array.isArray(object_id)) {
+			return error_code.object_id_error
 		}
 	}
-	if(area_id){
-		if(Array.isArray(area_id)){
-			return error_code.id_format_error
+	if (object_type) {
+		if (!Array.isArray(object_type)) {
+			return error_code.object_type_error
+		}
+	}
+	if (area_id) {
+		if (!Array.isArray(area_id)) {
+			return error_code.area_id_error
 		}
 	}
 	return filter
