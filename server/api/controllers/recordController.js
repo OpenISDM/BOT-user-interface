@@ -80,8 +80,10 @@ export default {
 					.toFile(
 						path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
 						function (err) {
-							if (err)
-								return console.log(`add shift change record failed ${err}`)
+							if (err) {
+								console.log(`add shift change record failed ${err}`)
+								response.status(500).send('Something broke!')
+							}
 
 							console.log('pdf create succeed')
 							response.status(200).json(pdfPackage.path)

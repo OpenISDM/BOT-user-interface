@@ -48,7 +48,7 @@ const BOTButton = ({
 }) => {
 	const variant = pressed ? 'primary' : 'outline-primary'
 	const debounceClick = useCallback(
-		debounce(onClick, 1000, {
+		debounce((e) => onClick(e), 1000, {
 			leading: true,
 			trailing: false,
 		}),
@@ -59,8 +59,8 @@ const BOTButton = ({
 		<Button
 			style={{ margin: '1px', ...style }}
 			variant={variant}
-			onClick={() => {
-				debounceClick()
+			onClick={(e) => {
+				debounceClick(e)
 			}}
 			{...props}
 		>
