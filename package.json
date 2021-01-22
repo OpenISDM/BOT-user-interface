@@ -14,7 +14,7 @@
 		"webp": "node ./tools/webpCovertor.js",
 		"lint": "eslint . --fix && prettier --write .",
 		"analyze": "cross-env NODE_ENV=production npm_config_report=true npm run build",
-		"newman": "newman run ./server/test/real_data/bot_demo_site.postman_collection.json"
+		"newman": "newman run ./server/test/real_data/bot_demo_site.postman_collection.json --insecure"
 	},
 	"keywords": [],
 	"author": "",

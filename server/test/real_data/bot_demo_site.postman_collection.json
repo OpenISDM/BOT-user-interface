@@ -23,7 +23,6 @@
 							"    pm.expect(responseJson.userInfo).to.have.property('freqSearchCount');",
 							"    pm.expect(responseJson.userInfo).to.have.property('id');",
 							"    pm.expect(responseJson.userInfo).to.have.property('areas_id');",
-							"    pm.expect(responseJson.userInfo).to.have.property('main_area');",
 							"    pm.expect(responseJson.userInfo).to.have.property('locale_id');",
 							"    pm.expect(responseJson.userInfo).to.have.property('locale');",
 							"    pm.expect(responseJson.userInfo).to.have.property('searchHistory');",
@@ -82,13 +81,22 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"username\":\"dev\",\"password\":\"BeDIS@1807\"}"
+					"raw": "{\"username\":\"dev\",\"password\":\"BeDIS@1807\"}",
+					"options": {
+						"raw": {}
+					}
 				},
 				"url": {
-					"raw": "http://localhost/data/auth/signin",
-					"protocol": "http",
-					"host": ["localhost"],
-					"path": ["data", "auth", "signin"]
+					"raw": "https://localhost/data/auth/signin",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"data",
+						"auth",
+						"signin"
+					]
 				}
 			},
 			"response": []
@@ -198,13 +206,21 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"locale\":\"tw\",\"user\":{\"name\":\"dev\",\"roles\":[\"dev\"],\"permissions\":[\"form:view\",\"form:edit\",\"route:devicesManagement\",\"route:patientManagement\",\"route:objectManagement\",\"route:userProfile\",\"route:bigScreen\",\"route:trackingHistory\",\"route:report\",\"user:mydevice\",\"user:mypatient\",\"user:shiftChange\",\"user:saveSearchRecord\",\"user:cleanPath\",\"user:toggleShowDevices\",\"user:toggleShowResidents\",\"route:monitorSetting\",\"user:batteryNotice\",\"route:systemStatus\",\"route:editObjectManagement\",\"route:userManager\",\"route:shiftChangeRecord\",\"route:rolePermissionManagement\",\"route:transferredLocationManagement\",\"route:monitor\",\"route:management\",\"route:systemSetting\",\"route:contactTree\",\"route:setting\",\"route:BOTAdmin\",\"route:customSettings\",\"user:importTable\",\"form:develop\",\"route:lbeacon\",\"route:gateway\",\"view:lbeaconMarker\"],\"freqSearchCount\":4,\"id\":\"36\",\"areas_id\":[4,3],\"main_area\":4,\"locale_id\":1,\"locale\":\"tw\",\"searchHistory\":[\"生理監視器\",\"心電圖機\",\"血壓計\",\"血氧機\",\"無線傳輸生理監視器\",\"氧氣流量錶\",\"GF負壓錶\",\"IV Pump\",\"二合一生理監視器\",\"二維無線條碼閱讀機\",\"血氧計\",\"ddddd\",\"\",\"Patient\",\"T05-166\",\"T\",\"12\",\"sdfd\",\"小菊\",\"f\",\"二\",\"a\",\"錶\",\"一\",\"I\",\"華\",\"20201013-2000\",\"kkk\",\"小PP\",\"小二\",\"GF\",\"T05-E0F\",\"華碩VivoWatch\",\"john\",\"johnson\",\"BiDaE patient tag\",\"ATM IC person\",\"ATM IC\",\"1210\",\"2020-0929-1202\",\"2020-0929-1210\",\"床邊生理監視器\",\"空針輸液幫浦\",\"98800056\",\"9880056\",\"不鏽鋼病床(有標記)\",\"血氧機2\",\"2\",\"血\",\"不鏽鋼病床\",\"血氧機1\",\"華碩手環4\",\"華碩手環\",\"華碩手環1\",\"華碩手環2\",\"ATM Tag\",\"華碩\",\"輪血加溫器\",\"三合一生理監視器\",\"LUCAS\",\"LU\",\"L\",\"l\",\"2020-0511-000\",\"2020-0511-0007\",\"2020-0511-0005\",\"不鏽鋼\",\"三\"],\"keyword_type\":\"1\",\"list_id\":\"2\",\"list_name\":\"血氧和血壓\"},\"areaId\":4}"
+					"raw": "{\"locale\":\"tw\",\"user\":{\"name\":\"dev\",\"roles\":[\"dev\"],\"permissions\":[\"form:view\",\"form:edit\",\"route:devicesManagement\",\"route:patientManagement\",\"route:objectManagement\",\"route:userProfile\",\"route:bigScreen\",\"route:trackingHistory\",\"route:report\",\"user:mydevice\",\"user:mypatient\",\"user:shiftChange\",\"user:saveSearchRecord\",\"user:cleanPath\",\"user:toggleShowDevices\",\"user:toggleShowResidents\",\"route:monitorSetting\",\"user:batteryNotice\",\"route:systemStatus\",\"route:editObjectManagement\",\"route:userManager\",\"route:shiftChangeRecord\",\"route:rolePermissionManagement\",\"route:transferredLocationManagement\",\"route:monitor\",\"route:management\",\"route:systemSetting\",\"route:contactTree\",\"route:setting\",\"route:BOTAdmin\",\"route:generalSettings\",\"user:importTable\",\"form:develop\",\"route:lbeacon\",\"route:gateway\",\"view:lbeaconMarker\"],\"freqSearchCount\":4,\"id\":\"36\",\"areas_id\":[4,3],\"locale_id\":1,\"locale\":\"tw\",\"searchHistory\":[\"生理監視器\",\"心電圖機\",\"血壓計\",\"血氧機\",\"無線傳輸生理監視器\",\"氧氣流量錶\",\"GF負壓錶\",\"IV Pump\",\"二合一生理監視器\",\"二維無線條碼閱讀機\",\"血氧計\",\"ddddd\",\"\",\"Patient\",\"T05-166\",\"T\",\"12\",\"sdfd\",\"小菊\",\"f\",\"二\",\"a\",\"錶\",\"一\",\"I\",\"華\",\"20201013-2000\",\"kkk\",\"小PP\",\"小二\",\"GF\",\"T05-E0F\",\"華碩VivoWatch\",\"john\",\"johnson\",\"BiDaE patient tag\",\"ATM IC person\",\"ATM IC\",\"1210\",\"2020-0929-1202\",\"2020-0929-1210\",\"床邊生理監視器\",\"空針輸液幫浦\",\"98800056\",\"9880056\",\"不鏽鋼病床(有標記)\",\"血氧機2\",\"2\",\"血\",\"不鏽鋼病床\",\"血氧機1\",\"華碩手環4\",\"華碩手環\",\"華碩手環1\",\"華碩手環2\",\"ATM Tag\",\"華碩\",\"輪血加溫器\",\"三合一生理監視器\",\"LUCAS\",\"LU\",\"L\",\"l\",\"2020-0511-000\",\"2020-0511-0007\",\"2020-0511-0005\",\"不鏽鋼\",\"三\"],\"keyword_type\":\"1\",\"list_id\":\"2\",\"list_name\":\"血氧和血壓\"},\"areaId\":4}",
+					"options": {
+						"raw": {}
+					}
 				},
 				"url": {
-					"raw": "http://localhost/data/trackingData",
-					"protocol": "http",
-					"host": ["localhost"],
-					"path": ["data", "trackingData"]
+					"raw": "https://localhost/data/trackingData",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"data",
+						"trackingData"
+					]
 				}
 			},
 			"response": []
