@@ -14,6 +14,11 @@ const Authenticate = {
 	FAILED: 3,
 }
 
+const ObjectTypeQuery = {
+	DEVICE: 0,
+	PEOPLE: 1,
+}
+
 async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
 	const matchRes = await match_key(key)
@@ -44,9 +49,9 @@ async function getIDTableData(request, response) {
 			)
 			const AreaTable = await pool.query(queryType.getAreaIDQuery())
 			// object_type = 0, will get device object type
-			const ObjectType = await pool.query(queryType.getObjectTypeQuery(0))
+			const ObjectType = await pool.query(queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE))
 			// object_type = 1, will get people object type
-			const PeopleType = await pool.query(queryType.getObjectTypeQuery(1))
+			const PeopleType = await pool.query(queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE))
 			const data = {
 				area_table: AreaTable.rows,
 				object_types: {
