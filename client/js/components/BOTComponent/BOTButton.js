@@ -32,15 +32,38 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Button } from 'react-bootstrap'
+import { debounce } from 'lodash'
 import PropTypes from 'prop-types'
 
-const BOTButton = ({ pressed = false, text = '', style, ...props }) => {
+const BOTButton = ({
+	pressed = false,
+	text = '',
+	style,
+	onClick = () => {
+		// do nothing
+	},
+	...props
+}) => {
 	const variant = pressed ? 'primary' : 'outline-primary'
+	const debounceClick = useCallback(
+		debounce(onClick, 1000, {
+			leading: true,
+			trailing: false,
+		}),
+		[]
+	)
 
 	return (
-		<Button style={{ margin: '1px', ...style }} variant={variant} {...props}>
+		<Button
+			style={{ margin: '1px', ...style }}
+			variant={variant}
+			onClick={() => {
+				debounceClick()
+			}}
+			{...props}
+		>
 			{text}
 		</Button>
 	)
@@ -48,6 +71,9 @@ const BOTButton = ({ pressed = false, text = '', style, ...props }) => {
 
 BOTButton.propTypes = {
 	pressed: PropTypes.bool,
+	text: PropTypes.string,
+	style: PropTypes.object,
+	onClick: PropTypes.func,
 }
 
 export default BOTButton
