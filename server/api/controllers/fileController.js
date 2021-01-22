@@ -64,7 +64,7 @@ export default {
 			encoding: 'utf8',
 		}
 
-		fs.writeFile(filePath, '\ufeff' + csv, options, function (err) {
+		fs.promises.writeFile(filePath, '\ufeff' + csv, options, function (err) {
 			if (err) {
 				console.log(err)
 			} else {
@@ -90,8 +90,11 @@ export default {
 			.create(pdfPackage.pdf, pdfPackage.options)
 			.toFile(
 				path.join(process.env.LOCAL_FILE_PATH, pdfPackage.path),
-				function (err, result) {
-					if (err) return console.log(`edit object package error ${err}`)
+				function (err) {
+					if (err) {
+						console.log(`generate pdf failed ${err}`)
+						response.status(500).send('Something broke!')
+					}
 
 					console.log('pdf create succeed')
 					response.status(200).json(pdfPackage.path)

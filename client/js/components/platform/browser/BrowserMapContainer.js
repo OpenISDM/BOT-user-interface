@@ -35,7 +35,7 @@
 import React from 'react'
 import { AppContext } from '../../../context/AppContext'
 import config from '../../../config'
-import { Nav, Button } from 'react-bootstrap'
+import { Nav } from 'react-bootstrap'
 import AccessControl from '../../authentication/AccessControl'
 import Map from '../../presentational/Map'
 import { CLEAR_SEARCH_RESULT } from '../../../config/wordMap'
@@ -44,6 +44,7 @@ import {
 	SET_DEVICE_OBJECT_TYPE_VISIBLE,
 	SET_PERSON_OBJECT_TYPE_VISIBLE,
 } from '../../../reducer/action'
+import BOTButton from '../../BOTComponent/BOTButton'
 
 class BrowserMapContainer extends React.Component {
 	static contextType = AppContext
@@ -126,32 +127,30 @@ class BrowserMapContainer extends React.Component {
 				<div>
 					<Nav className="d-flex align-items-start text-capitalize bd-highlight">
 						<Nav.Item className="mt-2">
-							<Button
+							<BOTButton
 								variant="outline-primary"
 								className="mr-1 ml-2 text-capitalize"
 								onClick={handleClickButton}
 								name={CLEAR_SEARCH_RESULT}
-							>
-								{locale.texts.CLEAR}
-							</Button>
+								text={locale.texts.CLEAR}
+							/>
 						</Nav.Item>
 						<AccessControl permission={'user:saveSearchRecord'}>
 							<Nav.Item className="mt-2">
-								<Button
+								<BOTButton
 									variant="outline-primary"
 									className="mr-1 ml-2 text-capitalize"
 									onClick={handleClickButton}
 									name="save"
 									value={1}
 									disabled={showPdfDownloadForm}
-								>
-									{locale.texts.SAVE}
-								</Button>
+									text={locale.texts.SAVE}
+								/>
 							</Nav.Item>
 						</AccessControl>
 						<AccessControl permission={'user:toggleShowDevices'}>
 							<Nav.Item className="mt-2">
-								<Button
+								<BOTButton
 									variant="primary"
 									className="mr-1 ml-2 text-capitalize"
 									onClick={() => {
@@ -169,16 +168,17 @@ class BrowserMapContainer extends React.Component {
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
 									}
-								>
-									{deviceObjectTypeVisible
-										? locale.texts.HIDE_DEVICES
-										: locale.texts.SHOW_DEVICES}
-								</Button>
+									text={
+										deviceObjectTypeVisible
+											? locale.texts.HIDE_DEVICES
+											: locale.texts.SHOW_DEVICES
+									}
+								/>
 							</Nav.Item>
 						</AccessControl>
 						<AccessControl permission={'user:toggleShowResidents'}>
 							<Nav.Item className="mt-2">
-								<Button
+								<BOTButton
 									variant="primary"
 									className="mr-1 ml-2 text-capitalize"
 									onClick={() => {
@@ -196,11 +196,12 @@ class BrowserMapContainer extends React.Component {
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.PERSON)
 									}
-								>
-									{personObjectTypeVisible
-										? locale.texts.HIDE_RESIDENTS
-										: locale.texts.SHOW_RESIDENTS}
-								</Button>
+									text={
+										personObjectTypeVisible
+											? locale.texts.HIDE_RESIDENTS
+											: locale.texts.SHOW_RESIDENTS
+									}
+								/>
 							</Nav.Item>
 						</AccessControl>
 						<div className="d-flex bd-highligh ml-auto">
@@ -209,46 +210,47 @@ class BrowserMapContainer extends React.Component {
 									area.id.toString()
 								) && (
 									<Nav.Item className="mt-2 bd-highligh">
-										<Button
+										<BOTButton
 											variant="warning"
 											className="mr-1 ml-2"
 											onClick={handleClickButton}
 											name="location"
 											value={locationMonitorConfig[area.id].enable}
 											active={!locationMonitorConfig[area.id].enable}
-										>
-											{locationMonitorConfig[area.id].enable
-												? locale.texts.LOCATION_MONITOR_ON
-												: locale.texts.LOCATION_MONITOR_OFF}
-										</Button>
+											text={
+												locationMonitorConfig[area.id].enable
+													? locale.texts.LOCATION_MONITOR_ON
+													: locale.texts.LOCATION_MONITOR_OFF
+											}
+										/>
 									</Nav.Item>
 								)}
 							{geofenceConfig &&
 								Object.keys(geofenceConfig).includes(area.id.toString()) && (
 									<div className="d-flex">
 										<Nav.Item className="mt-2 bd-highligh">
-											<Button
+											<BOTButton
 												variant="warning"
 												className="mr-1 ml-2"
 												onClick={handleClickButton}
 												name="geofence"
 												value={geofenceConfig[area.id].enable}
 												active={!geofenceConfig[area.id].enable}
-											>
-												{geofenceConfig[area.id].enable
-													? locale.texts.FENCE_ON
-													: locale.texts.FENCE_OFF}
-											</Button>
+												text={
+													geofenceConfig[area.id].enable
+														? locale.texts.FENCE_ON
+														: locale.texts.FENCE_OFF
+												}
+											/>
 										</Nav.Item>
 										<Nav.Item className="mt-2">
-											<Button
+											<BOTButton
 												variant="outline-primary"
 												className="mr-1 ml-2"
 												onClick={handleClickButton}
 												name="clearAlerts"
-											>
-												{locale.texts.CLEAR_ALERTS}
-											</Button>
+												text={locale.texts.CLEAR_ALERTS}
+											/>
 										</Nav.Item>
 									</div>
 								)}

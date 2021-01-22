@@ -33,20 +33,21 @@
 */
 
 import React, { Fragment } from 'react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import { Modal, Form } from 'react-bootstrap'
 import moment from 'moment'
 import config from '../../config'
 import { AppContext } from '../../context/AppContext'
 import GeneralConfirmForm from '../presentational/form/GeneralConfirmForm'
 import DownloadPdfRequestForm from '../presentational/form/DownloadPdfRequestForm'
 import Select from 'react-select'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { Formik } from 'formik'
 import { getDescription } from '../../helper/descriptionGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import apiHelper from '../../helper/apiHelper'
 import { Title } from '../BOTComponent/styleComponent'
 import { SAVE_SUCCESS } from '../../config/wordMap'
+import BOTButton from '../BOTComponent/BOTButton'
 import PropTypes from 'prop-types'
 
 const style = {
@@ -171,7 +172,7 @@ class ShiftChange extends React.Component {
 
 		const callback = () => {
 			this.props.handleClose(() => {
-				messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+				setSuccessMessage(SAVE_SUCCESS)
 			})
 		}
 
@@ -232,7 +233,7 @@ class ShiftChange extends React.Component {
 						onSubmit={(values) => {
 							this.confirmShift(values)
 						}}
-						render={({ values, setFieldValue, submitForm }) => (
+						render={({ values, setFieldValue, submitForm, isSubmitting }) => (
 							<Fragment>
 								<Modal.Header className="d-flex flex-column text-capitalize">
 									<Title>{locale.texts.SHIFT_CHANGE_RECORD}</Title>
@@ -304,12 +305,18 @@ class ShiftChange extends React.Component {
 									</Form.Group>
 								</Modal.Body>
 								<Modal.Footer>
-									<Button variant="outline-secondary" onClick={handleClose}>
-										{locale.texts.CANCEL}
-									</Button>
-									<Button type="submit" variant="primary" onClick={submitForm}>
-										{locale.texts.CONFIRM}
-									</Button>
+									<BOTButton
+										variant="outline-secondary"
+										onClick={handleClose}
+										text={locale.texts.CANCEL}
+									/>
+									<BOTButton
+										type="submit"
+										variant="primary"
+										onClick={submitForm}
+										disabled={isSubmitting}
+										text={locale.texts.CONFIRM}
+									/>
 								</Modal.Footer>
 							</Fragment>
 						)}

@@ -76,13 +76,15 @@ const ResetPassword = ({ match }) => {
 				validationSchema={object().shape({
 					account: string().required(locale.texts.USERNAME_IS_REQUIRED),
 					password: string().required(locale.texts.PASSWORD_IS_REQUIRED),
-					confirm: string().when('password', {
-						is: (val) => !!(val && val.length > 0),
-						then: string().oneOf(
-							[ref('password')],
-							locale.texts.PASSWORD_NOT_FIT
-						),
-					}),
+					confirm: string()
+						.required(locale.texts.PASSWORD_IS_REQUIRED)
+						.when('password', {
+							is: (val) => !!(val && val.length > 0),
+							then: string().oneOf(
+								[ref('password')],
+								locale.texts.PASSWORD_NOT_FIT
+							),
+						}),
 				})}
 				onSubmit={async (values) => {
 					await apiHelper.authApiAgent.resetPassword({
