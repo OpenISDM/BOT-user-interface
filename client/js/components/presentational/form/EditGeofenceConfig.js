@@ -45,6 +45,7 @@ import RadioButtonGroup from '../../container/RadioButtonGroup'
 import RadioButton from '../RadioButton'
 import BOTTimePicker from '../../BOTComponent/BOTTimePicker'
 import config from '../../../config'
+import PropTypes from 'prop-types'
 
 const style = {
 	icon: {
@@ -83,8 +84,7 @@ const EditGeofenceConfig = ({
 		? locale.texts.EDIT_GEOFENCE_CONFIG
 		: locale.texts.ADD_GEOFENCE_CONFIG
 
-	const currentLocationLabel =
-		locale.texts[config.mapConfig.areaOptions[area.id]]
+	const currentLocationLabel = area.label
 
 	return (
 		<Modal
@@ -293,6 +293,15 @@ const EditGeofenceConfig = ({
 	)
 }
 
+EditGeofenceConfig.propTypes = {
+	show: PropTypes.bool,
+	isEdited: PropTypes.bool,
+	selectedData: PropTypes.object,
+	lbeaconsTable: PropTypes.array,
+	handleClose: PropTypes.func,
+	handleSubmit: PropTypes.func,
+}
+
 export default EditGeofenceConfig
 
 const parseLbeaconsGroup = (type, index) => {
@@ -353,7 +362,7 @@ const TypeGroup = ({
 			<small className="form-text text-muted">UUID</small>
 
 			{repository.map((item, index) => {
-				return item == 'undefined,' ? null : (
+				return item === 'undefined,' ? null : (
 					<Row noGutters className="py-1" key={index}>
 						<Col
 							lg={1}
@@ -391,7 +400,7 @@ const TypeGroup = ({
 					<Select
 						placeholder={locale.texts.SELECT_LBEACON}
 						name={`${abbr}_lbeacon`}
-						options={abbr == 'f' ? lbeaconOptions_f : lbeaconOptions_p}
+						options={abbr === 'f' ? lbeaconOptions_f : lbeaconOptions_p}
 						styles={styleConfig.reactSelect}
 						onChange={(value) => {
 							const typeGroup = `${abbr}_lbeacon`
@@ -405,11 +414,22 @@ const TypeGroup = ({
 					/>
 					{`lbeacon_error.${abbr}` && (
 						<small className="form-text text-capitaliz" style={style.error}>
-							{abbr == 'f' ? lbeacon_error.f : lbeacon_error.p}
+							{abbr === 'f' ? lbeacon_error.f : lbeacon_error.p}
 						</small>
 					)}
 				</Col>
 			</Row>
 		</div>
 	)
+}
+
+TypeGroup.propTypes = {
+	type: PropTypes.string,
+	abbr: PropTypes.string,
+	title: PropTypes.string,
+	repository: PropTypes.array,
+	values: PropTypes.object,
+	error: PropTypes.object,
+	setFieldValue: PropTypes.object,
+	lbeaconsTable: PropTypes.array,
 }

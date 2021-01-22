@@ -46,14 +46,14 @@ export default {
                 UNION
 
                 SELECT
-                    DISTINCT type
+                    DISTINCT name
                 FROM object_table
                 WHERE area_id = ${areaId}
 
                 UNION
 
                 SELECT
-                    DISTINCT name
+                    DISTINCT type
                 FROM object_table
                 WHERE area_id = ${areaId}
 
@@ -67,9 +67,16 @@ export default {
                 UNION
 
                 SELECT
+                    DISTINCT nickname
+                FROM object_table
+                WHERE area_id = ${areaId}
+
+                UNION
+
+                SELECT
                     DISTINCT description
-                FROM lbeacon_table 
-                WHERE CAST(uuid as TEXT) 
+                FROM lbeacon_table
+                WHERE CAST(uuid as TEXT)
                 LIKE '000${areaId}%'
             ) AS keywords
             WHERE key IS NOT NULL

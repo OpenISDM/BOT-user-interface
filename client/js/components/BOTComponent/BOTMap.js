@@ -43,12 +43,12 @@ import {
 import L, { CRS } from 'leaflet'
 import 'leaflet.markercluster'
 import '../../config/leafletAwesomeNumberMarkers'
-import siteConfig from '../../../../site_module/siteConfig'
 import config from '../../config'
 import { AppContext } from '../../context/AppContext'
-import { isWebpSupported, getCoordinatesFromUUID } from '../../helper/utilities'
+import { getCoordinatesFromUUID } from '../../helper/utilities'
 import { macAddressToCoordinate } from '../../helper/dataTransfer'
 import apiHelper from '../../helper/apiHelper'
+import { mapPrefix } from '../../dataSrc'
 import PropTypes from 'prop-types'
 
 const generateGeoFenceLayer = (showGeoFence, geoFenceList) => {
@@ -100,8 +100,19 @@ const generateMarkersLayer = ({ objectList = [] }) => {
 	return <LayerGroup>{markers}</LayerGroup>
 }
 
+const generateImageLayer = ({ bounds }) => {
+	const { stateReducer } = useContext(AppContext)
+	const [{ area }] = stateReducer
+	const { map_image_path } = area
+
+	const url = map_image_path ? mapPrefix + map_image_path : null
+	if (url && bounds) {
+		return <ImageOverlay bounds={bounds} url={url} />
+	}
+}
+
 const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
-	const { auth, stateReducer } = useContext(AppContext)
+	const { stateReducer } = useContext(AppContext)
 	const [{ area }] = stateReducer
 	const [geoFenceList, setGeoFenceList] = useState([])
 
@@ -117,15 +128,8 @@ const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 		fetchData()
 	}, [])
 
-	const { areaOptions, browserMapOptions } = config.mapConfig
-	const { areaModules } = siteConfig
-	const areaOption = areaOptions[auth.user.main_area]
-	const { bounds } = areaModules[areaOption]
-	const url =
-		isWebpSupported() && areaModules[areaOption].urlWebp
-			? areaModules[areaOption].urlWebp
-			: areaModules[areaOption].url
-
+	const { browserMapOptions } = config.mapConfig
+	const { bounds } = area
 	const mapProps = {
 		...browserMapOptions,
 		crs: CRS.Simple,
@@ -143,7 +147,7 @@ const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 		>
 			{generateGeoFenceLayer(showGeoFence, geoFenceList)}
 			{generateMarkersLayer({ objectList })}
-			<ImageOverlay bounds={mapProps.bounds} url={url} />
+			{generateImageLayer({ bounds })}
 		</MapContainer>
 	)
 }

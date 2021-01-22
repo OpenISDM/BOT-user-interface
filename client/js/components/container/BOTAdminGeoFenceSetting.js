@@ -35,7 +35,6 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import { object, string, array } from 'yup'
 import Select from 'react-select'
 import { AppContext } from '../../context/AppContext'
 import FormikFormGroup from '../presentational/FormikFormGroup'
@@ -43,11 +42,14 @@ import BOTButton from '../BOTComponent/BOTButton'
 import BOTMap from '../BOTComponent/BOTMap'
 import config from '../../config'
 import apiHelper from '../../helper/apiHelper'
-import { getBitValue, findExpectedBitValue } from '../../helper/utilities'
+import {
+	getBitValue,
+	findExpectedBitValue,
+	delay,
+} from '../../helper/utilities'
 import NotificationTypeConfig from '../container/NotificationTypeConfig'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../config/wordMap'
-import PropTypes from 'prop-types'
 
 const AREAS = {
 	CURRENT_COVERED_AREA: 0,
@@ -108,8 +110,8 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		])
 
 		if (geofenceAreaRes && namedListRes) {
-			let deviceNameList = []
-			let patientNameList = []
+			const deviceNameList = []
+			const patientNameList = []
 			namedListRes.data.forEach((item) => {
 				item.objectIds = item.objectIds.map((i) => i.object_id)
 
@@ -137,12 +139,19 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		}
 	}
 
-	handleSubmit = async (submitValue) => {
+	handleSubmit = async (submitValue, actions) => {
 		const res = await apiHelper.geofenceApis.setGeofenceAreaConfig({
 			areaConfig: submitValue,
 		})
-		await messageGenerator.setSuccessMessage(SAVE_SUCCESS)
-		this.getData()
+		if (res) {
+			await setSuccessMessage(SAVE_SUCCESS)
+			await this.getData()
+			delay({
+				callback: () => {
+					actions.setSubmitting(false)
+				},
+			})
+		}
 	}
 
 	caculateAlertTypes = ({ bell, light, gui, sms }) => {
@@ -169,10 +178,6 @@ class BOTAdminGeoFenceSetting extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const currentAreaModule = Object.values(config.mapConfig.AREA_MODULES).find(
-			(module) => parseInt(module.id) === parseInt(area.id)
-		)
-
 		const { deviceNameList, patientNameList } = this.state
 		const {
 			monitored_device_named_list_ids,
@@ -295,12 +300,15 @@ class BOTAdminGeoFenceSetting extends React.Component {
 					validateOnChange={false}
 					validateOnBlur={false}
 					initialValues={initialValues}
-					onSubmit={(values) => {
+					onSubmit={(values, actions) => {
 						const submitValue = {
 							area_id: area.id,
-							monitorDeviceNameListids: [values.devices.value],
-							monitorPatientNameListids: [values.patients.value],
-							montiorObjectTypes: [values.otherObjectTypes.value],
+							monitorDeviceNameListids: values &&
+								values.devices && [values.devices.value],
+							monitorPatientNameListids: values &&
+								values.patients && [values.patients.value],
+							montiorObjectTypes: values &&
+								values.otherObjectTypes && [values.otherObjectTypes.value],
 							dayShift: {
 								name: SHIFT_NAME.DAY_SHIFT,
 								alert_last_sec: values[`${defaultShiftList[0]}_alert_last_sec`],
@@ -341,7 +349,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 								end_time: values[`${defaultShiftList[2]}_end_time`],
 							},
 						}
-						this.handleSubmit(submitValue)
+						this.handleSubmit(submitValue, actions)
 					}}
 					render={({
 						errors,
@@ -361,7 +369,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 											onClick={() => {
 												this.setCurrentPressedButton(AREAS.CURRENT_COVERED_AREA)
 											}}
-											text={locale.texts[currentAreaModule.name]}
+											text={area.label}
 										/>
 										{/* <BOTButton
 											pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}

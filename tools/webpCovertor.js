@@ -1,3 +1,4 @@
+/* eslint-disable import/no-commonjs */
 /*
     2020 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
@@ -32,24 +33,28 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import imagemin from 'imagemin'
-import webp from 'imagemin-webp'
-import { fileURLToPath } from 'url'
-import path, { dirname } from 'path'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const imagePath = path.join(__dirname, '..', 'site_module', 'img', 'map')
+const imagemin = require('imagemin')
+const imageminWebp = require('imagemin-webp')
+const url = require('url')
+const path = require('path')
 
-const convertImages = async () => {
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+const imagePath = path
+	.join(__dirname, '..', 'server', 'map')
+	.replace(/\\/g, '/')
+
+;(async () => {
 	const files = [`${imagePath}/*.{jpg,png}`]
 	const config = {
 		destination: imagePath,
-		plugins: [webp({ quality: 75 })],
+		plugins: [imageminWebp({ quality: 75 })],
 	}
 
 	console.log('coverting image to webp...')
-	await imagemin(files, config)
+	const output = await imagemin(files, config)
+	console.log('output', output)
 	console.log('webp coverting complete!')
-}
-
-convertImages()
+})()

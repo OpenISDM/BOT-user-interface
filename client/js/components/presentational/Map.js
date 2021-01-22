@@ -37,18 +37,14 @@ import L from 'leaflet'
 import 'leaflet.markercluster'
 import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
-import siteConfig from '../../../../site_module/siteConfig'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import {
-	isEqual,
-	isWebpSupported,
-	getCoordinatesFromUUID,
-} from '../../helper/utilities'
+import { isEqual, getCoordinatesFromUUID } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
+import { mapPrefix } from '../../dataSrc'
 
 class Map extends React.Component {
 	static contextType = AppContext
@@ -59,8 +55,9 @@ class Map extends React.Component {
 		currentAreaId: null,
 	}
 
-	map = null
-	image = null
+	mapLayer = null
+	imageLayer = null
+	imageUrl = ''
 	pathOfDevice = L.layerGroup()
 	markersLayer = L.layerGroup()
 	errorCircle = L.layerGroup()
@@ -117,9 +114,7 @@ class Map extends React.Component {
 			this.drawPolyline()
 		}
 
-		if (prevProps.areaId !== this.props.areaId) {
-			this.setMap()
-		}
+		this.setMap()
 	}
 
 	shouldComponentUpdate = (nextProps, nextState) => {
@@ -133,10 +128,7 @@ class Map extends React.Component {
 
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
-		const { auth } = this.context
 		const { mapConfig } = this.props
-		const { areaOptions } = mapConfig
-		const { areaModules } = siteConfig
 
 		if (isBrowser) {
 			this.mapOptions = mapConfig.browserMapOptions
@@ -149,95 +141,51 @@ class Map extends React.Component {
 			this.iconOptions = mapConfig.iconOptionsInMobile
 		}
 
-		/** Error handler of the user's auth area does not include the group of sites */
-		const areaOption = areaOptions[auth.user.main_area]
-
-		/** set the map's config */
-		let bounds = [
-			[0, 0],
-			[1000, 1000],
-		]
-		let url = null
-		const currentAreaModules = areaModules[areaOption]
-		if (currentAreaModules) {
-			bounds = currentAreaModules.bounds
-			url =
-				isWebpSupported() && currentAreaModules.urlWebp
-					? currentAreaModules.urlWebp
-					: currentAreaModules.url
+		if (this.mapLayer !== null) {
+			this.mapLayer.remove && this.mapLayer.remove()
 		}
 
-		this.mapOptions.maxBounds = bounds.map((latLng, index) =>
-			latLng.map((axis) => axis + this.mapOptions.maxBoundsOffset[index])
-		)
-
-		if (this.map !== null) {
-			this.map.remove && this.map.remove()
-		} else {
-			const node = this.node
-			this.map = L.map(node, this.mapOptions)
-		}
+		const node = this.node
+		this.mapLayer = L.map(node, this.mapOptions)
 
 		/** Close popup while mouse leaving out the map */
-		this.map.on('mouseout', () => {
-			this.map.closePopup()
+		this.mapLayer.on('mouseout', () => {
+			this.mapLayer.closePopup()
 			this.setState({
 				shouldUpdateTrackingData: true,
 			})
 		})
 
-		if (url && bounds) {
-			const image = L.imageOverlay(url, bounds)
-			this.map.addLayer(image)
-			this.map.fitBounds(bounds)
-			this.image = image
-		} else {
-			const image = L.imageOverlay(null, null)
-			this.image = image
-			this.map.addLayer(image)
-		}
+		this.setMap()
 	}
 
 	/** Set the overlay image when changing area */
 	setMap = () => {
 		const [{ area }] = this.context.stateReducer
-		const { areaModules } = siteConfig
-		const { areaOptions, mapOptions } = this.props.mapConfig
+		const { bounds, map_image_path } = area
+		const url = map_image_path ? mapPrefix + map_image_path : null
+		const isSameImageUrl = url === this.imageUrl
 
-		/** Error handler of the user's auth area does not include the group of sites */
-		const areaOption = areaOptions[area.id]
+		if (!bounds || !url || isSameImageUrl) return
 
-		/** set the map's config */
-		let bounds = [
-			[0, 0],
-			[1000, 1000],
-		]
-		let url = null
-		const currentAreaModules = areaModules[areaOption]
-		if (currentAreaModules) {
-			bounds = currentAreaModules.bounds
-			url =
-				isWebpSupported() && currentAreaModules.urlWebp
-					? currentAreaModules.urlWebp
-					: currentAreaModules.url
-		}
-
-		mapOptions.maxBounds = bounds.map((latLng, index) =>
-			latLng.map((axis) => axis + mapOptions.maxBoundsOffset[index])
-		)
-
-		if (url && bounds) {
-			this.image.setUrl(url)
-			this.image.setBounds(bounds)
-			this.map.fitBounds(bounds)
+		const hasNoImageLayer = this.imageLayer === null
+		if (hasNoImageLayer) {
+			// add Image layer
+			this.imageLayer = L.imageOverlay(url, bounds)
+			this.mapLayer.addLayer(this.imageLayer)
 		} else {
-			this.image.setUrl(null)
+			// set new image url
+			this.imageLayer.setUrl(url)
+			this.imageLayer.setBounds(bounds)
 		}
+
+		this.imageUrl = url
+		this.mapLayer.fitBounds(bounds)
 	}
 
 	/** Calculate the current scale for creating markers and resizing. */
 	calculateScale = () => {
-		this.minZoom = this.map.getMinZoom()
+		this.minZoom = this.mapLayer.getMinZoom()
 		this.zoomDiff = this.currentZoom - this.minZoom
 		this.resizeFactor = Math.pow(2, this.zoomDiff)
 		this.resizeConst = Math.floor(this.zoomDiff * 20)
@@ -324,7 +272,7 @@ class Map extends React.Component {
 				})
 				this.pathOfDevice.addLayer(polyline)
 				this.pathOfDevice.addLayer(decorator)
-				this.pathOfDevice.addTo(this.map)
+				this.pathOfDevice.addTo(this.mapLayer)
 			}
 		}
 	}
@@ -353,7 +301,7 @@ class Map extends React.Component {
 		})
 
 		/** Add the new markerslayers to the map */
-		this.geoFenceLayer.addTo(this.map)
+		this.geoFenceLayer.addTo(this.mapLayer)
 	}
 
 	/** Create the geofence-related lbeacons markers */
@@ -410,7 +358,7 @@ class Map extends React.Component {
 				// invisibleCircle.on('mouseout', function() {this.closePopup();})
 			})
 		/** Add the new markerslayers to the map */
-		layer.addTo(this.map)
+		layer.addTo(this.mapLayer)
 	}
 
 	/**
@@ -594,8 +542,8 @@ class Map extends React.Component {
 			}
 		})
 		/** Add the new markerslayers to the map */
-		this.markersLayer.addTo(this.map)
-		this.errorCircle.addTo(this.map)
+		this.markersLayer.addTo(this.mapLayer)
+		this.errorCircle.addTo(this.mapLayer)
 	}
 
 	/** Filter out undesired tracking data */
@@ -657,7 +605,6 @@ Map.propTypes = {
 	locationMonitorConfig: PropTypes.object.isRequired,
 	geofenceConfig: PropTypes.object.isRequired,
 	pathMacAddress: PropTypes.object.isRequired,
-	areaId: PropTypes.number.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	authenticated: PropTypes.bool.isRequired,
 }

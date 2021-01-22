@@ -33,13 +33,14 @@
 */
 
 import React from 'react'
+import { isEmpty } from 'lodash'
 import NotificationBadge, { Effect } from 'react-notification-badge'
 import { Row, Dropdown, Button } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
 import apiHelper from '../../helper/apiHelper'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { withRouter } from 'react-router-dom'
 import { SET_OPENED_NOTIFICATION } from '../../reducer/action'
 import moment from 'moment'
@@ -67,7 +68,7 @@ class NavNotification extends React.Component {
 	}
 
 	getTrackingData = async () => {
-		const [{ area }, dispatch] = this.context.stateReducer
+		const [{ area, openedNotification }, dispatch] = this.context.stateReducer
 		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
 		})
@@ -79,7 +80,7 @@ class NavNotification extends React.Component {
 				locale: this.context.locale.abbr,
 			})
 
-			if (res.data.emergency.length === 0) {
+			if (!isEmpty(openedNotification) && res.data.emergency.length === 0) {
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
 					value: {},
@@ -97,7 +98,7 @@ class NavNotification extends React.Component {
 		})
 
 		if (res) {
-			await messageGenerator.setSuccessMessage('save success')
+			await setSuccessMessage('save success')
 			dispatch({
 				type: SET_OPENED_NOTIFICATION,
 				value: {},

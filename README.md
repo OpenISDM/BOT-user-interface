@@ -26,11 +26,8 @@ Copy the `.env.example` and rename the to `.env` . Set your local environment va
 cp .env.example .env
 ```
 
-Need to modify site_module file structure.
-
-i. run command in terminal "npm run webp".
-ii. import webp from site_module/img/map into siteConfig.
-iii. add a new field, urlWebp, into each area module.
+i. copy image files(jpg|png) to /server/map
+ii. run command in terminal "npm run webp".
 
 Covert png/jpg to webp
 

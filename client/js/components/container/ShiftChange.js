@@ -98,7 +98,7 @@ class ShiftChange extends React.Component {
 		const { locale, auth, stateReducer } = this.context
 		const userId = auth.user.id
 		const authentication = auth.user.name
-		const [{ objectFoundResults, tableSelection }] = stateReducer
+		const [{ area, objectFoundResults, tableSelection }] = stateReducer
 		const {
 			listName,
 			assignedDeviceGroupListids,
@@ -122,7 +122,7 @@ class ShiftChange extends React.Component {
 			signature: authentication,
 			additional: {
 				shift: values.shift,
-				area: locale.texts[config.mapConfig.areaOptions[auth.user.areas_id[0]]],
+				area: area.label,
 				name: auth.user.name,
 				listName,
 			},

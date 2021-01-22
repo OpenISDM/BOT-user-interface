@@ -39,8 +39,8 @@ import 'leaflet.markercluster'
 import '../../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../../context/AppContext'
 import pinImage from './pinImage'
-import siteConfig from '../../../../../site_module/siteConfig'
 import { macAddressToCoordinate } from '../../../helper/dataTransfer'
+import { mapPrefix } from '../../../dataSrc'
 
 class Map extends React.Component {
 	static contextType = AppContext
@@ -69,18 +69,13 @@ class Map extends React.Component {
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
 		const [{ area }] = this.context.stateReducer
-
-		const { areaModules } = siteConfig
+		const { bounds = [], map_image_path } = area
+		const url = map_image_path ? mapPrefix + map_image_path : null
 
 		this.iconOptions = this.props.mapConfig.iconOptionsInBigScreen
-		const areaOption = this.props.mapConfig.areaOptions[area.id]
-
-		/** set the map's config */
-		const { url, bounds, hasMap } = areaModules[areaOption]
-
 		const map = L.map('mapid', this.props.mapConfig.bigScreenMapOptions)
 
-		if (hasMap) {
+		if (url) {
 			const image = L.imageOverlay(url, bounds)
 			map.addLayer(image)
 			map.fitBounds(bounds)
@@ -101,14 +96,10 @@ class Map extends React.Component {
 	/** Set the overlay image */
 	setMap = () => {
 		const [{ area }] = this.context.stateReducer
-		const { areaModules } = siteConfig
+		const { bounds = [], map_image_path } = area
+		const url = map_image_path ? mapPrefix + map_image_path : null
 
-		const areaOption = this.props.mapConfig.areaOptions[area.id]
-
-		/** set the map's config */
-		const { url, bounds, hasMap } = areaModules[areaOption]
-
-		if (hasMap) {
+		if (url) {
 			this.image.setUrl(url)
 			this.image.setBounds(bounds)
 			this.map.fitBounds(bounds)

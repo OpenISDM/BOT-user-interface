@@ -38,6 +38,7 @@ const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const webpack = require('webpack')
 const dotenv = require('dotenv')
@@ -54,8 +55,8 @@ module.exports = {
 	devtool: 'eval-source-map',
 	output: {
 		path: path.join(__dirname, 'server/dist'),
-		filename: './js/[name].[hash].js',
-		chunkFilename: './js/[name].[hash].chunk.js',
+		filename: './js/[name].[chunkhash].js',
+		chunkFilename: './js/[name].[chunkhash].chunk.js',
 		publicPath: '/',
 	},
 	devServer: {
@@ -66,10 +67,14 @@ module.exports = {
 	module: {
 		rules: [
 			{
+				loader: 'babel-loader',
 				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
-				use: {
-					loader: 'babel-loader',
+				query: {
+					plugins: ['lodash'],
+					presets: [
+						['@babel/preset-env', { modules: false, targets: { node: 4 } }],
+					],
 				},
 			},
 			{
@@ -134,11 +139,46 @@ module.exports = {
 				'client/manifest.webmanifest',
 			],
 		}),
+
+		new webpack.IgnorePlugin(/\.\/locale/, /moment/),
+
+		new LodashModuleReplacementPlugin({
+			shorthands: true,
+		}),
 	],
 	optimization: {
-		removeAvailableModules: false,
-		removeEmptyChunks: false,
-		splitChunks: false,
-		runtimeChunk: true,
+		minimize: true,
+		splitChunks: {
+			chunks: 'all',
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/](!react-bootstrap)(!leaflet)(!mdbreact)(!xlsx)(!react-app-polyfill)[\\/]/,
+					name: 'vendor',
+				},
+				xlsxVendor: {
+					test: /[\\/]node_modules[\\/](xlsx)[\\/]/,
+					name: 'xlsxVendor',
+				},
+				reactVendor: {
+					test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+					name: 'reactVendor',
+				},
+				leaflet: {
+					test: /[\\/]node_modules[\\/](leaflet)[\\/]/,
+					name: 'leafletVendor',
+				},
+				reactAppPolyfill: {
+					test: /[\\/]node_modules[\\/](react-app-polyfill)[\\/]/,
+					name: 'reactAppPolyfillVendor',
+				},
+				bootstrapVendor: {
+					test: /[\\/]node_modules[\\/](react-bootstrap)[\\/]/,
+					name: 'bootstrapVendor',
+				},
+			},
+		},
+		runtimeChunk: {
+			name: 'runtime',
+		},
 	},
 }

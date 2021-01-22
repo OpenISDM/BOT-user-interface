@@ -83,10 +83,17 @@ class NavbarContainer extends React.Component {
 		const res = await apiHelper.areaApiAgent.getAreaTable()
 		if (res) {
 			const areaOptions = res.data.map((area) => {
+				const bounds = []
+				if (area.left_bottom_corner && area.left_bottom_corner) {
+					bounds.push([area.left_bottom_corner.y, area.left_bottom_corner.x])
+					bounds.push([area.right_upper_corner.y, area.right_upper_corner.x])
+				}
 				return {
+					...area,
 					id: area.id,
 					value: area.readable_name,
 					label: area.readable_name,
+					bounds,
 				}
 			})
 			this.setState({

@@ -85,7 +85,7 @@ class EditPatientForm extends React.Component {
 		const areaOptions = areaTable.map((area) => {
 			return {
 				value: area.name,
-				label: locale.texts[area.name.toUpperCase().replace(/ /g, '_')],
+				label: area.readable_name,
 				id: area.id,
 			}
 		})

@@ -13,9 +13,6 @@ const NotificationConfig = sequelize.define(
 		area_id: {
 			type: DataTypes.INTEGER,
 		},
-		light_agents_id: {
-			type: DataTypes.STRING,
-		},
 		sms_contact_list: {
 			type: DataTypes.STRING,
 		},

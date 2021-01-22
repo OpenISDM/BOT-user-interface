@@ -105,6 +105,8 @@ class ObjectTable extends React.Component {
 
 		if (deviceObjectTableRes && areaTableRes && idleMacRes) {
 			const typeList = {}
+			const areaDataMap = keyBy(areaTableRes.data, 'name')
+
 			const data = deviceObjectTableRes.data.rows.map((item) => {
 				item.status = {
 					value: item.status,
@@ -129,7 +131,9 @@ class ObjectTable extends React.Component {
 
 				item.area_name = {
 					value: item.area_name,
-					label: locale.texts[item.area_name],
+					label:
+						areaDataMap[item.area_name] &&
+						areaDataMap[item.area_name].readable_name,
 					id: item.area_id,
 				}
 
