@@ -22,10 +22,14 @@ async function getIDTableData(request, response) {
 	if (matchRes === Authenticate.SUCCESS) {
 		let filter = ''
 		if (area_id) {
+			if (!Array.isArray(area_id)) {
+				response.json(error_code.area_id_error)
+				return
+			}
 			area_id.map((item) => {
-				if (typeof item === 'string' && item.match(IntegerRegExp)) {
-					return parseInt(item, 10)
-				} else if (Number.isInteger(item)) {
+				if (typeof item === 'string' && item.match(IntegerRegExp) || Number.isInteger(item)) {
+				// 	return parseInt(item, 10)
+				// } else if (Number.isInteger(item)) {
 					return item
 				}
 				response.json(error_code.id_format_error)
@@ -55,7 +59,7 @@ async function getIDTableData(request, response) {
 				},
 				object_table: ObjectTable.rows,
 			}
-			response.json(data)
+			response.json(CheckIsNullResponse(data))
 			//const data = await pool.query(queryType.getIDTableQuery(key))
 			//response.json(data.rows)
 		} catch (err) {
@@ -237,7 +241,7 @@ async function getPeopleHistoryData(request, response) {
 }
 
 function CheckIsNullResponse(rows) {
-	if (rows.length > 0) {
+	if (rows.length > 0 || (rows.constructor===Object && Object.keys(rows).length > 0)) {
 		return error_code.get_value_success(rows)
 	}
 	return error_code.get_null_value(rows)
