@@ -39,7 +39,7 @@ import pool from '../db/connection'
 import {
 	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
 	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
-} from '../config/config'
+} from '../../config/config'
 
 moment.updateLocale('en', {
 	relativeTime: MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
