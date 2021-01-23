@@ -47,7 +47,7 @@ import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const sslPath = path.join(__dirname, '..', 'ssl')
+const sslPath = path.join(__dirname)
 
 const privateKey =
 	process.env.PRIVATE_KEY &&

@@ -43,7 +43,7 @@ import compression from 'compression'
 
 // import validation from './api/middlewares/validation.js';
 import sessionOptions from './api/config/session'
-import credentials from './api/config/credentials'
+import credentials from './ssl/credentials'
 import dataRoutes from './api/routes/dataRoutes'
 import authRoutes from './api/routes/dataRoutes/authRoutes'
 import UIRoutes from './api/routes/UIRoutes'
