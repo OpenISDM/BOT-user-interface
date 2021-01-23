@@ -36,16 +36,15 @@ import 'dotenv/config'
 import moment from 'moment-timezone'
 import dbQueries from '../db/lbeaconQueries'
 import pool from '../db/connection'
-import statusCode from '../config/statusCode'
+
+const LBEACON_STATUS_NOT_AVAILABLE = 9999
 
 export default {
 	getAllLbeacon: async (request, response) => {
 		const isLbeaconHealthStatusCode = parseInt(
 			process.env.IS_LBEACON_HEALTH_STATUS_CODE
 		)
-		const isLbeaconStatusNotAvailable = parseInt(
-			statusCode.LBEACON_STATUS_NOT_AVAILABLE
-		)
+		const isLbeaconStatusNotAvailable = parseInt(LBEACON_STATUS_NOT_AVAILABLE)
 		const isLbeaconHealthTimeIntervalInMin = parseInt(
 			process.env.LBEACON_HEALTH_TIME_INTERVAL_IN_MIN
 		)
