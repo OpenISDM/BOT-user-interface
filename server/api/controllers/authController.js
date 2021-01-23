@@ -36,8 +36,7 @@ import 'dotenv/config'
 import 'moment-timezone'
 import dbQueries from '../db/authQueries'
 import pool from '../db/connection'
-import encrypt from '../service/encrypt'
-import mailTransporter from '../service/mailTransporter'
+import { encrypt, mailer } from '../../helper'
 import resetPasswordInstruction from '../config/template'
 import jwt from 'jsonwebtoken'
 import { fileURLToPath } from 'url'
@@ -59,7 +58,7 @@ export const signin = (request, response) => {
 			} else {
 				const hash = encrypt.createHash(password)
 
-				if (hash == res.rows[0].password) {
+				if (hash === res.rows[0].password) {
 					const {
 						name,
 						roles,
@@ -99,7 +98,9 @@ export const signin = (request, response) => {
 					}
 
 					/** Set session */
-					request.session.regenerate(() => {})
+					request.session.regenerate(() => {
+						// do nothing
+					})
 					request.session.user = name
 
 					response.status(200).json({
@@ -109,7 +110,7 @@ export const signin = (request, response) => {
 
 					pool
 						.query(dbQueries.setVisitTimestamp(username))
-						.then((res) => console.log(`sign in success: ${name}`))
+						.then(() => console.log(`sign in success: ${name}`))
 						.catch((err) => console.log(`set visit timestamp fails ${err}`))
 				} else {
 					response.json({
@@ -182,7 +183,7 @@ export const sentResetPwdInstruction = (request, response) => {
 	pool
 		.query(dbQueries.validateEmail(email))
 		.then((res) => {
-			if (res.rowCount != 0) {
+			if (res.rowCount !== 0) {
 				const accountNameList = res.rows.map((item) => item.name)
 				const { registered_timestamp } = res.rows[0]
 				const token = jwt.sign(
@@ -201,9 +202,9 @@ export const sentResetPwdInstruction = (request, response) => {
 					text: resetPasswordInstruction.content(token, accountNameList),
 				}
 
-				mailTransporter
+				mailer
 					.sendMail(message)
-					.then((res) => {
+					.then(() => {
 						console.log('send password reset instruction succeed')
 						response.status(200).json()
 					})
@@ -226,7 +227,7 @@ export const sentResetPwdInstruction = (request, response) => {
 export const verifyResetPwdToken = (request, response) => {
 	const token = request.params.token
 
-	jwt.verify(token, encrypt.secret, (err, decoded) => {
+	jwt.verify(token, encrypt.secret, (err) => {
 		if (err) {
 			response.redirect('/')
 		} else {
@@ -250,7 +251,7 @@ export const resetPassword = (request, response) => {
 
 			pool
 				.query(dbQueries.resetPassword(email, account, hash))
-				.then((res) => {
+				.then(() => {
 					console.log('reset password succeed')
 					response.status(200).json()
 				})

@@ -1,4 +1,4 @@
-export const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
+const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
 	// convert to binary
 	const targetResult = targetDecimal.toString(2)
 	const expectedResult = expectedDecimal.toString(2)
@@ -9,3 +9,5 @@ export const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
 
 	return targetBitValue === expectedBitValue
 }
+
+export default { findExpectedBitValue }

@@ -4,7 +4,7 @@ import queryType from './api_queryType'
 import pool from '../api/db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-import encrypt from '../api/service/encrypt'
+import { encrypt } from '../helper'
 
 //#region api v1.0
 const get_api_key_v0 = (request, response) => {
@@ -144,7 +144,7 @@ async function get_history_data(request, response) {
 			response.json(error_code.sort_type_define_error)
 		}
 
-		let data = await get_data(
+		const data = await get_data(
 			key,
 			start_time,
 			end_time,

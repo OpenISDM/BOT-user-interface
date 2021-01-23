@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        mailTransporter.js
+        helper/index.js
 
     File Description:
         BOT UI component
@@ -31,30 +31,9 @@
         Edward Chen, r08921a28@ntu.edu.tw
         Joe Chou, jjoe100892@gmail.com
 */
+import common from './common'
+import encrypt from './encrypt'
+import ipc from './ipc'
+import mailer from './mailer'
 
-import nodemailer from 'nodemailer'
-import 'dotenv/config'
-
-let config = {}
-if (process.env.EMAIL_HOST || process.env.EMAIL_PORT) {
-	config = {
-		host: process.env.EMAIL_HOST,
-		port: process.env.EMAIL_PORT,
-		auth: {
-			user: process.env.EMAIL_USER,
-			pass: process.env.EMAIL_PASSWORD,
-		},
-	}
-} else {
-	config = {
-		service: process.env.EMAIL_SERVICE,
-		auth: {
-			user: process.env.EMAIL_USER,
-			pass: process.env.EMAIL_PASSWORD,
-		},
-	}
-}
-
-const mailer = nodemailer.createTransport(config)
-
-export default mailer
+export { common, encrypt, ipc, mailer }

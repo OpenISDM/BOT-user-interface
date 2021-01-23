@@ -39,7 +39,7 @@ import recordQueries from '../db/recordQueries'
 import pool, { sequelize } from '../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
-import { reloadGeofenceConfig } from '../service/IPCService'
+import { ipc } from '../../helper'
 import { ObjectTable } from '../db/model'
 
 export default {
@@ -92,7 +92,7 @@ export default {
 		pool
 			.query(dbQueries.editDevice(formOption))
 			.then((res) => {
-				reloadGeofenceConfig(area_id)
+				ipc.reloadGeofenceConfig(area_id)
 				response.status(200).json(res)
 			})
 			.catch((err) => {
@@ -107,7 +107,7 @@ export default {
 		pool
 			.query(dbQueries.editPersona(formOption))
 			.then((res) => {
-				reloadGeofenceConfig(area_id)
+				ipc.reloadGeofenceConfig(area_id)
 				response.status(200).json(res)
 			})
 			.catch((err) => {

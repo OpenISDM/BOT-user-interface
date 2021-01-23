@@ -36,8 +36,7 @@ import 'dotenv/config'
 import _ from 'lodash'
 import { Op } from '../db/connection'
 import { NotificationTable, ObjectSummaryTable, ObjectTable } from '../db/model'
-import { findExpectedBitValue } from '../service/utilities'
-import { stopLightAlarm } from '../service/IPCService'
+import { common, ipc } from '../../helper'
 
 const NOTIFICATION_ENUM = {
 	LOW_BATTERY: 'LOW_BATTERY',
@@ -113,14 +112,14 @@ export default {
 					const monitortype = notificaiton.monitor_type
 					let type = MONITOR_TYPE.NORMAL
 					if (
-						findExpectedBitValue({
+						common.findExpectedBitValue({
 							targetDecimal: monitortype,
 							expectedDecimal: MONITOR_TYPE.PANIC,
 						})
 					) {
 						type = NOTIFICATION_ENUM.PANIC
 					} else if (
-						findExpectedBitValue({
+						common.findExpectedBitValue({
 							targetDecimal: monitortype,
 							expectedDecimal: MONITOR_TYPE.GEO_FENCE,
 						})
@@ -162,7 +161,7 @@ export default {
 				}
 			)
 
-			stopLightAlarm({ notificationId })
+			ipc.stopLightAlarm({ notificationId })
 
 			response.status(200).json(res)
 		} catch (e) {

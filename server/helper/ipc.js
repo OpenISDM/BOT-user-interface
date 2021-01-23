@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        IPCService.js
+        ipc.js
 
     File Description:
         BOT UI component
