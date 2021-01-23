@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        areaRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import areaController from '../../controllers/internal/areaController'
 
-const pgSession = ConnectPgSimple(session)
-
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+export default (app) => {
+	app.route('/data/area').post(areaController.getAreaTable)
 }
-
-export default sessionOptions

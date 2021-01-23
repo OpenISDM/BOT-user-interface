@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        fileRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,12 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import fileController from '../../controllers/internal/fileController'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	app.route('/data/file/export/csv').post(fileController.exportCSV)
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app.route('/data/file/export/pdf').post(fileController.exportPDF)
+
+	app.route('/data/file/:folder/:file').get(fileController.getFile)
 }
-
-export default sessionOptions

@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        UIRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,25 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import { verifyResetPwdToken } from '../controllers/internal/authController'
+import { fileURLToPath } from 'url'
+import path, { dirname } from 'path'
+import { pageChecker } from '../middlewares'
 
-const pgSession = ConnectPgSimple(session)
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+export default (app) => {
+	app.get('/login', (req, res) => {
+		res.sendFile(
+			path.join(__dirname, '..', '..', 'public', 'dist', 'index.html')
+		)
+	})
+
+	app.get(/^\/page\/(.*)/, pageChecker, (req, res) => {
+		res.sendFile(
+			path.join(__dirname, '..', '..', 'public', 'dist', 'index.html')
+		)
+	})
+
+	app.get('/resetpassword/new/:token', verifyResetPwdToken)
 }
-
-export default sessionOptions

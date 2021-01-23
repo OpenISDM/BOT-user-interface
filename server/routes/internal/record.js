@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        recordRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,29 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import recordController from '../../controllers/internal/recordController'
+import cors from 'cors'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/record', cors())
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app.options('/data/record/editedObject', cors())
+	app.options('/data/record/shiftChange', cors())
+	app.options('/data/record/patientRecord', cors())
+
+	app
+		.route('/data/record/editedObject')
+		.post(recordController.getEditObjectRecord)
+		.delete(recordController.deleteEditObjectRecord)
+
+	app
+		.route('/data/record/shiftChange')
+		.post(recordController.getShiftChangeRecord)
+		.put(recordController.addShiftChangeRecord)
+		.delete(recordController.deleteShiftChangeRecord)
+
+	app
+		.route('/data/record/patientRecord')
+		.post(recordController.addPatientRecord)
 }
-
-export default sessionOptions

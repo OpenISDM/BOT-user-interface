@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        authRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,18 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import {
+	signin,
+	signout,
+	validation,
+	sentResetPwdInstruction,
+	resetPassword,
+} from '../../controllers/internal/authController'
 
-const pgSession = ConnectPgSimple(session)
-
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+export default (app) => {
+	app.route('/data/auth/signin').post(signin)
+	app.route('/data/auth/signout').post(signout)
+	app.route('/data/auth/validation').post(validation)
+	app.route('/data/auth/sentResetPwdInstruction').post(sentResetPwdInstruction)
+	app.route('/data/auth/resetpassword').post(resetPassword)
 }
-
-export default sessionOptions

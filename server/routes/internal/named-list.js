@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        namedListRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,22 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import NamedListController from '../../controllers/internal/namedListController'
+import cors from 'cors'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/namedList', cors())
+	app.options('/data/namedList/*', cors())
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app
+		.route('/data/namedList')
+		.get(NamedListController.getNamedList)
+		.post(NamedListController.setNamedList)
+		.delete(NamedListController.removeNamedList)
+
+	app
+		.route('/data/namedList/object')
+		.post(NamedListController.addObject)
+		.delete(NamedListController.removeObject)
 }
-
-export default sessionOptions

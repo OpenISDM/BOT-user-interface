@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        monitorRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,17 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import monitorController from '../../controllers/internal/monitorController'
+import cors from 'cors'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/monitor', cors())
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app
+		.route('/data/monitor')
+		.post(monitorController.getMonitorConfig)
+		.delete(monitorController.deleteMonitorConfig)
+		.patch(monitorController.addMonitorConfig)
+		.put(monitorController.setMonitorConfig)
 }
-
-export default sessionOptions

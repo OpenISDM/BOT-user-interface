@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        routes/internal/index.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,42 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import trackingData from './tracking-data'
+import lbeacon from './lbeacon'
+import gateway from './gateway'
+import user from './user'
+import object from './object'
+import locationHistory from './location-history'
+import area from './area'
+import file from './file'
+import role from './role'
+import geofence from './geofence'
+import monitor from './monitor'
+import record from './record'
+import transferredLocation from './transferred-location'
+import groupList from './group-list'
+import utils from './utils'
+import userAssignments from './user-assignments'
+import namedList from './named-list'
+import notification from './notification'
 
-const pgSession = ConnectPgSimple(session)
-
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+export default (app) => {
+	trackingData(app)
+	lbeacon(app)
+	gateway(app)
+	user(app)
+	object(app)
+	locationHistory(app)
+	area(app)
+	file(app)
+	role(app)
+	geofence(app)
+	monitor(app)
+	record(app)
+	transferredLocation(app)
+	groupList(app)
+	utils(app)
+	userAssignments(app)
+	namedList(app)
+	notification(app)
 }
-
-export default sessionOptions

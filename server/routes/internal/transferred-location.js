@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        transferredLocationRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,22 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import transferredLocationController from '../../controllers/internal/transferredLocationController'
+import cors from 'cors'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/transferredLocation', cors())
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app
+		.route('/data/transferredLocation/getAll')
+		.get(transferredLocationController.getAll)
+
+	app
+		.route('/data/transferredLocation/addOne')
+		.post(transferredLocationController.addOne)
+
+	app
+		.route('/data/transferredLocation/removeByIds')
+		.post(transferredLocationController.removeByIds)
 }
-
-export default sessionOptions

@@ -44,11 +44,11 @@ import compression from 'compression'
 import { shouldCompress } from './middlewares'
 import sessionOptions from './config/session'
 import credentials from './ssl/credentials'
-import dataRoutes from './api/routes/dataRoutes'
-import authRoutes from './api/routes/dataRoutes/authRoutes'
-import UIRoutes from './api/routes/UIRoutes'
-import APIRoutes from './routes/APIRoutes'
 import { attach } from './websocket'
+import internal from './routes/internal'
+import auth from './routes/internal/auth'
+import ui from './routes/ui'
+import external from './routes/external'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -87,17 +87,16 @@ app.get(/\.(js)$/, (req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public', 'dist')))
 app.use('/map', express.static(path.join(__dirname, 'public', 'map')))
 
-UIRoutes(app)
-
-authRoutes(app)
-
 /** Access control of data retrieving from database by session */
 // app.use(validation.authChecker);
 
-/** Data retrieving routes */
-dataRoutes(app)
+// Internal APIs
+ui(app)
+auth(app)
+internal(app)
 
-APIRoutes(app)
+// External APIs
+external(app)
 
 const httpsServer = https.createServer(credentials, app)
 

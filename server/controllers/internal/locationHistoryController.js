@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        locationHistoryController.js
 
     File Description:
         BOT UI component
@@ -33,23 +33,33 @@
 */
 
 import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import dbQueries from '../../db/locationHistoryQueries'
+import pool from '../../db/connection'
 
-const pgSession = ConnectPgSimple(session)
+export default {
+	getLocationHistory: (request, response) => {
+		const { key, startTime, endTime, mode } = request.body
+		pool
+			.query(dbQueries.getLocationHistory(key, startTime, endTime, mode))
+			.then((res) => {
+				console.log(`get location history by ${mode} succeed`)
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`get location history by ${mode} failed ${err}`)
+			})
+	},
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
+	getContactTree: (request, response) => {
+		const { child, parents, startTime, endTime } = request.body
+		pool
+			.query(dbQueries.getContactTree(child, parents, startTime, endTime))
+			.then((res) => {
+				console.log('get contact tree succeed')
+				response.status(200).json(res)
+			})
+			.catch((err) => {
+				console.log(`get contact tree failed ${err}`)
+			})
 	},
 }
-
-export default sessionOptions

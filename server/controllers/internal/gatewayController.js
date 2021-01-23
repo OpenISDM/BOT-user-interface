@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        gatewayController.js
 
     File Description:
         BOT UI component
@@ -33,23 +33,39 @@
 */
 
 import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import dbQueries from '../../db/gatewayQueries'
+import pool from '../../db/connection'
 
-const pgSession = ConnectPgSimple(session)
+export default {
+	getAllGateway: async (request, response) => {
+		try {
+			const res = await pool.query(dbQueries.getAllGateway)
+			console.log('get gateway table succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get gateway table failed ${e}`)
+		}
+	},
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
+	deleteGateway: async (request, response) => {
+		const { ids } = request.body
+		try {
+			const res = await pool.query(dbQueries.deleteGateway(ids))
+			console.log('delete Gateway record succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`delete gateway failed ${e}`)
+		}
+	},
+
+	editGateway: async (request, response) => {
+		const { formOption } = request.body
+		try {
+			const res = await pool.query(dbQueries.editGateway(formOption))
+			console.log('edit lbeacon succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`edit lbeacon failed ${e}`)
+		}
 	},
 }
-
-export default sessionOptions

@@ -26,7 +26,7 @@ Copy the `.env.example` and rename the to `.env` . Set your local environment va
 cp .env.example .env
 ```
 
-i. copy image files(jpg|png) to /server/map
+i. copy image files(jpg|png) to /server/public/map
 ii. run command in terminal "npm run webp".
 
 Covert png/jpg to webp

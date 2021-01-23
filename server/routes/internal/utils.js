@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        utilsRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import utilsController from '../../controllers/internal/utilsController'
+import cors from 'cors'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/utils/searchableKeyword', cors())
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app
+		.route('/data/utils/searchableKeyword')
+		.post(utilsController.getSearchableKeywords)
 }
-
-export default sessionOptions

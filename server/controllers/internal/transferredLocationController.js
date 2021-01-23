@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        transferredLocationController.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,42 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import { TransferLocations } from '../../db/model'
 
-const pgSession = ConnectPgSimple(session)
+export default {
+	getAll: async (request, response) => {
+		try {
+			const res = await TransferLocations.findAll()
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get all transferred Location failed: ${e}`)
+		}
+	},
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
+	addOne: async (request, response) => {
+		const { name, department } = request.body
+		try {
+			const res = await TransferLocations.upsert(
+				{ name, department }, // Record to upsert
+				{ returning: true } // Return upserted record
+			)
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`add transferred Location failed: ${e}`)
+		}
+	},
+
+	removeByIds: async (request, response) => {
+		const { transferLocationIds } = request.body
+		try {
+			const res = await TransferLocations.destroy({
+				where: {
+					id: transferLocationIds,
+				},
+			})
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`remove transferred Locations failed: ${e}`)
+		}
 	},
 }
-
-export default sessionOptions

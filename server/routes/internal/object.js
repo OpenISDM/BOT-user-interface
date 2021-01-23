@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        objectRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,41 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import objectController from '../../controllers/internal/objectController'
+import cors from 'cors'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	// enable pre-flight request for DELETE request
+	app.options('/data/object', cors())
+	app.options('/data/object/:type', cors())
+	app.options('/data/objectPackage', cors())
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app
+		.route('/data/object')
+		.get(objectController.getObject)
+		.delete(objectController.deleteObject)
+		.patch(objectController.disassociate)
+
+	app
+		.route('/data/object/device')
+		.post(objectController.addDevice)
+		.put(objectController.editDevice)
+
+	app
+		.route('/data/object/person')
+		.post(objectController.addPerson)
+		.put(objectController.editPerson)
+
+	app.route('/data/objectPackage').put(objectController.editObjectPackage)
+
+	app.route('/data/object/mac/idle').post(objectController.getIdleMacaddr)
+
+	app
+		.route('/data/object/alias')
+		.get(objectController.getAliases)
+		.put(objectController.editAlias)
+
+	app.route('/data/object/aliases').put(objectController.editAliases)
+
+	app.route('/data/object/nickname').post(objectController.editNickname)
 }
-
-export default sessionOptions

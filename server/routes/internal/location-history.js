@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        session.js
+        locationHistoryRoutes.js
 
     File Description:
         BOT UI component
@@ -32,24 +32,14 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import 'dotenv/config'
-import session from 'express-session'
-import ConnectPgSimple from 'connect-pg-simple'
-import pool from '../db/connection'
+import locationHistoryController from '../../controllers/internal/locationHistoryController'
 
-const pgSession = ConnectPgSimple(session)
+export default (app) => {
+	app
+		.route('/data/trace/locationHistory')
+		.post(locationHistoryController.getLocationHistory)
 
-const sessionOptions = {
-	store: new pgSession({
-		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
-	}),
-	secret: process.env.KEY,
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		// maxAge: 1000
-	},
+	app
+		.route('/data/trace/contactTree')
+		.post(locationHistoryController.getContactTree)
 }
-
-export default sessionOptions
