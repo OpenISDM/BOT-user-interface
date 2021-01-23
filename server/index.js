@@ -41,7 +41,7 @@ import https from 'https'
 import session from 'express-session'
 import compression from 'compression'
 
-import { shouldCompress } from './api/middlewares'
+import { shouldCompress } from './middlewares'
 import sessionOptions from './config/session'
 import credentials from './ssl/credentials'
 import dataRoutes from './api/routes/dataRoutes'

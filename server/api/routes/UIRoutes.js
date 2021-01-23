@@ -35,7 +35,7 @@
 import { verifyResetPwdToken } from '../controllers/authController'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
-import { pageChecker } from '../middlewares'
+import { pageChecker } from '../../middlewares'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
