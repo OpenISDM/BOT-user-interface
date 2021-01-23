@@ -230,7 +230,9 @@ export const verifyResetPwdToken = (request, response) => {
 		if (err) {
 			response.redirect('/')
 		} else {
-			response.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
+			response.sendFile(
+				path.join(__dirname, '..', '..', 'public', 'dist', 'index.html')
+			)
 		}
 	})
 }

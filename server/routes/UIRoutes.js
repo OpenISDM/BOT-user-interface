@@ -27,7 +27,9 @@ export default (app) => {
 	})
 
 	app.get(/^\/page\/(.*)/, (req, res) => {
-		res.sendFile(path.join(__dirname, '..', '..', 'dist', 'index.html'))
+		res.sendFile(
+			path.join(__dirname, '..', '..', 'public', 'dist', 'index.html')
+		)
 	})
 	app.post('/data/getObjectTable', db.getObjectTable)
 

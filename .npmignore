@@ -1,7 +1,8 @@
 /client/img
 /client/js/config.js
 /site
-server/dist
+server/public/dist
+server/public/map
 /download
 /sslforfree
 /run.bat

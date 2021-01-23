@@ -77,8 +77,8 @@ app.use(
 	})
 )
 
-app.use(express.static(path.join(__dirname, 'dist')))
-app.use('/map', express.static(path.join(__dirname, 'map')))
+app.use(express.static(path.join(__dirname, 'public', 'dist')))
+app.use('/map', express.static(path.join(__dirname, 'public', 'map')))
 
 UIRoutes(app)
 
