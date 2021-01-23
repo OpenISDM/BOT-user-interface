@@ -41,14 +41,13 @@ import https from 'https'
 import session from 'express-session'
 import compression from 'compression'
 
-// import validation from './api/middlewares/validation.js';
+import { shouldCompress } from './api/middlewares'
 import sessionOptions from './api/config/session'
 import credentials from './ssl/credentials'
 import dataRoutes from './api/routes/dataRoutes'
 import authRoutes from './api/routes/dataRoutes/authRoutes'
 import UIRoutes from './api/routes/UIRoutes'
 import UtilRoutes from './api/routes/UtilRoutes'
-import shouldCompress from './api/config/compression'
 import APIRoutes from './routes/APIRoutes'
 import { attach } from './websocket'
 

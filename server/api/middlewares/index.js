@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        validation.js
+        middlewares/index.js
 
     File Description:
         BOT UI component
@@ -32,6 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
+import compression from 'compression'
+
 export const authChecker = (req, res, next) => {
 	if (req.session.user) {
 		next()
@@ -47,4 +49,12 @@ export const pageChecker = (req, res, next) => {
 		res.clearCookie('user')
 		res.redirect('/login')
 	}
+}
+
+export const shouldCompress = (req, res) => {
+	if (req.headers['x-no-compression']) {
+		return false
+	}
+
+	return compression.filter(req, res)
 }

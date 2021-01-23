@@ -32,10 +32,10 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import authController from '../controllers/authController'
+import { verifyResetPwdToken } from '../controllers/authController'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
-import { pageChecker } from '../middlewares/validation'
+import { pageChecker } from '../middlewares'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -52,5 +52,5 @@ export default (app) => {
 		)
 	})
 
-	app.get('/resetpassword/new/:token', authController.verifyResetPwdToken)
+	app.get('/resetpassword/new/:token', verifyResetPwdToken)
 }
