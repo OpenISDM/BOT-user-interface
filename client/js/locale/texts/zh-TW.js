@@ -640,6 +640,8 @@ const tw = {
 	UNKNOWN: '未知',
 
 	REPLACE_TAG: '更換標籤',
+
+	SERVICE_AREAS: '負責區域',
 }
 
 export default tw

@@ -36,10 +36,8 @@ import { userInfo, user as userPath } from '../dataSrc'
 import { get, post, put, del } from '../helper/httpClient'
 
 export default {
-	async getAllUser({ locale }) {
-		return await get(userPath, {
-			locale,
-		})
+	async getAllUser() {
+		return await get(userPath)
 	},
 
 	async deleteUser({ username }) {

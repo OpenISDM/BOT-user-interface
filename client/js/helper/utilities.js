@@ -84,7 +84,9 @@ export const isWebpSupported = () => {
 }
 
 export const formatTime = (timeString) => {
-	return moment(timeString).format('YYYY-MM-DD HH:mm:ss')
+	if (timeString) {
+		return moment(timeString).format('YYYY-MM-DD HH:mm:ss')
+	}
 }
 
 export const formatToMac = (string) => {

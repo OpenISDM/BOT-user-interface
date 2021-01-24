@@ -53,13 +53,12 @@ export default {
 
 	addUser: (request, response) => {
 		const { user } = request.body
-		const { name, password, email, roles, area_id } = user
+		const { name, password, email, roles, areaIds } = user
 		const hash = encrypt.createHash(password)
 		const signupPackage = {
 			name: name.toLowerCase(),
 			password: hash,
 			email,
-			area_id,
 		}
 		request.session.regenerate(() => {
 			request.session.user = name
@@ -72,7 +71,7 @@ export default {
 					.then(() => {
 						pool
 							.query(
-								dbQueries.insertUserData(name.toLowerCase(), roles, area_id)
+								dbQueries.insertUserData(name.toLowerCase(), roles, areaIds)
 							)
 							.then((res) => {
 								console.log('sign up succeed')

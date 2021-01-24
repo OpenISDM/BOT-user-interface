@@ -67,7 +67,6 @@ export const signin = (request, response) => {
 						search_history,
 						areas_id,
 						id,
-						main_area,
 						locale_id,
 						locale,
 						email,
@@ -76,10 +75,6 @@ export const signin = (request, response) => {
 						list_name,
 					} = res.rows[0]
 
-					if (main_area && !areas_id.includes(main_area)) {
-						areas_id.push(main_area.toString())
-					}
-
 					const userInfo = {
 						name,
 						roles,
@@ -87,7 +82,6 @@ export const signin = (request, response) => {
 						freqSearchCount: freq_search_count,
 						id,
 						areas_id,
-						main_area,
 						locale_id,
 						locale,
 						searchHistory: search_history,
