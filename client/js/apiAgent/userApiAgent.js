@@ -68,14 +68,6 @@ export default {
 		})
 	},
 
-	async editMyDevice({ username, mode, acn }) {
-		return await put(userInfo.mydevice, {
-			username,
-			mode,
-			acn,
-		})
-	},
-
 	async editMaxSearchHistoryCount({ info, username }) {
 		return await post(userInfo.maxSearchHistoryCount, {
 			info,

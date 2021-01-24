@@ -330,27 +330,6 @@ export default {
 		return query
 	},
 
-	editMyDevice: (username, mode, acn) => {
-		let text = ''
-		if (mode == 'add') {
-			text = `
-				UPDATE user_table
-				SET mydevice = array_append(mydevice, '${acn}')
-				WHERE name = '${username}';
-			`
-		} else if (mode == 'remove') {
-			text = `
-				UPDATE user_table
-				SET mydevice = array_remove(mydevice, '${acn}')
-				WHERE name = '${username}';
-			`
-		} else {
-			text = ''
-		}
-
-		return text
-	},
-
 	editMaxSearchHistoryCount: (username, info) => {
 		const { freqSearchCount } = info
 

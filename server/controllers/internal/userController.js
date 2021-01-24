@@ -176,20 +176,6 @@ export default {
 			})
 	},
 
-	editMyDevice: (request, response) => {
-		const { username, mode, acn } = request.body
-
-		pool
-			.query(dbQueries.editMyDevice(username, mode, acn))
-			.then(() => {
-				console.log('edit mydevice succeed')
-				response.status(200).json()
-			})
-			.catch((err) => {
-				console.log(`edit mydevice failed ${err}`)
-			})
-	},
-
 	editMaxSearchHistoryCount: (request, response) => {
 		const { username, info } = request.body
 

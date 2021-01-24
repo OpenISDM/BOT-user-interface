@@ -41,8 +41,6 @@ export default (app) => {
 
 	app.options('/data/user/searchHistory', cors())
 
-	app.options('/data/user/myDevice', cors())
-
 	app.options('/data/user/keywordType', cors())
 
 	app.options('/data/user/sentResetPwdInstruction', cors())
@@ -60,11 +58,7 @@ export default (app) => {
 
 	app.route('/data/user/locale').post(userController.setLocale)
 
-	app.route('/data/user/mydevice')
-
 	app.route('/data/user/searchHistory').put(userController.addSearchHistory)
-
-	app.route('/data/user/myDevice').put(userController.editMyDevice)
 
 	app
 		.route('/data/user/maxSearchHistoryCount')
