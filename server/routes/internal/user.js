@@ -45,8 +45,6 @@ export default (app) => {
 
 	app.options('/data/user/keywordType', cors())
 
-	app.options('/data/user/listId', cors())
-
 	app.options('/data/user/sentResetPwdInstruction', cors())
 
 	app
@@ -73,6 +71,4 @@ export default (app) => {
 		.post(userController.editMaxSearchHistoryCount)
 
 	app.route('/data/user/keywordType').put(userController.editKeywordType)
-
-	app.route('/data/user/listId').put(userController.editListId)
 }

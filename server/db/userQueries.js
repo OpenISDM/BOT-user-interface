@@ -374,19 +374,4 @@ export default {
 			values,
 		}
 	},
-
-	editListId: (userId, listId) => {
-		const text = `
-			UPDATE user_table
-			SET list_id = $2
-			WHERE id = $1
-		`
-
-		const values = [userId, listId]
-
-		return {
-			text,
-			values,
-		}
-	},
 }

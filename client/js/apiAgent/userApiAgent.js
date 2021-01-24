@@ -97,13 +97,6 @@ export default {
 		})
 	},
 
-	async editListId({ userId, listId }) {
-		return await put(userInfo.listId, {
-			userId,
-			listId,
-		})
-	},
-
 	async setArea({ user }) {
 		return await put(userInfo.area.secondary, {
 			user,

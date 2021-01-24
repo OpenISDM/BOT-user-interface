@@ -217,18 +217,4 @@ export default {
 				console.log(`edit keyword type failed ${err}`)
 			})
 	},
-
-	editListId: (request, response) => {
-		const { userId, listId } = request.body
-
-		pool
-			.query(dbQueries.editListId(userId, listId))
-			.then(() => {
-				console.log('edit list id succeed')
-				response.status(200).json(200)
-			})
-			.catch((err) => {
-				console.log(`edit list id failed ${err}`)
-			})
-	},
 }

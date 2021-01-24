@@ -50,7 +50,6 @@ export const userInfo = {
 	mydevice: `${domain}/data/user/mydevice`,
 	maxSearchHistoryCount: `${domain}/data/user/maxSearchHistoryCount`,
 	keywordType: `${domain}/data/user/keywordType`,
-	listId: `${domain}/data/user/listId`,
 }
 export const object = {
 	object: `${domain}/data/object`,
