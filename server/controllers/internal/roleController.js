@@ -33,7 +33,7 @@
 */
 
 import 'dotenv/config'
-import { Roles } from '../../db/model'
+import { Roles } from '../../db/models'
 
 export default {
 	getAllRole: async (request, response) => {

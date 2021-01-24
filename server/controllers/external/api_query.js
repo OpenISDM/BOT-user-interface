@@ -4,7 +4,7 @@ import queryType from './api_queryType'
 import pool from '../../db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
-import { encrypt } from '../../helper'
+import { encrypt } from '../../helpers'
 
 //#region api v1.0
 const get_api_key_v0 = (request, response) => {

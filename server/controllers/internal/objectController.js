@@ -39,8 +39,8 @@ import recordQueries from '../../db/recordQueries'
 import pool, { sequelize } from '../../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
-import { ipc } from '../../helper'
-import { ObjectTable } from '../../db/model'
+import { ipc } from '../../helpers'
+import { ObjectTable } from '../../db/models'
 
 export default {
 	getObject: (request, response) => {

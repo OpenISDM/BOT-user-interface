@@ -33,7 +33,7 @@
 */
 
 import 'dotenv/config'
-import { AreaTable } from '../../db/model'
+import { AreaTable } from '../../db/models'
 
 export default {
 	getAreaTable: async (request, response) => {

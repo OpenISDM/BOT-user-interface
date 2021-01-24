@@ -39,7 +39,7 @@ import {
 	DeviceGroupList,
 	PatientGroupList,
 	UserAssignmentEnum,
-} from '../../db/model'
+} from '../../db/models'
 
 export default {
 	getByUserId: async (request, response) => {

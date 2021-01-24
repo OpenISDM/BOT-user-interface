@@ -34,7 +34,7 @@
 
 import 'dotenv/config'
 import { updateOrCreate } from '../../db/connection'
-import { NamedList, ObjectNamedListMappingTable } from '../../db/model'
+import { NamedList, ObjectNamedListMappingTable } from '../../db/models'
 
 export default {
 	getNamedList: async (request, response) => {

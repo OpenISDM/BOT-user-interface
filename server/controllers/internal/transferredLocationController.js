@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { TransferLocations } from '../../db/model'
+import { TransferLocations } from '../../db/models'
 
 export default {
 	getAll: async (request, response) => {

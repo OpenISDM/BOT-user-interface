@@ -38,7 +38,7 @@ import {
 	GeoFenceConfig,
 	GeoFenceAreaConfig,
 	NotificationConfig,
-} from '../../db/model'
+} from '../../db/models'
 
 const MONITOR_TYPE = {
 	NORMAL: 0,

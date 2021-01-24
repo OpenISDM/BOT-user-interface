@@ -34,7 +34,7 @@
 
 import pkg from 'sequelize'
 import pg from 'pg'
-import { decrypt } from '../helper/encrypt'
+import { decrypt } from '../helpers/encrypt'
 
 const { Sequelize } = pkg
 

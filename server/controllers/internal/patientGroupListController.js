@@ -34,7 +34,7 @@
 
 import 'dotenv/config'
 import { sequelize } from '../../db/connection'
-import { PatientGroupList, ObjectTable } from '../../db/model'
+import { PatientGroupList, ObjectTable } from '../../db/models'
 
 export default {
 	getPatientGroupList: async (request, response) => {

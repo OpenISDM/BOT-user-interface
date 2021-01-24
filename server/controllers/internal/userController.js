@@ -36,7 +36,7 @@ import 'dotenv/config'
 import dbQueries from '../../db/userQueries'
 import pool from '../../db/connection'
 import authQueries from '../../db/authQueries'
-import { encrypt } from '../../helper'
+import { encrypt } from '../../helpers'
 
 export default {
 	getAllUser: (request, response) => {

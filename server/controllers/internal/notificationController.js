@@ -39,8 +39,8 @@ import {
 	NotificationTable,
 	ObjectSummaryTable,
 	ObjectTable,
-} from '../../db/model'
-import { common, ipc } from '../../helper'
+} from '../../db/models'
+import { common, ipc } from '../../helpers'
 
 const NOTIFICATION_ENUM = {
 	LOW_BATTERY: 'LOW_BATTERY',
