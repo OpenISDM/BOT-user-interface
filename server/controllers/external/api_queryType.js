@@ -200,7 +200,7 @@ const getPeopleHistoryQuery = (
 	limit ${count_limit};`
 }
 
-const getPeopleRealtimeQuery = (key, filter) => {
+const getPeopleRealtimeQuery = (filter) => {
 	return `
 	select distinct on (object_id)
 		object_table.id as object_id,
@@ -256,7 +256,7 @@ const getObjectTypeQuery = (type) => {
 	`
 }
 
-const getObjectRealtimeQuery = (key, filter) => {
+const getObjectRealtimeQuery = (filter) => {
 	return `
 	select distinct on (object_id)
 		object_table.id as object_id,
@@ -353,31 +353,19 @@ const getObjectHistoryQuery = (
 	limit ${count_limit};`
 }
 
-const getIDTableQuery = (key, filter) => {
+const getIDTableQuery = (area_id) => {
 	return `
 	select
-		object_table.id as id,
+		object_table.asset_control_number as id,
 		object_table.mac_address as mac_address,
 		object_table.type as object_type,
 		object_table.name as name,
 		object_table.area_id as area_id
 	from
 		object_table
-	
-	inner join user_area
-	on user_area.area_id = object_table.area_id
-		
-	inner join user_table 
-	on user_table.id  = user_area.user_id 
-		
-	inner join api_key 
-	on api_key.id = user_table.id 
-
 	where
-		key = '${key}'
-		${filter}
-	group by
-		object_table.id, user_area.area_id	
+		object_table.area_id in (${area_id.map(
+			(item) => `'${item}'`)})	
 	`
 }
 

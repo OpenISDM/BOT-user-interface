@@ -250,27 +250,10 @@ const ObjectTypeQuery = {
 
 async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
-	let filter = ''
-	if (area_id) {
-		if (!Array.isArray(area_id)) {
-			response.json(error_code.area_id_error)
-			return
-		}
-		area_id.map((item) => {
-			if (
-				(typeof item === 'string' && item.match(IntegerRegExp)) ||
-				Number.isInteger(item)
-			) {
-				return item
-			}
-			response.json(error_code.id_format_error)
-			return undefined
-		})
-		filter += queryType.getAreaIDFilter(area_id)
-	}
+
 	try {
-		console.log(queryType.getIDTableQuery(key, filter))
-		const ObjectTable = await pool.query(queryType.getIDTableQuery(key, filter))
+		console.log(queryType.getIDTableQuery(area_id))
+		const ObjectTable = await pool.query(queryType.getIDTableQuery(area_id))
 
 		// object_type = 0, will get device object type
 		const ObjectType = await pool.query(
