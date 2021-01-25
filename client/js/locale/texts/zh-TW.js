@@ -642,6 +642,9 @@ const tw = {
 	REPLACE_TAG: '更換標籤',
 
 	SERVICE_AREAS: '負責區域',
+
+	TIPS: '提示',
+	TIPS_REPLACE_TAG: '請選擇任一個物件進行更換標籤。',
 }
 
 export default tw

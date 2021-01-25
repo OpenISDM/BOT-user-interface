@@ -656,6 +656,9 @@ const en = {
 	REPLACE_TAG: 'Replace Tag',
 
 	SERVICE_AREAS: 'Service Areas',
+
+	TIPS: 'Tips',
+	TIPS_REPLACE_TAG: 'Please select an object to replace tag.',
 }
 
 export default en
