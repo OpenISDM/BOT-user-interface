@@ -654,6 +654,8 @@ const en = {
 	UNKNOWN: 'Unknown',
 
 	REPLACE_TAG: 'Replace Tag',
+
+	SERVICE_AREAS: 'Service Areas',
 }
 
 export default en

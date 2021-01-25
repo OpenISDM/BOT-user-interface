@@ -57,7 +57,7 @@ const webpackConfig = {
 	mode: 'production',
 	devtool: 'none',
 	output: {
-		path: path.join(__dirname, 'server/dist'),
+		path: path.join(__dirname, 'server/public/dist'),
 		filename: './js/[name].[chunkhash].js',
 		chunkFilename: './js/[name].[chunkhash].chunk.js',
 		publicPath: '/',

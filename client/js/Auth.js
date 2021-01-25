@@ -82,10 +82,10 @@ class Auth extends React.Component {
 			setCookies('authenticated', true)
 			this.setUserCookies(user)
 
-			dispatch({
-				type: SET_AREA,
-				value: { id: user.main_area },
-			})
+			// dispatch({
+			// 	type: SET_AREA,
+			// 	value: { id: user.main_area },
+			// })
 
 			this.setState(
 				{
@@ -123,7 +123,6 @@ class Auth extends React.Component {
 			freqSearchCount: user.freqSearchCount,
 			id: user.id,
 			areas_id: user.areas_id,
-			main_area: user.main_area,
 			locale: user.locale,
 			keyword_type: user.keyword_type,
 			list_id: user.list_id,

@@ -35,12 +35,10 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
-import Select from 'react-select'
-import { object, string } from 'yup'
+import { object, string, array } from 'yup'
 import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
 import FormikFormGroup from '../FormikFormGroup'
-import styleConfig from '../../../config/styleConfig'
 import { AppContext } from '../../../context/AppContext'
 import { emailValidation } from '../../../helper/validation'
 import PropTypes from 'prop-types'
@@ -58,9 +56,8 @@ const EditUserForm = ({
 	const { locale } = React.useContext(AppContext)
 	const areaOptions = areaTable.map((area) => {
 		return {
-			value: area.name,
-			label: area.readable_name,
-			id: area.id,
+			name: area.readable_name,
+			id: `${area.id}`,
 		}
 	})
 
@@ -77,7 +74,7 @@ const EditUserForm = ({
 						password: '',
 						email: selectedUser ? selectedUser.email : '',
 						roles: selectedUser ? selectedUser.role_type : '',
-						area: selectedUser ? selectedUser.main_area : '',
+						areaIds: selectedUser ? selectedUser.areaIds : '',
 					}}
 					validationSchema={object().shape({
 						name: string()
@@ -114,9 +111,9 @@ const EditUserForm = ({
 								return true
 							})
 							.max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
-						area: selectedUser
+						areaIds: selectedUser
 							? null
-							: object().required(locale.texts.REQUIRED),
+							: array().required(locale.texts.REQUIRED),
 						password: selectedUser
 							? ''
 							: string()
@@ -214,24 +211,31 @@ const EditUserForm = ({
 							/>
 							<hr />
 							<FormikFormGroup
-								type="text"
 								name="areaName"
 								className="text-capitalize"
 								label={locale.texts.PRIMARY_AREA}
-								error={errors.area}
-								touched={touched.area}
+								error={errors.areaIds}
+								touched={touched.areaIds}
 								component={() => (
-									<Select
-										placeholder={locale.texts.SELECT_AREA}
-										name="area"
-										value={values.area}
-										onChange={(value) => setFieldValue('area', value)}
-										options={areaOptions || []}
-										styles={styleConfig.reactSelect}
-										components={{
-											IndicatorSeparator: () => null,
-										}}
-									/>
+									<CheckboxGroup
+										id="areaIds"
+										value={values.areaIds}
+										error={errors.areaIds}
+										touched={touched.areaIds}
+										onChange={setFieldValue}
+									>
+										{areaOptions.map((area, index) => {
+											return (
+												<Field
+													component={Checkbox}
+													key={index}
+													name="areaIds"
+													id={area.id}
+													label={area.name}
+												/>
+											)
+										})}
+									</CheckboxGroup>
 								)}
 							/>
 							<Modal.Footer>

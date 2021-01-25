@@ -512,27 +512,22 @@ const userInfoTableColumn = [
 	{
 		Header: 'email',
 		accessor: 'email',
-		width: 150,
+		width: 200,
 	},
 	{
 		Header: 'user id',
 		accessor: 'id',
-		width: 50,
+		width: 70,
 	},
 	{
 		Header: 'Roles',
 		accessor: 'roles',
-		width: 150,
-	},
-	{
-		Header: 'Main Area',
-		accessor: 'main_area.label',
-		width: 150,
-	},
-	{
-		Header: 'secondary areas',
-		accessor: 'area_ids',
 		width: 200,
+	},
+	{
+		Header: 'service areas',
+		accessor: 'areasName',
+		width: 300,
 	},
 	{
 		Header: 'last visited timestamp',

@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import { pgClient } from '../api/db/connection'
+import { pgClient } from '../db/connection'
 
 const io = new Server()
 

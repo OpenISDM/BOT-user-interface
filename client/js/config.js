@@ -69,7 +69,6 @@ const config = {
 		areas_id: [0],
 		permissions: ['form:view'],
 		locale: 'tw',
-		main_area: 1,
 	},
 
 	KEYWORD_TYPE: ['type_alias', 'type'],

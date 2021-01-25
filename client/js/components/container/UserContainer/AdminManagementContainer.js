@@ -79,20 +79,16 @@ class AdminManagementContainer extends React.Component {
 
 	getUserList = async (callback) => {
 		const { locale } = this.context
-		const res = await apiHelper.userApiAgent.getAllUser({
-			locale: locale.abbr,
-		})
+		const res = await apiHelper.userApiAgent.getAllUser()
 		if (res) {
 			const data = res.data.rows.map((item, index) => {
 				item._id = index + 1
 				item.roles = item.role_type
 					.map((role) => locale.texts[role.toUpperCase()])
 					.join('/')
-				item.area_ids = item.area_ids
-					.filter((area) => parseInt(area.id) !== parseInt(item.main_area.id))
-					.map((area) => locale.texts[area.value])
-					.join('/')
-				item.main_area.label = locale.texts[item.main_area.value]
+				item.areas = item.area_ids
+				item.areaIds = item.area_ids.map((area) => `${area.id}`)
+				item.areasName = item.area_ids.map((area) => area.value).join('/')
 				item.last_visit_timestamp = formatTime(item.last_visit_timestamp)
 				item.registered_timestamp = formatTime(item.registered_timestamp)
 
@@ -149,21 +145,14 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	handleSetUserSubmit = async (values) => {
-		const { auth } = this.context
+		const { areaIds, email, name, roles } = values
 		const { selectedUser } = this.state
 		const user = {
-			...auth.user,
-			...values,
 			id: selectedUser.id,
-			areas_id: auth.user.areas_id,
-			main_area: values.area.id,
-		}
-
-		const index = auth.user.areas_id.indexOf(auth.user.main_area)
-		user.areas_id.splice(index, 1)
-
-		if (!user.areas_id.includes(user.area.id)) {
-			user.areas_id.push(user.area.id)
+			name,
+			email,
+			roles,
+			areaIds,
 		}
 
 		await apiHelper.userApiAgent.setUserInfo({ user })
@@ -172,13 +161,13 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	handleAddUserSubmit = async (values) => {
-		const { name, email, password, roles, area } = values
+		const { name, email, password, roles, areaIds } = values
 		const user = {
 			name: name.toLowerCase(),
 			email: email.toLowerCase(),
 			password,
 			roles,
-			area_id: area.id,
+			areaIds,
 		}
 
 		await apiHelper.userApiAgent.addUser({ user })

@@ -47,10 +47,8 @@ export const userInfo = {
 	password: `${domain}/data/user/password`,
 	locale: `${domain}/data/user/locale`,
 	searchHistory: `${domain}/data/user/searchHistory`,
-	mydevice: `${domain}/data/user/mydevice`,
 	maxSearchHistoryCount: `${domain}/data/user/maxSearchHistoryCount`,
 	keywordType: `${domain}/data/user/keywordType`,
-	listId: `${domain}/data/user/listId`,
 }
 export const object = {
 	object: `${domain}/data/object`,

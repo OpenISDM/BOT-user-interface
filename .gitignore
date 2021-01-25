@@ -82,7 +82,7 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-server/dist
+server/public/dist/*
 
 # Gatsby files
 .cache/
@@ -127,7 +127,7 @@ server/dist
 *.so
 
 # BOT Map images
-server/map/*
+server/public/map/*
 
 # Keep track gitkeep files
 !.gitkeep

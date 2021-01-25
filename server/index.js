@@ -41,16 +41,14 @@ import https from 'https'
 import session from 'express-session'
 import compression from 'compression'
 
-// import validation from './api/middlewares/validation.js';
-import sessionOptions from './api/config/session'
-import credentials from './api/config/credentials'
-import dataRoutes from './api/routes/dataRoutes'
-import authRoutes from './api/routes/dataRoutes/authRoutes'
-import UIRoutes from './api/routes/UIRoutes'
-import UtilRoutes from './api/routes/UtilRoutes'
-import shouldCompress from './api/config/compression'
-import APIRoutes from './routes/APIRoutes'
+import { shouldCompress } from './middlewares'
+import sessionOptions from './config/session'
+import credentials from './ssl/credentials'
 import { attach } from './websocket'
+import internal from './routes/internal'
+import auth from './routes/internal/auth'
+import ui from './routes/ui'
+import external from './routes/external'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -77,22 +75,28 @@ app.use(
 	})
 )
 
-app.use(express.static(path.join(__dirname, 'dist')))
-app.use('/map', express.static(path.join(__dirname, 'map')))
+/** Replace with br file if the browser support br encoding */
+app.get(/\.(js)$/, (req, res, next) => {
+	if (req.header('Accept-Encoding').includes('br')) {
+		req.url += '.br'
+		res.set('Content-Encoding', 'br')
+	}
+	next()
+})
 
-UIRoutes(app)
-
-UtilRoutes(app)
-
-authRoutes(app)
+app.use(express.static(path.join(__dirname, 'public', 'dist')))
+app.use('/map', express.static(path.join(__dirname, 'public', 'map')))
 
 /** Access control of data retrieving from database by session */
 // app.use(validation.authChecker);
 
-/** Data retrieving routes */
-dataRoutes(app)
+// Internal APIs
+ui(app)
+auth(app)
+internal(app)
 
-APIRoutes(app)
+// External APIs
+external(app)
 
 const httpsServer = https.createServer(credentials, app)
 

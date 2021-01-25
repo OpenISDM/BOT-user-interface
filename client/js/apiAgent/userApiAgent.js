@@ -36,10 +36,8 @@ import { userInfo, user as userPath } from '../dataSrc'
 import { get, post, put, del } from '../helper/httpClient'
 
 export default {
-	async getAllUser({ locale }) {
-		return await get(userPath, {
-			locale,
-		})
+	async getAllUser() {
+		return await get(userPath)
 	},
 
 	async deleteUser({ username }) {
@@ -68,14 +66,6 @@ export default {
 		})
 	},
 
-	async editMyDevice({ username, mode, acn }) {
-		return await put(userInfo.mydevice, {
-			username,
-			mode,
-			acn,
-		})
-	},
-
 	async editMaxSearchHistoryCount({ info, username }) {
 		return await post(userInfo.maxSearchHistoryCount, {
 			info,
@@ -94,13 +84,6 @@ export default {
 		return await put(userInfo.keywordType, {
 			userId,
 			keywordTypeId,
-		})
-	},
-
-	async editListId({ userId, listId }) {
-		return await put(userInfo.listId, {
-			userId,
-			listId,
 		})
 	},
 
