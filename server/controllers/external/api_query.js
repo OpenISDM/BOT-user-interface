@@ -250,96 +250,76 @@ const ObjectTypeQuery = {
 
 async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
-	const matchRes = await CheckKey(key)
 
-	if (matchRes === Authenticate.SUCCESS) {
-		let filter = ''
-		if (area_id) {
-			if (!Array.isArray(area_id)) {
-				response.json(error_code.area_id_error)
-				return
-			}
-			area_id.map((item) => {
-				if (
-					(typeof item === 'string' && item.match(IntegerRegExp)) ||
-					Number.isInteger(item)
-				) {
-					return item
-				}
-				response.json(error_code.id_format_error)
-				return undefined
-			})
-			filter += queryType.getAreaIDFilter(area_id)
+	let filter = ''
+	if (area_id) {
+		if (!Array.isArray(area_id)) {
+			response.json(error_code.area_id_error)
+			return
 		}
-		try {
-			console.log(queryType.getIDTableQuery(key, filter))
-			const ObjectTable = await pool.query(
-				queryType.getIDTableQuery(key, filter)
-			)
-			const AreaTable = await pool.query(queryType.getAreaIDQuery())
-			// object_type = 0, will get device object type
-			const ObjectType = await pool.query(
-				queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
-			)
-			// object_type = 1, will get people object type
-			const PeopleType = await pool.query(
-				queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE)
-			)
-			const data = {
-				area_table: AreaTable.rows,
-				object_types: {
-					people_type: PeopleType.rows.map((item) => {
-						return item.object_type
-					}),
-					device_type: ObjectType.rows.map((item) => {
-						return item.object_type
-					}),
-				},
-				object_table: ObjectTable.rows,
+		area_id.map((item) => {
+			if (
+				(typeof item === 'string' && item.match(IntegerRegExp)) ||
+				Number.isInteger(item)
+			) {
+				return item
 			}
-			response.json(CheckIsNullResponse(data))
-			//const data = await pool.query(queryType.getIDTableQuery(key))
-			//response.json(data.rows)
-		} catch (err) {
-			console.log(`get id table data error : ${err}`)
+			response.json(error_code.id_format_error)
+			return undefined
+		})
+		filter += queryType.getAreaIDFilter(area_id)
+	}
+	try {
+		console.log(queryType.getIDTableQuery(key, filter))
+		const ObjectTable = await pool.query(queryType.getIDTableQuery(key, filter))
+		const AreaTable = await pool.query(queryType.getAreaIDQuery())
+		// object_type = 0, will get device object type
+		const ObjectType = await pool.query(
+			queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
+		)
+		// object_type = 1, will get people object type
+		const PeopleType = await pool.query(
+			queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE)
+		)
+		const data = {
+			area_table: AreaTable.rows,
+			object_types: {
+				people_type: PeopleType.rows.map((item) => {
+					return item.object_type
+				}),
+				device_type: ObjectType.rows.map((item) => {
+					return item.object_type
+				}),
+			},
+			object_table: ObjectTable.rows,
 		}
-	} else if (matchRes === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
+		response.json(CheckIsNullResponse(data))
+		//const data = await pool.query(queryType.getIDTableQuery(key))
+		//response.json(data.rows)
+	} catch (err) {
+		console.log(`get id table data error : ${err}`)
 	}
 }
 
 async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
-	const matchRes = await CheckKey(key)
 
-	const userArea = getUserArea(key)
-	console.log(userArea)
-	if (matchRes === Authenticate.SUCCESS) {
-		try {
-			const filter = SetFilter(object_id, object_type, area_id)
-			if (typeof filter !== 'string') {
-				response.json(filter)
-				return
-			}
-			const data = await pool.query(
-				queryType.getPeopleRealtimeQuery(key, filter)
-			)
-			data.rows.forEach((item) => {
-				item.last_reported_timestamp = moment(
-					item.last_reported_timtstamp
-				).format(timeDefaultFormat)
-			})
-			console.log('get realtime data successful')
-			response.json(CheckIsNullResponse(data.rows))
-		} catch (err) {
-			console.log(`get realtime data failed : ${err}`)
+	try {
+		const filter = SetFilter(object_id, object_type, area_id)
+		if (typeof filter !== 'string') {
+			response.json(filter)
+			return
 		}
-	} else if (matchRes === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
+		const data = await pool.query(queryType.getPeopleRealtimeQuery(key, filter))
+		data.rows.forEach((item) => {
+			item.last_reported_timestamp = moment(
+				item.last_reported_timtstamp
+			).format(timeDefaultFormat)
+		})
+		console.log('get realtime data successful')
+		response.json(CheckIsNullResponse(data.rows))
+	} catch (err) {
+		console.log(`get realtime data failed : ${err}`)
 	}
 }
 async function getPeopleHistoryData(request, response) {
@@ -363,7 +343,7 @@ async function getPeopleHistoryData(request, response) {
 	count_limit = set_count_limit(count_limit)
 	sort_type = set_sort_type(sort_type)
 
-	const filter = '' //SetFilter(object_id, object_type, area_id)
+	const filter = SetFilter(object_id, object_type, area_id)
 	if (typeof filter !== 'string') {
 		response.json(filter)
 		return
@@ -404,82 +384,71 @@ function CheckIsNullResponse(rows) {
 
 async function getObjectRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
-	const matchRes = await CheckKey(key)
 
-	if (matchRes === Authenticate.SUCCESS) {
-		try {
-			const filter = SetFilter(object_id, object_type, area_id)
-			if (typeof filter !== 'string') {
-				response.json(filter)
-				return
-			}
-
-			const data = await pool.query(
-				queryType.getObjectRealtimeQuery(key, filter)
-			)
-
-			response.json(CheckIsNullResponse(data.rows))
-		} catch (err) {
-			console.log(`get realtime data failed : ${err}`)
+	try {
+		const filter = SetFilter(object_id, object_type, area_id)
+		if (typeof filter !== 'string') {
+			response.json(filter)
+			return
 		}
-	} else if (matchRes === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
+		const data = await pool.query(queryType.getObjectRealtimeQuery(key, filter))
+
+		data.rows.forEach((item) => {
+			item.last_reported_timestamp = moment(
+				item.last_reported_timtstamp
+			).format(timeDefaultFormat)
+		})
+
+		response.json(CheckIsNullResponse(data.rows))
+	} catch (err) {
+		console.log(`get realtime data failed : ${err}`)
 	}
 }
 
 async function getObjectHistoryData(request, response) {
 	const { key, object_type, object_id, area_id } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
-	const matchRes = await CheckKey(key)
 
-	if (matchRes === Authenticate.SUCCESS) {
-		const error_msg = check_input_error(
-			start_time,
-			end_time,
-			sort_type,
-			count_limit
-		)
+	const error_msg = check_input_error(
+		start_time,
+		end_time,
+		sort_type,
+		count_limit
+	)
 
-		if (error_msg !== undefined) {
-			response.json(error_msg)
-			return
-		}
-		start_time = set_initial_time(start_time, 1)
-		end_time = set_initial_time(end_time, 0)
-		count_limit = set_count_limit(count_limit)
-		sort_type = set_sort_type(sort_type)
+	if (error_msg !== undefined) {
+		response.json(error_msg)
+		return
+	}
+	start_time = set_initial_time(start_time, 1)
+	end_time = set_initial_time(end_time, 0)
+	count_limit = set_count_limit(count_limit)
+	sort_type = set_sort_type(sort_type)
 
-		const filter = SetFilter(object_id, object_type, area_id)
-		if (typeof filter !== 'string') {
-			response.json(filter)
-			return
-		}
-		try {
-			const data = await pool.query(
-				queryType.getObjectHistoryQuery(
-					key,
-					filter,
-					start_time,
-					end_time,
-					count_limit,
-					sort_type
-				)
+	const filter = SetFilter(object_id, object_type, area_id)
+	if (typeof filter !== 'string') {
+		response.json(filter)
+		return
+	}
+	try {
+		const data = await pool.query(
+			queryType.getObjectHistoryQuery(
+				key,
+				filter,
+				start_time,
+				end_time,
+				count_limit,
+				sort_type
 			)
-			data.rows.forEach((item) => {
-				item.record_timestamp = moment(item.record_timestamp).format(
-					timeDefaultFormat
-				)
-			})
-			response.json(CheckIsNullResponse(data.rows))
-		} catch (err) {
-			console.log(`get object history data failed : ${err}`)
-		}
-	} else if (matchRes === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
+		)
+		data.rows.forEach((item) => {
+			item.record_timestamp = moment(item.record_timestamp).format(
+				timeDefaultFormat
+			)
+		})
+		response.json(CheckIsNullResponse(data.rows))
+	} catch (err) {
+		console.log(`get object history data failed : ${err}`)
 	}
 }
 
@@ -637,12 +606,14 @@ function DateIsValid(time) {
 	return moment(time, timeDefaultFormat, true).isValid()
 }
 
-function SetFilter(object_id, object_type, area_id) {
-	let filter = ''
+function checkFilter(request, response, next) {
+	const { object_id, area_id, object_type } = request.body
+	let errorCode = {}
 
 	if (object_id) {
 		if (!Array.isArray(object_id)) {
-			return error_code.object_id_error
+			response.json(error_code.object_id_error)
+			return
 		}
 		object_id.map((item) => {
 			if (
@@ -651,18 +622,20 @@ function SetFilter(object_id, object_type, area_id) {
 			) {
 				return item
 			}
-			filter = error_code.id_format_error
+			errorCode = error_code.id_format_error
 			return undefined
 		})
 	}
 	if (object_type) {
 		if (!Array.isArray(object_type)) {
-			return error_code.object_type_error
+			response.json(error_code.object_type_error)
+			return
 		}
 	}
 	if (area_id) {
 		if (!Array.isArray(area_id)) {
-			return error_code.area_id_error
+			response.json(error_code.area_id_error)
+			return
 		}
 		area_id.map((item) => {
 			if (
@@ -671,10 +644,20 @@ function SetFilter(object_id, object_type, area_id) {
 			) {
 				return item
 			}
-			filter = error_code.id_format_error
+			errorCode = error_code.id_format_error
 			return undefined
 		})
 	}
+	if (Object.keys(errorCode).length !== 0) {
+		response.json(errorCode)
+		return
+	}
+	next()
+}
+
+function SetFilter(object_id, object_type, area_id) {
+	let filter = ''
+
 	if (typeof filter !== 'string') {
 		return filter
 	}
@@ -692,6 +675,7 @@ export default {
 
 	//#region api v1.1
 	checkKey,
+	checkFilter,
 	getApiKey,
 	getPeopleHistoryData,
 	getPeopleRealtimeData,
