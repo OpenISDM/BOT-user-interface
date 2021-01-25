@@ -63,6 +63,7 @@ function setKey(user_id, username, hash) {
 const getAllKeyQuery = ' SELECT  * FROM api_key '
 const getAllUserQuery = ' SELECT  * FROM user_table	'
 //#endregion
+
 //#region  api v1.0
 const get_data = (
 	key,
@@ -388,14 +389,23 @@ const getIDTableQuery = (key, filter) => {
 		object_table.name as name,
 		object_table.area_id as area_id
 	from
-		api_key
-	inner join user_table on
-		api_key.id = user_table.id
-	inner join object_table on
-		object_table.area_id = user_table.main_area
+		object_table
+	
+	inner join user_area
+	on user_area.area_id = object_table.area_id
+		
+	inner join user_table 
+	on user_table.id  = user_area.user_id 
+		
+	inner join api_key 
+	on api_key.id = user_table.id 
+	
 	where
 		key = '${key}'
-		${filter};`
+		${filter}
+	group by
+		object_table.id, user_area.area_id	
+	`
 }
 //#endregion
 export default {
