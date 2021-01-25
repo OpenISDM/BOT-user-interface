@@ -449,52 +449,35 @@ async function getObjectHistoryData(request, response) {
 	}
 }
 
-const getApiKey = (request, response) => {
+const getApiKey = async (request, response) => {
 	const { username, password } = request.body
 
-	let getUserName = ''
-	pool
-		.query(queryType.getAllUserQuery) //verification by sha256
-		.then((res) => {
-			res.rows.forEach((item) => {
-				if (username === item.name && password === item.password) {
-					getUserName = item.name
-				}
-			})
-			if (getUserName !== '') {
-				//already match user name
-				pool
-					.query(queryType.confirmValidation(getUserName))
-					.then((res) => {
-						console.log('confirm validation succeed')
+	let userName = ''
 
-						const hash = encrypt.createHash(password)
+	const allUser = await pool.query(queryType.getAllUserQuery).catch((err) => {
+		console.log(`get all username fail : ${err}`)
+	})
 
-						pool
-							.query(queryType.setKey(res.rows[0].user_id, getUserName, hash))
-							.then(() => {
-								response.json(
-									error_code.get_key_success_v1(
-										hash,
-										moment().add(30, 'm').format(timeDefaultFormat)
-									)
-								)
-								console.log('get Key success')
-							})
-							.catch((err) => {
-								console.log(`set Key failer ${err}`)
-							})
-					})
-					.catch((err) => {
-						console.log(`confirm validation fails ${err}`)
-					})
-			} else {
-				response.json(error_code.sha_256_incorrect)
-			}
+	allUser.rows.forEach((item) => {
+		if (username === item.name && password === item.password) {
+			userName = item.name
+		}
+	})
+
+	if (userName !== '') {
+		const validationConfirm = await pool.query(queryType.confirmValidation(userName)).catch((err)=>{
+			console.log(`confirm validation error : ${err}`)
 		})
-		.catch((err) => {
-			console.log(`get user fails ${err}`)
+
+		const hashToken = encrypt.createHash(password)
+
+		await pool.query(queryType.setKey(validationConfirm.rows[0].user_id, userName, hashToken)).catch((err) =>{
+			console.log(`update data error : ${err}`)
 		})
+		response.json(error_code.get_key_success_v1(hashToken, moment().add(30,'m').format(timeDefaultFormat)))
+	} else {
+		response.json(error_code.sha_256_incorrect)
+	}
 }
 async function getUserArea(key) {
 	const userArea = await pool.query(queryType.getUserAreaQuery(key))
