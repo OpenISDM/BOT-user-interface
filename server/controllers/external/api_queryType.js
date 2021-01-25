@@ -415,6 +415,23 @@ const getIDTableQuery = (key, filter) => {
 		object_table.id, user_area.area_id	
 	`
 }
+
+const getUserAreaQuery = (key)=>{
+	return `
+	select 
+		distinct area_id
+	from 
+		user_area
+
+	inner join user_table
+	on user_table.id = user_area.user_id 
+
+	inner join api_key
+	on api_key.id  = user_table.id 
+
+	where api_key.key= '${key}' 
+	`
+}
 //#endregion
 export default {
 	//#region common export
@@ -422,6 +439,7 @@ export default {
 	setKey,
 	getAllKeyQuery,
 	getAllUserQuery,
+	getUserAreaQuery,
 	//#endregion
 
 	//#region api v1.0

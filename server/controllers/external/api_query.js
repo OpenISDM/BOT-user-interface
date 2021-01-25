@@ -314,6 +314,8 @@ async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 	const matchRes = await CheckKey(key)
 
+	const userArea = getUserArea(key)
+	console.log(userArea)
 	if (matchRes === Authenticate.SUCCESS) {
 		try {
 			const filter = SetFilter(object_id, object_type, area_id)
@@ -344,57 +346,49 @@ async function getPeopleHistoryData(request, response) {
 	const { key, area_id, object_id, object_type } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
 
-	const matchRes = await CheckKey(key)
+	const error_msg = check_input_error(
+		start_time,
+		end_time,
+		sort_type,
+		count_limit
+	)
 
-	if (matchRes === Authenticate.SUCCESS) {
-		const error_msg = check_input_error(
-			start_time,
-			end_time,
-			sort_type,
-			count_limit
-		)
+	if (error_msg !== undefined) {
+		response.json(error_msg)
+		return
+	}
 
-		if (error_msg !== undefined) {
-			response.json(error_msg)
-			return
-		}
+	start_time = set_initial_time(start_time, 1)
+	end_time = set_initial_time(end_time, 0)
+	count_limit = set_count_limit(count_limit)
+	sort_type = set_sort_type(sort_type)
 
-		start_time = set_initial_time(start_time, 1)
-		end_time = set_initial_time(end_time, 0)
-		count_limit = set_count_limit(count_limit)
-		sort_type = set_sort_type(sort_type)
+	const filter = '' //SetFilter(object_id, object_type, area_id)
+	if (typeof filter !== 'string') {
+		response.json(filter)
+		return
+	}
 
-		const filter = SetFilter(object_id, object_type, area_id)
-		if (typeof filter !== 'string') {
-			response.json(filter)
-			return
-		}
-
-		try {
-			const data = await pool.query(
-				queryType.getPeopleHistoryQuery(
-					key,
-					filter,
-					start_time,
-					end_time,
-					count_limit,
-					sort_type
-				)
+	try {
+		const data = await pool.query(
+			queryType.getPeopleHistoryQuery(
+				key,
+				filter,
+				start_time,
+				end_time,
+				count_limit,
+				sort_type
 			)
-			console.log('get people history successed.')
-			data.rows.forEach((item) => {
-				item.record_timestamp = moment(item.record_timestamp).format(
-					timeDefaultFormat
-				)
-			})
-			response.json(CheckIsNullResponse(data.rows))
-		} catch (err) {
-			console.log(`get people history data failed : ${err}`)
-		}
-	} else if (matchRes === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
+		)
+		console.log('get people history successed.')
+		data.rows.forEach((item) => {
+			item.record_timestamp = moment(item.record_timestamp).format(
+				timeDefaultFormat
+			)
+		})
+		response.json(CheckIsNullResponse(data.rows))
+	} catch (err) {
+		console.log(`get people history data failed : ${err}`)
 	}
 }
 
@@ -536,7 +530,42 @@ const getApiKey = (request, response) => {
 			console.log(`get user fails ${err}`)
 		})
 }
+async function getUserArea(key) {
+	const userArea = await pool.query(queryType.getUserAreaQuery(key))
+	userArea.map((item) => {
+		return item.area_id
+	})
+	return userArea
+}
 
+async function checkKey(request, response, next) {
+	const { key } = request.body
+	let Flag = Authenticate.FAILED
+	const userKeyData = await pool
+		.query(queryType.getAllKeyQuery)
+		.catch((err) => {
+			console.log(`match exception : ${err}`)
+			Flag = Authenticate.EXCEPTION
+		})
+
+	userKeyData.rows.forEach((item) => {
+		const validTime = moment(item.register_time).add(30, 'm')
+
+		if (moment().isBefore(moment(validTime)) && item.key === key) {
+			Flag = Authenticate.SUCCESS
+		} else if (moment().isAfter(moment(validTime)) && item.key === key) {
+			Flag = Authenticate.UNACTIVATED
+		}
+	})
+
+	if (Authenticate.SUCCESS) {
+		next()
+	} else if (Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
 async function CheckKey(key) {
 	let Flag = Authenticate.FAILED
 	return await pool
@@ -662,6 +691,7 @@ export default {
 	//#endregion
 
 	//#region api v1.1
+	checkKey,
 	getApiKey,
 	getPeopleHistoryData,
 	getPeopleRealtimeData,

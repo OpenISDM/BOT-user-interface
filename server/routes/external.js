@@ -1,7 +1,9 @@
 import api_query from '../controllers/external/api_query'
+
+
 export default (app) => {
 	app.post('/api/1.1/auth/signin', api_query.getApiKey)
-	app.post('/api/1.1/tracing/history/people', api_query.getPeopleHistoryData)
+	app.post('/api/1.1/tracing/history/people', api_query.checkKey, api_query.getPeopleHistoryData)
 	app.post('/api/1.1/tracing/realtime/people', api_query.getPeopleRealtimeData)
 	app.post('/api/1.1/tracing/history/device', api_query.getObjectHistoryData)
 	app.post('/api/1.1/tracing/realtime/device', api_query.getObjectRealtimeData)
