@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import lbeaconController from '../../controllers/internal/lbeaconController'
+import lbeaconController from '../../controllers/internal/lbeacon'
 import cors from 'cors'
 
 export default (app) => {

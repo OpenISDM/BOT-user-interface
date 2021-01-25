@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import objectController from '../../controllers/internal/objectController'
+import objectController from '../../controllers/internal/object'
 import cors from 'cors'
 
 export default (app) => {

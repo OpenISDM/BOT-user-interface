@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import locationHistoryController from '../../controllers/internal/locationHistoryController'
+import locationHistoryController from '../../controllers/internal/location-history'
 
 export default (app) => {
 	app

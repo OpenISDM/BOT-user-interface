@@ -1,10 +1,10 @@
 import pkg from 'sequelize'
 import { sequelize } from '../connection'
-import UserAssignments from './userAssignments'
+import UserAssignments from './user-assignments'
 const { DataTypes } = pkg
 
-const PatientGroupList = sequelize.define(
-	'patient_group_list',
+const DeviceGroupList = sequelize.define(
+	'device_group_list',
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -17,7 +17,7 @@ const PatientGroupList = sequelize.define(
 		area_id: {
 			type: DataTypes.INTEGER,
 		},
-		patients: {
+		items: {
 			type: DataTypes.ARRAY(DataTypes.STRING),
 		},
 	},
@@ -27,6 +27,6 @@ const PatientGroupList = sequelize.define(
 	}
 )
 
-UserAssignments.belongsTo(PatientGroupList, { foreignKey: 'group_list_id' })
+UserAssignments.belongsTo(DeviceGroupList, { foreignKey: 'group_list_id' })
 
-export default PatientGroupList
+export default DeviceGroupList

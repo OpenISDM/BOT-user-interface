@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import utilsController from '../../controllers/internal/utilsController'
+import utilsController from '../../controllers/internal/utils'
 import cors from 'cors'
 
 export default (app) => {

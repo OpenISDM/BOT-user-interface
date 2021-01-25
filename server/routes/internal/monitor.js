@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import monitorController from '../../controllers/internal/monitorController'
+import monitorController from '../../controllers/internal/monitor'
 import cors from 'cors'
 
 export default (app) => {

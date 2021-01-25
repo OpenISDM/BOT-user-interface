@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import recordController from '../../controllers/internal/recordController'
+import recordController from '../../controllers/internal/record'
 import cors from 'cors'
 
 export default (app) => {

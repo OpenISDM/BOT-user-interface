@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import notificationController from '../../controllers/internal/notificationController'
+import notificationController from '../../controllers/internal/notification'
 import cors from 'cors'
 
 export default (app) => {

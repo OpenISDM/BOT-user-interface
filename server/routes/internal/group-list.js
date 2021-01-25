@@ -32,8 +32,8 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import deviceGroupListController from '../../controllers/internal/deviceGroupListController'
-import patientGroupListController from '../../controllers/internal/patientGroupListController'
+import deviceGroupListController from '../../controllers/internal/device-group-list'
+import patientGroupListController from '../../controllers/internal/patient-group-list'
 import cors from 'cors'
 
 export default (app) => {

@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import fileController from '../../controllers/internal/fileController'
+import fileController from '../../controllers/internal/file'
 
 export default (app) => {
 	app.route('/data/file/export/csv').post(fileController.exportCSV)

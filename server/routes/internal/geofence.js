@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import geofenceController from '../../controllers/internal/geofenceController'
+import geofenceController from '../../controllers/internal/geofence'
 import cors from 'cors'
 
 export default (app) => {

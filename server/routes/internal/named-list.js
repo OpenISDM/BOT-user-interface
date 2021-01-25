@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import NamedListController from '../../controllers/internal/namedListController'
+import NamedListController from '../../controllers/internal/named-list'
 import cors from 'cors'
 
 export default (app) => {

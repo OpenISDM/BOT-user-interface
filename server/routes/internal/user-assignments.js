@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import userAssignmentsController from '../../controllers/internal/userAssignmentsController'
+import userAssignmentsController from '../../controllers/internal/user-assignments'
 import cors from 'cors'
 
 export default (app) => {

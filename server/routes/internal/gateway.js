@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import gatewayController from '../../controllers/internal/gatewayController'
+import gatewayController from '../../controllers/internal/gateway'
 import cors from 'cors'
 
 export default (app) => {

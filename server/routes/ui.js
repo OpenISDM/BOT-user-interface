@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { verifyResetPwdToken } from '../controllers/internal/authController'
+import { verifyResetPwdToken } from '../controllers/internal/auth'
 import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 import { pageChecker } from '../middlewares'

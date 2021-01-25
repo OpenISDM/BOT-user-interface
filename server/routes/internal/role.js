@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import roleController from '../../controllers/internal/roleController'
+import roleController from '../../controllers/internal/role'
 import cors from 'cors'
 
 export default (app) => {

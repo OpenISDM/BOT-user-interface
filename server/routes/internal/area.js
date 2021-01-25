@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import areaController from '../../controllers/internal/areaController'
+import areaController from '../../controllers/internal/area'
 
 export default (app) => {
 	app.route('/data/area').post(areaController.getAreaTable)

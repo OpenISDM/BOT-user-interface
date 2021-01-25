@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import trackingController from '../../controllers/internal/trackingDataController'
+import trackingController from '../../controllers/internal/tracking-data'
 
 export default (app) => {
 	app.route('/data/trackingData').post(trackingController.getTrackingData)

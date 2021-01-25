@@ -38,7 +38,7 @@ import {
 	validation,
 	sentResetPwdInstruction,
 	resetPassword,
-} from '../../controllers/internal/authController'
+} from '../../controllers/internal/auth'
 
 export default (app) => {
 	app.route('/data/auth/signin').post(signin)

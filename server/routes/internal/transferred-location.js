@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import transferredLocationController from '../../controllers/internal/transferredLocationController'
+import transferredLocationController from '../../controllers/internal/transferred-location'
 import cors from 'cors'
 
 export default (app) => {
