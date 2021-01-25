@@ -250,7 +250,6 @@ const ObjectTypeQuery = {
 
 async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
-
 	let filter = ''
 	if (area_id) {
 		if (!Array.isArray(area_id)) {
@@ -272,11 +271,12 @@ async function getIDTableData(request, response) {
 	try {
 		console.log(queryType.getIDTableQuery(key, filter))
 		const ObjectTable = await pool.query(queryType.getIDTableQuery(key, filter))
-		const AreaTable = await pool.query(queryType.getAreaIDQuery())
+
 		// object_type = 0, will get device object type
 		const ObjectType = await pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
 		)
+		const AreaTable = await pool.query(queryType.getAreaIDQuery())
 		// object_type = 1, will get people object type
 		const PeopleType = await pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE)
@@ -294,8 +294,6 @@ async function getIDTableData(request, response) {
 			object_table: ObjectTable.rows,
 		}
 		response.json(CheckIsNullResponse(data))
-		//const data = await pool.query(queryType.getIDTableQuery(key))
-		//response.json(data.rows)
 	} catch (err) {
 		console.log(`get id table data error : ${err}`)
 	}
@@ -305,7 +303,7 @@ async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = ''//SetFilter(object_id, object_type, area_id)
+		const filter = '' //SetFilter(object_id, object_type, area_id)
 		if (typeof filter !== 'string') {
 			response.json(filter)
 			return
@@ -350,7 +348,6 @@ async function getPeopleHistoryData(request, response) {
 	}
 
 	try {
-		console.log(queryType.getPeopleHistoryQuery(filter,start_time,end_time,count_limit, sort_type))
 		const data = await pool.query(
 			queryType.getPeopleHistoryQuery(
 				filter,
@@ -501,10 +498,11 @@ const getApiKey = (request, response) => {
 }
 async function getUserArea(key) {
 	const userArea = await pool.query(queryType.getUserAreaQuery(key))
-	userArea.map((item) => {
+	const data = userArea.rows.map((item) => {
 		return item.area_id
 	})
-	return userArea
+
+	return data
 }
 
 async function checkKey(request, response, next) {
