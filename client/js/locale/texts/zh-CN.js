@@ -110,7 +110,7 @@ const cn = {
 	FEMALE: '女',
 	SCAN_TAG: '请扫描TAG',
 	ALREADY_CHOOSE: '已选择',
-	MAIN_AREA: '主要区域',
+	LAST_LOGIN_AREA: '最近登入区域',
 	PRIMARY_AREA: '主要区域',
 	SECONDARY_AREAS: '次要区域',
 	PERSONA_LIST: '人员列表',

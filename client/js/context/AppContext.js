@@ -45,7 +45,7 @@ const AppContextProvider = (props) => {
 	const { locale } = auth
 
 	const initialState = {
-		area: { id: parseInt(auth.user.main_area) },
+		area: { id: 0 },
 		shouldUpdateTrackingData: true,
 		assignedObject: null,
 		tableSelection: [],

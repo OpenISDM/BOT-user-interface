@@ -41,7 +41,7 @@ import AccessControl from '../authentication/AccessControl'
 import { AppContext } from '../../context/AppContext'
 import Select from 'react-select'
 import NavNotification from './NavNotification'
-import SocketNotifciation from './SocketNotifciation'
+// import SocketNotifciation from './SocketNotifciation'
 import { navbarNavList } from '../../config/pageModules'
 import styleConfig from '../../config/styleConfig'
 import { BOTNavLink } from '../BOTComponent/styleComponent'
@@ -61,22 +61,11 @@ class NavbarContainer extends React.Component {
 	navList = navbarNavList
 
 	handleClick = () => {
-		// console.log(e)
+		// Do reload on this method?
 	}
 
 	componentDidMount = () => {
 		this.getAreaTable()
-	}
-
-	setCurrentArea = (selectedArea) => {
-		const { stateReducer } = this.context
-		const [{ area }, dispatch] = stateReducer
-		if (area && selectedArea && area.value !== selectedArea.value) {
-			dispatch({
-				type: SET_AREA,
-				value: selectedArea,
-			})
-		}
 	}
 
 	getAreaTable = async () => {
@@ -96,26 +85,44 @@ class NavbarContainer extends React.Component {
 					bounds,
 				}
 			})
+
 			this.setState({
 				areaOptions,
 			})
 		}
 	}
 
-	render = () => {
-		const style = {
-			navbar: {
-				boxShadow: '0 1px 6px 0 rgba(32,33,36,0.28)',
-			},
-		}
-
-		const { locale, auth, stateReducer } = this.context
+	setCurrentArea = (selectedArea) => {
+		const { stateReducer } = this.context
 		const [{ area }, dispatch] = stateReducer
+		if (area && selectedArea && area.value !== selectedArea.value) {
+			dispatch({
+				type: SET_AREA,
+				value: selectedArea,
+			})
+		}
+	}
+
+	getCurrentArea = () => {
+		const [{ area }] = this.context.stateReducer
 		const { areaOptions } = this.state
-		const selectedArea = areaOptions.find(
+		let currentArea = areaOptions.find(
 			(areaOption) => areaOption.id === area.id
 		)
-		this.setCurrentArea(selectedArea)
+
+		// If there has no any current area then set first area to default
+		if (!currentArea) {
+			currentArea = areaOptions[0]
+		}
+
+		return currentArea
+	}
+
+	render = () => {
+		const { locale, auth } = this.context
+		const { areaOptions } = this.state
+		const currentArea = this.getCurrentArea()
+		this.setCurrentArea(currentArea)
 
 		return (
 			<div>
@@ -125,7 +132,9 @@ class NavbarContainer extends React.Component {
 					expand="lg"
 					fixed="top"
 					collapseOnSelect
-					style={style.navbar}
+					style={{
+						boxShadow: '0 1px 6px 0 rgba(32,33,36,0.28)',
+					}}
 				>
 					<Navbar.Brand className="p-0 mx-0">
 						<Nav.Item className="nav-link nav-brand d-flex align-items-center color-black">
@@ -139,14 +148,9 @@ class NavbarContainer extends React.Component {
 							<Select
 								placeholder={locale.texts.SELECT_LOCATION}
 								name="select"
-								value={selectedArea}
+								value={currentArea}
 								options={areaOptions}
-								onChange={(value) => {
-									dispatch({
-										type: SET_AREA,
-										value,
-									})
-								}}
+								onChange={this.setCurrentArea}
 								styles={styleConfig.reactSelectNavbar}
 								isSearchable={false}
 								components={{

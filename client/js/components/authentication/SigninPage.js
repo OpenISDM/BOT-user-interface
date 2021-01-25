@@ -51,10 +51,9 @@ const imageLength = 80
 
 const SigninPage = () => {
 	const appContext = React.useContext(AppContext)
-	const { stateReducer, locale, auth } = appContext
-	const [, dispatch] = stateReducer
-
+	const { locale, auth } = appContext
 	const history = useHistory()
+
 	return (
 		<CenterContainer>
 			<div className="d-flex justify-content-center">
@@ -79,7 +78,7 @@ const SigninPage = () => {
 				})}
 				onSubmit={(values, actions) => {
 					const callback = () => history.push('/')
-					auth.login(values, { actions, dispatch, callback, locale })
+					auth.login(values, { actions, callback, locale })
 				}}
 				render={({ errors, status, touched, isSubmitting }) => (
 					<Form>

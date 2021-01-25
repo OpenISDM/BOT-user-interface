@@ -111,7 +111,7 @@ const ms = {
 	PATIENT: 'sabar',
 	SCAN_TAG: 'Sila Imbas TAG',
 	ALREADY_CHOOSE: 'Sudah memilih',
-	MAIN_AREA: 'Kawasan utama',
+	LAST_LOGIN_AREA: 'Kawasan utama',
 	PRIMARY_AREA: 'kawasan utama',
 	SECONDARY_AREAS: 'kawasan sekunder',
 	PERSONA_LIST: 'senarai persona',

@@ -111,7 +111,7 @@ const en = {
 	PATIENT: 'Patient',
 	SCAN_TAG: 'Please Scan TAG',
 	ALREADY_CHOOSE: 'Already choose',
-	MAIN_AREA: 'Main area',
+	LAST_LOGIN_AREA: 'Last login area',
 	PRIMARY_AREA: 'primary area',
 	SECONDARY_AREAS: 'secondary areas',
 	PERSONA_LIST: 'persona list',
