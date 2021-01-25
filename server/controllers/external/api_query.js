@@ -305,7 +305,7 @@ async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = SetFilter(object_id, object_type, area_id)
+		const filter = ''//SetFilter(object_id, object_type, area_id)
 		if (typeof filter !== 'string') {
 			response.json(filter)
 			return
@@ -350,9 +350,9 @@ async function getPeopleHistoryData(request, response) {
 	}
 
 	try {
+		console.log(queryType.getPeopleHistoryQuery(filter,start_time,end_time,count_limit, sort_type))
 		const data = await pool.query(
 			queryType.getPeopleHistoryQuery(
-				key,
 				filter,
 				start_time,
 				end_time,
@@ -534,27 +534,6 @@ async function checkKey(request, response, next) {
 	} else {
 		response.json(error_code.key_incorrect)
 	}
-}
-async function CheckKey(key) {
-	let Flag = Authenticate.FAILED
-	return await pool
-		.query(queryType.getAllKeyQuery)
-		.then((res) => {
-			res.rows.forEach((item) => {
-				const validTime = moment(item.register_time).add(30, 'm')
-
-				if (moment().isBefore(moment(validTime)) && item.key === key) {
-					Flag = Authenticate.SUCCESS
-				} else if (moment().isAfter(moment(validTime)) && item.key === key) {
-					Flag = Authenticate.UNACTIVATED
-				}
-			})
-			return Flag
-		})
-		.catch((err) => {
-			console.log(`match exception : ${err}`)
-			Flag = Authenticate.EXCEPTION
-		})
 }
 
 function check_input_error(start_time, end_time, sort_type, count_limit) {
