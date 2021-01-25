@@ -192,7 +192,7 @@ const getPeopleHistoryQuery = (
 	${filter}
 
 	inner join location_history_table
-	on location_history_table.object_id = object_table.id
+	on location_history_table.object_id = object_table.asset_control_number
 
 	left join lbeacon_table
 	on lbeacon_table.uuid = location_history_table.uuid
@@ -210,39 +210,45 @@ const getPeopleHistoryQuery = (
 }
 
 const getPeopleRealtimeQuery = (key, filter) => {
-	return `select
-	object_table.id as object_id,
-	object_table.name as object_name,
-	object_summary_table.mac_address as mac_address,
-	object_table.type as object_type,
-	object_summary_table.updated_by_area as area_id,
-	area_table.readable_name as area_name,
-	object_summary_table.uuid as lbeacon_uuid,
-	lbeacon_table.description as lbeacon_description, 
-	object_summary_table.base_x as position_x,
-	object_summary_table.base_y as position_y,
-	object_summary_table.battery_voltage as battery_voltage,
-	object_summary_table.payload as payload,
-	object_summary_table.last_reported_timestamp as last_reported_timestamp
-	from api_key
-
-	inner join user_table
-	on user_table.id = api_key.id
+	return `
+	select distinct on (object_id)
+		object_table.id as object_id,
+		object_table.name as object_name,
+		object_summary_table.mac_address as mac_address,
+		object_table.type as object_type,
+		object_summary_table.updated_by_area as area_id,
+		area_table.readable_name as area_name,
+		object_summary_table.uuid as lbeacon_uuid,
+		lbeacon_table.description as lbeacon_description, 
+		object_summary_table.base_x as position_x,
+		object_summary_table.base_y as position_y,
+		object_summary_table.battery_voltage as battery_voltage,
+		object_summary_table.payload as payload,
+		object_summary_table.last_reported_timestamp as last_reported_timestamp
+	from 
+		object_summary_table
 
 	inner join object_table
-	on object_table.area_id = user_table.main_area
+	on object_table.mac_address = object_summary_table.mac_address 
 	and object_table.object_type = '1'
 
-	inner join object_summary_table
-	on object_summary_table.mac_address = object_table.mac_address
-	${filter}
+	inner join user_area 
+	on object_table.area_id = object_table.area_id 
+	
+	inner join user_table
+	on user_table.id = user_area.user_id 
+	
+	inner join api_key
+	on api_key.id = user_table.id
 
 	left join lbeacon_table
 	on object_summary_table.uuid = lbeacon_table.uuid
 
 	left join area_table
 	on area_table.id = object_summary_table.updated_by_area
-	where api_key.key = '${key}';
+	where 
+		api_key.key = '${key}'
+		${filter}
 	`
 }
 
@@ -271,7 +277,7 @@ const getObjectTypeQuery = (type) => {
 
 const getObjectRealtimeQuery = (key, filter) => {
 	return `
-	select
+	select distinct on (object_id)
 		object_table.id as object_id,
 		object_table.name as object_name,
 		object_table.mac_address as mac_address,
@@ -285,18 +291,19 @@ const getObjectRealtimeQuery = (key, filter) => {
 		object_summary_table.battery_voltage as battery_voltage,
 		object_summary_table.last_reported_timestamp as last_reported_timestamp
 	from
-		object_table
+		object_summary_table 
 
-	inner join object_summary_table on
+	inner join object_table on
 		object_table.mac_address = object_summary_table.mac_address
-		and object_summary_table.last_reported_timestamp + interval '5' minute > now()
-
+	
+	inner join user_area on
+		object_table.area_id = user_area.area_id 
+		
 	inner join user_table on
-		user_table.main_area = object_table.area_id
+		user_table.id = user_area.user_id 
 
 	inner join api_key on
 		user_table.id = api_key.id
-		and api_key.key = '${key}'
 
 	left join lbeacon_table on
 		object_summary_table.uuid = lbeacon_table.uuid
@@ -305,7 +312,8 @@ const getObjectRealtimeQuery = (key, filter) => {
 		object_summary_table.updated_by_area = area_table.id
 
 	where
-		object_table.object_type = '0'
+		api_key.key= '${key}'
+		and object_table.object_type = '0'
 		${filter}
 	`
 }
@@ -344,7 +352,7 @@ const getObjectHistoryQuery = (
 ) => {
 	return `
 	select
-		object_table.id as object_id,
+		object_table.asset_control_number as object_id,
 		object_table."name" as object_name,
 		object_table.mac_address as mac_address,
 		object_table.type as object_type,
@@ -357,7 +365,7 @@ const getObjectHistoryQuery = (
 		location_history_table
 
 	inner join object_table on
-		object_table.id = location_history_table.object_id
+		object_table.asset_control_number = location_history_table.object_id
 		${filter}
 
 	inner join user_table on
@@ -399,7 +407,7 @@ const getIDTableQuery = (key, filter) => {
 		
 	inner join api_key 
 	on api_key.id = user_table.id 
-	
+
 	where
 		key = '${key}'
 		${filter}
