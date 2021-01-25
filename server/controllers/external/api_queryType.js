@@ -311,10 +311,10 @@ const getAreaIDFilter = (area_id) => {
 			(item) => `'${item}'`
 		)})`
 	}
+	return ''
 }
 
 const getObjectHistoryQuery = (
-	key,
 	filter,
 	start_time,
 	end_time,
