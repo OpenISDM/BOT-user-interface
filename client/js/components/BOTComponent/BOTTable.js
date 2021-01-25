@@ -79,11 +79,10 @@ const BOTTable = ({ data, columns, onClickCallback, style }) => {
 						onClick: () => {
 							if (rowInfo.index === selected) {
 								setSelected(null)
-								onClickCallback(null)
 							} else {
 								setSelected(rowInfo.index)
-								onClickCallback(rowInfo.original)
 							}
+							onClickCallback(rowInfo.original)
 						},
 					}
 				}
