@@ -465,20 +465,32 @@ const getApiKey = async (request, response) => {
 	})
 
 	if (userName !== '') {
-		const validationConfirm = await pool.query(queryType.confirmValidation(userName)).catch((err)=>{
-			console.log(`confirm validation error : ${err}`)
-		})
+		const validationConfirm = await pool
+			.query(queryType.confirmValidation(userName))
+			.catch((err) => {
+				console.log(`confirm validation error : ${err}`)
+			})
 
 		const hashToken = encrypt.createHash(password)
 
-		await pool.query(queryType.setKey(validationConfirm.rows[0].user_id, userName, hashToken)).catch((err) =>{
-			console.log(`update data error : ${err}`)
-		})
-		response.json(error_code.get_key_success_v1(hashToken, moment().add(30,'m').format(timeDefaultFormat)))
+		await pool
+			.query(
+				queryType.setKey(validationConfirm.rows[0].user_id, userName, hashToken)
+			)
+			.catch((err) => {
+				console.log(`update data error : ${err}`)
+			})
+		response.json(
+			error_code.get_key_success_v1(
+				hashToken,
+				moment().add(30, 'm').format(timeDefaultFormat)
+			)
+		)
 	} else {
 		response.json(error_code.sha_256_incorrect)
 	}
 }
+
 async function getUserArea(key) {
 	const userArea = await pool.query(queryType.getUserAreaQuery(key))
 	const data = userArea.rows.map((item) => {
