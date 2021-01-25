@@ -249,18 +249,14 @@ const ObjectTypeQuery = {
 }
 
 async function getIDTableData(request, response) {
-	const { key, area_id } = request.body
+	const { area_id } = request.body
 
 	try {
-		console.log(queryType.getIDTableQuery(area_id))
 		const ObjectTable = await pool.query(queryType.getIDTableQuery(area_id))
-
-		// object_type = 0, will get device object type
+		const AreaTable = await pool.query(queryType.getAreaIDQuery())
 		const ObjectType = await pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
 		)
-		const AreaTable = await pool.query(queryType.getAreaIDQuery())
-		// object_type = 1, will get people object type
 		const PeopleType = await pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE)
 		)
@@ -286,12 +282,12 @@ async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = '' //SetFilter(object_id, object_type, area_id)
+		const filter = SetFilter(object_id, object_type, area_id)
 		if (typeof filter !== 'string') {
 			response.json(filter)
 			return
 		}
-		const data = await pool.query(queryType.getPeopleRealtimeQuery(key, filter))
+		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
 		data.rows.forEach((item) => {
 			item.last_reported_timestamp = moment(
 				item.last_reported_timtstamp
@@ -371,7 +367,7 @@ async function getObjectRealtimeData(request, response) {
 			response.json(filter)
 			return
 		}
-		const data = await pool.query(queryType.getObjectRealtimeQuery(key, filter))
+		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
 
 		data.rows.forEach((item) => {
 			item.last_reported_timestamp = moment(
@@ -413,7 +409,6 @@ async function getObjectHistoryData(request, response) {
 	try {
 		const data = await pool.query(
 			queryType.getObjectHistoryQuery(
-				key,
 				filter,
 				start_time,
 				end_time,
