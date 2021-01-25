@@ -163,7 +163,6 @@ const get_data = (
 
 //#region api v1.1
 const getPeopleHistoryQuery = (
-	key,
 	filter,
 	start_time,
 	end_time,
@@ -181,29 +180,21 @@ const getPeopleHistoryQuery = (
 	lbeacon_table.description as lbeacon_description,
 	location_history_table.payload as payload,
 	location_history_table.record_timestamp as record_timestamp
-	from api_key
-
-	inner join user_table
-	on user_table.id = api_key.id
+	from location_history_table
 
 	inner join object_table
-	on object_table.area_id = user_table.main_area
+	on object_table.asset_control_number = location_history_table.object_id 
 	and object_table.object_type = '1'
-	${filter}
-
-	inner join location_history_table
-	on location_history_table.object_id = object_table.asset_control_number
-
+	
 	left join lbeacon_table
-	on lbeacon_table.uuid = location_history_table.uuid
-
+	on lbeacon_table.uuid = location_history_table.uuid 
+	
 	left join area_table
-	on area_table.id = location_history_table.area_id
+	on area_table.id = location_history_table.area_id 
 
-	where api_key.key = '${key}' and
-		  record_timestamp > '${start_time}' and
-		  record_timestamp < '${end_time}'
-
+	where record_timestamp > '${start_time}' 
+		  and record_timestamp < '${end_time}'
+		  ${filter}
 
 	order by record_timestamp ${sort_type}
 	limit ${count_limit};`
@@ -230,16 +221,6 @@ const getPeopleRealtimeQuery = (key, filter) => {
 
 	inner join object_table
 	on object_table.mac_address = object_summary_table.mac_address 
-	and object_table.object_type = '1'
-
-	inner join user_area 
-	on object_table.area_id = object_table.area_id 
-	
-	inner join user_table
-	on user_table.id = user_area.user_id 
-	
-	inner join api_key
-	on api_key.id = user_table.id
 
 	left join lbeacon_table
 	on object_summary_table.uuid = lbeacon_table.uuid
@@ -247,7 +228,7 @@ const getPeopleRealtimeQuery = (key, filter) => {
 	left join area_table
 	on area_table.id = object_summary_table.updated_by_area
 	where 
-		api_key.key = '${key}'
+		object_table.object_type = '1'
 		${filter}
 	`
 }
@@ -295,15 +276,6 @@ const getObjectRealtimeQuery = (key, filter) => {
 
 	inner join object_table on
 		object_table.mac_address = object_summary_table.mac_address
-	
-	inner join user_area on
-		object_table.area_id = user_area.area_id 
-		
-	inner join user_table on
-		user_table.id = user_area.user_id 
-
-	inner join api_key on
-		user_table.id = api_key.id
 
 	left join lbeacon_table on
 		object_summary_table.uuid = lbeacon_table.uuid
@@ -312,8 +284,7 @@ const getObjectRealtimeQuery = (key, filter) => {
 		object_summary_table.updated_by_area = area_table.id
 
 	where
-		api_key.key= '${key}'
-		and object_table.object_type = '0'
+		object_table.object_type = '0'
 		${filter}
 	`
 }
@@ -366,14 +337,6 @@ const getObjectHistoryQuery = (
 
 	inner join object_table on
 		object_table.asset_control_number = location_history_table.object_id
-		${filter}
-
-	inner join user_table on
-		user_table.main_area = object_table.area_id
-
-	inner join api_key on
-		user_table.id = api_key.id
-		and api_key.key = '${key}'
 
 	left join lbeacon_table on
 		location_history_table.uuid = lbeacon_table.uuid
@@ -383,6 +346,8 @@ const getObjectHistoryQuery = (
 	where
 		location_history_table.record_timestamp > '${start_time}'
 		and	location_history_table.record_timestamp < '${end_time}'
+		${filter}
+
 	order by
 		location_history_table.record_timestamp ${sort_type}
 	limit ${count_limit};`
