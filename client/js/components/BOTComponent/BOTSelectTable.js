@@ -191,11 +191,9 @@ class BOTSelectTable extends React.Component {
 				resizable={true}
 				freezeWhenExpanded={false}
 				onPageChange={() => {
-					this.clearSelection()
 					onPageChangeCallback()
 				}}
 				onSortedChange={() => {
-					this.clearSelection()
 					onSortedChangeCallback()
 				}}
 				NoDataComponent={() => null}
