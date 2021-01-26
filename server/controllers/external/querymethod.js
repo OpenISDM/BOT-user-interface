@@ -234,30 +234,15 @@ function time_format(time) {
 //#endregion
 
 //#region api v1.1
-const IntegerRegExp = new RegExp('^[0-9]{1,}$')
-const Authenticate = {
-	EXCEPTION: 0,
-	SUCCESS: 1,
-	UNACTIVATED: 2,
-	FAILED: 3,
-}
 
+//#region Enum
 const ObjectTypeQuery = {
 	DEVICE: 0,
 	PEOPLE: 1,
 }
+//#endregion
 
-async function compareUserArea(key, area_id){
-	const user_area = await getUserArea(key)
-
-	if(area_id){
-		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
-		console.log(validArea)
-		return validArea
-	}
-	return user_area
-}
-
+//#region Get value method
 async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
 
@@ -294,7 +279,7 @@ async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = await SetFilter(key, object_id, object_type, area_id)
+		const filter = await setFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
 		data.rows.forEach((item) => {
 			item.last_reported_timestamp = moment(
@@ -307,16 +292,17 @@ async function getPeopleRealtimeData(request, response) {
 		console.log(`get realtime data failed : ${err}`)
 	}
 }
+
 async function getPeopleHistoryData(request, response) {
 	const { key, area_id, object_id, object_type } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
 
-	start_time = set_initial_time(start_time, 1)
-	end_time = set_initial_time(end_time, 0)
-	count_limit = set_count_limit(count_limit)
-	sort_type = set_sort_type(sort_type)
+	start_time = setInitialTime(start_time, 1)
+	end_time = setInitialTime(end_time, 0)
+	count_limit = setCountLimit(count_limit)
+	sort_type = setSortType(sort_type)
 
-	const filter = await SetFilter(key, object_id, object_type, area_id)
+	const filter = await setFilter(key, object_id, object_type, area_id)
 
 	try {
 		const data = await pool.query(
@@ -340,21 +326,11 @@ async function getPeopleHistoryData(request, response) {
 	}
 }
 
-function checkIsNullResponse(rows) {
-	if (
-		rows.length > 0 ||
-		(Object.keys(rows).length > 0 && rows.constructor === Object)
-	) {
-		return error_code.get_value_success(rows)
-	}
-	return error_code.get_null_value(rows)
-}
-
 async function getObjectRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = await SetFilter(key, object_id, object_type, area_id)
+		const filter = await setFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
 
 		data.rows.forEach((item) => {
@@ -368,39 +344,7 @@ async function getObjectRealtimeData(request, response) {
 		console.log(`get realtime data failed : ${err}`)
 	}
 }
-
-async function getObjectHistoryData(request, response) {
-	const { key, object_type, object_id, area_id } = request.body
-	let { start_time, end_time, count_limit, sort_type } = request.body
-
-	start_time = set_initial_time(start_time, 1)
-	end_time = set_initial_time(end_time, 0)
-	count_limit = set_count_limit(count_limit)
-	sort_type = set_sort_type(sort_type)
-
-	const filter = await SetFilter(key, object_id, object_type, area_id)
-	try {
-		const data = await pool.query(
-			queryType.getObjectHistoryQuery(
-				filter,
-				start_time,
-				end_time,
-				count_limit,
-				sort_type
-			)
-		)
-		data.rows.forEach((item) => {
-			item.record_timestamp = moment(item.record_timestamp).format(
-				timeDefaultFormat
-			)
-		})
-		response.json(checkIsNullResponse(data.rows))
-	} catch (err) {
-		console.log(`get object history data failed : ${err}`)
-	}
-}
-
-const getApiKey = async (request, response) => {
+async function getApiKey(request, response) {
 	const { username, password } = request.body
 
 	let userName = ''
@@ -442,6 +386,60 @@ const getApiKey = async (request, response) => {
 	}
 }
 
+async function getObjectHistoryData(request, response) {
+	const { key, object_type, object_id, area_id } = request.body
+	let { start_time, end_time, count_limit, sort_type } = request.body
+
+	start_time = setInitialTime(start_time, 1)
+	end_time = setInitialTime(end_time, 0)
+	count_limit = setCountLimit(count_limit)
+	sort_type = setSortType(sort_type)
+
+	const filter = await setFilter(key, object_id, object_type, area_id)
+	try {
+		const data = await pool.query(
+			queryType.getObjectHistoryQuery(
+				filter,
+				start_time,
+				end_time,
+				count_limit,
+				sort_type
+			)
+		)
+		data.rows.forEach((item) => {
+			item.record_timestamp = moment(item.record_timestamp).format(
+				timeDefaultFormat
+			)
+		})
+		response.json(checkIsNullResponse(data.rows))
+	} catch (err) {
+		console.log(`get object history data failed : ${err}`)
+	}
+}
+//#endregion
+
+//#region Set values or check value methods
+async function compareUserArea(key, area_id){
+	const user_area = await getUserArea(key)
+
+	if(area_id){
+		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
+		console.log(validArea)
+		return validArea
+	}
+	return user_area
+}
+
+function checkIsNullResponse(rows) {
+	if (
+		rows.length > 0 ||
+		(Object.keys(rows).length > 0 && rows.constructor === Object)
+	) {
+		return error_code.get_value_success(rows)
+	}
+	return error_code.get_null_value(rows)
+}
+
 async function getUserArea(key) {
 	const userArea = await pool.query(queryType.getUserAreaQuery(key))
 	const data = userArea.rows.map((item) => {
@@ -450,21 +448,21 @@ async function getUserArea(key) {
 	return data
 }
 
-function set_initial_time(time, diff) {
+function setInitialTime(time, diff) {
 	if (time === undefined) {
 		return moment(moment().subtract(diff, 'day')).format()
 	}
-	return set_time_format(time)
+	return setTimeFormat(time)
 }
 
-function set_sort_type(sort_type) {
+function setSortType(sort_type) {
 	if (sort_type === undefined) {
 		return 'desc'
 	}
 	return sort_type
 }
 
-function set_count_limit(count_limit) {
+function setCountLimit(count_limit) {
 	if (count_limit === undefined) {
 		return 10
 	} else if (count_limit >= 50000) {
@@ -473,15 +471,12 @@ function set_count_limit(count_limit) {
 	return count_limit
 }
 
-function set_time_format(time) {
+function setTimeFormat(time) {
 	return moment(time, timeDefaultFormat).format()
 }
 
-function dateIsValid(time) {
-	return moment(time, timeDefaultFormat, true).isValid()
-}
 
-async function SetFilter(key, object_id, object_type, area_id) {
+async function setFilter(key, object_id, object_type, area_id) {
 	let filter = ''
 	const user_area = await getUserArea(key)
 
@@ -490,132 +485,8 @@ async function SetFilter(key, object_id, object_type, area_id) {
 	filter += queryType.getObjectIDFilter(object_id)
 	return filter
 }
-//#region middleware checker
-async function checkKey(request, response, next) {
-	const { key } = request.body
-	let Flag = Authenticate.FAILED
-	const userKeyData = await pool
-		.query(queryType.getAllKeyQuery)
-		.catch((err) => {
-			console.log(`match exception : ${err}`)
-			Flag = Authenticate.EXCEPTION
-		})
-
-	userKeyData.rows.forEach((item) => {
-		const validTime = moment(item.register_time).add(30, 'm')
-
-		if (moment().isBefore(moment(validTime)) && item.key === key) {
-			Flag = Authenticate.SUCCESS
-		} else if (moment().isAfter(moment(validTime)) && item.key === key) {
-			Flag = Authenticate.UNACTIVATED
-		}
-	})
-
-	if (Flag === Authenticate.SUCCESS) {
-		next()
-	} else if (Flag === Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
-	}
-}
-async function checkFilter(request, response, next) {
-	const { key, object_id, area_id, object_type } = request.body
-	let errorCode = {}
-	
-	if (object_id) {
-		if (!Array.isArray(object_id)) {
-			response.json(error_code.object_id_error)
-			return
-		}
-	}
-	if (object_type) {
-		if (!Array.isArray(object_type)) {
-			response.json(error_code.object_type_error)
-			return
-		}
-	}
-	if (area_id) {
-		if (!Array.isArray(area_id)) {
-			response.json(error_code.area_id_error)
-			return
-		}
-		area_id.map((item) => {
-			if (
-				(typeof item === 'string' && item.match(IntegerRegExp)) ||
-				Number.isInteger(item)
-			) {
-				return item
-			}
-			errorCode = error_code.id_format_error
-			return undefined
-		})
-		const user_area = await getUserArea(key)
-		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
-		if(validArea.length === 0){
-			errorCode = error_code.area_id_authority_error
-		}
-	}
-	if (Object.keys(errorCode).length !== 0) {
-		response.json(errorCode)
-		return
-	}
-	next()
-}
-async function checkAreaIDFilter(request, response, next){
-	const { key, area_id } = request.body
-	let errorCode = {}
-	if (area_id) {
-		if (!Array.isArray(area_id)) {
-			response.json(error_code.area_id_error)
-			return
-		}
-		area_id.map((item) => {
-			if (
-				(typeof item === 'string' && item.match(IntegerRegExp)) ||
-				Number.isInteger(item)
-			) {
-				return item
-			}
-			errorCode = error_code.id_format_error
-			return undefined
-		})
-		const user_area = await getUserArea(key)
-		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
-		if(validArea.length === 0){
-			errorCode = error_code.area_id_authority_error
-		}
-	}
-	if (Object.keys(errorCode).length !== 0) {
-		response.json(errorCode)
-		return
-	}
-	next()
-}
-function checkLimitFilter(request, response, next){
-	const {start_time, end_time, sort_type, count_limit} = request.body
-	if (start_time !== undefined && dateIsValid(start_time) === false) {
-		response.json(error_code.start_time_error)
-		return
-	}
-
-	if (end_time !== undefined && dateIsValid(end_time) === false) {
-		response.json(error_code.end_time_error)
-		return
-	}
-
-	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
-		response.json( error_code.sort_type_define_error)
-		return
-	}
-
-	if (count_limit !== undefined && isNaN(count_limit)) {
-		response.json( error_code.count_error)
-		return
-	}
-	next()
-}
 //#endregion
+
 
 //#endregion
 export default {
@@ -625,15 +496,12 @@ export default {
 	//#endregion
 
 	//#region api v1.1
-	checkKey,
-	checkFilter,
-	checkAreaIDFilter,
-	checkLimitFilter,
 	getApiKey,
 	getPeopleHistoryData,
 	getPeopleRealtimeData,
 	getObjectHistoryData,
 	getObjectRealtimeData,
 	getIDTableData,
+	getUserArea,
 	//#endregion
 }
