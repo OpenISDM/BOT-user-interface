@@ -1,11 +1,10 @@
-import error_code from './api_error_code'
+import error_code from './codes'
 import moment from 'moment-timezone'
-import queryType from './api_queryType'
+import queryType from './querytype'
 import pool from '../../db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { encrypt } from '../../helpers'
-import { request } from 'express'
 
 //#region api v1.0
 const get_api_key_v0 = (request, response) => {
@@ -478,7 +477,7 @@ function set_time_format(time) {
 	return moment(time, timeDefaultFormat).format()
 }
 
-function DateIsValid(time) {
+function dateIsValid(time) {
 	return moment(time, timeDefaultFormat, true).isValid()
 }
 
@@ -595,12 +594,12 @@ async function checkAreaIDFilter(request, response, next){
 }
 function checkLimitFilter(request, response, next){
 	const {start_time, end_time, sort_type, count_limit} = request.body
-	if (start_time !== undefined && DateIsValid(start_time) === false) {
+	if (start_time !== undefined && dateIsValid(start_time) === false) {
 		response.json(error_code.start_time_error)
 		return
 	}
 
-	if (end_time !== undefined && DateIsValid(end_time) === false) {
+	if (end_time !== undefined && dateIsValid(end_time) === false) {
 		response.json(error_code.end_time_error)
 		return
 	}
