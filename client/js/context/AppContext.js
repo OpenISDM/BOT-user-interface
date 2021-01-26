@@ -42,10 +42,12 @@ export const AppContext = React.createContext()
 
 const AppContextProvider = (props) => {
 	const auth = React.useContext(AuthenticationContext)
-	const { locale } = auth
+	const { locale, user } = auth
+	const { areas_id = [] } = user
+	const id = areas_id[0] ? areas_id[0] : 0 // 0 is default area but it is not exsist
 
 	const initialState = {
-		area: { id: 0 },
+		area: { id },
 		shouldUpdateTrackingData: true,
 		assignedObject: null,
 		tableSelection: [],
