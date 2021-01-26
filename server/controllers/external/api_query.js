@@ -5,6 +5,7 @@ import pool from '../../db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { encrypt } from '../../helpers'
+import { request } from 'express'
 
 //#region api v1.0
 const get_api_key_v0 = (request, response) => {
@@ -68,7 +69,6 @@ async function get_history_data(request, response) {
 		count_limit, //
 		sort_type,
 	} = request.body
-
 	let matchRes = Promise.resolve(match_key_v0(key))
 	await matchRes.then(function (result) {
 		matchRes = result
@@ -248,12 +248,25 @@ const ObjectTypeQuery = {
 	PEOPLE: 1,
 }
 
+async function compareUserArea(key, area_id){
+	const user_area = await getUserArea(key)
+
+	if(area_id){
+		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
+		console.log(validArea)
+		return validArea
+	}
+	return user_area
+}
+
 async function getIDTableData(request, response) {
-	const { area_id } = request.body
+	const { key, area_id } = request.body
 
 	try {
-		const ObjectTable = await pool.query(queryType.getIDTableQuery(area_id))
-		const AreaTable = await pool.query(queryType.getAreaIDQuery())
+		const validArea = await compareUserArea(key, area_id)
+
+		const ObjectTable = await pool.query(queryType.getIDTableQuery(validArea))
+		const AreaTable = await pool.query(queryType.getAreaIDQuery(key))
 		const ObjectType = await pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
 		)
@@ -272,7 +285,7 @@ async function getIDTableData(request, response) {
 			},
 			object_table: ObjectTable.rows,
 		}
-		response.json(CheckIsNullResponse(data))
+		response.json(checkIsNullResponse(data))
 	} catch (err) {
 		console.log(`get id table data error : ${err}`)
 	}
@@ -290,7 +303,7 @@ async function getPeopleRealtimeData(request, response) {
 			).format(timeDefaultFormat)
 		})
 		console.log('get realtime data successful')
-		response.json(CheckIsNullResponse(data.rows))
+		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get realtime data failed : ${err}`)
 	}
@@ -298,18 +311,6 @@ async function getPeopleRealtimeData(request, response) {
 async function getPeopleHistoryData(request, response) {
 	const { key, area_id, object_id, object_type } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
-
-	const error_msg = check_input_error(
-		start_time,
-		end_time,
-		sort_type,
-		count_limit
-	)
-
-	if (error_msg !== undefined) {
-		response.json(error_msg)
-		return
-	}
 
 	start_time = set_initial_time(start_time, 1)
 	end_time = set_initial_time(end_time, 0)
@@ -334,13 +335,13 @@ async function getPeopleHistoryData(request, response) {
 				timeDefaultFormat
 			)
 		})
-		response.json(CheckIsNullResponse(data.rows))
+		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get people history data failed : ${err}`)
 	}
 }
 
-function CheckIsNullResponse(rows) {
+function checkIsNullResponse(rows) {
 	if (
 		rows.length > 0 ||
 		(Object.keys(rows).length > 0 && rows.constructor === Object)
@@ -354,7 +355,7 @@ async function getObjectRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = SetFilter(key, object_id, object_type, area_id)
+		const filter = await SetFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
 
 		data.rows.forEach((item) => {
@@ -363,7 +364,7 @@ async function getObjectRealtimeData(request, response) {
 			).format(timeDefaultFormat)
 		})
 
-		response.json(CheckIsNullResponse(data.rows))
+		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get realtime data failed : ${err}`)
 	}
@@ -373,17 +374,6 @@ async function getObjectHistoryData(request, response) {
 	const { key, object_type, object_id, area_id } = request.body
 	let { start_time, end_time, count_limit, sort_type } = request.body
 
-	const error_msg = check_input_error(
-		start_time,
-		end_time,
-		sort_type,
-		count_limit
-	)
-
-	if (error_msg !== undefined) {
-		response.json(error_msg)
-		return
-	}
 	start_time = set_initial_time(start_time, 1)
 	end_time = set_initial_time(end_time, 0)
 	count_limit = set_count_limit(count_limit)
@@ -405,7 +395,7 @@ async function getObjectHistoryData(request, response) {
 				timeDefaultFormat
 			)
 		})
-		response.json(CheckIsNullResponse(data.rows))
+		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get object history data failed : ${err}`)
 	}
@@ -461,53 +451,6 @@ async function getUserArea(key) {
 	return data
 }
 
-async function checkKey(request, response, next) {
-	const { key } = request.body
-	let Flag = Authenticate.FAILED
-	const userKeyData = await pool
-		.query(queryType.getAllKeyQuery)
-		.catch((err) => {
-			console.log(`match exception : ${err}`)
-			Flag = Authenticate.EXCEPTION
-		})
-
-	userKeyData.rows.forEach((item) => {
-		const validTime = moment(item.register_time).add(30, 'm')
-
-		if (moment().isBefore(moment(validTime)) && item.key === key) {
-			Flag = Authenticate.SUCCESS
-		} else if (moment().isAfter(moment(validTime)) && item.key === key) {
-			Flag = Authenticate.UNACTIVATED
-		}
-	})
-
-	if (Authenticate.SUCCESS) {
-		next()
-	} else if (Authenticate.UNACTIVATED) {
-		response.json(error_code.key_unactive)
-	} else {
-		response.json(error_code.key_incorrect)
-	}
-}
-
-function check_input_error(start_time, end_time, sort_type, count_limit) {
-	if (start_time !== undefined && DateIsValid(start_time) === false) {
-		return error_code.start_time_error
-	}
-
-	if (end_time !== undefined && DateIsValid(end_time) === false) {
-		return error_code.end_time_error
-	}
-
-	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
-		return error_code.sort_type_define_error
-	}
-
-	if (count_limit !== undefined && isNaN(count_limit)) {
-		return error_code.count_error
-	}
-}
-
 function set_initial_time(time, diff) {
 	if (time === undefined) {
 		return moment(moment().subtract(diff, 'day')).format()
@@ -539,10 +482,48 @@ function DateIsValid(time) {
 	return moment(time, timeDefaultFormat, true).isValid()
 }
 
-function checkFilter(request, response, next) {
-	const { object_id, area_id, object_type } = request.body
-	let errorCode = {}
+async function SetFilter(key, object_id, object_type, area_id) {
+	let filter = ''
+	const user_area = await getUserArea(key)
 
+	filter += queryType.getObjectTypeFilter(object_type)
+	filter += queryType.getAreaIDFilter(user_area, area_id)
+	filter += queryType.getObjectIDFilter(object_id)
+	return filter
+}
+//#region middleware checker
+async function checkKey(request, response, next) {
+	const { key } = request.body
+	let Flag = Authenticate.FAILED
+	const userKeyData = await pool
+		.query(queryType.getAllKeyQuery)
+		.catch((err) => {
+			console.log(`match exception : ${err}`)
+			Flag = Authenticate.EXCEPTION
+		})
+
+	userKeyData.rows.forEach((item) => {
+		const validTime = moment(item.register_time).add(30, 'm')
+
+		if (moment().isBefore(moment(validTime)) && item.key === key) {
+			Flag = Authenticate.SUCCESS
+		} else if (moment().isAfter(moment(validTime)) && item.key === key) {
+			Flag = Authenticate.UNACTIVATED
+		}
+	})
+
+	if (Flag === Authenticate.SUCCESS) {
+		next()
+	} else if (Flag === Authenticate.UNACTIVATED) {
+		response.json(error_code.key_unactive)
+	} else {
+		response.json(error_code.key_incorrect)
+	}
+}
+async function checkFilter(request, response, next) {
+	const { key, object_id, area_id, object_type } = request.body
+	let errorCode = {}
+	
 	if (object_id) {
 		if (!Array.isArray(object_id)) {
 			response.json(error_code.object_id_error)
@@ -570,6 +551,11 @@ function checkFilter(request, response, next) {
 			errorCode = error_code.id_format_error
 			return undefined
 		})
+		const user_area = await getUserArea(key)
+		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
+		if(validArea.length === 0){
+			errorCode = error_code.area_id_authority_error
+		}
 	}
 	if (Object.keys(errorCode).length !== 0) {
 		response.json(errorCode)
@@ -577,16 +563,61 @@ function checkFilter(request, response, next) {
 	}
 	next()
 }
-
-async function SetFilter(key, object_id, object_type, area_id) {
-	let filter = ''
-	const user_area = await getUserArea(key)
-
-	filter += queryType.getObjectTypeFilter(object_type)
-	filter += queryType.getAreaIDFilter(user_area, area_id)
-	filter += queryType.getObjectIDFilter(object_id)
-	return filter
+async function checkAreaIDFilter(request, response, next){
+	const { key, area_id } = request.body
+	let errorCode = {}
+	if (area_id) {
+		if (!Array.isArray(area_id)) {
+			response.json(error_code.area_id_error)
+			return
+		}
+		area_id.map((item) => {
+			if (
+				(typeof item === 'string' && item.match(IntegerRegExp)) ||
+				Number.isInteger(item)
+			) {
+				return item
+			}
+			errorCode = error_code.id_format_error
+			return undefined
+		})
+		const user_area = await getUserArea(key)
+		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
+		if(validArea.length === 0){
+			errorCode = error_code.area_id_authority_error
+		}
+	}
+	if (Object.keys(errorCode).length !== 0) {
+		response.json(errorCode)
+		return
+	}
+	next()
 }
+function checkLimitFilter(request, response, next){
+	const {start_time, end_time, sort_type, count_limit} = request.body
+	if (start_time !== undefined && DateIsValid(start_time) === false) {
+		response.json(error_code.start_time_error)
+		return
+	}
+
+	if (end_time !== undefined && DateIsValid(end_time) === false) {
+		response.json(error_code.end_time_error)
+		return
+	}
+
+	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
+		response.json( error_code.sort_type_define_error)
+		return
+	}
+
+	if (count_limit !== undefined && isNaN(count_limit)) {
+		response.json( error_code.count_error)
+		return
+	}
+	next()
+}
+//#endregion
+
 //#endregion
 export default {
 	//#region api v1.0
@@ -597,6 +628,8 @@ export default {
 	//#region api v1.1
 	checkKey,
 	checkFilter,
+	checkAreaIDFilter,
+	checkLimitFilter,
 	getApiKey,
 	getPeopleHistoryData,
 	getPeopleRealtimeData,

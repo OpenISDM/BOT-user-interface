@@ -202,8 +202,8 @@ const getPeopleHistoryQuery = (
 
 const getPeopleRealtimeQuery = (filter) => {
 	return `
-	select distinct on (object_id)
-		object_table.id as object_id,
+	select
+		object_table.asset_control_number as object_id,
 		object_table.name as object_name,
 		object_summary_table.mac_address as mac_address,
 		object_table.type as object_type,
@@ -233,15 +233,27 @@ const getPeopleRealtimeQuery = (filter) => {
 	`
 }
 
-const getAreaIDQuery = () => {
+const getAreaIDQuery = (key) => {
 	return `
 	select
 		area_table.id as area_id,
 		area_table.readable_name  as area_name
 	from
 		area_table
+	
+	inner join 	user_area 
+	on area_table.id = user_area.area_id 
+
+	inner join user_table 
+	on user_table.id = user_area.user_id 
+
+	inner join api_key
+	on api_key.id = user_table.id
+		
 	where
-		not (area_table.id = '9999')
+		api_key."key" = '${key}'
+	group by 
+		area_table.id, area_table.readable_name 
 	`
 }
 
@@ -259,7 +271,7 @@ const getObjectTypeQuery = (type) => {
 const getObjectRealtimeQuery = (filter) => {
 	return `
 	select distinct on (object_id)
-		object_table.id as object_id,
+		object_table.asset_control_number as object_id,
 		object_table.name as object_name,
 		object_table.mac_address as mac_address,
 		object_table.type  as object_type,
@@ -290,14 +302,14 @@ const getObjectRealtimeQuery = (filter) => {
 }
 
 const getObjectIDFilter = (object_id) => {
-	if (object_id) {
-		return `\nand object_table.id in (${object_id.map((item) => `'${item}'`)})`
+	if (object_id && object_id.length > 0 ) {
+		return `\nand object_table.asset_control_number in (${object_id.map((item) => `'${item}'`)})`
 	}
 	return ''
 }
 
 const getObjectTypeFilter = (object_type) => {
-	if (object_type) {
+	if (object_type && object_type.length > 0) {
 		return `\nand object_table.type in (${object_type.map(
 			(item) => `'${item}'`
 		)})`
@@ -306,10 +318,10 @@ const getObjectTypeFilter = (object_type) => {
 }
 
 const getAreaIDFilter = (user_area, area_id) => {
-	if (area_id) {
+	if (area_id && area_id.length > 0) {
 		return `\n and object_table.area_id in (${area_id.map(
 			(item) =>{
-				if(user_area.includes(item)) {
+				if(user_area.includes(item) || user_area.includes(item.toString())) {
 					return `'${item}'`
 				}
 				return ''
