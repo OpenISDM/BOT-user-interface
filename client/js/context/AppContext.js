@@ -44,7 +44,7 @@ const AppContextProvider = (props) => {
 	const auth = React.useContext(AuthenticationContext)
 	const { locale, user } = auth
 	const { areas_id = [] } = user
-	const id = areas_id[0] ? areas_id[0] : 0 // 0 is default area but it is not exsist
+	const id = areas_id[0] ? areas_id[0] : null
 
 	const initialState = {
 		area: { id },
