@@ -356,6 +356,7 @@ const getObjectHistoryQuery = (
 
 	inner join object_table on
 		object_table.asset_control_number = location_history_table.object_id
+		and object_table.object_type = '0'
 
 	left join lbeacon_table on
 		location_history_table.uuid = lbeacon_table.uuid

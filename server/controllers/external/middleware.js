@@ -3,7 +3,6 @@ import moment from 'moment-timezone'
 import pool from '../../db/connection'
 import code from './codes'
 import queryMethod from './querymethod'
-import querymethod from './querymethod'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 
@@ -72,7 +71,7 @@ async function checkFilter(request, response, next) {
 			errorCode = code.idFormatError
 			return undefined
 		})
-		const user_area = await querymethod.getUserArea(key)
+		const user_area = await queryMethod.getUserArea(key)
 		const validArea = area_id.filter(
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
