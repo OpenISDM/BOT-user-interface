@@ -110,6 +110,11 @@ const area_id_error = {
 	error_message : 'get data fail : area_id input must be a integer array',
 	data: [],
 }
+const area_id_authority_error = {
+	error_code : '264',
+	error_messsage : 'get data fail : permission denied, you enter a area id that out of authority.',
+	data : [],
+}
 export default {
 	get_key_success_v0,
 	get_key_success_v1,
@@ -128,4 +133,5 @@ export default {
 	object_id_error,
 	area_id_error,
 	object_type_error,
+	area_id_authority_error,
 }
