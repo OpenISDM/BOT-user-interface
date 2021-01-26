@@ -282,11 +282,7 @@ async function getPeopleRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = SetFilter(object_id, object_type, area_id)
-		if (typeof filter !== 'string') {
-			response.json(filter)
-			return
-		}
+		const filter = await SetFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
 		data.rows.forEach((item) => {
 			item.last_reported_timestamp = moment(
@@ -320,11 +316,7 @@ async function getPeopleHistoryData(request, response) {
 	count_limit = set_count_limit(count_limit)
 	sort_type = set_sort_type(sort_type)
 
-	const filter = SetFilter(object_id, object_type, area_id)
-	if (typeof filter !== 'string') {
-		response.json(filter)
-		return
-	}
+	const filter = await SetFilter(key, object_id, object_type, area_id)
 
 	try {
 		const data = await pool.query(
@@ -362,11 +354,7 @@ async function getObjectRealtimeData(request, response) {
 	const { key, object_id, object_type, area_id } = request.body
 
 	try {
-		const filter = SetFilter(object_id, object_type, area_id)
-		if (typeof filter !== 'string') {
-			response.json(filter)
-			return
-		}
+		const filter = SetFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
 
 		data.rows.forEach((item) => {
@@ -401,11 +389,7 @@ async function getObjectHistoryData(request, response) {
 	count_limit = set_count_limit(count_limit)
 	sort_type = set_sort_type(sort_type)
 
-	const filter = SetFilter(object_id, object_type, area_id)
-	if (typeof filter !== 'string') {
-		response.json(filter)
-		return
-	}
+	const filter = await SetFilter(key, object_id, object_type, area_id)
 	try {
 		const data = await pool.query(
 			queryType.getObjectHistoryQuery(
@@ -474,7 +458,6 @@ async function getUserArea(key) {
 	const data = userArea.rows.map((item) => {
 		return item.area_id
 	})
-
 	return data
 }
 
@@ -565,16 +548,6 @@ function checkFilter(request, response, next) {
 			response.json(error_code.object_id_error)
 			return
 		}
-		object_id.map((item) => {
-			if (
-				(typeof item === 'string' && item.match(IntegerRegExp)) ||
-				Number.isInteger(item)
-			) {
-				return item
-			}
-			errorCode = error_code.id_format_error
-			return undefined
-		})
 	}
 	if (object_type) {
 		if (!Array.isArray(object_type)) {
@@ -605,14 +578,12 @@ function checkFilter(request, response, next) {
 	next()
 }
 
-function SetFilter(object_id, object_type, area_id) {
+async function SetFilter(key, object_id, object_type, area_id) {
 	let filter = ''
+	const user_area = await getUserArea(key)
 
-	if (typeof filter !== 'string') {
-		return filter
-	}
 	filter += queryType.getObjectTypeFilter(object_type)
-	filter += queryType.getAreaIDFilter(area_id)
+	filter += queryType.getAreaIDFilter(user_area, area_id)
 	filter += queryType.getObjectIDFilter(object_id)
 	return filter
 }

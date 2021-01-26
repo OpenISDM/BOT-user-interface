@@ -305,13 +305,20 @@ const getObjectTypeFilter = (object_type) => {
 	return ''
 }
 
-const getAreaIDFilter = (area_id) => {
+const getAreaIDFilter = (user_area, area_id) => {
 	if (area_id) {
 		return `\n and object_table.area_id in (${area_id.map(
-			(item) => `'${item}'`
+			(item) =>{
+				if(user_area.includes(item)) {
+					return `'${item}'`
+				}
+				return ''
+		}
 		)})`
 	}
-	return ''
+	return `\nand object_table.area_id in (${user_area.map(
+		(item) => `'${item}'`
+	)})`
 }
 
 const getObjectHistoryQuery = (
@@ -372,7 +379,7 @@ const getIDTableQuery = (area_id) => {
 const getUserAreaQuery = (key)=>{
 	return `
 	select 
-		distinct area_id
+		area_id
 	from 
 		user_area
 
@@ -383,6 +390,7 @@ const getUserAreaQuery = (key)=>{
 	on api_key.id  = user_table.id 
 
 	where api_key.key= '${key}' 
+	group by area_id
 	`
 }
 //#endregion
