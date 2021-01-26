@@ -210,6 +210,7 @@ class ObjectTable extends React.Component {
 			showDeleteConfirmation: false,
 			disableASN: false,
 			isAddButtonPressed: false,
+			selectedRowData: {},
 		})
 
 		this.clearSelection()
