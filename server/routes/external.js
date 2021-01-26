@@ -1,14 +1,40 @@
-import api_query from '../controllers/external/api_query'
-
-
+import query from '../controllers/external/querymethod'
+import middleware from '../controllers/external/middleware'
 export default (app) => {
-	app.post('/api/1.1/auth/signin', api_query.getApiKey)
-	app.post('/api/1.1/tracing/history/people', api_query.checkKey, api_query.checkFilter, api_query.checkLimitFilter, api_query.getPeopleHistoryData)
-	app.post('/api/1.1/tracing/realtime/people', api_query.checkKey, api_query.checkFilter, api_query.getPeopleRealtimeData)
-	app.post('/api/1.1/tracing/history/device', api_query.checkKey, api_query.checkFilter,api_query.checkLimitFilter, api_query.getObjectHistoryData)
-	app.post('/api/1.1/tracing/realtime/device',api_query.checkKey, api_query.checkFilter, api_query.getObjectRealtimeData)
-	app.post('/api/1.1/tracing/objectlist',api_query.checkKey, api_query.checkAreaIDFilter, api_query.getIDTableData)
+	app.post('/api/1.1/auth/signin', query.getApiKey)
+	app.post(
+		'/api/1.1/tracing/history/people',
+		middleware.checkKey,
+		middleware.checkFilter,
+		middleware.checkAdditionalFilter,
+		query.getPeopleHistoryData
+	)
+	app.post(
+		'/api/1.1/tracing/realtime/people',
+		middleware.checkKey,
+		middleware.checkFilter,
+		query.getPeopleRealtimeData
+	)
+	app.post(
+		'/api/1.1/tracing/history/device',
+		middleware.checkKey,
+		middleware.checkFilter,
+		middleware.checkAdditionalFilter,
+		query.getObjectHistoryData
+	)
+	app.post(
+		'/api/1.1/tracing/realtime/device',
+		middleware.checkKey,
+		middleware.checkFilter,
+		query.getObjectRealtimeData
+	)
+	app.post(
+		'/api/1.1/tracing/objectlist',
+		middleware.checkKey,
+		middleware.checkAreaIDFilter,
+		query.getIDTableData
+	)
 
-	app.post('/api/1.0/tracing/history', api_query.get_history_data)
-	app.post('/api/1.0/auth/signin', api_query.get_api_key_v0)
+	app.post('/api/1.0/tracing/history', query.get_history_data)
+	app.post('/api/1.0/auth/signin', query.get_api_key_v0)
 }
