@@ -41,15 +41,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default (app) => {
 	app.get('/login', (req, res) => {
-		res.sendFile(
-			path.join(__dirname, '..', '..', 'public', 'dist', 'index.html')
-		)
+		res.sendFile(path.join(__dirname, '..', 'public', 'dist', 'index.html'))
 	})
 
 	app.get(/^\/page\/(.*)/, pageChecker, (req, res) => {
-		res.sendFile(
-			path.join(__dirname, '..', '..', 'public', 'dist', 'index.html')
-		)
+		res.sendFile(path.join(__dirname, '..', 'public', 'dist', 'index.html'))
 	})
 
 	app.get('/resetpassword/new/:token', verifyResetPwdToken)
