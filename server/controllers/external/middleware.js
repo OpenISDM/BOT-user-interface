@@ -29,8 +29,8 @@ async function checkKey(request, response, next) {
 
 		if (moment().isBefore(moment(validTime)) && item.key === key) {
 			Flag = Authenticate.SUCCESS
-		} else if (moment().isAfter(moment(validTime)) && item.key === key) {
-			Flag = Authenticate.UNACTIVATED
+		} else if (moment().isAfter(moment(validTime)) && item.key === key && Flag !== Authenticate.SUCCESS) {
+            Flag = Authenticate.UNACTIVATED
 		}
 	})
 
