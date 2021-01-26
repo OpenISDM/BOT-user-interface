@@ -302,8 +302,10 @@ const getObjectRealtimeQuery = (filter) => {
 }
 
 const getObjectIDFilter = (object_id) => {
-	if (object_id && object_id.length > 0 ) {
-		return `\nand object_table.asset_control_number in (${object_id.map((item) => `'${item}'`)})`
+	if (object_id && object_id.length > 0) {
+		return `\nand object_table.asset_control_number in (${object_id.map(
+			(item) => `'${item}'`
+		)})`
 	}
 	return ''
 }
@@ -319,14 +321,12 @@ const getObjectTypeFilter = (object_type) => {
 
 const getAreaIDFilter = (user_area, area_id) => {
 	if (area_id && area_id.length > 0) {
-		return `\n and object_table.area_id in (${area_id.map(
-			(item) =>{
-				if(user_area.includes(item) || user_area.includes(item.toString())) {
-					return `'${item}'`
-				}
-				return ''
-		}
-		)})`
+		return `\n and object_table.area_id in (${area_id.map((item) => {
+			if (user_area.includes(item) || user_area.includes(item.toString())) {
+				return `'${item}'`
+			}
+			return ''
+		})})`
 	}
 	return `\nand object_table.area_id in (${user_area.map(
 		(item) => `'${item}'`
@@ -383,12 +383,11 @@ const getIDTableQuery = (area_id) => {
 	from
 		object_table
 	where
-		object_table.area_id in (${area_id.map(
-			(item) => `'${item}'`)})	
+		object_table.area_id in (${area_id.map((item) => `'${item}'`)})	
 	`
 }
 
-const getUserAreaQuery = (key)=>{
+const getUserAreaQuery = (key) => {
 	return `
 	select 
 		area_id

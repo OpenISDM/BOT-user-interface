@@ -419,11 +419,13 @@ async function getObjectHistoryData(request, response) {
 //#endregion
 
 //#region Set values or check value methods
-async function compareUserArea(key, area_id){
+async function compareUserArea(key, area_id) {
 	const user_area = await getUserArea(key)
 
-	if(area_id){
-		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
+	if (area_id) {
+		const validArea = area_id.filter(
+			(item) => user_area.includes(item) || user_area.includes(item.toString())
+		)
 		console.log(validArea)
 		return validArea
 	}
@@ -475,7 +477,6 @@ function setTimeFormat(time) {
 	return moment(time, timeDefaultFormat).format()
 }
 
-
 async function setFilter(key, object_id, object_type, area_id) {
 	let filter = ''
 	const user_area = await getUserArea(key)
@@ -486,7 +487,6 @@ async function setFilter(key, object_id, object_type, area_id) {
 	return filter
 }
 //#endregion
-
 
 //#endregion
 export default {

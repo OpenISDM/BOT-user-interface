@@ -73,8 +73,10 @@ async function checkFilter(request, response, next) {
 			return undefined
 		})
 		const user_area = await querymethod.getUserArea(key)
-		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
-		if(validArea.length === 0){
+		const validArea = area_id.filter(
+			(item) => user_area.includes(item) || user_area.includes(item.toString())
+		)
+		if (validArea.length === 0) {
 			errorCode = code.area_id_authority_error
 		}
 	}
@@ -84,7 +86,7 @@ async function checkFilter(request, response, next) {
 	}
 	next()
 }
-async function checkAreaIDFilter(request, response, next){
+async function checkAreaIDFilter(request, response, next) {
 	const { key, area_id } = request.body
 	let errorCode = {}
 	if (area_id) {
@@ -103,8 +105,10 @@ async function checkAreaIDFilter(request, response, next){
 			return undefined
 		})
 		const user_area = await queryMethod.getUserArea(key)
-		const validArea = area_id.filter(item => user_area.includes(item) || user_area.includes(item.toString()))
-		if(validArea.length === 0){
+		const validArea = area_id.filter(
+			(item) => user_area.includes(item) || user_area.includes(item.toString())
+		)
+		if (validArea.length === 0) {
 			errorCode = code.area_id_authority_error
 		}
 	}
@@ -114,8 +118,8 @@ async function checkAreaIDFilter(request, response, next){
 	}
 	next()
 }
-function checkAdditionalFilter(request, response, next){
-	const {start_time, end_time, sort_type, count_limit} = request.body
+function checkAdditionalFilter(request, response, next) {
+	const { start_time, end_time, sort_type, count_limit } = request.body
 	if (start_time !== undefined && dateIsValid(start_time) === false) {
 		response.json(code.start_time_error)
 		return
@@ -127,12 +131,12 @@ function checkAdditionalFilter(request, response, next){
 	}
 
 	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
-		response.json( code.sort_type_define_error)
+		response.json(code.sort_type_define_error)
 		return
 	}
 
 	if (count_limit !== undefined && isNaN(count_limit)) {
-		response.json( code.count_error)
+		response.json(code.count_error)
 		return
 	}
 	next()
@@ -143,8 +147,8 @@ function dateIsValid(time) {
 }
 
 export default {
-    checkKey,
-    checkFilter,
-    checkAreaIDFilter,
-    checkAdditionalFilter
+	checkKey,
+	checkFilter,
+	checkAreaIDFilter,
+	checkAdditionalFilter,
 }

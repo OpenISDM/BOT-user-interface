@@ -1,7 +1,7 @@
-function get_key_success_v0(key, time){
+function get_key_success_v0(key, time) {
 	return {
-		error_code : '0',
-		error_message : 'get key success',
+		error_code: '0',
+		error_message: 'get key success',
 		key,
 		note: 'validity period of key until : ' + time,
 	}
@@ -16,19 +16,19 @@ function get_key_success_v1(key, time) {
 	}
 }
 
-function get_value_success(rows){
+function get_value_success(rows) {
 	return {
-		error_code : '0',
-		error_message : 'get data success',
-		data : rows
+		error_code: '0',
+		error_message: 'get data success',
+		data: rows,
 	}
 }
 
-function get_null_value(rows){
+function get_null_value(rows) {
 	return {
-		error_code : '101',
-		error_message : 'success to post, but there is no match data with filter',
-		data : rows
+		error_code: '101',
+		error_message: 'success to post, but there is no match data with filter',
+		data: rows,
 	}
 }
 
@@ -93,27 +93,28 @@ const id_format_error = {
 	data: [],
 }
 
-const object_id_error={
+const object_id_error = {
 	error_code: '261',
-	error_message : 'get data fail : object_id input must be a integer array',
+	error_message: 'get data fail : object_id input must be a integer array',
 	data: [],
 }
 
-const object_type_error ={
-	error_code : '262',
+const object_type_error = {
+	error_code: '262',
 	error_message: 'get data fail : object_type input must be a string array',
-	data:[],
+	data: [],
 }
 
 const area_id_error = {
-	error_code:'263',
-	error_message : 'get data fail : area_id input must be a integer array',
+	error_code: '263',
+	error_message: 'get data fail : area_id input must be a integer array',
 	data: [],
 }
 const area_id_authority_error = {
-	error_code : '264',
-	error_messsage : 'get data fail : permission denied, you enter a area id that out of authority.',
-	data : [],
+	error_code: '264',
+	error_messsage:
+		'get data fail : permission denied, you enter a area id that out of authority.',
+	data: [],
 }
 export default {
 	get_key_success_v0,
