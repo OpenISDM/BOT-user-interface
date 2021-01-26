@@ -198,7 +198,7 @@ class UserProfile extends React.Component {
 				</div>
 				<div className="mb-3 text-capitalize">
 					<div className="font-size-120-percent color-black">
-						{locale.texts.YOUR_SERVICE_AREAS}
+						{locale.texts.SERVICE_AREAS}
 					</div>
 					<div>
 						{Object.values(areaTable)
