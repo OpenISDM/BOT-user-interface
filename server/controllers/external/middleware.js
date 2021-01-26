@@ -37,9 +37,9 @@ async function checkKey(request, response, next) {
 	if (Flag === Authenticate.SUCCESS) {
 		next()
 	} else if (Flag === Authenticate.UNACTIVATED) {
-		response.json(code.key_unactive)
+		response.json(code.keyUnactive)
 	} else {
-		response.json(code.key_incorrect)
+		response.json(code.keyIncorrect)
 	}
 }
 async function checkFilter(request, response, next) {
@@ -47,19 +47,19 @@ async function checkFilter(request, response, next) {
 	let errorCode = {}
 	if (object_id) {
 		if (!Array.isArray(object_id)) {
-			response.json(code.object_id_error)
+			response.json(code.objectIDError)
 			return
 		}
 	}
 	if (object_type) {
 		if (!Array.isArray(object_type)) {
-			response.json(code.object_type_error)
+			response.json(code.objectTypeError)
 			return
 		}
 	}
 	if (area_id) {
 		if (!Array.isArray(area_id)) {
-			response.json(code.area_id_error)
+			response.json(code.areaIDError)
 			return
 		}
 		area_id.map((item) => {
@@ -69,7 +69,7 @@ async function checkFilter(request, response, next) {
 			) {
 				return item
 			}
-			errorCode = code.id_format_error
+			errorCode = code.idFormatError
 			return undefined
 		})
 		const user_area = await querymethod.getUserArea(key)
@@ -77,7 +77,7 @@ async function checkFilter(request, response, next) {
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
 		if (validArea.length === 0) {
-			errorCode = code.area_id_authority_error
+			errorCode = code.areaIDAuthorityError
 		}
 	}
 	if (Object.keys(errorCode).length !== 0) {
@@ -91,7 +91,7 @@ async function checkAreaIDFilter(request, response, next) {
 	let errorCode = {}
 	if (area_id) {
 		if (!Array.isArray(area_id)) {
-			response.json(code.area_id_error)
+			response.json(code.areaIDError)
 			return
 		}
 		area_id.map((item) => {
@@ -101,7 +101,7 @@ async function checkAreaIDFilter(request, response, next) {
 			) {
 				return item
 			}
-			errorCode = code.id_format_error
+			errorCode = code.idFormatError
 			return undefined
 		})
 		const user_area = await queryMethod.getUserArea(key)
@@ -109,7 +109,7 @@ async function checkAreaIDFilter(request, response, next) {
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
 		if (validArea.length === 0) {
-			errorCode = code.area_id_authority_error
+			errorCode = code.areaIDAuthorityError
 		}
 	}
 	if (Object.keys(errorCode).length !== 0) {
@@ -121,22 +121,22 @@ async function checkAreaIDFilter(request, response, next) {
 function checkAdditionalFilter(request, response, next) {
 	const { start_time, end_time, sort_type, count_limit } = request.body
 	if (start_time !== undefined && dateIsValid(start_time) === false) {
-		response.json(code.start_time_error)
+		response.json(code.startTimeError)
 		return
 	}
 
 	if (end_time !== undefined && dateIsValid(end_time) === false) {
-		response.json(code.end_time_error)
+		response.json(code.endTimeError)
 		return
 	}
 
 	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
-		response.json(code.sort_type_define_error)
+		response.json(code.sortTypeDefineError)
 		return
 	}
 
 	if (count_limit !== undefined && isNaN(count_limit)) {
-		response.json(code.count_error)
+		response.json(code.countLimitError)
 		return
 	}
 	next()

@@ -35,6 +35,6 @@ export default (app) => {
 		query.getIDTableData
 	)
 
-	app.post('/api/1.0/tracing/history', query.get_history_data)
-	app.post('/api/1.0/auth/signin', query.get_api_key_v0)
+	app.post('/api/1.0/tracing/history', query.getTracingHisotry)
+	app.post('/api/1.0/auth/signin', query.getApiKeyV0)
 }

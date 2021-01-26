@@ -7,7 +7,7 @@ const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { encrypt } from '../../helpers'
 
 //#region api v1.0
-const get_api_key_v0 = (request, response) => {
+const getApiKeyV0 = (request, response) => {
 	const { username, password } = request.body
 
 	let getUserName = ''
@@ -35,7 +35,7 @@ const get_api_key_v0 = (request, response) => {
 							.query(queryType.setKey(res.rows[0].user_id, getUserName, hash))
 							.then((res) => {
 								response.json(
-									error_code.get_key_success_v0(
+									error_code.getKeySuccessV0(
 										hash,
 										moment().add(30, 'm').locale('en').format('LT')
 									)
@@ -50,7 +50,7 @@ const get_api_key_v0 = (request, response) => {
 						console.log(`confirm validation fails ${err}`)
 					})
 			} else {
-				response.json(error_code.sha_256_incorrect)
+				response.json(error_code.accountIncorrect)
 			}
 		})
 		.catch((err) => {
@@ -58,7 +58,7 @@ const get_api_key_v0 = (request, response) => {
 		})
 }
 
-async function get_history_data(request, response) {
+async function getTracingHisotry(request, response) {
 	let {
 		key,
 		tag, // string
@@ -68,7 +68,7 @@ async function get_history_data(request, response) {
 		count_limit, //
 		sort_type,
 	} = request.body
-	let matchRes = Promise.resolve(match_key_v0(key))
+	let matchRes = Promise.resolve(matchKey(key))
 	await matchRes.then(function (result) {
 		matchRes = result
 	})
@@ -81,7 +81,7 @@ async function get_history_data(request, response) {
 		if (start_time != undefined) {
 			// verification by format
 			if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
-				response.json(error_code.start_time_error)
+				response.json(error_code.startTimeError)
 			} else {
 				// if format right then convert to utc
 				start_time = time_format(start_time)
@@ -93,7 +93,7 @@ async function get_history_data(request, response) {
 
 		if (end_time != undefined) {
 			if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
-				response.json(error_code.end_time_error)
+				response.json(error_code.endTimeError)
 			} else {
 				end_time = time_format(end_time)
 			}
@@ -110,7 +110,7 @@ async function get_history_data(request, response) {
 			tag.map((item) => {
 				if (item.match(pattern) == null) {
 					//judge format
-					response.json(error_code.mac_address_error)
+					response.json(error_code.macAddressError)
 				}
 			})
 		}
@@ -124,7 +124,7 @@ async function get_history_data(request, response) {
 			Lbeacon.map((item) => {
 				if (item.match(pattern) == null) {
 					//judge format
-					response.json(error_code.Lbeacon_error)
+					response.json(error_code.lbeaconFormatError)
 				}
 			})
 		}
@@ -133,17 +133,17 @@ async function get_history_data(request, response) {
 		if (count_limit == undefined) {
 			count_limit = 10
 		} else {
-			isNaN(count_limit) ? response.json(error_code.count_error) : null
+			isNaN(count_limit) ? response.json(error_code.countLimitError) : null
 		}
 
 		//0=DESC 1=ASC  : default=0
 		if (sort_type == undefined) {
 			sort_type = 'desc'
 		} else if (sort_type != 'desc' && sort_type != 'asc') {
-			response.json(error_code.sort_type_define_error)
+			response.json(error_code.sortTypeDefineError)
 		}
 
-		const data = await get_data(
+		const data = await getDurationData(
 			key,
 			start_time,
 			end_time,
@@ -163,11 +163,11 @@ async function get_history_data(request, response) {
 		response.json(error_code.key_timeout)
 	} else {
 		// key fail match with user
-		response.json(error_code.key_incorrect)
+		response.json(error_code.keyIncorrect)
 	}
 }
 
-async function match_key_v0(key) {
+async function matchKey(key) {
 	let matchFlag = 0 // flag = 0 when key error
 	return await pool
 		.query(queryType.getAllKeyQuery)
@@ -187,7 +187,7 @@ async function match_key_v0(key) {
 		})
 }
 
-async function get_data(
+async function getDurationData(
 	key,
 	start_time,
 	end_time,
@@ -344,6 +344,7 @@ async function getObjectRealtimeData(request, response) {
 		console.log(`get realtime data failed : ${err}`)
 	}
 }
+
 async function getApiKey(request, response) {
 	const { username, password } = request.body
 
@@ -376,13 +377,13 @@ async function getApiKey(request, response) {
 				console.log(`update data error : ${err}`)
 			})
 		response.json(
-			error_code.get_key_success_v1(
+			error_code.getKeySuccessV1(
 				hashToken,
 				moment().add(30, 'm').format(timeDefaultFormat)
 			)
 		)
 	} else {
-		response.json(error_code.sha_256_incorrect)
+		response.json(error_code.accountIncorrect)
 	}
 }
 
@@ -437,9 +438,9 @@ function checkIsNullResponse(rows) {
 		rows.length > 0 ||
 		(Object.keys(rows).length > 0 && rows.constructor === Object)
 	) {
-		return error_code.get_value_success(rows)
+		return error_code.getValueSuccess(rows)
 	}
-	return error_code.get_null_value(rows)
+	return error_code.getNullValue(rows)
 }
 
 async function getUserArea(key) {
@@ -491,8 +492,8 @@ async function setFilter(key, object_id, object_type, area_id) {
 //#endregion
 export default {
 	//#region api v1.0
-	get_api_key_v0,
-	get_history_data,
+	getApiKeyV0,
+	getTracingHisotry,
 	//#endregion
 
 	//#region api v1.1
