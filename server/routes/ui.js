@@ -53,4 +53,13 @@ export default (app) => {
 	})
 
 	app.get('/resetpassword/new/:token', verifyResetPwdToken)
+
+	/** Replace with br file if the browser support br encoding */
+	app.get(/\.(js)$/, (req, res, next) => {
+		if (req.header('Accept-Encoding').includes('br')) {
+			req.url += '.br'
+			res.set('Content-Encoding', 'br')
+		}
+		next()
+	})
 }
