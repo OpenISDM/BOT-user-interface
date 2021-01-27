@@ -307,13 +307,18 @@ async function getPeopleRealtimeData(request, response) {
 }
 
 async function getPeopleHistoryData(request, response) {
-	const { key, area_id, object_id, object_type } = request.body
-	let { start_time, end_time, count_limit, sort_type } = request.body
+	const {
+		key,
+		area_id,
+		object_id,
+		object_type,
+		sort_type = 'desc',
+	} = request.body
+	let { start_time, end_time, count_limit = 10 } = request.body
 
 	start_time = setInitialTime(start_time, 1)
 	end_time = setInitialTime(end_time, 0)
-	count_limit = setCountLimit(count_limit)
-	sort_type = setSortType(sort_type)
+	if (count_limit > 50000) count_limit = 500000
 
 	const filter = await setFilter(key, object_id, object_type, area_id)
 
@@ -392,14 +397,19 @@ async function getApiKey(request, response) {
 }
 
 async function getObjectHistoryData(request, response) {
-	const { key, object_type, object_id, area_id } = request.body
-	let { start_time, end_time, count_limit, sort_type } = request.body
+	const {
+		key,
+		object_type,
+		object_id,
+		area_id,
+		sort_type = 'desc',
+	} = request.body
+	let { start_time, end_time, count_limit = 10 } = request.body
 
 	start_time = setInitialTime(start_time, 1)
 	end_time = setInitialTime(end_time, 0)
-	count_limit = setCountLimit(count_limit)
-	sort_type = setSortType(sort_type)
-
+	if (count_limit > 50000) count_limit = 50000
+	
 	const filter = await setFilter(key, object_id, object_type, area_id)
 	try {
 		const data = await pool.query(
@@ -459,22 +469,6 @@ function setInitialTime(time, diff) {
 		return moment(moment().subtract(diff, 'day')).format()
 	}
 	return setTimeFormat(time)
-}
-
-function setSortType(sort_type) {
-	if (sort_type === undefined) {
-		return 'desc'
-	}
-	return sort_type
-}
-
-function setCountLimit(count_limit) {
-	if (count_limit === undefined) {
-		return 10
-	} else if (count_limit >= 50000) {
-		return 50000
-	}
-	return count_limit
 }
 
 function setTimeFormat(time) {
