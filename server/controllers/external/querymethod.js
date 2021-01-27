@@ -82,7 +82,7 @@ async function getTracingHisotry(request, response) {
 	if (sort_type == undefined) {
 		sort_type = 'desc'
 	} else if (sort_type != 'desc' && sort_type != 'asc') {
-		response.json(error_code.sortTypeDefineError)
+		response.json(error_code.sortTypeError)
 	}
 
 	const data = await getDurationData(

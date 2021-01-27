@@ -56,6 +56,12 @@ const endTimeError = {
 	data: [],
 }
 
+const nullTimeError = {
+	error_code : '212',
+	error_message : 'get data fail : please enter start_time and end_time',
+	data:[],
+}
+
 const macAddressError = {
 	error_code: '220',
 	error_message: 'get data fail : mac address of TAG format error',
@@ -74,7 +80,7 @@ const countLimitError = {
 	data: [],
 }
 
-const sortTypeDefineError = {
+const sortTypeError = {
 	error_code: '250',
 	error_message: 'get data fail : sort type must be desc or asc',
 	data: [],
@@ -117,10 +123,11 @@ export default {
 	keyUnactive,
 	startTimeError,
 	endTimeError,
+	nullTimeError,
 	macAddressError,
 	lbeaconFormatError,
 	countLimitError,
-	sortTypeDefineError,
+	sortTypeError,
 	idFormatError,
 	getNullValue,
 	objectIDError,
