@@ -1,5 +1,5 @@
-import query from '../controllers/middleware/querymethod'
-import {middleware as middleware} from '../middlewares/index'
+import query from '../controllers/external/querymethod'
+import {external as middleware} from '../middlewares/index'
 export default (app) => {
 	app.post('/api/1.1/auth/signin', query.getApiKey)
 	app.post(
