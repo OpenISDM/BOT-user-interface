@@ -247,7 +247,7 @@ async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
 
 	try {
-		const validArea = compareUserArea(key, area_id)
+		const validArea = await compareUserArea(key, area_id)
 
 		const ObjectTablePromise = pool.query(queryType.getIDTableQuery(validArea))
 		const AreaTablePromise = pool.query(queryType.getAreaIDQuery(key))
@@ -431,7 +431,6 @@ async function compareUserArea(key, area_id) {
 		const validArea = area_id.filter(
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
-		console.log(validArea)
 		return validArea
 	}
 	return user_area

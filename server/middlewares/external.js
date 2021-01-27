@@ -3,6 +3,7 @@ import moment from 'moment-timezone'
 import pool from '../db/connection'
 import code from '../controllers/external/codes'
 import queryMethod from '../controllers/external/querymethod'
+import querymethod from '../controllers/external/querymethod'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 
@@ -89,33 +90,25 @@ async function checkFilter(request, response, next) {
 }
 async function checkAreaIDFilter(request, response, next) {
 	const { key, area_id } = request.body
-
-	let errorCode = null
-
 	if (area_id) {
 		if (!Array.isArray(area_id)) {
 			response.json(code.areaIDError)
 			return
 		}
+		const userArea = await querymethod.getUserArea(key)
+
 		area_id.every((item)=>{
 			if(IntegerRegExp.test(item)){
+				if(!(userArea.includes(item) || userArea.includes(item.toString()))){
+					response.json(code.areaIDAuthorityError)
+				}
 				return true
 			}
 			response.json(code.idFormatError)
 			return false
 		})
-		const user_area = await queryMethod.getUserArea(key)
-		const validArea = area_id.filter(
-			(item) => user_area.includes(item) || user_area.includes(item.toString())
-		)
-		if (validArea.length === 0) {
-			errorCode = code.areaIDAuthorityError
-		}
 	}
-	if (errorCode) {
-		response.json(errorCode)
-		return
-	}
+
 	next()
 }
 function checkAdditionalFilter(request, response, next) {
