@@ -247,27 +247,40 @@ async function getIDTableData(request, response) {
 	const { key, area_id } = request.body
 
 	try {
-		const validArea = await compareUserArea(key, area_id)
+		const validArea = compareUserArea(key, area_id)
 
-		const ObjectTable = await pool.query(queryType.getIDTableQuery(validArea))
-		const AreaTable = await pool.query(queryType.getAreaIDQuery(key))
-		const ObjectType = await pool.query(
+		const ObjectTablePromise = pool.query(queryType.getIDTableQuery(validArea))
+		const AreaTablePromise = pool.query(queryType.getAreaIDQuery(key))
+		const ObjectTypePromise = pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.DEVICE)
 		)
-		const PeopleType = await pool.query(
+		const PeopleTypePromise = pool.query(
 			queryType.getObjectTypeQuery(ObjectTypeQuery.PEOPLE)
 		)
+
+		const [
+			ObjectTableRes,
+			AreaTableRes,
+			ObjectTypeRes,
+			PeopleTypeRes,
+		] = await Promise.all([
+			ObjectTablePromise,
+			AreaTablePromise,
+			ObjectTypePromise,
+			PeopleTypePromise,
+		])
+
 		const data = {
-			area_table: AreaTable.rows,
+			area_table: AreaTableRes.rows,
 			object_types: {
-				people_type: PeopleType.rows.map((item) => {
+				people_type: PeopleTypeRes.rows.map((item) => {
 					return item.object_type
 				}),
-				device_type: ObjectType.rows.map((item) => {
+				device_type: ObjectTypeRes.rows.map((item) => {
 					return item.object_type
 				}),
 			},
-			object_table: ObjectTable.rows,
+			object_table: ObjectTableRes.rows,
 		}
 		response.json(checkIsNullResponse(data))
 	} catch (err) {
