@@ -361,31 +361,22 @@ async function getObjectRealtimeData(request, response) {
 async function getApiKey(request, response) {
 	const { username, password } = request.body
 
-	let userName = ''
-
+	let user = null
 	const allUser = await pool.query(queryType.getAllUserQuery).catch((err) => {
 		console.log(`get all username fail : ${err}`)
 	})
 
 	allUser.rows.forEach((item) => {
 		if (username === item.name && password === item.password) {
-			userName = item.name
+			user = item
 		}
 	})
 
-	if (userName !== '') {
-		const validationConfirm = await pool
-			.query(queryType.confirmValidation(userName))
-			.catch((err) => {
-				console.log(`confirm validation error : ${err}`)
-			})
-
+	if (user) {
 		const hashToken = encrypt.createHash(password)
 
 		await pool
-			.query(
-				queryType.setKey(validationConfirm.rows[0].user_id, userName, hashToken)
-			)
+			.query(queryType.setKey(user.id, user.name, hashToken))
 			.catch((err) => {
 				console.log(`update data error : ${err}`)
 			})
