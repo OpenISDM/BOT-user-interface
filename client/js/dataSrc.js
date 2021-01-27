@@ -72,6 +72,7 @@ export const trace = {
 	contactTree: `${domain}/data/trace/contactTree`,
 }
 export const area = `${domain}/data/area`
+export const areaUser = `${domain}/data/area/user`
 export const role = `${domain}/data/role`
 export const auth = {
 	signin: `${domain}/data/auth/signin`,
@@ -126,6 +127,7 @@ export default {
 	objectPackage,
 	trace,
 	area,
+	areaUser,
 	role,
 	auth,
 	file,

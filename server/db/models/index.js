@@ -12,6 +12,8 @@ import UserAssignments, { UserAssignmentEnum } from './user-assignments'
 import NotificationTable from './notification-table'
 import ObjectSummaryTable from './object-summary-table'
 import AreaTable from './area-table'
+import UserTable from './user-table'
+import UserArea from './user-area'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -24,6 +26,20 @@ ObjectTable.hasOne(ObjectSummaryTable, {
 ObjectSummaryTable.belongsTo(ObjectTable, {
 	foreignKey: 'mac_address',
 	targetKey: 'mac_address',
+})
+
+UserAssignments.belongsTo(DeviceGroupList, { foreignKey: 'group_list_id' })
+UserAssignments.belongsTo(PatientGroupList, { foreignKey: 'group_list_id' })
+
+UserTable.belongsToMany(AreaTable, {
+	through: UserArea,
+	as: 'areas',
+	foreignKey: 'user_id',
+})
+AreaTable.belongsToMany(UserTable, {
+	through: UserArea,
+	as: 'users',
+	foreignKey: 'area_id',
 })
 
 export {
@@ -41,5 +57,7 @@ export {
 	NotificationTable,
 	ObjectSummaryTable,
 	AreaTable,
+	UserArea,
+	UserTable,
 	UserAssignmentEnum,
 }

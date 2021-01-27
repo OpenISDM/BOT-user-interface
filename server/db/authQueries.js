@@ -46,7 +46,8 @@ export default {
 							max_search_history_count,
 							locale_id,
 							keyword_type,
-							list_id
+                            list_id,
+                            last_login_area
 						FROM user_table
 						WHERE name =$1
 					)
@@ -112,7 +113,8 @@ export default {
 				) AS search_history,
 				user_info.id,
 				user_info.id,
-				user_info.locale_id,
+                user_info.locale_id,
+                user_info.last_login_area,
 				user_info.keyword_type,
 				user_info.list_id,
 				device_group_list.name AS list_name,

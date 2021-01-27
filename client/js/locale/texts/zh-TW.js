@@ -111,7 +111,7 @@ const tw = {
 	FEMALE: '女',
 	SCAN_TAG: '請掃描TAG',
 	ALREADY_CHOOSE: '已選擇',
-	MAIN_AREA: '主要區域',
+	LAST_LOGIN_AREA: '最近登入區域',
 	PRIMARY_AREA: '主要區域',
 	SECONDARY_AREAS: '次要區域',
 	PERSONA_LIST: '人員列表',
@@ -642,6 +642,9 @@ const tw = {
 	REPLACE_TAG: '更換標籤',
 
 	SERVICE_AREAS: '負責區域',
+
+	TIPS: '提示',
+	TIPS_REPLACE_TAG: '請選擇任一個物件進行更換標籤。',
 }
 
 export default tw

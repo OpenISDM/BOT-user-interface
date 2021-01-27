@@ -73,6 +73,7 @@ export const signin = (request, response) => {
 						keyword_type,
 						list_id,
 						list_name,
+						last_login_area,
 					} = res.rows[0]
 
 					const userInfo = {
@@ -89,6 +90,7 @@ export const signin = (request, response) => {
 						keyword_type,
 						list_id,
 						list_name,
+						last_login_area,
 					}
 
 					/** Set session */

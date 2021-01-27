@@ -52,7 +52,7 @@ const DeviceTable = () => {
 				'acn',
 				'transferred_location',
 			]}
-			enabledSelection={[SELECTION.TYPE, SELECTION.STATUS]}
+			enabledSelection={[SELECTION.TYPE, SELECTION.STATUS, SELECTION.AREA]}
 			columns={objectTableColumn}
 			EditedForm={EditObjectForm}
 			objectApiMode={DEVICE}

@@ -213,7 +213,7 @@ const EditUserForm = ({
 							<FormikFormGroup
 								name="areaName"
 								className="text-capitalize"
-								label={locale.texts.PRIMARY_AREA}
+								label={locale.texts.SERVICE_AREAS}
 								error={errors.areaIds}
 								touched={touched.areaIds}
 								component={() => (

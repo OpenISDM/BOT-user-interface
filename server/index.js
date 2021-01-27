@@ -75,15 +75,6 @@ app.use(
 	})
 )
 
-/** Replace with br file if the browser support br encoding */
-app.get(/\.(js)$/, (req, res, next) => {
-	if (req.header('Accept-Encoding').includes('br')) {
-		req.url += '.br'
-		res.set('Content-Encoding', 'br')
-	}
-	next()
-})
-
 app.use(express.static(path.join(__dirname, 'public', 'dist')))
 app.use('/map', express.static(path.join(__dirname, 'public', 'map')))
 

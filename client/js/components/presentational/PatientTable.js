@@ -33,7 +33,7 @@
 */
 
 import React from 'react'
-import ObjectTable from './ObjectTable'
+import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../../config'
 import EditPatientForm from './form/EditPatientForm'
 import { patientTableColumn } from '../../config/tables'
@@ -44,7 +44,7 @@ const PatientTable = () => {
 		<ObjectTable
 			objectType={[config.OBJECT_TYPE.PERSON]}
 			filteredAttribute={['name', 'area', 'macAddress', 'acn', 'sex']}
-			enabledSelection={[]}
+			enabledSelection={[SELECTION.AREA]}
 			columns={patientTableColumn}
 			EditedForm={EditPatientForm}
 			objectApiMode={PERSON}

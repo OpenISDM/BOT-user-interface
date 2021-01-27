@@ -35,9 +35,8 @@
 import React from 'react'
 import { Button, ButtonToolbar } from 'react-bootstrap'
 import { AppContext } from '../../../context/AppContext'
-import EditAreasForm from '../../presentational/form/EditAreasForm'
 import EditPwdForm from '../../presentational/form/EditPwdForm'
-import messageGenerator from '../../../helper/messageGenerator'
+import { setSuccessMessage } from '../../../helper/messageGenerator'
 import config from '../../../config'
 import NumberPicker from '../NumberPicker'
 import apiHelper from '../../../helper/apiHelper'
@@ -59,7 +58,11 @@ class UserProfile extends React.Component {
 
 	/** get area table from database */
 	getAreaTable = async () => {
-		const res = await apiHelper.areaApiAgent.getAreaTable()
+		const { auth } = this.context
+		const { user } = auth
+		const res = await apiHelper.areaApiAgent.getAreaTableByUserId({
+			userId: user.id,
+		})
 		if (res) {
 			const areaTable = res.data.reduce((table, area) => {
 				table[area.id] = area
@@ -116,7 +119,7 @@ class UserProfile extends React.Component {
 	handleSubmit = async (values) => {
 		const formIndex = [this.state.show, this.state.showEditPwd].indexOf(true)
 
-		const callback = () => messageGenerator.setSuccessMessage(SAVE_SUCCESS)
+		const callback = () => setSuccessMessage(SAVE_SUCCESS)
 		const { auth } = this.context
 		switch (formIndex) {
 			case 0:
@@ -178,15 +181,6 @@ class UserProfile extends React.Component {
 					<Button
 						variant="outline-primary"
 						className="text-capitalize mr-2"
-						name="secondaryArea"
-						size="sm"
-						onClick={this.handleClick}
-					>
-						{locale.texts.EDIT_SECONDARY_AREA}
-					</Button>
-					<Button
-						variant="outline-primary"
-						className="text-capitalize mr-2"
 						name="password"
 						size="sm"
 						onClick={this.handleClick}
@@ -204,24 +198,10 @@ class UserProfile extends React.Component {
 				</div>
 				<div className="mb-3 text-capitalize">
 					<div className="font-size-120-percent color-black">
-						{locale.texts.YOUR_SERVICE_AREAS}
+						{locale.texts.SERVICE_AREAS}
 					</div>
 					<div>
-						{locale.texts.PRIMARY_AREA}:{' '}
-						{areaTable.length !== 0 &&
-							auth.user.main_area &&
-							areaTable[auth.user.main_area] &&
-							locale.texts[areaTable[auth.user.main_area].name]}
-					</div>
-					<div>
-						{locale.texts.SECONDARY_AREAS}:{' '}
-						{Object.values(this.state.areaTable)
-							.filter((area) => {
-								return (
-									parseInt(auth.user.main_area) !== parseInt(area.id) &&
-									auth.user.areas_id.includes(area.id)
-								)
-							})
+						{Object.values(areaTable)
 							.map((area) => {
 								return area.readable_name
 							})
@@ -273,12 +253,6 @@ class UserProfile extends React.Component {
 					</div>
 				</div>
 				<hr />
-				<EditAreasForm
-					show={this.state.show}
-					handleClose={this.handleClose}
-					handleSubmit={this.handleSubmit}
-					areaTable={this.state.areaTable}
-				/>
 				<EditPwdForm
 					show={this.state.showEditPwd}
 					handleClose={this.handleClose}

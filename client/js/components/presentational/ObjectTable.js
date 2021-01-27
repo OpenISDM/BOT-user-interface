@@ -35,9 +35,15 @@
 import React from 'react'
 import { keyBy } from 'lodash'
 import { AppContext } from '../../context/AppContext'
-import { Row, Col, ButtonToolbar } from 'react-bootstrap'
+import {
+	Row,
+	Col,
+	ButtonToolbar,
+	Button,
+	OverlayTrigger,
+	Popover,
+} from 'react-bootstrap'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import { PrimaryButton } from '../BOTComponent/styleComponent'
 import { setSuccessMessage } from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
 import { ADD, DELETE, SAVE_SUCCESS, DISASSOCIATE } from '../../config/wordMap'
@@ -45,6 +51,7 @@ import { formatTime } from '../../helper/utilities'
 import config from '../../config'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import BOTTable from '../BOTComponent/BOTTable'
+import BOTButton from '../BOTComponent/BOTButton'
 import BOTObjectFilterBar from '../BOTComponent/BOTObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
 import PropTypes from 'prop-types'
@@ -74,6 +81,7 @@ class ObjectTable extends React.Component {
 		apiMethod: '',
 		idleMacaddrSet: [],
 		associatedMacSet: [],
+		isAddButtonPressed: false,
 	}
 
 	componentDidMount = () => {
@@ -201,7 +209,10 @@ class ObjectTable extends React.Component {
 			isMultiSelection: false,
 			showDeleteConfirmation: false,
 			disableASN: false,
+			isAddButtonPressed: false,
+			selectedRowData: {},
 		})
+
 		this.clearSelection()
 	}
 
@@ -262,6 +273,7 @@ class ObjectTable extends React.Component {
 					formTitle: name,
 					disableASN: false,
 					apiMethod: 'post',
+					isAddButtonPressed: true,
 				})
 				break
 
@@ -270,6 +282,7 @@ class ObjectTable extends React.Component {
 					showDeleteConfirmation: true,
 					action: DISASSOCIATE,
 					message: locale.texts.ARE_YOU_SURE_TO_DISASSOCIATE,
+					isAddButtonPressed: true,
 				})
 				break
 		}
@@ -318,7 +331,8 @@ class ObjectTable extends React.Component {
 			addText,
 			deleteText,
 		} = this.props
-		const { locale } = this.context
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection }, dispatch] = stateReducer
 
 		const typeOptions = this.state.filterSelection.typeList
 			? Object.values(this.state.filterSelection.typeList)
@@ -379,12 +393,46 @@ class ObjectTable extends React.Component {
 							]}
 						/>
 						<ButtonToolbar>
-							<PrimaryButton name={ADD} onClick={this.handleClickButton}>
-								{locale.texts[addText]}
-							</PrimaryButton>
-							<PrimaryButton name={DELETE} onClick={this.handleDeleteAction}>
-								{locale.texts[deleteText]}
-							</PrimaryButton>
+							<OverlayTrigger
+								trigger="click"
+								key={'left'}
+								placement="left"
+								overlay={
+									<Popover id="popover-basic">
+										<Popover.Title as="h3">{locale.texts.TIPS}</Popover.Title>
+										<Popover.Content>
+											{locale.texts.TIPS_REPLACE_TAG}
+										</Popover.Content>
+									</Popover>
+								}
+							>
+								<Button variant="info">{locale.texts.REPLACE_TAG}</Button>
+							</OverlayTrigger>
+							<BOTButton
+								pressed={this.state.isAddButtonPressed}
+								name={ADD}
+								onClick={this.handleClickButton}
+								text={locale.texts[addText]}
+							/>
+							<BOTButton
+								pressed={this.state.isMultiSelection}
+								name={DELETE}
+								onClick={this.handleDeleteAction}
+								text={locale.texts[deleteText]}
+							/>
+							{this.state.isMultiSelection ? (
+								<BOTButton
+									pressed={tableSelection.length > 0}
+									name={DELETE}
+									onClick={() => {
+										dispatch({
+											type: SET_TABLE_SELECTION,
+											value: [],
+										})
+									}}
+									text={locale.texts.CLEAR}
+								/>
+							) : null}
 						</ButtonToolbar>
 					</Row>
 				</Col>

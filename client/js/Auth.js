@@ -35,7 +35,6 @@
 import React from 'react'
 import AuthenticationContext from './context/AuthenticationContext'
 import config from './config'
-import { SET_AREA } from './reducer/action'
 import apiHelper from './helper/apiHelper'
 import PropTypes from 'prop-types'
 import supportedLocale from './locale/supportedLocale'
@@ -65,7 +64,7 @@ class Auth extends React.Component {
 		}
 	}
 
-	login = async (userInfo, { actions, dispatch, callback }) => {
+	login = async (userInfo, { actions, callback }) => {
 		const { username, password } = userInfo
 		const res = await apiHelper.authApiAgent.login({
 			username,
@@ -80,12 +79,8 @@ class Auth extends React.Component {
 			user.permissions = getPermissionsByRoles({ roles: user.roles })
 
 			setCookies('authenticated', true)
-			this.setUserCookies(user)
 
-			// dispatch({
-			// 	type: SET_AREA,
-			// 	value: { id: user.main_area },
-			// })
+			this.setUserCookies(user)
 
 			this.setState(
 				{
@@ -98,8 +93,6 @@ class Auth extends React.Component {
 	}
 
 	logout = async () => {
-		await apiHelper.authApiAgent.logout()
-
 		const callback = () => {
 			removeCookies('authenticated')
 			removeCookies('user')
@@ -113,6 +106,8 @@ class Auth extends React.Component {
 			},
 			callback
 		)
+
+		await apiHelper.authApiAgent.logout()
 	}
 
 	setUserCookies = async (user) => {
