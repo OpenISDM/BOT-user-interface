@@ -1,8 +1,8 @@
-import queryType from './querytype'
+import queryType from '../controllers/external/querytype'
 import moment from 'moment-timezone'
-import pool from '../../db/connection'
-import code from './codes'
-import queryMethod from './querymethod'
+import pool from '../db/connection'
+import code from '../controllers/external/codes'
+import queryMethod from '../controllers/external/querymethod'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 
@@ -23,14 +23,17 @@ async function checkKey(request, response, next) {
 			Flag = Authenticate.EXCEPTION
 		})
 
-	userKeyData.rows.forEach((item) => {
-		const validTime = moment(item.register_time).add(30, 'm')
+	userKeyData.rows.every((item) => {
+		if(item.key === key){
+			const validTime = moment(item.register_time).add(30,'m')
 
-		if (moment().isBefore(moment(validTime)) && item.key === key) {
-			Flag = Authenticate.SUCCESS
-		} else if (moment().isAfter(moment(validTime)) && item.key === key && Flag !== Authenticate.SUCCESS) {
-            Flag = Authenticate.UNACTIVATED
+			if(moment().isBefore(moment(validTime))){
+				Flag = Authenticate.SUCCESS
+				return false
+			}
+			Flag = Authenticate.UNACTIVATED
 		}
+		return true
 	})
 
 	if (Flag === Authenticate.SUCCESS) {
@@ -43,7 +46,7 @@ async function checkKey(request, response, next) {
 }
 async function checkFilter(request, response, next) {
 	const { key, object_id, area_id, object_type } = request.body
-	let errorCode = {}
+	let errorCode = null
 	if (object_id) {
 		if (!Array.isArray(object_id)) {
 			response.json(code.objectIDError)
@@ -61,17 +64,16 @@ async function checkFilter(request, response, next) {
 			response.json(code.areaIDError)
 			return
 		}
-		area_id.map((item) => {
-			if (
-				(typeof item === 'string' && item.match(IntegerRegExp)) ||
-				Number.isInteger(item)
-			) {
-				return item
+		area_id.every((item)=>{
+			if(IntegerRegExp.test(item)){
+				return true
 			}
 			errorCode = code.idFormatError
-			return undefined
+			return false
 		})
+
 		const user_area = await queryMethod.getUserArea(key)
+
 		const validArea = area_id.filter(
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
@@ -79,7 +81,7 @@ async function checkFilter(request, response, next) {
 			errorCode = code.areaIDAuthorityError
 		}
 	}
-	if (Object.keys(errorCode).length !== 0) {
+	if (errorCode) {
 		response.json(errorCode)
 		return
 	}
@@ -87,21 +89,20 @@ async function checkFilter(request, response, next) {
 }
 async function checkAreaIDFilter(request, response, next) {
 	const { key, area_id } = request.body
-	let errorCode = {}
+
+	let errorCode = null
+
 	if (area_id) {
 		if (!Array.isArray(area_id)) {
 			response.json(code.areaIDError)
 			return
 		}
-		area_id.map((item) => {
-			if (
-				(typeof item === 'string' && item.match(IntegerRegExp)) ||
-				Number.isInteger(item)
-			) {
-				return item
+		area_id.every((item)=>{
+			if(IntegerRegExp.test(item)){
+				return true
 			}
-			errorCode = code.idFormatError
-			return undefined
+			response.json(code.idFormatError)
+			return false
 		})
 		const user_area = await queryMethod.getUserArea(key)
 		const validArea = area_id.filter(
@@ -111,7 +112,7 @@ async function checkAreaIDFilter(request, response, next) {
 			errorCode = code.areaIDAuthorityError
 		}
 	}
-	if (Object.keys(errorCode).length !== 0) {
+	if (errorCode) {
 		response.json(errorCode)
 		return
 	}
@@ -119,22 +120,22 @@ async function checkAreaIDFilter(request, response, next) {
 }
 function checkAdditionalFilter(request, response, next) {
 	const { start_time, end_time, sort_type, count_limit } = request.body
-	if (start_time !== undefined && dateIsValid(start_time) === false) {
+	if (start_time && dateIsValid(start_time) === false) {
 		response.json(code.startTimeError)
 		return
 	}
 
-	if (end_time !== undefined && dateIsValid(end_time) === false) {
+	if (end_time && dateIsValid(end_time) === false) {
 		response.json(code.endTimeError)
 		return
 	}
 
-	if (sort_type !== undefined && sort_type !== 'desc' && sort_type !== 'asc') {
+	if (sort_type && sort_type !== 'desc' && sort_type !== 'asc') {
 		response.json(code.sortTypeDefineError)
 		return
 	}
 
-	if (count_limit !== undefined && isNaN(count_limit)) {
+	if (count_limit && isNaN(count_limit)) {
 		response.json(code.countLimitError)
 		return
 	}
