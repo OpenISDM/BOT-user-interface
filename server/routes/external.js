@@ -36,5 +36,5 @@ export default (app) => {
 	)
 
 	app.post('/api/1.0/tracing/history', query.getTracingHisotry)
-	app.post('/api/1.0/auth/signin', query.getApiKeyV0)
+	app.post('/api/1.0/auth/signin', query.getApiKey)
 }

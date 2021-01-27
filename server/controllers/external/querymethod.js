@@ -6,58 +6,8 @@ import pool from '../../db/connection'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { encrypt } from '../../helpers'
 
+
 //#region api v1.0
-const getApiKeyV0 = (request, response) => {
-	const { username, password } = request.body
-
-	let getUserName = ''
-	pool
-		.query(queryType.getAllUserQuery) //verification by sha256
-		.then((res) => {
-			res.rows.map((item) => {
-				if (
-					username == item.username_sha256 &&
-					password == item.password_sha256
-				) {
-					getUserName = item.name
-				}
-			})
-			if (getUserName != '') {
-				//already match user name
-				pool
-					.query(queryType.confirmValidation(getUserName))
-					.then((res) => {
-						console.log('confirm validation succeed')
-
-						const hash = encrypt.createHash(password)
-
-						pool
-							.query(queryType.setKey(res.rows[0].user_id, getUserName, hash))
-							.then((res) => {
-								response.json(
-									error_code.getKeySuccessV0(
-										hash,
-										moment().add(30, 'm').locale('en').format('LT')
-									)
-								)
-								console.log('get Key success')
-							})
-							.catch((err) => {
-								console.log(`set Key failer ${err}`)
-							})
-					})
-					.catch((err) => {
-						console.log(`confirm validation fails ${err}`)
-					})
-			} else {
-				response.json(error_code.accountIncorrect)
-			}
-		})
-		.catch((err) => {
-			console.log(`get user fails ${err}`)
-		})
-}
-
 async function getTracingHisotry(request, response) {
 	let {
 		key,
@@ -318,7 +268,7 @@ async function getPeopleHistoryData(request, response) {
 
 	start_time = setInitialTime(start_time, 1)
 	end_time = setInitialTime(end_time, 0)
-	if (count_limit > 50000) count_limit = 500000
+	if (count_limit > 50000) count_limit = 50000
 
 	const filter = await setFilter(key, object_id, object_type, area_id)
 
@@ -371,10 +321,12 @@ async function getApiKey(request, response) {
 		console.log(`get all username fail : ${err}`)
 	})
 
-	allUser.rows.forEach((item) => {
+	allUser.rows.every((item) => {
 		if (username === item.name && password === item.password) {
 			user = item
+			return false
 		}
+		return true
 	})
 
 	if (user) {
@@ -386,7 +338,7 @@ async function getApiKey(request, response) {
 				console.log(`update data error : ${err}`)
 			})
 		response.json(
-			error_code.getKeySuccessV1(
+			error_code.getKeySuccess(
 				hashToken,
 				moment().add(30, 'm').format(timeDefaultFormat)
 			)
@@ -409,7 +361,7 @@ async function getObjectHistoryData(request, response) {
 	start_time = setInitialTime(start_time, 1)
 	end_time = setInitialTime(end_time, 0)
 	if (count_limit > 50000) count_limit = 50000
-	
+
 	const filter = await setFilter(key, object_id, object_type, area_id)
 	try {
 		const data = await pool.query(

@@ -1,20 +1,13 @@
-function getKeySuccessV0(key, time) {
+function getKeySuccess(key, time) {
 	return {
 		error_code: '0',
 		error_message: 'get key success',
 		key,
 		note: 'validity period of key until : ' + time,
-	}
-}
-
-function getKeySuccessV1(key, time) {
-	return {
-		error_code: '0',
-		error_message: 'get key success',
-		key,
 		valid_time: time,
 	}
 }
+
 
 function getValueSuccess(rows) {
 	return {
@@ -117,8 +110,7 @@ const areaIDAuthorityError = {
 	data: [],
 }
 export default {
-	getKeySuccessV0,
-	getKeySuccessV1,
+	getKeySuccess,
 	getValueSuccess,
 	accountIncorrect,
 	keyIncorrect,
