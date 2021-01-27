@@ -6,7 +6,6 @@ import pool from '../../db/connection'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 import { encrypt } from '../../helpers'
 
-
 //#region api v1.0
 async function getTracingHisotry(request, response) {
 	let {
@@ -18,124 +17,92 @@ async function getTracingHisotry(request, response) {
 		count_limit, //
 		sort_type,
 	} = request.body
-	let matchRes = Promise.resolve(matchKey(key))
-	await matchRes.then(function (result) {
-		matchRes = result
+
+	//** Time **//
+
+	if (start_time != undefined) {
+		// verification by format
+		if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
+			response.json(error_code.startTimeError)
+		} else {
+			// if format right then convert to utc
+			start_time = time_format(start_time)
+		}
+	} else {
+		// set default WHEN no input
+		start_time = moment(moment().subtract(1, 'day')).format()
+	}
+
+	if (end_time != undefined) {
+		if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
+			response.json(error_code.endTimeError)
+		} else {
+			end_time = time_format(end_time)
+		}
+	} else {
+		end_time = moment(moment()).format()
+	}
+
+	//** TAG **//
+	if (tag != undefined) {
+		tag = tag.split(',')
+		const pattern = new RegExp(
+			'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
+		)
+		tag.map((item) => {
+			if (item.match(pattern) == null) {
+				//judge format
+				response.json(error_code.macAddressError)
+			}
+		})
+	}
+
+	//** Lbeacon **//
+	if (Lbeacon != undefined) {
+		Lbeacon = Lbeacon.split(',')
+		const pattern = new RegExp(
+			'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
+		)
+		Lbeacon.map((item) => {
+			if (item.match(pattern) == null) {
+				//judge format
+				response.json(error_code.lbeaconFormatError)
+			}
+		})
+	}
+
+	//set default when no input
+	if (count_limit == undefined) {
+		count_limit = 10
+	} else {
+		isNaN(count_limit) ? response.json(error_code.countLimitError) : null
+	}
+
+	//0=DESC 1=ASC  : default=0
+	if (sort_type == undefined) {
+		sort_type = 'desc'
+	} else if (sort_type != 'desc' && sort_type != 'asc') {
+		response.json(error_code.sortTypeDefineError)
+	}
+
+	const data = await getDurationData(
+		key,
+		start_time,
+		end_time,
+		tag,
+		Lbeacon,
+		count_limit,
+		sort_type
+	)
+
+	data.map((item) => {
+		item.start_time = moment(item.start_time).format(timeDefaultFormat)
+		item.end_time = moment(item.end_time).format(timeDefaultFormat)
 	})
 
-	if (matchRes == 1) {
-		// matched
-
-		//** Time **//
-
-		if (start_time != undefined) {
-			// verification by format
-			if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
-				response.json(error_code.startTimeError)
-			} else {
-				// if format right then convert to utc
-				start_time = time_format(start_time)
-			}
-		} else {
-			// set default WHEN no input
-			start_time = moment(moment().subtract(1, 'day')).format()
-		}
-
-		if (end_time != undefined) {
-			if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
-				response.json(error_code.endTimeError)
-			} else {
-				end_time = time_format(end_time)
-			}
-		} else {
-			end_time = moment(moment()).format()
-		}
-
-		//** TAG **//
-		if (tag != undefined) {
-			tag = tag.split(',')
-			const pattern = new RegExp(
-				'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
-			)
-			tag.map((item) => {
-				if (item.match(pattern) == null) {
-					//judge format
-					response.json(error_code.macAddressError)
-				}
-			})
-		}
-
-		//** Lbeacon **//
-		if (Lbeacon != undefined) {
-			Lbeacon = Lbeacon.split(',')
-			const pattern = new RegExp(
-				'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
-			)
-			Lbeacon.map((item) => {
-				if (item.match(pattern) == null) {
-					//judge format
-					response.json(error_code.lbeaconFormatError)
-				}
-			})
-		}
-
-		//set default when no input
-		if (count_limit == undefined) {
-			count_limit = 10
-		} else {
-			isNaN(count_limit) ? response.json(error_code.countLimitError) : null
-		}
-
-		//0=DESC 1=ASC  : default=0
-		if (sort_type == undefined) {
-			sort_type = 'desc'
-		} else if (sort_type != 'desc' && sort_type != 'asc') {
-			response.json(error_code.sortTypeDefineError)
-		}
-
-		const data = await getDurationData(
-			key,
-			start_time,
-			end_time,
-			tag,
-			Lbeacon,
-			count_limit,
-			sort_type
-		)
-
-		data.map((item) => {
-			item.start_time = moment(item.start_time).format(timeDefaultFormat)
-			item.end_time = moment(item.end_time).format(timeDefaultFormat)
-		})
-
-		response.json(data)
-	} else if (matchRes == 2) {
-		response.json(error_code.key_timeout)
-	} else {
-		// key fail match with user
-		response.json(error_code.keyIncorrect)
-	}
+	response.json(data)
 }
 
-async function matchKey(key) {
-	let matchFlag = 0 // flag = 0 when key error
-	return await pool
-		.query(queryType.getAllKeyQuery)
-		.then((res) => {
-			res.rows.map((item) => {
-				const vaildTime = moment(item.register_time).add(30, 'm')
-				if (moment().isBefore(moment(vaildTime)) && item.key == key) {
-					matchFlag = 1 //in time & key right
-				} else if (moment().isAfter(moment(vaildTime)) && item.key == key) {
-					matchFlag = 2 // out time & key right
-				}
-			})
-			return matchFlag
-		})
-		.catch((err) => {
-			console.log(`match key fails ${err}`)
-		})
-}
 
 async function getDurationData(
 	key,
