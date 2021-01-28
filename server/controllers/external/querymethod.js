@@ -222,24 +222,14 @@ async function getObjectRealtimeData(request, response) {
 
 async function getApiKey(request, response) {
 	const { username, password } = request.body
-	let user = null
-	const allUser = await pool.query(queryType.getAllUserQuery).catch((err) => {
-		console.log(`get all username fail : ${err}`)
-	})
+	console.log(queryType.getUserQuery(username, password))
+	const user = await pool.query(queryType.getUserQuery(username, password))
 
-	allUser.rows.every((item) => {
-		if (username === item.name && password === item.password) {
-			user = item
-			return false
-		}
-		return true
-	})
-
-	if (user) {
+	if (user.rows.length > 0) {
 		const hashToken = encrypt.createHash(password)
 
 		await pool
-			.query(queryType.setKey(user.id, user.name, hashToken))
+			.query(queryType.setKey(user.rows[0].id, user.rows[0].name, hashToken))
 			.catch((err) => {
 				console.log(`update data error : ${err}`)
 			})

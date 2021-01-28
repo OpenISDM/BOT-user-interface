@@ -10,8 +10,20 @@ function setKey(user_id, username, hash) {
 	register_time = now()
 	`
 }
+
+function getUserQuery(username, password) {
+	return `
+	select  
+		id, "name", "password"
+	from
+		user_table
+	where
+		user_table."name" = '${username}'
+		and user_table."password" = '${password}'
+	`
+}
+
 const getAllKeyQuery = ' SELECT  * FROM api_key '
-const getAllUserQuery = ' SELECT  * FROM user_table	'
 //#endregion
 
 //#region  api v1.0
@@ -354,7 +366,7 @@ export default {
 	//#region common export
 	setKey,
 	getAllKeyQuery,
-	getAllUserQuery,
+	getUserQuery,
 	getUserAreaQuery,
 	//#endregion
 
