@@ -49,7 +49,7 @@ import { object, string } from 'yup'
 import { AppContext } from '../../../context/AppContext'
 import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
-import { DISASSOCIATE, NORMAL, TRANSFERRED } from '../../../config/wordMap'
+import { DISASSOCIATE, NORMAL } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
 import { formatToMac, compareString } from '../../../helper/utilities'
 import apiHelper from '../../../helper/apiHelper'
@@ -104,11 +104,11 @@ class EditObjectForm extends React.Component {
 		const {
 			title,
 			selectedRowData = {},
-			objectList = [],
 			show,
 			handleClose,
-			disableASN,
+			isReadOnly,
 			associatedMacSet = [],
+			associatedAsnSet = [],
 			handleSubmit,
 			macOptions,
 			handleClick,
@@ -130,9 +130,7 @@ class EditObjectForm extends React.Component {
 			status,
 			asset_control_number = '',
 			mac_address = '',
-			transferred_location = '',
 			area_name = '',
-			nickname = '',
 			monitor_type = [],
 			isBind = false,
 		} = selectedRowData
@@ -140,14 +138,11 @@ class EditObjectForm extends React.Component {
 		const initialValues = {
 			name: name || '',
 			type: type || '',
-			asset_control_number: asset_control_number || '',
+			asset_control_number: isReadOnly ? asset_control_number : '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : null,
 			status: status ? status.value : NORMAL,
 			area: area_name || '',
 			monitorType: monitor_type.length > 0 ? monitor_type.split('/') : [],
-			transferred_location:
-				status && status.value === TRANSFERRED ? transferred_location : null,
-			nickname: nickname || '',
 		}
 
 		const validationSchema = object().shape({
@@ -159,20 +154,14 @@ class EditObjectForm extends React.Component {
 					'asset_control_number',
 					locale.texts.THE_ASSET_CONTROL_NUMBER_IS_ALREADY_USED,
 					(value) => {
-						if (!value) {
-							return false
+						const acnString = `${value}`.trim().toUpperCase()
+						if (compareString(asset_control_number, acnString)) {
+							return true
 						}
-						const alreadyUsedNumber =
-							!disableASN &&
-							objectList
-								.map((item) => item.asset_control_number.toUpperCase())
-								.includes(value.toUpperCase())
-						if (alreadyUsedNumber) {
-							return false
-						}
-						return true
+						return !associatedAsnSet.includes(acnString)
 					}
-				),
+				)
+				.max(40, locale.texts.LIMIT_IN_FOURTY_CHARACTER),
 			mac_address: object()
 				.nullable()
 				.test(
@@ -182,7 +171,8 @@ class EditObjectForm extends React.Component {
 						if (!obj || isEmpty(obj)) {
 							return true
 						}
-						return macaddrValidation(obj.label)
+						const macString = `${obj.label}`.trim().toUpperCase()
+						return macaddrValidation({ macaddr: macString })
 					}
 				)
 				.test(
@@ -191,28 +181,17 @@ class EditObjectForm extends React.Component {
 					(obj) => {
 						let macWithColons = ''
 						if (obj && obj.label) {
-							macWithColons = obj.label
+							macWithColons = `${obj.label}`.trim().toUpperCase()
 						}
 
-						if (
-							!obj ||
-							isEmpty(obj) ||
-							compareString(mac_address, macWithColons)
-						) {
+						if (compareString(mac_address, macWithColons)) {
 							return true
 						}
-
 						return !associatedMacSet.includes(macWithColons)
 					}
 				),
 			status: string().required(locale.texts.STATUS_IS_REQUIRED),
 			area: string().required(locale.texts.AREA_IS_REQUIRED),
-			transferred_location: object()
-				.nullable()
-				.when('status', {
-					is: TRANSFERRED,
-					then: object().required(locale.texts.LOCATION_IS_REQUIRED),
-				}),
 		})
 
 		return (
@@ -238,18 +217,12 @@ class EditObjectForm extends React.Component {
 								...values,
 								name: values.name.trim(),
 								type: values.type.trim(),
-								nickname: values.nickname.trim(),
 								status: values.status,
-								transferred_location:
-									values.status === TRANSFERRED
-										? values.transferred_location.id
-										: null,
 								monitor_type,
 								area_id: values.area.id || 0,
-								mac_address:
-									isEmpty(values.mac_address) || values.mac_address === null
-										? null
-										: values.mac_address.label,
+								mac_address: values.mac_address
+									? values.mac_address.label.trim()
+									: '',
 							}
 
 							handleSubmit(postOption)
@@ -274,32 +247,6 @@ class EditObjectForm extends React.Component {
 											placeholder=""
 										/>
 									</Col>
-
-									<Col>
-										<FormikFormGroup
-											type="text"
-											name="area"
-											label={locale.texts.AUTH_AREA}
-											error={errors.area}
-											touched={touched.area}
-											placeholder=""
-											component={() => (
-												<Select
-													placeholder=""
-													name="area"
-													value={values.area}
-													onChange={(value) => setFieldValue('area', value)}
-													options={areaOptions || []}
-													styles={styleConfig.reactSelect}
-													components={{
-														IndicatorSeparator: () => null,
-													}}
-												/>
-											)}
-										/>
-									</Col>
-								</Row>
-								<Row noGutters>
 									<Col>
 										<FormikFormGroup
 											type="text"
@@ -307,17 +254,6 @@ class EditObjectForm extends React.Component {
 											label={locale.texts.TYPE}
 											error={errors.type}
 											touched={touched.type}
-											placeholder=""
-										/>
-									</Col>
-									<Col>
-										<FormikFormGroup
-											type="text"
-											name="nickname"
-											label={locale.texts.NICKNAME}
-											disabled={true}
-											error={errors.nickname}
-											touched={touched.nickname}
 											placeholder=""
 										/>
 									</Col>
@@ -357,35 +293,36 @@ class EditObjectForm extends React.Component {
 											label={locale.texts.ACN}
 											error={errors.asset_control_number}
 											touched={touched.asset_control_number}
+											disabled={isReadOnly}
 										/>
 									</Col>
 								</Row>
-								<FormikFormGroup
-									name="transferred_location"
-									label={locale.texts.AREA}
-									error={errors.transferred_location}
-									touched={touched.transferred_location}
-									placeholder=""
-									display={values.status === TRANSFERRED}
-									component={() => (
-										<Select
-											name="transferred_location"
-											value={values.transferred_location}
-											className="my-1"
-											onChange={(value) =>
-												setFieldValue('transferred_location', value)
-											}
-											options={this.state.transferredLocationOptions || []}
-											isSearchable={false}
-											isDisabled={values.status !== TRANSFERRED}
-											styles={styleConfig.reactSelect}
-											placeholder={locale.texts.SELECT_LOCATION}
-											components={{
-												IndicatorSeparator: () => null,
-											}}
+								<Row>
+									<Col>
+										<FormikFormGroup
+											type="text"
+											name="area"
+											label={locale.texts.AUTH_AREA}
+											error={errors.area}
+											touched={touched.area}
+											placeholder=""
+											component={() => (
+												<Select
+													placeholder=""
+													name="area"
+													value={values.area}
+													onChange={(value) => setFieldValue('area', value)}
+													options={areaOptions || []}
+													styles={styleConfig.reactSelect}
+													components={{
+														IndicatorSeparator: () => null,
+													}}
+												/>
+											)}
 										/>
-									)}
-								/>
+									</Col>
+								</Row>
+
 								<Modal.Footer>
 									<div className="mr-auto">
 										<Button
@@ -425,13 +362,13 @@ EditObjectForm.propTypes = {
 	macOptions: PropTypes.object.isRequired,
 	handleClick: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
-	disableASN: PropTypes.bool.isRequired,
+	isReadOnly: PropTypes.bool.isRequired,
 	associatedMacSet: PropTypes.array.isRequired,
 	areaTable: PropTypes.array.isRequired,
 	title: PropTypes.string.isRequired,
 	handleClose: PropTypes.func.isRequired,
 	show: PropTypes.bool.isRequired,
-	objectList: PropTypes.array.isRequired,
+	associatedAsnSet: PropTypes.array.isRequired,
 }
 
 export default EditObjectForm

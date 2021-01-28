@@ -334,25 +334,10 @@ const patientTableColumn = [
 		accessor: 'area_name.label',
 		width: 150,
 	},
-	// {
-	// 	Header: 'PATIENT_GENDER',
-	// 	accessor: 'object_type.label',
-	// 	width: 70,
-	// },
 	{
 		Header: 'room',
 		accessor: 'room',
 		width: 100,
-	},
-	{
-		Header: 'attending Physician',
-		accessor: 'physician_name',
-		width: 100,
-	},
-	{
-		Header: 'Monitor Type',
-		accessor: 'monitor_type',
-		width: 250,
 	},
 	{
 		Header: 'registered timestamp',
@@ -385,8 +370,8 @@ const objectTableColumn = [
 		accessor: 'name',
 	},
 	{
-		Header: 'Nickname',
-		accessor: 'nickname',
+		Header: 'Alias',
+		accessor: 'type_alias',
 	},
 	{
 		Header: 'Type',
@@ -416,14 +401,6 @@ const objectTableColumn = [
 		Header: 'Status',
 		accessor: 'status.label',
 		width: 150,
-	},
-	{
-		Header: 'Transferred Location',
-		accessor: 'transferred_location.label',
-	},
-	{
-		Header: 'Monitor Type',
-		accessor: 'monitor_type',
 	},
 	{
 		Header: 'registered timestamp',
