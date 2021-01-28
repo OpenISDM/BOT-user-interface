@@ -2,14 +2,14 @@ import pkg from 'sequelize'
 import { sequelize } from '../connection'
 const { DataTypes } = pkg
 
-const UserArea = sequelize.define(
-	'user_area',
+const UserRole = sequelize.define(
+	'user_role',
 	{
 		user_id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 		},
-		area_id: {
+		role_id: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 		},
@@ -21,4 +21,4 @@ const UserArea = sequelize.define(
 	}
 )
 
-export default UserArea
+export default UserRole

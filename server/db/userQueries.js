@@ -41,7 +41,7 @@ export default {
             user_table.email,
             user_table.registered_timestamp,
             user_table.last_visit_timestamp,
-            ARRAY_REMOVE(ARRAY_AGG(roles.name), NULL) AS role_type,
+            ARRAY_REMOVE(ARRAY_AGG(roles.id), NULL) as role_ids,
             coalesce(areas.area_ids, array[]::JSONB[]) as area_ids
         FROM
             user_table

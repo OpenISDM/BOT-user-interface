@@ -35,7 +35,7 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
-import { object, string, array } from 'yup'
+import { object, string } from 'yup'
 import CheckboxGroup from '../../container/CheckboxGroup'
 import Checkbox from '../Checkbox'
 import FormikFormGroup from '../FormikFormGroup'
@@ -49,7 +49,7 @@ const EditUserForm = ({
 	selectedUser,
 	handleSubmit,
 	handleClose,
-	roleName,
+	filteredRoleList,
 	data,
 	areaTable,
 }) => {
@@ -73,7 +73,7 @@ const EditUserForm = ({
 						name: selectedUser ? selectedUser.name : '',
 						password: '',
 						email: selectedUser ? selectedUser.email : '',
-						roles: selectedUser ? selectedUser.role_type : '',
+						roleIds: selectedUser ? selectedUser.role_ids : '',
 						areaIds: selectedUser ? selectedUser.areaIds : '',
 					}}
 					validationSchema={object().shape({
@@ -111,9 +111,6 @@ const EditUserForm = ({
 								return true
 							})
 							.max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
-						areaIds: selectedUser
-							? null
-							: array().required(locale.texts.REQUIRED),
 						password: selectedUser
 							? ''
 							: string()
@@ -133,7 +130,6 @@ const EditUserForm = ({
 										}
 									)
 									.max(20, locale.texts.LIMIT_IN_TWENTY_CHARACTER),
-						roles: string().required(locale.texts.ROLE_IS_REQUIRED),
 						email: string()
 							.required(locale.texts.REQUIRED)
 							.test(
@@ -180,32 +176,32 @@ const EditUserForm = ({
 							/>
 							<hr />
 							<FormikFormGroup
-								name="roles"
+								name="roleIds"
 								className="text-capitalize"
 								label={locale.texts.ROLES}
-								error={errors.roles}
-								touched={touched.roles}
+								error={errors.roleIds}
+								touched={touched.roleIds}
 								component={() => (
 									<CheckboxGroup
-										id="roles"
-										value={values.roles}
-										error={errors.roles}
-										touched={touched.roles}
+										id="roleIds"
+										value={values.roleIds}
+										error={errors.roleIds}
+										touched={touched.roleIds}
 										onChange={setFieldValue}
 									>
-										{roleName
-											.filter((roleName) => roleName.name !== 'guest')
-											.map((roleName, index) => {
-												return (
-													<Field
-														component={Checkbox}
-														key={index}
-														name="roles"
-														id={roleName.name}
-														label={locale.texts[roleName.name.toUpperCase()]}
-													/>
-												)
-											})}
+										{filteredRoleList.map((filteredRoleList, index) => {
+											return (
+												<Field
+													component={Checkbox}
+													key={index}
+													name="roleIds"
+													id={filteredRoleList.id}
+													label={
+														locale.texts[filteredRoleList.name.toUpperCase()]
+													}
+												/>
+											)
+										})}
 									</CheckboxGroup>
 								)}
 							/>
@@ -261,7 +257,7 @@ EditUserForm.propTypes = {
 	areaTable: PropTypes.array.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	handleClose: PropTypes.func.isRequired,
-	roleName: PropTypes.object.isRequired,
+	filteredRoleList: PropTypes.object.isRequired,
 	data: PropTypes.array.isRequired,
 }
 
