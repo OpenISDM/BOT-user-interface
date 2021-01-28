@@ -17,14 +17,11 @@ async function getTracingHisotry(request, response) {
 		count_limit = 10, //
 	} = request.body
 
-	//** Time **//
-	if(Lbeacon)
-		Lbeacon = Lbeacon.split(',')
-	if(tag)
-		tag= tag.split(',')
+	// to initial data.
+	Lbeacon = splitInputData(Lbeacon)
+	tag = splitInputData(tag)
 	start_time = setInitialTime(start_time, 1, timeDefaultFormat)
 	end_time = setInitialTime(end_time, 0, timeDefaultFormat)
-
 	if(count_limit > 50000) count_limit = 500000
 
 	const data = await getDurationData(
@@ -37,12 +34,18 @@ async function getTracingHisotry(request, response) {
 		sort_type
 	)
 
-	data.map((item) => {
+	data.forEach((item) => {
 		item.start_time = moment(item.start_time).format(timeDefaultFormat)
 		item.end_time = moment(item.end_time).format(timeDefaultFormat)
 	})
 
 	response.json(data)
+}
+
+function splitInputData(data){
+	if(data)
+		return data.split(',')
+	return null
 }
 
 //function setUUIDData(Lbeacon)
@@ -69,7 +72,7 @@ async function getDurationData(
 		) //get area id
 		.then((res) => {
 			console.log('get_data success')
-			res.rows.map((item) => {
+			res.rows.forEach((item) => {
 				item.duration.hours = setDurationTime(item.duration.hours)
 				item.duration.minutes = setDurationTime(item.duration.minutes)
 				item.duration.seconds = setDurationTime(item.duration.seconds)

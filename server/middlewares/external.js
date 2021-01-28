@@ -13,9 +13,10 @@ const Authenticate = {
 	FAILED: 3,
 }
 
-async function checkUsername(request, response, next){
+//Do we need to check strange char like $%^*/\... ?
+// async function checkUsername(request, response, next){
 
-}
+// }
 
 async function checkKey(request, response, next) {
 	const { key } = request.body
