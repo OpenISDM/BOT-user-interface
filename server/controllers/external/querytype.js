@@ -272,18 +272,18 @@ const getObjectRealtimeQuery = (filter) => {
 	`
 }
 
-const getObjectIDFilter = (object_id) => {
-	if (object_id && object_id.length > 0) {
-		return `\nand object_table.asset_control_number in (${object_id.map(
+const getObjectIDFilter = (object_ids) => {
+	if (object_ids && object_ids.length > 0) {
+		return `\nand object_table.asset_control_number in (${object_ids.map(
 			(item) => `'${item}'`
 		)})`
 	}
 	return ''
 }
 
-const getObjectTypeFilter = (object_type) => {
-	if (object_type && object_type.length > 0) {
-		return `\nand object_table.type in (${object_type.map(
+const getObjectTypeFilter = (object_types) => {
+	if (object_types && object_types.length > 0) {
+		return `\nand object_table.type in (${object_types.map(
 			(item) => `'${item}'`
 		)})`
 	}
@@ -291,9 +291,9 @@ const getObjectTypeFilter = (object_type) => {
 }
 
 
-const getAreaIDFilter = (user_area, area_id) => {
-	if (area_id && area_id.length > 0) {
-		return `\n and object_table.area_id in (${area_id.map((item) => {
+const getAreaIDFilter = (user_area, area_ids) => {
+	if (area_ids && area_ids.length > 0) {
+		return `\n and object_table.area_id in (${area_ids.map((item) => {
 			if (user_area.includes(item) || user_area.includes(item.toString())) {
 				return `'${item}'`
 			}
