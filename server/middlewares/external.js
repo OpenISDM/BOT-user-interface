@@ -13,6 +13,10 @@ const Authenticate = {
 	FAILED: 3,
 }
 
+async function checkUsername(request, response, next){
+
+}
+
 async function checkKey(request, response, next) {
 	const { key } = request.body
 	let Flag = Authenticate.FAILED
@@ -22,12 +26,12 @@ async function checkKey(request, response, next) {
 			console.log(`match exception : ${err}`)
 			Flag = Authenticate.EXCEPTION
 		})
-
+	console.log(moment().format())
 	userKeyData.rows.every((item) => {
-		if(item.key === key){
-			const validTime = moment(item.register_time).add(30,'m')
+		if (item.key === key) {
+			const validTime = moment(item.register_time).add(30, 'm')
 
-			if(moment().isBefore(moment(validTime))){
+			if (moment().isBefore(moment(validTime))) {
 				Flag = Authenticate.SUCCESS
 				return false
 			}
@@ -64,8 +68,8 @@ async function checkFilter(request, response, next) {
 			response.json(code.areaIDError)
 			return
 		}
-		area_id.every((item)=>{
-			if(IntegerRegExp.test(item)){
+		area_id.every((item) => {
+			if (IntegerRegExp.test(item)) {
 				return true
 			}
 			errorCode = code.idFormatError
@@ -94,11 +98,11 @@ async function checkAreaIDFilter(request, response, next) {
 			response.json(code.areaIDError)
 			return
 		}
-		const userArea = await querymethod.getUserArea(key)
+		const userArea = await queryMethod.getUserArea(key)
 
-		area_id.every((item)=>{
-			if(IntegerRegExp.test(item)){
-				if(!(userArea.includes(item) || userArea.includes(item.toString()))){
+		area_id.every((item) => {
+			if (IntegerRegExp.test(item)) {
+				if (!(userArea.includes(item) || userArea.includes(item.toString()))) {
 					response.json(code.areaIDAuthorityError)
 				}
 				return true
@@ -110,32 +114,78 @@ async function checkAreaIDFilter(request, response, next) {
 
 	next()
 }
+
+async function checkUUIDFilter(request, response, next) {
+	let { Lbeacon, tag } = request.body
+
+	let error = null
+	if (Lbeacon) {
+		console.log(Lbeacon)
+		Lbeacon = Lbeacon.split(',')
+		const LbeaconRegExp = new RegExp(
+			'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
+		)
+		Lbeacon.every((item) => {
+			if (!LbeaconRegExp.test(item)) {
+				error = code.lbeaconFormatError
+				return false
+			}
+			return true
+		})
+	}
+
+	if (tag) {
+		console.log(tag)
+		tag = tag.split(',')
+		const tagRegExp = new RegExp(
+			'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
+		)
+		tag.every((item) => {
+			if (!tagRegExp.test(item)) {
+				error = code.macAddressError
+				return false
+			}
+			return true
+		})
+	}
+	if (error) {
+		response.json(error)
+		return
+	}
+	next()
+}
+
 function checkAdditionalFilter(request, response, next) {
 	const { start_time, end_time, sort_type, count_limit } = request.body
-	if (start_time && dateIsValid(start_time) === false) {
+
+	if (dateIsValid(start_time) === false) {
 		response.json(code.startTimeError)
 		return
 	}
 
-	if (end_time && dateIsValid(end_time) === false) {
+	if (dateIsValid(end_time) === false) {
 		response.json(code.endTimeError)
 		return
 	}
 
 	if (sort_type && sort_type !== 'desc' && sort_type !== 'asc') {
-		response.json(code.sortTypeDefineError)
+		response.json(code.sortTypeError)
 		return
 	}
 
-	if (count_limit && isNaN(count_limit)) {
+	if (count_limit && !isPostiveInteger(count_limit)) {
 		response.json(code.countLimitError)
 		return
 	}
 	next()
 }
 
+function isPostiveInteger(number) {
+	return /^\+?\d+$/.test(number)
+}
+
 function dateIsValid(time) {
-	return moment(time, timeDefaultFormat, true).isValid()
+	return moment(time, timeDefaultFormat, true).isValid() || moment(time, true).isValid()
 }
 
 export default {
@@ -143,4 +193,5 @@ export default {
 	checkFilter,
 	checkAreaIDFilter,
 	checkAdditionalFilter,
+	checkUUIDFilter
 }

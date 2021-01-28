@@ -8,82 +8,24 @@ import { encrypt } from '../../helpers'
 
 //#region api v1.0
 async function getTracingHisotry(request, response) {
+	const {key, sort_type='desc'} = request.body
 	let {
-		key,
 		tag, // string
 		Lbeacon, // string
 		start_time, // YYYY/MM/DD HH:mm:ss
 		end_time, // YYYY/MM/DD HH:mm:ss
-		count_limit, //
-		sort_type,
+		count_limit = 10, //
 	} = request.body
 
 	//** Time **//
-
-	if (start_time != undefined) {
-		// verification by format
-		if (moment(start_time, timeDefaultFormat, true).isValid() == false) {
-			response.json(error_code.startTimeError)
-		} else {
-			// if format right then convert to utc
-			start_time = time_format(start_time)
-		}
-	} else {
-		// set default WHEN no input
-		start_time = moment(moment().subtract(1, 'day')).format()
-	}
-
-	if (end_time != undefined) {
-		if (moment(end_time, timeDefaultFormat, true).isValid() == false) {
-			response.json(error_code.endTimeError)
-		} else {
-			end_time = time_format(end_time)
-		}
-	} else {
-		end_time = moment(moment()).format()
-	}
-
-	//** TAG **//
-	if (tag != undefined) {
-		tag = tag.split(',')
-		const pattern = new RegExp(
-			'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'
-		)
-		tag.map((item) => {
-			if (item.match(pattern) == null) {
-				//judge format
-				response.json(error_code.macAddressError)
-			}
-		})
-	}
-
-	//** Lbeacon **//
-	if (Lbeacon != undefined) {
+	if(Lbeacon)
 		Lbeacon = Lbeacon.split(',')
-		const pattern = new RegExp(
-			'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
-		)
-		Lbeacon.map((item) => {
-			if (item.match(pattern) == null) {
-				//judge format
-				response.json(error_code.lbeaconFormatError)
-			}
-		})
-	}
+	if(tag)
+		tag= tag.split(',')
+	start_time = setInitialTime(start_time, 1, timeDefaultFormat)
+	end_time = setInitialTime(end_time, 0, timeDefaultFormat)
 
-	//set default when no input
-	if (count_limit == undefined) {
-		count_limit = 10
-	} else {
-		isNaN(count_limit) ? response.json(error_code.countLimitError) : null
-	}
-
-	//0=DESC 1=ASC  : default=0
-	if (sort_type == undefined) {
-		sort_type = 'desc'
-	} else if (sort_type != 'desc' && sort_type != 'asc') {
-		response.json(error_code.sortTypeError)
-	}
+	if(count_limit > 50000) count_limit = 500000
 
 	const data = await getDurationData(
 		key,
@@ -103,7 +45,7 @@ async function getTracingHisotry(request, response) {
 	response.json(data)
 }
 
-
+//function setUUIDData(Lbeacon)
 async function getDurationData(
 	key,
 	start_time,
@@ -128,13 +70,10 @@ async function getDurationData(
 		.then((res) => {
 			console.log('get_data success')
 			res.rows.map((item) => {
-				//item.area_name = tw[item.area_name.toUpperCase().replace(/ /g, '_')]
-				item.duration.hours == undefined ? (item.duration.hours = 0) : null
-				item.duration.minutes == undefined ? (item.duration.minutes = 0) : null
-				item.duration.seconds == undefined ? (item.duration.seconds = 0) : null
-				item.duration.milliseconds == undefined
-					? (item.duration.milliseconds = 0)
-					: null
+				item.duration.hours = setDurationTime(item.duration.hours)
+				item.duration.minutes = setDurationTime(item.duration.minutes)
+				item.duration.seconds = setDurationTime(item.duration.seconds)
+				item.duration.milliseconds = setDurationTime(item.duration.milliseconds)
 			})
 			return res.rows
 		})
@@ -142,12 +81,13 @@ async function getDurationData(
 			console.log(`get_data fails ${err}`)
 		})
 }
-
-function time_format(time) {
-	if (time != undefined) {
-		return moment(time, timeDefaultFormat).format()
+function setDurationTime(time) {
+	if (time === undefined) {
+		return 0
 	}
+	return time
 }
+
 //#endregion
 
 //#region api v1.1
@@ -211,11 +151,7 @@ async function getPeopleRealtimeData(request, response) {
 	try {
 		const filter = await setFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
-		data.rows.forEach((item) => {
-			item.last_reported_timestamp = moment(
-				item.last_reported_timtstamp
-			).format(timeDefaultFormat)
-		})
+
 		console.log('get realtime data successful')
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
@@ -250,11 +186,7 @@ async function getPeopleHistoryData(request, response) {
 			)
 		)
 		console.log('get people history successed.')
-		data.rows.forEach((item) => {
-			item.record_timestamp = moment(item.record_timestamp).format(
-				timeDefaultFormat
-			)
-		})
+
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get people history data failed : ${err}`)
@@ -267,12 +199,6 @@ async function getObjectRealtimeData(request, response) {
 	try {
 		const filter = await setFilter(key, object_id, object_type, area_id)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
-
-		data.rows.forEach((item) => {
-			item.last_reported_timestamp = moment(
-				item.last_reported_timtstamp
-			).format(timeDefaultFormat)
-		})
 
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
@@ -307,7 +233,7 @@ async function getApiKey(request, response) {
 		response.json(
 			error_code.getKeySuccess(
 				hashToken,
-				moment().add(30, 'm').format(timeDefaultFormat)
+				moment().add(30, 'm').format()
 			)
 		)
 	} else {
@@ -340,11 +266,6 @@ async function getObjectHistoryData(request, response) {
 				sort_type
 			)
 		)
-		data.rows.forEach((item) => {
-			item.record_timestamp = moment(item.record_timestamp).format(
-				timeDefaultFormat
-			)
-		})
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get object history data failed : ${err}`)
@@ -383,16 +304,13 @@ async function getUserArea(key) {
 	return data
 }
 
-function setInitialTime(time, diff) {
+function setInitialTime(time, diff, format = null) {
 	if (time === undefined) {
 		return moment(moment().subtract(diff, 'day')).format()
 	}
-	return setTimeFormat(time)
+	return moment(time, format).format()
 }
 
-function setTimeFormat(time) {
-	return moment(time, timeDefaultFormat).format()
-}
 
 async function setFilter(key, object_id, object_type, area_id) {
 	let filter = ''
@@ -408,7 +326,6 @@ async function setFilter(key, object_id, object_type, area_id) {
 //#endregion
 export default {
 	//#region api v1.0
-	getApiKeyV0,
 	getTracingHisotry,
 	//#endregion
 

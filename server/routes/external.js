@@ -1,5 +1,5 @@
 import query from '../controllers/external/querymethod'
-import {external as middleware} from '../middlewares/index'
+import { external as middleware } from '../middlewares/index'
 export default (app) => {
 	app.post('/api/1.1/auth/signin', query.getApiKey)
 	app.post(
@@ -35,6 +35,12 @@ export default (app) => {
 		query.getIDTableData
 	)
 
-	app.post('/api/1.0/tracing/history', query.getTracingHisotry)
+	app.post(
+		'/api/1.0/tracing/history',
+		middleware.checkKey,
+		middleware.checkUUIDFilter,
+		middleware.checkAdditionalFilter,
+		query.getTracingHisotry
+	)
 	app.post('/api/1.0/auth/signin', query.getApiKey)
 }
