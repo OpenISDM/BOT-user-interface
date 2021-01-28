@@ -27,10 +27,10 @@ function getKeyQuery(key){
 	return `
 	select 
 		key,  
-		status 
+		(case 
 			when register_time + interval '30 min' > now() then 'ACTIVE'
 			else 'UNACTIVE'
-			end
+			end) as status
 	from 
 		api_key
 	where
