@@ -23,7 +23,22 @@ function getUserQuery(username, password) {
 	`
 }
 
-const getAllKeyQuery = ' SELECT  * FROM api_key '
+function getKeyQuery(key){
+	return `
+	select 
+		key,  
+		status 
+			when register_time + interval '30 min' > now() then 'ACTIVE'
+			else 'UNACTIVE'
+			end
+	from 
+		api_key
+	where
+		key = '${key}'
+	order by 
+		register_time 	desc
+	`
+}
 //#endregion
 
 //#region  api v1.0
@@ -365,7 +380,7 @@ const getUserAreaQuery = (key) => {
 export default {
 	//#region common export
 	setKey,
-	getAllKeyQuery,
+	getKeyQuery,
 	getUserQuery,
 	getUserAreaQuery,
 	//#endregion

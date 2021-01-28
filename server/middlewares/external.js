@@ -24,34 +24,19 @@ async function checkPassword(request, response, next){
 
 async function checkKey(request, response, next) {
 	const { key } = request.body
-	let Flag = Authenticate.FAILED
-	const userKeyData = await pool
-		.query(queryType.getAllKeyQuery)
-		.catch((err) => {
-			console.log(`match exception : ${err}`)
-			Flag = Authenticate.EXCEPTION
-		})
-	console.log(moment().format())
-	userKeyData.rows.every((item) => {
-		if (item.key === key) {
-			const validTime = moment(item.register_time).add(30, 'm')
 
-			if (moment().isBefore(moment(validTime))) {
-				Flag = Authenticate.SUCCESS
-				return false
-			}
-			Flag = Authenticate.UNACTIVATED
+	const userKey = await pool.query(queryType.getKeyQuery(key))
+
+	if(userKey.rows.length > 0){
+		if(userKey.rows[0].status === 'ACTIVE'){
+			next()
+			return
 		}
-		return true
-	})
-
-	if (Flag === Authenticate.SUCCESS) {
-		next()
-	} else if (Flag === Authenticate.UNACTIVATED) {
 		response.json(code.keyUnactive)
-	} else {
-		response.json(code.keyIncorrect)
+		return
 	}
+	response.json(code.keyIncorrect)
+	return
 }
 async function checkFilter(request, response, next) {
 	const { key, object_ids, area_ids, object_types } = request.body
