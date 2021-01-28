@@ -35,7 +35,6 @@ async function checkKey(request, response, next) {
 }
 async function checkFilter(request, response, next) {
 	const { key, object_ids, area_ids, object_types } = request.body
-	let errorCode = null
 	if (object_ids) {
 		if (!Array.isArray(object_ids)) {
 			response.json(code.objectIDError)
@@ -57,22 +56,16 @@ async function checkFilter(request, response, next) {
 			if (IntegerRegExp.test(item)) {
 				return true
 			}
-			errorCode = code.idFormatError
+			response.json(code.idFormatError)
 			return false
 		})
-
-		const user_area = await queryMethod.getUserArea(key)
-
-		const validArea = area_ids.filter(
-			(item) => user_area.includes(item) || user_area.includes(item.toString())
+		const validArea = await queryMethod.getUserArea(
+			key,
+			queryType.getAreaCheckFilter(area_ids)
 		)
-		if (validArea.length === 0) {
-			errorCode = code.areaIDAuthorityError
+		if (validArea.length !== area_ids.length) {
+			response.json(code.areaIDAuthorityError)
 		}
-	}
-	if (errorCode) {
-		response.json(errorCode)
-		return
 	}
 	next()
 }
@@ -83,20 +76,24 @@ async function checkAreaIDFilter(request, response, next) {
 			response.json(code.areaIDError)
 			return
 		}
-		const userArea = await queryMethod.getUserArea(key)
 
 		area_ids.every((item) => {
 			if (IntegerRegExp.test(item)) {
-				if (!(userArea.includes(item) || userArea.includes(item.toString()))) {
-					response.json(code.areaIDAuthorityError)
-				}
 				return true
 			}
 			response.json(code.idFormatError)
 			return false
 		})
-	}
 
+		const validArea = await queryMethod.getUserArea(
+			key,
+			queryType.getAreaCheckFilter(area_ids)
+		)
+		if (validArea.length !== area_ids.length) {
+			response.json(code.areaIDAuthorityError)
+			return
+		}
+	}
 	next()
 }
 

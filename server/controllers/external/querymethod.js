@@ -57,12 +57,22 @@ async function getDurationData(
 	count_limit,
 	sort_type
 ) {
-	const data = await pool.query(queryType.get_data(key, start_time, end_time, tag,Lbeacon, count_limit, sort_type))
-	data.rows.forEach((item)=>{
+	const data = await pool.query(
+		queryType.get_data(
+			key,
+			start_time,
+			end_time,
+			tag,
+			Lbeacon,
+			count_limit,
+			sort_type
+		)
+	)
+	data.rows.forEach((item) => {
 		item.duration.hours = setDurationTime(item.duration.hours)
-				item.duration.minutes = setDurationTime(item.duration.minutes)
-				item.duration.seconds = setDurationTime(item.duration.seconds)
-				item.duration.milliseconds = setDurationTime(item.duration.milliseconds)
+		item.duration.minutes = setDurationTime(item.duration.minutes)
+		item.duration.seconds = setDurationTime(item.duration.seconds)
+		item.duration.milliseconds = setDurationTime(item.duration.milliseconds)
 	})
 	return data.rows
 }
@@ -130,24 +140,17 @@ async function getIDTableData(request, response) {
 	}
 }
 
-function hexToDec(hex) {
-	return hex
-		.toLowerCase()
-		.split('')
-		.reduce((result, ch) => result * 16 + '0123456789abcdef'.indexOf(ch), 0)
-}
-
-// offset is 14H (20D)
-function getFloor(uuid) {
-	return hexToDec(uuid.slice(6, 8)) - 20
-}
-
 async function getPeopleRealtimeData(request, response) {
 	const { key, object_ids, object_types, area_ids } = request.body
 
 	try {
 		const filter = await setFilter(key, object_ids, object_types, area_ids)
 		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
+
+		data.rows.forEach((item)=>{
+			item.floor = getFloor(item.lbeacon_uuid)
+			item.last_reported_timestamp = moment(item.last_reported_timestamp).format()
+		})
 
 		console.log('get realtime data successful')
 		response.json(checkIsNullResponse(data.rows))
@@ -183,7 +186,10 @@ async function getPeopleHistoryData(request, response) {
 			)
 		)
 		console.log('get people history successed.')
-
+		data.rows.forEach((item)=>{
+			item.floor = getFloor(item.lbeacon_uuid)
+			item.record_timestamp = moment(item.record_timestamp).format()
+		})
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get people history data failed : ${err}`)
@@ -196,6 +202,11 @@ async function getObjectRealtimeData(request, response) {
 	try {
 		const filter = await setFilter(key, object_ids, object_types, area_ids)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
+
+		data.rows.forEach((item)=>{
+			item.floor = getFloor(item.lbeacon_uuid)
+			item.last_reported_timestamp = moment(item.last_reported_timestamp).format()
+		})
 
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
@@ -249,6 +260,10 @@ async function getObjectHistoryData(request, response) {
 				sort_type
 			)
 		)
+		data.rows.forEach((item)=>{
+			item.floor = getFloor(item.lbeacon_uuid)
+			item.record_timestamp = moment(item.record_timestamp).format()
+		})
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get object history data failed : ${err}`)
@@ -257,11 +272,23 @@ async function getObjectHistoryData(request, response) {
 //#endregion
 
 //#region Set values or check value methods
-async function compareUserArea(key, area_id) {
+function hexToDec(hex) {
+	return hex
+		.toLowerCase()
+		.split('')
+		.reduce((result, ch) => result * 16 + '0123456789abcdef'.indexOf(ch), 0)
+}
+
+// offset is 14H (20D)
+function getFloor(uuid) {
+	return hexToDec(uuid.slice(6, 8)) - 20
+}
+
+async function compareUserArea(key, area_ids) {
 	const user_area = await getUserArea(key)
 
-	if (area_id) {
-		const validArea = area_id.filter(
+	if (area_ids) {
+		const validArea = area_ids.filter(
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
 		return validArea
@@ -279,8 +306,8 @@ function checkIsNullResponse(rows) {
 	return errorCode.getNoData(rows)
 }
 
-async function getUserArea(key) {
-	const userArea = await pool.query(queryType.getUserAreaQuery(key))
+async function getUserArea(key, filter = '') {
+	const userArea = await pool.query(queryType.getUserAreaQuery(key, filter))
 	const data = userArea.rows.map((item) => {
 		return item.area_id
 	})

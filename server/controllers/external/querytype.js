@@ -290,6 +290,7 @@ const getObjectTypeFilter = (object_type) => {
 	return ''
 }
 
+
 const getAreaIDFilter = (user_area, area_id) => {
 	if (area_id && area_id.length > 0) {
 		return `\n and object_table.area_id in (${area_id.map((item) => {
@@ -344,7 +345,7 @@ const getObjectHistoryQuery = (
 	limit ${count_limit};`
 }
 
-const getIDTableQuery = (area_id) => {
+const getIDTableQuery = (area_ids) => {
 	return `
 	select
 		object_table.asset_control_number as id,
@@ -355,11 +356,11 @@ const getIDTableQuery = (area_id) => {
 	from
 		object_table
 	where
-		object_table.area_id in (${area_id.map((item) => `'${item}'`)})	
+		object_table.area_id in (${area_ids.map((item) => `'${item}'`)})	
 	`
 }
 
-const getUserAreaQuery = (key) => {
+const getUserAreaQuery = (key, filter = '') => {
 	return `
 	select 
 		area_id
@@ -372,9 +373,13 @@ const getUserAreaQuery = (key) => {
 	inner join api_key
 	on api_key.id  = user_table.id 
 
-	where api_key.key= '${key}' 
+	where api_key.key= '${key}'
+	${filter} 
 	group by area_id
 	`
+}
+const getAreaCheckFilter = (area_ids) =>{
+	return `\n and area_id in (${area_ids.map((item=> `'${item}'`))})`
 }
 //#endregion
 export default {
@@ -400,5 +405,6 @@ export default {
 	getObjectTypeQuery,
 	getAreaIDQuery,
 	getAreaIDFilter,
+	getAreaCheckFilter
 	//#endregion
 }
