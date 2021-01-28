@@ -34,11 +34,6 @@ async function getTracingHisotry(request, response) {
 		sort_type
 	)
 
-	data.forEach((item) => {
-		item.start_time = moment(item.start_time).format(default_Time_Format)
-		item.end_time = moment(item.end_time).format(default_Time_Format)
-	})
-
 	response.json(data)
 }
 
@@ -69,6 +64,8 @@ async function getDurationData(
 		)
 	)
 	data.rows.forEach((item) => {
+		item.start_time = moment(item.start_time).format(default_Time_Format)
+		item.end_time = moment(item.end_time).format(default_Time_Format)
 		item.duration.hours = setDurationTime(item.duration.hours)
 		item.duration.minutes = setDurationTime(item.duration.minutes)
 		item.duration.seconds = setDurationTime(item.duration.seconds)
