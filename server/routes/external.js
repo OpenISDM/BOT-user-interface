@@ -31,7 +31,7 @@ export default (app) => {
 	app.post(
 		'/api/1.1/tracing/objectlist',
 		middleware.checkKey,
-		middleware.checkAreaIDFilter,
+		middleware.checkKeyAndAreaidsFilter,
 		query.getIDTableData
 	)
 

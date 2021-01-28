@@ -1,13 +1,17 @@
 //#region common code
 function setKey(user_id, username, hash) {
-	return ` insert into api_key (id, name, key, register_time)
-   values (${user_id}, '${username}', '${hash}', now())
-   on conflict(id)
-   do
-   update set
-	name = '${username}',
-	key = '${hash}',
-	register_time = now()
+	return ` 
+	insert into api_key 
+	(id, name, key, register_time) values 
+	(${user_id}, '${username}', '${hash}', now())
+	on 
+	   	conflict(id)
+   	do
+	   update 
+	set
+		name = '${username}',
+		key = '${hash}',
+		register_time = now()
 	`
 }
 
@@ -293,12 +297,7 @@ const getObjectTypeFilter = (object_types) => {
 
 const getAreaIDFilter = (user_area, area_ids) => {
 	if (area_ids && area_ids.length > 0) {
-		return `\n and object_table.area_id in (${area_ids.map((item) => {
-			if (user_area.includes(item) || user_area.includes(item.toString())) {
-				return `'${item}'`
-			}
-			return ''
-		})})`
+		return `\n and object_table.area_id in (${area_ids.map((item) => `'${item}'`)})`
 	}
 	return `\nand object_table.area_id in (${user_area.map(
 		(item) => `'${item}'`

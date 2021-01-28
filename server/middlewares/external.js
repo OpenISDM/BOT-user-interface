@@ -69,7 +69,7 @@ async function checkFilter(request, response, next) {
 	}
 	next()
 }
-async function checkAreaIDFilter(request, response, next) {
+async function checkKeyAndAreaidsFilter(request, response, next) {
 	const { key, area_ids } = request.body
 	if (area_ids) {
 		if (!Array.isArray(area_ids)) {
@@ -180,7 +180,7 @@ function dateIsValid(time) {
 export default {
 	checkKey,
 	checkFilter,
-	checkAreaIDFilter,
+	checkKeyAndAreaidsFilter,
 	checkOptionalFilter,
 	checkUUIDFilter,
 	checkPassword,
