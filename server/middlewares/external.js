@@ -1,8 +1,8 @@
-import queryType from '../controllers/external/querytype'
+import queryType from '../controllers/external/queryType'
 import moment from 'moment-timezone'
 import pool from '../db/connection'
 import code from '../controllers/external/codes'
-import queryMethod from '../controllers/external/querymethod'
+import queryMethod from '../controllers/external/queryMethod'
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 

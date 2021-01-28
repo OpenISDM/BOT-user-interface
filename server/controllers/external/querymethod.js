@@ -1,6 +1,6 @@
 import error_code from './codes'
 import moment from 'moment-timezone'
-import queryType from './querytype'
+import queryType from './queryType'
 import pool from '../../db/connection'
 
 const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
@@ -104,10 +104,10 @@ const ObjectTypeQuery = {
 
 //#region Get value method
 async function getIDTableData(request, response) {
-	const { key, area_id } = request.body
+	const { key, area_ids } = request.body
 
 	try {
-		const validArea = await compareUserArea(key, area_id)
+		const validArea = await compareUserArea(key, area_ids)
 
 		const ObjectTablePromise = pool.query(queryType.getIDTableQuery(validArea))
 		const AreaTablePromise = pool.query(queryType.getAreaIDQuery(key))
@@ -149,10 +149,10 @@ async function getIDTableData(request, response) {
 }
 
 async function getPeopleRealtimeData(request, response) {
-	const { key, object_id, object_type, area_id } = request.body
+	const { key, object_ids, object_types, area_ids } = request.body
 
 	try {
-		const filter = await setFilter(key, object_id, object_type, area_id)
+		const filter = await setFilter(key, object_ids, object_types, area_ids)
 		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
 
 		console.log('get realtime data successful')
@@ -165,9 +165,9 @@ async function getPeopleRealtimeData(request, response) {
 async function getPeopleHistoryData(request, response) {
 	const {
 		key,
-		area_id,
-		object_id,
-		object_type,
+		area_ids,
+		object_ids,
+		object_types,
 		sort_type = 'desc',
 	} = request.body
 	let { start_time, end_time, count_limit = 10 } = request.body
@@ -176,7 +176,7 @@ async function getPeopleHistoryData(request, response) {
 	end_time = setInitialTime(end_time, 0)
 	if (count_limit > 50000) count_limit = 50000
 
-	const filter = await setFilter(key, object_id, object_type, area_id)
+	const filter = await setFilter(key, object_ids, object_types, area_ids)
 
 	try {
 		const data = await pool.query(
@@ -197,10 +197,10 @@ async function getPeopleHistoryData(request, response) {
 }
 
 async function getObjectRealtimeData(request, response) {
-	const { key, object_id, object_type, area_id } = request.body
+	const { key, object_ids, object_types, area_ids } = request.body
 
 	try {
-		const filter = await setFilter(key, object_id, object_type, area_id)
+		const filter = await setFilter(key, object_ids, object_types, area_ids)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
 
 		response.json(checkIsNullResponse(data.rows))
@@ -247,9 +247,9 @@ async function getApiKey(request, response) {
 async function getObjectHistoryData(request, response) {
 	const {
 		key,
-		object_type,
-		object_id,
-		area_id,
+		object_types,
+		object_ids,
+		area_ids,
 		sort_type = 'desc',
 	} = request.body
 	let { start_time, end_time, count_limit = 10 } = request.body
@@ -258,7 +258,7 @@ async function getObjectHistoryData(request, response) {
 	end_time = setInitialTime(end_time, 0)
 	if (count_limit > 50000) count_limit = 50000
 
-	const filter = await setFilter(key, object_id, object_type, area_id)
+	const filter = await setFilter(key, object_ids, object_types, area_ids)
 	try {
 		const data = await pool.query(
 			queryType.getObjectHistoryQuery(
@@ -315,13 +315,13 @@ function setInitialTime(time, diff, format = null) {
 }
 
 
-async function setFilter(key, object_id, object_type, area_id) {
+async function setFilter(key, object_ids, object_types, area_ids) {
 	let filter = ''
 	const user_area = await getUserArea(key)
 
-	filter += queryType.getObjectTypeFilter(object_type)
-	filter += queryType.getAreaIDFilter(user_area, area_id)
-	filter += queryType.getObjectIDFilter(object_id)
+	filter += queryType.getObjectTypeFilter(object_types)
+	filter += queryType.getAreaIDFilter(user_area, area_ids)
+	filter += queryType.getObjectIDFilter(object_ids)
 	return filter
 }
 //#endregion
