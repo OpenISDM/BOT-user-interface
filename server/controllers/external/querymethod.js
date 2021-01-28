@@ -285,14 +285,7 @@ function getFloor(uuid) {
 }
 
 async function compareUserArea(key, area_ids) {
-	const user_area = await getUserArea(key)
-
-	if (area_ids) {
-		const validArea = area_ids.filter(
-			(item) => user_area.includes(item) || user_area.includes(item.toString())
-		)
-		return validArea
-	}
+	const user_area = await getUserArea(key, queryType.getAreaCheckFilter(area_ids))
 	return user_area
 }
 
