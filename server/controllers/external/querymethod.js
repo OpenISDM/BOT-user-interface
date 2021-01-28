@@ -147,6 +147,14 @@ async function getIDTableData(request, response) {
 	}
 }
 
+function hexToDec(hex){
+	return hex.toLowerCase().split('').reduce((result, ch)=> result*16 + '0123456789abcdef'.indexOf(ch),0)
+}
+
+function getFloor(uuid){
+	return hexToDec(uuid.slice(6,8)) - 20
+}
+
 async function getPeopleRealtimeData(request, response) {
 	const { key, object_ids, object_types, area_ids } = request.body
 
@@ -210,7 +218,6 @@ async function getObjectRealtimeData(request, response) {
 
 async function getApiKey(request, response) {
 	const { username, password } = request.body
-
 	let user = null
 	const allUser = await pool.query(queryType.getAllUserQuery).catch((err) => {
 		console.log(`get all username fail : ${err}`)
