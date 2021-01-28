@@ -99,23 +99,12 @@ class BOTSelectTable extends React.Component {
 		const [, dispatch] = stateReducer
 
 		let selection = []
-		let rowsCount = 0
-
 		const selectAll = !this.state.selectAll
 		if (selectAll) {
 			const wrappedInstance = this.selectTable.getWrappedInstance()
 			const currentRecords = wrappedInstance.getResolvedState().sortedData
 			currentRecords.forEach((item) => {
-				rowsCount++
-				if (
-					rowsCount >
-						wrappedInstance.state.pageSize * wrappedInstance.state.page &&
-					rowsCount <=
-						wrappedInstance.state.pageSize +
-							wrappedInstance.state.pageSize * wrappedInstance.state.page
-				) {
-					selection.push(item._original.id)
-				}
+				selection.push(item._original.id)
 			})
 		} else {
 			selection = []

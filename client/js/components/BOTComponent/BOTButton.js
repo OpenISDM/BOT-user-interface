@@ -41,19 +41,23 @@ const BOTButton = ({
 	pressed = false,
 	text = '',
 	style,
+	enableDebounce = true,
 	onClick = () => {
 		// do nothing
 	},
 	...props
 }) => {
 	const variant = pressed ? 'primary' : 'outline-primary'
-	const debounceClick = useCallback(
-		debounce((e) => onClick(e), 1000, {
-			leading: true,
-			trailing: false,
-		}),
-		[]
-	)
+	let debounceClick = onClick
+	if (enableDebounce) {
+		debounceClick = useCallback(
+			debounce((e) => onClick(e), 1000, {
+				leading: true,
+				trailing: false,
+			}),
+			[]
+		)
+	}
 
 	return (
 		<Button
@@ -74,6 +78,7 @@ BOTButton.propTypes = {
 	text: PropTypes.string,
 	style: PropTypes.object,
 	onClick: PropTypes.func,
+	enableDebounce: PropTypes.bool,
 }
 
 export default BOTButton
