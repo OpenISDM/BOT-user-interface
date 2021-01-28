@@ -6,16 +6,9 @@ import queryMethod from '../controllers/external/queryMethod'
 const default_Time_Format = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 
-const Authenticate = {
-	EXCEPTION: 0,
-	SUCCESS: 1,
-	UNACTIVATED: 2,
-	FAILED: 3,
-}
-
-async function checkPassword(request, response, next){
-	const {password} = request.body
-	if(isPasswordConform(password)){
+async function checkPassword(request, response, next) {
+	const { password } = request.body
+	if (isNumberLetters(password)) {
 		next()
 		return
 	}
@@ -25,15 +18,17 @@ async function checkPassword(request, response, next){
 async function checkKey(request, response, next) {
 	const { key } = request.body
 
-	const userKey = await pool.query(queryType.getKeyQuery(key))
+	if (isNumberLetters(key)) {
+		const userKey = await pool.query(queryType.getKeyQuery(key))
 
-	if(userKey.rows.length > 0){
-		if(userKey.rows[0].status === 'ACTIVE'){
-			next()
+		if (userKey.rows.length > 0) {
+			if (userKey.rows[0].status === 'ACTIVE') {
+				next()
+				return
+			}
+			response.json(code.keyUnactive)
 			return
 		}
-		response.json(code.keyUnactive)
-		return
 	}
 	response.json(code.keyIncorrect)
 	return
@@ -174,7 +169,7 @@ function isPostiveInteger(number) {
 	return /^\+?\d+$/.test(number)
 }
 
-function isPasswordConform(password){
+function isNumberLetters(password) {
 	return /^[0-9a-zA-Z]+$/.test(password)
 }
 
@@ -191,5 +186,5 @@ export default {
 	checkAreaIDFilter,
 	checkOptionalFilter,
 	checkUUIDFilter,
-	checkPassword
+	checkPassword,
 }
