@@ -91,7 +91,8 @@ const addPerson = (formOption) => {
 			monitor_type,
 			object_type,
 			type,
-			status,
+            status,
+            room,
 			registered_timestamp
 		)
 		VALUES (
@@ -102,7 +103,8 @@ const addPerson = (formOption) => {
 			$5,
 			$6,
 			'Patient',
-			'returned',
+            'returned',
+            $7,
 			now()
 		)`
 
@@ -113,6 +115,7 @@ const addPerson = (formOption) => {
 		formOption.area_id,
 		formOption.monitor_type,
 		formOption.object_type,
+		formOption.room,
 	]
 
 	const query = {
