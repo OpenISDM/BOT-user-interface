@@ -8,7 +8,7 @@ import { encrypt } from '../../helpers'
 
 //#region api v1.0
 async function getTracingHisotry(request, response) {
-	const {key, sort_type='desc'} = request.body
+	const { key, sort_type = 'desc' } = request.body
 	let {
 		tag, // string
 		Lbeacon, // string
@@ -22,7 +22,7 @@ async function getTracingHisotry(request, response) {
 	tag = splitInputData(tag)
 	start_time = setInitialTime(start_time, 1, timeDefaultFormat)
 	end_time = setInitialTime(end_time, 0, timeDefaultFormat)
-	if(count_limit > 50000) count_limit = 500000
+	if (count_limit > 50000) count_limit = 500000
 
 	const data = await getDurationData(
 		key,
@@ -42,9 +42,8 @@ async function getTracingHisotry(request, response) {
 	response.json(data)
 }
 
-function splitInputData(data){
-	if(data)
-		return data.split(',')
+function splitInputData(data) {
+	if (data) return data.split(',')
 	return null
 }
 
@@ -234,10 +233,7 @@ async function getApiKey(request, response) {
 				console.log(`update data error : ${err}`)
 			})
 		response.json(
-			error_code.getKeySuccess(
-				hashToken,
-				moment().add(30, 'm').format()
-			)
+			error_code.getKeySuccess(hashToken, moment().add(30, 'm').format())
 		)
 	} else {
 		response.json(error_code.accountIncorrect)
@@ -313,7 +309,6 @@ function setInitialTime(time, diff, format = null) {
 	}
 	return moment(time, format).format()
 }
-
 
 async function setFilter(key, object_ids, object_types, area_ids) {
 	let filter = ''

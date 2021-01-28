@@ -8,7 +8,6 @@ function getKeySuccess(key, time) {
 	}
 }
 
-
 function getValueSuccess(rows) {
 	return {
 		error_code: '0',
@@ -57,9 +56,9 @@ const endTimeError = {
 }
 
 const nullTimeError = {
-	error_code : '212',
-	error_message : 'get data fail : please enter start_time and end_time',
-	data:[],
+	error_code: '212',
+	error_message: 'get data fail : please enter start_time and end_time',
+	data: [],
 }
 
 const macAddressError = {
@@ -94,19 +93,19 @@ const idFormatError = {
 
 const objectIDError = {
 	error_code: '261',
-	error_message: 'get data fail : object_id input must be a integer array',
+	error_message: 'get data fail : object_ids input must be a integer array',
 	data: [],
 }
 
 const objectTypeError = {
 	error_code: '262',
-	error_message: 'get data fail : object_type input must be a string array',
+	error_message: 'get data fail : object_types input must be a string array',
 	data: [],
 }
 
 const areaIDError = {
 	error_code: '263',
-	error_message: 'get data fail : area_id input must be a integer array',
+	error_message: 'get data fail : area_ids input must be a integer array',
 	data: [],
 }
 const areaIDAuthorityError = {

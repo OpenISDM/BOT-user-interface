@@ -50,26 +50,26 @@ async function checkKey(request, response, next) {
 	}
 }
 async function checkFilter(request, response, next) {
-	const { key, object_id, area_id, object_type } = request.body
+	const { key, object_ids, area_ids, object_types } = request.body
 	let errorCode = null
-	if (object_id) {
-		if (!Array.isArray(object_id)) {
+	if (object_ids) {
+		if (!Array.isArray(object_ids)) {
 			response.json(code.objectIDError)
 			return
 		}
 	}
-	if (object_type) {
-		if (!Array.isArray(object_type)) {
+	if (object_types) {
+		if (!Array.isArray(object_types)) {
 			response.json(code.objectTypeError)
 			return
 		}
 	}
-	if (area_id) {
-		if (!Array.isArray(area_id)) {
+	if (area_ids) {
+		if (!Array.isArray(area_ids)) {
 			response.json(code.areaIDError)
 			return
 		}
-		area_id.every((item) => {
+		area_ids.every((item) => {
 			if (IntegerRegExp.test(item)) {
 				return true
 			}
@@ -79,7 +79,7 @@ async function checkFilter(request, response, next) {
 
 		const user_area = await queryMethod.getUserArea(key)
 
-		const validArea = area_id.filter(
+		const validArea = area_ids.filter(
 			(item) => user_area.includes(item) || user_area.includes(item.toString())
 		)
 		if (validArea.length === 0) {
@@ -93,15 +93,15 @@ async function checkFilter(request, response, next) {
 	next()
 }
 async function checkAreaIDFilter(request, response, next) {
-	const { key, area_id } = request.body
-	if (area_id) {
-		if (!Array.isArray(area_id)) {
+	const { key, area_ids } = request.body
+	if (area_ids) {
+		if (!Array.isArray(area_ids)) {
 			response.json(code.areaIDError)
 			return
 		}
 		const userArea = await queryMethod.getUserArea(key)
 
-		area_id.every((item) => {
+		area_ids.every((item) => {
 			if (IntegerRegExp.test(item)) {
 				if (!(userArea.includes(item) || userArea.includes(item.toString()))) {
 					response.json(code.areaIDAuthorityError)
@@ -186,7 +186,10 @@ function isPostiveInteger(number) {
 }
 
 function dateIsValid(time) {
-	return moment(time, timeDefaultFormat, true).isValid() || moment(time, true).isValid()
+	return (
+		moment(time, timeDefaultFormat, true).isValid() ||
+		moment(time, true).isValid()
+	)
 }
 
 export default {
@@ -194,5 +197,5 @@ export default {
 	checkFilter,
 	checkAreaIDFilter,
 	checkAdditionalFilter,
-	checkUUIDFilter
+	checkUUIDFilter,
 }
