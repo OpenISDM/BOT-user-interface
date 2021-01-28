@@ -57,31 +57,14 @@ async function getDurationData(
 	count_limit,
 	sort_type
 ) {
-	return await pool
-		.query(
-			queryType.get_data(
-				key,
-				start_time,
-				end_time,
-				tag,
-				Lbeacon,
-				count_limit,
-				sort_type
-			)
-		) //get area id
-		.then((res) => {
-			console.log('get_data success')
-			res.rows.forEach((item) => {
-				item.duration.hours = setDurationTime(item.duration.hours)
+	const data = await pool.query(queryType.get_data(key, start_time, end_time, tag,Lbeacon, count_limit, sort_type))
+	data.rows.forEach((item)=>{
+		item.duration.hours = setDurationTime(item.duration.hours)
 				item.duration.minutes = setDurationTime(item.duration.minutes)
 				item.duration.seconds = setDurationTime(item.duration.seconds)
 				item.duration.milliseconds = setDurationTime(item.duration.milliseconds)
-			})
-			return res.rows
-		})
-		.catch((err) => {
-			console.log(`get_data fails ${err}`)
-		})
+	})
+	return data.rows
 }
 function setDurationTime(time) {
 	if (time === undefined) {
