@@ -240,7 +240,7 @@ async function getApiKey(request, response) {
 				console.log(`update data error : ${err}`)
 			})
 		response.json(
-			error_code.getKeySuccess(hashToken, moment().add(30, 'm').format())
+			error_code.getApiKeySuccessess(hashToken, moment().add(30, 'm').format())
 		)
 	} else {
 		response.json(error_code.accountIncorrect)
@@ -297,9 +297,9 @@ function checkIsNullResponse(rows) {
 		rows.length > 0 ||
 		(Object.keys(rows).length > 0 && rows.constructor === Object)
 	) {
-		return error_code.getValueSuccess(rows)
+		return error_code.getDataSuccessrows)
 	}
-	return error_code.getNullValue(rows)
+	return error_code.getNoDataws)
 }
 
 async function getUserArea(key) {

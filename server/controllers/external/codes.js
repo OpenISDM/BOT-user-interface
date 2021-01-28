@@ -1,4 +1,4 @@
-function getKeySuccess(key, time) {
+function getApiKeySuccess(key, time) {
 	return {
 		error_code: '0',
 		error_message: 'get key success',
@@ -8,7 +8,7 @@ function getKeySuccess(key, time) {
 	}
 }
 
-function getValueSuccess(rows) {
+function getDataSuccess(rows) {
 	return {
 		error_code: '0',
 		error_message: 'get data success',
@@ -16,7 +16,7 @@ function getValueSuccess(rows) {
 	}
 }
 
-function getNullValue(rows) {
+function getNoData(rows) {
 	return {
 		error_code: '101',
 		error_message: 'success to post, but there is no match data with filter',
@@ -115,8 +115,8 @@ const areaIDAuthorityError = {
 	data: [],
 }
 export default {
-	getKeySuccess,
-	getValueSuccess,
+	getApiKeySuccess,
+	getDataSuccess,
 	accountIncorrect,
 	keyIncorrect,
 	keyUnactive,
@@ -128,7 +128,7 @@ export default {
 	countLimitError,
 	sortTypeError,
 	idFormatError,
-	getNullValue,
+	getNoData,
 	objectIDError,
 	areaIDError,
 	objectTypeError,
