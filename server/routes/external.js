@@ -1,12 +1,12 @@
 import query from '../controllers/external/queryMethod'
 import { external as middleware } from '../middlewares/index'
 export default (app) => {
-	app.post('/api/1.1/auth/signin', query.getApiKey)
+	app.post('/api/1.1/auth/signin',middleware.checkPassword, query.getApiKey)
 	app.post(
 		'/api/1.1/tracing/history/people',
 		middleware.checkKey,
 		middleware.checkFilter,
-		middleware.checkAdditionalFilter,
+		middleware.checkOptionalFilter,
 		query.getPeopleHistoryData
 	)
 	app.post(
@@ -19,7 +19,7 @@ export default (app) => {
 		'/api/1.1/tracing/history/device',
 		middleware.checkKey,
 		middleware.checkFilter,
-		middleware.checkAdditionalFilter,
+		middleware.checkOptionalFilter,
 		query.getObjectHistoryData
 	)
 	app.post(
@@ -39,7 +39,7 @@ export default (app) => {
 		'/api/1.0/tracing/history',
 		middleware.checkKey,
 		middleware.checkUUIDFilter,
-		middleware.checkAdditionalFilter,
+		middleware.checkOptionalFilter,
 		query.getTracingHisotry
 	)
 	app.post('/api/1.0/auth/signin', query.getApiKey)

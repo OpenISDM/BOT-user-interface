@@ -1,9 +1,9 @@
-import error_code from './codes'
+import errorCode from './codes'
 import moment from 'moment-timezone'
 import queryType from './queryType'
 import pool from '../../db/connection'
 
-const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
+const default_Time_Format = 'YYYY/MM/DD HH:mm:ss'
 import { encrypt } from '../../helpers'
 
 //#region api v1.0
@@ -20,8 +20,8 @@ async function getTracingHisotry(request, response) {
 	// to initial data.
 	Lbeacon = splitInputData(Lbeacon)
 	tag = splitInputData(tag)
-	start_time = setInitialTime(start_time, 1, timeDefaultFormat)
-	end_time = setInitialTime(end_time, 0, timeDefaultFormat)
+	start_time = setInitialTime(start_time, 1, default_Time_Format)
+	end_time = setInitialTime(end_time, 0, default_Time_Format)
 	if (count_limit > 50000) count_limit = 500000
 
 	const data = await getDurationData(
@@ -35,8 +35,8 @@ async function getTracingHisotry(request, response) {
 	)
 
 	data.forEach((item) => {
-		item.start_time = moment(item.start_time).format(timeDefaultFormat)
-		item.end_time = moment(item.end_time).format(timeDefaultFormat)
+		item.start_time = moment(item.start_time).format(default_Time_Format)
+		item.end_time = moment(item.end_time).format(default_Time_Format)
 	})
 
 	response.json(data)
@@ -147,12 +147,16 @@ async function getIDTableData(request, response) {
 	}
 }
 
-function hexToDec(hex){
-	return hex.toLowerCase().split('').reduce((result, ch)=> result*16 + '0123456789abcdef'.indexOf(ch),0)
+function hexToDec(hex) {
+	return hex
+		.toLowerCase()
+		.split('')
+		.reduce((result, ch) => result * 16 + '0123456789abcdef'.indexOf(ch), 0)
 }
 
-function getFloor(uuid){
-	return hexToDec(uuid.slice(6,8)) - 20
+// offset is 14H (20D)
+function getFloor(uuid) {
+	return hexToDec(uuid.slice(6, 8)) - 20
 }
 
 async function getPeopleRealtimeData(request, response) {
@@ -240,10 +244,10 @@ async function getApiKey(request, response) {
 				console.log(`update data error : ${err}`)
 			})
 		response.json(
-			error_code.getApiKeySuccess(hashToken, moment().add(30, 'm').format())
+			errorCode.getApiKeySuccess(hashToken, moment().add(30, 'm').format())
 		)
 	} else {
-		response.json(error_code.accountIncorrect)
+		response.json(errorCode.accountIncorrect)
 	}
 }
 
@@ -297,9 +301,9 @@ function checkIsNullResponse(rows) {
 		rows.length > 0 ||
 		(Object.keys(rows).length > 0 && rows.constructor === Object)
 	) {
-		return error_code.getDataSuccess(rows)
+		return errorCode.getDataSuccess(rows)
 	}
-	return error_code.getNoData(rows)
+	return errorCode.getNoData(rows)
 }
 
 async function getUserArea(key) {

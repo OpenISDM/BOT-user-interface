@@ -3,7 +3,7 @@ import moment from 'moment-timezone'
 import pool from '../db/connection'
 import code from '../controllers/external/codes'
 import queryMethod from '../controllers/external/queryMethod'
-const timeDefaultFormat = 'YYYY/MM/DD HH:mm:ss'
+const default_Time_Format = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 
 const Authenticate = {
@@ -13,10 +13,14 @@ const Authenticate = {
 	FAILED: 3,
 }
 
-//Do we need to check strange char like $%^*/\... ?
-// async function checkUsername(request, response, next){
-
-// }
+async function checkPassword(request, response, next){
+	const {password} = request.body
+	if(isPasswordConform(password)){
+		next()
+		return
+	}
+	response.json(code.keyIncorrect)
+}
 
 async function checkKey(request, response, next) {
 	const { key } = request.body
@@ -156,7 +160,7 @@ async function checkUUIDFilter(request, response, next) {
 	next()
 }
 
-function checkAdditionalFilter(request, response, next) {
+function checkOptionalFilter(request, response, next) {
 	const { start_time, end_time, sort_type, count_limit } = request.body
 
 	if (dateIsValid(start_time) === false) {
@@ -185,9 +189,13 @@ function isPostiveInteger(number) {
 	return /^\+?\d+$/.test(number)
 }
 
+function isPasswordConform(password){
+	return /^[0-9a-zA-Z]+$/.test(password)
+}
+
 function dateIsValid(time) {
 	return (
-		moment(time, timeDefaultFormat, true).isValid() ||
+		moment(time, default_Time_Format, true).isValid() ||
 		moment(time, true).isValid()
 	)
 }
@@ -196,6 +204,7 @@ export default {
 	checkKey,
 	checkFilter,
 	checkAreaIDFilter,
-	checkAdditionalFilter,
+	checkOptionalFilter,
 	checkUUIDFilter,
+	checkPassword
 }
