@@ -3701,6 +3701,646 @@
 						"description": "to get people's position and stay here duration. history data."
 					},
 					"response": []
+				},
+				{
+					"name": "tracing history tag error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"220\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text"
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "c1:af:00:01:03:89;c1:af:00:01:03:80",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021/01/25 15:42:09",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				},
+				{
+					"name": "tracing history uuid error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"230\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text"
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354;00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021/01/25 15:42:09",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				},
+				{
+					"name": "tracing history start_time error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"210\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text"
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-25T15:42:09zzz",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				},
+				{
+					"name": "tracing history end_time error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"211\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09zzz",
+									"type": "text"
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				},
+				{
+					"name": "tracing history sort_type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"250\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "ascc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				},
+				{
+					"name": "tracing history count_limit error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"240\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85aa",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				},
+				{
+					"name": "tracing history key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"200\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c921",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
 				}
 			]
 		}
