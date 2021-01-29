@@ -78,7 +78,7 @@ export default {
 						[Op.eq]: null,
 					},
 					violation_timestamp: {
-						[Op.gt]: new Date(Date.now() - 30 * 60 * 1000), // 30 mins
+						[Op.gt]: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours
 					},
 					[Op.or]: [
 						{
