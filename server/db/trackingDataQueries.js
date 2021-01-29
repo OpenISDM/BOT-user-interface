@@ -32,8 +32,9 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const getTrackingData = (areaIds) => {
-	const query = `
+export default {
+	getTrackingData: (areaIds) => {
+		const query = `
 		SELECT
 			object_table.mac_address,
 			object_summary_table.uuid as lbeacon_uuid,
@@ -150,9 +151,6 @@ const getTrackingData = (areaIds) => {
 			object_table.asset_control_number
 			DESC;
 	`
-	return query
-}
-
-export default {
-	getTrackingData,
+		return query
+	},
 }
