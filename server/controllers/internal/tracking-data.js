@@ -68,7 +68,12 @@ const calculatePosition = (item) => {
 export default {
 	getTrackingData: (request, response) => {
 		const locale = request.body.locale || 'en'
-		const { areaIds = [] } = request.body
+		const { areaIds } = request.body
+
+		if (!areaIds) {
+			response.status(200).json([])
+			return
+		}
 
 		pool
 			.query(dbQueries.getTrackingData(areaIds))
