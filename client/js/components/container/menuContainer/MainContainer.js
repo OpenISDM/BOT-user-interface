@@ -130,15 +130,13 @@ class MainContainer extends React.Component {
 	/** Get tracking data from database.
 	 *  Once get the tracking data, violated objects would be collected. */
 	getTrackingData = async () => {
-		const { auth, locale, stateReducer } = this.context
+		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
 
 		const {
 			data: trackingData,
 		} = await apiHelper.trackingDataApiAgent.getTrackingData({
-			locale: locale.abbr,
-			user: auth.user,
-			areaId: area.id,
+			areaIds: [area.id],
 		})
 
 		const trackingDataMap = keyBy(trackingData, 'id')

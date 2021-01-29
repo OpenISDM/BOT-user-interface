@@ -67,16 +67,10 @@ const calculatePosition = (item) => {
 
 const getTrackingData = (request, response) => {
 	const locale = request.body.locale || 'en'
-	const { user, areaId } = request.body
-
-	/** The user's authenticated area id */
-	const userAuthenticatedAreasId = user.areas_id
-
-	/** User interface's current area id */
-	const currentAreaId = areaId.toString()
+	const { areaIds } = request.body
 
 	pool
-		.query(dbQueries.getTrackingData(userAuthenticatedAreasId))
+		.query(dbQueries.getTrackingData(areaIds))
 		.then((res) => {
 			console.log('get tracking data')
 
@@ -92,18 +86,6 @@ const getTrackingData = (request, response) => {
 				item.currentPosition = item.lbeacon_uuid
 					? calculatePosition(item)
 					: null
-
-				const lbeaconAreaId = lbeacon_coordinate ? lbeacon_coordinate[2] : null
-
-				const isLbeaconMatchArea =
-					parseInt(lbeaconAreaId) === parseInt(currentAreaId)
-
-				const isUserSObject = userAuthenticatedAreasId.includes(
-					parseInt(item.area_id)
-				)
-
-				/** Flag the object that belongs to the current area or to the user's authenticated area */
-				item.isMatchedObject = isUserSObject && isLbeaconMatchArea
 
 				/** Set the boolean if the object's last_seen_timestamp is in the specific time period */
 				const isInTheTimePeriod =

@@ -32,7 +32,7 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-const getTrackingData = (areas_id) => {
+const getTrackingData = (areaIds) => {
 	const query = `
 		SELECT
 			object_table.mac_address,
@@ -73,7 +73,7 @@ const getTrackingData = (areas_id) => {
 			lbeacon_table.description as location_description,
 			JSON_BUILD_OBJECT(
 				'id', area_table.id,
-				'value', area_table.name
+				'value', area_table.readable_name
 			) AS lbeacon_area,
 			COALESCE(patient_record.record, ARRAY[]::JSON[]) as records
 
@@ -142,7 +142,7 @@ const getTrackingData = (areas_id) => {
 		LEFT JOIN transfer_locations
         ON object_table.transferred_location = transfer_locations.id
 
-		WHERE object_table.area_id IN (${areas_id.map((item) => item)})
+		WHERE object_table.area_id IN (${areaIds.map((areaId) => areaId).join(',')})
 
 		ORDER BY
 			object_table.area_id,

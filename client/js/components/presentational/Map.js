@@ -549,7 +549,7 @@ class Map extends React.Component {
 	/** Filter out undesired tracking data */
 	filterTrackingData = (data = []) => {
 		return data.filter((item) => {
-			return item.found && item.isMatchedObject
+			return item.found
 		})
 	}
 

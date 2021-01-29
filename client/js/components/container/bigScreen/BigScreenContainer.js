@@ -100,13 +100,11 @@ class BigScreenContainer extends React.Component {
 	}
 
 	getTrackingData = async () => {
-		const { auth, locale, stateReducer } = this.context
+		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
 
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
-			locale: locale.abbr,
-			user: auth.user,
-			areaId: area.id,
+			areaIds: [area.id],
 		})
 		if (res) {
 			axios.post(dataSrc.getSearchQueue).then((searchQueue) => {

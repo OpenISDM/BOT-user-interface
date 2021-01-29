@@ -89,14 +89,8 @@
 				"url": {
 					"raw": "https://localhost/data/auth/signin",
 					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"data",
-						"auth",
-						"signin"
-					]
+					"host": ["localhost"],
+					"path": ["data", "auth", "signin"]
 				}
 			},
 			"response": []
@@ -150,7 +144,6 @@
 							"",
 							"    pm.expect(firstItem).to.have.property('lbeacon_coordinate');",
 							"    pm.expect(firstItem).to.have.property('currentPosition');",
-							"    pm.expect(firstItem).to.have.property('isMatchedObject');",
 							"    pm.expect(firstItem).to.have.property('found');",
 							"    pm.expect(firstItem).to.have.property('residence_time');",
 							"    pm.expect(firstItem).to.have.property('battery_indicator');",
@@ -214,13 +207,8 @@
 				"url": {
 					"raw": "https://localhost/data/trackingData",
 					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"data",
-						"trackingData"
-					]
+					"host": ["localhost"],
+					"path": ["data", "trackingData"]
 				}
 			},
 			"response": []
