@@ -102,7 +102,7 @@ export default {
 	},
 	areaIDAuthorityError: {
 		error_code: '264',
-		error_messsage:
+		error_message:
 			'get data fail : permission denied, you enter a area id that out of authority.',
 		data: [],
 	},
