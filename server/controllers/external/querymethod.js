@@ -146,7 +146,6 @@ async function getPeopleRealtimeData(request, response) {
 
 		data.rows.forEach((item)=>{
 			item.floor = getFloor(item.lbeacon_uuid)
-			item.last_reported_timestamp = moment(item.last_reported_timestamp).format()
 		})
 
 		console.log('get realtime data successful')
@@ -185,7 +184,6 @@ async function getPeopleHistoryData(request, response) {
 		console.log('get people history successed.')
 		data.rows.forEach((item)=>{
 			item.floor = getFloor(item.lbeacon_uuid)
-			item.record_timestamp = moment(item.record_timestamp).format()
 		})
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
@@ -202,7 +200,6 @@ async function getObjectRealtimeData(request, response) {
 
 		data.rows.forEach((item)=>{
 			item.floor = getFloor(item.lbeacon_uuid)
-			item.last_reported_timestamp = moment(item.last_reported_timestamp).format()
 		})
 
 		response.json(checkIsNullResponse(data.rows))
@@ -225,7 +222,7 @@ async function getApiKey(request, response) {
 				console.log(`update data error : ${err}`)
 			})
 		response.json(
-			errorCode.getApiKeySuccess(hashToken, moment().add(30, 'm').format())
+			errorCode.getApiKeySuccess(hashToken, moment().add(30, 'm'))
 		)
 	} else {
 		response.json(errorCode.accountIncorrect)
@@ -259,7 +256,6 @@ async function getObjectHistoryData(request, response) {
 		)
 		data.rows.forEach((item)=>{
 			item.floor = getFloor(item.lbeacon_uuid)
-			item.record_timestamp = moment(item.record_timestamp).format()
 		})
 		response.json(checkIsNullResponse(data.rows))
 	} catch (err) {
