@@ -6,621 +6,3703 @@
 	},
 	"item": [
 		{
-			"name": "/1.1/auth/signin",
-			"event": [
+			"name": "sign in ",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test response data object properties\",()=>{\r",
-							"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'key', 'valid_time')\r",
-							"})\r",
-							"\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.key).to.eql(\"350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.1/auth/signin",
+					"event": [
 						{
-							"key": "username",
-							"value": "dev",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "23c231c338c10ee7fed634ff6758773ef9f82f840877035213fe13747e6a2ff5",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'key', 'valid_time', 'note')\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.key).to.eql(\"350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.1/auth/signin/",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.1",
-						"auth",
-						"signin",
-						""
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "dev",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "23c231c338c10ee7fed634ff6758773ef9f82f840877035213fe13747e6a2ff5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/auth/signin/",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"auth",
+								"signin",
+								""
+							]
+						},
+						"description": "to sign in account to BOT API"
+					},
+					"response": []
 				},
-				"description": "to sign in account to BOT API"
-			},
-			"response": []
+				{
+					"name": "/1.0/auth/signin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'key', 'note', 'valid_time')\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.key).to.eql(\"c94860b7172e0ad6592f6848c50991407e7784a0cb52f02932cc03ec99c2f09a\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "jason",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "5f77605c6aba6d89193ed83cc2b837d2fdd564c3f5aa8f202e8165408b7017c8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/auth/signin",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"auth",
+								"signin"
+							]
+						},
+						"description": "to sign in BOT, and get key."
+					},
+					"response": []
+				},
+				{
+					"name": "sign-in wrong password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"100\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "123",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "46748676748674grgegrgegregeg",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/auth/signin/",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"auth",
+								"signin",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "/1.1/tracing/objectlist",
-			"event": [
+			"name": "realtime people",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"pm.test(\"Test area_table value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.data).to.be.an(\"object\");\r",
-							"    pm.expect(jsonData.data.area_table[0].area_id).to.eql(3)\r",
-							"    pm.expect(jsonData.data.area_table[0].area_name).to.eql(\"台大雲林5B\")\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.1/tracing/realtime/people",
+					"event": [
 						{
-							"key": "key",
-							"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
-							"type": "text"
-						},
-						{
-							"key": "aree_id[0]",
-							"value": "4",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
+									"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
+									"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.1/tracing/objectlist",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.1",
-						"tracing",
-						"objectlist"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202101051030",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						},
+						"description": "to get people realtime infos"
+					},
+					"response": []
 				},
-				"description": "to get all area, object type, objects"
-			},
-			"response": []
+				{
+					"name": "realtime people object id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"261\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids",
+									"value": "43543543",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime people area id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"263\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "6554654",
+									"type": "text"
+								},
+								{
+									"key": "area_ids",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime people type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"262\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_types",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "64564",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime people key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"200\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c921",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "54646574",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime people put out of area_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"264\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "46548679",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime people cannot find data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"101\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "654678687687",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "/1.1/tracing/realtime/people",
-			"event": [
+			"name": "realtime device",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
-							"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
-							"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.1/tracing/realtime/device",
+					"event": [
 						{
-							"key": "key",
-							"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
-							"type": "text"
-						},
-						{
-							"key": "area_id[0]",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "object_id[0]",
-							"value": "202101051030",
-							"type": "text"
-						},
-						{
-							"key": "object_type[0]",
-							"value": "Patient",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
+									"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
+									"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.1",
-						"tracing",
-						"realtime",
-						"people"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"device"
+							]
+						},
+						"description": "to get realtime device infos."
+					},
+					"response": []
 				},
-				"description": "to get people realtime infos"
-			},
-			"response": []
+				{
+					"name": "realtime device object id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"261\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"device"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime device area id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"263\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime device type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"262\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_types",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime device key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"200\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c921",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "54646574",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime device put out of area_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"264\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "realtime device cannot find data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"101\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "IV Pump",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/realtime/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"realtime",
+								"people"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "/1.1/tracing/history/people",
-			"event": [
+			"name": "object list",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
-							"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
-							"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.1/tracing/objectlist",
+					"event": [
 						{
-							"key": "key",
-							"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
-							"type": "text"
-						},
-						{
-							"key": "object_id[0]",
-							"value": "202012090249",
-							"type": "text"
-						},
-						{
-							"key": "object_type[0]",
-							"value": "Patient",
-							"type": "text"
-						},
-						{
-							"key": "area_id[0]",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "count_limit",
-							"value": "20",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"pm.test(\"Test area_table value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.data).to.be.an(\"object\");\r",
+									"    pm.expect(jsonData.data.area_table[0].area_id).to.eql(3)\r",
+									"    pm.expect(jsonData.data.area_table[0].area_name).to.eql(\"台大雲林5B\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.1",
-						"tracing",
-						"history",
-						"people"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[1]",
+									"value": "3",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/objectlist",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"objectlist"
+							]
+						},
+						"description": "to get all area, object type, objects"
+					},
+					"response": []
 				},
-				"description": "to get people history infos."
-			},
-			"response": []
+				{
+					"name": "objectlist wrong key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"200\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "hehhjey5o4pjkup4o5ujk-pjk043",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/objectlist",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"objectlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "objectlist wrong area_id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"264\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[1]",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/objectlist",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"objectlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "objectlist input a const instead of array",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"263\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "area_ids",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/objectlist",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"objectlist"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "/1.1/tracing/realtime/device",
-			"event": [
+			"name": "history people",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
-							"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
-							"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.1/tracing/history/people",
+					"event": [
 						{
-							"key": "key",
-							"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
-							"type": "text"
-						},
-						{
-							"key": "object_type[0]",
-							"value": "血氧機",
-							"type": "text"
-						},
-						{
-							"key": "object_id[0]",
-							"value": "2020-0929-1142",
-							"type": "text"
-						},
-						{
-							"key": "area_id[0]",
-							"value": "4",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
+									"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
+									"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.1/tracing/realtime/device",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.1",
-						"tracing",
-						"realtime",
-						"device"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
 				},
-				"description": "to get realtime device infos."
-			},
-			"response": []
+				{
+					"name": "history people object_id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"261\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people area_id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"263\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"262\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"200\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c92",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people out of bound area error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"264\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people sort_type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"250\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "ascfgfd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people start_time error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"210\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021/01/27 11:33:00111",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people end_time error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"211\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00111",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history people count_limit error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"240\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "202012090249",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "Patient",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "-1",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/people",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"people"
+							]
+						},
+						"description": "to get people history infos."
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "/1.1/tracing/history/device",
-			"event": [
+			"name": "history device",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
-							"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
-							"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.1/tracing/history/device",
+					"event": [
 						{
-							"key": "key",
-							"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
-							"type": "text"
-						},
-						{
-							"key": "object_type[0]",
-							"value": "血氧機",
-							"type": "text"
-						},
-						{
-							"key": "object_id[0]",
-							"value": "2020-0929-1142",
-							"type": "text"
-						},
-						{
-							"key": "area_id[0]",
-							"value": "4",
-							"type": "text"
-						},
-						{
-							"key": "count_limit",
-							"value": "20",
-							"type": "text"
-						},
-						{
-							"key": "start_time",
-							"value": "",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "end_time",
-							"value": "",
-							"type": "text",
-							"disabled": true
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
+									"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
+									"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.1",
-						"tracing",
-						"history",
-						"device"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
 				},
-				"description": "to get history device infos."
-			},
-			"response": []
+				{
+					"name": "history device object_id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"261\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device area_id error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"263\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
+									"});\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData.data).to.be.an(\"Array\");\r",
+									"    pm.expect(jsonData.data[0].area_id).to.eql(4)\r",
+									"    pm.expect(jsonData.data[0].area_name).to.eql(\"畢迪科技\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "historydevice key error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"200\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c92",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device out of bound area error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"264\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys(\"error_code\", \"error_message\", \"data\")\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device sort_type error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"250\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc75",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device start_time error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"210\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:0044",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device end_time error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"211\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00868",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				},
+				{
+					"name": "history device count_limit error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test error code of the response\", ()=>{\r",
+									"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
+									"    pm.expect(jsonData.error_code).to.eql(\"240\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test response data object properties\",()=>{\r",
+									"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'data')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "object_types[0]",
+									"value": "血氧機",
+									"type": "text"
+								},
+								{
+									"key": "object_ids[0]",
+									"value": "2020-0929-1142",
+									"type": "text"
+								},
+								{
+									"key": "area_ids[0]",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "-1",
+									"type": "text"
+								},
+								{
+									"key": "start_time",
+									"value": "2021-01-27T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021-01-28T11:33:00+08:00",
+									"type": "text"
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://127.0.0.1/api/1.1/tracing/history/device",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.1",
+								"tracing",
+								"history",
+								"device"
+							]
+						},
+						"description": "to get history device infos."
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "/1.0/auth/signin",
-			"event": [
+			"name": "tracing history",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"object\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test error code of the response\", ()=>{\r",
-							"    pm.expect(jsonData.error_code).to.be.an(\"string\");\r",
-							"    pm.expect(jsonData.error_code).to.eql(\"0\");\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Test response data object properties\",()=>{\r",
-							"    pm.expect(jsonData).to.have.all.keys('error_code', 'error_message', 'key', 'note')\r",
-							"})\r",
-							"\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData.key).to.eql(\"c94860b7172e0ad6592f6848c50991407e7784a0cb52f02932cc03ec99c2f09a\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+					"name": "/1.0/tracing/history",
+					"event": [
 						{
-							"key": "username",
-							"value": "06b9a6eacd7a77b9361123fd19776455eb16b9c83426a1abbf514a414792b73f",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "5f77605c6aba6d89193ed83cc2b837d2fdd564c3f5aa8f202e8165408b7017c8",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Connect status test\", ()=>{\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"Array\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Test data value of the response\", ()=>{\r",
+									"    pm.expect(jsonData[0].area_id).to.eql(4)\r",
+									"    pm.expect(jsonData[0].area_name).to.eql(\"畢迪科技\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.0/auth/signin",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"path": [
-						"api",
-						"1.0",
-						"auth",
-						"signin"
-					]
-				},
-				"description": "to sign in BOT, and get key."
-			},
-			"response": []
-		},
-		{
-			"name": "/1.0/tracing/history",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Connect status test\", ()=>{\r",
-							"    pm.response.to.have.status(200);\r",
-							"})\r",
-							"\r",
-							"const jsonData = pm.response.json();\r",
-							"pm.test(\"Test data type of the response\", () => {\r",
-							"  pm.expect(jsonData).to.be.an(\"Array\");\r",
-							"});\r",
-							"\r",
-							"\r",
-							"pm.test(\"Test data value of the response\", ()=>{\r",
-							"    pm.expect(jsonData[0].area_id).to.eql(4)\r",
-							"    pm.expect(jsonData[0].area_name).to.eql(\"畢迪科技\")\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "key",
-							"value": "c94860b7172e0ad6592f6848c50991407e7784a0cb52f02932cc03ec99c2f09a",
-							"type": "text"
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "key",
+									"value": "350cae2741c7524deb8b15f67014baf407322cfabe779b0060191dd5997c9218",
+									"type": "text"
+								},
+								{
+									"key": "count_limit",
+									"value": "85",
+									"type": "text"
+								},
+								{
+									"key": "end_time",
+									"value": "2021/01/26 15:42:09",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "Lbeacon",
+									"value": "00040015-0000-0000-1863-000000008354,00040015-0000-0000-0557-000000008472",
+									"type": "text"
+								},
+								{
+									"key": "tag",
+									"value": "e7:c4:52:3c:b8:6c",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_type",
+									"value": "asc",
+									"type": "text"
+								}
+							]
 						},
-						{
-							"key": "count_limit",
-							"value": "0",
-							"type": "text",
-							"disabled": true
-						}
-					]
-				},
-				"url": {
-					"raw": "https://127.0.0.1/api/1.0/tracing/history",
-					"protocol": "https",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"path": [
-						"api",
-						"1.0",
-						"tracing",
-						"history"
-					]
-				},
-				"description": "to get people's position and stay here duration. history data."
-			},
-			"response": []
+						"url": {
+							"raw": "https://127.0.0.1/api/1.0/tracing/history",
+							"protocol": "https",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"path": [
+								"api",
+								"1.0",
+								"tracing",
+								"history"
+							]
+						},
+						"description": "to get people's position and stay here duration. history data."
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
