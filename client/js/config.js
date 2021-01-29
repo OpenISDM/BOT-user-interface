@@ -126,7 +126,7 @@ const config = {
 		},
 	},
 
-	monitorOptions: ['geofence', 'panic', 'movement', 'location'],
+	monitorOptions: ['geofence', 'emergency', 'movement', 'location'],
 
 	monitorTypeMap: {
 		object: [1, 16],
@@ -211,7 +211,7 @@ const config = {
 
 	monitorType: {
 		1: 'geofence',
-		2: 'panic',
+		2: 'emergency',
 		4: 'movement',
 		8: 'location',
 		16: 'bed',
@@ -283,7 +283,7 @@ const config = {
 	MONITOR_TYPE: {
 		NORMAL: 0,
 		GEO_FENCE: 1,
-		PANIC: 2,
+		EMERGENCY: 2,
 		ACTIVITY: 4,
 		LOCATION: 8,
 		BED_CLEARNESS: 16,

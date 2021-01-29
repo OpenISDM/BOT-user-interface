@@ -268,7 +268,7 @@ class MainContainer extends React.Component {
 	getResultBySearchKey = async (searchKey) => {
 		const { stateReducer } = this.context
 		const [{ openedNotification }] = stateReducer
-		const { object: notifiedObject } = openedNotification
+		const { object: notifiedObject, notificaiton } = openedNotification
 		const {
 			trackingData,
 			trackingDataMap,
@@ -390,8 +390,21 @@ class MainContainer extends React.Component {
 				}
 		}
 
-		if (notifiedObject) {
-			searchResult.push(trackingDataMap[notifiedObject.id])
+		if (notifiedObject && notificaiton) {
+			const monitorType = notificaiton.monitor_type
+			const object = trackingDataMap[notifiedObject.id]
+
+			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
+				/// do nothing
+			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
+				object.emergency = true
+			}
+
+			searchResult = searchResult.filter((object) => {
+				return !isSameValue(object.id, notifiedObject.id)
+			})
+
+			searchResult.push(object)
 		}
 
 		const showDeivceObject = searchResult.some(

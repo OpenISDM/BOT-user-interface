@@ -124,15 +124,6 @@ const getTrackingData = (request, response) => {
 					? moment(item.last_reported_timestamp).locale(locale).fromNow()
 					: ''
 
-				/** Flag the object that is on sos */
-				if (parseInt(item.object_type) !== 0) {
-					item.panic =
-						moment().diff(item.panic_violation_timestamp, 'second') <
-						process.env.PANIC_TIME_INTERVAL_IN_SEC
-							? 1
-							: 0
-				}
-
 				/** Flag the object's battery volumn is limiting */
 				if (
 					item.battery_voltage > parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)

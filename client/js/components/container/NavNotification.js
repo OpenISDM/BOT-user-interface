@@ -168,7 +168,7 @@ class NavNotification extends React.Component {
 										monitorTypeString = locale.texts.GEOFENCE_ALERT
 									} else if (
 										parseInt(notificaiton.monitor_type) ===
-										config.MONITOR_TYPE.PANIC
+										config.MONITOR_TYPE.EMERGENCY
 									) {
 										monitorTypeString = locale.texts.EMERGENCY_ALERT
 									}

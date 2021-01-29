@@ -44,14 +44,14 @@ import { common, ipc } from '../../helpers'
 
 const NOTIFICATION_ENUM = {
 	LOW_BATTERY: 'LOW_BATTERY',
-	PANIC: 'PANIC',
+	EMERGENCY: 'EMERGENCY',
 	GEO_FENCE: 'GEO_FENCE',
 }
 
 const MONITOR_TYPE = {
 	NORMAL: 0,
 	GEO_FENCE: 1,
-	PANIC: 2,
+	EMERGENCY: 2,
 	ACTIVITY: 4,
 	LOCATION: 8,
 	BED_CLEARNESS: 16,
@@ -62,9 +62,6 @@ export default {
 		const { areaId } = request.query
 		try {
 			const objectTablePromise = ObjectTable.findAll({
-				where: {
-					area_id: areaId,
-				},
 				include: [
 					{
 						model: ObjectSummaryTable,
@@ -125,10 +122,10 @@ export default {
 					if (
 						common.findExpectedBitValue({
 							targetDecimal: monitortype,
-							expectedDecimal: MONITOR_TYPE.PANIC,
+							expectedDecimal: MONITOR_TYPE.EMERGENCY,
 						})
 					) {
-						type = NOTIFICATION_ENUM.PANIC
+						type = NOTIFICATION_ENUM.EMERGENCY
 					} else if (
 						common.findExpectedBitValue({
 							targetDecimal: monitortype,

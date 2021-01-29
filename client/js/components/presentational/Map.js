@@ -506,11 +506,9 @@ class Map extends React.Component {
 					.bindPopup(popupContent, this.props.mapConfig.popupOptions)
 					.openPopup()
 
-				marker.addTo(this.markersLayer)
-
 				/** Set the z-index offset of the searhed object so that
 				 * the searched object icon will be on top of all others */
-				if (item.searched || item.panic) marker.setZIndexOffset(1000)
+				if (item.searched || item.emergency) marker.setZIndexOffset(1000)
 
 				/** Set the marker's event. */
 				marker.on('mouseover', () => {
@@ -539,6 +537,8 @@ class Map extends React.Component {
 					})
 					this.props.searchResultListRef.current.handleClick()
 				})
+
+				marker.addTo(this.markersLayer)
 			}
 		})
 		/** Add the new markerslayers to the map */
