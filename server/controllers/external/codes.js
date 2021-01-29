@@ -4,8 +4,8 @@ export default {
 			error_code: '0',
 			error_message: 'get key success',
 			key,
-			note: 'validity period of key until : ' + validTime,
-			valid_time: validTime,
+			note: 'validity period of key until : ' + validTime.format(),
+			valid_time: validTime.valueOf(),
 		}
 	},
 	getDataSuccess : (rows)=>{

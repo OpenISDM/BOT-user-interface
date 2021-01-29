@@ -74,10 +74,10 @@ async function getDurationData(
 	return data.rows
 }
 function setDurationTime(time) {
-	if (time === undefined) {
-		return 0
+	if (time) {
+		return time
 	}
-	return time
+	return 0
 }
 
 //#endregion
@@ -144,7 +144,7 @@ async function getPeopleRealtimeData(request, response) {
 		const filter = await setFilter(key, object_ids, object_types, area_ids)
 		const data = await pool.query(queryType.getPeopleRealtimeQuery(filter))
 
-		data.rows.forEach((item)=>{
+		data.rows.forEach((item) => {
 			item.floor = getFloor(item.lbeacon_uuid)
 		})
 
@@ -182,7 +182,7 @@ async function getPeopleHistoryData(request, response) {
 			)
 		)
 		console.log('get people history successed.')
-		data.rows.forEach((item)=>{
+		data.rows.forEach((item) => {
 			item.floor = getFloor(item.lbeacon_uuid)
 		})
 		response.json(checkIsNullResponse(data.rows))
@@ -198,7 +198,7 @@ async function getObjectRealtimeData(request, response) {
 		const filter = await setFilter(key, object_ids, object_types, area_ids)
 		const data = await pool.query(queryType.getObjectRealtimeQuery(filter))
 
-		data.rows.forEach((item)=>{
+		data.rows.forEach((item) => {
 			item.floor = getFloor(item.lbeacon_uuid)
 		})
 
@@ -221,9 +221,7 @@ async function getApiKey(request, response) {
 			.catch((err) => {
 				console.log(`update data error : ${err}`)
 			})
-		response.json(
-			errorCode.getApiKeySuccess(hashToken, moment().add(30, 'm'))
-		)
+		response.json(errorCode.getApiKeySuccess(hashToken, moment().add(30, 'm')))
 	} else {
 		response.json(errorCode.accountIncorrect)
 	}
@@ -254,7 +252,7 @@ async function getObjectHistoryData(request, response) {
 				sort_type
 			)
 		)
-		data.rows.forEach((item)=>{
+		data.rows.forEach((item) => {
 			item.floor = getFloor(item.lbeacon_uuid)
 		})
 		response.json(checkIsNullResponse(data.rows))
@@ -278,7 +276,10 @@ function getFloor(uuid) {
 }
 
 async function compareUserArea(key, area_ids) {
-	const user_area = await getUserArea(key, queryType.getAreaCheckFilter(area_ids))
+	const user_area = await getUserArea(
+		key,
+		queryType.getAreaCheckFilter(area_ids)
+	)
 	return user_area
 }
 
@@ -301,10 +302,10 @@ async function getUserArea(key, filter = '') {
 }
 
 function setInitialTime(time, diff, format = null) {
-	if (time === undefined) {
-		return moment(moment().subtract(diff, 'day')).format()
+	if (time) {
+		return moment(time, format).format()
 	}
-	return moment(time, format).format()
+	return moment(moment().subtract(diff, 'day')).format()
 }
 
 async function setFilter(key, object_ids, object_types, area_ids) {

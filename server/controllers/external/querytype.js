@@ -27,6 +27,7 @@ function getUserQuery(username, password) {
 	`
 }
 
+
 function getKeyQuery(key){
 	return `
 	select 
@@ -154,7 +155,7 @@ const getPeopleHistoryQuery = (
 	location_history_table.uuid as lbeacon_uuid,
 	lbeacon_table.description as lbeacon_description,
 	location_history_table.payload as payload,
-	location_history_table.record_timestamp as record_timestamp
+	extract (epoch from location_history_table.record_timestamp) as record_timestamp
 	from location_history_table
 
 	inner join object_table
@@ -190,7 +191,7 @@ const getPeopleRealtimeQuery = (filter) => {
 		object_summary_table.base_y as position_y,
 		object_summary_table.battery_voltage as battery_voltage,
 		object_summary_table.payload as payload,
-		object_summary_table.last_reported_timestamp as last_reported_timestamp
+		extract(epoch from object_summary_table.last_reported_timestamp) as last_reported_timestamp
 	from 
 		object_summary_table
 
@@ -257,7 +258,7 @@ const getObjectRealtimeQuery = (filter) => {
 		object_summary_table.base_x as position_x,
 		object_summary_table.base_y as position_y,
 		object_summary_table.battery_voltage as battery_voltage,
-		object_summary_table.last_reported_timestamp as last_reported_timestamp
+		extract(epoch from object_summary_table.last_reported_timestamp) as last_reported_timestamp
 	from
 		object_summary_table 
 
@@ -321,7 +322,7 @@ const getObjectHistoryQuery = (
 		area_table.readable_name as area_name,
 		location_history_table.uuid as lbeacon_uuid,
 		lbeacon_table.description as lbeacon_description,
-		location_history_table.record_timestamp as record_timestamp
+		extract (epoch from location_history_table.record_timestamp) as record_timestamp
 	from
 		location_history_table
 
