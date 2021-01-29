@@ -71,7 +71,7 @@ class ObjectTable extends React.Component {
 		showDeleteConfirmation: false,
 		selectedRowData: {},
 		formTitle: '',
-		disableASN: false,
+		isReadOnly: false,
 		data: [],
 		dataMap: {},
 		areaTable: [],
@@ -81,7 +81,9 @@ class ObjectTable extends React.Component {
 		apiMethod: '',
 		idleMacaddrSet: [],
 		associatedMacSet: [],
+		associatedAsnSet: [],
 		isAddButtonPressed: false,
+		isMultiSelection: false,
 	}
 
 	componentDidMount = () => {
@@ -104,18 +106,25 @@ class ObjectTable extends React.Component {
 		})
 		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
 		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
+		const acnPromise = apiHelper.objectApiAgent.getAcnSet()
 
-		const [deviceObjectTableRes, areaTableRes, idleMacRes] = await Promise.all([
+		const [
+			objectTableRes,
+			areaTableRes,
+			idleMacRes,
+			acnRes,
+		] = await Promise.all([
 			objectTablePromise,
 			areaTablePromise,
 			idleMacPromise,
+			acnPromise,
 		])
 
-		if (deviceObjectTableRes && areaTableRes && idleMacRes) {
+		if (objectTableRes && areaTableRes && idleMacRes && acnRes) {
 			const typeList = {}
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
 
-			const data = deviceObjectTableRes.data.rows.map((item) => {
+			const data = objectTableRes.data.rows.map((item) => {
 				item.status = {
 					value: item.status,
 					label: item.status ? locale.texts[item.status.toUpperCase()] : null,
@@ -154,8 +163,16 @@ class ObjectTable extends React.Component {
 
 			const associatedMacSet = [
 				...new Set(
-					deviceObjectTableRes.data.rows.map((item) => {
-						return item.mac_address
+					objectTableRes.data.rows.map((item) => {
+						return `${item.mac_address}`.toUpperCase()
+					})
+				),
+			]
+
+			const associatedAsnSet = [
+				...new Set(
+					acnRes.data.map((item) => {
+						return `${item.asset_control_number}`.toUpperCase()
 					})
 				),
 			]
@@ -189,12 +206,12 @@ class ObjectTable extends React.Component {
 					areaTable: areaTableRes.data,
 					areaSelection,
 					idleMacaddrSet,
+					associatedAsnSet,
 					macOptions,
 					locale: locale.abbr,
 					isShowEdit: false,
-					isMultiSelection: false,
 					showDeleteConfirmation: false,
-					disableASN: false,
+					isReadOnly: false,
 				},
 				callback
 			)
@@ -206,9 +223,8 @@ class ObjectTable extends React.Component {
 	handleClose = () => {
 		this.setState({
 			isShowEdit: false,
-			isMultiSelection: false,
 			showDeleteConfirmation: false,
-			disableASN: false,
+			isReadOnly: false,
 			isAddButtonPressed: false,
 			selectedRowData: {},
 		})
@@ -271,7 +287,7 @@ class ObjectTable extends React.Component {
 				this.setState({
 					isShowEdit: true,
 					formTitle: name,
-					disableASN: false,
+					isReadOnly: false,
 					apiMethod: 'post',
 					isAddButtonPressed: true,
 				})
@@ -288,30 +304,32 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	handleDeleteAction = () => {
+	switchSelectionMode = () => {
+		const [, dispatch] = this.context.stateReducer
 		const { isMultiSelection } = this.state
+		this.setState({
+			isMultiSelection: !isMultiSelection,
+		})
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
+		})
+	}
+
+	handleDeleteAction = () => {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
-		if (isMultiSelection) {
-			let state = {}
-			if (tableSelection.length > 0) {
-				state = {
-					action: DELETE,
-					showDeleteConfirmation: true,
-					message: locale.texts.ARE_YOU_SURE_TO_DELETE,
-				}
-			} else {
-				state = {
-					isMultiSelection: false,
-				}
-			}
 
-			this.setState(state)
-		} else {
-			this.setState({
-				isMultiSelection: true,
-			})
+		let state = {}
+		if (tableSelection.length > 0) {
+			state = {
+				action: DELETE,
+				showDeleteConfirmation: true,
+				message: locale.texts.ARE_YOU_SURE_TO_DELETE,
+			}
 		}
+
+		this.setState(state)
 	}
 
 	clearSelection = () => {
@@ -332,7 +350,7 @@ class ObjectTable extends React.Component {
 			deleteText,
 		} = this.props
 		const { locale, stateReducer } = this.context
-		const [{ tableSelection }, dispatch] = stateReducer
+		const [{ tableSelection }] = stateReducer
 
 		const typeOptions = this.state.filterSelection.typeList
 			? Object.values(this.state.filterSelection.typeList)
@@ -393,46 +411,52 @@ class ObjectTable extends React.Component {
 							]}
 						/>
 						<ButtonToolbar>
-							<OverlayTrigger
-								trigger="click"
-								key={'left'}
-								placement="left"
-								overlay={
-									<Popover id="popover-basic">
-										<Popover.Title as="h3">{locale.texts.TIPS}</Popover.Title>
-										<Popover.Content>
-											{locale.texts.TIPS_REPLACE_TAG}
-										</Popover.Content>
-									</Popover>
-								}
-							>
-								<Button variant="info">{locale.texts.REPLACE_TAG}</Button>
-							</OverlayTrigger>
-							<BOTButton
-								pressed={this.state.isAddButtonPressed}
-								name={ADD}
-								onClick={this.handleClickButton}
-								text={locale.texts[addText]}
-							/>
-							<BOTButton
-								pressed={this.state.isMultiSelection}
-								name={DELETE}
-								onClick={this.handleDeleteAction}
-								text={locale.texts[deleteText]}
-							/>
 							{this.state.isMultiSelection ? (
 								<BOTButton
+									theme={'danger'}
 									pressed={tableSelection.length > 0}
 									name={DELETE}
-									onClick={() => {
-										dispatch({
-											type: SET_TABLE_SELECTION,
-											value: [],
-										})
-									}}
-									text={locale.texts.CLEAR}
+									onClick={this.handleDeleteAction}
+									text={locale.texts[deleteText]}
 								/>
-							) : null}
+							) : (
+								<>
+									<OverlayTrigger
+										trigger="click"
+										key={'left'}
+										placement="left"
+										overlay={
+											<Popover id="popover-basic">
+												<Popover.Title as="h3">
+													{locale.texts.TIPS}
+												</Popover.Title>
+												<Popover.Content>
+													{locale.texts.TIPS_REPLACE_TAG}
+												</Popover.Content>
+											</Popover>
+										}
+									>
+										<Button variant="info">{locale.texts.REPLACE_TAG}</Button>
+									</OverlayTrigger>
+									<BOTButton
+										pressed={this.state.isAddButtonPressed}
+										name={ADD}
+										onClick={this.handleClickButton}
+										text={locale.texts[addText]}
+									/>
+								</>
+							)}
+							<BOTButton
+								enableDebounce={false}
+								pressed={this.state.isMultiSelection}
+								name={DELETE}
+								onClick={this.switchSelectionMode}
+								text={
+									this.state.isMultiSelection
+										? locale.texts.CANCEL
+										: locale.texts[deleteText]
+								}
+							/>
 						</ButtonToolbar>
 					</Row>
 				</Col>
@@ -453,7 +477,7 @@ class ObjectTable extends React.Component {
 								this.setState({
 									isShowEdit: true,
 									formTitle: 'edit object',
-									disableASN: true,
+									isReadOnly: true,
 									apiMethod: 'put',
 									selectedRowData,
 								})
@@ -469,10 +493,10 @@ class ObjectTable extends React.Component {
 					handleClick={this.handleClickButton}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
-					objectList={this.state.data}
-					disableASN={this.state.disableASN}
+					isReadOnly={this.state.isReadOnly}
 					areaTable={this.state.areaTable}
 					associatedMacSet={this.state.associatedMacSet}
+					associatedAsnSet={this.state.associatedAsnSet}
 					macOptions={this.state.macOptions}
 				/>
 

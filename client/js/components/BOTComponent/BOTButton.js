@@ -39,6 +39,7 @@ import PropTypes from 'prop-types'
 
 const BOTButton = ({
 	pressed = false,
+	theme = 'primary',
 	text = '',
 	style,
 	enableDebounce = true,
@@ -47,7 +48,7 @@ const BOTButton = ({
 	},
 	...props
 }) => {
-	const variant = pressed ? 'primary' : 'outline-primary'
+	const variant = pressed ? theme : `outline-${theme}`
 	let debounceClick = onClick
 	if (enableDebounce) {
 		debounceClick = useCallback(
@@ -75,6 +76,7 @@ const BOTButton = ({
 
 BOTButton.propTypes = {
 	pressed: PropTypes.bool,
+	theme: PropTypes.string,
 	text: PropTypes.string,
 	style: PropTypes.object,
 	onClick: PropTypes.func,

@@ -77,13 +77,20 @@ export default {
 
 			const notificationTablePromise = NotificationTable.findAll({
 				where: {
-					area_id: areaId,
 					web_processed: {
 						[Op.eq]: null,
 					},
 					violation_timestamp: {
 						[Op.gt]: new Date(Date.now() - 30 * 60 * 1000), // 30 mins
 					},
+					[Op.or]: [
+						{
+							area_id: areaId,
+						},
+						{
+							owner_area_id: areaId,
+						},
+					],
 				},
 				order: [['id', 'DESC']],
 			})

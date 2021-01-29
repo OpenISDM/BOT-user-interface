@@ -55,6 +55,7 @@ export const object = {
 	device: `${domain}/data/object/device`,
 	person: `${domain}/data/object/person`,
 	idleMacaddr: `${domain}/data/object/mac/idle`,
+	acn: `${domain}/data/object/acn`,
 	alias: `${domain}/data/object/alias`,
 	aliases: `${domain}/data/object/aliases`,
 	nickname: `${domain}/data/object/nickname`,

@@ -11,6 +11,11 @@ const NotificationTable = sequelize.define(
 			autoIncrement: true,
 		},
 		area_id: {
+			// triggered area id
+			type: DataTypes.INTEGER,
+		},
+		owner_area_id: {
+			// owner area id
 			type: DataTypes.INTEGER,
 		},
 		monitor_type: {

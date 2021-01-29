@@ -109,6 +109,10 @@ export default {
 		return await post(object.idleMacaddr)
 	},
 
+	async getAcnSet() {
+		return await get(object.acn)
+	},
+
 	async editNickname({ personList }) {
 		return await post(object.nickname, { personList })
 	},

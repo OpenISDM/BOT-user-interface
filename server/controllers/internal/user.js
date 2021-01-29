@@ -34,7 +34,8 @@
 
 import 'dotenv/config'
 import dbQueries from '../../db/userQueries'
-import pool from '../../db/connection'
+import pool, { updateOrCreate } from '../../db/connection'
+import { UserTable, UserArea, UserRole } from '../../db/models'
 import authQueries from '../../db/authQueries'
 import { encrypt } from '../../helpers'
 
@@ -90,18 +91,67 @@ export default {
 		})
 	},
 
-	setUserInfo: (request, response) => {
+	setUserInfo: async (request, response) => {
 		const { user } = request.body
+		const { name, email, id, roleIds, areaIds } = user
 
-		pool
-			.query(dbQueries.setUserInfo(user))
-			.then((res) => {
-				console.log('edit user info succeed')
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`edit user info failed ${err}`)
-			})
+		try {
+			let promises = []
+
+			// remove role and area first
+			promises.push(
+				UserRole.destroy({
+					where: { user_id: user.id },
+				})
+			)
+			promises.push(
+				UserArea.destroy({
+					where: { user_id: user.id },
+				})
+			)
+
+			await Promise.all(promises)
+
+			// set user info
+			promises = []
+			promises.push(
+				updateOrCreate({
+					model: UserTable,
+					where: { id },
+					newItem: { name, email },
+				})
+			)
+
+			if (roleIds && roleIds.length > 0) {
+				roleIds.forEach((roleId) =>
+					promises.push(
+						updateOrCreate({
+							model: UserRole,
+							where: { user_id: id, role_id: roleId },
+							newItem: { user_id: id, role_id: roleId },
+						})
+					)
+				)
+			}
+
+			if (areaIds && areaIds.length > 0) {
+				areaIds.forEach((areaId) =>
+					promises.push(
+						updateOrCreate({
+							model: UserArea,
+							where: { user_id: id, area_id: areaId },
+							newItem: { user_id: id, area_id: areaId },
+						})
+					)
+				)
+			}
+
+			const res = await Promise.all(promises)
+
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`setUserInfo failed ${e}`)
+		}
 	},
 
 	deleteUser: (request, response) => {

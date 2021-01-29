@@ -39,9 +39,9 @@ export const emailValidation = (email) => {
 }
 
 /** Mac address format validation */
-export const macaddrValidation = (macaddr) => {
+export const macaddrValidation = ({ macaddr = '' }) => {
 	const req = new RegExp('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
-	return req.test(macaddr)
+	return req.test(macaddr.trim())
 }
 
 /** String is empty test */

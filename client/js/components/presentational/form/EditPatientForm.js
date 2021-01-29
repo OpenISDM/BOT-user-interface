@@ -44,6 +44,7 @@ import FormikFormGroup from '../FormikFormGroup'
 import styleConfig from '../../../config/styleConfig'
 import { DISASSOCIATE } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
+import { formatToMac, compareString } from '../../../helper/utilities'
 import PropTypes from 'prop-types'
 
 const monitorTypeMap = {}
@@ -60,16 +61,16 @@ class EditPatientForm extends React.Component {
 		const {
 			title,
 			selectedRowData = {},
-			physicianList = [],
 			show,
 			handleClose,
 			areaTable,
-			disableASN,
-			objectTable,
+			isReadOnly,
 			macOptions,
 			handleSubmit,
 			roomOptions,
 			handleClick,
+			associatedAsnSet = [],
+			associatedMacSet = [],
 		} = this.props
 
 		const {
@@ -78,8 +79,6 @@ class EditPatientForm extends React.Component {
 			mac_address,
 			asset_control_number,
 			room,
-			physician_id,
-			physicianIDNumber,
 		} = selectedRowData
 
 		const areaOptions = areaTable.map((area) => {
@@ -88,27 +87,6 @@ class EditPatientForm extends React.Component {
 				label: area.readable_name,
 				id: area.id,
 			}
-		})
-
-		// const genderOptions = Object.values(config.GENDER_OPTIONS).map((item) => {
-		// 	item.label = locale.texts[item.value.toUpperCase()]
-		// 	return item
-		// })
-
-		const physicianListOptions = physicianList.map((user) => {
-			return {
-				value: user.id,
-				label: user.name,
-			}
-		})
-
-		physicianList.map((user) => {
-			return physician_id === user.id
-				? (selectedRowData.physician = {
-						value: user.id,
-						label: user.name,
-				  })
-				: null
 		})
 
 		return (
@@ -120,7 +98,6 @@ class EditPatientForm extends React.Component {
 					<Formik
 						initialValues={{
 							area: area_name || '',
-							physician: '',
 							name: name || '',
 							mac_address: selectedRowData.isBind
 								? {
@@ -141,72 +118,60 @@ class EditPatientForm extends React.Component {
 								.required(locale.texts.NAME_IS_REQUIRED)
 								.max(40, locale.texts.LIMIT_IN_FOURTY_CHARACTER),
 							area: string().required(locale.texts.AREA_IS_REQUIRED),
-							// gender: string().required(locale.texts.GENDER_IS_REQUIRED),
 							asset_control_number: string()
-								.required(locale.texts.NUMBER_IS_REQUIRED)
+								.required(locale.texts.ASSET_CONTROL_NUMBER_IS_REQUIRED)
 								.test(
 									'asset_control_number',
-									locale.texts.THE_ID_IS_ALREADY_USED,
+									locale.texts.THE_ASSET_CONTROL_NUMBER_IS_ALREADY_USED,
 									(value) => {
-										if (value === undefined) return false
-										if (!disableASN) {
-											if (value != null) {
-												if (
-													objectTable
-														.map((item) =>
-															item.asset_control_number.toUpperCase()
-														)
-														.includes(value.toUpperCase())
-												) {
-													return false
-												}
-											}
+										const acnString = `${value}`.trim().toUpperCase()
+										if (compareString(asset_control_number, acnString)) {
+											return true
 										}
-										return true
+										return !associatedAsnSet.includes(acnString)
 									}
 								)
 								.max(40, locale.texts.LIMIT_IN_FOURTY_CHARACTER),
-
 							mac_address: object()
 								.nullable()
-								/** check if there are duplicated mac address in object table */
 								.test(
 									'mac_address',
 									locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
 									(obj) => {
-										console.log(obj)
-										if (obj === undefined) return true
-										if (obj == null || isEmpty(obj)) return true
-										if (selectedRowData.length === 0) return true
-										return macaddrValidation(obj.label)
+										if (!obj || isEmpty(obj)) {
+											return true
+										}
+										const macString = `${obj.label}`.trim().toUpperCase()
+										return macaddrValidation({ macaddr: macString })
+									}
+								)
+								.test(
+									'mac_address',
+									locale.texts.THE_MAC_ADDRESS_IS_ALREADY_USED,
+									(obj) => {
+										let macWithColons = ''
+										if (obj && obj.label) {
+											macWithColons = `${obj.label}`.trim().toUpperCase()
+										}
+
+										if (compareString(mac_address, macWithColons)) {
+											return true
+										}
+										return !associatedMacSet.includes(macWithColons)
 									}
 								),
 						})}
 						onSubmit={(values) => {
-							// physicianList.map((item) => {
-							// 	if (values.physician)
-							// 		return item.name === values.physician.value
-							// 			? (values.physician.value = item.id)
-							// 			: null
-							// })
-
-							const postOption = {
+							handleSubmit({
 								...values,
 								name: values.name.trim(),
 								area_id: values.area.id,
-								// gender_id: values.gender.value,
 								room: values.room ? values.room.label : '',
 								object_type: config.OBJECT_TYPE.PERSON,
-								physicianIDNumber: values.physician
-									? values.physician.value
-									: physicianIDNumber,
-								mac_address:
-									isEmpty(values.mac_address) || values.mac_address == null
-										? null
-										: values.mac_address.label,
-							}
-
-							handleSubmit(postOption)
+								mac_address: values.mac_address
+									? values.mac_address.label.trim()
+									: '',
+							})
 						}}
 						render={({
 							values,
@@ -229,29 +194,6 @@ class EditPatientForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-										{/* <FormikFormGroup
-											name="gender"
-											label={locale.texts.PATIENT_GENDER}
-											error={errors.gender}
-											touched={touched.gender}
-											component={() => (
-												<Select
-													placeholder={locale.texts.CHOOSE_GENDER}
-													name="gender"
-													styles={styleConfig.reactSelect}
-													value={values.gender}
-													onChange={(value) => setFieldValue('gender', value)}
-													options={genderOptions || []}
-													components={{
-														IndicatorSeparator: () => null,
-													}}
-												/>
-											)}
-										/> */}
-									</Col>
-								</Row>
-								<Row noGutters>
-									<Col>
 										<FormikFormGroup
 											type="text"
 											name="asset_control_number"
@@ -259,9 +201,11 @@ class EditPatientForm extends React.Component {
 											error={errors.asset_control_number}
 											touched={touched.asset_control_number}
 											placeholder=""
-											disabled={disableASN}
+											disabled={isReadOnly}
 										/>
 									</Col>
+								</Row>
+								<Row noGutters>
 									<Col>
 										<FormikFormGroup
 											name="mac_address"
@@ -274,7 +218,7 @@ class EditPatientForm extends React.Component {
 													value={values.mac_address}
 													className="my-1"
 													onChange={(obj) => {
-														obj.label = obj.value.match(/.{1,2}/g).join(':')
+														obj.label = formatToMac(obj.value)
 														setFieldValue('mac_address', obj)
 													}}
 													options={macOptions}
@@ -289,8 +233,31 @@ class EditPatientForm extends React.Component {
 											)}
 										/>
 									</Col>
+									<Col>
+										<FormikFormGroup
+											type="text"
+											name="room"
+											label={locale.texts.ROOM}
+											error={errors.room}
+											touched={touched.room}
+											component={() => (
+												<Creatable
+													placeholder={locale.texts.SELECT_ROOM}
+													name="room"
+													styles={styleConfig.reactSelect}
+													value={values.room}
+													onChange={(value) => setFieldValue('room', value)}
+													options={roomOptions || []}
+													isSearchable={true}
+													components={{
+														IndicatorSeparator: () => null,
+													}}
+												/>
+											)}
+										/>
+									</Col>
 								</Row>
-								<Row noGutters>
+								<Row>
 									<Col>
 										<FormikFormGroup
 											type="text"
@@ -313,51 +280,8 @@ class EditPatientForm extends React.Component {
 											)}
 										/>
 									</Col>
-									<Col>
-										<FormikFormGroup
-											type="text"
-											name="physician"
-											label={locale.texts.ATTENDING_PHYSICIAN}
-											error={errors.physician}
-											touched={touched.physician}
-											component={() => (
-												<Select
-													placeholder={locale.texts.SELECT_PHYSICIAN}
-													name="physician"
-													value={values.physician}
-													onChange={(value) =>
-														setFieldValue('physician', value)
-													}
-													options={physicianListOptions || []}
-													styles={styleConfig.reactSelect}
-													components={{
-														IndicatorSeparator: () => null,
-													}}
-												/>
-											)}
-										/>
-									</Col>
 								</Row>
-								<FormikFormGroup
-									type="text"
-									name="room"
-									label={locale.texts.ROOM}
-									error={errors.room}
-									touched={touched.room}
-									component={() => (
-										<Select
-											placeholder={locale.texts.SELECT_ROOM}
-											name="room"
-											styles={styleConfig.reactSelect}
-											value={values.room}
-											onChange={(value) => setFieldValue('room', value)}
-											options={roomOptions || []}
-											components={{
-												IndicatorSeparator: () => null,
-											}}
-										/>
-									)}
-								/>
+
 								<hr />
 								<Modal.Footer>
 									<div className="mr-auto">
@@ -396,16 +320,16 @@ class EditPatientForm extends React.Component {
 EditPatientForm.propTypes = {
 	title: PropTypes.string,
 	selectedRowData: PropTypes.object,
-	physicianList: PropTypes.array,
 	areaTable: PropTypes.array,
 	show: PropTypes.bool,
 	handleClose: PropTypes.func,
-	disableASN: PropTypes.bool,
-	objectTable: PropTypes.array,
+	isReadOnly: PropTypes.bool,
 	macOptions: PropTypes.array,
 	handleSubmit: PropTypes.func,
 	roomOptions: PropTypes.array,
 	handleClick: PropTypes.func,
+	associatedMacSet: PropTypes.array,
+	associatedAsnSet: PropTypes.array,
 }
 
 export default EditPatientForm

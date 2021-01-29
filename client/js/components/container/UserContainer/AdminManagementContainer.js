@@ -34,6 +34,7 @@
 
 import React from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
+import { keyBy } from 'lodash'
 import { userInfoTableColumn } from '../../../config/tables'
 import EditUserForm from '../../presentational/form/EditUserForm'
 import { AppContext } from '../../../context/AppContext'
@@ -57,12 +58,13 @@ class AdminManagementContainer extends React.Component {
 		showDeleteUserForm: false,
 		data: [],
 		selectedUser: null,
-		roleName: [],
+		filteredRoleList: [],
 		title: '',
 		locale: this.context.locale.abbr,
 		showDeleteConfirmation: false,
 		deleteUserName: '',
 		areaTable: [],
+		roleMap: null,
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -73,18 +75,30 @@ class AdminManagementContainer extends React.Component {
 
 	componentDidMount = () => {
 		this.getUserList()
-		this.getAllRole()
 		this.getAreaTable()
 	}
 
 	getUserList = async (callback) => {
 		const { locale } = this.context
-		const res = await apiHelper.userApiAgent.getAllUser()
-		if (res) {
-			const data = res.data.rows.map((item, index) => {
+		const allUserPromise = apiHelper.userApiAgent.getAllUser()
+		const allRolePrmise = apiHelper.roleApiAgent.getAllRole()
+
+		const [allUserRes, allRoleRes] = await Promise.all([
+			allUserPromise,
+			allRolePrmise,
+		])
+
+		if (allUserRes && allRoleRes) {
+			const allRoleList = allRoleRes.data
+			const filteredRoleList = allRoleRes.data.filter((item) =>
+				config.ROLES_SELECTION.includes(item.name)
+			)
+			const roleMap = keyBy(allRoleList, 'id')
+
+			const data = allUserRes.data.rows.map((item, index) => {
 				item._id = index + 1
-				item.roles = item.role_type
-					.map((role) => locale.texts[role.toUpperCase()])
+				item.roleName = item.role_ids
+					.map((roleId) => locale.texts[roleMap[roleId].name.toUpperCase()])
 					.join('/')
 				item.areas = item.area_ids
 				item.areaIds = item.area_ids.map((area) => `${area.id}`)
@@ -105,21 +119,11 @@ class AdminManagementContainer extends React.Component {
 					deleteUserName: '',
 					selectedUser: null,
 					locale: locale.abbr,
+					filteredRoleList,
+					roleMap,
 				},
 				callback
 			)
-		}
-	}
-
-	getAllRole = async () => {
-		const res = await apiHelper.roleApiAgent.getAllRole()
-		if (res) {
-			const roleName = res.data.filter((item) =>
-				config.ROLES_SELECTION.includes(item.name)
-			)
-			this.setState({
-				roleName,
-			})
 		}
 	}
 
@@ -145,13 +149,13 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	handleSetUserSubmit = async (values) => {
-		const { areaIds, email, name, roles } = values
+		const { name, email, roleIds, areaIds } = values
 		const { selectedUser } = this.state
 		const user = {
 			id: selectedUser.id,
 			name,
 			email,
-			roles,
+			roleIds,
 			areaIds,
 		}
 
@@ -161,12 +165,12 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	handleAddUserSubmit = async (values) => {
-		const { name, email, password, roles, areaIds } = values
+		const { name, email, password, roleIds, areaIds } = values
 		const user = {
 			name: name.toLowerCase(),
 			email: email.toLowerCase(),
 			password,
-			roles,
+			roleIds,
 			areaIds,
 		}
 
@@ -269,7 +273,7 @@ class AdminManagementContainer extends React.Component {
 					handleSubmit={this.handleSubmit}
 					title={title}
 					selectedUser={this.state.selectedUser}
-					roleName={this.state.roleName}
+					filteredRoleList={this.state.filteredRoleList}
 					data={this.state.data}
 					areaTable={this.state.areaTable}
 				/>

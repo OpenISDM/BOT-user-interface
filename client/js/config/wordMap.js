@@ -63,3 +63,5 @@ export const TRACE = 'trace'
 export const BROKEN = 'broken'
 
 export const ASSET_CONTROL_NUMBER = 'asset control number'
+
+export const CLEAR = 'clear'

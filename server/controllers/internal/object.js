@@ -226,6 +226,25 @@ export default {
 			})
 	},
 
+	getAcnSet: async (request, response) => {
+		try {
+			const res = await ObjectTable.findAll({
+				attributes: [
+					[
+						sequelize.fn('DISTINCT', sequelize.col('asset_control_number')),
+						'asset_control_number',
+					],
+				],
+				raw: true,
+			})
+
+			console.log('get  acn sets succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get acn set failed ${e}`)
+		}
+	},
+
 	getAliases: async (request, response) => {
 		const { objectType, areaId } = request.query
 		try {

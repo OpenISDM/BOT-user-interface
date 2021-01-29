@@ -14,6 +14,7 @@ import ObjectSummaryTable from './object-summary-table'
 import AreaTable from './area-table'
 import UserTable from './user-table'
 import UserArea from './user-area'
+import UserRole from './user-role'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -59,5 +60,6 @@ export {
 	AreaTable,
 	UserArea,
 	UserTable,
+	UserRole,
 	UserAssignmentEnum,
 }
