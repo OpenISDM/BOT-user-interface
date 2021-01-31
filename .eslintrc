@@ -5,7 +5,7 @@
 		"ecmaVersion": 2020
 	},
 	"parser": "babel-eslint",
-	"plugins": ["babel", "node", "prettier"],
+	"plugins": ["babel", "node", "prettier", "react-hooks"],
 	"env": {
 		"node": true,
 		"browser": true
@@ -38,6 +38,8 @@
 			}
 		],
 		"no-invalid-this": 0,
-		"babel/no-invalid-this": 1
+		"babel/no-invalid-this": 1,
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": "warn"
 	}
 }
