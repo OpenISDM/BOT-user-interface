@@ -45,7 +45,6 @@ import PropTypes from 'prop-types'
 const BrowserMainContainer = ({
 	getSearchKey,
 	lbeaconPosition,
-	geofenceConfig,
 	highlightSearchPanel,
 	showMobileMap,
 	clearSearchResult,
@@ -103,7 +102,6 @@ const BrowserMainContainer = ({
 						handleClick={handleClick}
 						getSearchKey={getSearchKey}
 						lbeaconPosition={lbeaconPosition}
-						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
@@ -156,7 +154,6 @@ BrowserMainContainer.propTypes = {
 	handleClearButton: PropTypes.func.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
-	geofenceConfig: PropTypes.object.isRequired,
 	highlightSearchPanel: PropTypes.func.isRequired,
 	showMobileMap: PropTypes.bool.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,

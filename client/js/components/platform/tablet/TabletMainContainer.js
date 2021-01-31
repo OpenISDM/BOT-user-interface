@@ -43,7 +43,6 @@ const TabletMainContainer = ({
 	handleClosePath,
 	handleShowPath,
 	lbeaconPosition,
-	geofenceConfig,
 	authenticated,
 	highlightSearchPanel,
 	showMobileMap,
@@ -81,7 +80,6 @@ const TabletMainContainer = ({
 							handleClearButton={handleClearButton}
 							getSearchKey={getSearchKey}
 							lbeaconPosition={lbeaconPosition}
-							geofenceConfig={geofenceConfig}
 							searchKey={searchKey}
 							authenticated={authenticated}
 							handleClosePath={handleClosePath}

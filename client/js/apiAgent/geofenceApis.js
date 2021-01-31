@@ -34,7 +34,6 @@
 
 import { geofence, geofenceArea } from '../dataSrc'
 import { post, put, del, patch, get } from '../helper/httpClient'
-import config from '../config'
 
 const geofenceApis = {
 	async getGeofenceConfig({ areaId }) {

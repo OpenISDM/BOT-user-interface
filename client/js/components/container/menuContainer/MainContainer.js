@@ -67,7 +67,6 @@ class MainContainer extends React.Component {
 		trackingDataMap: {},
 		proccessedTrackingData: [],
 		lbeaconPosition: [],
-		geofenceConfig: null,
 		locationMonitorConfig: null,
 		searchKey: {
 			type: null,
@@ -92,7 +91,6 @@ class MainContainer extends React.Component {
 		this.getTrackingData()
 		this.getKeywords()
 		this.getLbeaconPosition()
-		this.getGeofenceConfig()
 		this.getLocationMonitorConfig()
 		this.getGroupIdList()
 		this.interval = setInterval(
@@ -177,24 +175,6 @@ class MainContainer extends React.Component {
 			})
 			this.setState({
 				lbeaconPosition,
-			})
-		}
-	}
-
-	/** Retrieve geofence data from database */
-	getGeofenceConfig = async () => {
-		const { stateReducer } = this.context
-		const [{ area }] = stateReducer
-
-		const {
-			data: geofenceConfig,
-		} = await apiHelper.geofenceApis.getGeofenceConfig({
-			areaId: area.id,
-		})
-
-		if (geofenceConfig) {
-			this.setState({
-				geofenceConfig,
 			})
 		}
 	}
@@ -504,7 +484,6 @@ class MainContainer extends React.Component {
 			searchResult,
 			searchKey,
 			lbeaconPosition,
-			geofenceConfig,
 			clearSearchResult,
 			showPath,
 			pathMacAddress,
@@ -527,7 +506,6 @@ class MainContainer extends React.Component {
 		const propsGroup = {
 			getSearchKey,
 			lbeaconPosition,
-			geofenceConfig,
 			highlightSearchPanel,
 			clearSearchResult,
 			searchKey,

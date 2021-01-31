@@ -39,7 +39,7 @@ import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import { isEqual, getCoordinatesFromUUID } from '../../helper/utilities'
+import { isEqual } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
@@ -95,10 +95,6 @@ class Map extends React.Component {
 			this.setState({
 				currentAreaId: area.id,
 			})
-		}
-
-		if (!isEqual(prevProps.geofenceConfig, this.props.geofenceConfig)) {
-			this.createGeofenceMarkers()
 		}
 
 		if (
@@ -275,33 +271,6 @@ class Map extends React.Component {
 				this.pathOfDevice.addTo(this.mapLayer)
 			}
 		}
-	}
-
-	/** Create the geofence-related lbeacons markers */
-	createGeofenceMarkers = () => {
-		const { geofenceConfig } = this.props
-
-		// this.calculateScale()
-
-		this.geoFenceLayer.clearLayers()
-
-		/** Create the markers of lbeacons of perimeters and fences
-		 *  and onto the map  */
-		geofenceConfig.forEach((config) => {
-			if (config.enable && config.is_active) {
-				L.circleMarker(
-					getCoordinatesFromUUID({ lBeaconUUID: config.perimeters_uuid }),
-					this.iconOptions.geoFenceMarkerOptions
-				).addTo(this.geoFenceLayer)
-				L.circleMarker(
-					getCoordinatesFromUUID({ lBeaconUUID: config.fences_uuid }),
-					this.iconOptions.geoFenceMarkerOptions
-				).addTo(this.geoFenceLayer)
-			}
-		})
-
-		/** Add the new markerslayers to the map */
-		this.geoFenceLayer.addTo(this.mapLayer)
 	}
 
 	/** Create the geofence-related lbeacons markers */
@@ -603,7 +572,6 @@ Map.propTypes = {
 	isObjectListShownProp: PropTypes.func.isRequired,
 	selectObjectListProp: PropTypes.func.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
-	geofenceConfig: PropTypes.object.isRequired,
 	pathMacAddress: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	authenticated: PropTypes.bool.isRequired,

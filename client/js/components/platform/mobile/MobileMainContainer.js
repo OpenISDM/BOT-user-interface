@@ -40,7 +40,6 @@ import MapContainer from '../../container/MapContainer'
 const MobileMainContainer = ({
 	getSearchKey,
 	lbeaconPosition,
-	geofenceConfig,
 	showMobileMap,
 	clearSearchResult,
 	searchKey,
@@ -103,7 +102,6 @@ const MobileMainContainer = ({
 						handleClick={handleClick}
 						getSearchKey={getSearchKey}
 						lbeaconPosition={lbeaconPosition}
-						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}

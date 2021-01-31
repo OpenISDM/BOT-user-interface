@@ -48,7 +48,6 @@ export default class TabletMapContainer extends React.Component {
 		const { locale, stateReducer, auth } = this.context
 
 		const {
-			geofenceConfig,
 			locationMonitorConfig,
 			proccessedTrackingData,
 			showPdfDownloadForm,
@@ -82,7 +81,6 @@ export default class TabletMapContainer extends React.Component {
 					colorPanel={this.props.colorPanel}
 					proccessedTrackingData={proccessedTrackingData}
 					lbeaconPosition={this.props.lbeaconPosition}
-					geofenceConfig={this.props.geofenceConfig}
 					locationMonitorConfig={this.props.locationMonitorConfig}
 					getSearchKey={this.props.getSearchKey}
 					mapConfig={config.mapConfig}
