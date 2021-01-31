@@ -39,6 +39,7 @@ import {
 	LayerGroup,
 	Circle,
 	Marker,
+	useMap,
 } from 'react-leaflet'
 import L, { CRS } from 'leaflet'
 import 'leaflet.markercluster'
@@ -51,7 +52,7 @@ import apiHelper from '../../helper/apiHelper'
 import { mapPrefix } from '../../dataSrc'
 import PropTypes from 'prop-types'
 
-const generateGeoFenceLayer = (showGeoFence, geoFenceList) => {
+const GenerateGeoFenceLayer = ({ showGeoFence = false, geoFenceList = [] }) => {
 	let circles
 	if (showGeoFence) {
 		circles = geoFenceList.map((geoFence) => {
@@ -79,7 +80,12 @@ const generateGeoFenceLayer = (showGeoFence, geoFenceList) => {
 	return <LayerGroup>{circles}</LayerGroup>
 }
 
-const generateMarkersLayer = ({ objectList = [] }) => {
+GenerateGeoFenceLayer.propTypes = {
+	showGeoFence: PropTypes.bool,
+	geoFenceList: PropTypes.array,
+}
+
+const GenerateMarkersLayer = ({ objectList = [] }) => {
 	let markers
 	if (objectList.length > 0) {
 		markers = objectList.map((object, index) => {
@@ -100,15 +106,33 @@ const generateMarkersLayer = ({ objectList = [] }) => {
 	return <LayerGroup>{markers}</LayerGroup>
 }
 
-const generateImageLayer = ({ bounds }) => {
-	const { stateReducer } = useContext(AppContext)
-	const [{ area }] = stateReducer
-	const { map_image_path } = area
+GenerateMarkersLayer.propTypes = {
+	objectList: PropTypes.array,
+}
+
+const GenerateImageLayer = ({ area }) => {
+	const { bounds, map_image_path, id } = area
+	const map = useMap()
+
+	useEffect(() => {
+		map.fitBounds(bounds)
+	}, [map, bounds])
 
 	const url = map_image_path ? mapPrefix + map_image_path : null
 	if (url && bounds) {
-		return <ImageOverlay bounds={bounds} url={url} />
+		return (
+			<ImageOverlay
+				key={id} // We set unique id to key for updating new image data
+				bounds={bounds}
+				url={url}
+			/>
+		)
 	}
+}
+
+GenerateImageLayer.propTypes = {
+	area: PropTypes.object,
+	bounds: PropTypes.array,
 }
 
 const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
@@ -126,14 +150,12 @@ const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 			}
 		}
 		fetchData()
-	}, [])
+	}, [area.id])
 
 	const { browserMapOptions } = config.mapConfig
-	const { bounds } = area
 	const mapProps = {
 		...browserMapOptions,
 		crs: CRS.Simple,
-		bounds,
 	}
 
 	return (
@@ -145,9 +167,12 @@ const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 				backgroundColor: 'white',
 			}}
 		>
-			{generateGeoFenceLayer(showGeoFence, geoFenceList)}
-			{generateMarkersLayer({ objectList })}
-			{generateImageLayer({ bounds })}
+			<GenerateGeoFenceLayer
+				showGeoFence={showGeoFence}
+				geoFenceList={[...geoFenceList]}
+			/>
+			<GenerateMarkersLayer objectList={objectList} />
+			<GenerateImageLayer area={area} />
 		</MapContainer>
 	)
 }
