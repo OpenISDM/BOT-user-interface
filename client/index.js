@@ -1,5 +1,5 @@
 /*
-    2020 © Copyright (c) BiDaE Technology Inc.
+    2021 © Copyright (c) BiDaE Technology Inc.
     Provided under BiDaE SHAREWARE LICENSE-1.0 in the LICENSE.
 
     Project Name:
@@ -30,6 +30,7 @@
         Wayne Kang, b05505028@ntu.edu.tw
         Edward Chen, r08921a28@ntu.edu.tw
         Joe Chou, jjoe100892@gmail.com
+        Johnson Su, johnsonSu@bidae.tech
 */
 
 /** IE support */
