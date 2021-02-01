@@ -20,7 +20,7 @@ async function getTracingHisotry(request, response) {
 	tag = splitInputData(tag)
 	start_time = common.setInitialTime(start_time, 1, default_Time_Format)
 	end_time = common.setInitialTime(end_time, 0, default_Time_Format)
-	if (count_limit > 50000) count_limit = 500000
+	if (count_limit > 50000) count_limit = 50000
 
 	const data = await getDurationData(
 		key,
