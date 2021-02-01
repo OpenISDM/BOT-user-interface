@@ -43,8 +43,8 @@ const BrowserSearchContainer = ({
 	searchKey,
 	personObjectTypes,
 	deviceObjectTypes,
-	deviceNamedListMap,
-	personNamedListMap,
+	deviceNamedList,
+	personNamedList,
 	getSearchKey,
 	handleTouchMove,
 	clearSearchResult,
@@ -87,8 +87,8 @@ const BrowserSearchContainer = ({
 						clearSearchResult={clearSearchResult}
 						personObjectTypes={personObjectTypes}
 						deviceObjectTypes={deviceObjectTypes}
-						personNamedListMap={personNamedListMap}
-						deviceNamedListMap={deviceNamedListMap}
+						personNamedList={personNamedList}
+						deviceNamedList={deviceNamedList}
 						searchObjectArray={searchObjectArray}
 						pinColorArray={pinColorArray}
 					/>
@@ -102,8 +102,8 @@ BrowserSearchContainer.propTypes = {
 	searchKey: PropTypes.object.isRequired,
 	personObjectTypes: PropTypes.array.isRequired,
 	deviceObjectTypes: PropTypes.array.isRequired,
-	personNamedListMap: PropTypes.array.isRequired,
-	deviceNamedListMap: PropTypes.array.isRequired,
+	personNamedList: PropTypes.array.isRequired,
+	deviceNamedList: PropTypes.array.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	handleTouchMove: PropTypes.func.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
