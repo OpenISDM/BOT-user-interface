@@ -32,14 +32,20 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import { namedList, namedListObject } from '../dataSrc'
+import { namedList, namedListObject, namedListWithoutType } from '../dataSrc'
 import { get, post, del } from '../helper/httpClient'
 
 export default {
-	async getNamedList({ areaId, types, isUserDefined }) {
+	async getNamedList({ areaIds, types, isUserDefined }) {
 		return await get(namedList, {
-			areaId,
+			areaIds,
 			types,
+			isUserDefined,
+		})
+	},
+	async getNamedListWithoutType({ areaIds, isUserDefined }) {
+		return await get(namedListWithoutType, {
+			areaIds,
 			isUserDefined,
 		})
 	},

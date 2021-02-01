@@ -356,7 +356,7 @@ const cn = {
 	MOVEMENT_ALERT: '活动警告',
 	LOCATION_ALERT: '位置警告',
 	GEOFENCE_ALERT: '电子围篱警告',
-	PANIC: '紧急',
+	EMERGENCY: '紧急',
 	EDIT_SECONDARY_AREAS: '编辑次要区域',
 	NEW_PASSWORD: '新密码',
 	CHECK_PASSWORD: '确认新密码',

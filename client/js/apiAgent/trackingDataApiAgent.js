@@ -36,11 +36,9 @@ import { trackingData } from '../dataSrc'
 import { post } from '../helper/httpClient'
 
 export default {
-	async getTrackingData({ locale, user, areaId }) {
+	async getTrackingData({ areaIds }) {
 		return await post(trackingData, {
-			locale,
-			user,
-			areaId,
+			areaIds,
 		})
 	},
 }

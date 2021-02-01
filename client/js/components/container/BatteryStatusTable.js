@@ -67,12 +67,10 @@ class BatteryStatusTable extends React.Component {
 	}
 
 	getTrackingData = async () => {
-		const { locale, auth, stateReducer } = this.context
+		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
-			locale: locale.abbr,
-			user: auth.user,
-			areaId: area.id,
+			areaIds: [area.id],
 		})
 
 		if (res) {

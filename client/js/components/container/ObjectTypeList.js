@@ -36,8 +36,9 @@ import React from 'react'
 import { Row, Col, ListGroup } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import apiHelper from '../../helper/apiHelper'
-import { OBJECT_TYPE } from '../../config/wordMap'
+import { OBJECT_TYPE, NAMED_LIST } from '../../config/wordMap'
 import { Title } from '../BOTComponent/styleComponent'
+import PropTypes from 'prop-types'
 
 class ObjectTypeList extends React.Component {
 	static contextType = AppContext
@@ -48,7 +49,7 @@ class ObjectTypeList extends React.Component {
 
 	componentDidUpdate = (prepProps) => {
 		if (
-			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			!prepProps.clearSearchResult
 		) {
 			this.setState({
@@ -57,16 +58,40 @@ class ObjectTypeList extends React.Component {
 		}
 	}
 
-	handleClick = (e) => {
+	handleClick = (itemName, searchKey) => {
+		this.props.getSearchKey(searchKey)
+		this.addSearchHistory(searchKey)
+		this.checkInSearchHistory(itemName)
+	}
+
+	handleObjectTypeClick = (e) => {
 		const itemName = e.target.getAttribute('name')
 		const searchKey = {
 			type: OBJECT_TYPE,
 			value: itemName,
 		}
 
-		this.props.getSearchKey(searchKey)
-		this.addSearchHistory(searchKey)
-		this.checkInSearchHistory(itemName)
+		this.handleClick(itemName, searchKey)
+	}
+
+	handleNameListClick = (e) => {
+		const { deviceNamedListMap, personNamedListMap } = this.props
+		const itemName = e.target.getAttribute('name')
+		const id = e.target.getAttribute('namedListId')
+
+		const currentNamedList = deviceNamedListMap[id] || personNamedListMap[id]
+
+		const namedListObjectIds = currentNamedList.objectIds.map(
+			(item) => item.object_id
+		)
+		console.log(namedListObjectIds)
+		const searchKey = {
+			type: NAMED_LIST,
+			value: itemName,
+			namedListObjectIds,
+		}
+
+		this.handleClick(itemName, searchKey)
 	}
 
 	/** Set search history to auth */
@@ -93,14 +118,6 @@ class ObjectTypeList extends React.Component {
 		this.checkInSearchHistory(searchKey.value)
 	}
 
-	/** Sort the user search history and limit the history number */
-	sortSearchHistory(history) {
-		const toReturn = history.sort((a, b) => {
-			return b.value - a.value
-		})
-		return toReturn
-	}
-
 	/** Insert search history to database */
 	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
@@ -110,6 +127,7 @@ class ObjectTypeList extends React.Component {
 			keyType: 'object type search',
 			keyWord: itemName,
 		})
+
 		if (res) {
 			this.setState({
 				searchKey: itemName,
@@ -122,8 +140,10 @@ class ObjectTypeList extends React.Component {
 		const {
 			searchObjectArray,
 			pinColorArray,
-			deviceObjectTypes,
-			personObjectTypes,
+			deviceObjectTypes = [],
+			personObjectTypes = [],
+			deviceNamedListMap = [],
+			personNamedListMap = [],
 		} = this.props
 
 		const style = {
@@ -158,9 +178,9 @@ class ObjectTypeList extends React.Component {
 								const pinColorIndex = searchObjectArray.indexOf(item)
 								const element = (
 									<ListGroup.Item
-										eventKey={item.found + ':' + index}
-										key={index}
-										onClick={this.handleClick}
+										eventKey={`${item}:${index}`}
+										key={`${item}:${index}`}
+										onClick={this.handleObjectTypeClick}
 										name={item}
 										className="d-flex text-right justify-content-end"
 										style={{
@@ -172,6 +192,31 @@ class ObjectTypeList extends React.Component {
 										}}
 									>
 										{item}
+									</ListGroup.Item>
+								)
+								return element
+							})}
+
+							{Object.values(deviceNamedListMap).map((item, index) => {
+								const itemString = `${item.name}`
+								const pinColorIndex = searchObjectArray.indexOf(item)
+								const element = (
+									<ListGroup.Item
+										eventKey={`${itemString}:${index}`}
+										key={`${itemString}:${index}`}
+										onClick={this.handleNameListClick}
+										name={itemString}
+										namedListId={item.id}
+										className="d-flex text-left justify-content-end"
+										style={{
+											cursor: 'pointer',
+											color:
+												pinColorIndex > -1
+													? pinColorArray[pinColorIndex]
+													: null,
+										}}
+									>
+										{itemString}
 									</ListGroup.Item>
 								)
 								return element
@@ -201,9 +246,9 @@ class ObjectTypeList extends React.Component {
 								const pinColorIndex = searchObjectArray.indexOf(item)
 								const element = (
 									<ListGroup.Item
-										eventKey={item.found + ':' + index}
-										key={index}
-										onClick={this.handleClick}
+										eventKey={`${itemString}:${index}`}
+										key={`${itemString}:${index}`}
+										onClick={this.handleObjectTypeClick}
 										name={item}
 										className="d-flex text-left justify-content-end"
 										style={{
@@ -219,12 +264,48 @@ class ObjectTypeList extends React.Component {
 								)
 								return element
 							})}
+
+							{Object.values(personNamedListMap).map((item, index) => {
+								const itemString = `${item.name}`
+								const pinColorIndex = searchObjectArray.indexOf(item)
+								const element = (
+									<ListGroup.Item
+										eventKey={`${itemString}:${index}`}
+										key={`${itemString}:${index}`}
+										onClick={this.handleNameListClick}
+										name={itemString}
+										namedListId={item.id}
+										className="d-flex text-left justify-content-end"
+										style={{
+											cursor: 'pointer',
+											color:
+												pinColorIndex > -1
+													? pinColorArray[pinColorIndex]
+													: null,
+										}}
+									>
+										{itemString}
+									</ListGroup.Item>
+								)
+								return element
+							})}
 						</ListGroup>
 					</Col>
 				</Row>
 			</div>
 		)
 	}
+}
+
+ObjectTypeList.propTypes = {
+	getSearchKey: PropTypes.func.isRequired,
+	clearSearchResult: PropTypes.func.isRequired,
+	pinColorArray: PropTypes.array,
+	searchObjectArray: PropTypes.array,
+	personObjectTypes: PropTypes.array,
+	deviceObjectTypes: PropTypes.array,
+	personNamedListMap: PropTypes.array.isRequired,
+	deviceNamedListMap: PropTypes.array.isRequired,
 }
 
 export default ObjectTypeList

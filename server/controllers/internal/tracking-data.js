@@ -65,107 +65,84 @@ const calculatePosition = (item) => {
 	return [yy, xx, area_id]
 }
 
-const getTrackingData = (request, response) => {
-	const locale = request.body.locale || 'en'
-	const { user, areaId } = request.body
-
-	/** The user's authenticated area id */
-	const userAuthenticatedAreasId = user.areas_id
-
-	/** User interface's current area id */
-	const currentAreaId = areaId.toString()
-
-	pool
-		.query(dbQueries.getTrackingData(userAuthenticatedAreasId))
-		.then((res) => {
-			console.log('get tracking data')
-
-			/** Filter the objects that do no belong the area */
-			const toReturn = res.rows.map((item) => {
-				/** Parse lbeacon uuid into three field in an array: area id, latitude, longtitude */
-				const lbeacon_coordinate = item.lbeacon_uuid
-					? parseLbeaconCoordinate(item.lbeacon_uuid)
-					: null
-
-				item.lbeacon_coordinate = lbeacon_coordinate
-
-				item.currentPosition = item.lbeacon_uuid
-					? calculatePosition(item)
-					: null
-
-				const lbeaconAreaId = lbeacon_coordinate ? lbeacon_coordinate[2] : null
-
-				const isLbeaconMatchArea =
-					parseInt(lbeaconAreaId) === parseInt(currentAreaId)
-
-				const isUserSObject = userAuthenticatedAreasId.includes(
-					parseInt(item.area_id)
-				)
-
-				/** Flag the object that belongs to the current area or to the user's authenticated area */
-				item.isMatchedObject = isUserSObject && isLbeaconMatchArea
-
-				/** Set the boolean if the object's last_seen_timestamp is in the specific time period */
-				const isInTheTimePeriod =
-					moment().diff(item.last_reported_timestamp, 'seconds') <
-					process.env.OBJECT_FOUND_TIME_INTERVAL_IN_SEC
-
-				/** Set the boolean if its rssi is below the specific rssi threshold  */
-				const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
-				/** Flag the object that satisfied the time period and rssi threshold */
-				item.found = isInTheTimePeriod && isMatchRssi
-
-				/** Set the residence time of the object */
-				item.residence_time = item.found
-					? moment(item.last_seen_timestamp)
-							.locale(locale)
-							.from(moment(item.first_seen_timestamp))
-					: item.last_reported_timestamp
-					? moment(item.last_reported_timestamp).locale(locale).fromNow()
-					: ''
-
-				/** Flag the object that is on sos */
-				if (parseInt(item.object_type) !== 0) {
-					item.panic =
-						moment().diff(item.panic_violation_timestamp, 'second') <
-						process.env.PANIC_TIME_INTERVAL_IN_SEC
-							? 1
-							: 0
-				}
-
-				/** Flag the object's battery volumn is limiting */
-				if (
-					item.battery_voltage > parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
-				) {
-					item.battery_indicator = 3
-				} else if (
-					item.battery_voltage <=
-						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
-					item.battery_voltage > 16
-				) {
-					item.battery_indicator = 2
-				} else if (item.battery_voltage <= 16) {
-					item.battery_indicator = 1
-				}
-
-				const newItem = new Map(Object.entries(item))
-
-				/** Delete the unused field of the object */
-				newItem.delete('first_seen_timestamp')
-				newItem.delete('panic_violation_timestamp')
-				newItem.delete('lbeacon_uuid')
-				newItem.delete('base_x')
-				newItem.delete('base_y')
-
-				return Object.fromEntries(newItem)
-			})
-			response.status(200).json(toReturn)
-		})
-		.catch((err) => {
-			console.log(`get tracking data failed ${err}`)
-		})
-}
-
 export default {
-	getTrackingData,
+	getTrackingData: (request, response) => {
+		const locale = request.body.locale || 'en'
+		const { areaIds } = request.body
+
+		if (!areaIds) {
+			response.status(200).json([])
+			return
+		}
+
+		pool
+			.query(dbQueries.getTrackingData(areaIds))
+			.then((res) => {
+				console.log('get tracking data')
+
+				/** Filter the objects that do no belong the area */
+				const toReturn = res.rows.map((item) => {
+					/** Parse lbeacon uuid into three field in an array: area id, latitude, longtitude */
+					const lbeacon_coordinate = item.lbeacon_uuid
+						? parseLbeaconCoordinate(item.lbeacon_uuid)
+						: null
+
+					item.lbeacon_coordinate = lbeacon_coordinate
+
+					item.currentPosition = item.lbeacon_uuid
+						? calculatePosition(item)
+						: null
+
+					/** Set the boolean if the object's last_seen_timestamp is in the specific time period */
+					const isInTheTimePeriod =
+						moment().diff(item.last_reported_timestamp, 'seconds') <
+						process.env.OBJECT_FOUND_TIME_INTERVAL_IN_SEC
+
+					/** Set the boolean if its rssi is below the specific rssi threshold  */
+					const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
+					/** Flag the object that satisfied the time period and rssi threshold */
+					item.found = isInTheTimePeriod && isMatchRssi
+
+					/** Set the residence time of the object */
+					item.residence_time = item.found
+						? moment(item.last_seen_timestamp)
+								.locale(locale)
+								.from(moment(item.first_seen_timestamp))
+						: item.last_reported_timestamp
+						? moment(item.last_reported_timestamp).locale(locale).fromNow()
+						: ''
+
+					/** Flag the object's battery volumn is limiting */
+					if (
+						item.battery_voltage >
+						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
+					) {
+						item.battery_indicator = 3
+					} else if (
+						item.battery_voltage <=
+							parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
+						item.battery_voltage > 16
+					) {
+						item.battery_indicator = 2
+					} else if (item.battery_voltage <= 16) {
+						item.battery_indicator = 1
+					}
+
+					const newItem = new Map(Object.entries(item))
+
+					/** Delete the unused field of the object */
+					newItem.delete('first_seen_timestamp')
+					newItem.delete('panic_violation_timestamp')
+					newItem.delete('lbeacon_uuid')
+					newItem.delete('base_x')
+					newItem.delete('base_y')
+
+					return Object.fromEntries(newItem)
+				})
+				response.status(200).json(toReturn)
+			})
+			.catch((err) => {
+				console.log(`get tracking data failed ${err}`)
+			})
+	},
 }

@@ -56,7 +56,6 @@ class BrowserMapContainer extends React.Component {
 			pathMacAddress,
 			colorPanel,
 			lbeaconPosition,
-			geofenceConfig,
 			locationMonitorConfig,
 			proccessedTrackingData,
 			showPdfDownloadForm,
@@ -110,7 +109,6 @@ class BrowserMapContainer extends React.Component {
 						colorPanel={colorPanel}
 						proccessedTrackingData={proccessedTrackingData}
 						lbeaconPosition={lbeaconPosition}
-						geofenceConfig={geofenceConfig}
 						locationMonitorConfig={locationMonitorConfig}
 						getSearchKey={getSearchKey}
 						mapConfig={mapConfig}
@@ -227,35 +225,6 @@ class BrowserMapContainer extends React.Component {
 										/>
 									</Nav.Item>
 								)}
-							{geofenceConfig &&
-								Object.keys(geofenceConfig).includes(area.id.toString()) && (
-									<div className="d-flex">
-										<Nav.Item className="mt-2 bd-highligh">
-											<BOTButton
-												variant="warning"
-												className="mr-1 ml-2"
-												onClick={handleClickButton}
-												name="geofence"
-												value={geofenceConfig[area.id].enable}
-												active={!geofenceConfig[area.id].enable}
-												text={
-													geofenceConfig[area.id].enable
-														? locale.texts.FENCE_ON
-														: locale.texts.FENCE_OFF
-												}
-											/>
-										</Nav.Item>
-										<Nav.Item className="mt-2">
-											<BOTButton
-												variant="outline-primary"
-												className="mr-1 ml-2"
-												onClick={handleClickButton}
-												name="clearAlerts"
-												text={locale.texts.CLEAR_ALERTS}
-											/>
-										</Nav.Item>
-									</div>
-								)}
 						</div>
 					</Nav>
 				</div>
@@ -274,7 +243,6 @@ BrowserMapContainer.propTypes = {
 	searchKey: PropTypes.object.isRequired,
 	searchResult: PropTypes.array.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
-	geofenceConfig: PropTypes.object.isRequired,
 	pathMacAddress: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	activeActionButtons: PropTypes.array.isRequired,

@@ -355,7 +355,7 @@ const ms = {
 	EDIT_LONG_STAY_IN_DANGER_MONITOR: 'edit lama tinggal di dangen monitor',
 	EDIT_NOT_STAY_ROOM_MONITOR: 'edit jangan jaga monitor bilik',
 	MOVEMENT: 'amaran pergerakan',
-	PANIC: 'darurat',
+	EMERGENCY: 'darurat',
 	EDIT_SECONDARY_AREAS: 'edit kawasan sekunder',
 	NEW_PASSWORD: 'Kata laluan baru',
 	CHECK_PASSWORD: 'sahkan kata laluan baru',

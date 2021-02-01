@@ -115,7 +115,6 @@ export default class TabletMapContainer extends React.Component {
 								colorPanel={this.props.colorPanel}
 								proccessedTrackingData={this.props.proccessedTrackingData}
 								lbeaconPosition={this.props.lbeaconPosition}
-								geofenceConfig={this.props.geofenceConfig}
 								getSearchKey={this.props.getSearchKey}
 								mapConfig={config.mapConfig}
 								handleClosePath={this.props.handleClosePath}

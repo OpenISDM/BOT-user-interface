@@ -357,7 +357,7 @@ const tw = {
 	MOVEMENT_ALERT: '活動警告',
 	LOCATION_ALERT: '位置警告',
 	GEOFENCE_ALERT: '電子圍籬警告',
-	PANIC: '緊急',
+	EMERGENCY: '緊急',
 	EDIT_SECONDARY_AREAS: '編輯次要區域',
 	NEW_PASSWORD: '新密碼',
 	CHECK_PASSWORD: '確認新密碼',

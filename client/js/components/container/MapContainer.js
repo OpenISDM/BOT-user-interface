@@ -141,7 +141,6 @@ class MapContainer extends React.Component {
 		const { handleClickButton } = this
 		const { pathData, showPdfDownloadForm } = this.state
 		const {
-			geofenceConfig,
 			locationMonitorConfig,
 			proccessedTrackingData,
 			handleClearButton,
@@ -164,7 +163,6 @@ class MapContainer extends React.Component {
 			pathMacAddress,
 			searchResult,
 			handleClearButton,
-			geofenceConfig,
 			locationMonitorConfig,
 			lbeaconPosition,
 			searchObjectArray,
@@ -201,7 +199,6 @@ class MapContainer extends React.Component {
 }
 
 MapContainer.propTypes = {
-	geofenceConfig: PropTypes.object,
 	locationMonitorConfig: PropTypes.object,
 	proccessedTrackingData: PropTypes.array,
 	handleClearButton: PropTypes.func,

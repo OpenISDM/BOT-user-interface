@@ -43,6 +43,7 @@ import {
 	NORMAL,
 } from '../config/wordMap'
 import { isEqual } from 'lodash'
+import { isSameValue } from '../helper/utilities'
 
 export const getDescription = ({
 	item,
@@ -191,13 +192,10 @@ export const getStatus = (item, locale) => {
 }
 
 export const getPosition = (item, locale) => {
-	if (parseInt(item.lbeacon_area.id) === parseInt(item.area_id)) {
+	if (isSameValue(item.lbeacon_area.id, item.area_id)) {
 		return `${item.location_description},`
-	} else {
-		return `${locale.texts.NEAR} ${locale.texts[item.lbeacon_area.value]}-${
-			item.location_description
-		},`
 	}
+	return `${locale.texts.NEAR} ${item.lbeacon_area.value}-${item.location_description},`
 }
 
 export const getMacaddress = (item, locale) => {

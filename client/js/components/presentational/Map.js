@@ -39,7 +39,7 @@ import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import { isEqual, getCoordinatesFromUUID } from '../../helper/utilities'
+import { isEqual } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
@@ -95,10 +95,6 @@ class Map extends React.Component {
 			this.setState({
 				currentAreaId: area.id,
 			})
-		}
-
-		if (!isEqual(prevProps.geofenceConfig, this.props.geofenceConfig)) {
-			this.createGeofenceMarkers()
 		}
 
 		if (
@@ -275,33 +271,6 @@ class Map extends React.Component {
 				this.pathOfDevice.addTo(this.mapLayer)
 			}
 		}
-	}
-
-	/** Create the geofence-related lbeacons markers */
-	createGeofenceMarkers = () => {
-		const { geofenceConfig } = this.props
-
-		// this.calculateScale()
-
-		this.geoFenceLayer.clearLayers()
-
-		/** Create the markers of lbeacons of perimeters and fences
-		 *  and onto the map  */
-		geofenceConfig.forEach((config) => {
-			if (config.enable && config.is_active) {
-				L.circleMarker(
-					getCoordinatesFromUUID({ lBeaconUUID: config.perimeters_uuid }),
-					this.iconOptions.geoFenceMarkerOptions
-				).addTo(this.geoFenceLayer)
-				L.circleMarker(
-					getCoordinatesFromUUID({ lBeaconUUID: config.fences_uuid }),
-					this.iconOptions.geoFenceMarkerOptions
-				).addTo(this.geoFenceLayer)
-			}
-		})
-
-		/** Add the new markerslayers to the map */
-		this.geoFenceLayer.addTo(this.mapLayer)
 	}
 
 	/** Create the geofence-related lbeacons markers */
@@ -506,11 +475,9 @@ class Map extends React.Component {
 					.bindPopup(popupContent, this.props.mapConfig.popupOptions)
 					.openPopup()
 
-				marker.addTo(this.markersLayer)
-
 				/** Set the z-index offset of the searhed object so that
 				 * the searched object icon will be on top of all others */
-				if (item.searched || item.panic) marker.setZIndexOffset(1000)
+				if (item.searched || item.emergency) marker.setZIndexOffset(1000)
 
 				/** Set the marker's event. */
 				marker.on('mouseover', () => {
@@ -539,6 +506,8 @@ class Map extends React.Component {
 					})
 					this.props.searchResultListRef.current.handleClick()
 				})
+
+				marker.addTo(this.markersLayer)
 			}
 		})
 		/** Add the new markerslayers to the map */
@@ -549,7 +518,7 @@ class Map extends React.Component {
 	/** Filter out undesired tracking data */
 	filterTrackingData = (data = []) => {
 		return data.filter((item) => {
-			return item.found && item.isMatchedObject
+			return item.found
 		})
 	}
 
@@ -603,7 +572,6 @@ Map.propTypes = {
 	isObjectListShownProp: PropTypes.func.isRequired,
 	selectObjectListProp: PropTypes.func.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
-	geofenceConfig: PropTypes.object.isRequired,
 	pathMacAddress: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	authenticated: PropTypes.bool.isRequired,

@@ -314,6 +314,7 @@ class EditObjectForm extends React.Component {
 													onChange={(value) => setFieldValue('area', value)}
 													options={areaOptions || []}
 													styles={styleConfig.reactSelect}
+													isDisabled={isReadOnly}
 													components={{
 														IndicatorSeparator: () => null,
 													}}

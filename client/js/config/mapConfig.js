@@ -339,7 +339,7 @@ const mapConfig = {
 
 	/** Set the schema to select the color pin */
 	getIconColor: (item, hasColorPanel) => {
-		if (item.panic) {
+		if (item.emergency) {
 			return mapConfig.iconColor.sos
 		}
 
@@ -365,8 +365,8 @@ const mapConfig = {
 		}
 	},
 
-	getIconColorInBigScreen: (item, hasColorPanel) => {
-		if (item.pinColor == -1) {
+	getIconColorInBigScreen: (item) => {
+		if (item.pinColor === -1) {
 			return mapConfig.iconColor.normal
 		}
 		return mapConfig.iconColor.pinColorArray[item.pinColor]

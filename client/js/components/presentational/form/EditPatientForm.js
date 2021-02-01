@@ -273,6 +273,7 @@ class EditPatientForm extends React.Component {
 													onChange={(value) => setFieldValue('area', value)}
 													options={areaOptions || []}
 													styles={styleConfig.reactSelect}
+													isDisabled={isReadOnly}
 													components={{
 														IndicatorSeparator: () => null,
 													}}
@@ -281,8 +282,6 @@ class EditPatientForm extends React.Component {
 										/>
 									</Col>
 								</Row>
-
-								<hr />
 								<Modal.Footer>
 									<div className="mr-auto">
 										<Button

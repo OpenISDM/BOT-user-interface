@@ -39,7 +39,7 @@ import config from '../../config'
 import { geofenceConfigColumn } from '../../config/tables'
 import EditGeofenceConfig from '../presentational/form/EditGeofenceConfig'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
-import messageGenerator from '../../helper/messageGenerator'
+import { setSuccessMessage } from '../../helper/messageGenerator'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import apiHelper from '../../helper/apiHelper'
@@ -99,33 +99,35 @@ class BOTAdminMonitorSetting extends React.Component {
 			areaId: area.id,
 		})
 
-		const data = res.data.map((item, index) => {
-			item.key = index + 1
-			item.area = {
-				value: area.value,
-				label: area.label,
-				id: area.id,
-			}
-			item.p_rssi = item.perimeters_rssi
-			item.f_rssi = item.fences_rssi
-			item.p_lbeacon =
-				item.perimeters_uuid &&
-				item.perimeters_uuid.split(',').filter((uuid) => uuid)
-			item.f_lbeacon =
-				item.fences_uuid && item.fences_uuid.split(',').filter((uuid) => uuid)
+		if (res) {
+			const data = res.data.map((item, index) => {
+				item.key = index + 1
+				item.area = {
+					value: area.value,
+					label: area.label,
+					id: area.id,
+				}
+				item.p_rssi = item.perimeters_rssi
+				item.f_rssi = item.fences_rssi
+				item.p_lbeacon =
+					item.perimeters_uuid &&
+					item.perimeters_uuid.split(',').filter((uuid) => uuid)
+				item.f_lbeacon =
+					item.fences_uuid && item.fences_uuid.split(',').filter((uuid) => uuid)
 
-			return item
-		})
+				return item
+			})
 
-		this.setState(
-			{
-				data,
-				columns: geofenceConfigColumn,
-				show: false,
-				showDeleteConfirmation: false,
-			},
-			callback
-		)
+			this.setState(
+				{
+					data,
+					columns: geofenceConfigColumn,
+					show: false,
+					showDeleteConfirmation: false,
+				},
+				callback
+			)
+		}
 	}
 
 	handleClickButton = (e) => {
@@ -166,7 +168,7 @@ class BOTAdminMonitorSetting extends React.Component {
 
 	submitCallback = () => {
 		this.cleanSelection()
-		messageGenerator.setSuccessMessage('save success')
+		setSuccessMessage('save success')
 	}
 
 	handleSetSubmit = async (pack) => {

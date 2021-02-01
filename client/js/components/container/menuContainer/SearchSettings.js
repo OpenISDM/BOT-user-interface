@@ -38,7 +38,7 @@ import { Row, Col, Button, Form } from 'react-bootstrap'
 import Select from 'react-select'
 import { AppContext } from '../../../context/AppContext'
 import apiHelper from '../../../helper/apiHelper'
-import messageGenerator from '../../../helper/messageGenerator'
+import { setSuccessMessage } from '../../../helper/messageGenerator'
 import BOTSelectTable from '../../BOTComponent/BOTSelectTable'
 import BOTTable from '../../BOTComponent/BOTTable'
 import BOTButton from '../../BOTComponent/BOTButton'
@@ -127,7 +127,7 @@ class SearchSettings extends React.Component {
 
 	showMessage = debounce(
 		() => {
-			messageGenerator.setSuccessMessage('save success')
+			setSuccessMessage('save success')
 		},
 		1500,
 		{
@@ -145,7 +145,7 @@ class SearchSettings extends React.Component {
 		})
 
 		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({
-			areaId: area.id,
+			areaIds: [area.id],
 			types: [config.NAMED_LIST_TYPE.DEVICE, config.NAMED_LIST_TYPE.PATIENT],
 			isUserDefined: true,
 		})
@@ -231,9 +231,7 @@ class SearchSettings extends React.Component {
 		})
 
 		if (res) {
-			this.getObjectData(() =>
-				messageGenerator.setSuccessMessage('save success')
-			)
+			this.getObjectData(() => setSuccessMessage('save success'))
 		}
 	}
 
@@ -247,9 +245,7 @@ class SearchSettings extends React.Component {
 		})
 
 		if (res) {
-			this.getObjectData(() =>
-				messageGenerator.setSuccessMessage('save success')
-			)
+			this.getObjectData(() => setSuccessMessage('save success'))
 		}
 	}
 
@@ -263,9 +259,7 @@ class SearchSettings extends React.Component {
 		})
 
 		if (res) {
-			this.getObjectData(() =>
-				messageGenerator.setSuccessMessage('save success')
-			)
+			this.getObjectData(() => setSuccessMessage('save success'))
 		}
 	}
 
@@ -278,9 +272,7 @@ class SearchSettings extends React.Component {
 		})
 
 		if (res) {
-			this.getObjectData(() =>
-				messageGenerator.setSuccessMessage('save success')
-			)
+			this.getObjectData(() => setSuccessMessage('save success'))
 		}
 	}
 
