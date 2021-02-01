@@ -21,7 +21,7 @@ class NavbarContainer extends React.Component {
 
 	state = {
 		showShiftChange: false,
-		areaOptions: [],
+		areaOptionsMap: {},
 	}
 
 	navList = navbarNavList
@@ -34,16 +34,27 @@ class NavbarContainer extends React.Component {
 		this.getAreaTable()
 	}
 
+	componentDidUpdate = () => {
+		const { areaOptionsMap } = this.state
+		const [{ openedNotification }] = this.context.stateReducer
+		const { notificaiton } = openedNotification
+		if (notificaiton) {
+			const { area_id } = notificaiton // area_id where object be triggered
+			this.setCurrentArea(areaOptionsMap[area_id])
+		}
+	}
+
 	getAreaTable = async () => {
 		const res = await apiHelper.areaApiAgent.getAreaTable()
 		if (res) {
-			const areaOptions = res.data.map((area) => {
+			const areaOptionsMap = {}
+			res.data.forEach((area) => {
 				const bounds = []
 				if (area.left_bottom_corner && area.left_bottom_corner) {
 					bounds.push([area.left_bottom_corner.y, area.left_bottom_corner.x])
 					bounds.push([area.right_upper_corner.y, area.right_upper_corner.x])
 				}
-				return {
+				areaOptionsMap[area.id] = {
 					...area,
 					id: area.id,
 					value: area.readable_name,
@@ -53,7 +64,7 @@ class NavbarContainer extends React.Component {
 			})
 
 			this.setState({
-				areaOptions,
+				areaOptionsMap,
 			})
 		}
 	}
@@ -71,14 +82,12 @@ class NavbarContainer extends React.Component {
 
 	getCurrentArea = () => {
 		const [{ area }] = this.context.stateReducer
-		const { areaOptions } = this.state
-		let currentArea = areaOptions.find(
-			(areaOption) => areaOption.id === area.id
-		)
+		const { areaOptionsMap } = this.state
+		let currentArea = areaOptionsMap[area.id]
 
 		// If there has no any current area then set first area to default
 		if (!currentArea) {
-			currentArea = areaOptions[0]
+			currentArea = Object.values(areaOptionsMap)[0]
 		}
 
 		return currentArea
@@ -86,7 +95,8 @@ class NavbarContainer extends React.Component {
 
 	render = () => {
 		const { locale, auth } = this.context
-		const { areaOptions } = this.state
+		const { areaOptionsMap } = this.state
+		const areaOptions = Object.values(areaOptionsMap)
 		const currentArea = this.getCurrentArea()
 		this.setCurrentArea(currentArea)
 
