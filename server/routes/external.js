@@ -1,38 +1,38 @@
-import query from '../controllers/external/queryMethod'
+import {history, objectTable, realtime, signIn, tracingHistory} from '../controllers/external/index'
 import { external as middleware } from '../middlewares/index'
 export default (app) => {
-	app.post('/api/1.1/auth/signin', middleware.checkPassword, query.getApiKey)
+	app.post('/api/1.1/auth/signin', middleware.checkPassword, signIn.getApiKey)
 	app.post(
 		'/api/1.1/tracing/history/people',
 		middleware.checkKey,
 		middleware.checkFilter,
 		middleware.checkOptionalFilter,
-		query.getPeopleHistoryData
+		history.getPeopleHistoryData
 	)
 	app.post(
 		'/api/1.1/tracing/realtime/people',
 		middleware.checkKey,
 		middleware.checkFilter,
-		query.getPeopleRealtimeData
+		realtime.getPeopleRealtimeData
 	)
 	app.post(
 		'/api/1.1/tracing/history/device',
 		middleware.checkKey,
 		middleware.checkFilter,
 		middleware.checkOptionalFilter,
-		query.getObjectHistoryData
+		history.getObjectHistoryData
 	)
 	app.post(
 		'/api/1.1/tracing/realtime/device',
 		middleware.checkKey,
 		middleware.checkFilter,
-		query.getObjectRealtimeData
+		realtime.getObjectRealtimeData
 	)
 	app.post(
 		'/api/1.1/tracing/objectlist',
 		middleware.checkKey,
 		middleware.checkKeyAndAreaidsFilter,
-		query.getIDTableData
+		objectTable.getIDTableData
 	)
 
 	app.post(
@@ -40,7 +40,7 @@ export default (app) => {
 		middleware.checkKey,
 		middleware.checkUUIDFilter,
 		middleware.checkOptionalFilter,
-		query.getTracingHisotry
+		tracingHistory.getTracingHisotry
 	)
-	app.post('/api/1.0/auth/signin', middleware.checkPassword, query.getApiKey)
+	app.post('/api/1.0/auth/signin', middleware.checkPassword, signIn.getApiKey)
 }

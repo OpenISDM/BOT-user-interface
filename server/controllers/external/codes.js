@@ -1,10 +1,11 @@
+const default_Time_Format = 'YYYY/MM/DD HH:mm:ss'
 export default {
 	getApiKeySuccess :(key, validTime)=>{
 		return {
 			error_code: '0',
 			error_message: 'get key success',
 			key,
-			note: 'validity period of key until : ' + validTime.format(),
+			note: 'validity period of key until : ' + validTime.format(default_Time_Format),
 			valid_time: validTime.valueOf(),
 		}
 	},

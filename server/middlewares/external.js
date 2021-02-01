@@ -1,8 +1,8 @@
-import queryType from '../controllers/external/queryType'
+import queries from '../db/externalQueries'
 import moment from 'moment-timezone'
 import pool from '../db/connection'
 import code from '../controllers/external/codes'
-import queryMethod from '../controllers/external/queryMethod'
+import common from '../controllers/external/common'
 const default_Time_Format = 'YYYY/MM/DD HH:mm:ss'
 const IntegerRegExp = new RegExp('^[0-9]{1,}$')
 
@@ -19,7 +19,7 @@ async function checkKey(request, response, next) {
 	const { key } = request.body
 
 	if (isNumberLetters(key)) {
-		const userKey = await pool.query(queryType.getKeyQuery(key))
+		const userKey = await pool.query(queries.getKeyQuery(key))
 
 		if (userKey.rows.length > 0) {
 			if (userKey.rows[0].status === 'ACTIVE') {
@@ -59,9 +59,9 @@ async function checkFilter(request, response, next) {
 			response.json(code.idFormatError)
 			return false
 		})
-		const validArea = await queryMethod.getUserArea(
+		const validArea = await common.getUserArea(
 			key,
-			queryType.getAreaCheckFilter(area_ids)
+			queries.getAreaCheckFilter(area_ids)
 		)
 		if (validArea.length !== area_ids.length) {
 			response.json(code.areaIDAuthorityError)
@@ -85,9 +85,9 @@ async function checkKeyAndAreaidsFilter(request, response, next) {
 			return false
 		})
 
-		const validArea = await queryMethod.getUserArea(
+		const validArea = await common.getUserArea(
 			key,
-			queryType.getAreaCheckFilter(area_ids)
+			queries.getAreaCheckFilter(area_ids)
 		)
 		if (validArea.length !== area_ids.length) {
 			response.json(code.areaIDAuthorityError)
@@ -102,7 +102,6 @@ async function checkUUIDFilter(request, response, next) {
 
 	let error = null
 	if (Lbeacon) {
-		console.log(Lbeacon)
 		Lbeacon = Lbeacon.split(',')
 		const LbeaconRegExp = new RegExp(
 			'^[0-9A-Fa-f]{8}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{4}-?[0-9A-Fa-f]{12}$'
@@ -117,7 +116,6 @@ async function checkUUIDFilter(request, response, next) {
 	}
 
 	if (tag) {
-		console.log(tag)
 		tag = tag.split(',')
 		const tagRegExp = new RegExp(
 			'^[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}:?[0-9a-fA-F]{2}$'

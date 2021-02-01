@@ -1,4 +1,3 @@
-//#region common code
 function setKey(user_id, username, hash) {
 	return ` 
 	insert into api_key 
@@ -27,8 +26,7 @@ function getUserQuery(username, password) {
 	`
 }
 
-
-function getKeyQuery(key){
+function getKeyQuery(key) {
 	return `
 	select 
 		key,  
@@ -44,9 +42,7 @@ function getKeyQuery(key){
 		register_time 	desc
 	`
 }
-//#endregion
 
-//#region  api v1.0
 const get_data = (
 	key,
 	start_time,
@@ -135,9 +131,7 @@ const get_data = (
 
 	return query
 }
-//#endregion
 
-//#region api v1.1
 const getPeopleHistoryQuery = (
 	filter,
 	start_time,
@@ -295,10 +289,11 @@ const getObjectTypeFilter = (object_types) => {
 	return ''
 }
 
-
 const getAreaIDFilter = (user_area, area_ids) => {
 	if (area_ids && area_ids.length > 0) {
-		return `\n and object_table.area_id in (${area_ids.map((item) => `'${item}'`)})`
+		return `\n and object_table.area_id in (${area_ids.map(
+			(item) => `'${item}'`
+		)})`
 	}
 	return `\nand object_table.area_id in (${user_area.map(
 		(item) => `'${item}'`
@@ -378,23 +373,16 @@ const getUserAreaQuery = (key, filter = '') => {
 	group by area_id
 	`
 }
-const getAreaCheckFilter = (area_ids) =>{
-	return `\n and area_id in (${area_ids.map((item=> `'${item}'`))})`
+const getAreaCheckFilter = (area_ids) => {
+	return `\n and area_id in (${area_ids.map((item) => `'${item}'`)})`
 }
-//#endregion
+
 export default {
-	//#region common export
 	setKey,
 	getKeyQuery,
 	getUserQuery,
 	getUserAreaQuery,
-	//#endregion
-
-	//#region api v1.0
 	get_data,
-	//#endregion
-
-	//#region api v1.1
 	getPeopleRealtimeQuery,
 	getPeopleHistoryQuery,
 	getObjectHistoryQuery,
@@ -405,6 +393,5 @@ export default {
 	getObjectTypeQuery,
 	getAreaIDQuery,
 	getAreaIDFilter,
-	getAreaCheckFilter
-	//#endregion
+	getAreaCheckFilter,
 }
