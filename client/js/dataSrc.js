@@ -114,6 +114,7 @@ export const utils = {
 export const getTrackingTableByMacAddress = `${domain}/data/getTrackingTableByMacAddress`
 export const namedList = `${domain}/data/namedList`
 export const namedListObject = `${domain}/data/namedList/object`
+export const namedListWithoutType = `${domain}/data/namedList/without/type`
 export const notification = `${domain}/data/notification`
 
 export default {
@@ -145,5 +146,6 @@ export default {
 	getTrackingTableByMacAddress,
 	namedList,
 	namedListObject,
+	namedListWithoutType,
 	notification,
 }

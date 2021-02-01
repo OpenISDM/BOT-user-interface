@@ -18,6 +18,8 @@ export const PERSON = 'person'
 
 export const OBJECT_TYPE = 'object type'
 
+export const NAMED_LIST = 'named list'
+
 export const SEARCH_HISTORY = 'search history'
 
 export const SEARCH_BAR = 'search bar'

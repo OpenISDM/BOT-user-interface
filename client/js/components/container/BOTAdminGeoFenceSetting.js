@@ -99,7 +99,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		})
 
 		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({
-			areaId: area.id,
+			areaIds: [area.id],
 			types: [config.NAMED_LIST_TYPE.DEVICE, config.NAMED_LIST_TYPE.PATIENT],
 			isUserDefined: true,
 		})

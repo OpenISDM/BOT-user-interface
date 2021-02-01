@@ -47,6 +47,10 @@ export default (app) => {
 		.delete(NamedListController.removeNamedList)
 
 	app
+		.route('/data/namedList/without/type')
+		.get(NamedListController.getNamedListWithoutType)
+
+	app
 		.route('/data/namedList/object')
 		.post(NamedListController.addObject)
 		.delete(NamedListController.removeObject)

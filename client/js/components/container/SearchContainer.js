@@ -40,6 +40,7 @@ import {
 	CustomView,
 	isMobile,
 } from 'react-device-detect'
+import { keyBy } from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import TabletSearchContainer from '../platform/tablet/TabletSearchContainer'
 import MobileSearchContainer from '../platform/mobile/MobileSearchContainer'
@@ -47,6 +48,7 @@ import BrowserSearchContainer from '../platform/browser/BrowserSearchContainer'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
 import PropTypes from 'prop-types'
+import { isSameValue } from '../../helper/utilities'
 
 class SearchContainer extends React.Component {
 	static contextType = AppContext
@@ -61,6 +63,8 @@ class SearchContainer extends React.Component {
 		hasSearchableObjectData: false,
 		deviceObjectTypes: [],
 		personObjectTypes: [],
+		deviceNamedListMap: [],
+		personNamedListMap: [],
 	}
 
 	componentDidMount = () => {
@@ -87,18 +91,30 @@ class SearchContainer extends React.Component {
 	getData = async () => {
 		const { auth, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const res = await apiHelper.objectApiAgent.getAliases({
+		const aliasesPromise = await apiHelper.objectApiAgent.getAliases({
 			areaId: area.id,
 			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
+		const namedListPromise = apiHelper.namedListApiAgent.getNamedListWithoutType(
+			{
+				areaIds: [area.id],
+				isUserDefined: true,
+			}
+		)
 
-		if (res) {
+		const [aliasesRes, namedListRes] = await Promise.all([
+			aliasesPromise,
+			namedListPromise,
+		])
+
+		if (aliasesRes && namedListRes) {
+			console.log(namedListRes)
 			const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
 			const personObjectTypes = [
 				...new Set(
-					res.data
-						.filter(
-							(item) => parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
+					aliasesRes.data
+						.filter((item) =>
+							isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)
 						)
 						.map((item) => item.type)
 				),
@@ -106,9 +122,9 @@ class SearchContainer extends React.Component {
 
 			const deviceObjectTypes = [
 				...new Set(
-					res.data
-						.filter(
-							(item) => parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
+					aliasesRes.data
+						.filter((item) =>
+							isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)
 						)
 						.map((item) => {
 							return item[keywordType] ? item[keywordType] : item.type
@@ -116,9 +132,21 @@ class SearchContainer extends React.Component {
 				),
 			]
 
+			const deviceNamedList = namedListRes.data.filter((item) =>
+				isSameValue(item.type, config.NAMED_LIST_TYPE.DEVICE)
+			)
+			const deviceNamedListMap = keyBy(deviceNamedList, 'id')
+
+			const personNamedList = namedListRes.data.filter(
+				(item) => !isSameValue(item.type, config.NAMED_LIST_TYPE.DEVICE)
+			)
+			const personNamedListMap = keyBy(personNamedList, 'id')
+
 			this.setState({
 				personObjectTypes,
 				deviceObjectTypes,
+				deviceNamedListMap,
+				personNamedListMap,
 			})
 		}
 	}
@@ -134,12 +162,19 @@ class SearchContainer extends React.Component {
 			handleSearchTypeClick,
 		} = this.props
 
-		const { personObjectTypes, deviceObjectTypes } = this.state
+		const {
+			personObjectTypes,
+			deviceObjectTypes,
+			deviceNamedListMap,
+			personNamedListMap,
+		} = this.state
 
 		const propsGroup = {
 			searchKey,
 			personObjectTypes,
 			deviceObjectTypes,
+			deviceNamedListMap,
+			personNamedListMap,
 			getSearchKey,
 			clearSearchResult,
 			searchObjectArray,

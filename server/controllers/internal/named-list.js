@@ -38,10 +38,10 @@ import { NamedList, ObjectNamedListMappingTable } from '../../db/models'
 
 export default {
 	getNamedList: async (request, response) => {
-		const { areaId, types, isUserDefined } = request.query
+		const { areaIds, types, isUserDefined } = request.query
 		try {
 			const res = await NamedList.findAll({
-				where: { areaId, type: types, isUserDefined },
+				where: { areaId: areaIds, type: types, isUserDefined },
 				include: {
 					model: ObjectNamedListMappingTable,
 					attributes: ['object_id'],
@@ -51,6 +51,22 @@ export default {
 			response.status(200).json(res)
 		} catch (e) {
 			console.log('getNamedList error: ', e)
+		}
+	},
+	getNamedListWithoutType: async (request, response) => {
+		const { areaIds, isUserDefined } = request.query
+		try {
+			const res = await NamedList.findAll({
+				where: { areaId: areaIds, isUserDefined },
+				include: {
+					model: ObjectNamedListMappingTable,
+					attributes: ['object_id'],
+					as: 'objectIds',
+				},
+			})
+			response.status(200).json(res)
+		} catch (e) {
+			console.log('getNamedListWithoutType error: ', e)
 		}
 	},
 	setNamedList: async (request, response) => {
