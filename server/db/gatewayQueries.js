@@ -34,15 +34,7 @@
 
 const getAllGateway = `
 	SELECT
-		ip_address,
-		health_status,
-		last_report_timestamp,
-		registered_timestamp,
-		id,
-		api_version,
-		product_version,
-		abnormal_lbeacon_list,
-		comment
+		*
 	FROM
 		gateway_table
 	ORDER BY ip_address DESC

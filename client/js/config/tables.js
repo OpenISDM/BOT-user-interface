@@ -148,6 +148,10 @@ const gatewayTableColumn = [
 				: props.value,
 	},
 	{
+		Header: 'Unique ID',
+		accessor: 'unique_id',
+	},
+	{
 		Header: 'product_version',
 		accessor: 'product_version',
 		width: 170,
