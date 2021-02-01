@@ -116,6 +116,7 @@ export const namedList = `${domain}/data/namedList`
 export const namedListObject = `${domain}/data/namedList/object`
 export const namedListWithoutType = `${domain}/data/namedList/without/type`
 export const notification = `${domain}/data/notification`
+export const agent = `${domain}/data/agent`
 
 export default {
 	domain,
@@ -148,4 +149,5 @@ export default {
 	namedListObject,
 	namedListWithoutType,
 	notification,
+	agent,
 }

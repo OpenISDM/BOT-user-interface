@@ -37,6 +37,7 @@ import React from 'react'
 import UserProfile from '../components/container/UserContainer/UserProfile'
 import LBeaconTable from '../components/container/LBeaconTable'
 import GatewayTable from '../components/container/GatewayTable'
+import AgentTable from '../components/container/AgentTable'
 import AdminManagementContainer from '../components/container/UserContainer/AdminManagementContainer'
 import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
 import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
@@ -110,6 +111,12 @@ export const settingModule = {
 			component: (props) => <GatewayTable {...props} />,
 			platform: ['browser', 'tablet', 'mobile'],
 			permission: 'route:gateway',
+		},
+		{
+			name: 'agent',
+			component: (props) => <AgentTable {...props} />,
+			platform: ['browser', 'tablet', 'mobile'],
+			permission: 'route:agent',
 		},
 	],
 }

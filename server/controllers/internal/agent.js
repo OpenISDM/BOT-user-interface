@@ -6,7 +6,7 @@
         BiDae Object Tracker (BOT)
 
     File Name:
-        routes/internal/index.js
+        agentController.js
 
     File Description:
         BOT UI component
@@ -32,44 +32,39 @@
         Joe Chou, jjoe100892@gmail.com
 */
 
-import trackingData from './tracking-data'
-import lbeacon from './lbeacon'
-import gateway from './gateway'
-import user from './user'
-import object from './object'
-import locationHistory from './location-history'
-import area from './area'
-import file from './file'
-import role from './role'
-import geofence from './geofence'
-import monitor from './monitor'
-import record from './record'
-import transferredLocation from './transferred-location'
-import groupList from './group-list'
-import utils from './utils'
-import userAssignments from './user-assignments'
-import namedList from './named-list'
-import notification from './notification'
-import agent from './agent'
+import 'dotenv/config'
+import { AgentTable } from '../../db/models'
 
-export default (app) => {
-	trackingData(app)
-	lbeacon(app)
-	gateway(app)
-	user(app)
-	object(app)
-	locationHistory(app)
-	area(app)
-	file(app)
-	role(app)
-	geofence(app)
-	monitor(app)
-	record(app)
-	transferredLocation(app)
-	groupList(app)
-	utils(app)
-	userAssignments(app)
-	namedList(app)
-	notification(app)
-	agent(app)
+export default {
+	getAllAgents: async (request, response) => {
+		try {
+			const res = await AgentTable.findAll()
+			console.log('get agent table succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get agent table failed ${e}`)
+		}
+	},
+
+	deleteAgent: async (request, response) => {
+		const { ids } = request.body
+		try {
+			const res = await AgentTable.destroy({ where: { id: ids } })
+			console.log('delete Agents record succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`delete agents failed ${e}`)
+		}
+	},
+
+	editAgent: async (request, response) => {
+		const { id, comment } = request.body
+		try {
+			const res = await AgentTable.update({ comment }, { where: { id } })
+			console.log('edit Agents succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`edit Agents failed ${e}`)
+		}
+	},
 }
