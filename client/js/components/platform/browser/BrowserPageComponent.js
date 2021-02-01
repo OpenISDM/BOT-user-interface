@@ -7,7 +7,8 @@ import PropTypes from 'prop-types'
 
 const BrowserPageComponent = ({ containerModule, setMessage }) => {
 	const { tabList, title, defaultActiveKey, permission } = containerModule
-	const { locale } = useContext(AppContext)
+	const { locale, stateReducer } = useContext(AppContext)
+	const [{ area }] = stateReducer
 	const [key, setKey] = useState(defaultActiveKey)
 
 	useEffect(() => {
@@ -53,7 +54,10 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 							key,
 						}
 						return (
-							<AccessControl key={index} permission={tab.permission}>
+							<AccessControl
+								key={`${area.id}_${index}`} // we use key to reload data when changed
+								permission={tab.permission}
+							>
 								<Tab.Pane
 									eventKey={tab.name.replace(/ /g, '_')}
 									key={tab.name.replace(/ /g, '_')}
