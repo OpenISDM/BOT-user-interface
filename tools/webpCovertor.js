@@ -47,7 +47,7 @@ const imagePath = path
 	.replace(/\\/g, '/')
 
 ;(async () => {
-	const files = [`${imagePath}/*.{jpg,png}`]
+	const files = [`${imagePath}/*.{jpg,png,JPG,PNG}`]
 	const config = {
 		destination: imagePath,
 		plugins: [imageminWebp({ quality: 75 })],
