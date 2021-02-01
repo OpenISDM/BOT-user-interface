@@ -39,6 +39,7 @@ import {
 	NotificationTable,
 	ObjectSummaryTable,
 	ObjectTable,
+	AreaTable,
 } from '../../db/models'
 import { common, ipc } from '../../helpers'
 
@@ -92,12 +93,20 @@ export default {
 				order: [['id', 'DESC']],
 			})
 
-			const [objectTableQueried, notificationTableQueried] = await Promise.all([
+			const areaTablePromise = AreaTable.findAll({ raw: true })
+
+			const [
+				objectTableQueried,
+				notificationTableQueried,
+				areaTable,
+			] = await Promise.all([
 				objectTablePromise,
 				notificationTablePromise,
+				areaTablePromise,
 			])
 
 			const objectTableMap = _.keyBy(objectTableQueried, 'mac_address')
+			const areaTableMap = _.keyBy(areaTable, 'id')
 
 			const lowBattery = objectTableQueried
 				.filter((object) => {
@@ -108,6 +117,7 @@ export default {
 					)
 				})
 				.map((object) => {
+					object.areaName = areaTableMap[object.area_id].readable_name
 					return {
 						type: NOTIFICATION_ENUM.LOW_BATTERY,
 						object,
@@ -137,9 +147,11 @@ export default {
 
 					// filter only registered object
 					if (objectTableMap[macAddress]) {
+						const object = objectTableMap[macAddress]
+						object.areaName = areaTableMap[object.area_id].readable_name
 						return {
 							type,
-							object: objectTableMap[macAddress],
+							object,
 							notificaiton,
 						}
 					}

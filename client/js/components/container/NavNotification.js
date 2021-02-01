@@ -177,7 +177,7 @@ class NavNotification extends React.Component {
 										notificaiton.violation_timestamp
 									)
 										.locale(locale.abbr)
-										.format('YYYY-MM-DD HH:mm:ss')
+										.format('HH:mm:ss')
 
 									return (
 										<Dropdown.Item
@@ -198,8 +198,8 @@ class NavNotification extends React.Component {
 										>
 											<Row style={style.list}>
 												<Button variant="light" disabled={true}>
-													&#8729;{monitorTypeString}: {object.name},{' '}
-													{violationTimestamp}
+													&#8729;{monitorTypeString}:{' '}
+													{`${object.areaName}, ${object.name} ${violationTimestamp}`}
 												</Button>
 												<Button variant="primary" onClick={this.handleSubmit}>
 													{locale.texts.CLOSE_ALERT}
@@ -254,6 +254,7 @@ class NavNotification extends React.Component {
 										>
 											<div style={style.list}>
 												<p className="d-inline-block mx-2">&#8729;</p>
+												{`${object.areaName}, `}
 												{getDescription({
 													item: object,
 													locale,
