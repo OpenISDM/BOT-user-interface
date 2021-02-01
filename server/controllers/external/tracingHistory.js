@@ -61,6 +61,7 @@ async function getDurationData(
 			sort_type
 		)
 	)
+	console.log('get tracing history data successful')
 	data.rows.forEach((item) => {
 		item.start_time = moment(item.start_time).format(default_Time_Format)
 		item.end_time = moment(item.end_time).format(default_Time_Format)

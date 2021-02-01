@@ -32,7 +32,7 @@ async function getIDTableData(request, response) {
 			ObjectTypePromise,
 			PeopleTypePromise,
 		])
-
+		console.log('get object table successed')
 		const data = {
 			area_table: AreaTableRes.rows,
 			object_types: {

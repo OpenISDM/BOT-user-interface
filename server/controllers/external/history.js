@@ -63,6 +63,7 @@ async function getObjectHistoryData(request, response) {
 				sort_type
 			)
 		)
+		console.log('get device data success')
 		data.rows.forEach((item) => {
 			item.floor = common.getFloor(item.lbeacon_uuid)
 		})

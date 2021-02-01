@@ -12,7 +12,7 @@ async function getPeopleRealtimeData(request, response) {
 			item.floor = common.getFloor(item.lbeacon_uuid)
 		})
 
-		console.log('get realtime data successful')
+		console.log('get people realtime data successful')
 		response.json(common.checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get realtime data failed : ${err}`)
@@ -29,7 +29,7 @@ async function getObjectRealtimeData(request, response) {
 		data.rows.forEach((item) => {
 			item.floor = common.getFloor(item.lbeacon_uuid)
 		})
-
+		console.log('get device realtime data successful')
 		response.json(common.checkIsNullResponse(data.rows))
 	} catch (err) {
 		console.log(`get realtime data failed : ${err}`)
