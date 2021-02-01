@@ -44,13 +44,13 @@ export default {
 
 	startTimeError: {
 		error_code: '210',
-		error_message: 'get data fail : start time format error',
+		error_message: 'get data fail : cannot parse input start_time, please check your start_time string format',
 		data: [],
 	},
 
 	endTimeError: {
 		error_code: '211',
-		error_message: 'get data fail : end time format error',
+		error_message: 'get data fail : cannot parse input end_time, please check your end_time string format',
 		data: [],
 	},
 
@@ -86,7 +86,7 @@ export default {
 
 	objectIDError: {
 		error_code: '261',
-		error_message: 'get data fail : object_ids input must be a integer array',
+		error_message: 'get data fail : object_ids input must be a string array',
 		data: [],
 	},
 
