@@ -62,10 +62,10 @@ export default {
 		const { formOption } = request.body
 		try {
 			const res = await pool.query(dbQueries.editGateway(formOption))
-			console.log('edit lbeacon succeed')
+			console.log('edit gateway succeed')
 			response.status(200).json(res)
 		} catch (e) {
-			console.log(`edit lbeacon failed ${e}`)
+			console.log(`edit gateway failed ${e}`)
 		}
 	},
 }
