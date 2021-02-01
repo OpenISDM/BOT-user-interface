@@ -116,7 +116,7 @@ class SearchSettings extends React.Component {
 		namedListPatientObjects: [],
 		namedListData: [],
 		listName: '',
-		currentNameListRow: null,
+		currentNamedListRow: null,
 		namedListOptions: [],
 		selectedNamedList: null,
 	}
@@ -285,7 +285,7 @@ class SearchSettings extends React.Component {
 	setCurrentPage = (identity) =>
 		this.setState({
 			changedIndex: [],
-			currentNameListRow: null,
+			currentNamedListRow: null,
 			selectedNamedList: null,
 			buttonSelected: identity,
 		})
@@ -296,20 +296,21 @@ class SearchSettings extends React.Component {
 
 	setListName = (listName) => this.setState({ listName })
 
-	generateObjectTableByNameList = () => {
-		const { currentNameListRow, objectMap } = this.state
+	generateObjectTableByNamedList = () => {
+		const { currentNamedListRow, objectMap } = this.state
 
 		const tableData = []
 		let objectColumns
-		if (currentNameListRow) {
+		if (currentNamedListRow) {
 			objectColumns =
-				parseInt(currentNameListRow.type) === config.NAMED_LIST_TYPE.DEVICE
+				parseInt(currentNamedListRow.type) === config.NAMED_LIST_TYPE.DEVICE
 					? COLUMNS.DEIVCE
-					: parseInt(currentNameListRow.type) === config.NAMED_LIST_TYPE.PATIENT
+					: parseInt(currentNamedListRow.type) ===
+					  config.NAMED_LIST_TYPE.PATIENT
 					? COLUMNS.PATIENT
 					: null
 
-			currentNameListRow.objectIds.forEach((id) => {
+			currentNamedListRow.objectIds.forEach((id) => {
 				tableData.push(objectMap[id])
 			})
 		}
@@ -429,13 +430,13 @@ class SearchSettings extends React.Component {
 							<BOTTable
 								data={this.getNamedListWithLocale(locale)}
 								columns={COLUMNS.NAMED_LIST}
-								onClickCallback={(currentNameListRow) => {
-									this.setState({ currentNameListRow })
+								onClickCallback={(currentNamedListRow) => {
+									this.setState({ currentNamedListRow })
 								}}
 								pageSize={6}
 							/>
 						</div>
-						{this.generateObjectTableByNameList()}
+						{this.generateObjectTableByNamedList()}
 					</>
 				)
 				break

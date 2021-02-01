@@ -76,8 +76,8 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		deviceObjectTypes: [],
 		areaConfig: {},
 		geofenceNotificationConfigs: [],
-		deviceNameList: [],
-		patientNameList: [],
+		deviceNamedList: [],
+		patientNamedList: [],
 	}
 
 	componentDidMount = () => {
@@ -110,19 +110,19 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		])
 
 		if (geofenceAreaRes && namedListRes) {
-			const deviceNameList = []
-			const patientNameList = []
+			const deviceNamedList = []
+			const patientNamedList = []
 			namedListRes.data.forEach((item) => {
 				item.objectIds = item.objectIds.map((i) => i.object_id)
 
 				if (parseInt(item.type) === config.NAMED_LIST_TYPE.DEVICE) {
-					deviceNameList.push({
+					deviceNamedList.push({
 						value: item.id,
 						label: item.name,
 					})
 				}
 				if (parseInt(item.type) === config.NAMED_LIST_TYPE.PATIENT) {
-					patientNameList.push({
+					patientNamedList.push({
 						value: item.id,
 						label: item.name,
 					})
@@ -133,8 +133,8 @@ class BOTAdminGeoFenceSetting extends React.Component {
 				areaConfig: geofenceAreaRes.data.areaConfig,
 				geofenceNotificationConfigs:
 					geofenceAreaRes.data.geofenceNotificationConfigs,
-				deviceNameList,
-				patientNameList,
+				deviceNamedList,
+				patientNamedList,
 			})
 		}
 	}
@@ -178,7 +178,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const { deviceNameList, patientNameList } = this.state
+		const { deviceNamedList, patientNamedList } = this.state
 		const {
 			monitored_device_named_list_ids,
 			monitored_patient_named_list_ids,
@@ -186,7 +186,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		} = this.state.areaConfig
 
 		const monitoredDevicesOptions = [
-			...deviceNameList,
+			...deviceNamedList,
 			{
 				value: DEFAULT_CONSTRAINT_VALUE.MONITORED_DEVICE_ALL,
 				label: locale.texts.ALL_DEVICES,
@@ -194,7 +194,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		]
 
 		const monitoredPatientsOptions = [
-			...patientNameList,
+			...patientNamedList,
 			{
 				value: DEFAULT_CONSTRAINT_VALUE.MONITORED_PATIENT_ALL,
 				label: locale.texts.ALL_PATIENTS,
@@ -303,9 +303,9 @@ class BOTAdminGeoFenceSetting extends React.Component {
 					onSubmit={(values, actions) => {
 						const submitValue = {
 							area_id: area.id,
-							monitorDeviceNameListids: values &&
+							monitorDeviceNamedListids: values &&
 								values.devices && [values.devices.value],
-							monitorPatientNameListids: values &&
+							monitorPatientNamedListids: values &&
 								values.patients && [values.patients.value],
 							montiorObjectTypes: values &&
 								values.otherObjectTypes && [values.otherObjectTypes.value],
