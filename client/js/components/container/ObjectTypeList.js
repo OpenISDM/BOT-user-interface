@@ -74,21 +74,11 @@ class ObjectTypeList extends React.Component {
 		this.handleClick(itemName, searchKey)
 	}
 
-	handleNameListClick = (e) => {
-		const { deviceNamedListMap, personNamedListMap } = this.props
+	handleNamedListClick = (e) => {
 		const itemName = e.target.getAttribute('name')
-		const id = e.target.getAttribute('namedListId')
-
-		const currentNamedList = deviceNamedListMap[id] || personNamedListMap[id]
-
-		const namedListObjectIds = currentNamedList.objectIds.map(
-			(item) => item.object_id
-		)
-		console.log(namedListObjectIds)
 		const searchKey = {
 			type: NAMED_LIST,
 			value: itemName,
-			namedListObjectIds,
 		}
 
 		this.handleClick(itemName, searchKey)
@@ -142,8 +132,8 @@ class ObjectTypeList extends React.Component {
 			pinColorArray,
 			deviceObjectTypes = [],
 			personObjectTypes = [],
-			deviceNamedListMap = [],
-			personNamedListMap = [],
+			deviceNamedList = [],
+			personNamedList = [],
 		} = this.props
 
 		const style = {
@@ -197,16 +187,15 @@ class ObjectTypeList extends React.Component {
 								return element
 							})}
 
-							{Object.values(deviceNamedListMap).map((item, index) => {
+							{deviceNamedList.map((item, index) => {
 								const itemString = `${item.name}`
-								const pinColorIndex = searchObjectArray.indexOf(item)
+								const pinColorIndex = searchObjectArray.indexOf(item.name)
 								const element = (
 									<ListGroup.Item
 										eventKey={`${itemString}:${index}`}
 										key={`${itemString}:${index}`}
-										onClick={this.handleNameListClick}
+										onClick={this.handleNamedListClick}
 										name={itemString}
-										namedListId={item.id}
 										className="d-flex text-left justify-content-end"
 										style={{
 											cursor: 'pointer',
@@ -265,16 +254,15 @@ class ObjectTypeList extends React.Component {
 								return element
 							})}
 
-							{Object.values(personNamedListMap).map((item, index) => {
+							{personNamedList.map((item, index) => {
 								const itemString = `${item.name}`
-								const pinColorIndex = searchObjectArray.indexOf(item)
+								const pinColorIndex = searchObjectArray.indexOf(item.name)
 								const element = (
 									<ListGroup.Item
 										eventKey={`${itemString}:${index}`}
 										key={`${itemString}:${index}`}
-										onClick={this.handleNameListClick}
+										onClick={this.handleNamedListClick}
 										name={itemString}
-										namedListId={item.id}
 										className="d-flex text-left justify-content-end"
 										style={{
 											cursor: 'pointer',
@@ -304,8 +292,8 @@ ObjectTypeList.propTypes = {
 	searchObjectArray: PropTypes.array,
 	personObjectTypes: PropTypes.array,
 	deviceObjectTypes: PropTypes.array,
-	personNamedListMap: PropTypes.array.isRequired,
-	deviceNamedListMap: PropTypes.array.isRequired,
+	personNamedList: PropTypes.array.isRequired,
+	deviceNamedList: PropTypes.array.isRequired,
 }
 
 export default ObjectTypeList

@@ -40,7 +40,6 @@ import {
 	CustomView,
 	isMobile,
 } from 'react-device-detect'
-import { keyBy } from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import TabletSearchContainer from '../platform/tablet/TabletSearchContainer'
 import MobileSearchContainer from '../platform/mobile/MobileSearchContainer'
@@ -63,8 +62,8 @@ class SearchContainer extends React.Component {
 		hasSearchableObjectData: false,
 		deviceObjectTypes: [],
 		personObjectTypes: [],
-		deviceNamedListMap: [],
-		personNamedListMap: [],
+		deviceNamedList: [],
+		personNamedList: [],
 	}
 
 	componentDidMount = () => {
@@ -108,7 +107,6 @@ class SearchContainer extends React.Component {
 		])
 
 		if (aliasesRes && namedListRes) {
-			console.log(namedListRes)
 			const keywordType = config.KEYWORD_TYPE[auth.user.keyword_type]
 			const personObjectTypes = [
 				...new Set(
@@ -135,18 +133,16 @@ class SearchContainer extends React.Component {
 			const deviceNamedList = namedListRes.data.filter((item) =>
 				isSameValue(item.type, config.NAMED_LIST_TYPE.DEVICE)
 			)
-			const deviceNamedListMap = keyBy(deviceNamedList, 'id')
 
 			const personNamedList = namedListRes.data.filter(
 				(item) => !isSameValue(item.type, config.NAMED_LIST_TYPE.DEVICE)
 			)
-			const personNamedListMap = keyBy(personNamedList, 'id')
 
 			this.setState({
 				personObjectTypes,
 				deviceObjectTypes,
-				deviceNamedListMap,
-				personNamedListMap,
+				deviceNamedList,
+				personNamedList,
 			})
 		}
 	}
@@ -165,16 +161,16 @@ class SearchContainer extends React.Component {
 		const {
 			personObjectTypes,
 			deviceObjectTypes,
-			deviceNamedListMap,
-			personNamedListMap,
+			deviceNamedList,
+			personNamedList,
 		} = this.state
 
 		const propsGroup = {
 			searchKey,
 			personObjectTypes,
 			deviceObjectTypes,
-			deviceNamedListMap,
-			personNamedListMap,
+			deviceNamedList,
+			personNamedList,
 			getSearchKey,
 			clearSearchResult,
 			searchObjectArray,

@@ -116,6 +116,7 @@ const rules = {
 			'route:setting',
 			'route:lbeacon',
 			'route:gateway',
+			'route:agent',
 
 			'user:mydevice',
 			'user:mypatient',

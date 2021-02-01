@@ -186,6 +186,51 @@ const gatewayTableColumn = [
 	},
 ]
 
+const agentTableColumn = [
+	{
+		Header: 'health status',
+		accessor: 'health_status',
+		style: style.textRight,
+		width: 100,
+		Cell: (props) =>
+			config.HEALTH_STATUS_MAP[props.value]
+				? config.HEALTH_STATUS_MAP[props.value]
+				: props.value,
+	},
+	{
+		Header: 'area',
+		accessor: 'area_id',
+	},
+	{
+		Header: 'port',
+		accessor: 'port',
+	},
+	{
+		Header: 'Unique ID',
+		accessor: 'unique_id',
+	},
+	{
+		Header: 'IP Address',
+		accessor: 'ip_address',
+		width: 250,
+	},
+	{
+		Header: 'comment',
+		accessor: 'comment',
+		width: 130,
+	},
+	{
+		Header: 'last report timestamp',
+		accessor: 'last_report_timestamp',
+		width: 220,
+	},
+	{
+		Header: 'registered timestamp',
+		accessor: 'registered_timestamp',
+		width: 220,
+	},
+]
+
 const TransferredLocationColumn = [
 	{
 		Header: 'transferred location',
@@ -797,6 +842,7 @@ const locationHistoryByAreaColumns = [
 export {
 	lbeaconTableColumn,
 	gatewayTableColumn,
+	agentTableColumn,
 	objectTableColumn,
 	shiftChangeCheckTableColumn,
 	importTableColumn,

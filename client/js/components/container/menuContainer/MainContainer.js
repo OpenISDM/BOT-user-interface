@@ -56,6 +56,7 @@ import {
 	SEARCH_HISTORY,
 	SEARCH_BAR,
 	PIN_SELETION,
+	NAMED_LIST,
 } from '../../../config/wordMap'
 import { SET_OPENED_NOTIFICATION } from '../../../reducer/action'
 
@@ -131,15 +132,35 @@ class MainContainer extends React.Component {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
 
-		const {
-			data: trackingData,
-		} = await apiHelper.trackingDataApiAgent.getTrackingData({
+		const trackingDataPromise = apiHelper.trackingDataApiAgent.getTrackingData({
 			areaIds: [area.id],
 		})
+		const namedListPromise = apiHelper.namedListApiAgent.getNamedListWithoutType(
+			{
+				areaIds: [area.id],
+				isUserDefined: true,
+			}
+		)
 
-		const trackingDataMap = keyBy(trackingData, 'id')
+		const [
+			{ data: originalTrackingData },
+			{ data: namedList },
+		] = await Promise.all([trackingDataPromise, namedListPromise])
 
-		if (trackingData) {
+		if (originalTrackingData && namedList) {
+			const namedListMap = {}
+			namedList.forEach(({ name, objectIds }) => {
+				objectIds.forEach(({ object_id }) => {
+					namedListMap[object_id] = name
+				})
+			})
+
+			const trackingData = originalTrackingData.map((item) => {
+				item.named_list_name = namedListMap[item.id]
+				return item
+			})
+			const trackingDataMap = keyBy(trackingData, 'id')
+
 			this.setState({
 				trackingData,
 				trackingDataMap,
@@ -266,7 +287,7 @@ class MainContainer extends React.Component {
 				searchObjectArray = []
 				searchResult = []
 				proccessedTrackingData.forEach((item) => {
-					if (parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE) {
+					if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
 						item.searchedType = config.SEARCHED_TYPE.ALL_DEVICES
 						searchResult.push(item)
 					}
@@ -278,8 +299,8 @@ class MainContainer extends React.Component {
 				searchResult = []
 				proccessedTrackingData.forEach((item) => {
 					if (
-						parseInt(item.object_type) === config.OBJECT_TYPE.PERSON &&
-						item.type === config.OBJECT_TABLE_SUB_TYPE.PATIENT
+						isSameValue(item.object_type, config.OBJECT_TYPE.PERSON) &&
+						isSameValue(item.type, config.OBJECT_TABLE_SUB_TYPE.PATIENT)
 					) {
 						item.searchedType = config.SEARCHED_TYPE.ALL_PATIENTS
 						searchResult.push(item)
@@ -291,7 +312,7 @@ class MainContainer extends React.Component {
 				searchObjectArray = []
 				proccessedTrackingData.forEach((item) => {
 					const isMyDevice =
-						parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE &&
+						isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE) &&
 						groupIds &&
 						groupIds.includes(parseInt(item.list_id))
 
@@ -307,8 +328,8 @@ class MainContainer extends React.Component {
 				searchObjectArray = []
 				proccessedTrackingData.forEach((item) => {
 					const isMyPatient =
-						parseInt(item.object_type) === config.OBJECT_TYPE.PERSON &&
-						item.type === config.OBJECT_TABLE_SUB_TYPE.PATIENT &&
+						isSameValue(item.object_type, config.OBJECT_TYPE.PERSON) &&
+						isSameValue(item.type, config.OBJECT_TABLE_SUB_TYPE.PATIENT) &&
 						groupIds &&
 						groupIds.includes(parseInt(item.list_id))
 
@@ -320,16 +341,10 @@ class MainContainer extends React.Component {
 				})
 				break
 
+			case NAMED_LIST:
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
-				if (!searchObjectArray.includes(searchKey.value)) {
-					searchObjectArray.push(searchKey.value)
-					if (searchObjectArray.length > config.MAX_SEARCH_OBJECT_NUM) {
-						searchObjectArray.shift()
-						pinColorArray.push(pinColorArray.shift())
-					}
-				}
-
+				this.setPinColor({ searchKey, searchObjectArray, pinColorArray })
 				searchResult = proccessedTrackingData.filter((item) => {
 					const result = searchObjectArray.some((keyword) => {
 						return this.checkSearchableFields({ item, keyword })
@@ -410,6 +425,16 @@ class MainContainer extends React.Component {
 			activeActionButtons,
 			clearSearchResult,
 		})
+	}
+
+	setPinColor = ({ searchKey, searchObjectArray, pinColorArray }) => {
+		if (!searchObjectArray.includes(searchKey.value)) {
+			searchObjectArray.push(searchKey.value)
+			if (searchObjectArray.length > config.MAX_SEARCH_OBJECT_NUM) {
+				searchObjectArray.shift()
+				pinColorArray.push(pinColorArray.shift())
+			}
+		}
 	}
 
 	checkSearchableFields = ({ item, keyword }) => {

@@ -43,11 +43,11 @@ const path = require('path')
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const imagePath = path
-	.join(__dirname, '..', 'server', 'map')
+	.join(__dirname, '..', 'server', 'public', 'map')
 	.replace(/\\/g, '/')
 
 ;(async () => {
-	const files = [`${imagePath}/*.{jpg,png}`]
+	const files = [`${imagePath}/*.{jpg,png,JPG,PNG}`]
 	const config = {
 		destination: imagePath,
 		plugins: [imageminWebp({ quality: 75 })],

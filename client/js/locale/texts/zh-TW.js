@@ -77,6 +77,7 @@ const tw = {
 	RECORD: ' 工作支援',
 	LBEACON: 'lbeacon',
 	GATEWAY: 'gateway',
+	AGENT: 'agent',
 	SEARCH_RESULT: '搜尋結果',
 	NO_RESULT: '無搜尋結果',
 	RESULTS: '結果',
@@ -475,6 +476,7 @@ const tw = {
 	/** table Field */
 	ID: 'ID',
 	USER_ID: 'ID',
+	UNIQUE_ID: 'Unique ID',
 	HEALTH_STATUS: '狀態',
 	UUID: 'UUID',
 	DESCRIPTION: '地點描述',
@@ -645,6 +647,7 @@ const tw = {
 
 	TIPS: '提示',
 	TIPS_REPLACE_TAG: '請選擇任一個物件進行更換標籤。',
+	PORT: '通訊埠',
 }
 
 export default tw

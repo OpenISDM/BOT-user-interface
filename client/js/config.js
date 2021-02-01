@@ -205,6 +205,7 @@ const config = {
 		'nickname',
 		'location_description',
 		'type_alias',
+		'named_list_name',
 	],
 
 	AUTOSUGGEST_NUMBER_LIMIT: 10,

@@ -49,6 +49,7 @@ import {
 	ALL_PATIENTS,
 	OBJECT_TYPE,
 	SEARCH_HISTORY,
+	NAMED_LIST,
 } from '../../config/wordMap'
 import { ASSIGN_OBJECT } from '../../reducer/action'
 import PropTypes from 'prop-types'
@@ -94,6 +95,7 @@ const SearchResultListGroup = ({
 			case ALL_DEVICES:
 			case ALL_PATIENTS:
 				return <p className="d-inline-block">&bull;</p>
+			case NAMED_LIST:
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
 				return (

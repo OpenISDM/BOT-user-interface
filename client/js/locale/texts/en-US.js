@@ -78,6 +78,7 @@ const en = {
 	REPORT: 'Operation Supports',
 	RECORD: 'Operation Supports',
 	GATEWAY: 'gateway',
+	AGENT: 'agent',
 	SEARCH_RESULT: 'search results',
 	NO_RESULT: 'no result',
 	RESULTS: 'results',
@@ -484,6 +485,7 @@ const en = {
 	/** table field */
 	ID: 'ID',
 	USER_ID: 'user ID',
+	UNIQUE_ID: 'Unique ID',
 	HEALTH_STATUS: 'status',
 	UUID: 'UUID',
 	DESCRIPTION: 'description',
@@ -659,6 +661,7 @@ const en = {
 
 	TIPS: 'Tips',
 	TIPS_REPLACE_TAG: 'Please select an object to replace tag.',
+	PORT: 'Port',
 }
 
 export default en

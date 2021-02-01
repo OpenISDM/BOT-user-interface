@@ -200,8 +200,8 @@ export default {
 			let { montiorObjectTypes = [] } = areaConfig
 			const {
 				area_id,
-				monitorDeviceNameListids = [],
-				monitorPatientNameListids = [],
+				monitorDeviceNamedListids = [],
+				monitorPatientNamedListids = [],
 				dayShift,
 				swingShift,
 				nightShift,
@@ -219,8 +219,8 @@ export default {
 				await GeoFenceAreaConfig.update(
 					{
 						monitored_object_types: montiorObjectTypes,
-						monitored_patient_named_list_ids: monitorPatientNameListids.join(),
-						monitored_device_named_list_ids: monitorDeviceNameListids.join(),
+						monitored_patient_named_list_ids: monitorPatientNamedListids.join(),
+						monitored_device_named_list_ids: monitorDeviceNamedListids.join(),
 					},
 					{ where: { area_id } }
 				)
@@ -228,8 +228,8 @@ export default {
 				await GeoFenceAreaConfig.create({
 					area_id,
 					monitored_object_types: montiorObjectTypes,
-					monitored_patient_named_list_ids: monitorPatientNameListids.join(),
-					monitored_device_named_list_ids: monitorDeviceNameListids.join(),
+					monitored_patient_named_list_ids: monitorPatientNamedListids.join(),
+					monitored_device_named_list_ids: monitorDeviceNamedListids.join(),
 				})
 			}
 
