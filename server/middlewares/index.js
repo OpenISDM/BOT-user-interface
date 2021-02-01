@@ -33,7 +33,7 @@
 */
 
 import compression from 'compression'
-
+import external from './external'
 export const authChecker = (req, res, next) => {
 	if (req.session.user) {
 		next()
@@ -58,3 +58,5 @@ export const shouldCompress = (req, res) => {
 
 	return compression.filter(req, res)
 }
+
+export {external}
