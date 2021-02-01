@@ -2,16 +2,11 @@ import errorCode from './codes'
 import queries from '../../db/externalQueries'
 import pool from '../../db/connection'
 import moment from 'moment-timezone'
+import {common as helper} from '../../helpers/index'
 
-function hexToDec(hex) {
-	return hex
-		.toLowerCase()
-		.split('')
-		.reduce((result, ch) => result * 16 + '0123456789abcdef'.indexOf(ch), 0)
-}
 
 function getFloor(uuid) {
-	return hexToDec(uuid.slice(6, 8)) - 20
+	return helper.hexToDec(uuid.slice(6, 8)) - 20
 }
 
 async function compareUserArea(key, area_ids) {

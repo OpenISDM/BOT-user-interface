@@ -10,4 +10,11 @@ const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
 	return targetBitValue === expectedBitValue
 }
 
-export default { findExpectedBitValue }
+function hexToDec(hex) {
+	return hex
+		.toLowerCase()
+		.split('')
+		.reduce((result, ch) => result * 16 + '0123456789abcdef'.indexOf(ch), 0)
+}
+
+export default { findExpectedBitValue, hexToDec }
