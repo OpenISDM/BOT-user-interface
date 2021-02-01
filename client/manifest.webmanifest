@@ -4,15 +4,15 @@
 	"description": "Indoor location-based positioning service",
 	"icons": [
 		{
-			"src": "/imgs/logo/maskable_logo.png",
+			"src": "/imgs/logo/maskable_logo.webp",
 			"sizes": "196x196",
-			"type": "image/png",
+			"type": "image/webp",
 			"purpose": "any maskable"
 		},
 		{
-			"src": "/imgs/logo/maskable_logo.png",
+			"src": "/imgs/logo/maskable_logo.webp",
 			"sizes": "512x512",
-			"type": "image/png",
+			"type": "image/webp",
 			"purpose": "any maskable"
 		}
 	],

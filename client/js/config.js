@@ -33,7 +33,6 @@
 */
 
 import { version } from '../../package.json'
-import BOT_LOGO from '../img/logo/BOT_LOGO_GREEN.png'
 import BOT_LOGO_WEBP from '../img/logo/BOT_LOGO_GREEN.webp'
 import mapConfig from './config/mapConfig'
 import viewConfig from './config/viewConfig'
@@ -86,8 +85,6 @@ const config = {
 		}
 		return abbr
 	}, 'tw'),
-
-	LOGO: BOT_LOGO,
 
 	LOGO_WEBP: BOT_LOGO_WEBP,
 

@@ -386,18 +386,19 @@ class MainContainer extends React.Component {
 		if (notifiedObject && notificaiton) {
 			const monitorType = notificaiton.monitor_type
 			const object = trackingDataMap[notifiedObject.id]
+			if (object) {
+				if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
+					object.alerted = true
+				} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
+					object.emergency = true
+				}
 
-			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
-				/// do nothing
-			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
-				object.emergency = true
+				searchResult = searchResult.filter((object) => {
+					return !isSameValue(object.id, notifiedObject.id)
+				})
+
+				searchResult.push(object)
 			}
-
-			searchResult = searchResult.filter((object) => {
-				return !isSameValue(object.id, notifiedObject.id)
-			})
-
-			searchResult.push(object)
 		}
 
 		const showDeivceObject = searchResult.some(

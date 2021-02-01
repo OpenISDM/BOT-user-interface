@@ -309,7 +309,8 @@ const mapConfig = {
 		'lavender',
 		'lightblue',
 		'yellowgreen',
-		'sos',
+		'personSos',
+		'personAlert',
 		'female',
 		'male',
 		'blackRound',
@@ -322,12 +323,13 @@ const mapConfig = {
 		geofenceP: 'orange',
 		searched: 'blue',
 		unNormal: 'grey',
-		sos: 'sos',
 		number: 'white',
 		female: 'female',
 		male: 'male',
 
 		person: 'person',
+		personAlert: 'personAlert',
+		personSos: 'personSos',
 		female_1: 'female_2',
 		male_1: 'male_1',
 		blackBed: 'blackRound',
@@ -340,7 +342,11 @@ const mapConfig = {
 	/** Set the schema to select the color pin */
 	getIconColor: (item, hasColorPanel) => {
 		if (item.emergency) {
-			return mapConfig.iconColor.sos
+			return mapConfig.iconColor.personSos
+		}
+
+		if (item.alerted) {
+			return mapConfig.iconColor.personAlert
 		}
 
 		if (parseInt(item.object_type) === 0) {

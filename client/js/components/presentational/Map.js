@@ -477,7 +477,9 @@ class Map extends React.Component {
 
 				/** Set the z-index offset of the searhed object so that
 				 * the searched object icon will be on top of all others */
-				if (item.searched || item.emergency) marker.setZIndexOffset(1000)
+				if (item.searched || item.emergency || item.alerted) {
+					marker.setZIndexOffset(1000)
+				}
 
 				/** Set the marker's event. */
 				marker.on('mouseover', () => {
