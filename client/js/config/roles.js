@@ -24,7 +24,7 @@ const rules = {
 			'user:batteryNotice',
 		],
 	},
-	system_admin: {
+	bot_admin: {
 		permission: [
 			'form:edit',
 

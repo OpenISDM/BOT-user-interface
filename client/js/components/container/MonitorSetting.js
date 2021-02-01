@@ -8,7 +8,7 @@ const MonitorSetting = () => {
 	let component = <></>
 	if (user.roles.includes('dev')) {
 		component = <SystemAdminMonitorSetting />
-	} else if (user.roles.includes('care_provider')) {
+	} else if (user.roles.includes('bot_admin')) {
 		component = <BOTAdminMonitorSetting />
 	}
 	return component
