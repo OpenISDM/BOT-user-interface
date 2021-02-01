@@ -35,37 +35,36 @@
 export default {
 	getAllUser: () => {
 		const query = `
-        SELECT
+        select
             user_table.id,
             user_table.name,
             user_table.email,
             user_table.registered_timestamp,
             user_table.last_visit_timestamp,
-            ARRAY_REMOVE(ARRAY_AGG(roles.id), NULL) as role_ids,
+            ARRAY_REMOVE(ARRAY_AGG(roles.id), null) as role_ids,
             coalesce(areas.area_ids, array[]::JSONB[]) as area_ids
-        FROM
+        from
             user_table
-        LEFT JOIN (
-            SELECT
-                *
-            FROM
-                user_role
-            INNER JOIN roles ON
-                user_role.role_id = roles.id ) roles ON
-            user_table.id = roles.user_id
-        LEFT JOIN (
-            SELECT
+
+        left join user_role on
+            user_table.id = user_role.user_id
+
+        left join roles on
+            user_role.role_id = roles.id
+
+        left join (
+            select
                 user_id,
-                ARRAY_AGG(JSONB_BUILD_OBJECT( 'id', area_id::int, 'value', ( SELECT readable_name FROM area_table where area_table.id = area_id ) )) as area_ids
-            FROM
+                ARRAY_AGG(JSONB_BUILD_OBJECT( 'id', area_id::int, 'value', ( select readable_name from area_table where area_table.id = area_id ) )) as area_ids
+            from
                 user_area
-            GROUP BY
-                user_id ) as areas ON
+            group by
+                user_id ) as areas on
             areas.user_id = user_table.id
-        GROUP BY
+        group by
             user_table.id,
             areas.area_ids
-        ORDER BY
+        order by
             user_table.name desc
 		`
 		return query
