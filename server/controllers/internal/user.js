@@ -20,7 +20,7 @@ export default {
 
 	addUser: (request, response) => {
 		const { user } = request.body
-		const { name, password, email, roles, areaIds } = user
+		const { name, password, email, roleIds, areaIds } = user
 		const hash = encrypt.createHash(password)
 		const signupPackage = {
 			name: name.toLowerCase(),
@@ -38,21 +38,21 @@ export default {
 					.then(() => {
 						pool
 							.query(
-								dbQueries.insertUserData(name.toLowerCase(), roles, areaIds)
+								dbQueries.insertUserData(name.toLowerCase(), roleIds, areaIds)
 							)
 							.then((res) => {
 								console.log('sign up succeed')
 								response.status(200).json(res)
 							})
 							.catch((err) => {
-								console.log(`addUser failed ${err}`)
+								console.log(`addUser insertUserData failed ${err}`)
 							})
 					})
 					.catch((err) => {
 						console.log(`addUser failed ${err}`)
 					})
 			} else {
-				console.log('addUser failed : repeat username')
+				console.log('addUser signin failed : repeat username')
 			}
 		})
 	},
