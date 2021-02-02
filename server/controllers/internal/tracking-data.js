@@ -6,6 +6,7 @@ import {
 	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
 	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
 } from '../../config/config'
+import common from '../../helpers/common'
 
 moment.updateLocale('en', {
 	relativeTime: MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
@@ -14,22 +15,6 @@ moment.updateLocale('en', {
 moment.updateLocale('zh-tw', {
 	relativeTime: MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
 })
-
-/** Parse the lbeacon's location coordinate from lbeacon_uuid*/
-const parseLbeaconCoordinate = (lbeacon_uuid) => {
-	const area_id = parseInt(lbeacon_uuid.slice(0, 4))
-	const xx = parseInt(lbeacon_uuid.slice(14, 18) + lbeacon_uuid.slice(19, 23))
-	const yy = parseInt(lbeacon_uuid.slice(-8))
-	return [yy, xx, area_id]
-}
-
-const calculatePosition = (item) => {
-	const area_id = parseInt(item.lbeacon_uuid.slice(0, 4))
-	const xx = item.base_x
-	const yy = item.base_y
-
-	return [yy, xx, area_id]
-}
 
 export default {
 	getTrackingData: (request, response) => {
@@ -50,13 +35,13 @@ export default {
 				const toReturn = res.rows.map((item) => {
 					/** Parse lbeacon uuid into three field in an array: area id, latitude, longtitude */
 					const lbeacon_coordinate = item.lbeacon_uuid
-						? parseLbeaconCoordinate(item.lbeacon_uuid)
+						? common.parseLbeaconCoordinate(item.lbeacon_uuid)
 						: null
 
 					item.lbeacon_coordinate = lbeacon_coordinate
 
 					item.currentPosition = item.lbeacon_uuid
-						? calculatePosition(item)
+						? common.calculatePosition(item)
 						: null
 
 					/** Set the boolean if the object's last_seen_timestamp is in the specific time period */
@@ -66,6 +51,7 @@ export default {
 
 					/** Set the boolean if its rssi is below the specific rssi threshold  */
 					const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
+
 					/** Flag the object that satisfied the time period and rssi threshold */
 					item.found = isInTheTimePeriod && isMatchRssi
 
@@ -94,16 +80,9 @@ export default {
 						item.battery_indicator = 1
 					}
 
-					const newItem = new Map(Object.entries(item))
-
-					/** Delete the unused field of the object */
-					newItem.delete('first_seen_timestamp')
-					newItem.delete('panic_violation_timestamp')
-					newItem.delete('lbeacon_uuid')
-					newItem.delete('base_x')
-					newItem.delete('base_y')
-
-					return Object.fromEntries(newItem)
+					// I forget why should do this line
+					// return Object.fromEntries(new Map(Object.entries(item)))
+					return item
 				})
 				response.status(200).json(toReturn)
 			})

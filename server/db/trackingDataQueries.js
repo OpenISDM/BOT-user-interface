@@ -7,7 +7,6 @@ export default {
 			object_summary_table.first_seen_timestamp,
 			object_summary_table.last_seen_timestamp,
 			object_summary_table.last_reported_timestamp,
-			object_summary_table.panic_violation_timestamp,
 			object_summary_table.rssi,
 			object_summary_table.battery_voltage,
 			object_summary_table.base_x,
