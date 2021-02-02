@@ -115,6 +115,25 @@ export default {
 					if (objectTableMap[macAddress]) {
 						const object = objectTableMap[macAddress]
 						object.areaName = areaTableMap[object.area_id].readable_name
+						object.found = true
+						object.lbeacon_coordinate = object['extend.uuid']
+							? common.parseLbeaconCoordinate(object['extend.uuid'])
+							: null
+
+						object.currentPosition = object['extend.uuid']
+							? common.calculatePosition({
+									lbeaconUuid: object['extend.uuid'],
+									baseX: object['extend.base_x'],
+									baseY: object['extend.base_y'],
+							  })
+							: null
+
+						object.residence_time = common
+							.moment(object['extend.last_seen_timestamp'])
+							.locale('tw')
+							.fromNow()
+
+						object.lbeacon_area = { id: object.area_id, value: object.areaName }
 						return {
 							type,
 							object,

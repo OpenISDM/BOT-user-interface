@@ -1,3 +1,17 @@
+import moment from 'moment-timezone'
+import {
+	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
+	MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
+} from '../config/config'
+
+moment.updateLocale('en', {
+	relativeTime: MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN,
+})
+
+moment.updateLocale('zh-tw', {
+	relativeTime: MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW,
+})
+
 const findExpectedBitValue = ({ targetDecimal, expectedDecimal }) => {
 	// convert to binary
 	const targetResult = targetDecimal.toString(2)
@@ -17,10 +31,10 @@ const hexToDec = (hex) => {
 		.reduce((result, ch) => result * 16 + '0123456789abcdef'.indexOf(ch), 0)
 }
 
-const calculatePosition = (item) => {
-	const area_id = parseInt(item.lbeacon_uuid.slice(0, 4))
-	const xx = item.base_x
-	const yy = item.base_y
+const calculatePosition = ({ lbeaconUuid, baseX, baseY }) => {
+	const area_id = parseInt(lbeaconUuid.slice(0, 4))
+	const xx = baseX
+	const yy = baseY
 
 	return [yy, xx, area_id]
 }
@@ -38,4 +52,5 @@ export default {
 	hexToDec,
 	calculatePosition,
 	parseLbeaconCoordinate,
+	moment,
 }

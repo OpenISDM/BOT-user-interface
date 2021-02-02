@@ -234,12 +234,7 @@ class MainContainer extends React.Component {
 		const { stateReducer } = this.context
 		const [{ openedNotification }] = stateReducer
 		const { object: notifiedObject, notificaiton } = openedNotification
-		const {
-			trackingData,
-			trackingDataMap,
-			pinColorArray,
-			groupIds,
-		} = this.state
+		const { trackingData, pinColorArray, groupIds } = this.state
 
 		let searchResult = []
 		let suggestions = []
@@ -351,20 +346,17 @@ class MainContainer extends React.Component {
 
 		if (notifiedObject && notificaiton) {
 			const monitorType = notificaiton.monitor_type
-			const object = trackingDataMap[notifiedObject.id]
-			if (object) {
-				if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
-					object.alerted = true
-				} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
-					object.emergency = true
-				}
-
-				searchResult = searchResult.filter((object) => {
-					return !isSameValue(object.id, notifiedObject.id)
-				})
-
-				searchResult.push(object)
+			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
+				notifiedObject.alerted = true
+			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
+				notifiedObject.emergency = true
 			}
+
+			searchResult = searchResult.filter((object) => {
+				return !isSameValue(object.id, notifiedObject.id)
+			})
+
+			searchResult.push(notifiedObject)
 		}
 
 		const showDeivceObject = searchResult.some(
