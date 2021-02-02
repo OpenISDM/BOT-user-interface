@@ -5,7 +5,7 @@ import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import { isEqual, isSameValue } from '../../helper/utilities'
+import { isEqual } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
@@ -23,7 +23,6 @@ class Map extends React.Component {
 
 	mapLayer = null
 	imageLayer = null
-	imageUrl = ''
 	pathOfDevice = L.layerGroup()
 	markersLayer = L.layerGroup()
 	errorCircle = L.layerGroup()
@@ -126,7 +125,6 @@ class Map extends React.Component {
 		const [{ area }] = this.context.stateReducer
 		const { bounds, map_image_path } = area
 		const url = map_image_path ? `${mapPrefix}${map_image_path}` : null
-		const isSameImageUrl = isSameValue(url, this.imageUrl)
 
 		const removeImageLayer = !url && this.mapLayer.hasLayer(this.imageLayer)
 		if (removeImageLayer) {
@@ -135,7 +133,7 @@ class Map extends React.Component {
 			return
 		}
 
-		if (!bounds || !url || isSameImageUrl) return
+		if (!bounds || !url) return
 
 		const hasNoImageLayer = this.imageLayer === null
 		if (hasNoImageLayer) {
@@ -148,7 +146,6 @@ class Map extends React.Component {
 			this.imageLayer.setBounds(bounds)
 		}
 
-		this.imageUrl = url
 		this.mapLayer.fitBounds(bounds)
 	}
 
