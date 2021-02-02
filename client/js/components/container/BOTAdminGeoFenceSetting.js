@@ -44,6 +44,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		geofenceNotificationConfigs: [],
 		deviceNamedList: [],
 		patientNamedList: [],
+		showMap: true,
 	}
 
 	componentDidMount = () => {
@@ -139,6 +140,19 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		})
 
 		return bellBit + lightBit + guiBit + smsBit
+	}
+
+	generateMapView = () => {
+		if (this.state.showMap) {
+			return (
+				<>
+					<Row style={{ height: '60vh' }}>
+						<BOTMap showGeoFence={true} />
+					</Row>
+					<hr />
+				</>
+			)
+		}
 	}
 
 	render() {
@@ -329,6 +343,19 @@ class BOTAdminGeoFenceSetting extends React.Component {
 								<Row style={{ justifyContent: 'space-between' }}>
 									<div>
 										<BOTButton
+											enableDebounce={false}
+											pressed={true}
+											disabled={false}
+											onClick={() => {
+												this.setState({ showMap: !this.state.showMap })
+											}}
+											text={
+												this.state.showMap
+													? locale.texts.HIDE_MAP
+													: locale.texts.SHOW_MAP
+											}
+										/>
+										{/* <BOTButton
 											pressed={this.checkButtonIsPressed(
 												AREAS.CURRENT_COVERED_AREA
 											)}
@@ -337,7 +364,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 											}}
 											text={area.label}
 										/>
-										{/* <BOTButton
+										<BOTButton
 											pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}
 											onClick={() => {
 												this.setCurrentPressedButton(AREAS.GLOBAL_AREA)
@@ -356,10 +383,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 									/>
 								</Row>
 								<hr />
-								<Row style={{ height: '300px' }}>
-									<BOTMap showGeoFence={true} />
-								</Row>
-								<hr />
+								{this.generateMapView()}
 								<div
 									className="font-size-120-percent color-black d-flex justify-content-center"
 									style={{ paddingBottom: '5px' }}
