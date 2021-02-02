@@ -5,7 +5,7 @@ import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import { isEqual } from '../../helper/utilities'
+import { isEqual, isSameValue } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
@@ -125,8 +125,15 @@ class Map extends React.Component {
 	setMap = () => {
 		const [{ area }] = this.context.stateReducer
 		const { bounds, map_image_path } = area
-		const url = map_image_path ? mapPrefix + map_image_path : null
-		const isSameImageUrl = url === this.imageUrl
+		const url = map_image_path ? `${mapPrefix}${map_image_path}` : null
+		const isSameImageUrl = isSameValue(url, this.imageUrl)
+
+		const removeImageLayer = !url && this.mapLayer.hasLayer(this.imageLayer)
+		if (removeImageLayer) {
+			this.mapLayer.removeLayer(this.imageLayer)
+			this.imageLayer = null
+			return
+		}
 
 		if (!bounds || !url || isSameImageUrl) return
 
