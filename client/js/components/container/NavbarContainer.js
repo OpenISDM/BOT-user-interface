@@ -45,7 +45,19 @@ class NavbarContainer extends React.Component {
 	}
 
 	getAreaTable = async () => {
-		const res = await apiHelper.areaApiAgent.getAreaTable()
+		const { auth } = this.context
+		const { user } = auth
+		let res = null
+
+		const isBotAdmin = user.roles && user.roles.includes('bot_admin')
+		if (isBotAdmin) {
+			res = await apiHelper.areaApiAgent.getAreaTable()
+		} else {
+			res = await apiHelper.areaApiAgent.getAreaTableByUserId({
+				userId: user.id,
+			})
+		}
+
 		if (res) {
 			const areaOptionsMap = {}
 			res.data.forEach((area) => {
