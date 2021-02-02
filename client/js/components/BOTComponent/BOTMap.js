@@ -81,12 +81,15 @@ const GenerateImageLayer = ({ area }) => {
 	const map = useMap()
 
 	useEffect(() => {
-		map.fitBounds(bounds)
+		if (bounds) {
+			map.fitBounds(bounds)
+		}
 	}, [map, bounds])
 
 	const url = map_image_path ? mapPrefix + map_image_path : null
+	let image
 	if (url && bounds) {
-		return (
+		image = (
 			<ImageOverlay
 				key={id} // We set unique id to key for updating new image data
 				bounds={bounds}
@@ -94,6 +97,8 @@ const GenerateImageLayer = ({ area }) => {
 			/>
 		)
 	}
+
+	return <LayerGroup>{image}</LayerGroup>
 }
 
 GenerateImageLayer.propTypes = {
