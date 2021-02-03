@@ -52,7 +52,7 @@ GenerateGeoFenceLayer.propTypes = {
 }
 
 const GenerateMarkersLayer = ({ objectList = [] }) => {
-	let markers
+	const markers = []
 	if (objectList.length > 0) {
 		objectList.forEach((object, index) => {
 			/** Calculate the position of the object  */
