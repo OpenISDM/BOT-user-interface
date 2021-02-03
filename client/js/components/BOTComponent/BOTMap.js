@@ -54,7 +54,7 @@ GenerateGeoFenceLayer.propTypes = {
 const GenerateMarkersLayer = ({ objectList = [] }) => {
 	let markers
 	if (objectList.length > 0) {
-		markers = objectList.map((object, index) => {
+		objectList.forEach((object, index) => {
 			/** Calculate the position of the object  */
 			const position = macAddressToCoordinate(
 				object.mac_address,
@@ -62,10 +62,10 @@ const GenerateMarkersLayer = ({ objectList = [] }) => {
 				object.updated_by_n_lbeacons,
 				60
 			)
-
-			const option = new L.AwesomeNumberMarkers(config.mapConfig.iconOptions)
-
-			return <Marker key={index} position={position} icon={option} />
+			if (position) {
+				const option = new L.AwesomeNumberMarkers(config.mapConfig.iconOptions)
+				markers.push(<Marker key={index} position={position} icon={option} />)
+			}
 		})
 	}
 
