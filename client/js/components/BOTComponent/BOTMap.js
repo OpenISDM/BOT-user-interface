@@ -81,7 +81,7 @@ const GenerateImageLayer = ({ area }) => {
 	const map = useMap()
 
 	useEffect(() => {
-		if (bounds) {
+		if (bounds && bounds.length > 0) {
 			map.fitBounds(bounds)
 		}
 	}, [map, bounds])
