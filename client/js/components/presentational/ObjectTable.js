@@ -172,6 +172,7 @@ class ObjectTable extends React.Component {
 					isShowEdit: false,
 					showDeleteConfirmation: false,
 					isReadOnly: false,
+					isAddButtonPressed: false,
 				},
 				callback
 			)
@@ -285,16 +286,13 @@ class ObjectTable extends React.Component {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
 
-		let state = {}
 		if (tableSelection.length > 0) {
-			state = {
+			this.setState({
 				action: DELETE,
 				showDeleteConfirmation: true,
 				message: locale.texts.ARE_YOU_SURE_TO_DELETE,
-			}
+			})
 		}
-
-		this.setState(state)
 	}
 
 	clearSelection = () => {
@@ -380,6 +378,7 @@ class ObjectTable extends React.Component {
 								<>
 									<BOTButton
 										theme={'danger'}
+										enableDebounce={false}
 										pressed={tableSelection.length > 0}
 										name={DELETE}
 										onClick={this.handleDeleteAction}
