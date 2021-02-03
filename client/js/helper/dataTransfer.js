@@ -10,14 +10,20 @@ export const macAddressToCoordinate = (
 	updated_by_n_lbeacons,
 	dispersity
 ) => {
-	const xx = mac_address.slice(15, 16)
-	const yy = mac_address.slice(16, 17)
-	const origin_x = lbeacon_coordinate[1]
-	const origin_y = lbeacon_coordinate[0]
-	const factor = updated_by_n_lbeacons < 3 ? dispersity : 1
-	const xxx = origin_x + (parseInt(xx, 16) - 8) * factor
-	const yyy = origin_y + (parseInt(yy, 16) - 8) * factor
-	return [yyy, xxx]
+	let result = null
+	try {
+		const xx = mac_address.slice(15, 16)
+		const yy = mac_address.slice(16, 17)
+		const origin_x = lbeacon_coordinate[1]
+		const origin_y = lbeacon_coordinate[0]
+		const factor = updated_by_n_lbeacons < 3 ? dispersity : 1
+		const xxx = origin_x + (parseInt(xx, 16) - 8) * factor
+		const yyy = origin_y + (parseInt(yy, 16) - 8) * factor
+		result = [yyy, xxx]
+	} catch (e) {
+		console.error('macAddressToCoordinate failed:', e)
+	}
+	return result
 }
 
 /** Parsing the lbeacon's location coordinate from lbeacon_uuid*/
@@ -53,7 +59,7 @@ export const countNumber = (searchKey, item, numberSheet) => {
 }
 
 /** Transfer monitor type binary code to type string */
-export const transferMonitorTypeToString = (item, type) => {
+export const transferMonitorTypeToString = (item) => {
 	return Object.keys(config.monitorType)
 		.reduce((checkboxGroup, index) => {
 			if (item.monitor_type & index) {
