@@ -18,7 +18,7 @@ export default {
 			})
 	},
 
-	addUser: (request, response) => {
+	addUser: async (request, response) => {
 		const { user } = request.body
 		const { name, password, email, roleIds, areaIds } = user
 		const hash = encrypt.createHash(password)
@@ -27,34 +27,29 @@ export default {
 			password: hash,
 			email,
 		}
+
 		request.session.regenerate(() => {
 			request.session.user = name
 		})
 
-		pool.query(authQueries.signin(name)).then((ress) => {
-			if (ress.rowCount < 1) {
-				pool
-					.query(dbQueries.addUser(signupPackage))
-					.then(() => {
-						pool
-							.query(
-								dbQueries.insertUserData(name.toLowerCase(), roleIds, areaIds)
-							)
-							.then((res) => {
-								console.log('sign up succeed')
-								response.status(200).json(res)
-							})
-							.catch((err) => {
-								console.log(`addUser insertUserData failed ${err}`)
-							})
-					})
-					.catch((err) => {
-						console.log(`addUser failed ${err}`)
-					})
-			} else {
-				console.log('addUser signin failed : repeat username')
+		const authQueried = await pool.query(authQueries.signin(name))
+		if (authQueried && authQueried.rowCount < 1) {
+			try {
+				const addUserQueried = await pool.query(
+					dbQueries.addUser(signupPackage)
+				)
+				if (addUserQueried && addUserQueried.rowCount > 0) {
+					const userId = addUserQueried.rows[0].id
+					await pool.query(dbQueries.insertUserData(userId, roleIds, areaIds))
+				}
+			} catch (e) {
+				console.log(`addUser failed ${e}`)
 			}
-		})
+		} else {
+			console.log('addUser signin failed : repeat username')
+		}
+
+		response.status(200).json('OK')
 	},
 
 	setUserInfo: async (request, response) => {

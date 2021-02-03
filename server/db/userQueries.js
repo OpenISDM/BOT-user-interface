@@ -50,7 +50,7 @@ export default {
 				$2,
 				now(),
 				$3
-			);
+			) returning *;
 			`
 		const values = [
 			signupPackage.name,
@@ -66,47 +66,21 @@ export default {
 		return query
 	},
 
-	insertUserData: (name, roles, areaIds) => {
-		const insertRoles = roles.map((role) => {
-			return `(
-                (
-                    SELECT id
-                    FROM user_table
-                    WHERE name = '${name}'
-                ),
-                (
-                    SELECT id
-                    FROM roles
-                    WHERE name = '${role}'
-                )
-            )`
-		})
-
-		const insertAreaIds = areaIds.map((areaId) => {
-			return `(
-                (
-                    SELECT id
-                    FROM user_table
-                    WHERE name = '${name}'
-                ),
-                ${areaId}
-            )`
-		})
-
+	insertUserData: (userId, roleIds, areaIds) => {
 		return `
 			INSERT INTO user_role (
 				user_id,
 				role_id
 			)
 			VALUES
-			${insertRoles};
+			${roleIds.map((roleId) => `(${userId}, ${roleId})`).join(',')};
 
 			INSERT INTO user_area (
 				user_id,
 				area_id
 			)
             VALUES
-            ${insertAreaIds};
+            ${areaIds.map((areaId) => `(${userId}, ${areaId})`).join(',')};
 		`
 	},
 
