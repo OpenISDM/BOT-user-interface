@@ -1,14 +1,7 @@
 import React from 'react'
 import { keyBy } from 'lodash'
 import { AppContext } from '../../context/AppContext'
-import {
-	Row,
-	Col,
-	ButtonToolbar,
-	Button,
-	OverlayTrigger,
-	Popover,
-} from 'react-bootstrap'
+import { Row, Col, ButtonToolbar, Modal } from 'react-bootstrap'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import { setSuccessMessage } from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
@@ -50,6 +43,7 @@ class ObjectTable extends React.Component {
 		associatedAsnSet: [],
 		isAddButtonPressed: false,
 		isMultiSelection: false,
+		isReplaceTagMode: false,
 	}
 
 	componentDidMount = () => {
@@ -251,6 +245,7 @@ class ObjectTable extends React.Component {
 		switch (name) {
 			case ADD:
 				this.setState({
+					isReplaceTagMode: false,
 					isShowEdit: true,
 					formTitle: name,
 					isReadOnly: false,
@@ -280,6 +275,10 @@ class ObjectTable extends React.Component {
 			type: SET_TABLE_SELECTION,
 			value: [],
 		})
+	}
+
+	switchReplaceTagMode = () => {
+		this.setState({ isReplaceTagMode: !this.state.isReplaceTagMode })
 	}
 
 	handleDeleteAction = () => {
@@ -378,55 +377,49 @@ class ObjectTable extends React.Component {
 						/>
 						<ButtonToolbar>
 							{this.state.isMultiSelection ? (
-								<BOTButton
-									theme={'danger'}
-									pressed={tableSelection.length > 0}
-									name={DELETE}
-									onClick={this.handleDeleteAction}
-									text={locale.texts[deleteText]}
-								/>
+								<>
+									<BOTButton
+										theme={'danger'}
+										pressed={tableSelection.length > 0}
+										name={DELETE}
+										onClick={this.handleDeleteAction}
+										text={locale.texts[deleteText]}
+									/>
+									<BOTButton
+										enableDebounce={false}
+										pressed={true}
+										name={DELETE}
+										onClick={this.switchSelectionMode}
+										text={locale.texts.CANCEL}
+									/>
+								</>
 							) : (
 								<>
-									<OverlayTrigger
-										trigger="click"
-										key={'left'}
-										placement="left"
-										overlay={
-											<Popover id="popover-basic">
-												<Popover.Title as="h3">
-													{locale.texts.TIPS}
-												</Popover.Title>
-												<Popover.Content>
-													{locale.texts.TIPS_REPLACE_TAG}
-												</Popover.Content>
-											</Popover>
-										}
-									>
-										<Button variant="info">{locale.texts.REPLACE_TAG}</Button>
-									</OverlayTrigger>
+									<BOTButton
+										pressed={true}
+										onClick={this.switchReplaceTagMode}
+										text={locale.texts.REPLACE_TAG}
+									/>
 									<BOTButton
 										pressed={this.state.isAddButtonPressed}
 										name={ADD}
 										onClick={this.handleClickButton}
 										text={locale.texts[addText]}
 									/>
+									<BOTButton
+										enableDebounce={false}
+										pressed={this.state.isMultiSelection}
+										name={DELETE}
+										onClick={this.switchSelectionMode}
+										text={locale.texts[deleteText]}
+									/>
 								</>
 							)}
-							<BOTButton
-								enableDebounce={false}
-								pressed={this.state.isMultiSelection}
-								name={DELETE}
-								onClick={this.switchSelectionMode}
-								text={
-									this.state.isMultiSelection
-										? locale.texts.CANCEL
-										: locale.texts[deleteText]
-								}
-							/>
 						</ButtonToolbar>
 					</Row>
 				</Col>
 				<hr />
+
 				{this.state.isMultiSelection ? (
 					<BOTSelectTable
 						data={this.state.filteredData}
@@ -434,22 +427,35 @@ class ObjectTable extends React.Component {
 						style={{ maxHeight: '80vh' }}
 					/>
 				) : (
-					<BOTTable
-						data={this.state.filteredData}
-						columns={columns}
-						style={{ maxHeight: '80vh' }}
-						onClickCallback={(selectedRowData) => {
-							if (selectedRowData) {
-								this.setState({
-									isShowEdit: true,
-									formTitle: 'edit object',
-									isReadOnly: true,
-									apiMethod: 'put',
-									selectedRowData,
-								})
-							}
+					<Col
+						style={{
+							margin: '0px',
+							padding: '0px',
+							border: '0px',
+							backgroundColor: 'white',
+							zIndex: this.state.isReplaceTagMode ? 1060 : 1,
 						}}
-					/>
+					>
+						<BOTTable
+							data={this.state.filteredData}
+							columns={columns}
+							style={{
+								maxHeight: '80vh',
+							}}
+							onClickCallback={(selectedRowData) => {
+								if (selectedRowData) {
+									this.setState({
+										isReplaceTagMode: false,
+										isShowEdit: true,
+										formTitle: 'edit object',
+										isReadOnly: true,
+										apiMethod: 'put',
+										selectedRowData,
+									})
+								}
+							}}
+						/>
+					</Col>
 				)}
 
 				<EditedForm
@@ -471,6 +477,11 @@ class ObjectTable extends React.Component {
 					handleClose={this.handleClose}
 					message={this.state.message}
 					handleSubmit={this.handleSubmitAction}
+				/>
+
+				<Modal
+					show={this.state.isReplaceTagMode}
+					onHide={this.switchReplaceTagMode}
 				/>
 			</>
 		)
