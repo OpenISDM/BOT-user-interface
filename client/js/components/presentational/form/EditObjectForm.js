@@ -105,7 +105,7 @@ class EditObjectForm extends React.Component {
 			name: name || '',
 			type: type || '',
 			asset_control_number: isReadOnly ? asset_control_number : '',
-			mac_address: isBind ? { label: mac_address, value: mac_address } : null,
+			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
 			area: area_name || '',
 			monitorType: monitor_type.length > 0 ? monitor_type.split('/') : [],
@@ -129,7 +129,7 @@ class EditObjectForm extends React.Component {
 				)
 				.max(40, locale.texts.LIMIT_IN_FOURTY_CHARACTER),
 			mac_address: object()
-				.nullable()
+				.required(locale.texts.MAC_ADDRESS_IS_REQUIRED)
 				.test(
 					'mac_address',
 					locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
