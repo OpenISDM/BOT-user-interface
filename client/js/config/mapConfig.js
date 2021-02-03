@@ -25,7 +25,7 @@ const mapConfig = {
 	browserMapOptions: {
 		crs: L.CRS.Simple,
 		zoom: -5.5,
-		minZoom: -5.46,
+		minZoom: -7.46,
 		maxZoom: -1,
 		zoomDelta: 0.25,
 		zoomSnap: 0.3,
