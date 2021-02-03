@@ -20,7 +20,7 @@ export default {
 		}
 	},
 	getNamedListWithoutType: async (request, response) => {
-		const { areaIds, isUserDefined } = request.query
+		const { areaIds = [], isUserDefined = true } = request.query
 		try {
 			const res = await NamedList.findAll({
 				where: { areaId: areaIds, isUserDefined },

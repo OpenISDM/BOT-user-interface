@@ -26,7 +26,7 @@ const MONITOR_TYPE = {
 
 export default {
 	getAllNotifications: async (request, response) => {
-		const { areaId } = request.query
+		const { areaId = [] } = request.query
 		try {
 			const objectTablePromise = ObjectTable.findAll({
 				include: [
