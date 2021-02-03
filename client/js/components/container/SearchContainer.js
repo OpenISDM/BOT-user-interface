@@ -13,7 +13,7 @@ import BrowserSearchContainer from '../platform/browser/BrowserSearchContainer'
 import apiHelper from '../../helper/apiHelper'
 import config from '../../config'
 import PropTypes from 'prop-types'
-import { isSameValue } from '../../helper/utilities'
+import { isSameValue, isEqual } from '../../helper/utilities'
 
 class SearchContainer extends React.Component {
 	static contextType = AppContext
@@ -30,18 +30,28 @@ class SearchContainer extends React.Component {
 		personObjectTypes: [],
 		deviceNamedList: [],
 		personNamedList: [],
+		currentAreaId: null,
 	}
 
 	componentDidMount = () => {
 		this.getData()
 	}
 
-	componentDidUpdate = (prepProps) => {
+	componentDidUpdate = (prepProps, prevState) => {
+		const [{ area }] = this.context.stateReducer
+		if (!isEqual(prevState.currentAreaId, area.id)) {
+			this.setState({
+				currentAreaId: area.id,
+			})
+			this.getData()
+		}
+
 		/** Refresh the search result automatically
 		 *  This feature can be adjust by the user by changing the boolean value in config */
 		if (this.state.refreshSearchResult) {
 			this.props.getSearchKey(this.state.searchKey)
 		}
+
 		if (
 			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			this.props.clearSearchResult
