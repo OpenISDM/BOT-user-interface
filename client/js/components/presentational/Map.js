@@ -60,6 +60,7 @@ class Map extends React.Component {
 			this.setState({
 				currentAreaId: area.id,
 			})
+			this.setMap()
 		}
 
 		if (
@@ -74,8 +75,6 @@ class Map extends React.Component {
 		if (!isEqual(prevProps.pathMacAddress, this.props.pathMacAddress)) {
 			this.drawPolyline()
 		}
-
-		this.setMap()
 	}
 
 	shouldComponentUpdate = (nextProps, nextState) => {
