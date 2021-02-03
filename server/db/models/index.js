@@ -16,6 +16,7 @@ import UserTable from './user-table'
 import UserArea from './user-area'
 import UserRole from './user-role'
 import AgentTable from './agent-table'
+import LBeaconTable from './lbeacon-table'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -63,5 +64,6 @@ export {
 	UserTable,
 	UserRole,
 	AgentTable,
+	LBeaconTable,
 	UserAssignmentEnum,
 }

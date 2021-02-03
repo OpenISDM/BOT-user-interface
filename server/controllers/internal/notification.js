@@ -6,6 +6,7 @@ import {
 	ObjectSummaryTable,
 	ObjectTable,
 	AreaTable,
+	LBeaconTable,
 } from '../../db/models'
 import { common, ipc } from '../../helpers'
 
@@ -60,19 +61,23 @@ export default {
 			})
 
 			const areaTablePromise = AreaTable.findAll({ raw: true })
+			const lbeaconTablePromise = LBeaconTable.findAll({ raw: true })
 
 			const [
 				objectTableQueried,
 				notificationTableQueried,
 				areaTable,
+				lbeaconTable,
 			] = await Promise.all([
 				objectTablePromise,
 				notificationTablePromise,
 				areaTablePromise,
+				lbeaconTablePromise,
 			])
 
 			const objectTableMap = _.keyBy(objectTableQueried, 'mac_address')
 			const areaTableMap = _.keyBy(areaTable, 'id')
+			const lbeaconTableMap = _.keyBy(lbeaconTable, 'uuid')
 
 			const lowBattery = objectTableQueried
 				.filter((object) => {
@@ -134,6 +139,8 @@ export default {
 							.fromNow()
 
 						object.lbeacon_area = { id: object.area_id, value: object.areaName }
+						object.location_description =
+							lbeaconTableMap[object['extend.uuid']].description
 						return {
 							type,
 							object,
