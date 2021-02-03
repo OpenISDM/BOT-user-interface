@@ -341,7 +341,6 @@ class Map extends React.Component {
 			searchObjectArray,
 			pinColorArray,
 			searchKey,
-			proccessedTrackingData,
 			searchResult,
 		} = this.props
 
@@ -384,7 +383,7 @@ class Map extends React.Component {
 				const popupContent = this.props.mapConfig.getPopupContent(
 					[item],
 					this.collectObjectsByPosition(
-						proccessedTrackingData,
+						searchResult,
 						item.currentPosition,
 						item.type,
 						item.searchedType
@@ -467,7 +466,7 @@ class Map extends React.Component {
 
 				marker.on('click', async () => {
 					const objectList = this.collectObjectsByPosition(
-						proccessedTrackingData,
+						searchResult,
 						item.currentPosition,
 						item.type,
 						item.searchedType
@@ -534,7 +533,6 @@ class Map extends React.Component {
 
 Map.propTypes = {
 	mapConfig: PropTypes.object.isRequired,
-	proccessedTrackingData: PropTypes.array.isRequired,
 	searchResultListRef: PropTypes.object.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 	searchObjectArray: PropTypes.array.isRequired,
