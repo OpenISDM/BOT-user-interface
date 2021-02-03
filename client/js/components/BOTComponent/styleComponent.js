@@ -1,6 +1,4 @@
 import styled, { css } from 'styled-components'
-import Item from 'react-bootstrap/ListGroupItem'
-import Link from 'react-bootstrap/NavLink'
 import NavLink from 'react-bootstrap/NavLink'
 import Nav from 'react-bootstrap/Nav'
 import styleSheet from '../../config/styleSheet'
@@ -119,7 +117,7 @@ export const BOTSideNavTitle = styled.div`
 	text-transform: capitalize;
 `
 
-export const BOTNavLink = styled(Link)`
+export const BOTNavLink = styled(NavLink)`
 	font-weight: 500;
 	text-transform: capitalize;
 
@@ -238,7 +236,7 @@ export const ToggleDisplayDiv = styled.div`
 
 export const ReactBootstrapAlert = styled(Alert)`
 	${(props) =>
-		props.variant == 'secondary' &&
+		props.variant === 'secondary' &&
 		css`
 			border: 0;
 			background: ${styleSheet.lightGrey};
