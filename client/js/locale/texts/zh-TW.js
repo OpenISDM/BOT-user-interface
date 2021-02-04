@@ -618,6 +618,7 @@ const tw = {
 	TIPS: '提示',
 	TIPS_REPLACE_TAG: '請選擇任一個物件進行更換標籤。',
 	PORT: '通訊埠',
+	LOCATE: '定位',
 }
 
 export default tw

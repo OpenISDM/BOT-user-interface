@@ -632,6 +632,7 @@ const en = {
 	TIPS: 'Tips',
 	TIPS_REPLACE_TAG: 'Please select an object to replace tag.',
 	PORT: 'Port',
+	LOCATE: 'Locate',
 }
 
 export default en

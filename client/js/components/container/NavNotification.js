@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import { isEmpty } from 'lodash'
 import NotificationBadge, { Effect } from 'react-notification-badge'
 import { Row, Dropdown, Button } from 'react-bootstrap'
@@ -55,12 +55,11 @@ class NavNotification extends React.Component {
 		}
 	}
 
-	handleSubmit = async () => {
-		const [{ openedNotification }, dispatch] = this.context.stateReducer
-		const { notificaiton } = openedNotification
-
+	handleSubmit = async (e) => {
+		const notificationId = e.target.getAttribute('notificationId')
+		const [, dispatch] = this.context.stateReducer
 		const res = await apiHelper.notificationApiAgent.turnOffNotification({
-			notificationId: notificaiton.id,
+			notificationId,
 		})
 
 		if (res) {
@@ -96,7 +95,7 @@ class NavNotification extends React.Component {
 
 		return (
 			<>
-				<Dropdown>
+				<DropdownPersist>
 					<Dropdown.Toggle
 						variant="light"
 						id="battery-notice-btn"
@@ -150,30 +149,44 @@ class NavNotification extends React.Component {
 										.format('HH:mm:ss')
 
 									return (
-										<Dropdown.Item
-											key={index}
-											style={{ color: 'black' }}
-											onMouseEnter={() => {
-												dispatch({
-													type: SET_OPENED_NOTIFICATION,
-													value: {
-														monitorTypeString,
-														object,
-														notificaiton,
-													},
-												})
-
-												history.push('/')
-											}}
-										>
+										<Dropdown.Item key={index} style={{ color: 'black' }}>
 											<Row style={style.list}>
 												<Button variant="light" disabled={true}>
 													&#8729;{monitorTypeString}:{' '}
 													{`${object.areaName}, ${object.name} ${violationTimestamp}`}
 												</Button>
-												<Button variant="primary" onClick={this.handleSubmit}>
-													{locale.texts.CLOSE_ALERT}
-												</Button>
+												<Row
+													style={{
+														paddingLeft: '5px',
+														paddingRight: '20px',
+													}}
+												>
+													<Button
+														variant="primary"
+														onClick={() => {
+															dispatch({
+																type: SET_OPENED_NOTIFICATION,
+																value: {
+																	monitorTypeString,
+																	object,
+																	notificaiton,
+																},
+															})
+
+															history.push('/')
+														}}
+														style={{ marginRight: '5px' }}
+													>
+														{locale.texts.LOCATE}
+													</Button>
+													<Button
+														notificationId={notificaiton.id}
+														variant="primary"
+														onClick={this.handleSubmit}
+													>
+														{locale.texts.CLOSE_ALERT}
+													</Button>
+												</Row>
 											</Row>
 										</Dropdown.Item>
 									)
@@ -183,7 +196,7 @@ class NavNotification extends React.Component {
 							)}
 						</div>
 					</Dropdown.Menu>
-				</Dropdown>
+				</DropdownPersist>
 
 				<Dropdown style={{ marginLeft: '1px' }}>
 					<Dropdown.Toggle
@@ -251,6 +264,27 @@ class NavNotification extends React.Component {
 			</>
 		)
 	}
+}
+
+const DropdownPersist = (props) => {
+	const { stateReducer } = useContext(AppContext)
+	const [, dispatch] = stateReducer
+	const [open, setOpen] = useState(false)
+	const onToggle = (isOpen, ev, metadata) => {
+		if (metadata.source === 'select') {
+			setOpen(true)
+			return
+		}
+		setOpen(isOpen)
+		if (!isOpen) {
+			dispatch({
+				type: SET_OPENED_NOTIFICATION,
+				value: {},
+			})
+		}
+	}
+
+	return <Dropdown show={open} onToggle={onToggle} {...props}></Dropdown>
 }
 
 NavNotification.propTypes = {
