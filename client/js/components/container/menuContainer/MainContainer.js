@@ -376,8 +376,6 @@ class MainContainer extends React.Component {
 
 		const clearSearchResult = searchKey.value === null
 
-		console.log(searchResult && searchResult[0])
-
 		this.setState({
 			proccessedTrackingData,
 			searchResult,
