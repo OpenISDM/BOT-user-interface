@@ -146,6 +146,10 @@ class Map extends React.Component {
 		}
 
 		this.mapLayer.fitBounds(bounds)
+
+		// we call it twice to make sure map bounds are correct
+		// TODO: Johnson, this will be refactor, now just a workaround
+		this.mapLayer.fitBounds(bounds)
 	}
 
 	/** Calculate the current scale for creating markers and resizing. */
