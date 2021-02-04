@@ -47,10 +47,16 @@ const parseLbeaconCoordinate = (lbeacon_uuid) => {
 	return [yy, xx, area_id]
 }
 
+/** Fastest object deep clone */
+const deepClone = (objects) => {
+	return JSON.parse(JSON.stringify(objects))
+}
+
 export default {
 	findExpectedBitValue,
 	hexToDec,
 	calculatePosition,
 	parseLbeaconCoordinate,
 	moment,
+	deepClone,
 }

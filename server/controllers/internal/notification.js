@@ -89,6 +89,10 @@ export default {
 				})
 				.map((object) => {
 					object.areaName = areaTableMap[object.area_id].readable_name
+					object.lbeacon_area = {
+						id: object.area_id,
+						value: object.areaName,
+					}
 					return {
 						type: NOTIFICATION_ENUM.LOW_BATTERY,
 						object,
@@ -118,7 +122,8 @@ export default {
 
 					// filter only registered object
 					if (objectTableMap[macAddress]) {
-						const object = objectTableMap[macAddress]
+						const object = common.deepClone(objectTableMap[macAddress])
+						object.area_id = notificaiton.area_id // triggered area id
 						object.areaName = areaTableMap[object.area_id].readable_name
 						object.found = true
 						object.lbeacon_coordinate = object['extend.uuid']
@@ -139,6 +144,7 @@ export default {
 							.fromNow()
 
 						object.lbeacon_area = { id: object.area_id, value: object.areaName }
+
 						object.location_description =
 							lbeaconTableMap[object['extend.uuid']].description
 						return {
