@@ -26,14 +26,14 @@ class NavNotification extends React.Component {
 	}
 
 	componentDidMount = () => {
-		this.getTrackingData()
+		this.getAllNotifications()
 		this.interval = setInterval(
-			this.getTrackingData,
+			this.getAllNotifications,
 			config.mapConfig.intervalTime
 		)
 	}
 
-	getTrackingData = async () => {
+	getAllNotifications = async () => {
 		const [{ area, openedNotification }, dispatch] = this.context.stateReducer
 		const res = await apiHelper.notificationApiAgent.getAllNotifications({
 			areaId: area.id,
@@ -91,6 +91,7 @@ class NavNotification extends React.Component {
 			icon: {
 				fontSize: '15px',
 			},
+			dropdownList: { maxHeight: '30vh', overflowY: 'auto' },
 		}
 
 		return (
@@ -123,7 +124,10 @@ class NavNotification extends React.Component {
 								</div>
 							</Row>
 						</div>
-						<div className="overflow-hidden-scroll custom-scrollbar">
+						<div
+							className="overflow-hidden-scroll custom-scrollbar"
+							style={style.dropdownList}
+						>
 							{emergency.length !== 0 ? (
 								emergency.map(({ object, notificaiton }, index) => {
 									let monitorTypeString = ''
@@ -200,7 +204,7 @@ class NavNotification extends React.Component {
 					</Dropdown.Toggle>
 					<Dropdown.Menu
 						alignRight
-						bsPrefix="bot-dropdown-menu-right dropdown-menu "
+						bsPrefix="bot-dropdown-menu-right dropdown-menu"
 					>
 						<div className="px-5 py-2" style={style.title}>
 							<Row>
@@ -209,7 +213,10 @@ class NavNotification extends React.Component {
 								</div>
 							</Row>
 						</div>
-						<div className="overflow-hidden-scroll custom-scrollbar">
+						<div
+							className="overflow-hidden-scroll custom-scrollbar"
+							style={style.dropdownList}
+						>
 							{lowBattery.length !== 0 ? (
 								lowBattery.map(({ object }) => {
 									return (
