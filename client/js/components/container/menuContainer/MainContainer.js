@@ -347,7 +347,7 @@ class MainContainer extends React.Component {
 		if (notifiedObject && notificaiton) {
 			const monitorType = notificaiton.monitor_type
 			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
-				notifiedObject.alerted = true
+				notifiedObject.forbidden = true
 			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
 				notifiedObject.emergency = true
 			}

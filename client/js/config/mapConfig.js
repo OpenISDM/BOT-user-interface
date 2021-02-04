@@ -276,6 +276,7 @@ const mapConfig = {
 		'lightblue',
 		'yellowgreen',
 		'personSos',
+		'forbidden',
 		'personAlert',
 		'female',
 		'male',
@@ -296,6 +297,7 @@ const mapConfig = {
 		person: 'person',
 		personAlert: 'personAlert',
 		personSos: 'personSos',
+		forbidden: 'forbidden',
 		female_1: 'female_2',
 		male_1: 'male_1',
 		blackBed: 'blackRound',
@@ -313,6 +315,10 @@ const mapConfig = {
 
 		if (item.alerted) {
 			return mapConfig.iconColor.personAlert
+		}
+
+		if (item.forbidden) {
+			return mapConfig.iconColor.forbidden
 		}
 
 		if (parseInt(item.object_type) === 0) {
