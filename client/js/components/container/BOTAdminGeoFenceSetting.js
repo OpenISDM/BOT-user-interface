@@ -184,7 +184,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 		const monitoredOtherObjectTypesOptions = [
 			{
 				value: config.OBJECT_TABLE_SUB_TYPE.CONTRACTOR,
-				label: locale.texts.CONTRACTORS,
+				label: locale.texts.CONTRACTOR,
 				id: 1,
 			},
 			{

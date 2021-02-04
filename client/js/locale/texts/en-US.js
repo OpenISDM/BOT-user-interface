@@ -600,7 +600,7 @@ const en = {
 	PATIENTS: 'Patients',
 	OTHER_OBJECT_TYPES: 'Other Object Types',
 
-	CONTRACTORS: 'Contractors',
+	CONTRACTOR: 'Contractors',
 	VISITORS: 'Visitors',
 	STAFF: 'Staff',
 

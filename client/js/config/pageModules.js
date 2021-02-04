@@ -12,6 +12,7 @@ import ObjectEditedRecord from '../components/container/UserContainer/ObjectEdit
 import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
 import DeviceTable from '../components/presentational/DeviceTable'
 import PatientTable from '../components/presentational/PatientTable'
+import StaffTable from '../components/presentational/StaffTable'
 import VisitorTable from '../components/presentational/VisitorTable'
 import TrackingTable from '../components/container/TrackingTable'
 import BatteryStatusTable from '../components/container/BatteryStatusTable'
@@ -224,7 +225,7 @@ export const ObjectManagementModule = {
 		{
 			name: 'Staff Table',
 			permission: 'route:objectManagement',
-			component: () => null,
+			component: (props) => <StaffTable {...props} />,
 			platform: ['browser'],
 		},
 		{

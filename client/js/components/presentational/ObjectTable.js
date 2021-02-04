@@ -91,7 +91,7 @@ class ObjectTable extends React.Component {
 						config.OBJECT_TYPE.PERSON
 					)
 					if (isPersonObject) {
-						return isSameValue(item.type, objectSubTypes)
+						return objectSubTypes.includes(item.type)
 					}
 					return true
 				})
@@ -100,12 +100,14 @@ class ObjectTable extends React.Component {
 						value: item.status,
 						label: item.status ? locale.texts[item.status.toUpperCase()] : null,
 					}
+
 					item.transferred_location = item.transferred_location.id && {
 						value: `${item.transferred_location.name}-${item.transferred_location.department}`,
 						label: `${item.transferred_location.name}-${item.transferred_location.department}`,
 					}
 
 					item.isBind = item.mac_address ? 1 : 0
+
 					item.mac_address = item.mac_address
 						? item.mac_address
 						: locale.texts.NON_BINDING
@@ -126,6 +128,14 @@ class ObjectTable extends React.Component {
 					}
 
 					item.registered_timestamp = formatTime(item.registered_timestamp)
+
+					const isPersonObject = isSameValue(
+						item.object_type,
+						config.OBJECT_TYPE.PERSON
+					)
+					if (isPersonObject) {
+						item.subTypeName = locale.texts[item.type.toUpperCase()]
+					}
 
 					return item
 				})

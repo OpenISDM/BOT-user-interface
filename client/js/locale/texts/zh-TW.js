@@ -242,8 +242,8 @@ const tw = {
 	SELECT_ROOM: '選擇房號',
 	SELECT_LBEACON: '選擇lbeacon',
 	SELECT_TIME: '選擇時間',
-	SELECT_TYPE: '選擇物件類型',
-	SELECT_STATUS: '選擇物件狀態',
+	SELECT_TYPE: '選擇類型',
+	SELECT_STATUS: '選擇狀態',
 	SELECT_MONITOR_TYPE: '選擇監控類型',
 	TYPE_SEARCH_KEYWORD: '請輸入搜尋關鍵字 ...',
 	WRITE_THE_NOTES: '註記',
@@ -586,7 +586,7 @@ const tw = {
 	PATIENTS: '病人',
 	OTHER_OBJECT_TYPES: '其他物件類型',
 
-	CONTRACTORS: '約聘人員',
+	CONTRACTOR: '約聘人員',
 	VISITORS: '訪客',
 	STAFF: '員工',
 
