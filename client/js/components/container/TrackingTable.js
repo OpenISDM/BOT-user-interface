@@ -37,6 +37,7 @@ class TrackingTable extends React.Component {
 		const [{ area }] = stateReducer
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			areaIds: [area.id],
+			locale: locale.abbr,
 		})
 
 		if (res) {

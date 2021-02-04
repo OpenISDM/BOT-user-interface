@@ -117,6 +117,7 @@ class ShiftChangeRecord extends React.Component {
 
 		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
 			areaIds: [area.id],
+			locale: locale.abbr,
 		})
 
 		if (res) {

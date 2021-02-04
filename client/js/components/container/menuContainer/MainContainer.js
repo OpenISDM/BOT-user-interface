@@ -95,12 +95,13 @@ class MainContainer extends React.Component {
 	/** Get tracking data from database.
 	 *  Once get the tracking data, violated objects would be collected. */
 	getTrackingData = async () => {
-		const { stateReducer } = this.context
+		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-
 		const trackingDataPromise = apiHelper.trackingDataApiAgent.getTrackingData({
 			areaIds: [area.id],
+			locale: locale.abbr,
 		})
+
 		const namedListPromise = apiHelper.namedListApiAgent.getNamedListWithoutType(
 			{
 				areaIds: [area.id],
@@ -374,6 +375,8 @@ class MainContainer extends React.Component {
 		}
 
 		const clearSearchResult = searchKey.value === null
+
+		console.log(searchResult && searchResult[0])
 
 		this.setState({
 			proccessedTrackingData,
