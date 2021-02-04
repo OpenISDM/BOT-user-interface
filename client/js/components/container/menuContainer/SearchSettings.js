@@ -107,7 +107,7 @@ class SearchSettings extends React.Component {
 
 		const objectDataPromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: [area.id],
-			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
+			objectTypes: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
 
 		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({

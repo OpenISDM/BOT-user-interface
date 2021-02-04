@@ -8,7 +8,7 @@ import { DEVICE } from '../../config/wordMap'
 const DeviceTable = () => {
 	return (
 		<ObjectTable
-			objectType={[config.OBJECT_TYPE.DEVICE]}
+			objectTypes={[config.OBJECT_TYPE.DEVICE]}
 			filteredAttribute={[
 				'name',
 				'type',

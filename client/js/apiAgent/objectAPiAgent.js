@@ -2,10 +2,10 @@ import { object, objectPackage } from '../dataSrc'
 import { get, put, post, patch, del } from '../helper/httpClient'
 
 export default {
-	async getObjectTable({ areas_id, objectType }) {
+	async getObjectTable({ areas_id, objectTypes }) {
 		return await get(object.object, {
 			areas_id,
-			objectType,
+			objectTypes,
 		})
 	},
 

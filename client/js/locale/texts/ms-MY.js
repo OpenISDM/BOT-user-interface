@@ -69,7 +69,7 @@ const ms = {
 	DEVICE_TABLE: 'Add/Delete Devices',
 	PATIENT_TABLE: 'Add/Delete Patients',
 	STAFF_TABLE: 'Add/Delete Employees And Contractors',
-	VISTOR_TABLE: 'Add/Delete Visitors And Others',
+	VISITOR_TABLE: 'Add/Delete Visitors And Others',
 	BATTERY_TABLE: 'Show Battery Status',
 	TAGS: 'tag',
 	PATIENT_GENDER: 'Jantina',

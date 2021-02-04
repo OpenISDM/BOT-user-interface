@@ -362,6 +362,40 @@ const patientTableColumn = [
 	},
 ]
 
+const visitorTableColumn = [
+	{
+		Header: 'Name',
+		accessor: 'name',
+		width: 150,
+	},
+	{
+		Header: 'Nickname',
+		accessor: 'nickname',
+		width: 150,
+	},
+	{
+		Header: 'Tag ID',
+		accessor: 'mac_address',
+		width: 200,
+		Cell: (props) =>
+			!props.original.isBind ? (
+				<div className="color-blue text-underline">{props.value}</div>
+			) : (
+				props.value
+			),
+	},
+	{
+		Header: 'auth Area',
+		accessor: 'area_name.label',
+		width: 150,
+	},
+	{
+		Header: 'registered timestamp',
+		accessor: 'registered_timestamp',
+		width: 300,
+	},
+]
+
 const importTableColumn = [
 	{
 		Header: 'Name',
@@ -817,7 +851,8 @@ export {
 	objectTableColumn,
 	shiftChangeCheckTableColumn,
 	importTableColumn,
-	patientTableColumn,
+    patientTableColumn,
+    visitorTableColumn,
 	userInfoTableColumn,
 	locationHistoryByNameColumns,
 	locationHistoryByNameGroupByUUIDColumns,

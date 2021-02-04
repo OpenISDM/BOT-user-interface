@@ -52,7 +52,7 @@ class BrowserContactTree extends React.Component {
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
-			objectType: [config.OBJECT_TYPE.PERSON],
+			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
 		if (res) {
 			const options = res.data.rows.map((item) => {

@@ -10,10 +10,10 @@ import { ObjectTable } from '../../db/models'
 
 export default {
 	getObject: (request, response) => {
-		const { areas_id, objectType } = request.query
+		const { areas_id, objectTypes } = request.query
 
 		pool
-			.query(dbQueries.getObject(objectType, areas_id))
+			.query(dbQueries.getObject(objectTypes, areas_id))
 			.then((res) => {
 				console.log('get object table succeed')
 				response.status(200).json(res)
@@ -71,7 +71,7 @@ export default {
 		const { area_id } = formOption
 
 		pool
-			.query(dbQueries.editPersona(formOption))
+			.query(dbQueries.editPerson(formOption))
 			.then((res) => {
 				ipc.reloadGeofenceConfig(area_id)
 				response.status(200).json(res)

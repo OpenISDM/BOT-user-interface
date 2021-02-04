@@ -8,7 +8,8 @@ import { PERSON } from '../../config/wordMap'
 const PatientTable = () => {
 	return (
 		<ObjectTable
-			objectType={[config.OBJECT_TYPE.PERSON]}
+			objectTypes={[config.OBJECT_TYPE.PERSON]}
+			objectSubTypes={[config.OBJECT_TABLE_SUB_TYPE.PATIENT]}
 			filteredAttribute={['name', 'area', 'macAddress', 'acn', 'sex']}
 			enabledSelection={[SELECTION.AREA]}
 			columns={patientTableColumn}

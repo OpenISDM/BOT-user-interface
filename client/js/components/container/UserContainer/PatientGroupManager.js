@@ -101,7 +101,7 @@ class PatientGroupManager extends React.Component {
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
-			objectType: [config.OBJECT_TYPE.PERSON],
+			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
 		if (res) {
 			this.setState({

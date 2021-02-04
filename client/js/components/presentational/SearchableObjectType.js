@@ -3,6 +3,7 @@ import { Col, Nav } from 'react-bootstrap'
 import apiHelper from '../../helper/apiHelper'
 import { AppContext } from '../../context/AppContext'
 import { OBJECT_TYPE } from '../../config/wordMap'
+import config from '../../config'
 import { Title } from '../BOTComponent/styleComponent'
 import PropTypes from 'prop-types'
 
@@ -79,7 +80,7 @@ class SearchableObjectType extends React.Component {
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
-			objectType: [config.OBJECT_TYPE.DEVICE],
+			objectTypes: [config.OBJECT_TYPE.DEVICE],
 		})
 
 		if (res) {

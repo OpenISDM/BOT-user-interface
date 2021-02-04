@@ -6,7 +6,7 @@ import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import { setSuccessMessage } from '../../helper/messageGenerator'
 import apiHelper from '../../helper/apiHelper'
 import { ADD, DELETE, SAVE_SUCCESS, DISASSOCIATE } from '../../config/wordMap'
-import { formatTime } from '../../helper/utilities'
+import { formatTime, isSameValue } from '../../helper/utilities'
 import config from '../../config'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import BOTTable from '../BOTComponent/BOTTable'
@@ -58,11 +58,11 @@ class ObjectTable extends React.Component {
 
 	loadData = async (callback) => {
 		const { locale, auth } = this.context
-		const { objectType = [] } = this.props
+		const { objectTypes = [], objectSubTypes = [] } = this.props
 
 		const objectTablePromise = apiHelper.objectApiAgent.getObjectTable({
 			areas_id: auth.user.areas_id,
-			objectType,
+			objectTypes,
 		})
 		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
 		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
@@ -84,40 +84,51 @@ class ObjectTable extends React.Component {
 			const typeList = {}
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
 
-			const data = objectTableRes.data.rows.map((item) => {
-				item.status = {
-					value: item.status,
-					label: item.status ? locale.texts[item.status.toUpperCase()] : null,
-				}
-				item.transferred_location = item.transferred_location.id && {
-					value: `${item.transferred_location.name}-${item.transferred_location.department}`,
-					label: `${item.transferred_location.name}-${item.transferred_location.department}`,
-				}
-
-				item.isBind = item.mac_address ? 1 : 0
-				item.mac_address = item.mac_address
-					? item.mac_address
-					: locale.texts.NON_BINDING
-
-				if (!Object.keys(typeList).includes(item.type)) {
-					typeList[item.type] = {
-						value: item.type,
-						label: item.type,
+			const data = objectTableRes.data.rows
+				.filter((item) => {
+					const isPersonObject = isSameValue(
+						item.object_type,
+						config.OBJECT_TYPE.PERSON
+					)
+					if (isPersonObject) {
+						return isSameValue(item.type, objectSubTypes)
 					}
-				}
+					return true
+				})
+				.map((item) => {
+					item.status = {
+						value: item.status,
+						label: item.status ? locale.texts[item.status.toUpperCase()] : null,
+					}
+					item.transferred_location = item.transferred_location.id && {
+						value: `${item.transferred_location.name}-${item.transferred_location.department}`,
+						label: `${item.transferred_location.name}-${item.transferred_location.department}`,
+					}
 
-				item.area_name = {
-					value: item.area_name,
-					label:
-						areaDataMap[item.area_name] &&
-						areaDataMap[item.area_name].readable_name,
-					id: item.area_id,
-				}
+					item.isBind = item.mac_address ? 1 : 0
+					item.mac_address = item.mac_address
+						? item.mac_address
+						: locale.texts.NON_BINDING
 
-				item.registered_timestamp = formatTime(item.registered_timestamp)
+					if (!Object.keys(typeList).includes(item.type)) {
+						typeList[item.type] = {
+							value: item.type,
+							label: item.type,
+						}
+					}
 
-				return item
-			})
+					item.area_name = {
+						value: item.area_name,
+						label:
+							areaDataMap[item.area_name] &&
+							areaDataMap[item.area_name].readable_name,
+						id: item.area_id,
+					}
+
+					item.registered_timestamp = formatTime(item.registered_timestamp)
+
+					return item
+				})
 
 			const dataMap = keyBy(data, 'id')
 
@@ -488,7 +499,8 @@ class ObjectTable extends React.Component {
 }
 
 ObjectTable.propTypes = {
-	objectType: PropTypes.array.isRequired,
+	objectTypes: PropTypes.array.isRequired,
+	objectSubTypes: PropTypes.number,
 	filteredAttribute: PropTypes.array.isRequired,
 	enabledSelection: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,

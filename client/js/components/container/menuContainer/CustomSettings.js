@@ -4,7 +4,7 @@ import { ButtonToolbar, Row, Col } from 'react-bootstrap'
 import { AppContext } from '../../../context/AppContext'
 import apiHelper from '../../../helper/apiHelper'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
-import messageGenerator from '../../../helper/messageGenerator'
+import { setSuccessMessage } from '../../../helper/messageGenerator'
 import BOTTable from '../../BOTComponent/BOTTable'
 import BOTButton from '../../BOTComponent/BOTButton'
 import config from '../../../config'
@@ -33,7 +33,7 @@ class CustomSettings extends React.Component {
 
 	showMessage = debounce(
 		() => {
-			messageGenerator.setSuccessMessage('save success')
+			setSuccessMessage('save success')
 		},
 		1500,
 		{
@@ -138,7 +138,7 @@ class CustomSettings extends React.Component {
 
 		const res = await apiHelper.objectApiAgent.getObjectTable({
 			areas_id: [area.id],
-			objectType: [config.OBJECT_TYPE.PERSON],
+			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
 
 		if (res) {

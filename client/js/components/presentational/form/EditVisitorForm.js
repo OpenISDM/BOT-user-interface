@@ -18,7 +18,7 @@ Object.keys(config.monitorType).forEach((key) => {
 	monitorTypeMap[config.monitorType[key]] = key
 })
 
-class EditPatientForm extends React.Component {
+class EditVisitorForm extends React.Component {
 	static contextType = AppContext
 
 	render() {
@@ -33,7 +33,6 @@ class EditPatientForm extends React.Component {
 			isReadOnly,
 			macOptions,
 			handleSubmit,
-			roomOptions,
 			handleClick,
 			associatedAsnSet = [],
 			associatedMacSet = [],
@@ -44,7 +43,6 @@ class EditPatientForm extends React.Component {
 			area_name,
 			mac_address,
 			asset_control_number,
-			room,
 		} = selectedRowData
 
 		const areaOptions = areaTable.map((area) => {
@@ -72,12 +70,6 @@ class EditPatientForm extends React.Component {
 								  }
 								: null,
 							asset_control_number: asset_control_number || '',
-							room: room
-								? {
-										value: room,
-										label: room,
-								  }
-								: null,
 						}}
 						validationSchema={object().shape({
 							name: string()
@@ -132,8 +124,7 @@ class EditPatientForm extends React.Component {
 								...values,
 								name: values.name.trim(),
 								area_id: values.area.id,
-								room: values.room ? values.room.label : '',
-								type: config.OBJECT_TABLE_SUB_TYPE.PATIENT,
+								type: config.OBJECT_TABLE_SUB_TYPE.VISITOR,
 								mac_address: values.mac_address
 									? values.mac_address.label.trim()
 									: '',
@@ -199,29 +190,7 @@ class EditPatientForm extends React.Component {
 											)}
 										/>
 									</Col>
-									<Col>
-										<FormikFormGroup
-											type="text"
-											name="room"
-											label={locale.texts.ROOM}
-											error={errors.room}
-											touched={touched.room}
-											component={() => (
-												<Creatable
-													placeholder={locale.texts.SELECT_ROOM}
-													name="room"
-													styles={styleConfig.reactSelect}
-													value={values.room}
-													onChange={(value) => setFieldValue('room', value)}
-													options={roomOptions || []}
-													isSearchable={true}
-													components={{
-														IndicatorSeparator: () => null,
-													}}
-												/>
-											)}
-										/>
-									</Col>
+									<Col></Col>
 								</Row>
 								<Row>
 									<Col>
@@ -282,7 +251,7 @@ class EditPatientForm extends React.Component {
 	}
 }
 
-EditPatientForm.propTypes = {
+EditVisitorForm.propTypes = {
 	title: PropTypes.string,
 	selectedRowData: PropTypes.object,
 	areaTable: PropTypes.array,
@@ -297,4 +266,4 @@ EditPatientForm.propTypes = {
 	associatedAsnSet: PropTypes.array,
 }
 
-export default EditPatientForm
+export default EditVisitorForm

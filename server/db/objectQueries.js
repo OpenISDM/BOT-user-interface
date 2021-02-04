@@ -1,4 +1,4 @@
-const getObject = (objectType, areas_id) => {
+const getObject = (objectTypes, areas_id) => {
 	const text = `
 		SELECT
 			object_table.id,
@@ -38,9 +38,11 @@ const getObject = (objectType, areas_id) => {
 		LEFT JOIN transfer_locations
 		ON transfer_locations.id = object_table.transferred_location
 
-		WHERE object_table.object_type IN (${objectType.map((type) => type)})
+        WHERE object_table.object_type IN (${objectTypes.map((type) => type)})
+
 		${areas_id ? `AND object_table.area_id IN (${areas_id.map((id) => id)})` : ''}
-		ORDER BY
+
+        ORDER BY
 			object_table.name ASC,
 			object_table.registered_timestamp DESC
 	`
@@ -54,7 +56,6 @@ const addPerson = (formOption) => {
 			mac_address,
 			asset_control_number,
 			area_id,
-			monitor_type,
 			object_type,
 			type,
             status,
@@ -66,11 +67,10 @@ const addPerson = (formOption) => {
 			$2,
 			$3,
 			$4,
+			1,
 			$5,
-			$6,
-			'Patient',
             'returned',
-            $7,
+            $6,
 			now()
 		)`
 
@@ -79,8 +79,7 @@ const addPerson = (formOption) => {
 		formOption.mac_address,
 		formOption.asset_control_number,
 		formOption.area_id,
-		formOption.monitor_type,
-		formOption.object_type,
+		formOption.type,
 		formOption.room,
 	]
 
@@ -92,14 +91,12 @@ const addPerson = (formOption) => {
 	return query
 }
 
-const editPersona = (formOption) => {
+const editPerson = (formOption) => {
 	const text = `
-		Update object_table
+		UPDATE object_table
 		SET name = $2,
 			mac_address = $3,
-			area_id = $4,
-			monitor_type = $5,
-			object_type = $6
+			area_id = $4
 		WHERE asset_control_number = $1
 	`
 
@@ -108,8 +105,6 @@ const editPersona = (formOption) => {
 		formOption.name,
 		formOption.mac_address,
 		formOption.area_id,
-		formOption.monitor_type,
-		formOption.object_type,
 	]
 
 	const query = {
@@ -299,7 +294,7 @@ export default {
 	addPerson,
 	addObject,
 	editDevice,
-	editPersona,
+	editPerson,
 	deleteObject,
 	disassociate,
 	editObjectPackage,

@@ -67,7 +67,7 @@ const cn = {
 	DEVICE_TABLE: '设备列表',
 	PATIENT_TABLE: '病人列表',
 	STAFF_TABLE: '员工列表',
-	VISTOR_TABLE: '访客列表',
+	VISITOR_TABLE: '访客列表',
 	BATTERY_TABLE: '电池状态列表',
 	TAGS: '注册列表',
 	PATIENT_GENDER: '性别',
