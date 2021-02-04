@@ -432,7 +432,7 @@ class ObjectTable extends React.Component {
 							padding: '0px',
 							border: '0px',
 							backgroundColor: 'white',
-							zIndex: this.state.isReplaceTagMode ? 1060 : 1,
+							zIndex: this.state.isReplaceTagMode ? 1060 : 0,
 						}}
 					>
 						<BOTTable
