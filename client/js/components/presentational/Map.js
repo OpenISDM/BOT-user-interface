@@ -5,7 +5,7 @@ import '../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
-import { isEqual } from '../../helper/utilities'
+import { isEqual, isSameValue } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
 import apiHelper from '../../helper/apiHelper'
@@ -356,11 +356,6 @@ class Map extends React.Component {
 		this.markersLayer.clearLayers()
 		this.errorCircle.clearLayers()
 
-		/** Mark the objects onto the map  */
-
-		// const iconSize = [this.scalableIconSize, this.scalableIconSize];
-		// const numberSize = this.scalableNumberSize;
-
 		const numberSheet = {}
 
 		this.filterTrackingData(searchResult).forEach((item) => {
@@ -439,6 +434,10 @@ class Map extends React.Component {
 
 					/** Set the color of the ordered number */
 					numberColor: this.props.mapConfig.iconColor.number,
+
+					/** Mark the objects onto the map  */
+					// iconSize: [this.scalableIconSize, this.scalableIconSize],
+					// numberSize: this.scalableNumberSize,
 				}
 
 				const option = new L.AwesomeNumberMarkers(item.iconOption)
@@ -491,8 +490,9 @@ class Map extends React.Component {
 
 	/** Filter out undesired tracking data */
 	filterTrackingData = (data = []) => {
+		const [{ area }] = this.context.stateReducer
 		return data.filter((item) => {
-			return item.found
+			return item.found && isSameValue(item.updated_by_area, area.id)
 		})
 	}
 
