@@ -8,7 +8,7 @@ import botFeaturesConfig from './config/botFeaturesConfig'
 import { NORMAL, BROKEN, TRANSFERRED } from './config/wordMap'
 
 const config = {
-	VERSION: `v${version} b.1989`,
+	VERSION: `v${version} b.1990`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 
