@@ -117,12 +117,6 @@ const config = {
 		geo: 'geo_fence_config',
 	},
 
-	getLbeaconDataIntervalTime:
-		process.env.GET_LBEACON_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
-
-	getGatewayDataIntervalTime:
-		process.env.GET_GATEWAY_DATA_INTERVAL_TIME_IN_MILLI_SEC || 3600000,
-
 	FOLDER_PATH: {
 		trackingRecord: 'tracking_record',
 	},

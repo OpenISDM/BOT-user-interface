@@ -8,7 +8,7 @@ const pgSession = ConnectPgSimple(session)
 const sessionOptions = {
 	store: new pgSession({
 		pool,
-		tableName: process.env.SESSION_TABLE_NAME,
+		tableName: 'session',
 	}),
 	secret: process.env.KEY,
 	resave: true,
