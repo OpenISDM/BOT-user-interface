@@ -132,14 +132,14 @@ export const getNickname = (item) => {
 export const getACN = (item, locale) => {
 	return `
         ${locale.texts.ASSET_CONTROL_NUMBER}:
-        ${config.ACNOmitsymbol}${item.asset_control_number.slice(-4)},
+        ${config.mapConfig.ACNOmitsymbol}${item.asset_control_number.slice(-4)},
     `
 }
 
 export const getPatientID = (item, locale) => {
 	return `
         ${locale.texts.PATIENT_NUMBER}:
-        ${config.ACNOmitsymbol}${item.asset_control_number.slice(-4)},
+        ${config.mapConfig.ACNOmitsymbol}${item.asset_control_number.slice(-4)},
     `
 }
 

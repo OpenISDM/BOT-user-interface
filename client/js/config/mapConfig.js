@@ -11,6 +11,7 @@ const MARKER_SIZE_IN_TABLET = 20
  *  Refer leaflet.js for more optional setting https://leafletjs.com/reference-1.5.0.html
  */
 const mapConfig = {
+	ACNOmitsymbol,
 	mapOptions: {
 		crs: L.CRS.Simple,
 		zoom: -5.5,
