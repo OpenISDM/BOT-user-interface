@@ -9,16 +9,6 @@ const supportedLocale = {
 		code: 'en-us',
 		abbr: 'en',
 	},
-	// ms: {
-	// 	name: 'Malayu',
-	// 	code: 'ms-my',
-	// 	abbr: 'ms',
-	// },
-	// cn: {
-	// 	name: '简体中文',
-	// 	code: 'zh-cn',
-	// 	abbr: 'cn',
-	// },
 }
 
 export default supportedLocale
