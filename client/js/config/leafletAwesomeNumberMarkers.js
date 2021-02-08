@@ -29,7 +29,6 @@
 
 		_createInner() {
 			let iconColorStyle = ''
-			const specifiedNumberTop = ''
 			const options = this.options
 			let numberShiftTop = ''
 
@@ -45,7 +44,7 @@
 
 			numberShiftTop = 'top: ' + options.numberShiftTop + ';'
 
-			if (options.markerColor == 'male') {
+			if (options.markerColor === 'male') {
 				numberShiftTop = 'top: ' + options.specifiedNumberTop + ';'
 			}
 

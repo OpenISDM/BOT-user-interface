@@ -1,7 +1,11 @@
-import viewConfig from './viewConfig'
 import { monitorTypeChecker } from '../helper/dataTransfer'
 import { NORMAL, RESERVE, RETURNED } from './wordMap'
 import L from 'leaflet'
+
+const ACNOmitsymbol = '...'
+const MARKER_SIZE_IN_DESKTOP = 50
+const MARKER_SIZE_IN_MOBILE = 20
+const MARKER_SIZE_IN_TABLET = 20
 
 /** Map configuration.
  *  Refer leaflet.js for more optional setting https://leafletjs.com/reference-1.5.0.html
@@ -73,14 +77,9 @@ const mapConfig = {
 
 	/** Set the icon option for browser */
 	iconOptions: {
-		iconSize:
-			[viewConfig.MARKER_SIZE_IN_DESKTOP, viewConfig.MARKER_SIZE_IN_DESKTOP] ||
-			1,
+		iconSize: [MARKER_SIZE_IN_DESKTOP, MARKER_SIZE_IN_DESKTOP] || 1,
 
-		iconAnchor: [
-			viewConfig.MARKER_SIZE_IN_DESKTOP / 2,
-			viewConfig.MARKER_SIZE_IN_DESKTOP,
-		],
+		iconAnchor: [MARKER_SIZE_IN_DESKTOP / 2, MARKER_SIZE_IN_DESKTOP],
 
 		showNumber: true,
 
@@ -138,13 +137,9 @@ const mapConfig = {
 
 	/** Set the icon option for mobile */
 	iconOptionsInMobile: {
-		iconSize:
-			[viewConfig.MARKER_SIZE_IN_MOBILE, viewConfig.MARKER_SIZE_IN_MOBILE] || 1,
+		iconSize: [MARKER_SIZE_IN_MOBILE, MARKER_SIZE_IN_MOBILE] || 1,
 
-		iconAnchor: [
-			viewConfig.MARKER_SIZE_IN_MOBILE / 2,
-			viewConfig.MARKER_SIZE_IN_MOBILE,
-		],
+		iconAnchor: [MARKER_SIZE_IN_MOBILE / 2, MARKER_SIZE_IN_MOBILE],
 
 		circleRadius: 8,
 
@@ -186,15 +181,9 @@ const mapConfig = {
 
 	/** Set the icon option for tablet */
 	iconOptionsInTablet: {
-		iconSize: [
-			viewConfig.MARKER_SIZE_IN_TABLET,
-			viewConfig.MARKER_SIZE_IN_TABLET,
-		],
+		iconSize: [MARKER_SIZE_IN_TABLET, MARKER_SIZE_IN_TABLET],
 
-		iconAnchor: [
-			viewConfig.MARKER_SIZE_IN_TABLET / 2,
-			viewConfig.MARKER_SIZE_IN_TABLET,
-		],
+		iconAnchor: [MARKER_SIZE_IN_TABLET / 2, MARKER_SIZE_IN_TABLET],
 
 		showNumber: true,
 
@@ -341,9 +330,9 @@ const mapConfig = {
 				const indexText = mapConfig.popupOptions.showNumber
 					? `${index + 1}.`
 					: '&bull;'
-				const acn = `${locale.texts.ASSET_CONTROL_NUMBER}: ${
-					viewConfig.ACNOmitsymbol
-				}${item.asset_control_number.slice(-4)},`
+				const acn = `${
+					locale.texts.ASSET_CONTROL_NUMBER
+				}: ${ACNOmitsymbol}${item.asset_control_number.slice(-4)},`
 				const residenceTime =
 					item.status !== RETURNED
 						? `${locale.texts[item.status.toUpperCase()]}`

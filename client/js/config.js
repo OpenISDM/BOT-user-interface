@@ -1,11 +1,10 @@
 import { version } from '../../package.json'
 import BOT_LOGO_WEBP from '../img/logo/BOT_LOGO_GREEN.webp'
 import mapConfig from './config/mapConfig'
-import viewConfig from './config/viewConfig'
 import moment from 'moment'
 import supportedLocale from './locale/supportedLocale'
-import botFeaturesConfig from './config/botFeaturesConfig'
 import { NORMAL, BROKEN, TRANSFERRED } from './config/wordMap'
+import { convertConfigValue } from './helper/utilities'
 
 const config = {
 	VERSION: `v${version} b.1990`,
@@ -150,9 +149,9 @@ const config = {
 		return config.SHIFT_OPTIONS[2]
 	},
 
-	...viewConfig,
-
-	...botFeaturesConfig,
+	GENERATE_SHIFT_RECORD_ENABLE_DOUBLE_CONFIRMED: convertConfigValue(
+		JSON.stringify(process.env.GENERATE_SHIFT_RECORD_ENABLE_DOUBLE_CONFIRMED)
+	),
 
 	mapConfig,
 
