@@ -9,7 +9,6 @@ const rules = {
 			'route:patientManagement',
 			'route:objectManagement',
 			'route:userProfile',
-			'route:bigScreen',
 			'route:trackingHistory',
 			'route:report',
 
@@ -39,7 +38,6 @@ const rules = {
 			'route:trackingHistory',
 			'route:monitor',
 			'route:report',
-			'route:bigScreen',
 			'route:management',
 			'route:systemSetting',
 			'route:contactTree',
@@ -73,7 +71,6 @@ const rules = {
 			'route:rolePermissionManagement',
 			'route:transferredLocationManagement',
 			'route:trackingHistory',
-			'route:bigScreen',
 			'route:monitor',
 			'route:report',
 			'route:management',

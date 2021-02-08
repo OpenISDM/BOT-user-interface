@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import styleConfig from '../../config/styleConfig'
-import BOTInput from '../presentational/BOTInput'
+import BOTInput from '../BOTComponent/BOTInput'
 import { compareString, includes, filterByField } from '../../helper/utilities'
 import { SEARCH_BAR } from '../../config/wordMap'
 import PropTypes from 'prop-types'

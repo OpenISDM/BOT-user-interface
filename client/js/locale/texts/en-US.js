@@ -14,7 +14,6 @@ const en = {
 	GEOFENCE: 'Geo-fence',
 	OBJECT_MANAGEMENT: 'object management',
 	MANAGEMENT: 'management',
-	BIG_SCREEN: 'big screen',
 	ABOUT: 'about',
 	TRACKING_HISTORY: 'tracking history',
 	TRACKING_PATH: 'tracking path',

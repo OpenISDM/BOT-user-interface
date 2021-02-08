@@ -1,8 +1,7 @@
-import BOTCheckbox from '../components/presentational/BOTCheckbox'
-import BOTPagination from '../components/presentational/BOTPagination'
-import Select, { components } from 'react-select'
+import { components } from 'react-select'
 import React from 'react'
 import styleSheet from './styleSheet'
+import PropTypes from 'prop-types'
 
 const ValueContainer = ({ children, ...props }) => {
 	return (
@@ -25,9 +24,13 @@ const ValueContainer = ({ children, ...props }) => {
 	)
 }
 
+ValueContainer.propTypes = {
+	children: PropTypes.node.isRequired,
+}
+
 const styleConfig = {
 	reactSelect: {
-		option: (provided, state) => ({
+		option: (provided) => ({
 			...provided,
 			padding: '0.5rem',
 			fontSize: '1rem',
@@ -104,7 +107,7 @@ const styleConfig = {
 	},
 
 	reactSelectNavbar: {
-		option: (provided, state) => ({
+		option: (provided) => ({
 			...provided,
 			padding: '0.5rem',
 			fontSize: '0.8rem',
@@ -189,12 +192,6 @@ const styleConfig = {
 		},
 
 		defaultPageSize: 15,
-
-		SelectAllInputComponent: BOTCheckbox,
-
-		SelectInputComponent: BOTCheckbox,
-
-		PaginationComponent: BOTPagination,
 
 		showPaginationTop: true,
 

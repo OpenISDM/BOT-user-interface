@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Image } from 'react-bootstrap'
-import BOTSearchbar from '../../presentational/BOTSearchbar'
+import BOTSearchbar from '../../BOTComponent/BOTSearchbar'
 import config from '../../../config'
 
 const TabletSearchContainer = ({

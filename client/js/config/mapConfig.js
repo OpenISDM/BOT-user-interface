@@ -1,6 +1,7 @@
 import viewConfig from './viewConfig'
 import { monitorTypeChecker } from '../helper/dataTransfer'
 import { NORMAL, RESERVE, RETURNED } from './wordMap'
+import L from 'leaflet'
 
 /** Map configuration.
  *  Refer leaflet.js for more optional setting https://leafletjs.com/reference-1.5.0.html
@@ -68,21 +69,6 @@ const mapConfig = {
 		scrollWheelZoom: false,
 		maxBoundsOffset: [-10000, 10000],
 		maxBoundsViscosity: 0.0,
-	},
-
-	bigScreenMapOptions: {
-		crs: L.CRS.Simple,
-		center: L.latLng(17000, 18000),
-		zoom: -5.7,
-		minZoom: -6,
-		maxZoom: 0,
-		zoomDelta: 0.25,
-		zoomSnap: 0.2,
-		zoomControl: false,
-		attributionControl: false,
-		dragging: false,
-		doubleClickZoom: false,
-		scrollWheelZoom: false,
 	},
 
 	/** Set the icon option for browser */
@@ -196,18 +182,6 @@ const mapConfig = {
 
 			radius: 8,
 		},
-	},
-
-	/** Set the icon options for big screen */
-	iconOptionsInBigScreen: {
-		iconSize: [50, 50] || 1,
-
-		iconAnchor: [25, 50],
-
-		showNumber: false,
-
-		/* Set the Marker dispersity that can be any positive number */
-		markerDispersity: 60,
 	},
 
 	/** Set the icon option for tablet */
@@ -341,13 +315,6 @@ const mapConfig = {
 		) {
 			return mapConfig.iconColor.person
 		}
-	},
-
-	getIconColorInBigScreen: (item) => {
-		if (item.pinColor === -1) {
-			return mapConfig.iconColor.normal
-		}
-		return mapConfig.iconColor.pinColorArray[item.pinColor]
 	},
 
 	/* For test. To start object tracking*/

@@ -14,7 +14,6 @@ const tw = {
 	GEOFENCE: '電子圍籬',
 	OBJECT_MANAGEMENT: '追蹤物件管理',
 	MANAGEMENT: '管理',
-	BIG_SCREEN: '大螢幕',
 	ABOUT: '關於',
 	TRACKING_HISTORY: '追蹤紀錄',
 	TRACKING_PATH: '追蹤路徑',

@@ -72,11 +72,6 @@ const privateRoutesConfig = [
 		component: ObjectManagementContainer,
 		exact: true,
 	},
-	// {
-	//     path: routes.BIG_SCREEN,
-	//     component: BigScreenContainer,
-	//     exact: true,
-	// },
 	{
 		path: routes.ABOUT,
 		component: About,

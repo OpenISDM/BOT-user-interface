@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
-import BOTSearchbar from '../../presentational/BOTSearchbar'
+import BOTSearchbar from '../../BOTComponent/BOTSearchbar'
 import FrequentSearch from '../../container/FrequentSearch'
 import ObjectTypeList from '../../container/ObjectTypeList'
 import PropTypes from 'prop-types'

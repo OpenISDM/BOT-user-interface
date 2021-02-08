@@ -5,8 +5,6 @@ const routes = {
 
 	OBJECT_MANAGEMENT: '/page/objectManagement',
 
-	BIG_SCREEN: '/page/bigScreen',
-
 	ABOUT: '/page/about',
 
 	TRACE: '/page/trace',

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styleConfig from '../../config/styleConfig'
-import BOTOverlayTrigger from './BOTOverlayTrigger'
+import BOTOverlayTrigger from '../BOTComponent/BOTOverlayTrigger'
 
 const CheckboxOverlayTrigger = ({
 	popoverTitle,
