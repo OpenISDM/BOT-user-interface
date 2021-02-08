@@ -146,7 +146,10 @@ export default {
 						object.lbeacon_area = { id: object.area_id, value: object.areaName }
 
 						object.location_description =
+							lbeaconTableMap[object['extend.uuid']] &&
 							lbeaconTableMap[object['extend.uuid']].description
+
+						object.updated_by_area = object['extend.updated_by_area']
 						return {
 							type,
 							object,
