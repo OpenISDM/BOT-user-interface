@@ -1,3 +1,4 @@
+import BOTPagination from '../components/BOTComponent/BOTPagination'
 import { components } from 'react-select'
 import React from 'react'
 import styleSheet from './styleSheet'
@@ -83,7 +84,6 @@ const styleConfig = {
 			textTransform: 'capitalize',
 		}),
 	},
-
 	reactSelectFilter: {
 		control: (provided) => ({
 			...provided,
@@ -99,13 +99,11 @@ const styleConfig = {
 		//     paddingLeft: 35
 		// }),
 	},
-
 	reactSelectSearchComponent: {
 		IndicatorSeparator: () => null,
 		DropdownIndicator: () => null,
 		ValueContainer,
 	},
-
 	reactSelectNavbar: {
 		option: (provided) => ({
 			...provided,
@@ -192,6 +190,8 @@ const styleConfig = {
 		},
 
 		defaultPageSize: 15,
+
+		PaginationComponent: BOTPagination,
 
 		showPaginationTop: true,
 
