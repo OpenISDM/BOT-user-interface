@@ -12,15 +12,7 @@ const config = {
 
 	TIMESTAMP_FORMAT: 'LLL',
 
-	TRACING_INTERVAL_UNIT: 'days',
-
 	MAX_SEARCH_OBJECT_NUM: 5,
-
-	TRACING_INTERVAL_VALUE: 1,
-
-	DEFAULT_CONTACT_TREE_INTERVAL_UNIT: 'days',
-
-	DEFAULT_CONTACT_TREE_INTERVAL_VALUE: 1,
 
 	MAX_CONTACT_TRACING_LEVEL: 6,
 
@@ -78,24 +70,6 @@ const config = {
 		STAFF: 'Staff',
 	},
 
-	GENDER_OPTIONS: {
-		0: {
-			id: 0,
-			value: 'male',
-		},
-		1: {
-			id: 1,
-			value: 'female',
-		},
-	},
-
-	monitorOptions: ['geofence', 'emergency', 'movement', 'location'],
-
-	monitorTypeMap: {
-		object: [1, 16],
-		patient: [1, 2, 4, 8],
-	},
-
 	monitorSettingType: {
 		MOVEMENT_MONITOR: 'movement monitor',
 		LONG_STAY_IN_DANGER_MONITOR: 'long stay in danger monitor',
@@ -110,13 +84,6 @@ const config = {
 		'geofence monitor': 'geo_fence_config',
 	},
 
-	monitorSetting: {
-		'movement monitor': 'movement_config',
-		'long stay in danger monitor': 'location_long_stay_in_danger_config',
-		location: 'location_not_stay_room_config',
-		geo: 'geo_fence_config',
-	},
-
 	FOLDER_PATH: {
 		trackingRecord: 'tracking_record',
 	},
@@ -127,10 +94,6 @@ const config = {
 		NO_RESULT: 'no result',
 		WAIT_FOR_SEARCH: 'wait for search',
 	},
-
-	PDF_FILENAME_TIME_FORMAT: 'YYYY-MM-Do_hh_mm_ss',
-
-	DEFAULT_ROLE: ['bot_admin'],
 
 	ROLES_SELECTION: ['bot_admin', 'care_provider'],
 
@@ -173,13 +136,6 @@ const config = {
 		4: 'movement',
 		8: 'location',
 		16: 'bed',
-	},
-
-	toastMonitorMap: {
-		1: 'warn',
-		2: 'error',
-		4: 'error',
-		8: 'error',
 	},
 
 	statusToCreatePdf: [NORMAL, BROKEN, TRANSFERRED],
