@@ -1,7 +1,7 @@
 import React from 'react'
 import { shiftChangeRecordTableColumn } from '../../config/tables'
 import { AppContext } from '../../context/AppContext'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import config from '../../config'
 import { formatTime } from '../../helper/utilities'
 import messageGenerator from '../../helper/messageGenerator'
@@ -28,7 +28,7 @@ class ShiftChangeHistoricalRecord extends React.Component {
 	getData = async () => {
 		const { locale } = this.context
 
-		const res = await apiHelper.record.getRecord(
+		const res = await API.Record.getRecord(
 			config.RECORD_TYPE.SHIFT_CHANGE,
 			locale.abbr
 		)
@@ -52,7 +52,7 @@ class ShiftChangeHistoricalRecord extends React.Component {
 	handleOnClick = async (original) => {
 		const { locale } = this.context
 		if (original.file_path) {
-			await apiHelper.fileApiAgent.getFile({
+			await API.File.getFile({
 				path: original.file_path,
 			})
 		} else {

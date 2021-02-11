@@ -5,7 +5,7 @@ import { Row, Dropdown, Button } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
 import config from '../../config'
 import { getDescription } from '../../helper/descriptionGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { setSuccessMessage } from '../../helper/messageGenerator'
 import { withRouter } from 'react-router-dom'
 import { SET_OPENED_NOTIFICATION } from '../../reducer/action'
@@ -35,7 +35,7 @@ class NavNotification extends React.Component {
 
 	getAllNotifications = async () => {
 		const [{ area, openedNotification }, dispatch] = this.context.stateReducer
-		const res = await apiHelper.notificationApiAgent.getAllNotifications({
+		const res = await API.Notification.getAllNotifications({
 			areaId: area.id,
 		})
 
@@ -58,7 +58,7 @@ class NavNotification extends React.Component {
 	handleSubmit = async (e) => {
 		const notificationId = e.target.getAttribute('notificationId')
 		const [, dispatch] = this.context.stateReducer
-		const res = await apiHelper.notificationApiAgent.turnOffNotification({
+		const res = await API.Notification.turnOffNotification({
 			notificationId,
 		})
 

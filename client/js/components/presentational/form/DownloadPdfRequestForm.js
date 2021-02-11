@@ -1,8 +1,9 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import { pdfUrl } from '../../../dataSrc'
+import { pdfUrl } from '../../../api/File'
 import { AppContext } from '../../../context/AppContext'
+import PropTypes from 'prop-types'
 
 const style = {
 	modal: {
@@ -24,10 +25,10 @@ const DownloadPdfRequestForm = ({ handleClose, pdfPath, show }) => {
 		const link = document.createElement('a')
 		switch (name) {
 			case 'view':
-				window.open(pdfUrl(pdfPath))
+				window.open(`${pdfUrl}${pdfPath}`)
 				break
 			case 'download':
-				link.href = pdfUrl(pdfPath)
+				link.href = `${pdfUrl}${pdfPath}`
 				link.download = ''
 				link.click()
 				break
@@ -88,6 +89,12 @@ const DownloadPdfRequestForm = ({ handleClose, pdfPath, show }) => {
 			</Modal.Body>
 		</Modal>
 	)
+}
+
+DownloadPdfRequestForm.propTypes = {
+	handleClose: PropTypes.func,
+	pdfPath: PropTypes.string,
+	show: PropTypes.bool,
 }
 
 export default DownloadPdfRequestForm

@@ -1,5 +1,16 @@
-import { userInfo, user as userPath } from '../dataSrc'
-import { get, post, put, del } from '../helper/httpClient'
+import { get, post, put, del } from '../utils/request'
+
+const userPath = '/data/user'
+const userInfo = {
+	area: {
+		secondary: '/data/user/area/secondary',
+	},
+	password: '/data/user/password',
+	locale: '/data/user/locale',
+	searchHistory: '/data/user/searchHistory',
+	maxSearchHistoryCount: '/data/user/maxSearchHistoryCount',
+	keywordType: '/data/user/keywordType',
+}
 
 export default {
 	async getAllUser() {

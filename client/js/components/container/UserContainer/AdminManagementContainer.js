@@ -10,7 +10,7 @@ import { setSuccessMessage } from '../../../helper/messageGenerator'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import AccessControl from '../../authentication/AccessControl'
 import config from '../../../config'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { formatTime } from '../../../helper/utilities'
 import BOTTable from '../../BOTComponent/BOTTable'
 
@@ -46,8 +46,8 @@ class AdminManagementContainer extends React.Component {
 
 	getUserList = async (callback) => {
 		const { locale } = this.context
-		const allUserPromise = apiHelper.userApiAgent.getAllUser()
-		const allRolePrmise = apiHelper.roleApiAgent.getAllRole()
+		const allUserPromise = API.User.getAllUser()
+		const allRolePrmise = API.Role.getAllRole()
 
 		const [allUserRes, allRoleRes] = await Promise.all([
 			allUserPromise,
@@ -94,7 +94,7 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	getAreaTable = async () => {
-		const res = await apiHelper.areaApiAgent.getAreaTable()
+		const res = await API.Area.getAreaTable()
 		if (res) {
 			this.setState({
 				areaTable: res.data,
@@ -125,7 +125,7 @@ class AdminManagementContainer extends React.Component {
 			areaIds,
 		}
 
-		await apiHelper.userApiAgent.setUserInfo({ user })
+		await API.User.setUserInfo({ user })
 
 		this.getUserList(() => setSuccessMessage('save success'))
 	}
@@ -140,7 +140,7 @@ class AdminManagementContainer extends React.Component {
 			areaIds,
 		}
 
-		await apiHelper.userApiAgent.addUser({ user })
+		await API.User.addUser({ user })
 
 		this.getUserList(() => setSuccessMessage('save success'))
 	}
@@ -153,7 +153,7 @@ class AdminManagementContainer extends React.Component {
 	}
 
 	handleDeleteUserSubmit = async () => {
-		const res = await apiHelper.userApiAgent.deleteUser({
+		const res = await API.User.deleteUser({
 			username: this.state.deleteUserName,
 		})
 		if (res) {

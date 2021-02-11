@@ -8,7 +8,7 @@ import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import { setSuccessMessage } from '../../helper/messageGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { formatTime } from '../../helper/utilities'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
@@ -38,7 +38,7 @@ class LbeaconTable extends React.Component {
 	getData = async (callback) => {
 		const { locale, stateReducer } = this.context
 		const [, dispatch] = stateReducer
-		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+		const res = await API.Lbeacon.getLbeaconTable({
 			locale: locale.code,
 		})
 
@@ -76,7 +76,7 @@ class LbeaconTable extends React.Component {
 	}
 
 	handleSubmitForm = async (formOption) => {
-		const res = await apiHelper.lbeaconApiAgent.putLbeacon({ formOption })
+		const res = await API.Lbeacon.putLbeacon({ formOption })
 		if (res) {
 			this.getData(() => setSuccessMessage('save success'))
 		}
@@ -86,7 +86,7 @@ class LbeaconTable extends React.Component {
 		const [{ tableSelection }] = this.context.stateReducer
 
 		const ids = tableSelection.map((id) => id)
-		await apiHelper.lbeaconApiAgent.deleteLbeacon({ ids })
+		await API.Lbeacon.deleteLbeacon({ ids })
 
 		this.getData(() => setSuccessMessage('save success'))
 	}

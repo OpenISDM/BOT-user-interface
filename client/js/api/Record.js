@@ -1,5 +1,10 @@
-import { record, monitor } from '../dataSrc'
-import { post, put, del, patch } from '../helper/httpClient'
+import { post, put, del } from '../utils/request'
+
+const record = {
+	editedObject: '/data/record/editedObject',
+	shiftChange: '/data/record/shiftChange',
+	patientRecord: '/data/record/patientRecord',
+}
 
 export default {
 	async getRecord(type, locale) {
@@ -32,24 +37,6 @@ export default {
 	async addPatientRecord({ objectPackage }) {
 		return await post(record.patientRecord, {
 			objectPackage,
-		})
-	},
-
-	async delete(configPackage) {
-		return await del(monitor, {
-			configPackage,
-		})
-	},
-
-	async add(configPackage) {
-		return await patch(monitor, {
-			configPackage,
-		})
-	},
-
-	async put(configPackage) {
-		return await put(monitor, {
-			configPackage,
 		})
 	},
 }

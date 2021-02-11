@@ -18,7 +18,7 @@ import FormikFormGroup from '../FormikFormGroup'
 import { DISASSOCIATE, NORMAL } from '../../../config/wordMap'
 import { isEmpty, macaddrValidation } from '../../../helper/validation'
 import { formatToMac, compareString } from '../../../helper/utilities'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import PropTypes from 'prop-types'
 
 const monitorTypeMap = {}
@@ -38,7 +38,7 @@ class EditObjectForm extends React.Component {
 	}
 
 	getTransferredLocation = async () => {
-		const res = await apiHelper.transferredLocationApiAgent.getAll()
+		const res = await API.TransferredLocation.getAll()
 		const optionsMap = {}
 		if (res) {
 			res.data.forEach(({ id, name, department }) => {

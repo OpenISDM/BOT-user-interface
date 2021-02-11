@@ -8,7 +8,7 @@ import { setSuccessMessage } from '../../helper/messageGenerator'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import EditGatewayForm from '../presentational/form/EditGatewayForm'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { formatTime } from '../../helper/utilities'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
@@ -38,7 +38,7 @@ class AgentTable extends React.Component {
 	getData = async (callback) => {
 		const { locale, stateReducer } = this.context
 		const [, dispatch] = stateReducer
-		const res = await apiHelper.agentApiAgent.getAllAgents()
+		const res = await API.Agent.getAllAgents()
 
 		if (res) {
 			const data = res.data.map((row) => {
@@ -75,7 +75,7 @@ class AgentTable extends React.Component {
 	}
 
 	handleSubmitForm = async ({ id, comment }) => {
-		const res = await apiHelper.agentApiAgent.editAgent({
+		const res = await API.Agent.editAgent({
 			id,
 			comment,
 		})
@@ -88,7 +88,7 @@ class AgentTable extends React.Component {
 		const [{ tableSelection }] = this.context.stateReducer
 
 		const ids = tableSelection.map((id) => id)
-		await apiHelper.agentApiAgent.deleteAgent({
+		await API.Agent.deleteAgent({
 			ids,
 		})
 

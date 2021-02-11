@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, ListGroup } from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { OBJECT_TYPE, NAMED_LIST } from '../../config/wordMap'
 import { Title } from '../BOTComponent/styleComponent'
 import PropTypes from 'prop-types'
@@ -78,7 +78,7 @@ class ObjectTypeList extends React.Component {
 	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
 
-		const res = await apiHelper.userApiAgent.addSearchHistory({
+		const res = await API.User.addSearchHistory({
 			username: auth.user.name,
 			keyType: 'object type search',
 			keyWord: itemName,

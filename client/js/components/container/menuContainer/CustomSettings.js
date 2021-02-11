@@ -2,7 +2,7 @@ import React from 'react'
 import { debounce } from 'lodash'
 import { ButtonToolbar, Row, Col } from 'react-bootstrap'
 import { AppContext } from '../../../context/AppContext'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import { setSuccessMessage } from '../../../helper/messageGenerator'
 import BOTTable from '../../BOTComponent/BOTTable'
@@ -57,7 +57,7 @@ class CustomSettings extends React.Component {
 		const objectTypeList = this.state.changedIndex.map((index) => {
 			return this.state.deviceAliasesData[index]
 		})
-		await apiHelper.objectApiAgent.editAliases({
+		await API.Object.editAliases({
 			objectTypeList,
 			areaId: area.id,
 		})
@@ -69,7 +69,7 @@ class CustomSettings extends React.Component {
 		const personList = this.state.changedIndex.map((index) => {
 			return this.state.patientAliasesData[index]
 		})
-		await apiHelper.objectApiAgent.editNickname({
+		await API.Object.editNickname({
 			personList,
 		})
 
@@ -86,7 +86,7 @@ class CustomSettings extends React.Component {
 	getDeviceAliases = async () => {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const res = await apiHelper.objectApiAgent.getAliases({
+		const res = await API.Object.getAliases({
 			areaId: area.id,
 			objectType: config.OBJECT_TYPE.DEVICE,
 		})
@@ -136,7 +136,7 @@ class CustomSettings extends React.Component {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
 
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const res = await API.Object.getObjectTable({
 			areas_id: [area.id],
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})

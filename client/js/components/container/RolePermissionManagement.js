@@ -1,34 +1,17 @@
 import React from 'react'
-import { Tabs, Tab, Button, Form as BootstrapForm } from 'react-bootstrap'
+import {
+	Tabs,
+	Tab,
+	Button,
+	Form as BootstrapForm,
+	Row,
+	Col,
+} from 'react-bootstrap'
 import { AppContext } from '../../context/AppContext'
-import axios from 'axios'
-import dataSrc from '../../dataSrc'
 import Select from 'react-select'
-
-// import Checkbox from '../../presentational/Checkbox'
 import { Formik, Field, Form } from 'formik'
-
 import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 
-function Checkbox(props) {
-	return (
-		<Field name={props.name}>
-			{({ field, form }) => (
-				<label>
-					<input
-						{...field}
-						type="checkbox"
-						checked={props.checked}
-						onChange={props.onChange}
-					/>
-					{props.value}
-				</label>
-			)}
-		</Field>
-	)
-}
 class RolePermissionManagement extends React.Component {
 	static contextType = AppContext
 
@@ -81,7 +64,7 @@ class RolePermissionManagement extends React.Component {
 
 	getRolesPermission = () => {
 		// axios
-		// 	.get(dataSrc.getRolesPermission)
+		// 	.get(endpoints.getRolesPermission)
 		// 	.then((res) => {
 		// 		const rolesList = res.data.roles_list.map((role) => {
 		// 			return {
@@ -103,7 +86,7 @@ class RolePermissionManagement extends React.Component {
 
 	addPermission = (type, e) => {
 		// axios
-		// 	.post(dataSrc.modifyPermission, {
+		// 	.post(endpoints.modifyPermission, {
 		// 		type: 'add permission',
 		// 		permissionType: type,
 		// 		name: 'new permission',
@@ -126,7 +109,7 @@ class RolePermissionManagement extends React.Component {
 	renamePermissionToBackend = (type, id, e) => {
 		if (e.target.value) {
 			// axios
-			// 	.post(dataSrc.modifyPermission, {
+			// 	.post(endpoints.modifyPermission, {
 			// 		type: 'rename permission',
 			// 		permissionType: type,
 			// 		id,
@@ -142,7 +125,7 @@ class RolePermissionManagement extends React.Component {
 	}
 	removePermission = (type, id, e) => {
 		// axios
-		// 	.post(dataSrc.modifyPermission, {
+		// 	.post(endpoints.modifyPermission, {
 		// 		type: 'remove permission',
 		// 		permissionType: type,
 		// 		id,
@@ -157,7 +140,7 @@ class RolePermissionManagement extends React.Component {
 
 	onChangeRolesPermission = (sendPackage) => {
 		// axios
-		// 	.post(dataSrc.modifyRolesPermission, sendPackage)
+		// 	.post(endpoints.modifyRolesPermission, sendPackage)
 		// 	.then((res) => {
 		// 		this.getRolesPermission()
 		// 	})

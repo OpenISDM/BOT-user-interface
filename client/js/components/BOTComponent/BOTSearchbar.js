@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap'
 import Autosuggest from 'react-autosuggest'
 import config from '../../config'
 import { SEARCH_BAR, SEARCH_HISTORY } from '../../config/wordMap'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { AppContext } from '../../context/AppContext'
 import PropTypes from 'prop-types'
 
@@ -109,7 +109,7 @@ class BOTSearchbar extends React.Component {
 	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
 		try {
-			await apiHelper.userApiAgent.addSearchHistory({
+			await API.User.addSearchHistory({
 				username: auth.user.name,
 				keyType: 'object type search',
 				keyWord: itemName,

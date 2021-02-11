@@ -1,10 +1,11 @@
 import React from 'react'
 import Modal from 'react-bootstrap/Modal'
 import { Button, Row } from 'react-bootstrap'
-import { pdfUrl } from '../../dataSrc'
+import API from '../../api'
+import { pdfUrl } from '../../api/File'
 import QRCode from 'qrcode.react'
 import { AppContext } from '../../context/AppContext'
-import apiHelper from '../../helper/apiHelper'
+
 import PropTypes from 'prop-types'
 
 class PdfDownloadForm extends React.Component {
@@ -23,7 +24,7 @@ class PdfDownloadForm extends React.Component {
 	}
 
 	PdfDownloader = async () => {
-		await apiHelper.fileApiAgent.getFile({
+		await API.File.getFile({
 			path: this.props.savePath,
 		})
 	}
@@ -44,7 +45,7 @@ class PdfDownloadForm extends React.Component {
 				</Modal.Header>
 				<Modal.Body className="d-flex flex-column">
 					<Row className="d-flex justify-content-center mb-2">
-						<QRCode value={pdfUrl(savePath)} size={128} />
+						<QRCode value={`${pdfUrl}${savePath}`} size={128} />
 					</Row>
 					<Row className="d-flex justify-content-center mb-2">
 						<Button

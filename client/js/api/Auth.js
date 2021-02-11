@@ -1,5 +1,12 @@
-import { auth } from '../dataSrc'
-import { post } from '../helper/httpClient'
+import { post } from '../utils/request'
+
+const auth = {
+	signin: '/data/auth/signin',
+	signout: '/data/auth/signout',
+	validation: '/data/auth/validation',
+	resetPassword: '/data/auth/resetpassword',
+	sentResetPwdInstruction: '/data/auth/sentResetPwdInstruction',
+}
 
 async function confirmValidation({ username, password, authenticatedRoles }) {
 	return await post(auth.validation, {

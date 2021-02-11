@@ -3,7 +3,7 @@ import { debounce, keyBy } from 'lodash'
 import { Row, Col, Button, Form } from 'react-bootstrap'
 import Select from 'react-select'
 import { AppContext } from '../../../context/AppContext'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { setSuccessMessage } from '../../../helper/messageGenerator'
 import BOTSelectTable from '../../BOTComponent/BOTSelectTable'
 import BOTTable from '../../BOTComponent/BOTTable'
@@ -105,12 +105,12 @@ class SearchSettings extends React.Component {
 	getObjectData = async (callback) => {
 		const [{ area }, dispatch] = this.context.stateReducer
 
-		const objectDataPromise = apiHelper.objectApiAgent.getObjectTable({
+		const objectDataPromise = API.Object.getObjectTable({
 			areas_id: [area.id],
 			objectTypes: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
 
-		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({
+		const namedListPromise = API.NamedList.getNamedList({
 			areaIds: [area.id],
 			types: [config.NAMED_LIST_TYPE.DEVICE, config.NAMED_LIST_TYPE.PATIENT],
 			isUserDefined: true,
@@ -188,7 +188,7 @@ class SearchSettings extends React.Component {
 	handleCreateSubmit = async ({ type }) => {
 		const [{ area, tableSelection }] = this.context.stateReducer
 
-		const res = await apiHelper.namedListApiAgent.setNamedList({
+		const res = await API.NamedList.setNamedList({
 			areaId: area.id,
 			name: this.state.listName,
 			type,
@@ -205,7 +205,7 @@ class SearchSettings extends React.Component {
 		const { selectedNamedList } = this.state
 		const { value } = selectedNamedList
 
-		const res = await apiHelper.namedListApiAgent.addObject({
+		const res = await API.NamedList.addObject({
 			namedListId: value.id,
 			objectId: object.id,
 		})
@@ -219,7 +219,7 @@ class SearchSettings extends React.Component {
 		const { selectedNamedList } = this.state
 		const { value } = selectedNamedList
 
-		const res = await apiHelper.namedListApiAgent.removeObject({
+		const res = await API.NamedList.removeObject({
 			namedListId: value.id,
 			objectId: object.id,
 		})
@@ -233,7 +233,7 @@ class SearchSettings extends React.Component {
 		const { selectedNamedList } = this.state
 		const { value } = selectedNamedList
 
-		const res = await apiHelper.namedListApiAgent.removeNamedList({
+		const res = await API.NamedList.removeNamedList({
 			namedListId: value.id,
 		})
 

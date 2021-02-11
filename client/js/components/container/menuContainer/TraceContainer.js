@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+// import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
-	BrowserView,
+	// BrowserView,
 	TabletView,
 	MobileOnlyView,
 	isBrowser,
@@ -18,13 +18,13 @@ import config from '../../../config'
 import moment from 'moment'
 import {
 	locationHistoryByNameColumns,
-	locationHistoryByUUIDColumns,
+	// locationHistoryByUUIDColumns,
 	locationHistoryByAreaColumns,
 	locationHistoryByNameGroupBYUUIDColumns,
 } from '../../../config/tables'
 import axios from 'axios'
-import dataSrc from '../../../dataSrc'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
+import { pdfUrl } from '../../../api/File'
 import { JSONClone } from '../../../helper/utilities'
 
 class TraceContainer extends React.Component {
@@ -99,14 +99,14 @@ class TraceContainer extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const { locale } = this.context
-		if (this.context.locale.abbr != prevState.locale) {
+		if (this.context.locale.abbr !== prevState.locale) {
 			const columns = JSONClone(this.columns).map((field) => {
 				field.name = field.Header
 				field.Header =
 					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				return field
 			})
-			this.state.data.map((item) => {
+			this.state.data.forEach((item) => {
 				item.area = locale.texts[item.area_original]
 				item.residenceTime = moment(item.startTime)
 					.locale(locale.abbr)
@@ -121,7 +121,7 @@ class TraceContainer extends React.Component {
 
 	getObjectTable = async () => {
 		const { auth } = this.context
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const res = await API.Object.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
@@ -146,7 +146,7 @@ class TraceContainer extends React.Component {
 
 	getLbeaconTable = async () => {
 		const { locale } = this.context
-		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+		const res = await API.Lbeacon.getLbeaconTable({
 			locale: locale.abbr,
 		})
 		if (res) {
@@ -168,7 +168,7 @@ class TraceContainer extends React.Component {
 	}
 
 	getAreaTable = async () => {
-		const res = await apiHelper.areaApiAgent.getAreaTable()
+		const res = await API.Area.getAreaTable()
 		if (res) {
 			const area = res.data.map((area) => {
 				return {
@@ -205,7 +205,7 @@ class TraceContainer extends React.Component {
 		})
 
 		axios
-			.post(dataSrc.trace.locationHistory, {
+			.post('/data/trace/locationHistory', {
 				key,
 				startTime: moment(fields.startTime).format(),
 				endTime: moment(fields.endTime).format(),
@@ -217,14 +217,14 @@ class TraceContainer extends React.Component {
 				let histories = this.state.histories
 
 				/** Condition handler when no result */
-				if (res.data.rowCount == 0) {
+				if (res.data.rowCount === 0) {
 					ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
 					breadIndex--
 				} else {
 					switch (fields.mode) {
 						case 'nameGroupByArea':
 						case 'nameGroupByUUID':
-							data = res.data.rows.map((item, index) => {
+							data = res.data.rows.map((item) => {
 								item.residenceTime = moment
 									.duration(item.duration)
 									.locale(locale.abbr)
@@ -312,7 +312,7 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	onRowClick = (state, rowInfo, column, instance) => {
+	onRowClick = (state, rowInfo) => {
 		const { setFieldValue } = this.formikRef.current
 		const { locale } = this.context
 		const values = this.formikRef.current.state.values
@@ -322,7 +322,7 @@ class TraceContainer extends React.Component {
 		let mode
 		const breadIndex = Number(this.state.breadIndex)
 		return {
-			onClick: (e) => {
+			onClick: () => {
 				startTime = moment(rowInfo.original.startTime).toDate()
 				endTime = moment(rowInfo.original.endTime).toDate()
 
@@ -374,11 +374,73 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	handleClick = async (e, data) => {
-		const name = e.target.name || e.target.getAttribute('name')
+	exportCSV = () => {
+		const { locale } = this.context
+		const filePackage = pdfPackageGenerator.pdfFormat.getPath(
+			'trackingRecord',
+			{
+				extension: 'csv',
+			}
+		)
+		const fields = this.state.columns.map((column) => {
+			return {
+				label: locale.texts[column.name.replace(/ /g, '_').toUpperCase()],
+				value: column.accessor,
+			}
+		})
 
+		axios
+			.post('/data/file/export/csv', {
+				data: this.state.data,
+				fields,
+				filePackage,
+			})
+			.then(() => {
+				const link = document.createElement('a')
+				link.href = `${pdfUrl}${filePackage.path}`
+				link.download = ''
+				link.click()
+			})
+			.catch((err) => {
+				console.log(`export CSV failed ${err}`)
+			})
+	}
+
+	exportPdf = async (values) => {
 		const { auth, locale } = this.context
+		const pdfPackage = pdfPackageGenerator.getPdfPackage({
+			option: 'trackingRecord',
+			user: auth.user,
+			data: {
+				columns: this.state.columns.filter(
+					(column) => column.accessor !== 'uuid'
+				),
+				data: this.state.data,
+			},
+			locale,
+			signature: null,
+			additional: {
+				extension: 'pdf',
+				key: values.key.label,
+				startTime: moment(values.startTime).format('lll'),
+				endTime: moment(values.endTime).format('lll'),
+				type: values.mode,
+			},
+		})
 
+		const res = await API.File.getPDF({
+			userInfo: auth.user,
+			pdfPackage,
+		})
+		if (res) {
+			API.File.getFile({ path: pdfPackage.path })
+		}
+	}
+
+	handleClick = async (e, data) => {
+		const { history, index } = JSON.parse(data)
+		const name = e.target.name || e.target.getAttribute('name')
+		const mode = e.target.getAttribute('data-rb-event-key')
 		const values = this.formikRef.current.state.values
 
 		const {
@@ -390,69 +452,14 @@ class TraceContainer extends React.Component {
 
 		switch (name) {
 			case 'exportCSV':
-				const filePackage = pdfPackageGenerator.pdfFormat.getPath(
-					'trackingRecord',
-					{
-						extension: 'csv',
-					}
-				)
-				const fields = this.state.columns.map((column) => {
-					return {
-						label: locale.texts[column.name.replace(/ /g, '_').toUpperCase()],
-						value: column.accessor,
-					}
-				})
-
-				axios
-					.post(dataSrc.file.export.csv, {
-						data: this.state.data,
-						fields,
-						filePackage,
-					})
-					.then((res) => {
-						const link = document.createElement('a')
-						link.href = dataSrc.pdfUrl(filePackage.path)
-						link.download = ''
-						link.click()
-					})
-					.catch((err) => {
-						console.log(`export CSV failed ${err}`)
-					})
+				this.exportCSV()
 				break
 
 			case 'exportPDF':
-				const pdfPackage = pdfPackageGenerator.getPdfPackage({
-					option: 'trackingRecord',
-					user: auth.user,
-					data: {
-						columns: this.state.columns.filter(
-							(column) => column.accessor != 'uuid'
-						),
-						data: this.state.data,
-					},
-					locale,
-					signature: null,
-					additional: {
-						extension: 'pdf',
-						key: values.key.label,
-						startTime: moment(values.startTime).format('lll'),
-						endTime: moment(values.endTime).format('lll'),
-						type: values.mode,
-					},
-				})
-
-				const res = await apiHelper.fileApiAgent.getPDF({
-					userInfo: auth.user,
-					pdfPackage,
-				})
-				if (res) {
-					apiHelper.fileApiAgent.getFile({ path: pdfPackage.path })
-				}
-
+				this.exportPdf(values)
 				break
 
 			case 'nav':
-				const mode = e.target.getAttribute('data-rb-event-key')
 				setFieldValue('key', null)
 				setFieldValue('mode', mode)
 				setFieldValue('startTime', null)
@@ -466,7 +473,6 @@ class TraceContainer extends React.Component {
 				})
 				break
 			case 'bread':
-				const { history, index } = JSON.parse(data)
 				setFieldValue('mode', history.mode)
 				setFieldValue('key', history.key)
 				setFieldValue('startTime', moment(history.startTime).toDate())
@@ -512,7 +518,7 @@ class TraceContainer extends React.Component {
 
 		return (
 			<Fragment>
-				<CustomView condition={isTablet != true && isMobile != true}>
+				<CustomView condition={!isTablet && !isMobile}>
 					<BrowserTraceContainerView {...propsGroup} ref={this.formikRef} />
 				</CustomView>
 				<TabletView>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Nav } from 'react-bootstrap'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { AppContext } from '../../context/AppContext'
 import { OBJECT_TYPE } from '../../config/wordMap'
 import config from '../../config'
@@ -78,7 +78,7 @@ class SearchableObjectType extends React.Component {
 	getData = async () => {
 		const { auth } = this.context
 
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const res = await API.Object.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectTypes: [config.OBJECT_TYPE.DEVICE],
 		})
@@ -286,7 +286,7 @@ class SearchableObjectType extends React.Component {
 	checkInSearchHistory = async (itemName) => {
 		const { auth } = this.context
 
-		await apiHelper.userApiAgent.addSearchHistory({
+		await API.User.addSearchHistory({
 			username: auth.user.name,
 			keyType: 'object type search',
 			keyWord: itemName,

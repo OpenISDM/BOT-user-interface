@@ -1,7 +1,7 @@
 import React from 'react'
 import { editObjectRecordTableColumn } from '../../../config/tables'
 import { AppContext } from '../../../context/AppContext'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import config from '../../../config'
 import { formatTime, convertStatusToText } from '../../../helper/utilities'
 import messageGenerator from '../../../helper/messageGenerator'
@@ -27,7 +27,7 @@ class ObjectEditedRecord extends React.Component {
 
 	getData = async () => {
 		const { locale } = this.context
-		const res = await apiHelper.record.getRecord(
+		const res = await API.Record.getRecord(
 			config.RECORD_TYPE.EDITED_OBJECT,
 			locale.abbr
 		)
@@ -49,7 +49,7 @@ class ObjectEditedRecord extends React.Component {
 	handleOnClickCallback = async (original) => {
 		const { locale } = this.context
 		if (original.file_path) {
-			await apiHelper.fileApiAgent.getFile({
+			await API.File.getFile({
 				path: original.file_path,
 			})
 		} else {

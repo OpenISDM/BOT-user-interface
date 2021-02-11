@@ -7,7 +7,7 @@ import { BrowserView, MobileOnlyView, TabletView } from 'react-device-detect'
 import TabletMainContainer from '../../platform/tablet/TabletMainContainer'
 import MobileMainContainer from '../../platform/mobile/MobileMainContainer'
 import BrowserMainContainer from '../../platform/browser/BrowserMainContainer'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { createLbeaconCoordinate } from '../../../helper/dataTransfer'
 import { isEqual, deepClone, isSameValue } from '../../../helper/utilities'
 import {
@@ -97,17 +97,15 @@ class MainContainer extends React.Component {
 	getTrackingData = async () => {
 		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const trackingDataPromise = apiHelper.trackingDataApiAgent.getTrackingData({
+		const trackingDataPromise = API.Tracking.getTrackingData({
 			areaIds: [area.id],
 			locale: locale.abbr,
 		})
 
-		const namedListPromise = apiHelper.namedListApiAgent.getNamedListWithoutType(
-			{
-				areaIds: [area.id],
-				isUserDefined: true,
-			}
-		)
+		const namedListPromise = API.NamedList.getNamedListWithoutType({
+			areaIds: [area.id],
+			isUserDefined: true,
+		})
 
 		const [
 			{ data: originalTrackingData },
@@ -137,7 +135,7 @@ class MainContainer extends React.Component {
 
 	getKeywords = async () => {
 		const [{ area }] = this.context.stateReducer
-		const res = await apiHelper.utilsApiAgent.getSearchableKeywords({
+		const res = await API.Utils.getSearchableKeywords({
 			areaId: area.id,
 		})
 
@@ -152,7 +150,7 @@ class MainContainer extends React.Component {
 	getLbeaconPosition = async () => {
 		const { locale } = this.context
 
-		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+		const res = await API.Lbeacon.getLbeaconTable({
 			locale: locale.abbr,
 		})
 
@@ -172,12 +170,12 @@ class MainContainer extends React.Component {
 		const [{ area }] = stateReducer
 		const userId = auth.user.id
 
-		const {
-			data: groupIds,
-		} = await apiHelper.userAssignmentsApiAgent.getGroupIdListByUserId({
-			areaId: area.id,
-			userId,
-		})
+		const { data: groupIds } = await API.UserAssignments.getGroupIdListByUserId(
+			{
+				areaId: area.id,
+				userId,
+			}
+		)
 
 		this.setState({
 			groupIds,
@@ -188,7 +186,7 @@ class MainContainer extends React.Component {
 	getLocationMonitorConfig = async () => {
 		const { auth } = this.context
 
-		const res = await apiHelper.monitor.getMonitorConfig(
+		const res = await API.Monitor.getMonitorConfig(
 			NOT_STAY_ROOM_MONITOR,
 			auth.user.areas_id,
 			true

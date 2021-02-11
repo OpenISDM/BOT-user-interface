@@ -1,5 +1,7 @@
-import { patientGroupList, patientGruopDetailByAreaId } from '../dataSrc'
-import { get, post, put, del } from '../helper/httpClient'
+import { get, post, put, del } from '../utils/request'
+
+const patientGroupList = '/data/patientGroupList'
+const patientGruopDetailByAreaId = '/data/patientGruopDetailByAreaId'
 
 const patientGroupListApis = {
 	async addPatientGroupList({ name, areaId }) {

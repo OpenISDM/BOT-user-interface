@@ -1,5 +1,6 @@
-import { agent } from '../dataSrc'
-import { get, del, put } from '../helper/httpClient'
+import { get, del, put } from '../utils/request'
+
+const agent = '/data/agent'
 
 export default {
 	async getAllAgents() {

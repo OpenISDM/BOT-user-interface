@@ -6,6 +6,7 @@ export default (app) => {
 	app.options('/data/object', cors())
 	app.options('/data/object/:type', cors())
 	app.options('/data/objectPackage', cors())
+	app.options('/data/object/searchableKeyword', cors())
 
 	app
 		.route('/data/object')
@@ -37,4 +38,8 @@ export default (app) => {
 	app.route('/data/object/aliases').put(objectController.editAliases)
 
 	app.route('/data/object/nickname').post(objectController.editNickname)
+
+	app
+		.route('/data/object/searchableKeyword')
+		.post(objectController.getSearchableKeywords)
 }

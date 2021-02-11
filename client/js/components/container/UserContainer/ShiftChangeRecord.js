@@ -4,7 +4,7 @@ import { keyBy } from 'lodash'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../authentication/AccessControl'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import config from '../../../config'
 import ShiftChange from '../ShiftChange'
 import ShiftChangeCheckList from '../ShiftChangeCheckList'
@@ -47,7 +47,7 @@ class ShiftChangeRecord extends React.Component {
 		const assignedDeviceGroupListids = []
 		const assignedPatientGroupListids = []
 
-		const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
+		const res = await API.UserAssignments.getByUserId({
 			areaId: area.id,
 			userId,
 		})
@@ -80,9 +80,7 @@ class ShiftChangeRecord extends React.Component {
 		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(
-				area.id
-			)
+			const res = await API.PatientGroupListApis.getDetailByAreaId(area.id)
 			const patientGruopMap = keyBy(res.data.gruopList, 'id')
 			const patientObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
@@ -99,7 +97,7 @@ class ShiftChangeRecord extends React.Component {
 		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
+			const res = await API.DeviceGroupListApis.getDetailByAreaId(area.id)
 			const deviceGroupMap = keyBy(res.data.gruopList, 'id')
 			const deviceObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
@@ -115,7 +113,7 @@ class ShiftChangeRecord extends React.Component {
 		const { locale, stateReducer } = this.context
 		const [{ area }, dispatch] = stateReducer
 
-		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+		const res = await API.Tracking.getTrackingData({
 			areaIds: [area.id],
 			locale: locale.abbr,
 		})

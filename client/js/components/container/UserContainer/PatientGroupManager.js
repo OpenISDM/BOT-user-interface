@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppContext } from '../../../context/AppContext'
 import Select from 'react-select'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import DualListBox from './DualListBox'
 import messageGenerator from '../../../helper/messageGenerator'
@@ -39,7 +39,7 @@ class PatientGroupManager extends React.Component {
 
 	newPatientGroup = async (values) => {
 		try {
-			await apiHelper.patientGroupListApis.addPatientGroupList({
+			await API.PatientGroupListApis.addPatientGroupList({
 				name: values.name,
 				areaId: values.area.id,
 			})
@@ -52,7 +52,7 @@ class PatientGroupManager extends React.Component {
 
 	deletePatientGroup = async () => {
 		try {
-			await apiHelper.patientGroupListApis.deleteGroup({
+			await API.PatientGroupListApis.deleteGroup({
 				groupId: this.state.selectedPatientGroup.id,
 			})
 			this.setState({ selectedOption: null, selectedPatientGroup: null })
@@ -65,7 +65,7 @@ class PatientGroupManager extends React.Component {
 
 	addPatientToGroup = async (item) => {
 		try {
-			await apiHelper.patientGroupListApis.modifyPatientGroupList({
+			await API.PatientGroupListApis.modifyPatientGroupList({
 				groupId: this.state.selectedPatientGroup.id,
 				mode: 0,
 				itemId: item.id,
@@ -78,7 +78,7 @@ class PatientGroupManager extends React.Component {
 
 	removePatientFromGroup = async (item) => {
 		try {
-			await apiHelper.patientGroupListApis.modifyPatientGroupList({
+			await API.PatientGroupListApis.modifyPatientGroupList({
 				groupId: this.state.selectedPatientGroup.id,
 				mode: 1,
 				itemId: item.id,
@@ -99,7 +99,7 @@ class PatientGroupManager extends React.Component {
 	getObjectData = async () => {
 		const { auth } = this.context
 
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const res = await API.Object.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
@@ -111,7 +111,7 @@ class PatientGroupManager extends React.Component {
 	}
 
 	getAreaTable = async () => {
-		const res = await apiHelper.areaApiAgent.getAreaTable()
+		const res = await API.Area.getAreaTable()
 		if (res) {
 			const areaOptions = res.data.map((area) => {
 				return {
@@ -128,7 +128,7 @@ class PatientGroupManager extends React.Component {
 
 	getPatientGroup = async () => {
 		try {
-			const res = await apiHelper.patientGroupListApis.getPatientGroupList()
+			const res = await API.PatientGroupListApis.getPatientGroupList()
 			const data = res.data.map((group) => {
 				return {
 					...group,

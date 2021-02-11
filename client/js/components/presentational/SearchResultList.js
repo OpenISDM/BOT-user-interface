@@ -16,7 +16,7 @@ import ConfirmForm from '../container/ConfirmForm'
 import DownloadPdfRequestForm from '../presentational/form/DownloadPdfRequestForm'
 import config from '../../config'
 import moment from 'moment'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import messageGenerator from '../../helper/messageGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
 import { SET_ENABLE_REQUEST_TRACKING_DATA } from '../../reducer/action'
@@ -179,7 +179,7 @@ class SearchResultList extends React.Component {
 				currentArea: area,
 			})
 
-		await apiHelper.objectApiAgent.editObjectPackage(
+		await API.Object.editObjectPackage(
 			locale,
 			editedObjectPackage,
 			username,
@@ -263,7 +263,7 @@ class SearchResultList extends React.Component {
 			id: this.state.selectedObjectData[0].id, // TODO: Johnson, should be more clear
 		}
 
-		await apiHelper.record.addPatientRecord({
+		await API.Record.addPatientRecord({
 			objectPackage,
 		})
 

@@ -14,8 +14,8 @@ import config from '../../config'
 import { AppContext } from '../../context/AppContext'
 import { getCoordinatesFromUUID } from '../../helper/utilities'
 import { macAddressToCoordinate } from '../../helper/dataTransfer'
-import apiHelper from '../../helper/apiHelper'
-import { mapPrefix } from '../../dataSrc'
+import API from '../../api'
+import { baseURL } from '../../utils/request'
 import PropTypes from 'prop-types'
 
 const GenerateGeoFenceLayer = ({ showGeoFence = false, geoFenceList = [] }) => {
@@ -86,7 +86,7 @@ const GenerateImageLayer = ({ area }) => {
 		}
 	}, [map, bounds])
 
-	const url = map_image_path ? mapPrefix + map_image_path : null
+	const url = map_image_path ? `${baseURL}/map/${map_image_path}` : null
 	let image
 	if (url && bounds) {
 		image = (
@@ -113,7 +113,7 @@ const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const res = await apiHelper.geofenceApis.getGeofenceConfig({
+			const res = await API.GeofenceApis.getGeofenceConfig({
 				areaId: area.id,
 			})
 			if (res) {

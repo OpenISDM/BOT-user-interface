@@ -10,7 +10,7 @@ import { setSuccessMessage } from '../../helper/messageGenerator'
 import { Formik } from 'formik'
 import { getDescription } from '../../helper/descriptionGenerator'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { Title } from '../BOTComponent/styleComponent'
 import { SAVE_SUCCESS } from '../../config/wordMap'
 import BOTButton from '../BOTComponent/BOTButton'
@@ -121,14 +121,14 @@ class ShiftChange extends React.Component {
 		 * Just comment it for the future
 		 */
 
-		await apiHelper.record.addShiftChangeRecord({
+		await API.Record.addShiftChangeRecord({
 			userInfo: auth.user,
 			pdfPackage,
 			shift: values.shift,
 			list_id: auth.user.list_id,
 		})
 
-		await apiHelper.userAssignmentsApiAgent.finish({
+		await API.UserAssignments.finish({
 			userId,
 			groupListIds: [
 				...assignedDeviceGroupListids,

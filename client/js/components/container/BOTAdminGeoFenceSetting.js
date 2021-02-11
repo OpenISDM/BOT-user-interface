@@ -7,7 +7,7 @@ import FormikFormGroup from '../presentational/FormikFormGroup'
 import BOTButton from '../BOTComponent/BOTButton'
 import BOTMap from '../BOTComponent/BOTMap'
 import config from '../../config'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import {
 	getBitValue,
 	findExpectedBitValue,
@@ -61,11 +61,11 @@ class BOTAdminGeoFenceSetting extends React.Component {
 
 	getData = async () => {
 		const [{ area }] = this.context.stateReducer
-		const geofenceAreaPromise = apiHelper.geofenceApis.getGeofenceAreaConfig({
+		const geofenceAreaPromise = API.GeofenceApis.getGeofenceAreaConfig({
 			areaId: area.id,
 		})
 
-		const namedListPromise = apiHelper.namedListApiAgent.getNamedList({
+		const namedListPromise = API.NamedList.getNamedList({
 			areaIds: [area.id],
 			types: [config.NAMED_LIST_TYPE.DEVICE, config.NAMED_LIST_TYPE.PATIENT],
 			isUserDefined: true,
@@ -107,7 +107,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 	}
 
 	handleSubmit = async (submitValue, actions) => {
-		const res = await apiHelper.geofenceApis.setGeofenceAreaConfig({
+		const res = await API.GeofenceApis.setGeofenceAreaConfig({
 			areaConfig: submitValue,
 		})
 		if (res) {

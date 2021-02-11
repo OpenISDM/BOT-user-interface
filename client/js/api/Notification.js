@@ -1,5 +1,6 @@
-import { notification } from '../dataSrc'
-import { get, post } from '../helper/httpClient'
+import { get, post } from '../utils/request'
+
+const notification = '/data/notification'
 
 export default {
 	async getAllNotifications({ areaId }) {

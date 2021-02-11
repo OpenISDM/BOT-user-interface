@@ -1,5 +1,8 @@
-import { namedList, namedListObject, namedListWithoutType } from '../dataSrc'
-import { get, post, del } from '../helper/httpClient'
+import { get, post, del } from '../utils/request'
+
+const namedList = '/data/namedList'
+const namedListObject = '/data/namedList/object'
+const namedListWithoutType = '/data/namedList/without/type'
 
 export default {
 	async getNamedList({ areaIds, types, isUserDefined }) {

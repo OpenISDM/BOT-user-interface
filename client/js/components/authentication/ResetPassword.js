@@ -6,7 +6,7 @@ import { Formik, Form } from 'formik'
 import { CenterContainer, Title } from '../BOTComponent/styleComponent'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import { useHistory } from 'react-router-dom'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import PropTypes from 'prop-types'
 import { object, string, ref } from 'yup'
 import ImageWebp from '../utils/ImageWebp'
@@ -53,7 +53,7 @@ const ResetPassword = ({ match }) => {
 						}),
 				})}
 				onSubmit={async (values) => {
-					await apiHelper.authApiAgent.resetPassword({
+					await API.Auth.resetPassword({
 						token,
 						account: values.account,
 						password: values.password,

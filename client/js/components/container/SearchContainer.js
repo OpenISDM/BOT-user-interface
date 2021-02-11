@@ -10,7 +10,7 @@ import { AppContext } from '../../context/AppContext'
 import TabletSearchContainer from '../platform/tablet/TabletSearchContainer'
 import MobileSearchContainer from '../platform/mobile/MobileSearchContainer'
 import BrowserSearchContainer from '../platform/browser/BrowserSearchContainer'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import config from '../../config'
 import PropTypes from 'prop-types'
 import { isSameValue, isEqual } from '../../helper/utilities'
@@ -66,16 +66,14 @@ class SearchContainer extends React.Component {
 	getData = async () => {
 		const { auth, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const aliasesPromise = await apiHelper.objectApiAgent.getAliases({
+		const aliasesPromise = await API.Object.getAliases({
 			areaId: area.id,
 			objectType: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
-		const namedListPromise = apiHelper.namedListApiAgent.getNamedListWithoutType(
-			{
-				areaIds: [area.id],
-				isUserDefined: true,
-			}
-		)
+		const namedListPromise = API.NamedList.getNamedListWithoutType({
+			areaIds: [area.id],
+			isUserDefined: true,
+		})
 
 		const [aliasesRes, namedListRes] = await Promise.all([
 			aliasesPromise,

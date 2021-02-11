@@ -8,9 +8,9 @@ import { macAddressToCoordinate, countNumber } from '../../helper/dataTransfer'
 import { isEqual, isSameValue } from '../../helper/utilities'
 import { PIN_SELETION } from '../../config/wordMap'
 import PropTypes from 'prop-types'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import config from '../../config'
-import { mapPrefix } from '../../dataSrc'
+import { baseURL } from '../../utils/request'
 
 class Map extends React.Component {
 	static contextType = AppContext
@@ -123,7 +123,7 @@ class Map extends React.Component {
 	setMap = () => {
 		const [{ area }] = this.context.stateReducer
 		const { bounds, map_image_path } = area
-		const url = map_image_path ? `${mapPrefix}${map_image_path}` : null
+		const url = map_image_path ? `${baseURL}/map/${map_image_path}` : null
 
 		const removeImageLayer = !url && this.mapLayer.hasLayer(this.imageLayer)
 		if (removeImageLayer) {
@@ -190,7 +190,7 @@ class Map extends React.Component {
 		this.pathOfDevice.clearLayers()
 		if (this.props.pathMacAddress !== '') {
 			const route = []
-			const res = await apiHelper.utilsApiAgent.getTrackingTableByMacAddress({
+			const res = await API.Utils.getTrackingTableByMacAddress({
 				object_mac_address: this.props.pathMacAddress,
 			})
 			if (res) {

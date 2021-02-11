@@ -1,5 +1,7 @@
-import { deviceGroupList, deviceGruopDetailByAreaId } from '../dataSrc'
-import { get, post, put, del } from '../helper/httpClient'
+import { get, post, put, del } from '../utils/request'
+
+const deviceGroupList = '/data/deviceGroupList'
+const deviceGruopDetailByAreaId = '/data/deviceGruopDetailByAreaId'
 
 const deviceGroupListApis = {
 	async addDeviceGroupList({ name, areaId }) {

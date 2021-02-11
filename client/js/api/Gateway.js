@@ -1,5 +1,6 @@
-import { gateway } from '../dataSrc'
-import { get, del, put } from '../helper/httpClient'
+import { get, del, put } from '../utils/request'
+
+const gateway = '/data/gateway'
 
 export default {
 	async getGatewayTable({ locale }) {

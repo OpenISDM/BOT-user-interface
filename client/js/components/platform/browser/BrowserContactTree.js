@@ -1,6 +1,4 @@
 import React, { Fragment } from 'react'
-import dataSrc from '../../../dataSrc'
-import axios from 'axios'
 import 'react-table/react-table.css'
 import { Formik } from 'formik'
 import { object, number } from 'yup'
@@ -25,7 +23,7 @@ import { Row, Col, Card } from 'react-bootstrap'
 import NumberPicker from '../../container/NumberPicker'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 
 momentLocalizer()
 
@@ -50,7 +48,7 @@ class BrowserContactTree extends React.Component {
 	getObjectTable = async () => {
 		const { auth } = this.context
 
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const res = await API.Object.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
@@ -98,7 +96,7 @@ class BrowserContactTree extends React.Component {
 		while (wait.length != 0) {
 			const parent = wait.shift()
 			if (parent.level > level - 1) break
-			const res = await apiHelper.utilsApiAgent.getTraceContactTree({
+			const res = await API.Utils.getTraceContactTree({
 				child: parent.name,
 				parents: duplicate,
 				startTime: parent.startTime,
@@ -183,12 +181,12 @@ class BrowserContactTree extends React.Component {
 					additional: null,
 					// pdfOptions,
 				})
-				res = await apiHelper.fileApiAgent.getPDF({
+				res = await API.File.getPDF({
 					userInfo: auth.user,
 					pdfPackage,
 				})
 				if (res) {
-					await apiHelper.fileApiAgent.getFile(pdfPackage.path)
+					await API.File.getFile(pdfPackage.path)
 				}
 				break
 		}

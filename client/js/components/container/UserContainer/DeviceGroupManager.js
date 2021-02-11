@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppContext } from '../../../context/AppContext'
 import Select from 'react-select'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { PrimaryButton } from '../../BOTComponent/styleComponent'
 import DualListBox from './DualListBox'
 import messageGenerator from '../../../helper/messageGenerator'
@@ -39,7 +39,7 @@ class DeviceGroupManager extends React.Component {
 
 	newDeviceGroup = async (values) => {
 		try {
-			await apiHelper.deviceGroupListApis.addDeviceGroupList({
+			await API.DeviceGroupListApis.addDeviceGroupList({
 				name: values.name,
 				areaId: values.area.id,
 			})
@@ -52,7 +52,7 @@ class DeviceGroupManager extends React.Component {
 
 	deleteDeviceGroup = async () => {
 		try {
-			await apiHelper.deviceGroupListApis.deleteGroup({
+			await API.DeviceGroupListApis.deleteGroup({
 				groupId: this.state.selectedDeviceGroup.id,
 			})
 			this.setState({ selectedOption: null, selectedPatientGroup: null })
@@ -65,7 +65,7 @@ class DeviceGroupManager extends React.Component {
 
 	addDeviceToGroup = async (item) => {
 		try {
-			await apiHelper.deviceGroupListApis.modifyDeviceGroupList({
+			await API.DeviceGroupListApis.modifyDeviceGroupList({
 				groupId: this.state.selectedDeviceGroup.id,
 				mode: 0,
 				itemId: item.id,
@@ -78,7 +78,7 @@ class DeviceGroupManager extends React.Component {
 
 	removeDeviceFromGroup = async (item) => {
 		try {
-			await apiHelper.deviceGroupListApis.modifyDeviceGroupList({
+			await API.DeviceGroupListApis.modifyDeviceGroupList({
 				groupId: this.state.selectedDeviceGroup.id,
 				mode: 1,
 				itemId: item.id,
@@ -98,7 +98,7 @@ class DeviceGroupManager extends React.Component {
 
 	getObjectData = async () => {
 		const { auth } = this.context
-		const res = await apiHelper.objectApiAgent.getObjectTable({
+		const res = await API.Object.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectTypes: [config.OBJECT_TYPE.DEVICE],
 		})
@@ -110,7 +110,7 @@ class DeviceGroupManager extends React.Component {
 	}
 
 	getAreaTable = async () => {
-		const res = await apiHelper.areaApiAgent.getAreaTable()
+		const res = await API.Area.getAreaTable()
 		if (res) {
 			const areaOptions = res.data.map((area) => {
 				return {
@@ -127,7 +127,7 @@ class DeviceGroupManager extends React.Component {
 
 	getDeviceGroup = async () => {
 		try {
-			const res = await apiHelper.deviceGroupListApis.getDeviceGroupList()
+			const res = await API.DeviceGroupListApis.getDeviceGroupList()
 			const data = res.data.map((group) => {
 				return {
 					...group,

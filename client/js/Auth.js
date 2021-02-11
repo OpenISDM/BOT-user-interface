@@ -1,7 +1,7 @@
 import React from 'react'
 import AuthenticationContext from './context/AuthenticationContext'
 import config from './config'
-import apiHelper from './helper/apiHelper'
+import API from './api'
 import PropTypes from 'prop-types'
 import supportedLocale from './locale/supportedLocale'
 import {
@@ -32,7 +32,7 @@ class Auth extends React.Component {
 
 	login = async (userInfo, { actions, callback }) => {
 		const { username, password } = userInfo
-		const res = await apiHelper.authApiAgent.login({
+		const res = await API.Auth.login({
 			username,
 			password,
 		})
@@ -73,7 +73,7 @@ class Auth extends React.Component {
 			callback
 		)
 
-		await apiHelper.authApiAgent.logout()
+		await API.Auth.logout()
 	}
 
 	setUserCookies = async (user) => {
@@ -99,7 +99,7 @@ class Auth extends React.Component {
 			areas_id,
 		}
 
-		await apiHelper.userApiAgent.setArea({ user })
+		await API.User.setArea({ user })
 
 		this.setUserCookies(user)
 
@@ -159,7 +159,7 @@ class Auth extends React.Component {
 	}
 
 	setLocale = async (abbr) => {
-		await apiHelper.userApiAgent.setLocale({
+		await API.User.setLocale({
 			userId: this.state.user.id,
 			localeName: abbr,
 		})
@@ -186,7 +186,7 @@ class Auth extends React.Component {
 	}
 
 	setKeywordType = async (keywordTypeId) => {
-		await apiHelper.userApiAgent.editKeywordType({
+		await API.User.editKeywordType({
 			userId: this.state.user.id,
 			keywordTypeId,
 		})

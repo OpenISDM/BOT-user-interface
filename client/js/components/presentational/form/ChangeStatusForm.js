@@ -10,7 +10,7 @@ import { AppContext } from '../../../context/AppContext'
 import styleConfig from '../../../config/styleConfig'
 import FormikFormGroup from '../FormikFormGroup'
 import AccessControl from '../../authentication/AccessControl'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import { BROKEN, TRANSFERRED, TRACE, NORMAL } from '../../../config/wordMap'
 import PropTypes from 'prop-types'
 import { isEmpty } from '../../../helper/validation'
@@ -28,7 +28,7 @@ class ChangeStatusForm extends React.Component {
 
 	getTransferredLocation = async () => {
 		try {
-			const res = await apiHelper.transferredLocationApiAgent.getAll()
+			const res = await API.TransferredLocation.getAll()
 			const optionsMap = {}
 			res.data.forEach(({ id, name, department }) => {
 				const option = {
@@ -62,7 +62,7 @@ class ChangeStatusForm extends React.Component {
 
 	handleAddSubmit = async (name, department) => {
 		try {
-			await apiHelper.transferredLocationApiAgent.addOne({
+			await API.TransferredLocation.addOne({
 				name,
 				department,
 			})

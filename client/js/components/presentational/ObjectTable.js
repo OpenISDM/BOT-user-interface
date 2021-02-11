@@ -4,7 +4,7 @@ import { AppContext } from '../../context/AppContext'
 import { Row, Col, ButtonToolbar, Modal } from 'react-bootstrap'
 import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import { setSuccessMessage } from '../../helper/messageGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { ADD, DELETE, SAVE_SUCCESS, DISASSOCIATE } from '../../config/wordMap'
 import { formatTime, isSameValue } from '../../helper/utilities'
 import config from '../../config'
@@ -60,13 +60,13 @@ class ObjectTable extends React.Component {
 		const { locale, auth } = this.context
 		const { objectTypes = [], objectSubTypes = [] } = this.props
 
-		const objectTablePromise = apiHelper.objectApiAgent.getObjectTable({
+		const objectTablePromise = API.Object.getObjectTable({
 			areas_id: auth.user.areas_id,
 			objectTypes,
 		})
-		const areaTablePromise = apiHelper.areaApiAgent.getAreaTable()
-		const idleMacPromise = apiHelper.objectApiAgent.getIdleMacaddr()
-		const acnPromise = apiHelper.objectApiAgent.getAcnSet()
+		const areaTablePromise = API.Area.getAreaTable()
+		const idleMacPromise = API.Object.getIdleMacaddr()
+		const acnPromise = API.Object.getAcnSet()
 
 		const [
 			objectTableRes,
@@ -222,7 +222,7 @@ class ObjectTable extends React.Component {
 
 		switch (this.state.action) {
 			case DISASSOCIATE:
-				res = await apiHelper.objectApiAgent.disassociate({
+				res = await API.Object.disassociate({
 					formOption: {
 						id: selectedRowData.id,
 					},
@@ -237,7 +237,7 @@ class ObjectTable extends React.Component {
 					})
 				})
 
-				res = await apiHelper.objectApiAgent.deleteObject({
+				res = await API.Object.deleteObject({
 					formOption,
 				})
 				break
@@ -251,7 +251,7 @@ class ObjectTable extends React.Component {
 	handleSubmitForm = async (formOption) => {
 		const { apiMethod } = this.state
 		const { objectApiMode } = this.props
-		const res = await apiHelper.objectApiAgent[apiMethod]({
+		const res = await API.Object[apiMethod]({
 			formOption,
 			mode: objectApiMode,
 		})

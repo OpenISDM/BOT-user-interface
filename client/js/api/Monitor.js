@@ -1,6 +1,7 @@
-import { monitor } from '../dataSrc'
-import { post, del, patch, put } from '../helper/httpClient'
+import { post, del, patch, put } from '../utils/request'
 import config from '../config'
+
+const monitor = '/data/monitor'
 
 const monitorApis = {
 	async getMonitorConfig(type, areasId, isGetLbeaconPosition = false) {

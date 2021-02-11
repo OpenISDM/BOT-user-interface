@@ -12,7 +12,6 @@ import monitor from './monitor'
 import record from './record'
 import transferredLocation from './transferred-location'
 import groupList from './group-list'
-import utils from './utils'
 import userAssignments from './user-assignments'
 import namedList from './named-list'
 import notification from './notification'
@@ -33,7 +32,6 @@ export default (app) => {
 	record(app)
 	transferredLocation(app)
 	groupList(app)
-	utils(app)
 	userAssignments(app)
 	namedList(app)
 	notification(app)

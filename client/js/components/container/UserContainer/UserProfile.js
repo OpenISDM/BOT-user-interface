@@ -5,7 +5,7 @@ import EditPwdForm from '../../presentational/form/EditPwdForm'
 import { setSuccessMessage } from '../../../helper/messageGenerator'
 import config from '../../../config'
 import NumberPicker from '../NumberPicker'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import Select from 'react-select'
 import { SAVE_SUCCESS } from '../../../config/wordMap'
 
@@ -26,7 +26,7 @@ class UserProfile extends React.Component {
 	getAreaTable = async () => {
 		const { auth } = this.context
 		const { user } = auth
-		const res = await apiHelper.areaApiAgent.getAreaTableByUserId({
+		const res = await API.Area.getAreaTableByUserId({
 			userId: user.id,
 		})
 		if (res) {
@@ -51,7 +51,7 @@ class UserProfile extends React.Component {
 				userInfo,
 			})
 
-			await apiHelper.userApiAgent.editMaxSearchHistoryCount({
+			await API.User.editMaxSearchHistoryCount({
 				info: userInfo,
 				username: userInfo.name,
 			})
@@ -94,7 +94,7 @@ class UserProfile extends React.Component {
 				break
 
 			case 1:
-				await apiHelper.userApiAgent.password({
+				await API.User.password({
 					user_id: auth.user.id,
 					password: values.check_password,
 				})

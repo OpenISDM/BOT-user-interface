@@ -1,5 +1,4 @@
 import React from 'react'
-import dataSrc from '../../dataSrc'
 import axios from 'axios'
 import { Formik } from 'formik'
 import { object, string } from 'yup'
@@ -62,74 +61,74 @@ class TrackingHistory extends React.Component {
 				break
 		}
 
-		axios
-			.post(dataSrc.getLocationHistory, {
-				key,
-				startTime: moment(fields.startTime).format(),
-				endTime: moment(fields.endTime).format(),
-				mode: fields.mode,
-			})
-			.then((res) => {
-				if (res.data.rowCount === 0) {
-					setStatus(locale.texts.NO_DATA_FOUND)
-					setSubmitting(false)
-					return
-				}
-				let prevUUID = ''
-				let data = []
-				let additionalData = null
-				switch (fields.mode) {
-					case 'mac':
-						res.data.rows.forEach((pt) => {
-							if (pt.uuid !== prevUUID) {
-								data.push({
-									uuid: pt.uuid,
-									startTime: moment(pt.record_timestamp)
-										.locale(locale.abbr)
-										.format(timeValidatedFormat),
-									description: pt.description,
-									area: locale.texts[pt.area],
-								})
-								prevUUID = pt.uuid
-							}
+		// axios
+		// 	.post(endpoints.getLocationHistory, {
+		// 		key,
+		// 		startTime: moment(fields.startTime).format(),
+		// 		endTime: moment(fields.endTime).format(),
+		// 		mode: fields.mode,
+		// 	})
+		// 	.then((res) => {
+		// 		if (res.data.rowCount === 0) {
+		// 			setStatus(locale.texts.NO_DATA_FOUND)
+		// 			setSubmitting(false)
+		// 			return
+		// 		}
+		// 		let prevUUID = ''
+		// 		let data = []
+		// 		let additionalData = null
+		// 		switch (fields.mode) {
+		// 			case 'mac':
+		// 				res.data.rows.forEach((pt) => {
+		// 					if (pt.uuid !== prevUUID) {
+		// 						data.push({
+		// 							uuid: pt.uuid,
+		// 							startTime: moment(pt.record_timestamp)
+		// 								.locale(locale.abbr)
+		// 								.format(timeValidatedFormat),
+		// 							description: pt.description,
+		// 							area: locale.texts[pt.area],
+		// 						})
+		// 						prevUUID = pt.uuid
+		// 					}
 
-							data[data.length - 1].endTime = moment(pt.record_timestamp)
-								.locale(locale.abbr)
-								.format(timeValidatedFormat)
-						})
-						if (res.data.rowCount !== 0) {
-							additionalData = {
-								name: res.data.rows[0].name,
-								area: res.data.rows[0].area,
-							}
-						}
-						break
-					case 'uuid':
-						data = res.data.rows.map((item, index) => {
-							item.id = index + 1
-							return item
-						})
-						if (res.data.rowCount !== 0) {
-							additionalData = {
-								description: res.data.rows[0].description,
-								area: res.data.rows[0].area,
-							}
-						}
-						break
-				}
+		// 					data[data.length - 1].endTime = moment(pt.record_timestamp)
+		// 						.locale(locale.abbr)
+		// 						.format(timeValidatedFormat)
+		// 				})
+		// 				if (res.data.rowCount !== 0) {
+		// 					additionalData = {
+		// 						name: res.data.rows[0].name,
+		// 						area: res.data.rows[0].area,
+		// 					}
+		// 				}
+		// 				break
+		// 			case 'uuid':
+		// 				data = res.data.rows.map((item, index) => {
+		// 					item.id = index + 1
+		// 					return item
+		// 				})
+		// 				if (res.data.rowCount !== 0) {
+		// 					additionalData = {
+		// 						description: res.data.rows[0].description,
+		// 						area: res.data.rows[0].area,
+		// 					}
+		// 				}
+		// 				break
+		// 		}
 
-				this.setState(
-					{
-						data,
-						columns,
-						additionalData,
-					},
-					setSubmitting(false)
-				)
-			})
-			.catch((err) => {
-				console.log(`get location history failed ${err}`)
-			})
+		// 		this.setState(
+		// 			{
+		// 				data,
+		// 				columns,
+		// 				additionalData,
+		// 			},
+		// 			setSubmitting(false)
+		// 		)
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(`get location history failed ${err}`)
+		// 	})
 	}
 
 	render() {

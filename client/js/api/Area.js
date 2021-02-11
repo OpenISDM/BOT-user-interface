@@ -1,5 +1,7 @@
-import { area, areaUser } from '../dataSrc'
-import { post, get } from '../helper/httpClient'
+import { post, get } from '../utils/request'
+
+const area = '/data/area'
+const areaUser = '/data/area/user'
 
 export default {
 	async getAreaTable() {

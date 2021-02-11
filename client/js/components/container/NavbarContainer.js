@@ -14,7 +14,7 @@ import { BOTNavLink } from '../BOTComponent/styleComponent'
 import routes from '../../config/routes/routes'
 import { SET_AREA } from '../../reducer/action'
 import ImageWebp from '../utils/ImageWebp'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 
 class NavbarContainer extends React.Component {
 	static contextType = AppContext
@@ -51,9 +51,9 @@ class NavbarContainer extends React.Component {
 
 		const isBotAdmin = user.roles && user.roles.includes('bot_admin')
 		if (isBotAdmin) {
-			res = await apiHelper.areaApiAgent.getAreaTable()
+			res = await API.Area.getAreaTable()
 		} else {
-			res = await apiHelper.areaApiAgent.getAreaTableByUserId({
+			res = await API.Area.getAreaTableByUserId({
 				userId: user.id,
 			})
 		}

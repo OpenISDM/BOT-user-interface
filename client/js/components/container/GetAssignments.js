@@ -3,7 +3,7 @@ import { ButtonToolbar } from 'react-bootstrap'
 import { keyBy, debounce } from 'lodash'
 import { AppContext } from '../../context/AppContext'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import messageGenerator from '../../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../../config/wordMap'
 import config from '../../config'
@@ -52,7 +52,7 @@ class GetAssignments extends React.Component {
 		const assignedDeviceGroupListids = []
 		const assignedPatientGroupListids = []
 
-		const res = await apiHelper.userAssignmentsApiAgent.getByUserId({
+		const res = await API.UserAssignments.getByUserId({
 			areaId: area.id,
 			userId,
 		})
@@ -84,7 +84,7 @@ class GetAssignments extends React.Component {
 		const userId = auth.user.id
 
 		try {
-			await apiHelper.userAssignmentsApiAgent.accept({
+			await API.UserAssignments.accept({
 				userId,
 				groupListIds: submitGroupListIds,
 				assignmentType: this.state.currentAssignmentType,
@@ -101,7 +101,7 @@ class GetAssignments extends React.Component {
 		const userId = auth.user.id
 
 		try {
-			await apiHelper.userAssignmentsApiAgent.cancel({
+			await API.UserAssignments.cancel({
 				userId,
 				groupListIds: assignedGroupListids,
 			})
@@ -117,9 +117,7 @@ class GetAssignments extends React.Component {
 		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.patientGroupListApis.getDetailByAreaId(
-				area.id
-			)
+			const res = await API.PatientGroupListApis.getDetailByAreaId(area.id)
 			const patientGroupMap = keyBy(res.data.gruopList, 'id')
 			const patientObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({
@@ -136,7 +134,7 @@ class GetAssignments extends React.Component {
 		const [{ area }] = stateReducer
 
 		try {
-			const res = await apiHelper.deviceGroupListApis.getDetailByAreaId(area.id)
+			const res = await API.DeviceGroupListApis.getDetailByAreaId(area.id)
 			const deviceGroupMap = keyBy(res.data.gruopList, 'id')
 			const deviceObjectMap = keyBy(res.data.objectList, 'id')
 			this.setState({

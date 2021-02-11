@@ -1,5 +1,7 @@
-import { geofence, geofenceArea } from '../dataSrc'
-import { post, put, del, patch, get } from '../helper/httpClient'
+import { post, put, del, patch, get } from '../utils/request'
+
+const geofence = '/data/geofence'
+const geofenceArea = '/data/geofence/area'
 
 const geofenceApis = {
 	async getGeofenceConfig({ areaId }) {

@@ -1,5 +1,6 @@
-import { lbeacon } from '../dataSrc'
-import { get, put, del } from '../helper/httpClient'
+import { get, put, del } from '../utils/request'
+
+const lbeacon = '/data/lbeacon'
 
 export default {
 	async getLbeaconTable({ locale }) {

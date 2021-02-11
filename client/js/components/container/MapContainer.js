@@ -9,7 +9,7 @@ import BrowserMapContainer from '../platform/browser/BrowserMapContainer'
 import { CLEAR_SEARCH_RESULT } from '../../config/wordMap'
 import config from '../../config'
 import pdfPackageGenerator from '../../helper/pdfPackageGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 
 import PropTypes from 'prop-types'
 
@@ -91,7 +91,7 @@ class MapContainer extends React.Component {
 			pdfPackage,
 		}
 
-		const res = await apiHelper.fileApiAgent.getPDF({
+		const res = await API.File.getPDF({
 			...searResultInfo,
 		})
 

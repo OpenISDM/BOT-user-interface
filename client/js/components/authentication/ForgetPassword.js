@@ -11,7 +11,7 @@ import {
 } from '../BOTComponent/styleComponent'
 import FormikFormGroup from '../presentational/FormikFormGroup'
 import { useHistory } from 'react-router-dom'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { emailValidation } from '../../helper/validation'
 import ImageWebp from '../utils/ImageWebp'
 
@@ -50,7 +50,7 @@ const ForgetPassword = () => {
 				onSubmit={async (values, { setStatus }) => {
 					const { email } = values
 					setStatus('verifying')
-					await apiHelper.authApiAgent.sentResetPwdInstruction({
+					await API.Auth.sentResetPwdInstruction({
 						email,
 					})
 					history.push('/resetpassword/instruction')

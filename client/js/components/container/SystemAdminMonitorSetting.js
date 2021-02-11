@@ -8,7 +8,7 @@ import DeleteConfirmationForm from '../presentational/DeleteConfirmationForm'
 import { setSuccessMessage } from '../../helper/messageGenerator'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
 import PropTypes from 'prop-types'
@@ -49,7 +49,7 @@ class BOTAdminMonitorSetting extends React.Component {
 
 	getLbeaconTable = async () => {
 		const { locale } = this.context
-		const res = await apiHelper.lbeaconApiAgent.getLbeaconTable({
+		const res = await API.Lbeacon.getLbeaconTable({
 			locale: locale.abbr,
 		})
 
@@ -61,7 +61,7 @@ class BOTAdminMonitorSetting extends React.Component {
 	getMonitorConfig = async (callback) => {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const res = await apiHelper.geofenceApis.getGeofenceConfig({
+		const res = await API.GeofenceApis.getGeofenceConfig({
 			areaId: area.id,
 		})
 
@@ -141,14 +141,14 @@ class BOTAdminMonitorSetting extends React.Component {
 		const configPackage = pack || {}
 		const { path } = this.state
 
-		await apiHelper.geofenceApis[path]({ configPackage })
+		await API.GeofenceApis[path]({ configPackage })
 		this.getMonitorConfig(this.submitCallback)
 	}
 
 	handleDeleteSubmit = async () => {
 		const [{ tableSelection }] = this.context.stateReducer
 
-		await apiHelper.geofenceApis.delete({ ids: tableSelection })
+		await API.GeofenceApis.delete({ ids: tableSelection })
 		this.getMonitorConfig(this.submitCallback)
 	}
 

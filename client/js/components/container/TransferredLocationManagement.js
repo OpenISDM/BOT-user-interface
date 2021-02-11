@@ -2,7 +2,7 @@ import React from 'react'
 import { AppContext } from '../../context/AppContext'
 import { TransferredLocationColumn } from '../../config/tables'
 import messageGenerator from '../../helper/messageGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import EditTransferLocationForm from '../presentational/form/EditTransferLocationForm'
 import DeleteAlertModal from '../presentational/DeleteAlertModal'
@@ -27,7 +27,7 @@ class TranferredLocationManagement extends React.Component {
 	getTransferredLocation = async (callback) => {
 		const { stateReducer } = this.context
 		const [, dispatch] = stateReducer
-		const res = await apiHelper.transferredLocationApiAgent.getAll()
+		const res = await API.TransferredLocation.getAll()
 		const locationOptionsMap = {}
 		const data = []
 
@@ -94,7 +94,7 @@ class TranferredLocationManagement extends React.Component {
 
 	handleAddSubmit = async (values) => {
 		try {
-			await apiHelper.transferredLocationApiAgent.addOne({
+			await API.TransferredLocation.addOne({
 				name: values.name.value,
 				department: values.department,
 			})
@@ -111,7 +111,7 @@ class TranferredLocationManagement extends React.Component {
 		const { stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
 		try {
-			await apiHelper.transferredLocationApiAgent.removeByIds({
+			await API.TransferredLocation.removeByIds({
 				transferLocationIds: tableSelection,
 			})
 			const callback = () => {

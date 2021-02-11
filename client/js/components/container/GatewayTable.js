@@ -8,7 +8,7 @@ import { setSuccessMessage } from '../../helper/messageGenerator'
 import { PrimaryButton } from '../BOTComponent/styleComponent'
 import AccessControl from '../authentication/AccessControl'
 import EditGatewayForm from '../presentational/form/EditGatewayForm'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import { formatTime } from '../../helper/utilities'
 import BOTSelectTable from '../BOTComponent/BOTSelectTable'
 import { SET_TABLE_SELECTION } from '../../reducer/action'
@@ -38,7 +38,7 @@ class GatewayTable extends React.Component {
 	getData = async (callback) => {
 		const { locale, stateReducer } = this.context
 		const [, dispatch] = stateReducer
-		const res = await apiHelper.gatewayApiAgent.getGatewayTable({
+		const res = await API.Gateway.getGatewayTable({
 			locale: locale.code,
 		})
 
@@ -77,7 +77,7 @@ class GatewayTable extends React.Component {
 	}
 
 	handleSubmitForm = async (formOption) => {
-		const res = await apiHelper.gatewayApiAgent.putGateway({
+		const res = await API.Gateway.putGateway({
 			formOption,
 		})
 		if (res) {
@@ -89,7 +89,7 @@ class GatewayTable extends React.Component {
 		const [{ tableSelection }] = this.context.stateReducer
 
 		const ids = tableSelection.map((id) => id)
-		await apiHelper.gatewayApiAgent.deleteGateway({
+		await API.Gateway.deleteGateway({
 			ids,
 		})
 

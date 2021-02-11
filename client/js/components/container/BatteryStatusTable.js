@@ -3,7 +3,7 @@ import { AppContext } from '../../context/AppContext'
 import { trackingTableColumn } from '../../config/tables'
 import { toast } from 'react-toastify'
 import messageGenerator from '../../helper/messageGenerator'
-import apiHelper from '../../helper/apiHelper'
+import API from '../../api'
 import BOTTable from '../BOTComponent/BOTTable'
 
 class BatteryStatusTable extends React.Component {
@@ -35,7 +35,7 @@ class BatteryStatusTable extends React.Component {
 	getTrackingData = async () => {
 		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-		const res = await apiHelper.trackingDataApiAgent.getTrackingData({
+		const res = await API.Tracking.getTrackingData({
 			areaIds: [area.id],
 			locale: locale.abbr,
 		})

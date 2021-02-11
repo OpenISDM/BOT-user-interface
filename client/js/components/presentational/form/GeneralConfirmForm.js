@@ -3,7 +3,7 @@ import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import { AppContext } from '../../../context/AppContext'
-import apiHelper from '../../../helper/apiHelper'
+import API from '../../../api'
 import FormikFormGroup from '../FormikFormGroup'
 import PropTypes from 'prop-types'
 import { Paragraph } from '../../BOTComponent/styleComponent'
@@ -39,7 +39,7 @@ const GeneralConfirmForm = ({ show, handleClose, title }) => {
 						{ username, password },
 						{ setStatus, setSubmitting }
 					) => {
-						const res = await apiHelper.authApiAgent.confirmValidation({
+						const res = await API.Auth.confirmValidation({
 							username,
 							password,
 						})

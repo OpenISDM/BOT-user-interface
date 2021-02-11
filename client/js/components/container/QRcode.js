@@ -1,14 +1,9 @@
 import React from 'react'
-import Modal from 'react-bootstrap/Modal'
-import { Button, Row } from 'react-bootstrap'
-import axios from 'axios'
-import dataSrc from '../../dataSrc'
+import { pdfUrl } from '../../api/File'
 import QRCode from 'qrcode.react'
-import moment from 'moment'
 import config from '../../config'
 import { AppContext } from '../../context/AppContext'
 
-// need Inputs : search Result
 // this component will send json to back end, backend will return a url, and the component generate a qrcode
 class QRCodeContainer extends React.Component {
 	static contextType = AppContext
@@ -32,7 +27,7 @@ class QRCodeContainer extends React.Component {
 
 	sendSearchResultToBackend = (searchResultInfo, callBack) => {
 		// axios
-		// 	.post(dataSrc.generatePDF, searchResultInfo)
+		// 	.post(endpoints.generatePDF, searchResultInfo)
 		// 	.then((res) => {
 		// 		callBack(res.data)
 		// 	})
@@ -99,7 +94,7 @@ class QRCodeContainer extends React.Component {
 
 		return (
 			<div id="qrcode" style={style.QRcodeDiv}>
-				<QRCode value={dataSrc.pdfUrl(savePath)} style={style.QRcodeSize} />
+				<QRCode value={`${pdfUrl}${savePath}`} style={style.QRcodeSize} />
 			</div>
 		)
 	}
