@@ -1,12 +1,12 @@
 import Loadable from 'react-loadable'
 import routes from './routes'
-import Loader from '../../components/presentational/Loader'
+import Loader from '../../domain/presentational/Loader'
 
 const ForgetPassword = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "forgetPassword" */
-			'../../components/authentication/ForgetPassword'
+			'../../domain/authentication/ForgetPassword'
 		),
 	loading: Loader,
 })
@@ -15,7 +15,7 @@ const SigninPage = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "signinPage" */
-			'../../components/authentication/SigninPage'
+			'../../domain/authentication/SigninPage'
 		),
 	loading: Loader,
 })
@@ -24,7 +24,7 @@ const ResetPassword = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "resetPassword" */
-			'../../components/authentication/ResetPassword'
+			'../../domain/authentication/ResetPassword'
 		),
 	loading: Loader,
 })
@@ -33,7 +33,7 @@ const ResetPasswordResult = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "resetPasswordResult" */
-			'../../components/authentication/ResetPasswordResult'
+			'../../domain/authentication/ResetPasswordResult'
 		),
 	loading: Loader,
 })
@@ -42,7 +42,7 @@ const SentPwdInstructionResult = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "sentPwdInstructionResult" */
-			'../../components/authentication/SentPwdInstructionResult'
+			'../../domain/authentication/SentPwdInstructionResult'
 		),
 	loading: Loader,
 })

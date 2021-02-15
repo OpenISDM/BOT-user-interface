@@ -1,5 +1,5 @@
 import React from 'react'
-import ToastMessage from '../components/presentational/ToastMessage'
+import ToastMessage from '../domain/presentational/ToastMessage'
 import { toast, Slide } from 'react-toastify'
 
 export const setSuccessMessage = (msg) => {

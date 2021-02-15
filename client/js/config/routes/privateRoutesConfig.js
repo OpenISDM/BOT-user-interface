@@ -1,12 +1,12 @@
 import Loadable from 'react-loadable'
-import Loader from '../../components/presentational/Loader'
+import Loader from '../../domain/presentational/Loader'
 import routes from './routes'
 
 const ObjectManagementContainer = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "ObjectManagementContainer" */
-			'../../components/container/menuContainer/ObjectManagementContainer'
+			'../../domain/container/menuContainer/ObjectManagementContainer'
 		),
 	loading: Loader,
 })
@@ -15,7 +15,7 @@ const MainContainer = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "MainContainer" */
-			'../../components/container/menuContainer/MainContainer'
+			'../../domain/container/menuContainer/MainContainer'
 		),
 	loading: Loader,
 })
@@ -24,7 +24,7 @@ const SystemSetting = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "SystemSetting" */
-			'../../components/container/menuContainer/SystemSetting'
+			'../../domain/container/menuContainer/SystemSetting'
 		),
 	loading: Loader,
 })
@@ -33,7 +33,7 @@ const ReportContainer = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "ReportContainer" */
-			'../../components/container/menuContainer/ReportContainer'
+			'../../domain/container/menuContainer/ReportContainer'
 		),
 	loading: Loader,
 })
@@ -42,7 +42,7 @@ const BOTAdminContainer = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "BOTAdminContainer" */
-			'../../components/container/menuContainer/BOTAdminContainer'
+			'../../domain/container/menuContainer/BOTAdminContainer'
 		),
 	loading: Loader,
 })
@@ -51,7 +51,7 @@ const About = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "About" */
-			'../../components/container/About'
+			'../../domain/container/About'
 		),
 	loading: Loader,
 })

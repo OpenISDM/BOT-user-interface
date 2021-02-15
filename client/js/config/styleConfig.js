@@ -1,4 +1,4 @@
-import BOTPagination from '../components/BOTComponent/BOTPagination'
+import BOTPagination from '../domain/BOTComponent/BOTPagination'
 import { components } from 'react-select'
 import React from 'react'
 import styleSheet from './styleSheet'

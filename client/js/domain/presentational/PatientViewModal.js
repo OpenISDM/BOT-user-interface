@@ -11,7 +11,7 @@ import {
 	Paragraph,
 	FormFieldName,
 } from '../BOTComponent/styleComponent'
-import FormikFormGroup from '../presentational/FormikFormGroup'
+import FormikFormGroup from './FormikFormGroup'
 
 const style = {
 	index: {

@@ -1,37 +1,37 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import UserProfile from '../components/container/UserContainer/UserProfile'
-import LBeaconTable from '../components/container/LBeaconTable'
-import GatewayTable from '../components/container/GatewayTable'
-import AgentTable from '../components/container/AgentTable'
-import AdminManagementContainer from '../components/container/UserContainer/AdminManagementContainer'
-import DeviceGroupManager from '../components/container/UserContainer/DeviceGroupManager'
-import PatientGroupManager from '../components/container/UserContainer/PatientGroupManager'
-import MonitorSetting from '../components/container/MonitorSetting'
-import ObjectEditedRecord from '../components/container/UserContainer/ObjectEditedRecord'
-import ShiftChangeRecord from '../components/container/UserContainer/ShiftChangeRecord'
-import DeviceTable from '../components/presentational/DeviceTable'
-import PatientTable from '../components/presentational/PatientTable'
-import StaffTable from '../components/presentational/StaffTable'
-import VisitorTable from '../components/presentational/VisitorTable'
-import TrackingTable from '../components/container/TrackingTable'
-import BatteryStatusTable from '../components/container/BatteryStatusTable'
-import TraceContainer from '../components/container/menuContainer/TraceContainer'
+import UserProfile from '../domain/container/UserContainer/UserProfile'
+import LBeaconTable from '../domain/container/LBeaconTable'
+import GatewayTable from '../domain/container/GatewayTable'
+import AgentTable from '../domain/container/AgentTable'
+import AdminManagementContainer from '../domain/container/UserContainer/AdminManagementContainer'
+import DeviceGroupManager from '../domain/container/UserContainer/DeviceGroupManager'
+import PatientGroupManager from '../domain/container/UserContainer/PatientGroupManager'
+import MonitorSetting from '../domain/container/MonitorSetting'
+import ObjectEditedRecord from '../domain/container/UserContainer/ObjectEditedRecord'
+import ShiftChangeRecord from '../domain/container/UserContainer/ShiftChangeRecord'
+import DeviceTable from '../domain/presentational/DeviceTable'
+import PatientTable from '../domain/presentational/PatientTable'
+import StaffTable from '../domain/presentational/StaffTable'
+import VisitorTable from '../domain/presentational/VisitorTable'
+import TrackingTable from '../domain/container/TrackingTable'
+import BatteryStatusTable from '../domain/container/BatteryStatusTable'
+import TraceContainer from '../domain/container/menuContainer/TraceContainer'
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
-import Loader from '../components/presentational/Loader'
-import CustomSettings from '../components/container/menuContainer/CustomSettings'
-import SearchSettings from '../components/container/menuContainer/SearchSettings'
-import GetAssignments from '../components/container/GetAssignments'
-import ShiftChangeHistoricalRecord from '../components/container/ShiftChangeHistoricalRecord'
-// import RolePermissionManagement from '../components/container/RolePermissionManagement'
-// import TransferredLocationManagement from '../components/container/TransferredLocationManagement';
+import Loader from '../domain/presentational/Loader'
+import CustomSettings from '../domain/container/menuContainer/CustomSettings'
+import SearchSettings from '../domain/container/menuContainer/SearchSettings'
+import GetAssignments from '../domain/container/GetAssignments'
+import ShiftChangeHistoricalRecord from '../domain/container/ShiftChangeHistoricalRecord'
+// import RolePermissionManagement from '../domain/container/RolePermissionManagement'
+// import TransferredLocationManagement from '../domain/container/TransferredLocationManagement';
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "TransferredLocationManagement" */
-			'../components/container/TransferredLocationManagement'
+			'../domain/container/TransferredLocationManagement'
 		),
 	loading: Loader,
 })
