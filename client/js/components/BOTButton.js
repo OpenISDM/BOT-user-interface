@@ -8,23 +8,23 @@ const BOTButton = ({
 	theme = 'primary',
 	text = '',
 	style,
-	enableDebounce = true,
+	disableDebounce = false,
 	onClick = () => {
 		// do nothing
 	},
 	...props
 }) => {
 	const variant = pressed ? theme : `outline-${theme}`
-	let debounceClick = onClick
-	if (enableDebounce) {
-		// TODO: Johnson to modify this to fix eslint error
-		debounceClick = useCallback(
-			debounce((e) => onClick(e), 1000, {
-				leading: true,
-				trailing: false,
-			}),
-			[]
-		)
+
+	let debounceClick = useCallback(
+		debounce((e) => onClick(e), 1000, {
+			leading: true,
+			trailing: false,
+		}),
+		[]
+	)
+	if (disableDebounce) {
+		debounceClick = onClick
 	}
 
 	return (
@@ -47,7 +47,7 @@ BOTButton.propTypes = {
 	text: PropTypes.string,
 	style: PropTypes.object,
 	onClick: PropTypes.func,
-	enableDebounce: PropTypes.bool,
+	disableDebounce: PropTypes.bool,
 }
 
 export default BOTButton

@@ -339,7 +339,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 								<Row style={{ justifyContent: 'space-between' }}>
 									<div>
 										<BOTButton
-											enableDebounce={false}
+											disableDebounce={true}
 											pressed={true}
 											disabled={false}
 											onClick={() => {

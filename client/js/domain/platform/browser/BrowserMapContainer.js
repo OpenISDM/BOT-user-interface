@@ -132,7 +132,7 @@ class BrowserMapContainer extends React.Component {
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
 									}
-									enableDebounce={false}
+									disableDebounce={true}
 									text={
 										deviceObjectTypeVisible
 											? locale.texts.HIDE_DEVICES
@@ -161,7 +161,7 @@ class BrowserMapContainer extends React.Component {
 									disabled={
 										!activeActionButtons.includes(ACTION_BUTTONS.PERSON)
 									}
-									enableDebounce={false}
+									disableDebounce={true}
 									text={
 										personObjectTypeVisible
 											? locale.texts.HIDE_RESIDENTS

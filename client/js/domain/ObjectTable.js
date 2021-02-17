@@ -399,14 +399,14 @@ class ObjectTable extends React.Component {
 								<>
 									<BOTButton
 										theme={'danger'}
-										enableDebounce={false}
+										disableDebounce={true}
 										pressed={tableSelection.length > 0}
 										name={DELETE}
 										onClick={this.handleDeleteAction}
 										text={locale.texts[deleteText]}
 									/>
 									<BOTButton
-										enableDebounce={false}
+										disableDebounce={true}
 										pressed={true}
 										name={DELETE}
 										onClick={this.switchSelectionMode}
@@ -427,7 +427,7 @@ class ObjectTable extends React.Component {
 										text={locale.texts[addText]}
 									/>
 									<BOTButton
-										enableDebounce={false}
+										disableDebounce={true}
 										pressed={this.state.isMultiSelection}
 										name={DELETE}
 										onClick={this.switchSelectionMode}
