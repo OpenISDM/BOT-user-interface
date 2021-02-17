@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppContext } from '../context/AppContext'
 import { Row, Col } from 'react-bootstrap'
-import BOTButton from '../components/BOTButton'
+import Button from '../components/Button'
 import BOTAdminGeoFenceSetting from './BOTAdminGeoFenceSetting'
 
 const pages = {
@@ -85,7 +85,7 @@ class BOTAdminMonitorSetting extends React.Component {
 			<>
 				<Col>
 					<Row>
-						<BOTButton
+						<Button
 							pressed={this.checkButtonIsPressed(pages.GEO_FENCES)}
 							style={style.pageButtons}
 							onClick={() => {
@@ -93,7 +93,7 @@ class BOTAdminMonitorSetting extends React.Component {
 							}}
 							text={locale.texts.GEOFENCE}
 						/>
-						<BOTButton
+						<Button
 							pressed={this.checkButtonIsPressed(pages.MOVEMENT_MONITORS)}
 							style={style.pageButtons}
 							onClick={() => {
@@ -101,7 +101,7 @@ class BOTAdminMonitorSetting extends React.Component {
 							}}
 							text={locale.texts.MOVEMENT_MONITOR}
 						/>
-						<BOTButton
+						<Button
 							pressed={this.checkButtonIsPressed(pages.EMERGENCY_ALERT)}
 							style={style.pageButtons}
 							onClick={() => {

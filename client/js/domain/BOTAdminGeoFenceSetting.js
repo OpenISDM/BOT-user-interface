@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik'
 import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import FormikFormGroup from './FormikFormGroup'
-import BOTButton from '../components/BOTButton'
+import Button from '../components/Button'
 import BOTMap from '../components/BOTMap'
 import config from '../config'
 import API from '../api'
@@ -338,7 +338,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 							<Form>
 								<Row style={{ justifyContent: 'space-between' }}>
 									<div>
-										<BOTButton
+										<Button
 											disableDebounce={true}
 											pressed={true}
 											disabled={false}
@@ -351,7 +351,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 													: locale.texts.SHOW_MAP
 											}
 										/>
-										{/* <BOTButton
+										{/* <Button
 											pressed={this.checkButtonIsPressed(
 												AREAS.CURRENT_COVERED_AREA
 											)}
@@ -360,7 +360,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 											}}
 											text={area.label}
 										/>
-										<BOTButton
+										<Button
 											pressed={this.checkButtonIsPressed(AREAS.GLOBAL_AREA)}
 											onClick={() => {
 												this.setCurrentPressedButton(AREAS.GLOBAL_AREA)
@@ -370,7 +370,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 										/> */}
 									</div>
 
-									<BOTButton
+									<Button
 										pressed={true}
 										text={locale.texts.SAVE}
 										type="submit"

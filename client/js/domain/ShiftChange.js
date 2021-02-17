@@ -13,7 +13,7 @@ import pdfPackageGenerator from '../helper/pdfPackageGenerator'
 import API from '../api'
 import { Title } from '../components/styleComponent'
 import { SAVE_SUCCESS } from '../config/wordMap'
-import BOTButton from '../components/BOTButton'
+import Button from '../components/Button'
 import PropTypes from 'prop-types'
 
 const style = {
@@ -271,12 +271,12 @@ class ShiftChange extends React.Component {
 									</Form.Group>
 								</Modal.Body>
 								<Modal.Footer>
-									<BOTButton
+									<Button
 										variant="outline-secondary"
 										onClick={handleClose}
 										text={locale.texts.CANCEL}
 									/>
-									<BOTButton
+									<Button
 										type="submit"
 										variant="primary"
 										onClick={submitForm}

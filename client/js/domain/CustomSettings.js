@@ -6,7 +6,7 @@ import API from '../api'
 import { PrimaryButton } from '../components/styleComponent'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import BOTTable from '../components/BOTTable'
-import BOTButton from '../components/BOTButton'
+import Button from '../components/Button'
 import config from '../config'
 
 const pages = {
@@ -263,7 +263,7 @@ class CustomSettings extends React.Component {
 				<Row>
 					<Col xs={4} lg={3}>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.COVERED_AREA_PROFILE)}
 								onClick={() => {
 									this.setCurrentPage(pages.COVERED_AREA_PROFILE)
@@ -273,7 +273,7 @@ class CustomSettings extends React.Component {
 							/>
 						</Row>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.DEVICE_ALIASES)}
 								onClick={() => {
 									this.setCurrentPage(pages.DEVICE_ALIASES)
@@ -283,7 +283,7 @@ class CustomSettings extends React.Component {
 							/>
 						</Row>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.PATIENT_ALIASES)}
 								onClick={() => {
 									this.setCurrentPage(pages.PATIENT_ALIASES)

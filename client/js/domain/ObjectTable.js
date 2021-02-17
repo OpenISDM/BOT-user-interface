@@ -10,7 +10,7 @@ import { formatTime, isSameValue } from '../helper/utilities'
 import config from '../config'
 import BOTSelectTable from '../components/BOTSelectTable'
 import BOTTable from '../components/BOTTable'
-import BOTButton from '../components/BOTButton'
+import Button from '../components/Button'
 import BOTObjectFilterBar from '../components/BOTObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
@@ -397,7 +397,7 @@ class ObjectTable extends React.Component {
 						<ButtonToolbar>
 							{this.state.isMultiSelection ? (
 								<>
-									<BOTButton
+									<Button
 										theme={'danger'}
 										disableDebounce={true}
 										pressed={tableSelection.length > 0}
@@ -405,7 +405,7 @@ class ObjectTable extends React.Component {
 										onClick={this.handleDeleteAction}
 										text={locale.texts[deleteText]}
 									/>
-									<BOTButton
+									<Button
 										disableDebounce={true}
 										pressed={true}
 										name={DELETE}
@@ -415,18 +415,18 @@ class ObjectTable extends React.Component {
 								</>
 							) : (
 								<>
-									<BOTButton
+									<Button
 										pressed={true}
 										onClick={this.switchReplaceTagMode}
 										text={locale.texts.REPLACE_TAG}
 									/>
-									<BOTButton
+									<Button
 										pressed={this.state.isAddButtonPressed}
 										name={ADD}
 										onClick={this.handleClickButton}
 										text={locale.texts[addText]}
 									/>
-									<BOTButton
+									<Button
 										disableDebounce={true}
 										pressed={this.state.isMultiSelection}
 										name={DELETE}

@@ -1,13 +1,13 @@
 import React from 'react'
 import { debounce, keyBy } from 'lodash'
-import { Row, Col, Button, Form } from 'react-bootstrap'
+import { Row, Col, Form } from 'react-bootstrap'
 import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import API from '../api'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import BOTSelectTable from '../components/BOTSelectTable'
 import BOTTable from '../components/BOTTable'
-import BOTButton from '../components/BOTButton'
+import Button from '../components/Button'
 import config from '../config'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import DualListBox from './DualListBox'
@@ -326,9 +326,8 @@ class SearchSettings extends React.Component {
 										type: config.NAMED_LIST_TYPE.DEVICE,
 									})
 								}}
-							>
-								{locale.texts.CREATE}
-							</Button>
+								text={locale.texts.CREATE}
+							/>
 							<Form.Control
 								type="text"
 								value={listName}
@@ -363,9 +362,8 @@ class SearchSettings extends React.Component {
 										type: config.NAMED_LIST_TYPE.PATIENT,
 									})
 								}}
-							>
-								{locale.texts.CREATE}
-							</Button>
+								text={locale.texts.CREATE}
+							/>
 							<Form.Control
 								type="text"
 								value={listName}
@@ -464,9 +462,8 @@ class SearchSettings extends React.Component {
 						style={{ marginRight: '5px' }}
 						disabled={!selectedNamedList}
 						onClick={this.removeNamedList}
-					>
-						{locale.texts.DELETE}
-					</Button>
+						text={locale.texts.DELETE}
+					/>
 					<Select
 						className="flex-grow-1"
 						isClearable
@@ -504,7 +501,7 @@ class SearchSettings extends React.Component {
 				<Row>
 					<Col xs={4} lg={3}>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.CREATE_DEVICE_LIST)}
 								onClick={() => {
 									this.setCurrentPage(pages.CREATE_DEVICE_LIST)
@@ -514,7 +511,7 @@ class SearchSettings extends React.Component {
 							/>
 						</Row>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.CREATE_PATIENT_LIST)}
 								onClick={() => {
 									this.setCurrentPage(pages.CREATE_PATIENT_LIST)
@@ -524,7 +521,7 @@ class SearchSettings extends React.Component {
 							/>
 						</Row>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.VIEW_LIST)}
 								onClick={() => {
 									this.setCurrentPage(pages.VIEW_LIST)
@@ -534,7 +531,7 @@ class SearchSettings extends React.Component {
 							/>
 						</Row>
 						<Row style={style.rowContainer}>
-							<BOTButton
+							<Button
 								pressed={this.checkButtonIsPressed(pages.REVISE_LIST)}
 								onClick={() => {
 									this.setCurrentPage(pages.REVISE_LIST)

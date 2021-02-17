@@ -10,7 +10,7 @@ import {
 	SET_DEVICE_OBJECT_TYPE_VISIBLE,
 	SET_PERSON_OBJECT_TYPE_VISIBLE,
 } from '../../../reducer/action'
-import BOTButton from '../../../components/BOTButton'
+import Button from '../../../components/Button'
 
 class BrowserMapContainer extends React.Component {
 	static contextType = AppContext
@@ -91,7 +91,7 @@ class BrowserMapContainer extends React.Component {
 				<div>
 					<Nav className="d-flex align-items-start text-capitalize bd-highlight">
 						<Nav.Item className="mt-2">
-							<BOTButton
+							<Button
 								variant="outline-primary"
 								className="mr-1 ml-2 text-capitalize"
 								onClick={handleClickButton}
@@ -101,7 +101,7 @@ class BrowserMapContainer extends React.Component {
 						</Nav.Item>
 						<AccessControl permission={'user:saveSearchRecord'}>
 							<Nav.Item className="mt-2">
-								<BOTButton
+								<Button
 									variant="outline-primary"
 									className="mr-1 ml-2 text-capitalize"
 									onClick={handleClickButton}
@@ -114,7 +114,7 @@ class BrowserMapContainer extends React.Component {
 						</AccessControl>
 						<AccessControl permission={'user:toggleShowDevices'}>
 							<Nav.Item className="mt-2">
-								<BOTButton
+								<Button
 									variant="primary"
 									className="mr-1 ml-2 text-capitalize"
 									onClick={() => {
@@ -143,7 +143,7 @@ class BrowserMapContainer extends React.Component {
 						</AccessControl>
 						<AccessControl permission={'user:toggleShowResidents'}>
 							<Nav.Item className="mt-2">
-								<BOTButton
+								<Button
 									variant="primary"
 									className="mr-1 ml-2 text-capitalize"
 									onClick={() => {
@@ -176,7 +176,7 @@ class BrowserMapContainer extends React.Component {
 									area.id.toString()
 								) && (
 									<Nav.Item className="mt-2 bd-highligh">
-										<BOTButton
+										<Button
 											variant="warning"
 											className="mr-1 ml-2"
 											onClick={handleClickButton}
