@@ -1,4 +1,4 @@
-import BOTPagination from '../components/BOTPagination'
+import Pagination from '../components/Pagination'
 import { components } from 'react-select'
 import React from 'react'
 import styleSheet from './styleSheet'
@@ -191,7 +191,7 @@ const styleConfig = {
 
 		defaultPageSize: 15,
 
-		PaginationComponent: BOTPagination,
+		PaginationComponent: Pagination,
 
 		showPaginationTop: true,
 
