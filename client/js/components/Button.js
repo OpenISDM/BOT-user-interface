@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
-import { Button } from 'react-bootstrap'
+import { Button as RTBSButton } from 'react-bootstrap'
 import { debounce } from 'lodash'
 import PropTypes from 'prop-types'
 
-const BOTButton = ({
+const Button = ({
 	pressed = false,
 	theme = 'primary',
 	text = '',
@@ -28,7 +28,7 @@ const BOTButton = ({
 	}
 
 	return (
-		<Button
+		<RTBSButton
 			style={{ margin: '1px', ...style }}
 			variant={variant}
 			onClick={(e) => {
@@ -37,11 +37,11 @@ const BOTButton = ({
 			{...props}
 		>
 			{text}
-		</Button>
+		</RTBSButton>
 	)
 }
 
-BOTButton.propTypes = {
+Button.propTypes = {
 	pressed: PropTypes.bool,
 	theme: PropTypes.string,
 	text: PropTypes.string,
@@ -50,4 +50,4 @@ BOTButton.propTypes = {
 	disableDebounce: PropTypes.bool,
 }
 
-export default BOTButton
+export default Button
