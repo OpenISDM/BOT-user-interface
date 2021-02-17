@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
-import BOTSearchbar from '../../../components/BOTSearchbar'
+import Searchbar from '../../../components/Searchbar'
 import FrequentSearch from '../../FrequentSearch'
 import ObjectTypeList from '../../ObjectTypeList'
 import PropTypes from 'prop-types'
@@ -29,7 +29,7 @@ const BrowserSearchContainer = ({
 				id="searchBar"
 				className="d-flex justify-content-center align-items-center pb-2"
 			>
-				<BOTSearchbar
+				<Searchbar
 					placeholder={searchKey}
 					getSearchKey={getSearchKey}
 					clearSearchResult={clearSearchResult}

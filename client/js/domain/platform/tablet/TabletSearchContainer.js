@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Image } from 'react-bootstrap'
-import BOTSearchbar from '../../../components/BOTSearchbar'
+import Searchbar from '../../../components/Searchbar'
 import config from '../../../config'
 import PropTypes from 'prop-types'
 
@@ -18,7 +18,7 @@ const TabletSearchContainer = ({
 				id="searchBar"
 				className="d-flex justify-content-center align-items-center my-4"
 			>
-				<BOTSearchbar
+				<Searchbar
 					placeholder={searchKey}
 					getSearchKey={getSearchKey}
 					clearSearchResult={clearSearchResult}

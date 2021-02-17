@@ -29,7 +29,7 @@ const suggestionFilter = {
 	},
 }
 
-class BOTSearchbar extends React.Component {
+class Searchbar extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -210,11 +210,11 @@ class BOTSearchbar extends React.Component {
 	}
 }
 
-BOTSearchbar.propTypes = {
+Searchbar.propTypes = {
 	suggestData: PropTypes.array.isRequired,
 	clearSearchResult: PropTypes.bool.isRequired,
 	pinColorArray: PropTypes.array.isRequired,
 	getSearchKey: PropTypes.func.isRequired,
 }
 
-export default BOTSearchbar
+export default Searchbar
