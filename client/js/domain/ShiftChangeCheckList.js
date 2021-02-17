@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { AppContext } from '../context/AppContext'
 import { shiftChangeCheckTableColumn } from '../config/tables'
-import BOTSelectTable from '../components/BOTSelectTable'
+import SelectTable from '../components/SelectTable'
 import Map from '../components/Map'
 import PropTypes from 'prop-types'
 
@@ -45,7 +45,7 @@ class ShiftChangeCheckList extends React.Component {
 								<Map objectList={objectList} />
 							</Col>
 							<Col md={7}>
-								<BOTSelectTable
+								<SelectTable
 									data={totalResults}
 									columns={shiftChangeCheckTableColumn}
 									onMouseEnterCallback={this.handleOnMouseEnterCallback}

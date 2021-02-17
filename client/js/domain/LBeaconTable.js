@@ -10,7 +10,7 @@ import AccessControl from './AccessControl'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import API from '../api'
 import { formatTime } from '../helper/utilities'
-import BOTSelectTable from '../components/BOTSelectTable'
+import SelectTable from '../components/SelectTable'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 
 class LbeaconTable extends React.Component {
@@ -117,7 +117,7 @@ class LbeaconTable extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<BOTSelectTable
+				<SelectTable
 					data={this.state.data}
 					columns={lbeaconTableColumn}
 					onClickCallback={() => {

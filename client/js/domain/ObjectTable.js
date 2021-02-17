@@ -8,7 +8,7 @@ import API from '../api'
 import { ADD, DELETE, SAVE_SUCCESS, DISASSOCIATE } from '../config/wordMap'
 import { formatTime, isSameValue } from '../helper/utilities'
 import config from '../config'
-import BOTSelectTable from '../components/BOTSelectTable'
+import SelectTable from '../components/SelectTable'
 import Table from '../components/Table'
 import Button from '../components/Button'
 import ObjectFilterBar from '../components/ObjectFilterBar'
@@ -441,7 +441,7 @@ class ObjectTable extends React.Component {
 				<hr />
 
 				{this.state.isMultiSelection ? (
-					<BOTSelectTable
+					<SelectTable
 						data={this.state.filteredData}
 						columns={columns}
 						style={{ maxHeight: '80vh' }}

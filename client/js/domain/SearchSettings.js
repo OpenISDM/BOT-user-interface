@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import API from '../api'
 import { setSuccessMessage } from '../helper/messageGenerator'
-import BOTSelectTable from '../components/BOTSelectTable'
+import SelectTable from '../components/SelectTable'
 import Table from '../components/Table'
 import Button from '../components/Button'
 import config from '../config'
@@ -338,7 +338,7 @@ class SearchSettings extends React.Component {
 							/>
 						</div>
 						<div style={{ marginTop: '10px' }}>
-							<BOTSelectTable
+							<SelectTable
 								data={namedListDeviceObjects}
 								columns={COLUMNS.DEIVCE}
 								pageSize={25}
@@ -374,7 +374,7 @@ class SearchSettings extends React.Component {
 							/>
 						</div>
 						<div style={{ marginTop: '10px' }}>
-							<BOTSelectTable
+							<SelectTable
 								data={namedListPatientObjects}
 								columns={COLUMNS.PATIENT}
 								pageSize={25}

@@ -7,7 +7,7 @@ import { PrimaryButton } from '../components/styleComponent'
 import EditTransferLocationForm from './EditTransferLocationForm'
 import DeleteAlertModal from './DeleteAlertModal'
 import { ADD, DELETE, SAVE_SUCCESS } from '../config/wordMap'
-import BOTSelectTable from '../components/BOTSelectTable'
+import SelectTable from '../components/SelectTable'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 
 class TranferredLocationManagement extends React.Component {
@@ -143,7 +143,7 @@ class TranferredLocationManagement extends React.Component {
 					</PrimaryButton>
 				</div>
 				<hr />
-				<BOTSelectTable data={data} columns={TransferredLocationColumn} />
+				<SelectTable data={data} columns={TransferredLocationColumn} />
 				<EditTransferLocationForm
 					show={this.state.showAddForm}
 					actionName={ADD}

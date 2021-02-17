@@ -7,11 +7,11 @@ import { SET_TABLE_SELECTION } from '../reducer/action'
 import { JSONClone } from '../helper/utilities'
 import PropTypes from 'prop-types'
 
-const SelectTable = selecTableHOC(ReactTable)
+const RTBSSelectTable = selecTableHOC(ReactTable)
 
 import 'react-table/react-table.css'
 
-class BOTSelectTable extends React.Component {
+class SelectTable extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -132,7 +132,7 @@ class BOTSelectTable extends React.Component {
 		})
 
 		return (
-			<SelectTable
+			<RTBSSelectTable
 				{...extraProps}
 				{...styleConfig.reactTable}
 				ref={(r) => (this.selectTable = r)}
@@ -182,7 +182,7 @@ class BOTSelectTable extends React.Component {
 	}
 }
 
-BOTSelectTable.propTypes = {
+SelectTable.propTypes = {
 	style: PropTypes.object,
 	data: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
@@ -193,4 +193,4 @@ BOTSelectTable.propTypes = {
 	onMouseLeaveCallback: PropTypes.func.isRequired,
 }
 
-export default BOTSelectTable
+export default SelectTable

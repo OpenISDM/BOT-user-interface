@@ -9,7 +9,7 @@ import { setSuccessMessage } from '../helper/messageGenerator'
 import { PrimaryButton } from '../components/styleComponent'
 import AccessControl from './AccessControl'
 import API from '../api'
-import BOTSelectTable from '../components/BOTSelectTable'
+import SelectTable from '../components/SelectTable'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 
@@ -180,7 +180,7 @@ class BOTAdminMonitorSetting extends React.Component {
 				</div>
 
 				<hr />
-				<BOTSelectTable
+				<SelectTable
 					data={this.state.data}
 					columns={this.state.columns}
 					onClickCallback={(selectedItem) => {
