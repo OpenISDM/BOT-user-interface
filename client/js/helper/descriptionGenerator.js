@@ -1,6 +1,6 @@
 import config from '../config'
 import React from 'react'
-import AccessControl from '../domain/authentication/AccessControl'
+import AccessControl from '../domain/AccessControl'
 import {
 	RESERVE,
 	RETURNED,

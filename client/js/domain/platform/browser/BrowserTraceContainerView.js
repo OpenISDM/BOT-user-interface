@@ -12,11 +12,11 @@ import {
 	BOTNav,
 	NoDataFoundDiv,
 	PrimaryButton,
-} from '../../BOTComponent/styleComponent'
-import BOTTable from '../../BOTComponent/BOTTable'
-import Loader from '../../presentational/Loader'
+} from '../../../components/styleComponent'
+import BOTTable from '../../../components/BOTTable'
+import Loader from '../../Loader'
 import Select from 'react-select'
-import IconButton from '../../BOTComponent/IconButton'
+import IconButton from '../../../components/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
 import { AppContext } from '../../../context/AppContext'

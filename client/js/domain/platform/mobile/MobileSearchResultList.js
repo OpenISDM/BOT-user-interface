@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react'
 import { Button, Col, Row } from 'react-bootstrap'
 import ScrollArea from 'react-scrollbar'
-import AccessControl from '../../authentication/AccessControl'
-import SearchResultListGroup from '../../presentational/SearchResultListGroup'
+import AccessControl from '../../AccessControl'
+import SearchResultListGroup from '../../SearchResultListGroup'
 import { AppContext } from '../../../context/AppContext'
-import { Title } from '../../BOTComponent/styleComponent'
+import { Title } from '../../../components/styleComponent'
+import PropTypes from 'prop-types'
 
 const MobileSearchResultList = ({
 	searchKey,
@@ -88,6 +89,16 @@ const MobileSearchResultList = ({
 			</Row>
 		</Fragment>
 	)
+}
+
+MobileSearchResultList.propTypes = {
+	searchKey: PropTypes.array,
+	searchResult: PropTypes.array,
+	title: PropTypes.string,
+	selection: PropTypes.array,
+	handleToggleNotFound: PropTypes.func,
+	showNotFoundResult: PropTypes.func,
+	onSelect: PropTypes.func,
 }
 
 export default MobileSearchResultList

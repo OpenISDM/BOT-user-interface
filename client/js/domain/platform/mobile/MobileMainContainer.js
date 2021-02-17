@@ -1,7 +1,8 @@
 import React from 'react'
-import SearchContainer from '../../container/SearchContainer'
+import SearchContainer from '../../SearchContainer'
 import { AppContext } from '../../../context/AppContext'
-import MapContainer from '../../container/MapContainer'
+import MapContainer from '../../MapContainer'
+import PropTypes from 'prop-types'
 
 const MobileMainContainer = ({
 	getSearchKey,
@@ -76,6 +77,23 @@ const MobileMainContainer = ({
 			</div>
 		</div>
 	)
+}
+
+MobileMainContainer.propTypes = {
+	getSearchKey: PropTypes.func.isRequired,
+	lbeaconPosition: PropTypes.array.isRequired,
+	showMobileMap: PropTypes.bool,
+	clearSearchResult: PropTypes.func,
+	searchKey: PropTypes.array,
+	searchResult: PropTypes.array,
+	proccessedTrackingData: PropTypes.array,
+	pathMacAddress: PropTypes.array,
+	locationMonitorConfig: PropTypes.object,
+	searchObjectArray: PropTypes.array,
+	pinColorArray: PropTypes.array,
+	handleClick: PropTypes.func,
+	keywords: PropTypes.array,
+	display: PropTypes.bool,
 }
 
 export default MobileMainContainer

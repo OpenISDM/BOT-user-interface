@@ -1,14 +1,13 @@
 import React from 'react'
-import { Row, Image } from 'react-bootstrap'
-import BOTSearchbar from '../../BOTComponent/BOTSearchbar'
-import config from '../../../config'
+import { Row } from 'react-bootstrap'
+import BOTSearchbar from '../../../components/BOTSearchbar'
+import PropTypes from 'prop-types'
 
 const MobileSearchContainer = ({
 	searchKey,
 	getSearchKey,
 	handleTouchMove,
 	clearSearchResult,
-	suggestData,
 	keywords,
 }) => {
 	return (
@@ -27,6 +26,14 @@ const MobileSearchContainer = ({
 			</Row>
 		</div>
 	)
+}
+
+MobileSearchContainer.propTypes = {
+	searchKey: PropTypes.array,
+	getSearchKey: PropTypes.func,
+	handleTouchMove: PropTypes.func,
+	clearSearchResult: PropTypes.func,
+	keywords: PropTypes.array,
 }
 
 export default MobileSearchContainer

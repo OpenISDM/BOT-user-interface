@@ -1,8 +1,8 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
-import BOTSearchbar from '../../BOTComponent/BOTSearchbar'
-import FrequentSearch from '../../container/FrequentSearch'
-import ObjectTypeList from '../../container/ObjectTypeList'
+import BOTSearchbar from '../../../components/BOTSearchbar'
+import FrequentSearch from '../../FrequentSearch'
+import ObjectTypeList from '../../ObjectTypeList'
 import PropTypes from 'prop-types'
 
 const BrowserSearchContainer = ({

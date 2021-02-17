@@ -1,7 +1,8 @@
 import React from 'react'
 import { Row, Image } from 'react-bootstrap'
-import BOTSearchbar from '../../BOTComponent/BOTSearchbar'
+import BOTSearchbar from '../../../components/BOTSearchbar'
 import config from '../../../config'
+import PropTypes from 'prop-types'
 
 const TabletSearchContainer = ({
 	searchKey,
@@ -27,6 +28,14 @@ const TabletSearchContainer = ({
 			</Row>
 		</div>
 	)
+}
+
+TabletSearchContainer.propTypes = {
+	searchKey: PropTypes.object,
+	getSearchKey: PropTypes.func,
+	handleTouchMove: PropTypes.func,
+	clearSearchResult: PropTypes.func,
+	suggestData: PropTypes.array,
 }
 
 export default TabletSearchContainer

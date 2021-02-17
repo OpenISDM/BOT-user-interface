@@ -1,17 +1,18 @@
 import React from 'react'
-import QRcodeContainer from '../../container/QRcode'
+import QRcodeContainer from '../../QRcode'
 import { AppContext } from '../../../context/AppContext'
-import InfoPrompt from '../../presentational/InfoPrompt'
+import InfoPrompt from '../../InfoPrompt'
 import config from '../../../config'
 import { Nav, Button } from 'react-bootstrap'
-import AccessControl from '../../authentication/AccessControl'
-import Map from '../../presentational/Map'
+import AccessControl from '../../AccessControl'
+import Map from '../../Map'
 import {
 	SET_DEVICE_OBJECT_TYPE_VISIBLE,
 	SET_PERSON_OBJECT_TYPE_VISIBLE,
 } from '../../../reducer/action'
+import PropTypes from 'prop-types'
 
-export default class TabletMapContainer extends React.Component {
+class TabletMapContainer extends React.Component {
 	static contextType = AppContext
 
 	render() {
@@ -20,10 +21,23 @@ export default class TabletMapContainer extends React.Component {
 		const {
 			proccessedTrackingData,
 			showPdfDownloadForm,
+			pathMacAddress,
+			colorPanel,
 			handleClickButton,
+			lbeaconPosition,
+			searchKey,
+			isSearched,
+			searchResult,
+			getSearchKey,
+			handleClosePath,
+			handleShowPath,
+			showPath,
+			activeActionButtons,
 		} = this.props
+
 		const [
-			{ area, deviceObjectTypeVisible, personObjectTypeVisible },
+			{ deviceObjectTypeVisible, personObjectTypeVisible },
+			dispatch,
 		] = stateReducer
 		const style = {
 			title: {
@@ -64,12 +78,12 @@ export default class TabletMapContainer extends React.Component {
 								<QRcodeContainer
 									data={proccessedTrackingData.filter((item) => item.searched)}
 									userInfo={auth.user}
-									searchKey={this.props.searchKey}
-									isSearched={this.props.isSearched}
+									searchKey={searchKey}
+									isSearched={isSearched}
 								/>
 								<InfoPrompt
-									searchKey={this.props.searchKey}
-									searchResult={this.props.searchResult}
+									searchKey={searchKey}
+									searchResult={searchResult}
 									title={locale.texts.FOUND}
 									title2={locale.texts.NOT_FOUND}
 								/>
@@ -77,15 +91,15 @@ export default class TabletMapContainer extends React.Component {
 						</div>
 						<div style={style.mapBlockForTablet}>
 							<Map
-								pathMacAddress={this.props.pathMacAddress}
-								colorPanel={this.props.colorPanel}
-								proccessedTrackingData={this.props.proccessedTrackingData}
-								lbeaconPosition={this.props.lbeaconPosition}
-								getSearchKey={this.props.getSearchKey}
+								pathMacAddress={pathMacAddress}
+								colorPanel={colorPanel}
+								proccessedTrackingData={proccessedTrackingData}
+								lbeaconPosition={lbeaconPosition}
+								getSearchKey={getSearchKey}
 								mapConfig={config.mapConfig}
-								handleClosePath={this.props.handleClosePath}
-								handleShowPath={this.props.handleShowPath}
-								showPath={this.props.showPath}
+								handleClosePath={handleClosePath}
+								handleShowPath={handleShowPath}
+								showPath={showPath}
 							/>
 						</div>
 					</div>
@@ -135,7 +149,9 @@ export default class TabletMapContainer extends React.Component {
 											config.SEARCHED_TYPE.PIN_SELETION,
 										]}
 										disabled={
-											!activeActionButtons.includes(ACTION_BUTTONS.DEVICE)
+											!activeActionButtons.includes(
+												config.ACTION_BUTTONS.DEVICE
+											)
 										}
 									>
 										{deviceObjectTypeVisible
@@ -162,7 +178,9 @@ export default class TabletMapContainer extends React.Component {
 											config.SEARCHED_TYPE.PIN_SELETION,
 										]}
 										disabled={
-											!activeActionButtons.includes(ACTION_BUTTONS.PERSON)
+											!activeActionButtons.includes(
+												config.ACTION_BUTTONS.PERSON
+											)
 										}
 									>
 										{personObjectTypeVisible
@@ -171,7 +189,7 @@ export default class TabletMapContainer extends React.Component {
 									</Button>
 								</Nav.Item>
 							</AccessControl>
-							{process.env.IS_TRACKING_PATH_ON == 1 && (
+							{process.env.IS_TRACKING_PATH_ON === 1 && (
 								<AccessControl permission={'user:cleanPath'}>
 									<Nav.Item className="mt-2">
 										<Button
@@ -179,7 +197,7 @@ export default class TabletMapContainer extends React.Component {
 											className="mr-1 ml-2 text-capitalize"
 											onClick={handleClickButton}
 											name="cleanPath"
-											disabled={this.props.pathMacAddress == ''}
+											disabled={pathMacAddress === ''}
 										>
 											{locale.texts.CLEAN_PATH}
 										</Button>
@@ -193,3 +211,22 @@ export default class TabletMapContainer extends React.Component {
 		)
 	}
 }
+
+TabletMapContainer.propTypes = {
+	proccessedTrackingData: PropTypes.array,
+	pathMacAddress: PropTypes.array,
+	colorPanel: PropTypes.object,
+	handleClosePath: PropTypes.func,
+	lbeaconPosition: PropTypes.array,
+	handleShowPath: PropTypes.array,
+	searchKey: PropTypes.array,
+	showPath: PropTypes.bool,
+	getSearchKey: PropTypes.func,
+	isSearched: PropTypes.bool,
+	searchResult: PropTypes.array,
+	showPdfDownloadForm: PropTypes.bool,
+	handleClickButton: PropTypes.func,
+	activeActionButtons: PropTypes.array,
+}
+
+export default TabletMapContainer

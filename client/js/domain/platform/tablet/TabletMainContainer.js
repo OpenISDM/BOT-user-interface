@@ -1,7 +1,9 @@
 import React from 'react'
-import SearchResultList from '../../presentational/SearchResultList'
-import SearchContainer from '../../container/SearchContainer'
+import SearchResultList from '../../SearchResultList'
+import SearchContainer from '../../SearchContainer'
 import AuthenticationContext from '../../../context/AuthenticationContext'
+import MapContainer from '../../MapContainer'
+import PropTypes from 'prop-types'
 
 const TabletMainContainer = ({
 	handleClearButton,
@@ -81,6 +83,22 @@ const TabletMainContainer = ({
 			</div>
 		</div>
 	)
+}
+
+TabletMainContainer.propTypes = {
+	handleClearButton: PropTypes.func,
+	getSearchKey: PropTypes.func,
+	handleClosePath: PropTypes.func,
+	handleShowPath: PropTypes.func,
+	lbeaconPosition: PropTypes.array,
+	authenticated: PropTypes.bool,
+	highlightSearchPanel: PropTypes.func,
+	showMobileMap: PropTypes.func,
+	clearSearchResult: PropTypes.func,
+	searchKey: PropTypes.array,
+	searchResult: PropTypes.array,
+	proccessedTrackingData: PropTypes.array,
+	pathMacAddress: PropTypes.array,
 }
 
 export default TabletMainContainer

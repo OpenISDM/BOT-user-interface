@@ -11,16 +11,16 @@ import {
 	PrimaryButton,
 	NoDataFoundDiv,
 	PageTitle,
-} from '../../BOTComponent/styleComponent'
-import Loader from '../../presentational/Loader'
+} from '../../../components/styleComponent'
+import Loader from '../../Loader'
 import Select from 'react-select'
 
-import IconButton from '../../BOTComponent/IconButton'
+import IconButton from '../../../components/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
 import pdfPackageGenerator from '../../../helper/pdfPackageGenerator'
 import { Row, Col, Card } from 'react-bootstrap'
-import NumberPicker from '../../container/NumberPicker'
+import NumberPicker from '../../NumberPicker'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import API from '../../../api'
@@ -93,7 +93,7 @@ class BrowserContactTree extends React.Component {
 
 		this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.LOADING)
 
-		while (wait.length != 0) {
+		while (wait.length !== 0) {
 			const parent = wait.shift()
 			if (parent.level > level - 1) break
 			const res = await API.Utils.getTraceContactTree({
@@ -123,7 +123,7 @@ class BrowserContactTree extends React.Component {
 		}
 
 		/** set status code of fetching contact tracing data */
-		if (this.state.collection.length == 0) {
+		if (this.state.collection.length === 0) {
 			this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.NO_RESULT)
 		} else this.formikRef.current.setStatus(config.AJAX_STATUS_MAP.SUCCESS)
 	}
@@ -143,8 +143,8 @@ class BrowserContactTree extends React.Component {
 
 	filterDuplicated = (data) => {
 		const duplicated = []
-		Object.keys(data).map((level) => {
-			Object.keys(data[level]).map((parent) => {
+		Object.keys(data).forEach((level) => {
+			Object.keys(data[level]).forEach((parent) => {
 				data[level][parent] = data[level][parent]
 					.filter((child) => {
 						return !duplicated.includes(child)
@@ -161,34 +161,31 @@ class BrowserContactTree extends React.Component {
 	handleClick = async (e) => {
 		const name = e.target.name
 		const { auth, locale } = this.context
-		const values = this.formikRef.current.state.values
 		let res = null
-		switch (name) {
-			case 'exportPDF':
-				const pdfOptions = {
-					format: 'A4',
-					orientation: 'landscape',
-					border: '1cm',
-					timeout: '12000',
-				}
+		if (name === 'exportPDF') {
+			// const pdfOptions = {
+			// 	format: 'A4',
+			// 	orientation: 'landscape',
+			// 	border: '1cm',
+			// 	timeout: '12000',
+			// }
 
-				const pdfPackage = pdfPackageGenerator.getPdfPackage({
-					option: 'contactTree',
-					user: auth.user,
-					data: this.state.collection,
-					locale,
-					signature: null,
-					additional: null,
-					// pdfOptions,
-				})
-				res = await API.File.getPDF({
-					userInfo: auth.user,
-					pdfPackage,
-				})
-				if (res) {
-					await API.File.getFile(pdfPackage.path)
-				}
-				break
+			const pdfPackage = pdfPackageGenerator.getPdfPackage({
+				option: 'contactTree',
+				user: auth.user,
+				data: this.state.collection,
+				locale,
+				signature: null,
+				additional: null,
+				// pdfOptions,
+			})
+			res = await API.File.getPDF({
+				userInfo: auth.user,
+				pdfPackage,
+			})
+			if (res) {
+				await API.File.getFile(pdfPackage.path)
+			}
 		}
 	}
 
@@ -199,7 +196,7 @@ class BrowserContactTree extends React.Component {
 			<BOTContainer>
 				<div className="d-flex justify-content-between">
 					<PageTitle>{locale.texts.CONTACT_TREE}</PageTitle>
-					{this.state.collection.length != 0 && (
+					{this.state.collection.length !== 0 && (
 						<div>
 							<IconButton
 								iconName="fas fa-download"
@@ -232,15 +229,7 @@ class BrowserContactTree extends React.Component {
 							...values,
 						})
 					}}
-					render={({
-						values,
-						errors,
-						status,
-						touched,
-						isSubmitting,
-						setFieldValue,
-						submitForm,
-					}) => (
+					render={({ values, errors, status, setFieldValue, submitForm }) => (
 						<Fragment>
 							<div className="d-flex justify-content-between my-4">
 								<div className="d-flex justify-content-start">
@@ -390,7 +379,7 @@ class BrowserContactTree extends React.Component {
 							<Row
 							// className='d-flex justify-content-start'
 							>
-								{this.state.collection.length != 0 ? (
+								{this.state.collection.length !== 0 ? (
 									this.state.collection.map((level, index) => {
 										return (
 											<Card
@@ -420,9 +409,14 @@ class BrowserContactTree extends React.Component {
 																		<i className="fas fa-arrow-right"></i>
 																	</Col>
 																	<Col lg={5}>
-																		{level[parent].map((child) => {
+																		{level[parent].map((child, index) => {
 																			return (
-																				<p className="d-flex-column">{child}</p>
+																				<p
+																					key={index}
+																					className="d-flex-column"
+																				>
+																					{child}
+																				</p>
 																			)
 																		})}
 																	</Col>
@@ -440,7 +434,7 @@ class BrowserContactTree extends React.Component {
 									</NoDataFoundDiv>
 								)}
 							</Row>
-							{status == config.AJAX_STATUS_MAP.LOADING && (
+							{status === config.AJAX_STATUS_MAP.LOADING && (
 								<Loader backdrop={false} />
 							)}
 						</Fragment>

@@ -1,37 +1,37 @@
 /* eslint-disable react/display-name */
 import React from 'react'
-import UserProfile from '../domain/container/UserContainer/UserProfile'
-import LBeaconTable from '../domain/container/LBeaconTable'
-import GatewayTable from '../domain/container/GatewayTable'
-import AgentTable from '../domain/container/AgentTable'
-import AdminManagementContainer from '../domain/container/UserContainer/AdminManagementContainer'
-import DeviceGroupManager from '../domain/container/UserContainer/DeviceGroupManager'
-import PatientGroupManager from '../domain/container/UserContainer/PatientGroupManager'
-import MonitorSetting from '../domain/container/MonitorSetting'
-import ObjectEditedRecord from '../domain/container/UserContainer/ObjectEditedRecord'
-import ShiftChangeRecord from '../domain/container/UserContainer/ShiftChangeRecord'
-import DeviceTable from '../domain/presentational/DeviceTable'
-import PatientTable from '../domain/presentational/PatientTable'
-import StaffTable from '../domain/presentational/StaffTable'
-import VisitorTable from '../domain/presentational/VisitorTable'
-import TrackingTable from '../domain/container/TrackingTable'
-import BatteryStatusTable from '../domain/container/BatteryStatusTable'
-import TraceContainer from '../domain/container/menuContainer/TraceContainer'
+import UserProfile from '../domain/UserProfile'
+import LBeaconTable from '../domain/LBeaconTable'
+import GatewayTable from '../domain/GatewayTable'
+import AgentTable from '../domain/AgentTable'
+import AdminManagementContainer from '../domain/AdminManagementContainer'
+import DeviceGroupManager from '../domain/DeviceGroupManager'
+import PatientGroupManager from '../domain/PatientGroupManager'
+import MonitorSetting from '../domain/MonitorSetting'
+import ObjectEditedRecord from '../domain/ObjectEditedRecord'
+import ShiftChangeRecord from '../domain/ShiftChangeRecord'
+import DeviceTable from '../domain/DeviceTable'
+import PatientTable from '../domain/PatientTable'
+import StaffTable from '../domain/StaffTable'
+import VisitorTable from '../domain/VisitorTable'
+import TrackingTable from '../domain/TrackingTable'
+import BatteryStatusTable from '../domain/BatteryStatusTable'
+import TraceContainer from '../domain/TraceContainer'
 import routes from '../config/routes/routes'
 import Loadable from 'react-loadable'
-import Loader from '../domain/presentational/Loader'
-import CustomSettings from '../domain/container/menuContainer/CustomSettings'
-import SearchSettings from '../domain/container/menuContainer/SearchSettings'
-import GetAssignments from '../domain/container/GetAssignments'
-import ShiftChangeHistoricalRecord from '../domain/container/ShiftChangeHistoricalRecord'
-// import RolePermissionManagement from '../domain/container/RolePermissionManagement'
-// import TransferredLocationManagement from '../domain/container/TransferredLocationManagement';
+import Loader from '../domain/Loader'
+import CustomSettings from '../domain/CustomSettings'
+import SearchSettings from '../domain/SearchSettings'
+import GetAssignments from '../domain/GetAssignments'
+import ShiftChangeHistoricalRecord from '../domain/ShiftChangeHistoricalRecord'
+// import RolePermissionManagement from '../domain/RolePermissionManagement'
+// import TransferredLocationManagement from '../domain/TransferredLocationManagement';
 
 const TransferredLocationManagement = Loadable({
 	loader: () =>
 		import(
 			/* webpackChunkName: "TransferredLocationManagement" */
-			'../domain/container/TransferredLocationManagement'
+			'../domain/TransferredLocationManagement'
 		),
 	loading: Loader,
 })

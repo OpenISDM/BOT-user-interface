@@ -6,7 +6,7 @@ import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
-import BOTTable from '../../BOTComponent/BOTTable'
+import BOTTable from '../../../components/BOTTable'
 import moment from 'moment'
 import {
 	BOTNavLink,
@@ -15,11 +15,11 @@ import {
 	BOTContainer,
 	PrimaryButton,
 	PageTitle,
-} from '../../BOTComponent/styleComponent'
-import Loader from '../../presentational/Loader'
+} from '../../../components/styleComponent'
+import Loader from '../../Loader'
 import Select from 'react-select'
 
-import IconButton from '../../BOTComponent/IconButton'
+import IconButton from '../../../components/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
 import { AppContext } from '../../../context/AppContext'
@@ -225,6 +225,7 @@ const TabletTraceContainerView = React.forwardRef(
 									>
 										<DateTimePicker
 											inputProps={{
+												// eslint-disable-next-line react/display-name
 												component: (props) => <input {...props} readOnly />,
 											}}
 											name="startTime"
@@ -263,6 +264,7 @@ const TabletTraceContainerView = React.forwardRef(
 									>
 										<DateTimePicker
 											inputProps={{
+												// eslint-disable-next-line react/display-name
 												component: (props) => <input {...props} readOnly />,
 											}}
 											name="endTime"

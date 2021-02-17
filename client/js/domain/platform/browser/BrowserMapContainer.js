@@ -2,15 +2,15 @@ import React from 'react'
 import { AppContext } from '../../../context/AppContext'
 import config from '../../../config'
 import { Nav } from 'react-bootstrap'
-import AccessControl from '../../authentication/AccessControl'
-import Map from '../../presentational/Map'
+import AccessControl from '../../AccessControl'
+import Map from '../../Map'
 import { CLEAR_SEARCH_RESULT } from '../../../config/wordMap'
 import PropTypes from 'prop-types'
 import {
 	SET_DEVICE_OBJECT_TYPE_VISIBLE,
 	SET_PERSON_OBJECT_TYPE_VISIBLE,
 } from '../../../reducer/action'
-import BOTButton from '../../BOTComponent/BOTButton'
+import BOTButton from '../../../components/BOTButton'
 
 class BrowserMapContainer extends React.Component {
 	static contextType = AppContext

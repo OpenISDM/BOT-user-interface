@@ -1,32 +1,27 @@
 import React from 'react'
-import QRcodeContainer from '../../container/QRcode'
 import { AppContext } from '../../../context/AppContext'
-import InfoPrompt from '../../presentational/InfoPrompt'
 import config from '../../../config'
-import { Nav, Button } from 'react-bootstrap'
-import AccessControl from '../../authentication/AccessControl'
-import Map from '../../presentational/Map'
+import Map from '../../Map'
+import PropTypes from 'prop-types'
 
-export default class TabletMapContainer extends React.Component {
+class TabletMapContainer extends React.Component {
 	static contextType = AppContext
 
 	render() {
-		const { locale, stateReducer, auth } = this.context
-
 		const {
 			locationMonitorConfig,
 			proccessedTrackingData,
-			showPdfDownloadForm,
-			handleClickButton,
-			authenticated,
+			pathMacAddress,
+			colorPanel,
+			handleClosePath,
+			lbeaconPosition,
 			searchObjectArray,
 			pinColorArray,
+			handleShowPath,
 			searchKey,
-			handleClick,
+			showPath,
 			getSearchKey,
 		} = this.props
-
-		const [{ area }] = stateReducer
 
 		const style = {
 			mapForMobile: {
@@ -43,22 +38,38 @@ export default class TabletMapContainer extends React.Component {
 		return (
 			<div style={style.mapForMobile}>
 				<Map
-					pathMacAddress={this.props.pathMacAddress}
-					colorPanel={this.props.colorPanel}
+					pathMacAddress={pathMacAddress}
+					colorPanel={colorPanel}
 					proccessedTrackingData={proccessedTrackingData}
-					lbeaconPosition={this.props.lbeaconPosition}
-					locationMonitorConfig={this.props.locationMonitorConfig}
-					getSearchKey={this.props.getSearchKey}
+					lbeaconPosition={lbeaconPosition}
+					locationMonitorConfig={locationMonitorConfig}
+					getSearchKey={getSearchKey}
 					mapConfig={config.mapConfig}
-					handleClosePath={this.props.handleClosePath}
-					handleShowPath={this.props.handleShowPath}
-					showPath={this.props.showPath}
+					handleClosePath={handleClosePath}
+					handleShowPath={handleShowPath}
+					showPath={showPath}
 					searchObjectArray={searchObjectArray}
 					pinColorArray={pinColorArray}
 					searchKey={searchKey}
-					getSearchKey={getSearchKey}
 				/>
 			</div>
 		)
 	}
 }
+
+TabletMapContainer.propTypes = {
+	locationMonitorConfig: PropTypes.object,
+	proccessedTrackingData: PropTypes.array,
+	pathMacAddress: PropTypes.array,
+	colorPanel: PropTypes.object,
+	handleClosePath: PropTypes.func,
+	lbeaconPosition: PropTypes.array,
+	searchObjectArray: PropTypes.array,
+	pinColorArray: PropTypes.array,
+	handleShowPath: PropTypes.array,
+	searchKey: PropTypes.array,
+	showPath: PropTypes.bool,
+	getSearchKey: PropTypes.func,
+}
+
+export default TabletMapContainer

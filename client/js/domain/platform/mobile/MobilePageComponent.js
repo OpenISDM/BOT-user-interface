@@ -5,9 +5,10 @@ import {
 	PageTitle,
 	BOTNav,
 	BOTNavLink,
-} from '../../BOTComponent/styleComponent'
+} from '../../../components/styleComponent'
 import { AppContext } from '../../../context/AppContext'
-import AccessControl from '../../authentication/AccessControl'
+import AccessControl from '../../AccessControl'
+import PropTypes from 'prop-types'
 
 const MobilePageComponent = ({ containerModule, setMessage }) => {
 	const { locale } = React.useContext(AppContext)
@@ -56,4 +57,10 @@ const MobilePageComponent = ({ containerModule, setMessage }) => {
 		</BOTContainer>
 	)
 }
+
+MobilePageComponent.propTypes = {
+	containerModule: PropTypes.object,
+	setMessage: PropTypes.func,
+}
+
 export default MobilePageComponent

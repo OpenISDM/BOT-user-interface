@@ -1,9 +1,10 @@
 import React from 'react'
 import { Col, Button } from 'react-bootstrap'
-import AccessControl from '../../authentication/AccessControl'
+import AccessControl from '../../AccessControl'
 import { AppContext } from '../../../context/AppContext'
 import { MobileOnlyView, TabletView } from 'react-device-detect'
 import ScrollArea from 'react-scrollbar'
+import PropTypes from 'prop-types'
 
 class TabletObjectTypeList extends React.Component {
 	static contextType = AppContext
@@ -14,7 +15,7 @@ class TabletObjectTypeList extends React.Component {
 
 	componentDidUpdate = (prepProps) => {
 		if (
-			prepProps.clearSearchResult != this.props.clearSearchResult &&
+			prepProps.clearSearchResult !== this.props.clearSearchResult &&
 			!prepProps.clearSearchResult
 		) {
 			this.setState({
@@ -36,7 +37,7 @@ class TabletObjectTypeList extends React.Component {
 	}
 
 	render() {
-		const { locale, auth } = this.context
+		const { locale } = this.context
 
 		const style = {
 			list: {
@@ -67,10 +68,6 @@ class TabletObjectTypeList extends React.Component {
 				fontSize: '1.5rem',
 				fontWeight: 400,
 			},
-		}
-
-		const optionsOfMobile = {
-			maxScrollbarLength: 500,
 		}
 
 		return (
@@ -223,6 +220,12 @@ class TabletObjectTypeList extends React.Component {
 			</div>
 		)
 	}
+}
+
+TabletObjectTypeList.propTypes = {
+	deviceObjectTypes: PropTypes.array,
+	clearSearchResult: PropTypes.func,
+	getSearchKey: PropTypes.func,
 }
 
 export default TabletObjectTypeList

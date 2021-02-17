@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import AccessControl from '../../authentication/AccessControl'
-import SearchResultListGroup from '../../presentational/SearchResultListGroup'
+import AccessControl from '../../AccessControl'
+import SearchResultListGroup from '../../SearchResultListGroup'
 import { AppContext } from '../../../context/AppContext'
-import { Title } from '../../BOTComponent/styleComponent'
+import { Title } from '../../../components/styleComponent'
 import PropTypes from 'prop-types'
 
 const BrowserSearchResultList = ({
