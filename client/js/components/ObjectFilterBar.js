@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import styleConfig from '../config/styleConfig'
-import Input from '../components/Input'
+import Input from './Input'
 import { compareString, includes, filterByField } from '../helper/utilities'
 import { SEARCH_BAR } from '../config/wordMap'
 import PropTypes from 'prop-types'
@@ -42,7 +42,7 @@ const filterObjectList = ({
 	})
 }
 
-const BOTObjectFilterBar = ({
+const ObjectFilterBar = ({
 	onFilterUpdated = () => {
 		// do nothing
 	},
@@ -109,11 +109,11 @@ const BOTObjectFilterBar = ({
 	return <div className="d-flex justify-content-start">{elements}</div>
 }
 
-BOTObjectFilterBar.propTypes = {
+ObjectFilterBar.propTypes = {
 	onFilterUpdated: PropTypes.func.isRequired,
 	oldObjectFilter: PropTypes.array.isRequired,
 	objectList: PropTypes.array.isRequired,
 	selectionList: PropTypes.array.isRequired,
 }
 
-export default BOTObjectFilterBar
+export default ObjectFilterBar

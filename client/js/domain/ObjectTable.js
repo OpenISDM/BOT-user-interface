@@ -11,7 +11,7 @@ import config from '../config'
 import BOTSelectTable from '../components/BOTSelectTable'
 import Table from '../components/Table'
 import Button from '../components/Button'
-import BOTObjectFilterBar from '../components/BOTObjectFilterBar'
+import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 
@@ -375,7 +375,7 @@ class ObjectTable extends React.Component {
 			<>
 				<Col>
 					<Row className="d-flex justify-content-between">
-						<BOTObjectFilterBar
+						<ObjectFilterBar
 							onFilterUpdated={({ objectFilter, filteredData }) => {
 								this.setState({
 									objectFilter,
