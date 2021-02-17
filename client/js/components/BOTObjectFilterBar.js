@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import styleConfig from '../config/styleConfig'
-import BOTInput from '../components/BOTInput'
+import Input from '../components/Input'
 import { compareString, includes, filterByField } from '../helper/utilities'
 import { SEARCH_BAR } from '../config/wordMap'
 import PropTypes from 'prop-types'
@@ -86,7 +86,7 @@ const BOTObjectFilterBar = ({
 				)
 			}
 			return (
-				<BOTInput
+				<Input
 					key={index}
 					className="mx-2 w-30-view min-height-regular"
 					placeholder={label}

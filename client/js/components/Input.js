@@ -2,7 +2,7 @@ import React from 'react'
 import { Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
-class BOTInput extends React.Component {
+class Input extends React.Component {
 	state = {
 		value: '',
 	}
@@ -69,7 +69,7 @@ class BOTInput extends React.Component {
 	}
 }
 
-BOTInput.propTypes = {
+Input.propTypes = {
 	clearSearchResult: PropTypes.object,
 	placeholder: PropTypes.string,
 	error: PropTypes.object,
@@ -78,4 +78,4 @@ BOTInput.propTypes = {
 	getSearchKey: PropTypes.func,
 }
 
-export default BOTInput
+export default Input
