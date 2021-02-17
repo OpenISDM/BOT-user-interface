@@ -9,7 +9,7 @@ import styleConfig from '../config/styleConfig'
 import FormikFormGroup from './FormikFormGroup'
 import RadioButtonGroup from './RadioButtonGroup'
 import RadioButton from './RadioButton'
-import BOTTimePicker from '../components/BOTTimePicker'
+import TimePicker from '../components/TimePicker'
 import PropTypes from 'prop-types'
 
 const style = {
@@ -197,7 +197,7 @@ const EditGeofenceConfig = ({
 									<small className="form-text text-muted">
 										{locale.texts.ENABLE_START_TIME}
 									</small>
-									<BOTTimePicker
+									<TimePicker
 										name="start_time"
 										style={{ width: '100%' }}
 										value={values.start_time}
@@ -210,7 +210,7 @@ const EditGeofenceConfig = ({
 									<small className="form-text text-muted">
 										{locale.texts.ENABLE_END_TIME}
 									</small>
-									<BOTTimePicker
+									<TimePicker
 										name="end_time"
 										style={{ width: '100%' }}
 										value={values.end_time}

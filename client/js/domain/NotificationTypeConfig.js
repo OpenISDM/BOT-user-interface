@@ -3,7 +3,7 @@ import { Row, Col, Form } from 'react-bootstrap'
 import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import FormikFormGroup from './FormikFormGroup'
-import BOTTimePicker from '../components/BOTTimePicker'
+import TimePicker from '../components/TimePicker'
 import BOTSlider from '../components/BOTSlider'
 import PropTypes from 'prop-types'
 
@@ -88,7 +88,7 @@ const NotificationTypeConfig = ({
 						<small className="form-text text-muted">
 							{locale.texts.ENABLE_START_TIME}
 						</small>
-						<BOTTimePicker
+						<TimePicker
 							name={`${prefix}_start_time`}
 							style={{ width: '100%' }}
 							value={values[`${prefix}_start_time`]}
@@ -101,7 +101,7 @@ const NotificationTypeConfig = ({
 						<small className="form-text text-muted">
 							{locale.texts.ENABLE_END_TIME}
 						</small>
-						<BOTTimePicker
+						<TimePicker
 							name={`${prefix}_end_time`}
 							style={{ width: '100%' }}
 							value={values[`${prefix}_end_time`]}

@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import TimePicker from 'rc-time-picker'
+import RCTimePicker from 'rc-time-picker'
 import PropTypes from 'prop-types'
 
 import 'rc-time-picker/assets/index.css'
@@ -10,7 +10,7 @@ const covertToMoment = (value) => {
 	return moment().set({ hour: h, minute: m, second: s, millisecond: 0 })
 }
 
-const BOTTimePicker = ({
+const TimePicker = ({
 	value,
 	onChange,
 	style,
@@ -18,7 +18,7 @@ const BOTTimePicker = ({
 	isStringTypeValue = true,
 }) => {
 	return (
-		<TimePicker
+		<RCTimePicker
 			style={style}
 			showSecond={showSecond}
 			defaultValue={
@@ -34,7 +34,7 @@ const BOTTimePicker = ({
 	)
 }
 
-BOTTimePicker.propTypes = {
+TimePicker.propTypes = {
 	value: PropTypes.object,
 	showSecond: PropTypes.bool,
 	onChange: PropTypes.func,
@@ -42,4 +42,4 @@ BOTTimePicker.propTypes = {
 	isStringTypeValue: PropTypes.bool,
 }
 
-export default BOTTimePicker
+export default TimePicker
