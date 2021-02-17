@@ -1,4 +1,4 @@
-import { get, post, put, del } from '../utils/request'
+import { get, post, put, del } from './utils/request'
 
 const patientGroupList = '/data/patientGroupList'
 const patientGruopDetailByAreaId = '/data/patientGruopDetailByAreaId'

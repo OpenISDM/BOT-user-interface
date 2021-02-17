@@ -1,4 +1,4 @@
-import { get, post } from '../utils/request'
+import { get, post } from './utils/request'
 
 const userAssignments = {
 	getByUserId: '/data/userAssignments/getByUserId',

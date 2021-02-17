@@ -1,4 +1,4 @@
-import { post, put, del, patch, get } from '../utils/request'
+import { post, put, del, patch, get } from './utils/request'
 
 const geofence = '/data/geofence'
 const geofenceArea = '/data/geofence/area'

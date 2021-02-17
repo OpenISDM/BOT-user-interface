@@ -1,4 +1,4 @@
-import { get } from '../utils/request'
+import { get } from './utils/request'
 
 const role = '/data/role'
 

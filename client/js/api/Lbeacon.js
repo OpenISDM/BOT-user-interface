@@ -1,4 +1,4 @@
-import { get, put, del } from '../utils/request'
+import { get, put, del } from './utils/request'
 
 const lbeacon = '/data/lbeacon'
 

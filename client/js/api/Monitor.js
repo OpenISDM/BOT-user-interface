@@ -1,4 +1,4 @@
-import { post, del, patch, put } from '../utils/request'
+import { post, del, patch, put } from './utils/request'
 import config from '../config'
 
 const monitor = '/data/monitor'

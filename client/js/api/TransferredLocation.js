@@ -1,4 +1,4 @@
-import { get, post } from '../utils/request'
+import { get, post } from './utils/request'
 
 const getAll = '/data/transferredLocation/getAll'
 const addOne = '/data/transferredLocation/addOne'

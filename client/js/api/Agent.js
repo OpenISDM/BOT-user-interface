@@ -1,4 +1,4 @@
-import { get, del, put } from '../utils/request'
+import { get, del, put } from './utils/request'
 
 const agent = '/data/agent'
 

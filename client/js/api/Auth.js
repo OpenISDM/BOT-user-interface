@@ -1,4 +1,4 @@
-import { post } from '../utils/request'
+import { post } from './utils/request'
 
 const auth = {
 	signin: '/data/auth/signin',

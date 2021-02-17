@@ -1,4 +1,4 @@
-import { get, post, del } from '../utils/request'
+import { get, post, del } from './utils/request'
 
 const namedList = '/data/namedList'
 const namedListObject = '/data/namedList/object'

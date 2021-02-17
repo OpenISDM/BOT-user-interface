@@ -1,4 +1,4 @@
-import { post } from '../utils/request'
+import { post } from './utils/request'
 
 const trackingData = '/data/trackingData'
 const getTrackingTableByMacAddress = '/data/getTrackingTableByMacAddress'

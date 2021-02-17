@@ -1,4 +1,4 @@
-import { get, put, post, patch, del } from '../utils/request'
+import { get, put, post, patch, del } from './utils/request'
 
 const objectPackage = '/data/objectPackage'
 const object = {

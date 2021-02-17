@@ -1,4 +1,4 @@
-import { post, put, del } from '../utils/request'
+import { post, put, del } from './utils/request'
 
 const record = {
 	editedObject: '/data/record/editedObject',

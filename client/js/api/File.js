@@ -1,4 +1,4 @@
-import { post } from '../utils/request'
+import { post } from './utils/request'
 
 const pdf = '/data/file/export/pdf'
 export const pdfUrl = '/data/file/'

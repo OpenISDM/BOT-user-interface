@@ -1,4 +1,4 @@
-import { post, get } from '../utils/request'
+import { post, get } from './utils/request'
 
 const area = '/data/area'
 const areaUser = '/data/area/user'
