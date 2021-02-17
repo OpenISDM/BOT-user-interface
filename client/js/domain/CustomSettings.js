@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext'
 import API from '../api'
 import { PrimaryButton } from '../components/styleComponent'
 import { setSuccessMessage } from '../helper/messageGenerator'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 import Button from '../components/Button'
 import config from '../config'
 
@@ -210,7 +210,7 @@ class CustomSettings extends React.Component {
 								</PrimaryButton>
 							</ButtonToolbar>
 						</div>
-						<BOTTable
+						<Table
 							data={this.state.deviceAliasesData}
 							columns={this.state.deviceAliasesColumns}
 						/>
@@ -233,7 +233,7 @@ class CustomSettings extends React.Component {
 								</PrimaryButton>
 							</ButtonToolbar>
 						</div>
-						<BOTTable
+						<Table
 							data={this.state.patientAliasesData}
 							columns={this.state.patientAliasesColumns}
 						/>

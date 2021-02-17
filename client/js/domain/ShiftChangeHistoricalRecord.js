@@ -5,7 +5,7 @@ import API from '../api'
 import config from '../config'
 import { formatTime } from '../helper/utilities'
 import { setErrorMessage } from '../helper/messageGenerator'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 class ShiftChangeHistoricalRecord extends React.Component {
 	static contextType = AppContext
 
@@ -62,7 +62,7 @@ class ShiftChangeHistoricalRecord extends React.Component {
 
 	render() {
 		return (
-			<BOTTable
+			<Table
 				data={this.state.data}
 				columns={shiftChangeRecordTableColumn}
 				style={{ maxHeight: '75vh' }}

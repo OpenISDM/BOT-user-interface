@@ -6,7 +6,7 @@ import { AppContext } from '../context/AppContext'
 import API from '../api'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import BOTSelectTable from '../components/BOTSelectTable'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 import Button from '../components/Button'
 import config from '../config'
 import { SET_TABLE_SELECTION } from '../reducer/action'
@@ -284,7 +284,7 @@ class SearchSettings extends React.Component {
 		if (objectColumns) {
 			return (
 				<div style={{ marginTop: '10px' }}>
-					<BOTTable data={tableData} columns={objectColumns} />
+					<Table data={tableData} columns={objectColumns} />
 				</div>
 			)
 		}
@@ -391,7 +391,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div className="d-flex"></div>
 						<div style={{ marginTop: '10px' }}>
-							<BOTTable
+							<Table
 								data={this.getNamedListWithLocale(locale)}
 								columns={COLUMNS.NAMED_LIST}
 								onClickCallback={(currentNamedListRow) => {

@@ -6,7 +6,7 @@ import { object, string } from 'yup'
 import { Nav, Breadcrumb } from 'react-bootstrap'
 import styleConfig from '../../../config/styleConfig'
 import 'react-tabs/style/react-tabs.css'
-import BOTTable from '../../../components/BOTTable'
+import Table from '../../../components/Table'
 import moment from 'moment'
 import {
 	BOTNavLink,
@@ -299,7 +299,7 @@ const MobileTraceContainerView = React.forwardRef(
 
 							<hr />
 							{data.length !== 0 ? (
-								<BOTTable
+								<Table
 									data={data}
 									columns={columns}
 									style={{ maxHeight: '65vh' }}

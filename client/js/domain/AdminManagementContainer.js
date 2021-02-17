@@ -12,7 +12,7 @@ import AccessControl from './AccessControl'
 import config from '../config'
 import API from '../api'
 import { formatTime } from '../helper/utilities'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 
 const Fragment = React.Fragment
 
@@ -226,7 +226,7 @@ class AdminManagementContainer extends React.Component {
 					</AccessControl>
 				</div>
 				<hr />
-				<BOTTable
+				<Table
 					data={this.state.data}
 					columns={userInfoTableColumn}
 					style={{ maxHeight: '75vh' }}

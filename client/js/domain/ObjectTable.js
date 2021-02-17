@@ -9,7 +9,7 @@ import { ADD, DELETE, SAVE_SUCCESS, DISASSOCIATE } from '../config/wordMap'
 import { formatTime, isSameValue } from '../helper/utilities'
 import config from '../config'
 import BOTSelectTable from '../components/BOTSelectTable'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 import Button from '../components/Button'
 import BOTObjectFilterBar from '../components/BOTObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
@@ -456,7 +456,7 @@ class ObjectTable extends React.Component {
 							zIndex: this.state.isReplaceTagMode ? 1060 : 0,
 						}}
 					>
-						<BOTTable
+						<Table
 							data={this.state.filteredData}
 							columns={columns}
 							style={{

@@ -4,7 +4,7 @@ import { trackingTableColumn } from '../config/tables'
 import { toast } from 'react-toastify'
 import { setSuccessMessage, setErrorMessage } from '../helper/messageGenerator'
 import API from '../api'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 
 class BatteryStatusTable extends React.Component {
 	static contextType = AppContext
@@ -77,7 +77,7 @@ class BatteryStatusTable extends React.Component {
 
 	render() {
 		return (
-			<BOTTable
+			<Table
 				style={{ maxHeight: '85vh' }}
 				data={this.state.trackingData}
 				columns={trackingTableColumn}

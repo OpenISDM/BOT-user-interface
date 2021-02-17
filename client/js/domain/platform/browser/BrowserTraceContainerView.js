@@ -13,7 +13,7 @@ import {
 	NoDataFoundDiv,
 	PrimaryButton,
 } from '../../../components/styleComponent'
-import BOTTable from '../../../components/BOTTable'
+import Table from '../../../components/Table'
 import Loader from '../../Loader'
 import Select from 'react-select'
 import IconButton from '../../../components/IconButton'
@@ -277,7 +277,7 @@ const BrowseTraceContainerView = React.forwardRef(
 
 							<hr />
 							{data.length !== 0 ? (
-								<BOTTable
+								<Table
 									data={data}
 									columns={columns}
 									style={{ maxHeight: '65vh' }}

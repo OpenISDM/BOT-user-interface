@@ -4,7 +4,7 @@ import { object, string } from 'yup'
 import { Button, Row, Col, Nav } from 'react-bootstrap'
 import 'react-tabs/style/react-tabs.css'
 import { AppContext } from '../context/AppContext'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 // import {
 // 	locationHistoryByMacColumns,
 // 	locationHistoryByUUIDColumns,
@@ -352,7 +352,7 @@ class TrackingHistory extends React.Component {
 							<hr />
 							{isSubmitting && <Loader />}
 							{this.state.data.length !== 0 ? (
-								<BOTTable
+								<Table
 									data={this.state.data}
 									columns={this.state.columns}
 									style={{

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 import 'react-table/react-table.css'
 import 'react-tabs/style/react-tabs.css'
 
-const BOTTable = ({ data, columns, onClickCallback, style }) => {
+const Table = ({ data, columns, onClickCallback, style }) => {
 	const { locale } = useContext(AppContext)
 	const [selected, setSelected] = useState(null)
 	const [hovered, setHovered] = useState(null)
@@ -79,7 +79,7 @@ const BOTTable = ({ data, columns, onClickCallback, style }) => {
 	)
 }
 
-BOTTable.propTypes = {
+Table.propTypes = {
 	data: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
 	onClickCallback: PropTypes.func,
@@ -87,4 +87,4 @@ BOTTable.propTypes = {
 	style: PropTypes.object.isRequired,
 }
 
-export default BOTTable
+export default Table

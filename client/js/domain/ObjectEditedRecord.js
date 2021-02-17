@@ -5,7 +5,7 @@ import API from '../api'
 import config from '../config'
 import { formatTime, convertStatusToText } from '../helper/utilities'
 import { setErrorMessage } from '../helper/messageGenerator'
-import BOTTable from '../components/BOTTable'
+import Table from '../components/Table'
 
 class ObjectEditedRecord extends React.Component {
 	static contextType = AppContext
@@ -59,7 +59,7 @@ class ObjectEditedRecord extends React.Component {
 
 	render() {
 		return (
-			<BOTTable
+			<Table
 				data={this.state.data}
 				columns={editObjectRecordTableColumn}
 				style={{ maxHeight: '75vh' }}
