@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styleConfig from '../config/styleConfig'
-import BOTOverlayTrigger from '../components/BOTOverlayTrigger'
+import OverlayTrigger from '../components/OverlayTrigger'
 
 const CheckboxOverlayTrigger = ({
 	popoverTitle,
@@ -15,7 +15,7 @@ const CheckboxOverlayTrigger = ({
 	checked,
 }) => {
 	return (
-		<BOTOverlayTrigger
+		<OverlayTrigger
 			trigger={trigger}
 			key={id}
 			placement={placement}

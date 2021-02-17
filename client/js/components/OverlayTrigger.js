@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Popover, OverlayTrigger } from 'react-bootstrap'
+import { Popover, OverlayTrigger as RTBSOverlayTrigger } from 'react-bootstrap'
 
-const BOTOverlayTrigger = ({
+const OverlayTrigger = ({
 	popoverTitle,
 	popoverBody,
 	id,
@@ -11,7 +11,7 @@ const BOTOverlayTrigger = ({
 	innerElement = <></>,
 }) => {
 	return (
-		<OverlayTrigger
+		<RTBSOverlayTrigger
 			trigger={trigger}
 			key={id}
 			placement={placement}
@@ -25,11 +25,11 @@ const BOTOverlayTrigger = ({
 			}
 		>
 			{innerElement}
-		</OverlayTrigger>
+		</RTBSOverlayTrigger>
 	)
 }
 
-BOTOverlayTrigger.propTypes = {
+OverlayTrigger.propTypes = {
 	popoverTitle: PropTypes.string.isRequired,
 	popoverBody: PropTypes.string.isRequired,
 	id: PropTypes.string.isRequired,
@@ -38,4 +38,4 @@ BOTOverlayTrigger.propTypes = {
 	innerElement: PropTypes.element,
 }
 
-export default BOTOverlayTrigger
+export default OverlayTrigger
