@@ -10,7 +10,7 @@ import { PIN_SELETION } from '../config/wordMap'
 import PropTypes from 'prop-types'
 import API from '../api'
 import config from '../config'
-import { baseURL } from '../utils/request'
+import { baseURL } from '../api/utils/request'
 
 class Map extends React.Component {
 	static contextType = AppContext

@@ -15,7 +15,7 @@ import { AppContext } from '../context/AppContext'
 import { getCoordinatesFromUUID } from '../helper/utilities'
 import { macAddressToCoordinate } from '../helper/dataTransfer'
 import API from '../api'
-import { baseURL } from '../utils/request'
+import { baseURL } from '../api/utils/request'
 import PropTypes from 'prop-types'
 
 const GenerateGeoFenceLayer = ({ showGeoFence = false, geoFenceList = [] }) => {
