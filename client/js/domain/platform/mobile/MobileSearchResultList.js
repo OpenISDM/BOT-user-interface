@@ -4,7 +4,7 @@ import ScrollArea from 'react-scrollbar'
 import AccessControl from '../../AccessControl'
 import SearchResultListGroup from '../../SearchResultListGroup'
 import { AppContext } from '../../../context/AppContext'
-import { Title } from '../../../components/styleComponent'
+import { Title } from '../../../components/StyleComponents'
 import PropTypes from 'prop-types'
 
 const MobileSearchResultList = ({

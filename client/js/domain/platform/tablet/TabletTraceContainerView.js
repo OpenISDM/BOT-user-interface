@@ -15,7 +15,7 @@ import {
 	BOTContainer,
 	PrimaryButton,
 	PageTitle,
-} from '../../../components/styleComponent'
+} from '../../../components/StyleComponents'
 import Loader from '../../Loader'
 import Select from 'react-select'
 

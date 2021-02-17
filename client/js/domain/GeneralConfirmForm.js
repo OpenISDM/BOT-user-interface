@@ -6,7 +6,7 @@ import { AppContext } from '../context/AppContext'
 import API from '../api'
 import FormikFormGroup from './FormikFormGroup'
 import PropTypes from 'prop-types'
-import { Paragraph } from '../components/styleComponent'
+import { Paragraph } from '../components/StyleComponents'
 
 const style = {
 	modal: {

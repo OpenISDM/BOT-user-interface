@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppContext } from '../context/AppContext'
-import { CenterContainer } from '../components/styleComponent'
+import { CenterContainer } from '../components/StyleComponents'
 import styleSheet from '../config/styleSheet'
 
 const imageLength = 160

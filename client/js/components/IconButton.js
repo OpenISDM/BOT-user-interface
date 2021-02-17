@@ -1,5 +1,5 @@
 import React from 'react'
-import { PrimaryButton } from '../components/styleComponent'
+import { PrimaryButton } from '../components/StyleComponents'
 import PropTypes from 'prop-types'
 
 const IconButton = ({ iconName, children, name, onClick }) => {

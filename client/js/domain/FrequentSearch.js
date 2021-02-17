@@ -9,7 +9,7 @@ import {
 	MY_DEVICES,
 	MY_PATIENTS,
 } from '../config/wordMap'
-import { Title } from '../components/styleComponent'
+import { Title } from '../components/StyleComponents'
 import PropTypes from 'prop-types'
 
 class FrequentSearch extends React.Component {

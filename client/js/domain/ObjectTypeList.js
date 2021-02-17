@@ -3,7 +3,7 @@ import { Row, Col, ListGroup } from 'react-bootstrap'
 import { AppContext } from '../context/AppContext'
 import API from '../api'
 import { OBJECT_TYPE, NAMED_LIST } from '../config/wordMap'
-import { Title } from '../components/styleComponent'
+import { Title } from '../components/StyleComponents'
 import PropTypes from 'prop-types'
 
 class ObjectTypeList extends React.Component {

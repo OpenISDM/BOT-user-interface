@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Tab, ListGroup } from 'react-bootstrap'
-import { BOTSideNav } from '../../../components/styleComponent'
+import { BOTSideNav } from '../../../components/StyleComponents'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../AccessControl'
 import PropTypes from 'prop-types'

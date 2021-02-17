@@ -9,7 +9,7 @@ import {
 	Primary,
 	Paragraph,
 	FormFieldName,
-} from '../components/styleComponent'
+} from '../components/StyleComponents'
 import FormikFormGroup from './FormikFormGroup'
 import PropTypes from 'prop-types'
 

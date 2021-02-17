@@ -5,7 +5,7 @@ import {
 	PageTitle,
 	BOTNav,
 	BOTNavLink,
-} from '../../../components/styleComponent'
+} from '../../../components/StyleComponents'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../AccessControl'
 import PropTypes from 'prop-types'

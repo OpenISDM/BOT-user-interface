@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field } from 'formik'
-import { FormFieldName } from '../components/styleComponent'
+import { FormFieldName } from '../components/StyleComponents'
 import PropTypes from 'prop-types'
 
 const FormikFormGroup = ({

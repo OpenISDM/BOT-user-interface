@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppContext } from '../context/AppContext'
-import { CenterContainer } from '../components/styleComponent'
+import { CenterContainer } from '../components/StyleComponents'
 import { Link } from 'react-router-dom'
 import styleSheet from '../config/styleSheet'
 

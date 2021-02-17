@@ -10,7 +10,7 @@ import {
 	FontBoldDiv,
 	ToggleDisplayDiv,
 	ReactBootstrapAlert,
-} from '../components/styleComponent'
+} from '../components/StyleComponents'
 import { searchResultToMap } from '../helper/dataTransfer'
 import PropTypes from 'prop-types'
 

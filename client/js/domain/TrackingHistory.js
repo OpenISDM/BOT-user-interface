@@ -15,7 +15,7 @@ import {
 	BOTNavLink,
 	BOTNav,
 	NoDataFoundDiv,
-} from '../components/styleComponent'
+} from '../components/StyleComponents'
 import Loader from './Loader'
 // import { JSONClone } from '../helper/utilities'
 

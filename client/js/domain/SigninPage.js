@@ -3,7 +3,10 @@ import { Button, Dropdown } from 'react-bootstrap'
 import config from '../config'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import { CenterContainer, JustifyCenterDiv } from '../components/styleComponent'
+import {
+	CenterContainer,
+	JustifyCenterDiv,
+} from '../components/StyleComponents'
 import FormikFormGroup from './FormikFormGroup'
 import { Link, useHistory } from 'react-router-dom'
 import routes from '../config/routes/routes'

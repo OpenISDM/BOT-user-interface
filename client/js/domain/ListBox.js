@@ -1,7 +1,7 @@
 import React from 'react'
 import ListGroup from 'react-bootstrap/ListGroup'
 import PropTypes from 'prop-types'
-import { BOTSideNav } from '../components/styleComponent'
+import { BOTSideNav } from '../components/StyleComponents'
 
 const ListBox = ({ rows = [] }) => (
 	<ListGroup>

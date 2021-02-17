@@ -4,7 +4,7 @@ import API from '../api'
 import { AppContext } from '../context/AppContext'
 import { OBJECT_TYPE } from '../config/wordMap'
 import config from '../config'
-import { Title } from '../components/styleComponent'
+import { Title } from '../components/StyleComponents'
 import PropTypes from 'prop-types'
 
 class SearchableObjectType extends React.Component {

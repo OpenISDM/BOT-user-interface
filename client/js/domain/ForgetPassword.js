@@ -4,7 +4,11 @@ import config from '../config'
 import { AppContext } from '../context/AppContext'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
-import { CenterContainer, Title, Paragraph } from '../components/styleComponent'
+import {
+	CenterContainer,
+	Title,
+	Paragraph,
+} from '../components/StyleComponents'
 import FormikFormGroup from './FormikFormGroup'
 import { useHistory } from 'react-router-dom'
 import API from '../api'

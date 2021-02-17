@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactLoading from 'react-loading'
-import { LoaderWrapper } from '../components/styleComponent'
+import { LoaderWrapper } from '../components/StyleComponents'
 import styleSheet from '../config/styleSheet'
 import PropTypes from 'prop-types'
 

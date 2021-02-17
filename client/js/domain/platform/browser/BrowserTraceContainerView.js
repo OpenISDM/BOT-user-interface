@@ -12,7 +12,7 @@ import {
 	BOTNav,
 	NoDataFoundDiv,
 	PrimaryButton,
-} from '../../../components/styleComponent'
+} from '../../../components/StyleComponents'
 import Table from '../../../components/Table'
 import Loader from '../../Loader'
 import Select from 'react-select'
