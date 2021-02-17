@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import FormikFormGroup from './FormikFormGroup'
 import Button from '../components/Button'
-import BOTMap from '../components/BOTMap'
+import Map from '../components/Map'
 import config from '../config'
 import API from '../api'
 import { getBitValue, findExpectedBitValue, delay } from '../helper/utilities'
@@ -143,7 +143,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 			return (
 				<>
 					<Row style={{ height: '60vh' }}>
-						<BOTMap showGeoFence={true} />
+						<Map showGeoFence={true} />
 					</Row>
 					<hr />
 				</>

@@ -3,7 +3,7 @@ import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { AppContext } from '../context/AppContext'
 import { shiftChangeCheckTableColumn } from '../config/tables'
 import BOTSelectTable from '../components/BOTSelectTable'
-import BOTMap from '../components/BOTMap'
+import Map from '../components/Map'
 import PropTypes from 'prop-types'
 
 class ShiftChangeCheckList extends React.Component {
@@ -42,7 +42,7 @@ class ShiftChangeCheckList extends React.Component {
 					<Modal.Body>
 						<Row>
 							<Col md={5}>
-								<BOTMap objectList={objectList} />
+								<Map objectList={objectList} />
 							</Col>
 							<Col md={7}>
 								<BOTSelectTable

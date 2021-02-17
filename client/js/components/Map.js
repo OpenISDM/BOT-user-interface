@@ -106,7 +106,7 @@ GenerateImageLayer.propTypes = {
 	bounds: PropTypes.array,
 }
 
-const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
+const Map = ({ showGeoFence = false, objectList = [] }) => {
 	const { stateReducer } = useContext(AppContext)
 	const [{ area }] = stateReducer
 	const [geoFenceList, setGeoFenceList] = useState([])
@@ -148,9 +148,9 @@ const BOTMap = ({ showGeoFence = false, objectList = [] }) => {
 	)
 }
 
-BOTMap.propTypes = {
+Map.propTypes = {
 	showGeoFence: PropTypes.bool,
 	objectList: PropTypes.array,
 }
 
-export default BOTMap
+export default Map
