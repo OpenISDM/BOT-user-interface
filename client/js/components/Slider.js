@@ -1,9 +1,9 @@
 import 'rc-tooltip/assets/bootstrap.css'
 import React, { useState } from 'react'
-import Slider, { SliderTooltip } from 'rc-slider'
+import RCSlider, { SliderTooltip } from 'rc-slider'
 import PropTypes from 'prop-types'
 
-const { Handle } = Slider
+const { Handle } = RCSlider
 const handle = (props) => {
 	const { value, dragging, index, ...restProps } = props
 	return (
@@ -19,7 +19,7 @@ const handle = (props) => {
 	)
 }
 
-const BOTSlider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
+const Slider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
 	const [value, setValue] = useState([defaultValue])
 	return (
 		<div
@@ -31,7 +31,7 @@ const BOTSlider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
 			}}
 		>
 			<div style={{}}>{value}</div>
-			<Slider
+			<RCSlider
 				min={min}
 				max={max}
 				defaultValue={defaultValue}
@@ -45,11 +45,11 @@ const BOTSlider = ({ min = 0, max = 100, defaultValue = 0, onChange }) => {
 	)
 }
 
-BOTSlider.propTypes = {
+Slider.propTypes = {
 	min: PropTypes.number,
 	max: PropTypes.number,
 	defaultValue: PropTypes.number,
 	onChange: PropTypes.func,
 }
 
-export default BOTSlider
+export default Slider

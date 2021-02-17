@@ -4,7 +4,7 @@ import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import FormikFormGroup from './FormikFormGroup'
 import TimePicker from '../components/TimePicker'
-import BOTSlider from '../components/BOTSlider'
+import Slider from '../components/Slider'
 import PropTypes from 'prop-types'
 
 const NotificationTypeConfig = ({
@@ -132,7 +132,7 @@ const NotificationTypeConfig = ({
 								options={closeAlertOptions}
 							/>
 							{showSlider ? (
-								<BOTSlider
+								<Slider
 									defaultValue={parseInt(values[`${prefix}_alert_last_sec`])}
 									onChange={(value) => {
 										setFieldValue(`${prefix}_alert_last_sec`, value)
