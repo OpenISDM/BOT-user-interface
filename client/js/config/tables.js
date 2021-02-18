@@ -283,16 +283,6 @@ const trackingTableColumn = [
 		accessor: 'location_description',
 		width: 160,
 	},
-	{
-		Header: 'Residence Time',
-		accessor: 'residence_time',
-		width: 300,
-	},
-	{
-		Header: 'Transferred Location',
-		accessor: 'transferred_location',
-		width: 160,
-	},
 ]
 
 const searchResultTableColumn = [
