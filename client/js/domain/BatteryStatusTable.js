@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppContext } from '../context/AppContext'
-import { trackingTableColumn } from '../config/tables'
+import { batteryTableColumn } from '../config/tables'
 import { toast } from 'react-toastify'
 import { setSuccessMessage, setErrorMessage } from '../helper/messageGenerator'
 import API from '../api'
@@ -80,7 +80,7 @@ class BatteryStatusTable extends React.Component {
 			<Table
 				style={{ maxHeight: '85vh' }}
 				data={this.state.trackingData}
-				columns={trackingTableColumn}
+				columns={batteryTableColumn}
 			/>
 		)
 	}

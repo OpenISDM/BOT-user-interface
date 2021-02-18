@@ -212,6 +212,77 @@ const TransferredLocationColumn = [
 		accessor: 'department',
 	},
 ]
+const batteryTableColumn = [
+	{
+		Header: 'POUND_SIGN',
+		accessor: '_id',
+		style: style.column,
+		width: 40,
+	},
+	{
+		Header: 'Found',
+		accessor: 'found',
+		style: style.column,
+		width: 60,
+		Cell: (props) =>
+			props.value ? (
+				<i className="fas fa-circle" style={style.icon.circle}></i>
+			) : (
+				''
+			),
+	},
+	{
+		Header: 'Battery',
+		accessor: 'battery_indicator',
+		style: style.column,
+		width: 70,
+		Cell: (props) =>
+			(props.value === 3 && (
+				<i className="fas fa-battery-full" style={style.battery.full}></i>
+			)) ||
+			(props.value === 2 && (
+				<i className="fas fa-battery-quarter" style={style.battery.quarter}></i>
+			)) ||
+			(props.value === 1 && (
+				<i className="fas fa-battery-empty" style={style.battery.empty}></i>
+			)),
+	},
+	{
+		Header: 'Alert',
+		accessor: 'geofence_type',
+		width: 60,
+	},
+	{
+		Header: 'Tag ID',
+		accessor: 'mac_address',
+		width: 180,
+	},
+	{
+		Header: 'Name',
+		accessor: 'name',
+		width: 180,
+	},
+	{
+		Header: 'Type',
+		accessor: 'type',
+		width: 150,
+	},
+	{
+		Header: 'Asset Control Number',
+		accessor: 'asset_control_number',
+		width: 180,
+	},
+	{
+		Header: 'Status',
+		accessor: 'status',
+		width: 100,
+	},
+	{
+		Header: 'Last Location',
+		accessor: 'location_description',
+		width: 160,
+	},
+]
 
 const trackingTableColumn = [
 	{
@@ -281,6 +352,16 @@ const trackingTableColumn = [
 	{
 		Header: 'Last Location',
 		accessor: 'location_description',
+		width: 160,
+	},
+	{
+		Header: 'Residence Time',
+		accessor: 'residence_time',
+		width: 300,
+	},
+	{
+		Header: 'Transferred Location',
+		accessor: 'transferred_location',
 		width: 160,
 	},
 ]
@@ -890,6 +971,7 @@ export {
 	locationHistoryByUUIDColumns,
 	locationHistoryByAreaColumns,
 	trackingTableColumn,
+	batteryTableColumn,
 	searchResultTableColumn,
 	TransferredLocationColumn,
 	geofenceTableColumn,
