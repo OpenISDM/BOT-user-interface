@@ -374,7 +374,9 @@ const getUserAreaQuery = (key, filter = '') => {
 	`
 }
 const getAreaCheckFilter = (area_ids) => {
-	return `\n and area_id in (${area_ids.map((item) => `'${item}'`)})`
+	if(area_ids)
+		return `\n and area_id in (${area_ids.map((item) => `'${item}'`)})`
+	return area_ids
 }
 
 export default {

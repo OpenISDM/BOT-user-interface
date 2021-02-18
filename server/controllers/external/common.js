@@ -6,7 +6,9 @@ import {common as helper} from '../../helpers/index'
 
 
 function getFloor(uuid) {
-	return helper.hexToDec(uuid.slice(6, 8)) - 20
+	if(uuid)
+		return helper.hexToDec(uuid.slice(6, 8)) - 20
+	return null
 }
 
 async function compareUserArea(key, area_ids) {
