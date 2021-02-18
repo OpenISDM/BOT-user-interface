@@ -135,7 +135,7 @@ class MainContainer extends React.Component {
 
 	getKeywords = async () => {
 		const [{ area }] = this.context.stateReducer
-		const res = await API.Utils.getSearchableKeywords({
+		const res = await API.Object.getSearchableKeywords({
 			areaId: area.id,
 		})
 
