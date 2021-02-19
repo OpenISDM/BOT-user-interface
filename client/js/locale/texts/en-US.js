@@ -351,6 +351,7 @@ const en = {
 	TYPE_IS_REQUIRED: 'Type is required',
 	LOCATION_IS_REQUIRED: 'location is required',
 	ASSET_CONTROL_NUMBER_IS_REQUIRED: 'asset ID is required',
+	OBJECT_PERSON_TYPE_IS_REQUIRED: 'Object person type is required',
 	MAC_ADDRESS_IS_REQUIRED: 'Mac address is required',
 	STATUS_IS_REQUIRED: 'Status is required',
 	USERNAME_IS_REQUIRED: 'Username is required',

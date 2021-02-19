@@ -68,7 +68,7 @@ class EditVisitorForm extends React.Component {
 										label: mac_address,
 										value: mac_address,
 								  }
-								: null,
+								: '',
 							asset_control_number: asset_control_number || '',
 						}}
 						validationSchema={object().shape({
@@ -91,7 +91,6 @@ class EditVisitorForm extends React.Component {
 								)
 								.max(40, locale.texts.LIMIT_IN_FOURTY_CHARACTER),
 							mac_address: object()
-								.nullable()
 								.test(
 									'mac_address',
 									locale.texts.INCORRECT_MAC_ADDRESS_FORMAT,
