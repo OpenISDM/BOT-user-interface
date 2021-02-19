@@ -17,7 +17,7 @@ const EditListForm = ({
 	const { locale } = React.useContext(AppContext)
 
 	const validationSchema = object().shape({
-		//name : string().required(locale.texts.NAME_IS_REQUIRED),
+		name : string().required(locale.texts.NAME_IS_REQUIRED),
 		area: string().required(locale.texts.AREA_IS_REQUIRED),
 	})
 	return (
