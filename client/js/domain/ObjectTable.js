@@ -81,7 +81,7 @@ class ObjectTable extends React.Component {
 		])
 
 		if (objectTableRes && areaTableRes && idleMacRes && acnRes) {
-			const typeList = {}
+			const typeList = []
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
 
 			const data = objectTableRes.data.rows
@@ -112,11 +112,8 @@ class ObjectTable extends React.Component {
 						? item.mac_address
 						: locale.texts.NON_BINDING
 
-					if (!Object.keys(typeList).includes(item.type)) {
-						typeList[item.type] = {
-							value: item.type,
-							label: item.type,
-						}
+					if (!typeList.some((type) => type.value === item.type)) {
+						typeList.push({ value: item.type, label: item.type })
 					}
 
 					item.area_name = {
@@ -490,6 +487,7 @@ class ObjectTable extends React.Component {
 					associatedMacSet={this.state.associatedMacSet}
 					associatedAsnSet={this.state.associatedAsnSet}
 					macOptions={this.state.macOptions}
+					typeOptions={this.state.filterSelection.typeList}
 				/>
 
 				<DeleteConfirmationForm
