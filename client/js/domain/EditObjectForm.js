@@ -76,6 +76,7 @@ class EditObjectForm extends React.Component {
 			associatedMacSet = [],
 			associatedAsnSet = [],
 			handleSubmit,
+			typeOptions,
 			macOptions,
 			handleClick,
 			areaTable,
@@ -182,13 +183,15 @@ class EditObjectForm extends React.Component {
 								id,
 								...values,
 								name: values.name.trim(),
-								type: values.type.trim(),
 								status: values.status,
 								monitor_type,
 								area_id: values.area.id || 0,
 								mac_address: values.mac_address
 									? values.mac_address.label.trim()
 									: '',
+								type: values.type
+									? values.type.label.trim()
+									:'',
 							}
 
 							handleSubmit(postOption)
@@ -214,13 +217,29 @@ class EditObjectForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-										<FormikFormGroup
+									<FormikFormGroup
 											type="text"
 											name="type"
 											label={locale.texts.TYPE}
 											error={errors.type}
 											touched={touched.type}
 											placeholder=""
+											component={() => (
+												<Creatable
+													name="type"
+													value={values.type}
+													placeholder=""
+													className="my-1"
+													onChange={(obj) => {
+														obj.label = obj.value
+														setFieldValue('type', obj)
+													}}
+													options={typeOptions}
+													isSearchable={true}
+													styles={styleConfig.reactSelect}
+													component={{IndicatorSeparator:()=>null}}
+												/>
+											)}
 										/>
 									</Col>
 								</Row>
@@ -327,6 +346,7 @@ class EditObjectForm extends React.Component {
 EditObjectForm.propTypes = {
 	selectedRowData: PropTypes.object.isRequired,
 	macOptions: PropTypes.object.isRequired,
+	typeOptions: PropTypes.object.isRequired,
 	handleClick: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	isReadOnly: PropTypes.bool.isRequired,
