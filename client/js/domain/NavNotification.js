@@ -79,7 +79,7 @@ class NavNotification extends React.Component {
 		const style = {
 			list: {
 				height: '40px',
-				width: '600px',
+				width: '800px',
 				justifyContent: 'space-between',
 			},
 			title: {

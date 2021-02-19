@@ -8,7 +8,7 @@ import TabletMainContainer from './platform/tablet/TabletMainContainer'
 import MobileMainContainer from './platform/mobile/MobileMainContainer'
 import BrowserMainContainer from './platform/browser/BrowserMainContainer'
 import API from '../api'
-import { createLbeaconCoordinate } from '../helper/dataTransfer'
+import { createLbeaconCoordinate, countNumber } from '../helper/dataTransfer'
 import { isEqual, deepClone, isSameValue } from '../helper/utilities'
 import {
 	SWITCH_SEARCH_LIST,
@@ -238,6 +238,7 @@ class MainContainer extends React.Component {
 		let searchResult = []
 		let suggestions = []
 		let { searchObjectArray } = this.state
+		const numberSheet = {}
 
 		const activeActionButtons = []
 		const proccessedTrackingData = deepClone(trackingData)
@@ -373,6 +374,13 @@ class MainContainer extends React.Component {
 		}
 
 		const clearSearchResult = searchKey.value === null
+
+		searchResult = searchResult.map((item) => {
+			if (item.searched) {
+				item.numberOfSearched = countNumber(searchKey, item, numberSheet)
+			}
+			return item
+		})
 
 		this.setState({
 			proccessedTrackingData,

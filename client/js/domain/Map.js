@@ -4,7 +4,7 @@ import 'leaflet.markercluster'
 import '../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
-import { macAddressToCoordinate, countNumber } from '../helper/dataTransfer'
+import { macAddressToCoordinate } from '../helper/dataTransfer'
 import { isEqual, isSameValue } from '../helper/utilities'
 import { PIN_SELETION } from '../config/wordMap'
 import PropTypes from 'prop-types'
@@ -340,12 +340,7 @@ class Map extends React.Component {
 	handleObjectMarkers = () => {
 		const { locale, stateReducer } = this.context
 
-		const {
-			searchObjectArray,
-			pinColorArray,
-			searchKey,
-			searchResult,
-		} = this.props
+		const { searchObjectArray, pinColorArray, searchResult } = this.props
 
 		const [
 			{ assignedObject, deviceObjectTypeVisible, personObjectTypeVisible },
@@ -355,8 +350,6 @@ class Map extends React.Component {
 		this.prevZoom = this.originalZoom
 		this.markersLayer.clearLayers()
 		this.errorCircle.clearLayers()
-
-		const numberSheet = {}
 
 		this.filterTrackingData(searchResult).forEach((item) => {
 			const checkToShowDevice =
@@ -428,9 +421,7 @@ class Map extends React.Component {
 					currentPosition: item.currentPosition,
 
 					/** Set the ordered number on location pin */
-					number: item.searched
-						? countNumber(searchKey, item, numberSheet)
-						: '',
+					number: item.searched ? item.numberOfSearched : '',
 
 					/** Set the color of the ordered number */
 					numberColor: this.props.mapConfig.iconColor.number,

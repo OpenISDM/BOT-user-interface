@@ -476,7 +476,9 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${item.area},
                             ${acn}: ${item.asset_control_number.slice(-4)},
-                            ${locale.texts.NEAR} ${item.location_description}
+                            ${locale.texts.NEAR} ${
+							item.location_description ? item.location_description : ''
+						}
                             ${item.residence_time}
                         </div>
                     `

@@ -9,7 +9,6 @@ import {
 	getUpdatedByNLbeacons,
 	getLastUpdatedUserName,
 } from '../helper/descriptionGenerator'
-import { countNumber } from '../helper/dataTransfer'
 import {
 	ALL_DEVICES,
 	ALL_PATIENTS,
@@ -30,7 +29,6 @@ const SearchResultListGroup = ({
 	searchKey,
 }) => {
 	const { locale, auth, stateReducer } = React.useContext(AppContext)
-	const numberSheet = {}
 
 	const onMouseOver = (e, value) => {
 		const [, dispatch] = stateReducer
@@ -77,7 +75,7 @@ const SearchResultListGroup = ({
 									: null,
 							}}
 						>
-							{countNumber(searchKey, item, numberSheet)}
+							{item.numberOfSearched}
 						</div>
 					</div>
 				)
