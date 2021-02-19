@@ -72,7 +72,9 @@ export const getSubDescription = (item, locale) => {
 
 		case locale.supportedLocale.en.abbr:
 			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
-				return `${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
+				return `${locale.texts.WAS} ${locale.texts.NEAR} ${
+					item.location_description ? item.location_description : ''
+				} ${item.residence_time}`
 			} else if (item.mac_address && item.currentPosition) {
 				return `${getStatus(item, locale)}`
 			} else if (item.mac_address) {
@@ -82,7 +84,9 @@ export const getSubDescription = (item, locale) => {
 
 		case locale.supportedLocale.tw.abbr:
 			if (item.mac_address && item.currentPosition && isEqual(value, NORMAL)) {
-				return `${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${item.location_description}`
+				return `${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${
+					item.location_description ? item.location_description : ''
+				}`
 			} else if (item.mac_address && item.currentPosition) {
 				return `${getStatus(item, locale)}`
 			} else if (item.mac_address) {
@@ -100,13 +104,21 @@ export const getBatteryVolumn = (item, locale) => {
 		case locale.supportedLocale.en.abbr:
 			return item.currentPosition
 				? isEqual(item.status, RETURNED)
-					? `, ${locale.texts.WAS} ${locale.texts.NEAR} ${item.location_description} ${item.residence_time}`
+					? `, ${locale.texts.WAS} ${locale.texts.NEAR} ${
+							item.location_description
+								? item.location_description
+								: item.location_description
+					  } ${item.residence_time}`
 					: ''
 				: `, ${locale.texts.NOT_AVAILABLE}`
 		case locale.supportedLocale.tw.abbr:
 			return item.currentPosition
 				? isEqual(item.status, RETURNED)
-					? `, ${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${item.location_description}`
+					? `, ${item.residence_time}${locale.texts.WAS}${locale.texts.NEAR}${
+							item.location_description
+								? item.location_description
+								: item.location_description
+					  }`
 					: ''
 				: `, ${locale.texts.NOT_AVAILABLE}`
 	}
@@ -161,7 +173,10 @@ export const getPosition = (item, locale) => {
 	if (isSameValue(item.lbeacon_area.id, item.area_id)) {
 		return `${item.location_description},`
 	}
-	return `${locale.texts.NEAR} ${item.lbeacon_area.value}-${item.location_description},`
+
+	return `${locale.texts.NEAR} ${item.lbeacon_area.value}${
+		item.location_description ? `-${item.location_description}` : ''
+	},`
 }
 
 export const getMacaddress = (item, locale) => {
