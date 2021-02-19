@@ -220,54 +220,19 @@ const mapConfig = {
 		},
 	},
 
-	/** Set the representation of color pin
-	 * Icon options for AwesomeNumberMarkers
-	 * The process:
-	 * 1. Add the declaration of the desired icon option
-	 * 2. Add the CSS description in leafletMarker.css */
-	iconColorList: [
-		'black',
-		'red',
-		'orange',
-		'blue',
-		'grey',
-		'white',
-		'orchid',
-		'mistyrose',
-		'tan',
-		'lightyello',
-		'lavender',
-		'lightblue',
-		'yellowgreen',
-		'personSos',
-		'forbidden',
-		'personAlert',
-		'female',
-		'male',
-		'blackRound',
-		'whiteRound',
-	],
-
 	iconColor: {
 		normal: 'black',
-		geofenceF: 'red',
-		geofenceP: 'orange',
 		searched: 'blue',
 		unNormal: 'grey',
 		number: 'white',
-		female: 'female',
-		male: 'male',
 
 		person: 'person',
 		personAlert: 'personAlert',
 		personSos: 'personSos',
 		forbidden: 'forbidden',
-		female_1: 'female_2',
-		male_1: 'male_1',
 		blackBed: 'blackRound',
 		whiteBed: 'whiteRound',
 
-		// ["slateblue", "tan", "lightyellow", "lavender", "orange","lightblue", "mistyrose", "yellowgreen", "darkseagreen", "orchid"]
 		pinColorArray: ['slateblue', 'orange', 'yellowgreen', 'lightblue', 'tan'],
 	},
 
