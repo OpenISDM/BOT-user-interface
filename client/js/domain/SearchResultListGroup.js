@@ -15,6 +15,7 @@ import {
 	OBJECT_TYPE,
 	SEARCH_HISTORY,
 	NAMED_LIST,
+	NORMAL,
 } from '../config/wordMap'
 import { ASSIGN_OBJECT } from '../reducer/action'
 import PropTypes from 'prop-types'
@@ -55,6 +56,15 @@ const SearchResultListGroup = ({
 			)
 		}
 
+		let background
+		if (item.searched && item.status !== NORMAL) {
+			background = config.mapConfig.iconColor.unNormal
+		} else {
+			background = searchObjectArray.includes(item.keyword)
+				? pinColorArray[searchObjectArray.indexOf(item.keyword)]
+				: null
+		}
+
 		switch (searchKey.type) {
 			case ALL_DEVICES:
 			case ALL_PATIENTS:
@@ -70,9 +80,7 @@ const SearchResultListGroup = ({
 								height: '25px',
 								width: '25px',
 								borderRadius: '50%',
-								background: searchObjectArray.includes(item.keyword)
-									? pinColorArray[searchObjectArray.indexOf(item.keyword)]
-									: null,
+								background,
 							}}
 						>
 							{item.numberOfSearched}

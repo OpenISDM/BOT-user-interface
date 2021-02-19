@@ -84,9 +84,9 @@ const mapConfig = {
 
 		showNumber: true,
 
-		numberSize: 10,
+		numberSize: 14,
 
-		numberShiftTop: '',
+		numberShiftTop: '4%',
 
 		numberShiftLeft: '2%',
 
@@ -224,16 +224,25 @@ const mapConfig = {
 		normal: 'black',
 		searched: 'blue',
 		unNormal: 'grey',
+		greyWithoutDot: 'greyWithoutDot',
 		number: 'white',
-
-		person: 'person',
-		personAlert: 'personAlert',
-		personSos: 'personSos',
 		forbidden: 'forbidden',
 		blackBed: 'blackRound',
 		whiteBed: 'whiteRound',
 
-		pinColorArray: ['slateblue', 'orange', 'yellowgreen', 'lightblue', 'tan'],
+		person: 'person',
+		personAlert: 'personAlert',
+		personSos: 'personSos',
+
+		pinColorArray: [
+			// 'darkseagreen',
+			// 'orchid',
+			'slateblue',
+			'orange',
+			'yellowgreen',
+			'lightblue',
+			'tan',
+		],
 	},
 
 	/** Set the schema to select the color pin */
@@ -256,6 +265,8 @@ const mapConfig = {
 			}
 			if (monitorTypeChecker(item.monitor_type, 16)) {
 				return mapConfig.iconColor.blackBed
+			} else if (item.searched && item.status !== NORMAL) {
+				return mapConfig.iconColor.greyWithoutDot
 			} else if (hasColorPanel) {
 				return item.pinColor
 			} else if (item.searched) {

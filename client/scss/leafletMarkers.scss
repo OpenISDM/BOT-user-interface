@@ -1,8 +1,5 @@
 /* Marker setup */
 .awesome-number-marker {
-	/* background: url('../img/blue_pin_v2.webp') no-repeat;
-    background-size: contain;
-    background-position: center; */
 	width: 35px;
 	height: 46px;
 	position: absolute;
@@ -14,8 +11,6 @@
 
 .awesome-number-marker i {
 	color: #333;
-	/* margin-top: 10px;
-  margin-left: 10px; */
 	display: inline-block;
 	font-size: 20px;
 }
@@ -45,7 +40,7 @@
 }
 
 .awesome-number-marker-icon-blue {
-	background: url('../img/colorPin/DarkBlue_Without_Dot.webp') no-repeat
+	background: url('../img/colorPin/DarkBlue_without_dot.webp') no-repeat
 		center/contain;
 }
 
@@ -73,18 +68,21 @@
 	background-position: -574px 0;
 }
 
-.awesome-number-marker-icon-grey {
-	background: url('../img/colorPin//DarkGrey.webp') no-repeat center/contain;
-	/* background-position: -648px 0; */
-}
-
 .awesome-number-marker-icon-lightgray {
 	background-position: -612px 0;
 }
 
 .awesome-number-marker-icon-black {
 	background: url('../img/colorPin/Black.webp') no-repeat center/contain;
-	/* background-position: -682px 0; */
+}
+
+.awesome-number-marker-icon-grey {
+	background: url('../img/colorPin//DarkGrey.webp') no-repeat center/contain;
+}
+
+.awesome-number-marker-icon-greyWithoutDot {
+	background: url('../img/colorPin//DarkGrey_without_dot.webp') no-repeat
+		center/contain;
 }
 
 .awesome-number-marker-icon-slateblue {
