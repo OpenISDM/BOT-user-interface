@@ -104,7 +104,7 @@ class EditObjectForm extends React.Component {
 
 		const initialValues = {
 			name: name || '',
-			type: type || '',
+			type: type ? {label:type, value: type}: '',
 			asset_control_number: isReadOnly ? asset_control_number : '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
