@@ -44,10 +44,6 @@
 
 			numberShiftTop = 'top: ' + options.numberShiftTop + ';'
 
-			if (options.markerColor === 'male') {
-				numberShiftTop = 'top: ' + options.specifiedNumberTop + ';'
-			}
-
 			const numberPosition = 'position: relative;'
 			const numberShiftLeft = 'left: ' + options.numberShiftLeft + ';'
 

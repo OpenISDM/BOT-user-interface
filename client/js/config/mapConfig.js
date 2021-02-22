@@ -84,9 +84,9 @@ const mapConfig = {
 
 		showNumber: true,
 
-		numberSize: 10,
+		numberSize: 14,
 
-		numberShiftTop: '',
+		numberShiftTop: '4%',
 
 		numberShiftLeft: '2%',
 
@@ -220,55 +220,29 @@ const mapConfig = {
 		},
 	},
 
-	/** Set the representation of color pin
-	 * Icon options for AwesomeNumberMarkers
-	 * The process:
-	 * 1. Add the declaration of the desired icon option
-	 * 2. Add the CSS description in leafletMarker.css */
-	iconColorList: [
-		'black',
-		'red',
-		'orange',
-		'blue',
-		'grey',
-		'white',
-		'orchid',
-		'mistyrose',
-		'tan',
-		'lightyello',
-		'lavender',
-		'lightblue',
-		'yellowgreen',
-		'personSos',
-		'forbidden',
-		'personAlert',
-		'female',
-		'male',
-		'blackRound',
-		'whiteRound',
-	],
-
 	iconColor: {
 		normal: 'black',
-		geofenceF: 'red',
-		geofenceP: 'orange',
 		searched: 'blue',
 		unNormal: 'grey',
+		greyWithoutDot: 'greyWithoutDot',
 		number: 'white',
-		female: 'female',
-		male: 'male',
+		forbidden: 'forbidden',
+		blackBed: 'blackRound',
+		whiteBed: 'whiteRound',
 
 		person: 'person',
 		personAlert: 'personAlert',
 		personSos: 'personSos',
-		forbidden: 'forbidden',
-		female_1: 'female_2',
-		male_1: 'male_1',
-		blackBed: 'blackRound',
-		whiteBed: 'whiteRound',
 
-		// ["slateblue", "tan", "lightyellow", "lavender", "orange","lightblue", "mistyrose", "yellowgreen", "darkseagreen", "orchid"]
-		pinColorArray: ['slateblue', 'orange', 'yellowgreen', 'lightblue', 'tan'],
+		pinColorArray: [
+			// 'darkseagreen',
+			// 'orchid',
+			'slateblue',
+			'orange',
+			'yellowgreen',
+			'lightblue',
+			'tan',
+		],
 	},
 
 	/** Set the schema to select the color pin */
@@ -291,6 +265,8 @@ const mapConfig = {
 			}
 			if (monitorTypeChecker(item.monitor_type, 16)) {
 				return mapConfig.iconColor.blackBed
+			} else if (item.searched && item.status !== NORMAL) {
+				return mapConfig.iconColor.greyWithoutDot
 			} else if (hasColorPanel) {
 				return item.pinColor
 			} else if (item.searched) {
