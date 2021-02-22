@@ -6,7 +6,7 @@ import Select from 'react-select'
 import FormikFormGroup from './FormikFormGroup'
 import styleConfig from '../config/styleConfig'
 import PropTypes from 'prop-types'
-
+import {object, string} from 'yup'
 const EditListForm = ({
 	show,
 	handleClose,
@@ -16,6 +16,10 @@ const EditListForm = ({
 }) => {
 	const { locale } = React.useContext(AppContext)
 
+	const validationSchema = object().shape({
+		name : string().required(locale.texts.NAME_IS_REQUIRED),
+		area: string().required(locale.texts.AREA_IS_REQUIRED),
+	})
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton className="text-capitalize">
@@ -27,6 +31,7 @@ const EditListForm = ({
 						name: '',
 						area: '',
 					}}
+					validationSchema={validationSchema}
 					onSubmit={(values) => {
 						handleSubmit(values)
 					}}
@@ -42,6 +47,8 @@ const EditListForm = ({
 								type="text"
 								name="name"
 								label={locale.texts.NAME}
+								error={errors.name}
+								touched={touched.name}
 								placeholder=""
 							/>
 							<FormikFormGroup
