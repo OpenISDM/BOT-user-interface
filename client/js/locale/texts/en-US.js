@@ -212,6 +212,7 @@ const en = {
 	KEY: 'key',
 	TYPE: 'type',
 	ASSET_CONTROL_NUMBER: 'Asset ID',
+	NUMBER:'Number',
 	OBJECT_IDENTITY_NUMBER: 'object ID',
 	MAC_ADDRESS: 'mac address',
 	TAG_ID: 'Tag ID',

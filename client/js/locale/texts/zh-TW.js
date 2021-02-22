@@ -211,6 +211,7 @@ const tw = {
 	KEY: '關鍵字',
 	TYPE: '類別',
 	ASSET_CONTROL_NUMBER: '財編',
+	NUMBER: '編號',
 	OBJECT_IDENTITY_NUMBER: '物件 ID',
 	MAC_ADDRESS: 'MAC位址',
 	TAG_ID: '標籤編號',
