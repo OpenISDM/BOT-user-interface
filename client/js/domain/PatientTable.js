@@ -1,5 +1,5 @@
 import React from 'react'
-import ObjectTable, { SELECTION } from './ObjectTable'
+import ObjectTable, { DATA_METHOD, SELECTION } from './ObjectTable'
 import config from '../config'
 import EditPatientForm from './EditPatientForm'
 import { patientTableColumn } from '../config/tables'
@@ -17,6 +17,7 @@ const PatientTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_PATIENT'}
 			deleteText={'DELETE_PATIENT'}
+			dataMethod={DATA_METHOD.OBJECT}
 		/>
 	)
 }

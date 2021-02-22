@@ -1,5 +1,5 @@
 import React from 'react'
-import ObjectTable, { SELECTION } from './ObjectTable'
+import ObjectTable, { SELECTION, DATA_METHOD } from './ObjectTable'
 import config from '../config'
 import EditObjectForm from './EditObjectForm'
 import { objectTableColumn } from '../config/tables'
@@ -24,6 +24,7 @@ const DeviceTable = () => {
 			objectApiMode={DEVICE}
 			addText={'ADD_DEVICE'}
 			deleteText={'DELETE_DEVICE'}
+			dataMethod={DATA_METHOD.OBJECT}
 		/>
 	)
 }

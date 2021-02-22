@@ -1,5 +1,5 @@
 import React from 'react'
-import ObjectTable, { SELECTION } from './ObjectTable'
+import ObjectTable, { SELECTION, DATA_METHOD } from './ObjectTable'
 import config from '../config'
 import EditVisitorForm from './EditVisitorForm'
 import { visitorTableColumn } from '../config/tables'
@@ -17,6 +17,7 @@ const VisitorTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_VISITOR'}
 			deleteText={'DELETE_VISITOR'}
+			dataMethod={DATA_METHOD.OBJECT}
 		/>
 	)
 }
