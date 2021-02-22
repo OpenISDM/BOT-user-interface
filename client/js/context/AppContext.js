@@ -10,7 +10,7 @@ const AppContextProvider = (props) => {
 	const auth = React.useContext(AuthenticationContext)
 	const { locale, user } = auth
 	const { areas_id = [] } = user
-	const id = areas_id[0] ? areas_id[0] : null
+	const id = areas_id[0] ? areas_id[0] : 0 // We don't use 0 to be our area_id, so we set it to default for api work fine
 
 	const initialState = {
 		area: { id },
