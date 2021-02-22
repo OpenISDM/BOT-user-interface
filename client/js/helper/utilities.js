@@ -234,11 +234,7 @@ export const delay = ({ callback, second = 1 }) => {
 
 export const getIconColor = (item, hasColorPanel) => {
 	if (item.emergency) {
-		return config.mapConfig.iconColor.personSos
-	}
-
-	if (item.alerted) {
-		return config.mapConfig.iconColor.personAlert
+		return config.mapConfig.iconColor.sos
 	}
 
 	if (item.forbidden) {
@@ -247,22 +243,40 @@ export const getIconColor = (item, hasColorPanel) => {
 
 	if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
 		if (item.clear_bed) {
-			return config.mapConfig.iconColor.whiteBed
+			return config.mapConfig.iconColor.deivce.whiteBed
 		}
+
 		if (monitorTypeChecker(item.monitor_type, 16)) {
-			return config.mapConfig.iconColor.blackBed
-		} else if (item.searched && item.status !== NORMAL) {
-			return config.mapConfig.iconColor.greyWithoutDot
-		} else if (hasColorPanel) {
-			return item.pinColor
-		} else if (item.searched) {
-			return config.mapConfig.iconColor.searched
-		} else if (item.status !== NORMAL) {
-			return config.mapConfig.iconColor.unNormal
+			return config.mapConfig.iconColor.deivce.blackBed
 		}
-		return config.mapConfig.iconColor.normal
+
+		if (item.searched && item.status !== NORMAL) {
+			return config.mapConfig.iconColor.deivce.greyWithoutDot
+		}
+
+		if (hasColorPanel) {
+			return item.pinColor
+		}
+
+		if (item.searched) {
+			return config.mapConfig.iconColor.searched
+		}
+
+		if (item.status !== NORMAL) {
+			return config.mapConfig.iconColor.deivce.unNormal
+		}
+
+		return config.mapConfig.iconColor.deivce.normal
 	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
-		return config.mapConfig.iconColor.person
+		if (item.alerted) {
+			return config.mapConfig.iconColor.person.alert
+		}
+
+		if (hasColorPanel) {
+			return `Person${item.pinColor}`
+		}
+
+		return config.mapConfig.iconColor.person.normal
 	}
 }
 

@@ -219,27 +219,30 @@ const mapConfig = {
 	},
 
 	iconColor: {
-		normal: 'black',
+		number: 'White',
 		searched: 'SteelBlue',
-		unNormal: 'grey',
-		greyWithoutDot: 'greyWithoutDot',
-		number: 'white',
-		forbidden: 'forbidden',
-		blackBed: 'blackRound',
-		whiteBed: 'whiteRound',
+		sos: 'SOS',
+		forbidden: 'Forbidden',
 
-		person: 'person',
-		personAlert: 'personAlert',
-		personSos: 'personSos',
+		deivce: {
+			normal: 'BlackWithDot',
+			unNormal: 'GrayWithDot',
+			greyWithoutDot: 'Grey',
+			blackBed: 'BlackRound',
+			whiteBed: 'WhiteRound',
+		},
+
+		person: {
+			normal: 'Person',
+			alert: 'Alert',
+		},
 
 		pinColorArray: [
-			// 'darkseagreen',
-			// 'orchid',
-			'slateblue',
-			'orange',
-			'yellowgreen',
-			'lightblue',
-			'tan',
+			'SlateBlue',
+			'Orange',
+			'YellowGreen',
+			'LightBlue',
+			'Tan',
 			'SteelBlue',
 		],
 	},

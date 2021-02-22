@@ -10,7 +10,7 @@ const path = require('path')
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const imagePath = path
-	.join(__dirname, '..', 'server', 'public', 'map')
+	.join(__dirname, '..', 'client', 'img', 'colorPin')
 	.replace(/\\/g, '/')
 
 ;(async () => {
