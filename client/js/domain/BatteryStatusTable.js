@@ -8,6 +8,7 @@ import API from '../api'
 import Table from '../components/Table'
 import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
+import { keyBy } from 'lodash'
 
 class BatteryStatusTable extends React.Component {
 	static contextType = AppContext
@@ -33,16 +34,19 @@ class BatteryStatusTable extends React.Component {
 		this.getTrackingData()
 	}
 
-
 	getTrackingData = async (callback) => {
 		const { locale, stateReducer } = this.context
 		const [{ area }] = stateReducer
-
+		const { auth } = this.context
+		const { user } = auth
 		const BatteryDataPromise = API.Tracking.getTrackingData({
 			areaIds: [area.id],
 			locale: locale.addr,
 		})
-		const areaTablePromise = API.Area.getAreaTable()
+
+		const areaTablePromise = API.Area.getAreaTableByUserId({
+			userId: user.id,
+		})
 
 		const [BatteryDataRes, areaTableRes] = await Promise.all([
 			BatteryDataPromise,
@@ -51,14 +55,16 @@ class BatteryStatusTable extends React.Component {
 
 		if (BatteryDataRes && areaTableRes) {
 			this.setMessage('clear')
+			const areaDataMap = keyBy(areaTableRes.data, 'id')
 			const data = BatteryDataRes.data.map((item) => {
 				item.mac_address = item.mac_address
 					? item.mac_address
 					: locale.texts.NON_BINDING
 				item.area_name = {
-					value:item.lbeacon_area.value,
+					value: areaDataMap[item.area_id],
 					label:
-						item.lbeacon_area.value,
+						areaDataMap[item.area_id] &&
+						areaDataMap[item.area_id].readable_name,
 					id: item.area_id,
 				}
 				return item
@@ -111,13 +117,7 @@ class BatteryStatusTable extends React.Component {
 
 	render() {
 		const { locale } = this.context
-		const filteredAttribute = [
-			'name',
-			'type',
-			'area',
-			'macAddress',
-			'acn',
-		]
+		const filteredAttribute = ['name', 'type', 'area', 'macAddress', 'acn']
 		return (
 			<>
 				<Row>
