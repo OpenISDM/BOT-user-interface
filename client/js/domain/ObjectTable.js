@@ -21,6 +21,10 @@ export const SELECTION = {
 	STATUS: 'status',
 }
 
+export const DATA_METHOD = {
+	OBJECT: '1',
+	TRACKING: '2'
+}
 class ObjectTable extends React.Component {
 	static contextType = AppContext
 
@@ -56,7 +60,7 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	loadData = async (callback) => {
+	loadObjectTableData = async (callback) => {
 		const { locale, auth } = this.context
 		const { objectTypes = [], objectSubTypes = [] } = this.props
 
@@ -196,6 +200,72 @@ class ObjectTable extends React.Component {
 			)
 
 			this.clearSelection()
+		}
+	}
+	loadTrackingData = async (callback) => {
+		const { locale, stateReducer } = this.context
+		const [{ area }] = stateReducer
+		const { auth } = this.context
+		const { user } = auth
+		const BatteryDataPromise = API.Tracking.getTrackingData({
+			areaIds: [area.id],
+			locale: locale.addr,
+		})
+
+		const areaTablePromise = API.Area.getAreaTableByUserId({
+			userId: user.id,
+		})
+
+		const [BatteryDataRes, areaTableRes] = await Promise.all([
+			BatteryDataPromise,
+			areaTablePromise,
+		])
+
+		if (BatteryDataRes && areaTableRes) {
+			const areaDataMap = keyBy(areaTableRes.data, 'id')
+			const data = BatteryDataRes.data.map((item) => {
+				item.mac_address = item.mac_address
+					? item.mac_address
+					: locale.texts.NON_BINDING
+				item.area_name = {
+					value: areaDataMap[item.area_id],
+					label:
+						areaDataMap[item.area_id] &&
+						areaDataMap[item.area_id].readable_name,
+					id: item.area_id,
+				}
+				return item
+			})
+
+			const areaSelection = areaTableRes.data.map((area) => {
+				return {
+					value: area.name,
+					label: area.readable_name,
+				}
+			})
+			this.setState(
+				{
+					data,
+					filteredData: data,
+					areaTable: areaTableRes.data,
+					filterSelection:{
+						areaSelection
+					},
+					locale: locale.abbr,
+				},
+				callback
+			)
+			this.clearSelection()
+		}
+	}
+	loadData = async (callback) => {
+		switch (this.props.dataMethod){
+			case DATA_METHOD.OBJECT:
+				this.loadObjectTableData(callback)
+				break
+			case DATA_METHOD.TRACKING:
+				this.loadTrackingData(callback)
+				break
 		}
 	}
 
@@ -504,6 +574,7 @@ class ObjectTable extends React.Component {
 			</>
 		)
 	}
+
 }
 
 ObjectTable.propTypes = {
@@ -514,8 +585,9 @@ ObjectTable.propTypes = {
 	columns: PropTypes.array.isRequired,
 	EditedForm: PropTypes.node.isRequired,
 	objectApiMode: PropTypes.string.isRequired,
-	addText: PropTypes.string.isRequired,
-	deleteText: PropTypes.string.isRequired,
+	addText: PropTypes.string,
+	deleteText: PropTypes.string,
+	dataMethod : PropTypes.string.isRequired,
 }
 
 export default ObjectTable
