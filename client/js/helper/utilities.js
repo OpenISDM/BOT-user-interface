@@ -1,10 +1,11 @@
 import moment from 'moment'
 import Cookies from 'js-cookie'
-import { NORMAL } from '../config/wordMap'
+import { NORMAL, RESERVE, RETURNED } from '../config/wordMap'
 import config from '../config'
 import permissionsTable from '../config/roles'
 import generalTexts from '../locale/text'
 import supportedLocale from '../locale/supportedLocale'
+import { monitorTypeChecker } from './dataTransfer'
 
 /** Compare two objects, including strings, deep objects  */
 export const isEqual = (obj1, obj2) => {
@@ -229,4 +230,120 @@ export const removeCookies = (key) => {
 
 export const delay = ({ callback, second = 1 }) => {
 	return setTimeout(callback, second * 1000)
+}
+
+export const getIconColor = (item, hasColorPanel) => {
+	if (item.emergency) {
+		return config.mapConfig.iconColor.personSos
+	}
+
+	if (item.alerted) {
+		return config.mapConfig.iconColor.personAlert
+	}
+
+	if (item.forbidden) {
+		return config.mapConfig.iconColor.forbidden
+	}
+
+	if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
+		if (item.clear_bed) {
+			return config.mapConfig.iconColor.whiteBed
+		}
+		if (monitorTypeChecker(item.monitor_type, 16)) {
+			return config.mapConfig.iconColor.blackBed
+		} else if (item.searched && item.status !== NORMAL) {
+			return config.mapConfig.iconColor.greyWithoutDot
+		} else if (hasColorPanel) {
+			return item.pinColor
+		} else if (item.searched) {
+			return config.mapConfig.iconColor.searched
+		} else if (item.status !== NORMAL) {
+			return config.mapConfig.iconColor.unNormal
+		}
+		return config.mapConfig.iconColor.normal
+	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
+		return config.mapConfig.iconColor.person
+	}
+}
+
+export const getPopupContent = (object, objectList, locale) => {
+	const content = objectList
+		.map((item, index) => {
+			const indexText = config.mapConfig.popupOptions.showNumber
+				? `${index + 1}.`
+				: '&bull;'
+			const acn = `${locale.texts.ASSET_CONTROL_NUMBER}: ${
+				config.ACNOmitsymbol
+			}${item.asset_control_number.slice(-4)},`
+			const residenceTime =
+				item.status !== RETURNED
+					? `${locale.texts[item.status.toUpperCase()]}`
+					: `${item.residence_time}`
+			const reservedTime =
+				item.status === RESERVE ? `~ ${item.reserved_timestamp_final}` : ''
+			const isReservedFor =
+				item.status === RESERVE ? ` ${locale.texts.IS_RESERVED_FOR}` : ''
+			const reservedUserName =
+				item.status === RESERVE ? ` ${item.reserved_user_name}` : ''
+
+			let careProvider = ''
+			if (item.physician_names) {
+				careProvider = ` ${locale.texts.PHYSICIAN_NAME}: ${item.physician_name},`
+			}
+
+			const itemContent =
+				parseInt(item.object_type) === 0
+					? `${item.type},
+                        ${acn}
+                        ${residenceTime}
+                        ${reservedTime}
+                        ${isReservedFor}
+                        ${reservedUserName}
+                    `
+					: `${item.name},
+                        ${careProvider}
+                        ${item.residence_time}
+                    `
+
+			return `<div id='${item.mac_address}' class="popupItem mb-2">
+                    <div class="d-flex justify-content-start">
+                        <div class="min-width-1-percent">
+                            ${indexText}
+                        </div>
+                        <div>
+                            ${itemContent}
+                        </div>
+                    </div>
+                    </div>
+                    `
+		})
+		.join('')
+
+	return `
+        <div class="text-capitalize">
+            <div class="font-size-120-percent">
+                ${object[0].location_description}
+            </div>
+            <hr/>
+            <div class="popupContent custom-scrollbar max-height-30">
+                ${content}
+            </div>
+        </div>
+    `
+}
+
+export const getLbeaconPopupContent = (lbeacon) => {
+	return `
+        <div>
+            <div>
+                description: ${lbeacon.description}
+            </div>
+            <div>
+                coordinate: ${lbeacon.coordinate}
+            </div>
+            <div>
+                comment: ${lbeacon.comment}
+            </div>
+        </div>
+    `
 }

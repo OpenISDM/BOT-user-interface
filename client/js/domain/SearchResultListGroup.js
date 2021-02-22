@@ -12,10 +12,11 @@ import {
 import {
 	ALL_DEVICES,
 	ALL_PATIENTS,
+	MY_DEVICES,
+	MY_PATIENTS,
 	OBJECT_TYPE,
 	SEARCH_HISTORY,
 	NAMED_LIST,
-	NORMAL,
 } from '../config/wordMap'
 import { ASSIGN_OBJECT } from '../reducer/action'
 import PropTypes from 'prop-types'
@@ -56,14 +57,8 @@ const SearchResultListGroup = ({
 			)
 		}
 
-		let background
-		if (item.searched && item.status !== NORMAL) {
-			background = config.mapConfig.iconColor.unNormal
-		} else {
-			background = searchObjectArray.includes(item.keyword)
-				? pinColorArray[searchObjectArray.indexOf(item.keyword)]
-				: null
-		}
+		const pinColorIndex = searchObjectArray.indexOf(item.keyword)
+		const background = pinColorArray[pinColorIndex]
 
 		switch (searchKey.type) {
 			case ALL_DEVICES:
@@ -72,6 +67,8 @@ const SearchResultListGroup = ({
 			case NAMED_LIST:
 			case OBJECT_TYPE:
 			case SEARCH_HISTORY:
+			case MY_DEVICES:
+			case MY_PATIENTS:
 				return (
 					<div className="d-inline-block">
 						<div

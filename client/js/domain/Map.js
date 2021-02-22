@@ -5,7 +5,13 @@ import '../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
 import { macAddressToCoordinate } from '../helper/dataTransfer'
-import { isEqual, isSameValue } from '../helper/utilities'
+import {
+	isEqual,
+	isSameValue,
+	getIconColor,
+	getPopupContent,
+	getLbeaconPopupContent,
+} from '../helper/utilities'
 import { PIN_SELETION } from '../config/wordMap'
 import PropTypes from 'prop-types'
 import API from '../api'
@@ -293,7 +299,7 @@ class Map extends React.Component {
 
 				const lbeaconMarker = L.circleMarker(latLng, lbeaconMarkerOptions)
 				lbeaconMarker
-					.bindPopup(this.props.mapConfig.getLbeaconPopupContent(lbeacon))
+					.bindPopup(getLbeaconPopupContent(lbeacon))
 					.openPopup()
 					.addTo(layer)
 				// invisibleCircle.on('mouseover', this.handlemenu)
@@ -371,7 +377,7 @@ class Map extends React.Component {
 				/** Set the Marker's popup
 				 * popupContent (objectName, objectImg, objectImgWidth)
 				 * More Style sheet include in Map.css */
-				const popupContent = this.props.mapConfig.getPopupContent(
+				const popupContent = getPopupContent(
 					[item],
 					this.collectObjectsByPosition(
 						searchResult,
@@ -405,10 +411,7 @@ class Map extends React.Component {
 					...this.iconOptions,
 
 					/** Set the pin color */
-					markerColor: this.props.mapConfig.getIconColor(
-						item,
-						pinColorIndex > -1
-					),
+					markerColor: getIconColor(item, pinColorIndex > -1),
 
 					/** Set the pin size */
 					// iconSize,
