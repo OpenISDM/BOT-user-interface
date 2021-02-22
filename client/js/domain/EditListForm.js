@@ -47,6 +47,8 @@ const EditListForm = ({
 								type="text"
 								name="name"
 								label={locale.texts.NAME}
+								error={errors.name}
+								touched={touched.name}
 								placeholder=""
 							/>
 							<FormikFormGroup
