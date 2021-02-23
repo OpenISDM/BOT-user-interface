@@ -1,5 +1,3 @@
-import { monitorTypeChecker } from '../helper/dataTransfer'
-import { NORMAL, RESERVE, RETURNED } from './wordMap'
 import L from 'leaflet'
 
 const ACNOmitsymbol = '...'
@@ -221,66 +219,32 @@ const mapConfig = {
 	},
 
 	iconColor: {
-		normal: 'black',
-		searched: 'blue',
-		unNormal: 'grey',
-		greyWithoutDot: 'greyWithoutDot',
-		number: 'white',
-		forbidden: 'forbidden',
-		blackBed: 'blackRound',
-		whiteBed: 'whiteRound',
+		number: 'White',
+		searched: 'SteelBlue',
+		sos: 'SOS',
+		forbidden: 'Forbidden',
 
-		person: 'person',
-		personAlert: 'personAlert',
-		personSos: 'personSos',
+		deivce: {
+			normal: 'BlackWithDot',
+			unNormal: 'GrayWithDot',
+			grayWithoutDot: 'Gray',
+			blackBed: 'BlackRound',
+			whiteBed: 'WhiteRound',
+		},
+
+		person: {
+			normal: 'Person',
+			alert: 'Alert',
+		},
 
 		pinColorArray: [
-			// 'darkseagreen',
-			// 'orchid',
-			'slateblue',
-			'orange',
-			'yellowgreen',
-			'lightblue',
-			'tan',
+			'SlateBlue',
+			'Orange',
+			'YellowGreen',
+			'LightBlue',
+			'Tan',
+			'SteelBlue',
 		],
-	},
-
-	/** Set the schema to select the color pin */
-	getIconColor: (item, hasColorPanel) => {
-		if (item.emergency) {
-			return mapConfig.iconColor.personSos
-		}
-
-		if (item.alerted) {
-			return mapConfig.iconColor.personAlert
-		}
-
-		if (item.forbidden) {
-			return mapConfig.iconColor.forbidden
-		}
-
-		if (parseInt(item.object_type) === 0) {
-			if (item.clear_bed) {
-				return mapConfig.iconColor.whiteBed
-			}
-			if (monitorTypeChecker(item.monitor_type, 16)) {
-				return mapConfig.iconColor.blackBed
-			} else if (item.searched && item.status !== NORMAL) {
-				return mapConfig.iconColor.greyWithoutDot
-			} else if (hasColorPanel) {
-				return item.pinColor
-			} else if (item.searched) {
-				return mapConfig.iconColor.searched
-			} else if (item.status !== NORMAL) {
-				return mapConfig.iconColor.unNormal
-			}
-			return mapConfig.iconColor.normal
-		} else if (
-			parseInt(item.object_type) === 1 ||
-			parseInt(item.object_type) === 2
-		) {
-			return mapConfig.iconColor.person
-		}
 	},
 
 	/* For test. To start object tracking*/
@@ -298,90 +262,6 @@ const mapConfig = {
 		className: 'customPopup',
 		showNumber: false,
 		autoPan: false,
-	},
-
-	/** Set the html content of popup of markers */
-	getPopupContent: (object, objectList, locale) => {
-		const content = objectList
-			.map((item, index) => {
-				const indexText = mapConfig.popupOptions.showNumber
-					? `${index + 1}.`
-					: '&bull;'
-				const acn = `${
-					locale.texts.ASSET_CONTROL_NUMBER
-				}: ${ACNOmitsymbol}${item.asset_control_number.slice(-4)},`
-				const residenceTime =
-					item.status !== RETURNED
-						? `${locale.texts[item.status.toUpperCase()]}`
-						: `${item.residence_time}`
-				const reservedTime =
-					item.status === RESERVE ? `~ ${item.reserved_timestamp_final}` : ''
-				const isReservedFor =
-					item.status === RESERVE ? ` ${locale.texts.IS_RESERVED_FOR}` : ''
-				const reservedUserName =
-					item.status === RESERVE ? ` ${item.reserved_user_name}` : ''
-
-				let careProvider = ''
-				if (item.physician_names) {
-					careProvider = ` ${locale.texts.PHYSICIAN_NAME}: ${item.physician_name},`
-				}
-
-				const itemContent =
-					parseInt(item.object_type) === 0
-						? `${item.type},
-                            ${acn}
-                            ${residenceTime}
-                            ${reservedTime}
-                            ${isReservedFor}
-                            ${reservedUserName}
-                        `
-						: `${item.name},
-                            ${careProvider}
-                            ${item.residence_time}
-                        `
-
-				return `<div id='${item.mac_address}' class="popupItem mb-2">
-                        <div class="d-flex justify-content-start">
-                            <div class="min-width-1-percent">
-                                ${indexText}
-                            </div>
-                            <div>
-                                ${itemContent}
-                            </div>
-                        </div>
-                        </div>
-                        `
-			})
-			.join('')
-
-		return `
-            <div class="text-capitalize">
-                <div class="font-size-120-percent">
-                    ${object[0].location_description}
-                </div>
-                <hr/>
-                <div class="popupContent custom-scrollbar max-height-30">
-                    ${content}
-                </div>
-            </div>
-        `
-	},
-
-	/** Set the html content of popup of Lbeacon markers */
-	getLbeaconPopupContent: (lbeacon) => {
-		return `
-            <div>
-                <div>
-                    description: ${lbeacon.description}
-                </div>
-                <div>
-                    coordinate: ${lbeacon.coordinate}
-                </div>
-                <div>
-                    comment: ${lbeacon.comment}
-                </div>
-            </div>
-        `
 	},
 }
 

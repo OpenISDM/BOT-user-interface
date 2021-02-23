@@ -47,9 +47,7 @@ class MainContainer extends React.Component {
 		showPath: false,
 		pathMacAddress: '',
 		searchObjectArray: [],
-		pinColorArray: config.mapConfig.iconColor.pinColorArray.filter(
-			(item, index) => index < config.MAX_SEARCH_OBJECT_NUM
-		),
+		pinColorArray: config.mapConfig.iconColor.pinColorArray,
 		groupIds: [],
 		activeActionButtons: [],
 	}
@@ -396,7 +394,7 @@ class MainContainer extends React.Component {
 	setPinColor = ({ searchKey, searchObjectArray, pinColorArray }) => {
 		if (!searchObjectArray.includes(searchKey.value)) {
 			searchObjectArray.push(searchKey.value)
-			if (searchObjectArray.length > config.MAX_SEARCH_OBJECT_NUM) {
+			if (searchObjectArray.length > pinColorArray.length) {
 				searchObjectArray.shift()
 				pinColorArray.push(pinColorArray.shift())
 			}
