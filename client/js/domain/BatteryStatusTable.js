@@ -1,5 +1,5 @@
 import React from 'react'
-import ObjectTable, { SELECTION, DATA_METHOD } from './ObjectTable'
+import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
 //import EditPatientForm from './EditPatientForm'
 import { batteryTableColumn } from '../config/tables'
@@ -16,7 +16,6 @@ const BatteryStatusTable=()=>{
             columns={batteryTableColumn}
             EditedForm={EditPatientForm}
             objectApiMode={PERSON}
-            dataMethod={DATA_METHOD.TRACKING}
             isButtonEnable={false}
         />
     )

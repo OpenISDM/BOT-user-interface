@@ -214,12 +214,6 @@ const TransferredLocationColumn = [
 ]
 const batteryTableColumn = [
 	{
-		Header: 'POUND_SIGN',
-		accessor: '_id',
-		style: style.column,
-		width: 40,
-	},
-	{
 		Header: 'Found',
 		accessor: 'found',
 		style: style.column,

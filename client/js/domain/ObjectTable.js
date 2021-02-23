@@ -14,16 +14,11 @@ import Button from '../components/Button'
 import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
-
+import moment from 'moment-timezone'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
 	STATUS: 'status',
-}
-
-export const DATA_METHOD = {
-	OBJECT: '1',
-	TRACKING: '2'
 }
 class ObjectTable extends React.Component {
 	static contextType = AppContext
@@ -60,7 +55,7 @@ class ObjectTable extends React.Component {
 		}
 	}
 
-	loadObjectTableData = async (callback) => {
+	loadData = async (callback) => {
 		const { locale, auth } = this.context
 		const { objectTypes = [], objectSubTypes = [] } = this.props
 
@@ -120,12 +115,37 @@ class ObjectTable extends React.Component {
 						typeList.push({ value: item.type, label: item.type })
 					}
 
+					const isInTheTimePeriod =
+						moment().diff(item.last_reported_timestamp, 'seconds') <
+						process.env.OBJECT_FOUND_TIME_INTERVAL_IN_SEC
+
+					/** Set the boolean if its rssi is below the specific rssi threshold  */
+					const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
+
+					/** Flag the object that satisfied the time period and rssi threshold */
+					item.found = isInTheTimePeriod && isMatchRssi
+
 					item.area_name = {
 						value: item.area_name,
 						label:
 							areaDataMap[item.area_name] &&
 							areaDataMap[item.area_name].readable_name,
 						id: item.area_id,
+					}
+
+					if (
+						item.battery_voltage >
+						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
+					) {
+						item.battery_indicator = 3
+					} else if (
+						item.battery_voltage <=
+							parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
+						item.battery_voltage > 16
+					) {
+						item.battery_indicator = 2
+					} else if (item.battery_voltage <= 16) {
+						item.battery_indicator = 1
 					}
 
 					item.registered_timestamp = formatTime(item.registered_timestamp)
@@ -200,72 +220,6 @@ class ObjectTable extends React.Component {
 			)
 
 			this.clearSelection()
-		}
-	}
-	loadTrackingData = async (callback) => {
-		const { locale, stateReducer } = this.context
-		const [{ area }] = stateReducer
-		const { auth } = this.context
-		const { user } = auth
-		const BatteryDataPromise = API.Tracking.getTrackingData({
-			areaIds: [area.id],
-			locale: locale.addr,
-		})
-
-		const areaTablePromise = API.Area.getAreaTableByUserId({
-			userId: user.id,
-		})
-
-		const [BatteryDataRes, areaTableRes] = await Promise.all([
-			BatteryDataPromise,
-			areaTablePromise,
-		])
-
-		if (BatteryDataRes && areaTableRes) {
-			const areaDataMap = keyBy(areaTableRes.data, 'id')
-			const data = BatteryDataRes.data.map((item) => {
-				item.mac_address = item.mac_address
-					? item.mac_address
-					: locale.texts.NON_BINDING
-				item.area_name = {
-					value: areaDataMap[item.area_id],
-					label:
-						areaDataMap[item.area_id] &&
-						areaDataMap[item.area_id].readable_name,
-					id: item.area_id,
-				}
-				return item
-			})
-
-			const areaSelection = areaTableRes.data.map((area) => {
-				return {
-					value: area.name,
-					label: area.readable_name,
-				}
-			})
-			this.setState(
-				{
-					data,
-					filteredData: data,
-					areaTable: areaTableRes.data,
-					filterSelection:{
-						areaSelection
-					},
-					locale: locale.abbr,
-				},
-				callback
-			)
-			this.clearSelection()
-		}
-	}
-	loadData = async (callback) => {
-		switch (this.props.dataMethod){
-			case DATA_METHOD.OBJECT:
-				this.loadObjectTableData(callback)
-				break
-			case DATA_METHOD.TRACKING:
-				this.loadTrackingData(callback)
-				break
 		}
 	}
 
@@ -588,7 +542,6 @@ ObjectTable.propTypes = {
 	objectApiMode: PropTypes.string.isRequired,
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
-	dataMethod : PropTypes.string.isRequired,
 	isButtonEnable : PropTypes.string.isRequired,
 }
 

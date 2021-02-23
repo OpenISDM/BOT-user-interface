@@ -1,5 +1,5 @@
 import React from 'react'
-import ObjectTable, { SELECTION, DATA_METHOD } from './ObjectTable'
+import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
 import EditStaffForm from './EditStaffForm'
 import { staffTableColumn } from '../config/tables'
@@ -20,7 +20,6 @@ const StaffTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_STAFF'}
 			deleteText={'DELETE_STAFF'}
-			dataMethod={DATA_METHOD.OBJECT}
 			isButtonEnable={true}
 		/>
 	)

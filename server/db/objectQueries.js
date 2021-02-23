@@ -1,5 +1,5 @@
-const getObject = (objectTypes, areas_id) => {
-	const text = `
+const getObject = (filter) => {
+	return `
 		SELECT
 			object_table.id,
 			object_table.name,
@@ -28,8 +28,11 @@ const getObject = (objectTypes, areas_id) => {
 				SELECT name
 				FROM user_table
 				WHERE user_table.id = object_table.physician_id
-			) as physician_name
-
+			) as physician_name,
+			lbeacon_table.description as location_description,
+			object_summary_table.battery_voltage as battery_voltage,
+			object_summary_table.last_reported_timestamp as last_reported_timestamp,
+			object_summary_table.rssi as rssi
 		FROM object_table
 
 		LEFT JOIN area_table
@@ -37,16 +40,34 @@ const getObject = (objectTypes, areas_id) => {
 
 		LEFT JOIN transfer_locations
 		ON transfer_locations.id = object_table.transferred_location
+		
+		left join object_summary_table
+		on object_table.mac_address = object_summary_table.mac_address 
+		
+		left join lbeacon_table
+		on object_summary_table.uuid = lbeacon_table.uuid 
 
-        WHERE object_table.object_type IN (${objectTypes.map((type) => type)})
-
-		${areas_id ? `AND object_table.area_id IN (${areas_id.map((id) => id)})` : ''}
+		${filter}
 
         ORDER BY
 			object_table.name ASC,
 			object_table.registered_timestamp DESC
 	`
-	return text
+}
+const getObjectTableFilter = (objectTypes, area_ids)=>{
+	let filter = ''
+	if(objectTypes){
+		filter =
+			`WHERE object_table.object_type IN (${objectTypes.map((type) => type)})`
+	}
+	if(area_ids){
+		if(filter.trim()){
+			filter += ` AND object_table.area_id IN (${area_ids.map((id) => id)})`
+		}else{
+			filter = `Where object_table.area_id IN (${area_ids.map((id) => id)})`
+		}
+	}
+	return filter
 }
 
 const addPerson = (formOption) => {
@@ -351,4 +372,5 @@ export default {
 	deleteObjectSummaryRecord,
 	getIdleMacaddr,
 	getSearchableKeyword,
+	getObjectTableFilter,
 }

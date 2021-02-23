@@ -10,10 +10,10 @@ import { ObjectTable } from '../../db/models'
 
 export default {
 	getObject: (request, response) => {
-		const { areas_id, objectTypes } = request.query
+		const { area_ids, objectTypes } = request.query
 
 		pool
-			.query(dbQueries.getObject(objectTypes, areas_id))
+			.query(dbQueries.getObject(dbQueries.getObjectTableFilter(objectTypes, area_ids)))
 			.then((res) => {
 				console.log('get object table succeed')
 				response.status(200).json(res)

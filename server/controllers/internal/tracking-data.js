@@ -57,22 +57,6 @@ export default {
 								.fromNow()
 						: ''
 
-					/** Flag the object's battery volumn is limiting */
-					if (
-						item.battery_voltage >
-						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
-					) {
-						item.battery_indicator = 3
-					} else if (
-						item.battery_voltage <=
-							parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
-						item.battery_voltage > 16
-					) {
-						item.battery_indicator = 2
-					} else if (item.battery_voltage <= 16) {
-						item.battery_indicator = 1
-					}
-
 					// I forget why should do this line
 					// return Object.fromEntries(new Map(Object.entries(item)))
 					return item
