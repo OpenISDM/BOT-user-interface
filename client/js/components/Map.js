@@ -63,7 +63,10 @@ const GenerateMarkersLayer = ({ objectList = [] }) => {
 				60
 			)
 			if (position) {
-				const option = new L.AwesomeNumberMarkers(config.mapConfig.iconOptions)
+				const option = new L.AwesomeNumberMarkers({
+					...config.mapConfig.iconOptions,
+					markerColor: config.mapConfig.iconColor.deivce.normal,
+				})
 				markers.push(<Marker key={index} position={position} icon={option} />)
 			}
 		})

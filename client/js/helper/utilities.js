@@ -177,11 +177,11 @@ export const generateObjectSumString = ({ objectMap = {}, objectIds = [] }) => {
 	objectIds.forEach((id) => {
 		const object = objectMap[id]
 		if (object) {
-			const { name } = object
-			if (itemMap[name]) {
-				itemMap[name] += 1
+			const { type } = object
+			if (itemMap[type]) {
+				itemMap[type] += 1
 			} else {
-				itemMap[name] = 1
+				itemMap[type] = 1
 			}
 		}
 	})

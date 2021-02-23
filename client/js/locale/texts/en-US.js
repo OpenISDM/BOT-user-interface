@@ -212,7 +212,7 @@ const en = {
 	KEY: 'key',
 	TYPE: 'type',
 	ASSET_CONTROL_NUMBER: 'Asset ID',
-	NUMBER:'Number',
+	NUMBER: 'Number',
 	OBJECT_IDENTITY_NUMBER: 'object ID',
 	MAC_ADDRESS: 'mac address',
 	TAG_ID: 'Tag ID',
@@ -601,8 +601,8 @@ const en = {
 	PATIENTS: 'Patients',
 	OTHER_OBJECT_TYPES: 'Other Object Types',
 
-	CONTRACTOR: 'Contractors',
-	VISITORS: 'Visitors',
+	CONTRACTOR: 'Contractor',
+	VISITOR: 'Visitors',
 	STAFF: 'Staff',
 
 	MONITOR_ON_TIME: 'On Time',

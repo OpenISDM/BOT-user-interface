@@ -190,7 +190,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 			},
 			{
 				value: config.OBJECT_TABLE_SUB_TYPE.VISITOR,
-				label: locale.texts.VISITORS,
+				label: locale.texts.VISITOR,
 				id: 3,
 			},
 			{

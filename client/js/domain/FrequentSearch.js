@@ -48,7 +48,7 @@ class FrequentSearch extends React.Component {
 
 	generateFrequentItems = () => {
 		let items = null
-		const { auth } = this.context
+		const { auth, locale } = this.context
 		const { searchObjectArray, pinColorArray } = this.props
 		const doGenerate = auth.authenticated && auth.user.searchHistory
 		if (doGenerate) {
@@ -58,6 +58,8 @@ class FrequentSearch extends React.Component {
 				})
 				.map((item, index) => {
 					const pinColorIndex = searchObjectArray.indexOf(item)
+					const hasLocale = locale.texts[`${item}`.toUpperCase()]
+					const text = hasLocale || item
 
 					return (
 						<Button
@@ -71,7 +73,7 @@ class FrequentSearch extends React.Component {
 							name={SEARCH_HISTORY}
 							value={item}
 						>
-							{item}
+							{text}
 						</Button>
 					)
 				})
