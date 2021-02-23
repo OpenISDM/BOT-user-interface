@@ -227,7 +227,7 @@ const mapConfig = {
 		deivce: {
 			normal: 'BlackWithDot',
 			unNormal: 'GrayWithDot',
-			greyWithoutDot: 'Grey',
+			grayWithoutDot: 'Gray',
 			blackBed: 'BlackRound',
 			whiteBed: 'WhiteRound',
 		},

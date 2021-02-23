@@ -251,7 +251,7 @@ export const getIconColor = (item, hasColorPanel) => {
 		}
 
 		if (item.searched && item.status !== NORMAL) {
-			return config.mapConfig.iconColor.deivce.greyWithoutDot
+			return config.mapConfig.iconColor.deivce.grayWithoutDot
 		}
 
 		if (hasColorPanel) {
@@ -287,7 +287,7 @@ export const getPopupContent = (object, objectList, locale) => {
 				? `${index + 1}.`
 				: '&bull;'
 			const acn = `${locale.texts.ASSET_CONTROL_NUMBER}: ${
-				config.ACNOmitsymbol
+				config.mapConfig.ACNOmitsymbol
 			}${item.asset_control_number.slice(-4)},`
 			const residenceTime =
 				item.status !== RETURNED

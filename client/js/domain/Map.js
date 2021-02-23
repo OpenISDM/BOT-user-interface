@@ -406,8 +406,6 @@ class Map extends React.Component {
 					errorCircle.addTo(this.markersLayer)
 				}
 
-				console.log(getIconColor(item, pinColorIndex > -1))
-
 				/** Set the icon option*/
 				item.iconOption = {
 					...this.iconOptions,
