@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { AppContext } from '../context/AppContext'
 import styleConfig from '../config/styleConfig'
 import PropTypes from 'prop-types'

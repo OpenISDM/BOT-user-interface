@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select'
+import Select from '../components/Select'
 import styleConfig from '../config/styleConfig'
 import Input from './Input'
 import { compareString, includes, filterByField } from '../helper/utilities'

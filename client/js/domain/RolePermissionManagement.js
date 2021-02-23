@@ -8,7 +8,7 @@ import {
 	Col,
 } from 'react-bootstrap'
 import { AppContext } from '../context/AppContext'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { Formik, Field, Form } from 'formik'
 import Container from 'react-bootstrap/Container'
 

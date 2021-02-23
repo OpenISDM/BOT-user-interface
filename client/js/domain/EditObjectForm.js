@@ -7,7 +7,7 @@
  */
 import React from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
-import Select from 'react-select'
+import Select from '../components/Select'
 import Creatable from 'react-select/creatable'
 import config from '../config'
 import { Formik, Form } from 'formik'
@@ -104,7 +104,7 @@ class EditObjectForm extends React.Component {
 
 		const initialValues = {
 			name: name || '',
-			type: type ? {label:type, value: type}: '',
+			type: type ? { label: type, value: type } : '',
 			asset_control_number: isReadOnly ? asset_control_number : '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
@@ -189,9 +189,7 @@ class EditObjectForm extends React.Component {
 								mac_address: values.mac_address
 									? values.mac_address.label.trim()
 									: '',
-								type: values.type
-									? values.type.label.trim()
-									:'',
+								type: values.type ? values.type.label.trim() : '',
 							}
 
 							handleSubmit(postOption)
@@ -217,7 +215,7 @@ class EditObjectForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-									<FormikFormGroup
+										<FormikFormGroup
 											type="text"
 											name="type"
 											label={locale.texts.TYPE}
@@ -237,7 +235,7 @@ class EditObjectForm extends React.Component {
 													options={typeOptions}
 													isSearchable={true}
 													styles={styleConfig.reactSelect}
-													component={{IndicatorSeparator:()=>null}}
+													component={{ IndicatorSeparator: () => null }}
 												/>
 											)}
 										/>

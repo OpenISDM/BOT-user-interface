@@ -15,7 +15,7 @@ import {
 } from '../../../components/StyleComponents'
 import Table from '../../../components/Table'
 import Loader from '../../Loader'
-import Select from 'react-select'
+import Select from '../../../components/Select'
 import IconButton from '../../../components/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'

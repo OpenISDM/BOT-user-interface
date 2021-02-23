@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { object, string } from 'yup'
 import FormikFormGroup from './FormikFormGroup'
 import styleConfig from '../config/styleConfig'

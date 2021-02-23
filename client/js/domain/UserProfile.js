@@ -6,7 +6,7 @@ import { setSuccessMessage } from '../helper/messageGenerator'
 import config from '../config'
 import NumberPicker from './NumberPicker'
 import API from '../api'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { SAVE_SUCCESS } from '../config/wordMap'
 
 class UserProfile extends React.Component {

@@ -32,13 +32,13 @@ export const getDescription = ({
 	switch (item.object_type) {
 		case '0':
 			foundDeviceDescription += item.found
-				? ` ${getDeviceName(item, locale, keywordType)}
+				? ` ${getName({ item, keywordType })}
                     ${getACN(item, locale)}
                     ${getPosition(item, locale)}
                     ${getStatus(item, locale)}
                     ${normalText}
                     ${reserveText}`
-				: ` ${getDeviceName(item, locale, keywordType)}
+				: ` ${getName({ item, keywordType })}
                     ${getACN(item, locale)}
                     ${getSubDescription(item, locale)}`
 			break
