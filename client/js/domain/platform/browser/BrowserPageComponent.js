@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Tab, ListGroup } from 'react-bootstrap'
+import { useLocation, useHistory } from 'react-router-dom'
 import { BOTSideNav } from '../../../components/StyleComponents'
 import { AppContext } from '../../../context/AppContext'
 import AccessControl from '../../AccessControl'
@@ -9,6 +10,8 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 	const { tabList, title, defaultActiveKey, permission } = containerModule
 	const { locale, stateReducer } = useContext(AppContext)
 	const [{ area }] = stateReducer
+	const { pathname } = useLocation()
+	const history = useHistory()
 	const [key, setKey] = useState(defaultActiveKey)
 
 	useEffect(() => {
@@ -19,8 +22,13 @@ const BrowserPageComponent = ({ containerModule, setMessage }) => {
 		<Tab.Container
 			transition={false}
 			activeKey={key}
-			onSelect={(k) => {
-				setKey(k)
+			onSelect={(key) => {
+				setKey(key)
+				const newLocation = {
+					pathname,
+					state: { key },
+				}
+				history.push(newLocation)
 			}}
 		>
 			<div className="BOTsidenav">
