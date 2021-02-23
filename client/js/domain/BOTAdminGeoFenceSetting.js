@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { AppContext } from '../context/AppContext'
 import FormikFormGroup from './FormikFormGroup'
 import Button from '../components/Button'

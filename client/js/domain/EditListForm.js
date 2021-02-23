@@ -2,11 +2,11 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import { AppContext } from '../context/AppContext'
-import Select from 'react-select'
+import Select from '../components/Select'
 import FormikFormGroup from './FormikFormGroup'
 import styleConfig from '../config/styleConfig'
 import PropTypes from 'prop-types'
-import {object, string} from 'yup'
+import { object, string } from 'yup'
 const EditListForm = ({
 	show,
 	handleClose,
@@ -17,7 +17,7 @@ const EditListForm = ({
 	const { locale } = React.useContext(AppContext)
 
 	const validationSchema = object().shape({
-		name : string().required(locale.texts.NAME_IS_REQUIRED),
+		name: string().required(locale.texts.NAME_IS_REQUIRED),
 		area: string().required(locale.texts.AREA_IS_REQUIRED),
 	})
 	return (

@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { Row, Col, Form } from 'react-bootstrap'
-import Select from 'react-select'
 import { AppContext } from '../context/AppContext'
 import FormikFormGroup from './FormikFormGroup'
 import TimePicker from '../components/TimePicker'
 import Slider from '../components/Slider'
+import Select from '../components/Select'
 import PropTypes from 'prop-types'
 
 const NotificationTypeConfig = ({

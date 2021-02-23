@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppContext } from '../context/AppContext'
-import Select from 'react-select'
+import Select from '../components/Select'
 import API from '../api'
 import { PrimaryButton } from '../components/StyleComponents'
 import DualListBox from './DualListBox'

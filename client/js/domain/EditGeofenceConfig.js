@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
 import { Formik, Field, Form } from 'formik'
 import { object, string, array } from 'yup'

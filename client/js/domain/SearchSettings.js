@@ -1,7 +1,7 @@
 import React from 'react'
 import { debounce, keyBy } from 'lodash'
 import { Row, Col, Form } from 'react-bootstrap'
-import Select from 'react-select'
+import Select from '../components/Select'
 import { AppContext } from '../context/AppContext'
 import API from '../api'
 import { setSuccessMessage } from '../helper/messageGenerator'

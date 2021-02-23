@@ -13,7 +13,7 @@ import {
 	PageTitle,
 } from '../../../components/StyleComponents'
 import Loader from '../../Loader'
-import Select from 'react-select'
+import Select from '../components/Select'
 
 import IconButton from '../../../components/IconButton'
 import styleSheet from '../../../config/styleSheet'

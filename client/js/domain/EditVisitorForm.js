@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
-import Select from 'react-select'
+import Select from '../components/Select'
 import config from '../config'
 import { AppContext } from '../context/AppContext'
 import Creatable from 'react-select/creatable'
