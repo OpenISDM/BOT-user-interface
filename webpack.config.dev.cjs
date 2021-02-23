@@ -6,6 +6,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
+const config = require('./config/index.cjs')
 const webpack = require('webpack')
 const dotenv = require('dotenv')
 const path = require('path')
@@ -14,6 +15,18 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 	prev[next] = JSON.stringify(env[next])
 	return prev
 }, {})
+
+let stringReplaceOption = {}
+if (envKeys.WORD_REPLACEMENT_PATIENT_TO_RESIDENT === '"true"') {
+	stringReplaceOption = {
+		test: /\.js$/,
+		loader: 'string-replace-loader',
+		include: [path.resolve(__dirname, 'client/js/locale/texts')],
+		options: {
+			multiple: [...config.ReplacePairs.PatientToResident],
+		},
+	}
+}
 
 module.exports = {
 	entry: './client/index.js',
@@ -77,6 +90,7 @@ module.exports = {
 				test: /\.(sa|sc|c)ss$/,
 				use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
 			},
+			stringReplaceOption,
 		],
 	},
 	plugins: [

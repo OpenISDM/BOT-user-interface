@@ -12142,6 +12142,14 @@
   dependencies:
     "safe-buffer" "~5.1.0"
 
+"string-replace-loader@^3.0.1":
+  "integrity" "sha512-G6UD9HX1XaKXnWpKgNHPVc/pYYLtP8+UWfORY5n3GTLSUNUo2hU2ABBnC9B3hg7ATWVSIGTisiP8zGq1DlvTbg=="
+  "resolved" "https://registry.npmjs.org/string-replace-loader/-/string-replace-loader-3.0.1.tgz"
+  "version" "3.0.1"
+  dependencies:
+    "loader-utils" "^2.0.0"
+    "schema-utils" "^3.0.0"
+
 "string-width@^1.0.1":
   "integrity" "sha1-EYvfW4zcUaKn5w0hHgfisLmxB9M="
   "resolved" "https://registry.npmjs.org/string-width/-/string-width-1.0.2.tgz"
@@ -13267,7 +13275,7 @@
     "source-list-map" "^2.0.0"
     "source-map" "~0.6.1"
 
-"webpack@^4.42.1", "webpack@^4.46.0":
+"webpack@^4.42.1", "webpack@^4.46.0", "webpack@^5":
   "integrity" "sha512-6jJuJjg8znb/xRItk7bkT0+Q7AHCYjjFnvKIWQPkNIOyRqoCGvkOs0ipeQzrqz4l5FtN5ZI/ukEHroeX/o1/5Q=="
   "resolved" "https://registry.npmjs.org/webpack/-/webpack-4.46.0.tgz"
   "version" "4.46.0"
