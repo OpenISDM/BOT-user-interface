@@ -20,6 +20,7 @@ const StaffTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_STAFF'}
 			deleteText={'DELETE_STAFF'}
+			isButtonEnable={true}
 		/>
 	)
 }

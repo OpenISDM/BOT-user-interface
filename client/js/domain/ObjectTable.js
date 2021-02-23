@@ -14,13 +14,12 @@ import Button from '../components/Button'
 import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
-
+import moment from 'moment-timezone'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
 	STATUS: 'status',
 }
-
 class ObjectTable extends React.Component {
 	static contextType = AppContext
 
@@ -116,12 +115,37 @@ class ObjectTable extends React.Component {
 						typeList.push({ value: item.type, label: item.type })
 					}
 
+					const isInTheTimePeriod =
+						moment().diff(item.last_reported_timestamp, 'seconds') <
+						process.env.OBJECT_FOUND_TIME_INTERVAL_IN_SEC
+
+					/** Set the boolean if its rssi is below the specific rssi threshold  */
+					const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
+
+					/** Flag the object that satisfied the time period and rssi threshold */
+					item.found = isInTheTimePeriod && isMatchRssi
+
 					item.area_name = {
 						value: item.area_name,
 						label:
 							areaDataMap[item.area_name] &&
 							areaDataMap[item.area_name].readable_name,
 						id: item.area_id,
+					}
+
+					if (
+						item.battery_voltage >
+						parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
+					) {
+						item.battery_indicator = 3
+					} else if (
+						item.battery_voltage <=
+							parseInt(process.env.BATTERY_VOLTAGE_INDICATOR) &&
+						item.battery_voltage > 16
+					) {
+						item.battery_indicator = 2
+					} else if (item.battery_voltage <= 16) {
+						item.battery_indicator = 1
 					}
 
 					item.registered_timestamp = formatTime(item.registered_timestamp)
@@ -329,6 +353,7 @@ class ObjectTable extends React.Component {
 			EditedForm,
 			addText,
 			deleteText,
+			isButtonEnable,
 		} = this.props
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
@@ -391,7 +416,7 @@ class ObjectTable extends React.Component {
 								...enabledSelectionList,
 							]}
 						/>
-						<ButtonToolbar>
+						{isButtonEnable?(<ButtonToolbar>
 							{this.state.isMultiSelection ? (
 								<>
 									<Button
@@ -432,7 +457,7 @@ class ObjectTable extends React.Component {
 									/>
 								</>
 							)}
-						</ButtonToolbar>
+						</ButtonToolbar>) : null}
 					</Row>
 				</Col>
 				<hr />
@@ -504,6 +529,7 @@ class ObjectTable extends React.Component {
 			</>
 		)
 	}
+
 }
 
 ObjectTable.propTypes = {
@@ -514,8 +540,9 @@ ObjectTable.propTypes = {
 	columns: PropTypes.array.isRequired,
 	EditedForm: PropTypes.node.isRequired,
 	objectApiMode: PropTypes.string.isRequired,
-	addText: PropTypes.string.isRequired,
-	deleteText: PropTypes.string.isRequired,
+	addText: PropTypes.string,
+	deleteText: PropTypes.string,
+	isButtonEnable : PropTypes.string.isRequired,
 }
 
 export default ObjectTable
