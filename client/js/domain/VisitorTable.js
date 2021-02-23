@@ -18,6 +18,7 @@ const VisitorTable = () => {
 			addText={'ADD_VISITOR'}
 			deleteText={'DELETE_VISITOR'}
 			dataMethod={DATA_METHOD.OBJECT}
+			isButtonEnable={true}
 		/>
 	)
 }

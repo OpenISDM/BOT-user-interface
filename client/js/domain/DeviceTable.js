@@ -25,6 +25,7 @@ const DeviceTable = () => {
 			addText={'ADD_DEVICE'}
 			deleteText={'DELETE_DEVICE'}
 			dataMethod={DATA_METHOD.OBJECT}
+			isButtonEnable={true}
 		/>
 	)
 }

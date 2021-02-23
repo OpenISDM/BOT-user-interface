@@ -399,6 +399,7 @@ class ObjectTable extends React.Component {
 			EditedForm,
 			addText,
 			deleteText,
+			isButtonEnable,
 		} = this.props
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
@@ -461,7 +462,7 @@ class ObjectTable extends React.Component {
 								...enabledSelectionList,
 							]}
 						/>
-						<ButtonToolbar>
+						{isButtonEnable?(<ButtonToolbar>
 							{this.state.isMultiSelection ? (
 								<>
 									<Button
@@ -502,7 +503,7 @@ class ObjectTable extends React.Component {
 									/>
 								</>
 							)}
-						</ButtonToolbar>
+						</ButtonToolbar>) : null}
 					</Row>
 				</Col>
 				<hr />
@@ -588,6 +589,7 @@ ObjectTable.propTypes = {
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
 	dataMethod : PropTypes.string.isRequired,
+	isButtonEnable : PropTypes.string.isRequired,
 }
 
 export default ObjectTable

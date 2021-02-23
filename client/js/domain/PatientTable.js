@@ -18,6 +18,7 @@ const PatientTable = () => {
 			addText={'ADD_PATIENT'}
 			deleteText={'DELETE_PATIENT'}
 			dataMethod={DATA_METHOD.OBJECT}
+			isButtonEnable={true}
 		/>
 	)
 }

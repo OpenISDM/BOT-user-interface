@@ -21,6 +21,7 @@ const StaffTable = () => {
 			addText={'ADD_STAFF'}
 			deleteText={'DELETE_STAFF'}
 			dataMethod={DATA_METHOD.OBJECT}
+			isButtonEnable={true}
 		/>
 	)
 }

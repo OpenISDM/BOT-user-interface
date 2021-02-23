@@ -17,6 +17,7 @@ const BatteryStatusTable=()=>{
             EditedForm={EditPatientForm}
             objectApiMode={PERSON}
             dataMethod={DATA_METHOD.TRACKING}
+            isButtonEnable={false}
         />
     )
 }
