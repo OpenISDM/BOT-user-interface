@@ -17,6 +17,7 @@ const VisitorTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_VISITOR'}
 			deleteText={'DELETE_VISITOR'}
+			isButtonEnable={true}
 		/>
 	)
 }

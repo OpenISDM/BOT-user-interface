@@ -214,12 +214,6 @@ const TransferredLocationColumn = [
 ]
 const batteryTableColumn = [
 	{
-		Header: 'POUND_SIGN',
-		accessor: '_id',
-		style: style.column,
-		width: 40,
-	},
-	{
 		Header: 'Found',
 		accessor: 'found',
 		style: style.column,
@@ -268,14 +262,9 @@ const batteryTableColumn = [
 		width: 150,
 	},
 	{
-		Header: 'Asset Control Number',
+		Header: 'number',
 		accessor: 'asset_control_number',
 		width: 180,
-	},
-	{
-		Header: 'Status',
-		accessor: 'status',
-		width: 100,
 	},
 	{
 		Header: 'Last Location',

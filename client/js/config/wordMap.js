@@ -66,4 +66,6 @@ export const BROKEN = 'broken'
 
 export const ASSET_CONTROL_NUMBER = 'asset control number'
 
+export const NUMBER = 'number'
+
 export const CLEAR = 'clear'
