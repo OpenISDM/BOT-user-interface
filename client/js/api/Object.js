@@ -14,10 +14,11 @@ const object = {
 const searchableKeyword = '/data/object/searchableKeyword'
 
 export default {
-	async getObjectTable({ area_ids, objectTypes }) {
+	async getObjectList({ areaIds, objectTypes, objectSubTypes }) {
 		return await get(object.object, {
-			area_ids,
+			areaIds,
 			objectTypes,
+			objectSubTypes,
 		})
 	},
 

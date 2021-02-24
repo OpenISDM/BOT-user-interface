@@ -21,6 +21,19 @@ import LBeaconTable from './lbeacon-table'
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
 
+ObjectTable.belongsTo(AreaTable, {
+	foreignKey: 'area_id',
+	as: 'area',
+})
+ObjectTable.belongsTo(TransferLocations, {
+	foreignKey: 'transferred_location',
+	as: 'transferLocations',
+})
+ObjectTable.belongsTo(UserTable, {
+	foreignKey: 'physician_id',
+	as: 'user',
+})
+
 ObjectTable.hasOne(ObjectSummaryTable, {
 	foreignKey: 'mac_address',
 	sourceKey: 'mac_address',
@@ -29,6 +42,16 @@ ObjectTable.hasOne(ObjectSummaryTable, {
 ObjectSummaryTable.belongsTo(ObjectTable, {
 	foreignKey: 'mac_address',
 	targetKey: 'mac_address',
+})
+
+ObjectSummaryTable.hasOne(LBeaconTable, {
+	foreignKey: 'uuid',
+	sourceKey: 'uuid',
+	as: 'lbeacon',
+})
+LBeaconTable.belongsTo(ObjectSummaryTable, {
+	foreignKey: 'uuid',
+	targetKey: 'uuid',
 })
 
 UserAssignments.belongsTo(DeviceGroupList, { foreignKey: 'group_list_id' })

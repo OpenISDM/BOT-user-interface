@@ -10,7 +10,7 @@ export default (app) => {
 
 	app
 		.route('/data/object')
-		.get(objectController.getObject)
+		.get(objectController.getObjectList)
 		.delete(objectController.deleteObject)
 		.patch(objectController.disassociate)
 

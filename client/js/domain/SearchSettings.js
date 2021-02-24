@@ -105,8 +105,8 @@ class SearchSettings extends React.Component {
 	getObjectData = async (callback) => {
 		const [{ area }, dispatch] = this.context.stateReducer
 
-		const objectDataPromise = API.Object.getObjectTable({
-			area_ids: [area.id],
+		const objectDataPromise = API.Object.getObjectList({
+			areaIds: [area.id],
 			objectTypes: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
 
@@ -137,11 +137,11 @@ class SearchSettings extends React.Component {
 				}
 			})
 
-			const objectMap = keyBy(objectRes.data.rows, 'id')
+			const objectMap = keyBy(objectRes.data, 'id')
 			const namedListMap = keyBy(namedListRes.data, 'id')
 
 			const allDeviceObjects = []
-			const namedListDeviceObjects = objectRes.data.rows
+			const namedListDeviceObjects = objectRes.data
 				.filter((item) => {
 					return parseInt(item.object_type) === config.OBJECT_TYPE.DEVICE
 				})
@@ -151,7 +151,7 @@ class SearchSettings extends React.Component {
 				})
 
 			const allPatientObjects = []
-			const namedListPatientObjects = objectRes.data.rows
+			const namedListPatientObjects = objectRes.data
 				.filter((item) => {
 					return parseInt(item.object_type) === config.OBJECT_TYPE.PERSON
 				})

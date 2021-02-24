@@ -59,8 +59,8 @@ class ObjectTable extends React.Component {
 		const { locale, auth } = this.context
 		const { objectTypes = [], objectSubTypes = [] } = this.props
 
-		const objectTablePromise = API.Object.getObjectTable({
-			area_ids: auth.user.area_ids,
+		const objectTablePromise = API.Object.getObjectList({
+			areaIds: auth.user.area_ids,
 			objectTypes,
 		})
 		const areaTablePromise = API.Area.getAreaTable()
@@ -83,7 +83,7 @@ class ObjectTable extends React.Component {
 			const typeList = []
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
 
-			const data = objectTableRes.data.rows
+			const data = objectTableRes.data
 				.filter((item) => {
 					const isPersonObject = isSameValue(
 						item.object_type,
@@ -100,10 +100,11 @@ class ObjectTable extends React.Component {
 						label: item.status ? locale.texts[item.status.toUpperCase()] : null,
 					}
 
-					item.transferred_location = item.transferred_location.id && {
-						value: `${item.transferred_location.name}-${item.transferred_location.department}`,
-						label: `${item.transferred_location.name}-${item.transferred_location.department}`,
-					}
+					item.transferred_location = item.transferred_location &&
+						item.transferred_location.id && {
+							value: `${item.transferred_location.name}-${item.transferred_location.department}`,
+							label: `${item.transferred_location.name}-${item.transferred_location.department}`,
+						}
 
 					item.isBind = item.mac_address ? 1 : 0
 
@@ -165,12 +166,12 @@ class ObjectTable extends React.Component {
 
 			const associatedMacSet = [
 				...new Set(
-					objectTableRes.data.rows.map((item) => {
+					objectTableRes.data.map((item) => {
 						return `${item.mac_address}`.toUpperCase()
 					})
 				),
 			]
-
+			console.log(objectTableRes.data)
 			const associatedAsnSet = [
 				...new Set(
 					acnRes.data.map((item) => {

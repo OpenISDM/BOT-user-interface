@@ -136,9 +136,10 @@ class CustomSettings extends React.Component {
 		const { stateReducer } = this.context
 		const [{ area }] = stateReducer
 
-		const res = await API.Object.getObjectTable({
-			area_ids: [area.id],
+		const res = await API.Object.getObjectList({
+			areaIds: [area.id],
 			objectTypes: [config.OBJECT_TYPE.PERSON],
+			objectSubTypes: [config.OBJECT_TABLE_SUB_TYPE.PATIENT],
 		})
 
 		if (res) {
@@ -176,7 +177,7 @@ class CustomSettings extends React.Component {
 			]
 
 			this.setState({
-				patientAliasesData: res.data.rows,
+				patientAliasesData: res.data,
 				patientAliasesColumns: columns,
 			})
 		}
