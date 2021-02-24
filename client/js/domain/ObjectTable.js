@@ -60,7 +60,7 @@ class ObjectTable extends React.Component {
 		const { objectTypes = [], objectSubTypes = [] } = this.props
 
 		const objectTablePromise = API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+			area_ids: auth.user.area_ids,
 			objectTypes,
 		})
 		const areaTablePromise = API.Area.getAreaTable()
@@ -416,48 +416,50 @@ class ObjectTable extends React.Component {
 								...enabledSelectionList,
 							]}
 						/>
-						{isButtonEnable?(<ButtonToolbar>
-							{this.state.isMultiSelection ? (
-								<>
-									<Button
-										theme={'danger'}
-										disableDebounce={true}
-										pressed={tableSelection.length > 0}
-										name={DELETE}
-										onClick={this.handleDeleteAction}
-										text={locale.texts[deleteText]}
-									/>
-									<Button
-										disableDebounce={true}
-										pressed={true}
-										name={DELETE}
-										onClick={this.switchSelectionMode}
-										text={locale.texts.CANCEL}
-									/>
-								</>
-							) : (
-								<>
-									<Button
-										pressed={true}
-										onClick={this.switchReplaceTagMode}
-										text={locale.texts.REPLACE_TAG}
-									/>
-									<Button
-										pressed={this.state.isAddButtonPressed}
-										name={ADD}
-										onClick={this.handleClickButton}
-										text={locale.texts[addText]}
-									/>
-									<Button
-										disableDebounce={true}
-										pressed={this.state.isMultiSelection}
-										name={DELETE}
-										onClick={this.switchSelectionMode}
-										text={locale.texts[deleteText]}
-									/>
-								</>
-							)}
-						</ButtonToolbar>) : null}
+						{isButtonEnable ? (
+							<ButtonToolbar>
+								{this.state.isMultiSelection ? (
+									<>
+										<Button
+											theme={'danger'}
+											disableDebounce={true}
+											pressed={tableSelection.length > 0}
+											name={DELETE}
+											onClick={this.handleDeleteAction}
+											text={locale.texts[deleteText]}
+										/>
+										<Button
+											disableDebounce={true}
+											pressed={true}
+											name={DELETE}
+											onClick={this.switchSelectionMode}
+											text={locale.texts.CANCEL}
+										/>
+									</>
+								) : (
+									<>
+										<Button
+											pressed={true}
+											onClick={this.switchReplaceTagMode}
+											text={locale.texts.REPLACE_TAG}
+										/>
+										<Button
+											pressed={this.state.isAddButtonPressed}
+											name={ADD}
+											onClick={this.handleClickButton}
+											text={locale.texts[addText]}
+										/>
+										<Button
+											disableDebounce={true}
+											pressed={this.state.isMultiSelection}
+											name={DELETE}
+											onClick={this.switchSelectionMode}
+											text={locale.texts[deleteText]}
+										/>
+									</>
+								)}
+							</ButtonToolbar>
+						) : null}
 					</Row>
 				</Col>
 				<hr />
@@ -529,7 +531,6 @@ class ObjectTable extends React.Component {
 			</>
 		)
 	}
-
 }
 
 ObjectTable.propTypes = {
@@ -542,7 +543,7 @@ ObjectTable.propTypes = {
 	objectApiMode: PropTypes.string.isRequired,
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
-	isButtonEnable : PropTypes.string.isRequired,
+	isButtonEnable: PropTypes.string.isRequired,
 }
 
 export default ObjectTable

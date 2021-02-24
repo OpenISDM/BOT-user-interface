@@ -89,7 +89,7 @@ class UserProfile extends React.Component {
 		const { auth } = this.context
 		switch (formIndex) {
 			case 0:
-				auth.setArea(values.areas_id)
+				auth.setArea(values.area_ids)
 
 				break
 

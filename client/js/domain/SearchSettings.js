@@ -106,7 +106,7 @@ class SearchSettings extends React.Component {
 		const [{ area }, dispatch] = this.context.stateReducer
 
 		const objectDataPromise = API.Object.getObjectTable({
-			areas_id: [area.id],
+			area_ids: [area.id],
 			objectTypes: [config.OBJECT_TYPE.DEVICE, config.OBJECT_TYPE.PERSON],
 		})
 

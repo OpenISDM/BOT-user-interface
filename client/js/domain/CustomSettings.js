@@ -137,7 +137,7 @@ class CustomSettings extends React.Component {
 		const [{ area }] = stateReducer
 
 		const res = await API.Object.getObjectTable({
-			areas_id: [area.id],
+			area_ids: [area.id],
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
 

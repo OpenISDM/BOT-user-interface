@@ -79,7 +79,7 @@ class SearchableObjectType extends React.Component {
 		const { auth } = this.context
 
 		const res = await API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+			area_ids: auth.user.area_ids,
 			objectTypes: [config.OBJECT_TYPE.DEVICE],
 		})
 
