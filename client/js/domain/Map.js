@@ -346,7 +346,7 @@ class Map extends React.Component {
 	handleObjectMarkers = () => {
 		const { locale, stateReducer } = this.context
 
-		const { searchObjectArray, pinColorArray, searchResult } = this.props
+		const { searchObjectArray, searchResult } = this.props
 
 		const [
 			{ assignedObject, deviceObjectTypeVisible, personObjectTypeVisible },
@@ -388,13 +388,6 @@ class Map extends React.Component {
 					locale
 				)
 
-				const pinColorIndex = searchObjectArray.indexOf(item.keyword)
-
-				if (pinColorIndex > -1) {
-					item.searched = true
-					item.pinColor = pinColorArray[pinColorIndex]
-				}
-
 				/** Set the attribute if the object in search result list is on hover */
 				if (item.mac_address === assignedObject) {
 					// iconSize = iconSize.map(item => item * 5)
@@ -411,7 +404,7 @@ class Map extends React.Component {
 					...this.iconOptions,
 
 					/** Set the pin color */
-					markerColor: getIconColor(item, pinColorIndex > -1),
+					markerColor: getIconColor(item, searchObjectArray),
 
 					/** Set the pin size */
 					// iconSize,

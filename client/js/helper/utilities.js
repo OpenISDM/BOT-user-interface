@@ -232,7 +232,7 @@ export const delay = ({ callback, second = 1 }) => {
 	return setTimeout(callback, second * 1000)
 }
 
-export const getIconColor = (item, hasColorPanel) => {
+export const getIconColor = (item, searchObjectArray) => {
 	if (item.emergency) {
 		return config.mapConfig.iconColor.sos
 	}
@@ -240,6 +240,8 @@ export const getIconColor = (item, hasColorPanel) => {
 	if (item.forbidden) {
 		return config.mapConfig.iconColor.forbidden
 	}
+
+	const pinColorIndex = searchObjectArray.indexOf(item.keyword)
 
 	if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
 		if (item.clear_bed) {
@@ -254,8 +256,8 @@ export const getIconColor = (item, hasColorPanel) => {
 			return config.mapConfig.iconColor.deivce.grayWithoutDot
 		}
 
-		if (hasColorPanel) {
-			return item.pinColor
+		if (pinColorIndex > -1) {
+			return config.mapConfig.iconColor.pinColorArray[pinColorIndex]
 		}
 
 		if (item.searched) {
@@ -272,8 +274,8 @@ export const getIconColor = (item, hasColorPanel) => {
 			return config.mapConfig.iconColor.person.alert
 		}
 
-		if (hasColorPanel) {
-			return `Person${item.pinColor}`
+		if (pinColorIndex > -1) {
+			return `Person${config.mapConfig.iconColor.pinColorArray[pinColorIndex]}`
 		}
 
 		return config.mapConfig.iconColor.person.normal
