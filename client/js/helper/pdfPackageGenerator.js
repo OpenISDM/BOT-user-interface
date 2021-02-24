@@ -635,7 +635,6 @@ const pdfPackageGenerator = {
                             &nbsp;
                             ${confirmed}
                             ${item.name},
-                            ${item.type},
                             ${acn}: ${item.asset_control_number},
                             ${location}
                             ${item.residence_time}
