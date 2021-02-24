@@ -82,7 +82,6 @@ class ObjectTable extends React.Component {
 		if (objectTableRes && areaTableRes && idleMacRes && acnRes) {
 			const typeList = []
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
-
 			const data = objectTableRes.data.rows
 				.filter((item) => {
 					const isPersonObject = isSameValue(
@@ -354,6 +353,7 @@ class ObjectTable extends React.Component {
 			addText,
 			deleteText,
 			isButtonEnable,
+			isTableTappedEnable = true,
 		} = this.props
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
@@ -485,6 +485,7 @@ class ObjectTable extends React.Component {
 								maxHeight: '80vh',
 							}}
 							onClickCallback={(selectedRowData) => {
+								if(!isTableTappedEnable) return
 								if (selectedRowData) {
 									this.setState({
 										isReplaceTagMode: false,
@@ -538,11 +539,12 @@ ObjectTable.propTypes = {
 	filteredAttribute: PropTypes.array.isRequired,
 	enabledSelection: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
-	EditedForm: PropTypes.node.isRequired,
-	objectApiMode: PropTypes.string.isRequired,
+	EditedForm: PropTypes.node,
+	objectApiMode: PropTypes.string,
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
-	isButtonEnable : PropTypes.string.isRequired,
+	isButtonEnable : PropTypes.bool.isRequired,
+	isTableTapEnable : PropTypes.bool
 }
 
 export default ObjectTable
