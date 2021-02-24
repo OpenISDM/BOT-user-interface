@@ -352,7 +352,7 @@ class ObjectTable extends React.Component {
 			EditedForm,
 			addText,
 			deleteText,
-			isButtonEnable,
+			isButtonEnable=true,
 			isTableTappedEnable = true,
 		} = this.props
 		const { locale, stateReducer } = this.context
@@ -539,12 +539,12 @@ ObjectTable.propTypes = {
 	filteredAttribute: PropTypes.array.isRequired,
 	enabledSelection: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
-	EditedForm: PropTypes.node,
+	EditedForm: PropTypes.node.isRequired,
 	objectApiMode: PropTypes.string,
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
 	isButtonEnable : PropTypes.bool.isRequired,
-	isTableTapEnable : PropTypes.bool
+	isTableTapEnable : PropTypes.bool.isRequired
 }
 
 export default ObjectTable

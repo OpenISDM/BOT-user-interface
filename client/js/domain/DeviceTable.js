@@ -24,7 +24,6 @@ const DeviceTable = () => {
 			objectApiMode={DEVICE}
 			addText={'ADD_DEVICE'}
 			deleteText={'DELETE_DEVICE'}
-			isButtonEnable={true}
 		/>
 	)
 }
