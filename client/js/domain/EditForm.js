@@ -78,6 +78,7 @@ class EditForm extends React.Component {
 			associatedAsnSet = [],
 			handleSubmit,
             additionOptions,
+            additionOptionsTitle,
 			macOptions,
 			handleClick,
 		} = this.props
@@ -109,7 +110,7 @@ class EditForm extends React.Component {
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
 			area: area_name || '',
-			monitorType: monitor_type.length > 0 ? monitor_type.split('/') : [],
+			monitorType: (monitor_type && monitor_type.length > 0) ? monitor_type.split('/') : [],
 		}
 
 		const validationSchema = object().shape({
@@ -190,7 +191,7 @@ class EditForm extends React.Component {
 									: '',
 								type: values.type ? values.type.label.trim() : '',
 							}
-
+                            console.log(postOption)
 							handleSubmit(postOption)
 						}}
 						render={({
@@ -257,7 +258,7 @@ class EditForm extends React.Component {
                                     <FormikFormGroup
 											type="text"
 											name="type"
-											label={locale.texts.TYPE}
+											label={additionOptionsTitle}
 											error={errors.type}
 											touched={touched.type}
 											placeholder=""
@@ -268,6 +269,8 @@ class EditForm extends React.Component {
 													placeholder=""
 													className="my-1"
 													onChange={(obj) => {
+                                                        console.log(errors)
+                                                        console.log(touched)
 														obj.label = obj.value
 														setFieldValue('type', obj)
 													}}
@@ -354,6 +357,8 @@ EditForm.propTypes = {
 	handleClose: PropTypes.func.isRequired,
 	show: PropTypes.bool.isRequired,
 	associatedAsnSet: PropTypes.array.isRequired,
+    enableAdditionalOptions: PropTypes.bool,
+    additionOptionsTitle: PropTypes.string,
 }
 
 export default EditForm

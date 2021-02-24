@@ -1,10 +1,9 @@
 import React from 'react'
 import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
-//import EditPatientForm from './EditPatientForm'
 import { batteryTableColumn } from '../config/tables'
-import EditPatientForm from './EditPatientForm'
-
+import EditBatteryForm from './EditBatteryForm'
+import { PERSON } from '../config/wordMap'
 const BatteryStatusTable=()=>{
     const {OBJECT_TABLE_SUB_TYPE} = config
     return (
@@ -18,10 +17,9 @@ const BatteryStatusTable=()=>{
 			]}
             filteredAttribute={['name', 'type', 'area', 'macAddress', 'acn']}
             enabledSelection={[SELECTION.AREA]}
+            objectApiMode={PERSON}
             columns={batteryTableColumn}
-            EditedForm={EditPatientForm}
-            isButtonEnable={false}
-            isTableTappedEnable={false}
+            EditedForm={EditBatteryForm}
         />
     )
 }

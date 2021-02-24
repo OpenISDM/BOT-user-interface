@@ -15,10 +15,29 @@ import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
+import EditForm from './EditForm'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
 	STATUS: 'status',
+}
+
+export const TABLE = {
+	// DEVICE:{
+	// 	additionOptionsTitle: locale.texts.type,
+	// },
+	// PATIENT:{
+	// 	additionOptionsTitle:locale.texts.type,
+	// },
+	// STAFF:{
+	// 	additionOptionsTitle:locale.texts.type,
+	// },
+	// VISITOR:{
+
+	// },
+	// BATTERY:{
+
+	// },
 }
 class ObjectTable extends React.Component {
 	static contextType = AppContext
@@ -271,9 +290,11 @@ class ObjectTable extends React.Component {
 	handleSubmitForm = async (formOption) => {
 		const { apiMethod } = this.state
 		const { objectApiMode } = this.props
+		console.log(objectApiMode)
 		const res = await API.Object[apiMethod]({
 			formOption,
-			mode: objectApiMode,
+			mode: objectApiMode || formOption.object_type,
+			aa:console.log(formOption)
 		})
 		if (res) {
 			this.loadData(() => setSuccessMessage(SAVE_SUCCESS))
@@ -501,7 +522,21 @@ class ObjectTable extends React.Component {
 					</Col>
 				)}
 
-				<EditedForm
+				<EditForm
+					show={this.state.isShowEdit}
+					title={this.state.formTitle}
+					selectedRowData={this.state.selectedRowData}
+					handleClick={this.handleClickButton}
+					handleSubmit={this.handleSubmitForm}
+					handleClose={this.handleClose}
+					isReadOnly={this.state.isReadOnly}
+					areaTable={this.state.areaTable}
+					associatedMacSet={this.state.associatedMacSet}
+					associatedAsnSet={this.state.associatedAsnSet}
+					macOptions={this.state.macOptions}
+					additionOptions={this.state.filterSelection.typeList}
+				/>
+				{/* <EditedForm
 					show={this.state.isShowEdit}
 					title={this.state.formTitle}
 					selectedRowData={this.state.selectedRowData}
@@ -514,7 +549,7 @@ class ObjectTable extends React.Component {
 					associatedAsnSet={this.state.associatedAsnSet}
 					macOptions={this.state.macOptions}
 					typeOptions={this.state.filterSelection.typeList}
-				/>
+				/> */}
 
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}
