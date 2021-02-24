@@ -74,6 +74,7 @@
 		"prop-types": "^15.7.2",
 		"purgecss-webpack-plugin": "^2.3.0",
 		"sass-loader": "^9.0.3",
+		"string-replace-loader": "^3.0.1",
 		"style-loader": "^0.23.1",
 		"terser-webpack-plugin": "^4.2.3",
 		"webpack": "^4.46.0",
