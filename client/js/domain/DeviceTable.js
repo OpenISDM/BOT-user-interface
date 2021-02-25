@@ -3,7 +3,7 @@ import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
 import { objectTableColumn } from '../config/tables'
 import { DEVICE } from '../config/wordMap'
-import { ADDITION_OPTION } from './EditForm'
+
 const DeviceTable = () => {
 	return (
 		<ObjectTable
@@ -22,7 +22,11 @@ const DeviceTable = () => {
 			objectApiMode={DEVICE}
 			addText={'ADD_DEVICE'}
 			deleteText={'DELETE_DEVICE'}
-			typeOption={ADDITION_OPTION.DEVICE}
+			typeOption={{
+				label: 'TYPE',
+				value: 'type',
+				idText: 'ACN',
+			}}
 		/>
 	)
 }

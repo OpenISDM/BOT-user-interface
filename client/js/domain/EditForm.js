@@ -25,24 +25,6 @@ const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
 	monitorTypeMap[config.monitorType[key]] = key
 })
-
-export const ADDITION_OPTION = {
-	PATIENT: {
-		label: 'ROOM',
-		value: 'room',
-		idText: 'ID',
-	},
-	DEVICE: {
-		label: 'TYPE',
-		value: 'type',
-		idText: 'ACN',
-	},
-	STAFF: {
-		label: 'TYPE',
-		value: 'type',
-		idText: 'ID',
-	},
-}
 class EditForm extends React.Component {
 	static contextType = AppContext
 

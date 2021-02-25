@@ -15,7 +15,12 @@ const PatientTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_PATIENT'}
 			deleteText={'DELETE_PATIENT'}
-			typeOption={ADDITION_OPTION.PATIENT}
+			typeOption={{
+				label: 'ROOM',
+				value: 'room',
+				idText: 'ID',
+			}}
+			typeOptions={[]}
 		/>
 	)
 }

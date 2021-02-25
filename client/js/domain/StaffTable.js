@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import ObjectTable, { SELECTION } from './ObjectTable'
+import { AppContext } from '../context/AppContext'
 import config from '../config'
 import { staffTableColumn } from '../config/tables'
 import { PERSON } from '../config/wordMap'
-import { ADDITION_OPTION } from './EditForm'
+
 const StaffTable = () => {
+	const {locale} = useContext(AppContext)
 	return (
 		<ObjectTable
 			objectTypes={[config.OBJECT_TYPE.PERSON]}
@@ -18,7 +20,20 @@ const StaffTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_STAFF'}
 			deleteText={'DELETE_STAFF'}
-			typeOption={ADDITION_OPTION.STAFF}
+			typeOption={{
+				label: 'TYPE',
+				value: 'type',
+				idText: 'ID',
+			}}
+			typeOptions={[
+				config.OBJECT_TABLE_SUB_TYPE.STAFF,
+				config.OBJECT_TABLE_SUB_TYPE.CONTRACTOR,
+			].map((value) => {
+				return {
+					value,
+					label: locale.texts[value.toUpperCase()],
+				}
+			})}
 		/>
 	)
 }

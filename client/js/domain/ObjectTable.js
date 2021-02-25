@@ -62,7 +62,10 @@ class ObjectTable extends React.Component {
 		const {
 			objectTypes = [],
 			objectSubTypes = [],
-			typeOption = '',
+		} = this.props
+
+		let{
+			typeOptions = undefined
 		} = this.props
 		const objectTablePromise = API.Object.getObjectList({
 			areaIds: auth.user.area_ids,
@@ -86,7 +89,6 @@ class ObjectTable extends React.Component {
 
 		if (objectTableRes && areaTableRes && idleMacRes && acnRes) {
 			const typeList = []
-			let typeOptions = null
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
 			const data = objectTableRes.data
 				.filter((item) => {
@@ -169,24 +171,7 @@ class ObjectTable extends React.Component {
 
 			const dataMap = keyBy(data, 'id')
 
-			switch (typeOption) {
-				case ADDITION_OPTION.STAFF:
-					typeOptions = [
-						config.OBJECT_TABLE_SUB_TYPE.STAFF,
-						config.OBJECT_TABLE_SUB_TYPE.CONTRACTOR,
-					].map((value) => {
-						return {
-							value,
-							label: locale.texts[value.toUpperCase()],
-						}
-					})
-					break
-				case ADDITION_OPTION.PATIENT:
-					break
-				case ADDITION_OPTION.DEVICE:
-					typeOptions = typeList
-					break
-			}
+			typeOptions = typeOptions || typeList
 
 			const associatedMacSet = [
 				...new Set(
@@ -229,6 +214,7 @@ class ObjectTable extends React.Component {
 						typeList,
 						areaSelection,
 					},
+					typeOptions,
 					associatedMacSet,
 					areaTable: areaTableRes.data,
 					areaSelection,
@@ -240,7 +226,6 @@ class ObjectTable extends React.Component {
 					showDeleteConfirmation: false,
 					isReadOnly: false,
 					isAddButtonPressed: false,
-					typeOptions,
 				},
 				callback
 			)
@@ -576,6 +561,7 @@ ObjectTable.propTypes = {
 	typeOption: PropTypes.string,
 	addButtonVisible: PropTypes.bool,
 	deleteButtonVisible: PropTypes.bool,
+	typeOptions: PropTypes.array
 }
 
 export default ObjectTable
