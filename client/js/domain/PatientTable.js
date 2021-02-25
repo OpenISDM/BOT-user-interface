@@ -3,7 +3,6 @@ import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
 import { patientTableColumn } from '../config/tables'
 import { PERSON } from '../config/wordMap'
-import { ADDITION_OPTION } from './EditForm'
 const PatientTable = () => {
 	return (
 		<ObjectTable

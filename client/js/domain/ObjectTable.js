@@ -15,7 +15,7 @@ import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
-import EditForm, { ADDITION_OPTION } from './EditForm'
+import EditForm from './EditForm'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
