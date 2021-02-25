@@ -220,7 +220,6 @@ const mapConfig = {
 
 	iconColor: {
 		number: 'White',
-		searched: 'SteelBlue',
 		sos: 'SOS',
 		forbidden: 'Forbidden',
 

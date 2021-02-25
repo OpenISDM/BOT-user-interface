@@ -233,17 +233,22 @@ export const delay = ({ callback, second = 1 }) => {
 }
 
 export const getIconColor = (item, searchObjectArray) => {
-	let color
-	let specifiedMarker
-
 	if (item.emergency) {
-		color = config.mapConfig.iconColor.sos
+		return {
+			markerColor: config.mapConfig.iconColor.sos,
+		}
 	}
 
 	if (item.forbidden) {
-		color = config.mapConfig.iconColor.forbidden
+		return { markerColor: config.mapConfig.iconColor.forbidden }
 	}
 
+	if (item.alerted) {
+		return { markerColor: config.mapConfig.iconColor.person.alert }
+	}
+
+	let color
+	let specifiedMarker
 	const pinColorIndex = searchObjectArray.indexOf(item.keyword)
 
 	if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
@@ -251,31 +256,17 @@ export const getIconColor = (item, searchObjectArray) => {
 
 		if (item.clear_bed) {
 			color = config.mapConfig.iconColor.deivce.whiteBed
-		}
-
-		if (monitorTypeChecker(item.monitor_type, 16)) {
+		} else if (monitorTypeChecker(item.monitor_type, 16)) {
 			color = config.mapConfig.iconColor.deivce.blackBed
-		}
-
-		if (item.searched && item.status !== NORMAL) {
+		} else if (item.searched && item.status !== NORMAL) {
 			color = config.mapConfig.iconColor.deivce.grayWithoutDot
 		} else if (item.status !== NORMAL) {
 			color = config.mapConfig.iconColor.deivce.unNormal
-		}
-
-		if (item.searched) {
-			color = config.mapConfig.iconColor.searched
-		}
-
-		if (pinColorIndex > -1) {
+		} else if (pinColorIndex > -1) {
 			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
 		}
 	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
 		color = config.mapConfig.iconColor.person.normal
-
-		if (item.alerted) {
-			color = config.mapConfig.iconColor.person.alert
-		}
 
 		if (pinColorIndex > -1) {
 			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
