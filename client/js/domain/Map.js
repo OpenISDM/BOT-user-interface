@@ -435,9 +435,9 @@ class Map extends React.Component {
 					.bindPopup(popupContent, this.props.mapConfig.popupOptions)
 					.openPopup()
 
-				/** Set the z-index offset of the searhed object so that
-				 * the searched object icon will be on top of all others */
-				if (item.searched || item.emergency || item.alerted) {
+				/** Set the z-index offset of the object so that
+				 * the icon will be on top of all others */
+				if (item.emergency || item.forbidden || item.vitalSignAlert) {
 					marker.setZIndexOffset(1000)
 				}
 
