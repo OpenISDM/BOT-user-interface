@@ -1,10 +1,9 @@
 import React from 'react'
 import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
-import EditObjectForm from './EditObjectForm'
 import { objectTableColumn } from '../config/tables'
 import { DEVICE } from '../config/wordMap'
-
+import { ADDITION_OPTION } from './EditForm'
 const DeviceTable = () => {
 	return (
 		<ObjectTable
@@ -20,10 +19,10 @@ const DeviceTable = () => {
 			]}
 			enabledSelection={[SELECTION.TYPE, SELECTION.STATUS, SELECTION.AREA]}
 			columns={objectTableColumn}
-			EditedForm={EditObjectForm}
 			objectApiMode={DEVICE}
 			addText={'ADD_DEVICE'}
 			deleteText={'DELETE_DEVICE'}
+			additionOptionType={ ADDITION_OPTION.DEVICE }
 		/>
 	)
 }

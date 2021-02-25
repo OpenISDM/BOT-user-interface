@@ -26,6 +26,23 @@ Object.keys(config.monitorType).forEach((key) => {
 	monitorTypeMap[config.monitorType[key]] = key
 })
 
+export const ADDITION_OPTION = {
+	PATIENT: {
+		label: 'ROOM',
+		value: 'room',
+        idText: 'ID'
+	},
+	DEVICE: {
+		label: 'TYPE',
+		value: 'type',
+        idText: 'ACN'
+	},
+	STAFF: {
+		label: 'TYPE',
+		value: 'type',
+        idText: 'ID'
+	},
+}
 class EditForm extends React.Component {
 	static contextType = AppContext
 
@@ -72,15 +89,15 @@ class EditForm extends React.Component {
 			selectedRowData = {},
 			show,
 			handleClose,
-            areaTable,
+			areaTable,
 			isReadOnly,
 			associatedMacSet = [],
 			associatedAsnSet = [],
 			handleSubmit,
-            additionOptions,
-            additionOptionsTitle,
+			additionOptions,
 			macOptions,
 			handleClick,
+			additionOptionType,
 		} = this.props
 
 		const areaOptions = areaTable.map((area) => {
@@ -101,6 +118,7 @@ class EditForm extends React.Component {
 			area_name = '',
 			monitor_type = [],
 			isBind = false,
+			room = '',
 		} = selectedRowData
 
 		const initialValues = {
@@ -110,7 +128,9 @@ class EditForm extends React.Component {
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
 			area: area_name || '',
-			monitorType: (monitor_type && monitor_type.length > 0) ? monitor_type.split('/') : [],
+			monitorType:
+				monitor_type && monitor_type.length > 0 ? monitor_type.split('/') : [],
+			room: room || '',
 		}
 
 		const validationSchema = object().shape({
@@ -189,9 +209,9 @@ class EditForm extends React.Component {
 								mac_address: values.mac_address
 									? values.mac_address.label.trim()
 									: '',
-								type: values.type ? values.type.label.trim() : '',
+								type: values.type ? values.type.value.trim() : '',
 							}
-                            console.log(postOption)
+							console.log(postOption)
 							handleSubmit(postOption)
 						}}
 						render={({
@@ -215,13 +235,17 @@ class EditForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-                                    <FormikFormGroup
+										<FormikFormGroup
 											type="text"
 											name="asset_control_number"
-											label={locale.texts.ACN}
+											label={
+                                                additionOptionType
+                                                ? locale.texts[additionOptionType.idText]
+                                                : locale.texts.ID
+                                            }
 											error={errors.asset_control_number}
 											touched={touched.asset_control_number}
-                                            placeholder=""
+											placeholder=""
 											disabled={isReadOnly}
 										/>
 									</Col>
@@ -255,32 +279,31 @@ class EditForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-                                    <FormikFormGroup
-											type="text"
-											name="type"
-											label={additionOptionsTitle}
-											error={errors.type}
-											touched={touched.type}
-											placeholder=""
-											component={() => (
-												<Creatable
-													name="type"
-													value={values.type}
-													placeholder=""
-													className="my-1"
-													onChange={(obj) => {
-                                                        console.log(errors)
-                                                        console.log(touched)
-														obj.label = obj.value
-														setFieldValue('type', obj)
-													}}
-													options={additionOptions}
-													isSearchable={true}
-													styles={styleConfig.reactSelect}
-													component={{ IndicatorSeparator: () => null }}
-												/>
-											)}
-										/>
+										{additionOptionType ? (
+											<FormikFormGroup
+												type="text"
+												name="type"
+												label={locale.texts[additionOptionType.label]}
+												error={errors.type}
+												touched={touched.type}
+												placeholder=""
+												component={() => (
+													<Creatable
+														name="type"
+														value={values[additionOptionType.value]}
+														placeholder=""
+														className="my-1"
+														onChange={(obj) => {
+															setFieldValue('type', obj)
+														}}
+														options={additionOptions}
+														isSearchable={true}
+														styles={styleConfig.reactSelect}
+														component={{ IndicatorSeparator: () => null }}
+													/>
+												)}
+											/>
+										) : null}
 									</Col>
 								</Row>
 								<Row>
@@ -357,8 +380,9 @@ EditForm.propTypes = {
 	handleClose: PropTypes.func.isRequired,
 	show: PropTypes.bool.isRequired,
 	associatedAsnSet: PropTypes.array.isRequired,
-    enableAdditionalOptions: PropTypes.bool,
-    additionOptionsTitle: PropTypes.string,
+	enableAdditionalOptions: PropTypes.bool,
+	additionOptionsTitle: PropTypes.string,
+	additionOptionType: PropTypes.string,
 }
 
 export default EditForm

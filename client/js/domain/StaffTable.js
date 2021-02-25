@@ -1,10 +1,9 @@
 import React from 'react'
 import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
-import EditStaffForm from './EditStaffForm'
 import { staffTableColumn } from '../config/tables'
 import { PERSON } from '../config/wordMap'
-
+import { ADDITION_OPTION } from './EditForm'
 const StaffTable = () => {
 	return (
 		<ObjectTable
@@ -16,10 +15,10 @@ const StaffTable = () => {
 			filteredAttribute={['name', 'area', 'macAddress', 'acn']}
 			enabledSelection={[SELECTION.AREA]}
 			columns={staffTableColumn}
-			EditedForm={EditStaffForm}
 			objectApiMode={PERSON}
 			addText={'ADD_STAFF'}
 			deleteText={'DELETE_STAFF'}
+			additionOptionType={ADDITION_OPTION.STAFF}
 		/>
 	)
 }
