@@ -123,7 +123,11 @@ class EditForm extends React.Component {
 
 		const initialValues = {
 			name: name || '',
-			type: type ? { label: type, value: type } : '',
+			type: locale.texts[type.toUpperCase()]
+				? {value : type, label: locale.texts[type.toUpperCase()]}
+				: type
+					? {value : type, label : type}
+					:   '',
 			asset_control_number: isReadOnly ? asset_control_number : '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
