@@ -30,17 +30,17 @@ export const ADDITION_OPTION = {
 	PATIENT: {
 		label: 'ROOM',
 		value: 'room',
-        idText: 'ID'
+		idText: 'ID',
 	},
 	DEVICE: {
 		label: 'TYPE',
 		value: 'type',
-        idText: 'ACN'
+		idText: 'ACN',
 	},
 	STAFF: {
 		label: 'TYPE',
 		value: 'type',
-        idText: 'ID'
+		idText: 'ID',
 	},
 }
 class EditForm extends React.Component {
@@ -124,10 +124,10 @@ class EditForm extends React.Component {
 		const initialValues = {
 			name: name || '',
 			type: locale.texts[type.toUpperCase()]
-				? {value : type, label: locale.texts[type.toUpperCase()]}
+				? { value: type, label: locale.texts[type.toUpperCase()] }
 				: type
-					? {value : type, label : type}
-					:   '',
+				? { value: type, label: type }
+				: '',
 			asset_control_number: isReadOnly ? asset_control_number : '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
@@ -243,10 +243,10 @@ class EditForm extends React.Component {
 											type="text"
 											name="asset_control_number"
 											label={
-                                                additionOptionType
-                                                ? locale.texts[additionOptionType.idText]
-                                                : locale.texts.ID
-                                            }
+												additionOptionType
+													? locale.texts[additionOptionType.idText]
+													: locale.texts.ID
+											}
 											error={errors.asset_control_number}
 											touched={touched.asset_control_number}
 											placeholder=""
