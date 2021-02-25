@@ -175,13 +175,6 @@ export const BOTAdminModule = {
 			platform: ['browser', 'tablet'],
 		},
 		{
-			name: 'Edit User Roles And Permissions',
-			permission: 'route:BOTAdmin',
-			// component: (props) => <RolePermissionManagement {...props} />, // temporary hide
-			component: () => null,
-			platform: ['browser'],
-		},
-		{
 			name: 'Generate Revise Device Assignments',
 			permission: 'route:BOTAdmin',
 			path: 'devicesManagement',

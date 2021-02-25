@@ -433,7 +433,6 @@ const tw = {
 	ACCESS_RIGHT: '使用者權限',
 	OTHER_DEVICES: '其他儀器',
 	ADD_DELETE_USER_ACCOUNTS: '新增/刪除使用者',
-	EDIT_USER_ROLES_AND_PERMISSIONS: '修改使用者角色與權限',
 	ADMIN: '管理員',
 	CONFIRM: '確認',
 	REMOVE_USER_CONFIRM: '移除使用者',

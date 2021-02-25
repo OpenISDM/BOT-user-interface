@@ -443,7 +443,6 @@ const en = {
 	ACCESS_RIGHT: 'Access Right',
 	OTHER_DEVICES: 'Other Devices',
 	ADD_DELETE_USER_ACCOUNTS: 'Add/Delete User Accounts',
-	EDIT_USER_ROLES_AND_PERMISSIONS: 'Edit User Roles And Permissions',
 	ADMIN: 'Admin',
 	CONFIRM: 'Confirm',
 	REMOVE_USER_CONFIRM: 'Remove User',
