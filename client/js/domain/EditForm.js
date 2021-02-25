@@ -110,7 +110,7 @@ class EditForm extends React.Component {
 				: type
 				? { value: type, label: type }
 				: '',
-			asset_control_number: isReadOnly ? asset_control_number : '',
+			asset_control_number: asset_control_number || '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
 			area: area_name || '',
@@ -232,7 +232,6 @@ class EditForm extends React.Component {
 											error={errors.asset_control_number}
 											touched={touched.asset_control_number}
 											placeholder=""
-											disabled={isReadOnly}
 										/>
 									</Col>
 								</Row>
