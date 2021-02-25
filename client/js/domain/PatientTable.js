@@ -1,10 +1,8 @@
 import React from 'react'
 import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
-import EditPatientForm from './EditPatientForm'
 import { patientTableColumn } from '../config/tables'
 import { PERSON } from '../config/wordMap'
-
 const PatientTable = () => {
 	return (
 		<ObjectTable
@@ -13,13 +11,16 @@ const PatientTable = () => {
 			filteredAttribute={['name', 'area', 'macAddress', 'acn', 'sex']}
 			enabledSelection={[SELECTION.AREA]}
 			columns={patientTableColumn}
-			EditedForm={EditPatientForm}
 			objectApiMode={PERSON}
 			addText={'ADD_PATIENT'}
 			deleteText={'DELETE_PATIENT'}
-			isButtonEnable={true}
+			typeOption={{
+				label: 'ROOM',
+				value: 'room',
+				idText: 'ID',
+			}}
+			typeOptions={[]}
 		/>
 	)
 }
-
 export default PatientTable

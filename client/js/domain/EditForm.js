@@ -25,8 +25,7 @@ const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
 	monitorTypeMap[config.monitorType[key]] = key
 })
-
-class EditObjectForm extends React.Component {
+class EditForm extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -72,6 +71,7 @@ class EditObjectForm extends React.Component {
 			selectedRowData = {},
 			show,
 			handleClose,
+			areaTable,
 			isReadOnly,
 			associatedMacSet = [],
 			associatedAsnSet = [],
@@ -79,7 +79,7 @@ class EditObjectForm extends React.Component {
 			typeOptions,
 			macOptions,
 			handleClick,
-			areaTable,
+			typeOption,
 		} = this.props
 
 		const areaOptions = areaTable.map((area) => {
@@ -100,16 +100,23 @@ class EditObjectForm extends React.Component {
 			area_name = '',
 			monitor_type = [],
 			isBind = false,
+			room = '',
 		} = selectedRowData
 
 		const initialValues = {
 			name: name || '',
-			type: type ? { label: type, value: type } : '',
+			type: locale.texts[type.toUpperCase()]
+				? { value: type, label: locale.texts[type.toUpperCase()] }
+				: type
+				? { value: type, label: type }
+				: '',
 			asset_control_number: isReadOnly ? asset_control_number : '',
 			mac_address: isBind ? { label: mac_address, value: mac_address } : '',
 			status: status ? status.value : NORMAL,
 			area: area_name || '',
-			monitorType: monitor_type.length > 0 ? monitor_type.split('/') : [],
+			monitorType:
+				monitor_type && monitor_type.length > 0 ? monitor_type.split('/') : [],
+			room: room || '',
 		}
 
 		const validationSchema = object().shape({
@@ -157,7 +164,6 @@ class EditObjectForm extends React.Component {
 						return !associatedMacSet.includes(macWithColons)
 					}
 				),
-			status: string().required(locale.texts.STATUS_IS_REQUIRED),
 			area: string().required(locale.texts.AREA_IS_REQUIRED),
 		})
 
@@ -189,9 +195,9 @@ class EditObjectForm extends React.Component {
 								mac_address: values.mac_address
 									? values.mac_address.label.trim()
 									: '',
-								type: values.type ? values.type.label.trim() : '',
+								type: values.type ? values.type.value.trim() : '',
 							}
-
+							console.log(postOption)
 							handleSubmit(postOption)
 						}}
 						render={({
@@ -217,27 +223,16 @@ class EditObjectForm extends React.Component {
 									<Col>
 										<FormikFormGroup
 											type="text"
-											name="type"
-											label={locale.texts.TYPE}
-											error={errors.type}
-											touched={touched.type}
+											name="asset_control_number"
+											label={
+												typeOption
+													? locale.texts[typeOption.idText]
+													: locale.texts.ID
+											}
+											error={errors.asset_control_number}
+											touched={touched.asset_control_number}
 											placeholder=""
-											component={() => (
-												<Creatable
-													name="type"
-													value={values.type}
-													placeholder=""
-													className="my-1"
-													onChange={(obj) => {
-														obj.label = obj.value
-														setFieldValue('type', obj)
-													}}
-													options={typeOptions}
-													isSearchable={true}
-													styles={styleConfig.reactSelect}
-													component={{ IndicatorSeparator: () => null }}
-												/>
-											)}
+											disabled={isReadOnly}
 										/>
 									</Col>
 								</Row>
@@ -270,14 +265,31 @@ class EditObjectForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-										<FormikFormGroup
-											type="text"
-											name="asset_control_number"
-											label={locale.texts.ACN}
-											error={errors.asset_control_number}
-											touched={touched.asset_control_number}
-											disabled={isReadOnly}
-										/>
+										{typeOption ? (
+											<FormikFormGroup
+												type="text"
+												name="type"
+												label={locale.texts[typeOption.label]}
+												error={errors.type}
+												touched={touched.type}
+												placeholder=""
+												component={() => (
+													<Creatable
+														name="type"
+														value={values[typeOption.value]}
+														placeholder=""
+														className="my-1"
+														onChange={(obj) => {
+															setFieldValue('type', obj)
+														}}
+														options={typeOptions}
+														isSearchable={true}
+														styles={styleConfig.reactSelect}
+														component={{ IndicatorSeparator: () => null }}
+													/>
+												)}
+											/>
+										) : null}
 									</Col>
 								</Row>
 								<Row>
@@ -341,7 +353,7 @@ class EditObjectForm extends React.Component {
 	}
 }
 
-EditObjectForm.propTypes = {
+EditForm.propTypes = {
 	selectedRowData: PropTypes.object.isRequired,
 	macOptions: PropTypes.object.isRequired,
 	typeOptions: PropTypes.object.isRequired,
@@ -354,6 +366,9 @@ EditObjectForm.propTypes = {
 	handleClose: PropTypes.func.isRequired,
 	show: PropTypes.bool.isRequired,
 	associatedAsnSet: PropTypes.array.isRequired,
+	enableAdditionalOptions: PropTypes.bool,
+	typeOptionsTitle: PropTypes.string,
+	typeOption: PropTypes.string,
 }
 
-export default EditObjectForm
+export default EditForm

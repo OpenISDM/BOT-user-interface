@@ -1,7 +1,6 @@
 import React from 'react'
 import ObjectTable, { SELECTION } from './ObjectTable'
 import config from '../config'
-import EditObjectForm from './EditObjectForm'
 import { objectTableColumn } from '../config/tables'
 import { DEVICE } from '../config/wordMap'
 
@@ -20,11 +19,14 @@ const DeviceTable = () => {
 			]}
 			enabledSelection={[SELECTION.TYPE, SELECTION.STATUS, SELECTION.AREA]}
 			columns={objectTableColumn}
-			EditedForm={EditObjectForm}
 			objectApiMode={DEVICE}
 			addText={'ADD_DEVICE'}
 			deleteText={'DELETE_DEVICE'}
-			isButtonEnable={true}
+			typeOption={{
+				label: 'TYPE',
+				value: 'type',
+				idText: 'ACN',
+			}}
 		/>
 	)
 }

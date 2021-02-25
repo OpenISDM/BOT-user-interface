@@ -242,11 +242,6 @@ const batteryTableColumn = [
 			)),
 	},
 	{
-		Header: 'Alert',
-		accessor: 'geofence_type',
-		width: 60,
-	},
-	{
 		Header: 'Tag ID',
 		accessor: 'mac_address',
 		width: 180,
