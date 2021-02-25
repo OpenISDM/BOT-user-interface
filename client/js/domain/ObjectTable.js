@@ -164,29 +164,29 @@ class ObjectTable extends React.Component {
 						item.subTypeName = locale.texts[item.type.toUpperCase()]
 					}
 
-					switch (additionOptionType) {
-						case ADDITION_OPTION.STAFF:
-							additionOptions = [
-								config.OBJECT_TABLE_SUB_TYPE.STAFF,
-								config.OBJECT_TABLE_SUB_TYPE.CONTRACTOR,
-							].map((value) => {
-								return {
-									value,
-									label: locale.texts[value.toUpperCase()],
-								}
-							})
-							break
-						case ADDITION_OPTION.PATIENT:
-							break
-						case ADDITION_OPTION.DEVICE:
-							additionOptions = typeList
-							break
-					}
-
 					return item
 				})
 
 			const dataMap = keyBy(data, 'id')
+
+			switch (additionOptionType) {
+				case ADDITION_OPTION.STAFF:
+					additionOptions = [
+						config.OBJECT_TABLE_SUB_TYPE.STAFF,
+						config.OBJECT_TABLE_SUB_TYPE.CONTRACTOR,
+					].map((value) => {
+						return {
+							value,
+							label: locale.texts[value.toUpperCase()],
+						}
+					})
+					break
+				case ADDITION_OPTION.PATIENT:
+					break
+				case ADDITION_OPTION.DEVICE:
+					additionOptions = typeList
+					break
+			}
 
 			const associatedMacSet = [
 				...new Set(
