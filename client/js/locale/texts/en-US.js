@@ -332,6 +332,7 @@ const en = {
 	MOVEMENT_ALERT: 'movement alert',
 	LOCATION_ALERT: 'location alert',
 	GEOFENCE_ALERT: 'geofence alert',
+	VITAL_SIGN_ALERT: 'vital sign alert',
 	EMERGENCY: 'emergency',
 	EDIT_SECONDARY_AREAS: 'edit secondary areas',
 	NEW_PASSWORD: 'New password',

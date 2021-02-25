@@ -16,8 +16,8 @@ class NavNotification extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		emergency: [],
-		lowBattery: [],
+		notificaitonList: [],
+		lowBatteryList: [],
 		locale: this.context.locale.abbr,
 	}
 
@@ -41,12 +41,15 @@ class NavNotification extends React.Component {
 
 		if (res) {
 			this.setState({
-				emergency: res.data.emergency,
-				lowBattery: res.data.lowBattery,
+				notificaitonList: res.data.notificaitonList,
+				lowBatteryList: res.data.lowBatteryList,
 				locale: this.context.locale.abbr,
 			})
 
-			if (!isEmpty(openedNotification) && res.data.emergency.length === 0) {
+			if (
+				!isEmpty(openedNotification) &&
+				res.data.notificaitonList.length === 0
+			) {
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
 					value: {},
@@ -71,9 +74,13 @@ class NavNotification extends React.Component {
 		}
 	}
 
+	getMonitorTypeText = (monitorType, locale) => {
+		return locale.texts[config.MONITOR_TYPE_TEXT[monitorType]]
+	}
+
 	render() {
 		const { history } = this.props
-		const { emergency, lowBattery } = this.state
+		const { notificaitonList, lowBatteryList } = this.state
 		const { locale, stateReducer } = this.context
 		const [, dispatch] = stateReducer
 		const style = {
@@ -103,7 +110,7 @@ class NavNotification extends React.Component {
 					>
 						<i className="fas fa-bell" style={style.icon}>
 							<NotificationBadge
-								count={emergency.length}
+								count={notificaitonList.length}
 								effect={Effect.SCALE}
 								style={{
 									top: '-28px',
@@ -127,20 +134,12 @@ class NavNotification extends React.Component {
 							className="overflow-hidden-scroll custom-scrollbar"
 							style={style.dropdownList}
 						>
-							{emergency.length !== 0 ? (
-								emergency.map(({ object, notificaiton }, index) => {
-									let monitorTypeString = ''
-									if (
-										parseInt(notificaiton.monitor_type) ===
-										config.MONITOR_TYPE.GEO_FENCE
-									) {
-										monitorTypeString = locale.texts.GEOFENCE_ALERT
-									} else if (
-										parseInt(notificaiton.monitor_type) ===
-										config.MONITOR_TYPE.EMERGENCY
-									) {
-										monitorTypeString = locale.texts.EMERGENCY_ALERT
-									}
+							{notificaitonList.length !== 0 ? (
+								notificaitonList.map(({ object, notificaiton }, index) => {
+									const monitorTypeString = this.getMonitorTypeText(
+										notificaiton.monitor_type,
+										locale
+									)
 
 									const violationTimestamp = moment(
 										notificaiton.violation_timestamp
@@ -206,7 +205,7 @@ class NavNotification extends React.Component {
 					>
 						<i className="fas fa-battery-quarter" style={{ color: '#ff6600' }}>
 							<NotificationBadge
-								count={lowBattery.length}
+								count={lowBatteryList.length}
 								effect={Effect.SCALE}
 								style={{
 									top: '-28px',
@@ -230,8 +229,8 @@ class NavNotification extends React.Component {
 							className="overflow-hidden-scroll custom-scrollbar"
 							style={style.dropdownList}
 						>
-							{lowBattery.length !== 0 ? (
-								lowBattery.map(({ object }) => {
+							{lowBatteryList.length !== 0 ? (
+								lowBatteryList.map((object) => {
 									return (
 										<Dropdown.Item
 											disabled

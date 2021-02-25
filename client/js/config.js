@@ -200,6 +200,13 @@ const config = {
 		ACTIVITY: 4,
 		LOCATION: 8,
 		BED_CLEARNESS: 16,
+		VITAL_SIGN: 32,
+	},
+
+	MONITOR_TYPE_TEXT: {
+		0: 'GEOFENCE_ALERT',
+		2: 'EMERGENCY_ALERT',
+		32: 'VITAL_SIGN_ALERT',
 	},
 }
 

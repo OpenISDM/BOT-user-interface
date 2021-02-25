@@ -10,21 +10,6 @@ import {
 } from '../../db/models'
 import { common, ipc } from '../../helpers'
 
-const NOTIFICATION_ENUM = {
-	LOW_BATTERY: 'LOW_BATTERY',
-	EMERGENCY: 'EMERGENCY',
-	GEO_FENCE: 'GEO_FENCE',
-}
-
-const MONITOR_TYPE = {
-	NORMAL: 0,
-	GEO_FENCE: 1,
-	EMERGENCY: 2,
-	ACTIVITY: 4,
-	LOCATION: 8,
-	BED_CLEARNESS: 16,
-}
-
 export default {
 	getAllNotifications: async (request, response) => {
 		const { areaId = [] } = request.query
@@ -79,7 +64,7 @@ export default {
 			const areaTableMap = _.keyBy(areaTable, 'id')
 			const lbeaconTableMap = _.keyBy(lbeaconTable, 'uuid')
 
-			const lowBattery = objectTableQueried
+			const lowBatteryList = objectTableQueried
 				.filter((object) => {
 					const batteryVoltage = object['extend.battery_voltage']
 					return (
@@ -93,32 +78,12 @@ export default {
 						id: object.area_id,
 						value: object.areaName,
 					}
-					return {
-						type: NOTIFICATION_ENUM.LOW_BATTERY,
-						object,
-					}
+					return object
 				})
 
-			const emergency = notificationTableQueried
+			const notificaitonList = notificationTableQueried
 				.map((notificaiton) => {
 					const macAddress = notificaiton.mac_address
-					const monitortype = notificaiton.monitor_type
-					let type = MONITOR_TYPE.NORMAL
-					if (
-						common.findExpectedBitValue({
-							targetDecimal: monitortype,
-							expectedDecimal: MONITOR_TYPE.EMERGENCY,
-						})
-					) {
-						type = NOTIFICATION_ENUM.EMERGENCY
-					} else if (
-						common.findExpectedBitValue({
-							targetDecimal: monitortype,
-							expectedDecimal: MONITOR_TYPE.GEO_FENCE,
-						})
-					) {
-						type = NOTIFICATION_ENUM.GEO_FENCE
-					}
 
 					// filter only registered object
 					if (objectTableMap[macAddress]) {
@@ -151,7 +116,6 @@ export default {
 
 						object.updated_by_area = object['extend.updated_by_area']
 						return {
-							type,
 							object,
 							notificaiton,
 						}
@@ -161,13 +125,14 @@ export default {
 				.filter((item) => item)
 
 			response.status(200).json({
-				emergency,
-				lowBattery,
+				notificaitonList,
+				lowBatteryList,
 			})
 		} catch (e) {
 			console.log(e)
 		}
 	},
+
 	turnOffNotification: async (request, response) => {
 		const { notificationId } = request.body
 		try {
