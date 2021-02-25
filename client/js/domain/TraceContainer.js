@@ -74,7 +74,7 @@ class TraceContainer extends React.Component {
 			// enableBodyScroll(targetElement)
 		}
 
-		this.getObjectTable()
+		this.getObjectList()
 		this.getLbeaconTable()
 		this.getAreaTable()
 		// if (this.props.location.state) {
@@ -119,15 +119,15 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	getObjectTable = async () => {
+	getObjectList = async () => {
 		const { auth } = this.context
-		const res = await API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+		const res = await API.Object.getObjectList({
+			areaIds: auth.user.area_ids,
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
 
 		if (res) {
-			const name = res.data.rows.map((item) => {
+			const name = res.data.map((item) => {
 				return {
 					value: item.name,
 					label: item.name,

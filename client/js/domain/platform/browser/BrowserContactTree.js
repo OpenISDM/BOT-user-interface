@@ -13,8 +13,7 @@ import {
 	PageTitle,
 } from '../../../components/StyleComponents'
 import Loader from '../../Loader'
-import Select from '../components/Select'
-
+import Select from '../../../components/Select'
 import IconButton from '../../../components/IconButton'
 import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
@@ -42,18 +41,18 @@ class BrowserContactTree extends React.Component {
 	defaultActiveKey = 'name'
 
 	componentDidMount = () => {
-		this.getObjectTable()
+		this.getObjectList()
 	}
 
-	getObjectTable = async () => {
+	getObjectList = async () => {
 		const { auth } = this.context
 
-		const res = await API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+		const res = await API.Object.getObjectList({
+			areaIds: auth.user.area_ids,
 			objectTypes: [config.OBJECT_TYPE.PERSON],
 		})
 		if (res) {
-			const options = res.data.rows.map((item) => {
+			const options = res.data.map((item) => {
 				return {
 					value: item.name,
 					label: item.name,

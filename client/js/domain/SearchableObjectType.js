@@ -78,14 +78,14 @@ class SearchableObjectType extends React.Component {
 	getData = async () => {
 		const { auth } = this.context
 
-		const res = await API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+		const res = await API.Object.getObjectList({
+			areaIds: auth.user.area_ids,
 			objectTypes: [config.OBJECT_TYPE.DEVICE],
 		})
 
 		if (res) {
 			const objectTypeList = []
-			res.data.rows.forEach((item) => {
+			res.data.forEach((item) => {
 				if (!objectTypeList.includes(item.type)) {
 					objectTypeList.push(item.type)
 				}

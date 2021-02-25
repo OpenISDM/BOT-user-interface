@@ -1,75 +1,3 @@
-const getObject = (filter) => {
-	return `
-		SELECT
-			object_table.id,
-			object_table.name,
-			object_table.type,
-			object_table.nickname,
-			object_table.asset_control_number,
-			object_table.status,
-			object_table.transferred_location,
-			object_table.list_id,
-			object_table.type_alias,
-			JSON_BUILD_OBJECT(
-				'id', transfer_locations.id,
-				'name', transfer_locations.name,
-				'department', transfer_locations.department
-			) AS transferred_location,
-			object_table.mac_address,
-			object_table.monitor_type,
-			object_table.area_id,
-			area_table.name as area_name,
-			object_table.registered_timestamp,
-			object_table.object_type,
-			object_table.id,
-			object_table.room,
-			object_table.physician_id,
-			(
-				SELECT name
-				FROM user_table
-				WHERE user_table.id = object_table.physician_id
-			) as physician_name,
-			lbeacon_table.description as location_description,
-			object_summary_table.battery_voltage as battery_voltage,
-			object_summary_table.last_reported_timestamp as last_reported_timestamp,
-			object_summary_table.rssi as rssi
-		FROM object_table
-
-		LEFT JOIN area_table
-		ON area_table.id = object_table.area_id
-
-		LEFT JOIN transfer_locations
-		ON transfer_locations.id = object_table.transferred_location
-		
-		left join object_summary_table
-		on object_table.mac_address = object_summary_table.mac_address 
-		
-		left join lbeacon_table
-		on object_summary_table.uuid = lbeacon_table.uuid 
-
-		${filter}
-
-        ORDER BY
-			object_table.name ASC,
-			object_table.registered_timestamp DESC
-	`
-}
-const getObjectTableFilter = (objectTypes, area_ids)=>{
-	let filter = ''
-	if(objectTypes){
-		filter =
-			`WHERE object_table.object_type IN (${objectTypes.map((type) => type)})`
-	}
-	if(area_ids){
-		if(filter.trim()){
-			filter += ` AND object_table.area_id IN (${area_ids.map((id) => id)})`
-		}else{
-			filter = `Where object_table.area_id IN (${area_ids.map((id) => id)})`
-		}
-	}
-	return filter
-}
-
 const addPerson = (formOption) => {
 	const text = `
 		INSERT INTO object_table (
@@ -361,7 +289,6 @@ const getSearchableKeyword = (areaId) => {
 }
 
 export default {
-	getObject,
 	addPerson,
 	addObject,
 	editDevice,
@@ -372,5 +299,4 @@ export default {
 	deleteObjectSummaryRecord,
 	getIdleMacaddr,
 	getSearchableKeyword,
-	getObjectTableFilter,
 }

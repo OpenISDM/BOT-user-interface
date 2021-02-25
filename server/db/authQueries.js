@@ -96,7 +96,7 @@ export default {
 				array (
 					SELECT area_id::int
 					FROM areas
-				) AS areas_id,
+				) AS area_ids,
 				(
 					SELECT locales.name
 					FROM locales
@@ -138,7 +138,7 @@ export default {
 					SELECT area_id
 					FROM user_area
 					WHERE user_area.user_id = user_table.id
-				) as areas_id,
+				) as area_ids,
 				(
 					SELECT id
 					FROM user_table

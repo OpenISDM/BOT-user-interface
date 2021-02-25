@@ -18,6 +18,7 @@ import {
 	SEARCH_HISTORY,
 	NAMED_LIST,
 } from '../config/wordMap'
+import { getIconColor } from '../helper/utilities'
 import { ASSIGN_OBJECT } from '../reducer/action'
 import PropTypes from 'prop-types'
 
@@ -27,7 +28,6 @@ const SearchResultListGroup = ({
 	selection,
 	action,
 	searchObjectArray,
-	pinColorArray,
 	searchKey,
 }) => {
 	const { locale, auth, stateReducer } = React.useContext(AppContext)
@@ -57,8 +57,7 @@ const SearchResultListGroup = ({
 			)
 		}
 
-		const pinColorIndex = searchObjectArray.indexOf(item.keyword)
-		const background = pinColorArray[pinColorIndex]
+		const background = getIconColor(item, searchObjectArray)
 
 		switch (searchKey.type) {
 			case ALL_DEVICES:

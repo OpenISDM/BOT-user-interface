@@ -98,13 +98,13 @@ class DeviceGroupManager extends React.Component {
 
 	getObjectData = async () => {
 		const { auth } = this.context
-		const res = await API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+		const res = await API.Object.getObjectList({
+			areaIds: auth.user.area_ids,
 			objectTypes: [config.OBJECT_TYPE.DEVICE],
 		})
 		if (res) {
 			this.setState({
-				allDevices: res.data.rows,
+				allDevices: res.data,
 			})
 		}
 	}

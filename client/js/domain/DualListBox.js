@@ -1,9 +1,13 @@
 import React from 'react'
 import ListBox from './ListBox'
 import { Col, Row } from 'react-bootstrap'
+import { AppContext } from '../context/AppContext'
+import { isSameValue } from '../helper/utilities'
 import PropTypes from 'prop-types'
 
 class DualListBox extends React.Component {
+	static contextType = AppContext
+
 	generateSelectedRowsForListBox = () => {
 		const { allItems, selectedItemList } = this.props
 
@@ -27,13 +31,11 @@ class DualListBox extends React.Component {
 	}
 
 	generateUnselectedRowsForListBox = () => {
-		const { allItems, selectedItemList, selectedGroupAreaId } = this.props
+		const [{ area }] = this.context.stateReducer
+		const { allItems, selectedItemList } = this.props
 
 		let unselectedItems = allItems.filter((item) => {
-			return (
-				parseInt(item.area_id) === parseInt(selectedGroupAreaId) &&
-				item.list_id == null
-			)
+			return isSameValue(item.area_id, area.id) && item.list_id == null
 		})
 
 		if (selectedItemList) {
@@ -97,7 +99,6 @@ class DualListBox extends React.Component {
 DualListBox.propTypes = {
 	allItems: PropTypes.array.isRequired,
 	selectedItemList: PropTypes.array.isRequired,
-	selectedGroupAreaId: PropTypes.number.isRequired,
 	selectedTitle: PropTypes.string.isRequired,
 	unselectedTitle: PropTypes.string.isRequired,
 	onSelect: PropTypes.func.isRequired,
@@ -107,7 +108,6 @@ DualListBox.propTypes = {
 DualListBox.defaultProps = {
 	allItems: [],
 	selectedItemList: [],
-	selectedGroupAreaId: 0,
 	selectedTitle: '',
 	unselectedTitle: '',
 	onSelect: () => {

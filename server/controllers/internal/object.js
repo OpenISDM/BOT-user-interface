@@ -6,21 +6,84 @@ import pool, { sequelize } from '../../db/connection'
 import pdf from 'html-pdf'
 import path from 'path'
 import { ipc } from '../../helpers'
-import { ObjectTable } from '../../db/models'
+import {
+	ObjectTable,
+	AreaTable,
+	TransferLocations,
+	ObjectSummaryTable,
+	LBeaconTable,
+	UserTable,
+} from '../../db/models'
 
 export default {
-	getObject: (request, response) => {
-		const { area_ids, objectTypes } = request.query
+	getObjectList: async (request, response) => {
+		const { areaIds = [], objectTypes, objectSubTypes } = request.query
 
-		pool
-			.query(dbQueries.getObject(dbQueries.getObjectTableFilter(objectTypes, area_ids)))
-			.then((res) => {
-				console.log('get object table succeed')
-				response.status(200).json(res)
+		let objectSubTypeWhere = {}
+		if (objectSubTypes) {
+			objectSubTypeWhere = {
+				type: objectSubTypes,
+			}
+		}
+
+		try {
+			const queriredData = await ObjectTable.findAll({
+				where: {
+					area_id: areaIds,
+					object_type: objectTypes,
+					...objectSubTypeWhere,
+				},
+				include: [
+					{
+						model: AreaTable,
+						as: 'area',
+						required: false, // left join
+					},
+					{
+						model: TransferLocations,
+						as: 'transferLocations',
+						required: false, // left join
+					},
+					{
+						model: UserTable,
+						as: 'user',
+						required: false, // left join
+					},
+					{
+						model: ObjectSummaryTable,
+						as: 'extend',
+						required: false, // left join
+						include: [
+							{
+								model: LBeaconTable,
+								as: 'lbeacon',
+								required: false, // left join
+							},
+						],
+					},
+				],
+				raw: true,
+				nest: true,
 			})
-			.catch((err) => {
-				console.log(`get object table failed ${err}`)
+
+			const res = queriredData.map((item) => {
+				item.area_name = item.area && item.area.name
+				item.physician_name = item.user && item.user.name
+				item.location_description =
+					item.extend && item.extend.lbeacon && item.extend.lbeacon.description
+				item.battery_voltage = item.extend && item.extend.battery_voltage
+				item.last_reported_timestamp =
+					item.extend && item.extend.last_reported_timestamp
+				item.rssi = item.extend && item.extend.rssi
+
+				return item
 			})
+
+			console.log('get object list succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get object list failed ${e}`)
+		}
 	},
 
 	addDevice: (request, response) => {

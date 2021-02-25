@@ -171,7 +171,7 @@ export default {
 				user_id
 			)
 			VALUES
-			${user.areas_id.map(
+			${user.area_ids.map(
 				(id) => `(
 				${id},
 				${user.id}

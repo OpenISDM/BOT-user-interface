@@ -99,13 +99,15 @@ class PatientGroupManager extends React.Component {
 	getObjectData = async () => {
 		const { auth } = this.context
 
-		const res = await API.Object.getObjectTable({
-			areas_id: auth.user.areas_id,
+		const res = await API.Object.getObjectList({
+			areaIds: auth.user.area_ids,
 			objectTypes: [config.OBJECT_TYPE.PERSON],
+			objectSubTypes: [config.OBJECT_TABLE_SUB_TYPE.PATIENT],
 		})
+
 		if (res) {
 			this.setState({
-				allPatients: res.data.rows,
+				allPatients: res.data,
 			})
 		}
 	}
@@ -179,7 +181,6 @@ class PatientGroupManager extends React.Component {
 			selectedOption,
 		} = this.state
 
-		const areaId = selectedPatientGroup && selectedPatientGroup.area_id
 		const patients = selectedPatientGroup && selectedPatientGroup.patients
 
 		return (
@@ -221,7 +222,6 @@ class PatientGroupManager extends React.Component {
 				<DualListBox
 					allItems={allPatients}
 					selectedItemList={patients}
-					selectedGroupAreaId={areaId}
 					selectedTitle={locale.texts.SELECTED_PATIENTS}
 					unselectedTitle={locale.texts.UNSELECTED_PATIENTS}
 					onSelect={this.addPatientToGroup}

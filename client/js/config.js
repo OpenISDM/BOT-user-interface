@@ -22,7 +22,7 @@ const config = {
 
 	DEFAULT_USER: {
 		roles: 'guest',
-		areas_id: [0],
+		area_ids: [0],
 		permissions: ['form:view'],
 		locale: 'tw',
 	},
