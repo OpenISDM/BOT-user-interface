@@ -17,6 +17,7 @@ import UserArea from './user-area'
 import UserRole from './user-role'
 import AgentTable from './agent-table'
 import LBeaconTable from './lbeacon-table'
+import VitalSignSummaryTable from './vital-sign-summary-table'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -33,13 +34,21 @@ ObjectTable.belongsTo(UserTable, {
 	foreignKey: 'physician_id',
 	as: 'user',
 })
-
 ObjectTable.hasOne(ObjectSummaryTable, {
 	foreignKey: 'mac_address',
 	sourceKey: 'mac_address',
 	as: 'extend',
 })
 ObjectSummaryTable.belongsTo(ObjectTable, {
+	foreignKey: 'mac_address',
+	targetKey: 'mac_address',
+})
+ObjectTable.hasOne(VitalSignSummaryTable, {
+	foreignKey: 'mac_address',
+	sourceKey: 'mac_address',
+	as: 'vitalSign',
+})
+VitalSignSummaryTable.belongsTo(ObjectTable, {
 	foreignKey: 'mac_address',
 	targetKey: 'mac_address',
 })
@@ -88,5 +97,6 @@ export {
 	UserRole,
 	AgentTable,
 	LBeaconTable,
+	VitalSignSummaryTable,
 	UserAssignmentEnum,
 }

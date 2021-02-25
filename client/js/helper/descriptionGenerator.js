@@ -170,7 +170,10 @@ export const getStatus = (item, locale) => {
 }
 
 export const getPosition = (item, locale) => {
-	if (isSameValue(item.lbeacon_area.id, item.area_id)) {
+	if (
+		isSameValue(item.lbeacon_area.id, item.area_id) &&
+		item.location_description
+	) {
 		return `${item.location_description},`
 	}
 

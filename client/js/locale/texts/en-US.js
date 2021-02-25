@@ -635,6 +635,11 @@ const en = {
 	TIPS_REPLACE_TAG: 'Please select an object to replace tag.',
 	PORT: 'Port',
 	LOCATE: 'Locate',
+	TEMPERATURE: 'Temperature',
+	HEART_RATE: 'Heart Rate',
+	SYSTOLIC_BLOOD_PRESSURE: 'Systolic Blood Pressure',
+	DIASTOLIC_BLOOD_PRESSURE: 'Diastolic Blood Pressure',
+	BLOOD_OXYGEN: 'Blood Oxygen',
 }
 
 export default en

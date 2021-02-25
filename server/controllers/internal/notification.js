@@ -7,6 +7,7 @@ import {
 	ObjectTable,
 	AreaTable,
 	LBeaconTable,
+	VitalSignSummaryTable,
 } from '../../db/models'
 import { common, ipc } from '../../helpers'
 
@@ -19,9 +20,15 @@ export default {
 					{
 						model: ObjectSummaryTable,
 						as: 'extend',
-						required: false,
+						required: false, // left join
+					},
+					{
+						model: VitalSignSummaryTable,
+						as: 'vitalSign',
+						required: false, // left join
 					},
 				],
+				nest: true,
 				raw: true,
 			})
 
@@ -66,7 +73,7 @@ export default {
 
 			const lowBatteryList = objectTableQueried
 				.filter((object) => {
-					const batteryVoltage = object['extend.battery_voltage']
+					const batteryVoltage = object.extend.battery_voltage
 					return (
 						batteryVoltage > 0 &&
 						batteryVoltage <= parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
@@ -91,30 +98,30 @@ export default {
 						object.area_id = notificaiton.area_id // triggered area id
 						object.areaName = areaTableMap[object.area_id].readable_name
 						object.found = true
-						object.lbeacon_coordinate = object['extend.uuid']
-							? common.parseLbeaconCoordinate(object['extend.uuid'])
+						object.lbeacon_coordinate = object.extend.uuid
+							? common.parseLbeaconCoordinate(object.extend.uuid)
 							: null
 
-						object.currentPosition = object['extend.uuid']
+						object.currentPosition = object.extend.uuid
 							? common.calculatePosition({
-									lbeaconUuid: object['extend.uuid'],
-									baseX: object['extend.base_x'],
-									baseY: object['extend.base_y'],
+									lbeaconUuid: object.extend.uuid,
+									baseX: object.extend.base_x,
+									baseY: object.extend.base_y,
 							  })
 							: null
 
 						object.residence_time = common
-							.moment(object['extend.last_seen_timestamp'])
+							.moment(object.extend.last_seen_timestamp)
 							.locale('tw')
 							.fromNow()
 
 						object.lbeacon_area = { id: object.area_id, value: object.areaName }
 
 						object.location_description =
-							lbeaconTableMap[object['extend.uuid']] &&
-							lbeaconTableMap[object['extend.uuid']].description
+							lbeaconTableMap[object.extend.uuid] &&
+							lbeaconTableMap[object.extend.uuid].description
 
-						object.updated_by_area = object['extend.updated_by_area']
+						object.updated_by_area = object.extend.updated_by_area
 						return {
 							object,
 							notificaiton,

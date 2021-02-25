@@ -245,8 +245,8 @@ class NavNotification extends React.Component {
 													locale,
 													keywordType: config,
 												})}
-												{`${locale.texts.BATTERY_VOLTAGE}: ${(
-													object['extend.battery_voltage'] / 10
+												{`, ${locale.texts.BATTERY_VOLTAGE}: ${(
+													object.extend.battery_voltage / 10
 												).toFixed(1)}`}
 											</div>
 										</Dropdown.Item>

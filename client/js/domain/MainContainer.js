@@ -348,6 +348,8 @@ class MainContainer extends React.Component {
 				notifiedObject.forbidden = true
 			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
 				notifiedObject.emergency = true
+			} else if (isSameValue(monitorType, config.MONITOR_TYPE.VITAL_SIGN)) {
+				notifiedObject.vitalSignAlert = true
 			}
 
 			searchResult = searchResult.filter((object) => {

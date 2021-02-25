@@ -243,7 +243,7 @@ export const getIconColor = (item, searchObjectArray) => {
 		return { markerColor: config.mapConfig.iconColor.forbidden }
 	}
 
-	if (item.alerted) {
+	if (item.vitalSignAlert) {
 		return { markerColor: config.mapConfig.iconColor.person.alert }
 	}
 
@@ -307,19 +307,34 @@ export const getPopupContent = (object, objectList, locale) => {
 				careProvider = ` ${locale.texts.PHYSICIAN_NAME}: ${item.physician_name},`
 			}
 
-			const itemContent =
-				parseInt(item.object_type) === 0
-					? `${item.type},
-                        ${acn}
-                        ${residenceTime}
-                        ${reservedTime}
-                        ${isReservedFor}
-                        ${reservedUserName}
+			let itemContent = ''
+			if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
+				itemContent = `${item.type},
+                ${acn}
+                ${residenceTime}
+                ${reservedTime}
+                ${isReservedFor}
+                ${reservedUserName}
+            `
+			}
+			if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
+				let vitalSignText = ''
+				if (item.vitalSignAlert) {
+					vitalSignText = `
+                    ${locale.texts.TEMPERATURE}: ${item.vitalSign.temperature},
+                    ${locale.texts.HEART_RATE}: ${item.vitalSign.heart_rate},
+                    ${locale.texts.SYSTOLIC_BLOOD_PRESSURE}: ${item.vitalSign.systolic_blood_pressure},
+                    ${locale.texts.DIASTOLIC_BLOOD_PRESSURE}: ${item.vitalSign.diastolic_blood_pressure},
+                    ${locale.texts.BLOOD_OXYGEN}: ${item.vitalSign.blood_oxygen},
                     `
-					: `${item.name},
-                        ${careProvider}
-                        ${item.residence_time}
-                    `
+				}
+
+				itemContent = `${item.name},
+                ${careProvider}
+                ${vitalSignText}
+                ${item.residence_time}
+            `
+			}
 
 			return `<div id='${item.mac_address}' class="popupItem mb-2">
                     <div class="d-flex justify-content-start">
