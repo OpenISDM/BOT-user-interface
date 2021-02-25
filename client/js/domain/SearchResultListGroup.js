@@ -57,7 +57,7 @@ const SearchResultListGroup = ({
 			)
 		}
 
-		const background = getIconColor(item, searchObjectArray)
+		const { color: background } = getIconColor(item, searchObjectArray)
 
 		switch (searchKey.type) {
 			case ALL_DEVICES:
