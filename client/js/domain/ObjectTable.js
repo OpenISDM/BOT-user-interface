@@ -298,11 +298,9 @@ class ObjectTable extends React.Component {
 	handleSubmitForm = async (formOption) => {
 		const { apiMethod } = this.state
 		const { objectApiMode } = this.props
-		console.log(objectApiMode)
 		const res = await API.Object[apiMethod]({
 			formOption,
 			mode: objectApiMode || formOption.object_type,
-			aa: console.log(formOption),
 		})
 		if (res) {
 			this.loadData(() => setSuccessMessage(SAVE_SUCCESS))
