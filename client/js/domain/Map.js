@@ -399,12 +399,14 @@ class Map extends React.Component {
 					errorCircle.addTo(this.markersLayer)
 				}
 
+				const { markerColor } = getIconColor(item, searchObjectArray)
+
 				/** Set the icon option*/
 				item.iconOption = {
 					...this.iconOptions,
 
 					/** Set the pin color */
-					markerColor: getIconColor(item, searchObjectArray),
+					markerColor,
 
 					/** Set the pin size */
 					// iconSize,

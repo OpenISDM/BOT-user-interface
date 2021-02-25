@@ -17,7 +17,7 @@ const imagePath = path
 	const files = [`${imagePath}/*.{jpg,png,JPG,PNG}`]
 	const config = {
 		destination: imagePath,
-		plugins: [imageminWebp({ quality: 75 })],
+		plugins: [imageminWebp({ quality: 1, alphaQuality: 1, method: 6 })],
 	}
 
 	console.log('coverting image to webp...')

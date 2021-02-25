@@ -76,8 +76,17 @@ app.use(
 	})
 )
 
-app.use(express.static(path.join(__dirname, 'public', 'dist')))
-app.use('/map', express.static(path.join(__dirname, 'public', 'map')))
+app.use(
+	express.static(path.join(__dirname, 'public', 'dist'), {
+		maxAge: '30d',
+	})
+)
+app.use(
+	'/map',
+	express.static(path.join(__dirname, 'public', 'map'), {
+		maxAge: '30d',
+	})
+)
 
 /** Access control of data retrieving from database by session */
 // app.use(validation.authChecker);

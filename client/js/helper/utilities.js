@@ -233,53 +233,62 @@ export const delay = ({ callback, second = 1 }) => {
 }
 
 export const getIconColor = (item, searchObjectArray) => {
+	let color
+	let specifiedMarker
+
 	if (item.emergency) {
-		return config.mapConfig.iconColor.sos
+		color = config.mapConfig.iconColor.sos
 	}
 
 	if (item.forbidden) {
-		return config.mapConfig.iconColor.forbidden
+		color = config.mapConfig.iconColor.forbidden
 	}
 
 	const pinColorIndex = searchObjectArray.indexOf(item.keyword)
 
 	if (isSameValue(item.object_type, config.OBJECT_TYPE.DEVICE)) {
+		color = config.mapConfig.iconColor.deivce.normal
+
 		if (item.clear_bed) {
-			return config.mapConfig.iconColor.deivce.whiteBed
+			color = config.mapConfig.iconColor.deivce.whiteBed
 		}
 
 		if (monitorTypeChecker(item.monitor_type, 16)) {
-			return config.mapConfig.iconColor.deivce.blackBed
+			color = config.mapConfig.iconColor.deivce.blackBed
 		}
 
 		if (item.searched && item.status !== NORMAL) {
-			return config.mapConfig.iconColor.deivce.grayWithoutDot
-		}
-
-		if (pinColorIndex > -1) {
-			return config.mapConfig.iconColor.pinColorArray[pinColorIndex]
+			color = config.mapConfig.iconColor.deivce.grayWithoutDot
+		} else if (item.status !== NORMAL) {
+			color = config.mapConfig.iconColor.deivce.unNormal
 		}
 
 		if (item.searched) {
-			return config.mapConfig.iconColor.searched
-		}
-
-		if (item.status !== NORMAL) {
-			return config.mapConfig.iconColor.deivce.unNormal
-		}
-
-		return config.mapConfig.iconColor.deivce.normal
-	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
-		if (item.alerted) {
-			return config.mapConfig.iconColor.person.alert
+			color = config.mapConfig.iconColor.searched
 		}
 
 		if (pinColorIndex > -1) {
-			return `Person${config.mapConfig.iconColor.pinColorArray[pinColorIndex]}`
+			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
+		}
+	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
+		color = config.mapConfig.iconColor.person.normal
+
+		if (item.alerted) {
+			color = config.mapConfig.iconColor.person.alert
 		}
 
-		return config.mapConfig.iconColor.person.normal
+		if (pinColorIndex > -1) {
+			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
+			specifiedMarker = `Person${config.mapConfig.iconColor.pinColorArray[pinColorIndex]}`
+		}
 	}
+
+	return specifiedMarker
+		? {
+				color,
+				markerColor: specifiedMarker,
+		  }
+		: { color, markerColor: color }
 }
 
 export const getPopupContent = (object, objectList, locale) => {
