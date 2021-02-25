@@ -62,7 +62,7 @@ class ObjectTable extends React.Component {
 		const {
 			objectTypes = [],
 			objectSubTypes = [],
-			additionOptionType = '',
+			typeOption = '',
 		} = this.props
 		const objectTablePromise = API.Object.getObjectList({
 			areaIds: auth.user.area_ids,
@@ -86,7 +86,7 @@ class ObjectTable extends React.Component {
 
 		if (objectTableRes && areaTableRes && idleMacRes && acnRes) {
 			const typeList = []
-			let additionOptions = null
+			let typeOptions = null
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
 			const data = objectTableRes.data
 				.filter((item) => {
@@ -169,9 +169,9 @@ class ObjectTable extends React.Component {
 
 			const dataMap = keyBy(data, 'id')
 
-			switch (additionOptionType) {
+			switch (typeOption) {
 				case ADDITION_OPTION.STAFF:
-					additionOptions = [
+					typeOptions = [
 						config.OBJECT_TABLE_SUB_TYPE.STAFF,
 						config.OBJECT_TABLE_SUB_TYPE.CONTRACTOR,
 					].map((value) => {
@@ -184,7 +184,7 @@ class ObjectTable extends React.Component {
 				case ADDITION_OPTION.PATIENT:
 					break
 				case ADDITION_OPTION.DEVICE:
-					additionOptions = typeList
+					typeOptions = typeList
 					break
 			}
 
@@ -240,7 +240,7 @@ class ObjectTable extends React.Component {
 					showDeleteConfirmation: false,
 					isReadOnly: false,
 					isAddButtonPressed: false,
-					additionOptions,
+					typeOptions,
 				},
 				callback
 			)
@@ -542,8 +542,8 @@ class ObjectTable extends React.Component {
 					associatedMacSet={this.state.associatedMacSet}
 					associatedAsnSet={this.state.associatedAsnSet}
 					macOptions={this.state.macOptions}
-					additionOptions={this.state.additionOptions}
-					additionOptionType={this.props.additionOptionType}
+					typeOptions={this.state.typeOptions}
+					typeOption={this.props.typeOption}
 				/>
 
 				<DeleteConfirmationForm
@@ -573,7 +573,7 @@ ObjectTable.propTypes = {
 	objectApiMode: PropTypes.string,
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
-	additionOptionType: PropTypes.string,
+	typeOption: PropTypes.string,
 	addButtonVisible: PropTypes.bool,
 	deleteButtonVisible: PropTypes.bool,
 }

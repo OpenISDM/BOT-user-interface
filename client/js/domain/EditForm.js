@@ -94,10 +94,10 @@ class EditForm extends React.Component {
 			associatedMacSet = [],
 			associatedAsnSet = [],
 			handleSubmit,
-			additionOptions,
+			typeOptions,
 			macOptions,
 			handleClick,
-			additionOptionType,
+			typeOption,
 		} = this.props
 
 		const areaOptions = areaTable.map((area) => {
@@ -243,8 +243,8 @@ class EditForm extends React.Component {
 											type="text"
 											name="asset_control_number"
 											label={
-												additionOptionType
-													? locale.texts[additionOptionType.idText]
+												typeOption
+													? locale.texts[typeOption.idText]
 													: locale.texts.ID
 											}
 											error={errors.asset_control_number}
@@ -283,24 +283,24 @@ class EditForm extends React.Component {
 										/>
 									</Col>
 									<Col>
-										{additionOptionType ? (
+										{typeOption ? (
 											<FormikFormGroup
 												type="text"
 												name="type"
-												label={locale.texts[additionOptionType.label]}
+												label={locale.texts[typeOption.label]}
 												error={errors.type}
 												touched={touched.type}
 												placeholder=""
 												component={() => (
 													<Creatable
 														name="type"
-														value={values[additionOptionType.value]}
+														value={values[typeOption.value]}
 														placeholder=""
 														className="my-1"
 														onChange={(obj) => {
 															setFieldValue('type', obj)
 														}}
-														options={additionOptions}
+														options={typeOptions}
 														isSearchable={true}
 														styles={styleConfig.reactSelect}
 														component={{ IndicatorSeparator: () => null }}
@@ -374,7 +374,7 @@ class EditForm extends React.Component {
 EditForm.propTypes = {
 	selectedRowData: PropTypes.object.isRequired,
 	macOptions: PropTypes.object.isRequired,
-	additionOptions: PropTypes.object.isRequired,
+	typeOptions: PropTypes.object.isRequired,
 	handleClick: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 	isReadOnly: PropTypes.bool.isRequired,
@@ -385,8 +385,8 @@ EditForm.propTypes = {
 	show: PropTypes.bool.isRequired,
 	associatedAsnSet: PropTypes.array.isRequired,
 	enableAdditionalOptions: PropTypes.bool,
-	additionOptionsTitle: PropTypes.string,
-	additionOptionType: PropTypes.string,
+	typeOptionsTitle: PropTypes.string,
+	typeOption: PropTypes.string,
 }
 
 export default EditForm

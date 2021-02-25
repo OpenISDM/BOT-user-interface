@@ -18,7 +18,7 @@ const StaffTable = () => {
 			objectApiMode={PERSON}
 			addText={'ADD_STAFF'}
 			deleteText={'DELETE_STAFF'}
-			additionOptionType={ADDITION_OPTION.STAFF}
+			typeOption={ADDITION_OPTION.STAFF}
 		/>
 	)
 }
