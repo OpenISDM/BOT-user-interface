@@ -15,6 +15,7 @@ import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
+import EditForm from './EditForm'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
@@ -57,8 +58,15 @@ class ObjectTable extends React.Component {
 
 	loadData = async (callback) => {
 		const { locale, auth } = this.context
-		const { objectTypes = [], objectSubTypes = [] } = this.props
 
+		const {
+			objectTypes = [],
+			objectSubTypes = [],
+		} = this.props
+
+		let{
+			typeOptions = undefined
+		} = this.props
 		const objectTablePromise = API.Object.getObjectList({
 			areaIds: auth.user.area_ids,
 			objectTypes,
@@ -82,7 +90,6 @@ class ObjectTable extends React.Component {
 		if (objectTableRes && areaTableRes && idleMacRes && acnRes) {
 			const typeList = []
 			const areaDataMap = keyBy(areaTableRes.data, 'name')
-
 			const data = objectTableRes.data
 				.filter((item) => {
 					const isPersonObject = isSameValue(
@@ -164,6 +171,8 @@ class ObjectTable extends React.Component {
 
 			const dataMap = keyBy(data, 'id')
 
+			typeOptions = typeOptions || typeList
+
 			const associatedMacSet = [
 				...new Set(
 					objectTableRes.data.map((item) => {
@@ -171,7 +180,7 @@ class ObjectTable extends React.Component {
 					})
 				),
 			]
-			console.log(objectTableRes.data)
+
 			const associatedAsnSet = [
 				...new Set(
 					acnRes.data.map((item) => {
@@ -205,6 +214,7 @@ class ObjectTable extends React.Component {
 						typeList,
 						areaSelection,
 					},
+					typeOptions,
 					associatedMacSet,
 					areaTable: areaTableRes.data,
 					areaSelection,
@@ -275,7 +285,7 @@ class ObjectTable extends React.Component {
 		const { objectApiMode } = this.props
 		const res = await API.Object[apiMethod]({
 			formOption,
-			mode: objectApiMode,
+			mode: objectApiMode || formOption.object_type,
 		})
 		if (res) {
 			this.loadData(() => setSuccessMessage(SAVE_SUCCESS))
@@ -351,10 +361,10 @@ class ObjectTable extends React.Component {
 			filteredAttribute = [],
 			enabledSelection = [],
 			columns = [],
-			EditedForm,
 			addText,
 			deleteText,
-			isButtonEnable,
+			addButtonVisible = true,
+			deleteButtonVisible = true,
 		} = this.props
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
@@ -417,39 +427,41 @@ class ObjectTable extends React.Component {
 								...enabledSelectionList,
 							]}
 						/>
-						{isButtonEnable ? (
-							<ButtonToolbar>
-								{this.state.isMultiSelection ? (
-									<>
-										<Button
-											theme={'danger'}
-											disableDebounce={true}
-											pressed={tableSelection.length > 0}
-											name={DELETE}
-											onClick={this.handleDeleteAction}
-											text={locale.texts[deleteText]}
-										/>
-										<Button
-											disableDebounce={true}
-											pressed={true}
-											name={DELETE}
-											onClick={this.switchSelectionMode}
-											text={locale.texts.CANCEL}
-										/>
-									</>
-								) : (
-									<>
-										<Button
-											pressed={true}
-											onClick={this.switchReplaceTagMode}
-											text={locale.texts.REPLACE_TAG}
-										/>
+						<ButtonToolbar>
+							{this.state.isMultiSelection ? (
+								<>
+									<Button
+										theme={'danger'}
+										disableDebounce={true}
+										pressed={tableSelection.length > 0}
+										name={DELETE}
+										onClick={this.handleDeleteAction}
+										text={locale.texts[deleteText]}
+									/>
+									<Button
+										disableDebounce={true}
+										pressed={true}
+										name={DELETE}
+										onClick={this.switchSelectionMode}
+										text={locale.texts.CANCEL}
+									/>
+								</>
+							) : (
+								<>
+									<Button
+										pressed={true}
+										onClick={this.switchReplaceTagMode}
+										text={locale.texts.REPLACE_TAG}
+									/>
+									{addButtonVisible ? (
 										<Button
 											pressed={this.state.isAddButtonPressed}
 											name={ADD}
 											onClick={this.handleClickButton}
 											text={locale.texts[addText]}
 										/>
+									) : null}
+									{deleteButtonVisible ? (
 										<Button
 											disableDebounce={true}
 											pressed={this.state.isMultiSelection}
@@ -457,10 +469,10 @@ class ObjectTable extends React.Component {
 											onClick={this.switchSelectionMode}
 											text={locale.texts[deleteText]}
 										/>
-									</>
-								)}
-							</ButtonToolbar>
-						) : null}
+									) : null}
+								</>
+							)}
+						</ButtonToolbar>
 					</Row>
 				</Col>
 				<hr />
@@ -503,7 +515,7 @@ class ObjectTable extends React.Component {
 					</Col>
 				)}
 
-				<EditedForm
+				<EditForm
 					show={this.state.isShowEdit}
 					title={this.state.formTitle}
 					selectedRowData={this.state.selectedRowData}
@@ -515,7 +527,8 @@ class ObjectTable extends React.Component {
 					associatedMacSet={this.state.associatedMacSet}
 					associatedAsnSet={this.state.associatedAsnSet}
 					macOptions={this.state.macOptions}
-					typeOptions={this.state.filterSelection.typeList}
+					typeOptions={this.state.typeOptions}
+					typeOption={this.props.typeOption}
 				/>
 
 				<DeleteConfirmationForm
@@ -538,13 +551,17 @@ ObjectTable.propTypes = {
 	objectTypes: PropTypes.array.isRequired,
 	objectSubTypes: PropTypes.number,
 	filteredAttribute: PropTypes.array.isRequired,
+	buttonAttribute: PropTypes.array.isRequired,
 	enabledSelection: PropTypes.array.isRequired,
 	columns: PropTypes.array.isRequired,
 	EditedForm: PropTypes.node.isRequired,
-	objectApiMode: PropTypes.string.isRequired,
+	objectApiMode: PropTypes.string,
 	addText: PropTypes.string,
 	deleteText: PropTypes.string,
-	isButtonEnable: PropTypes.string.isRequired,
+	typeOption: PropTypes.string,
+	addButtonVisible: PropTypes.bool,
+	deleteButtonVisible: PropTypes.bool,
+	typeOptions: PropTypes.array
 }
 
 export default ObjectTable
