@@ -78,7 +78,7 @@ const InfoPrompt = ({ searchKey, searchResult, handleClick }) => {
 										&nbsp;
 										<FontBoldDiv>{searchResultMap[item][1]}</FontBoldDiv>
 										&nbsp;
-										{locale.texts[item.toUpperCase()] || item}
+										{locale.texts[item.toUpperCase().trim()] || item}
 									</JustifyCenterDiv>
 									&nbsp;
 									<JustifyCenterDiv className="mr-1">
@@ -88,7 +88,7 @@ const InfoPrompt = ({ searchKey, searchResult, handleClick }) => {
 											{searchResultMap[item][0] - searchResultMap[item][1]}
 										</FontBoldDiv>
 										&nbsp;
-										{locale.texts[item.toUpperCase()] || item}
+										{locale.texts[item.toUpperCase().trim()] || item}
 									</JustifyCenterDiv>
 								</Row>
 							)
