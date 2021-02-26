@@ -5,14 +5,15 @@ import { gatewayTableColumn } from '../config/tables'
 import { AppContext } from '../context/AppContext'
 import DeleteConfirmationForm from './DeleteConfirmationForm'
 import { setSuccessMessage } from '../helper/messageGenerator'
-import { PrimaryButton } from '../components/StyleComponents'
+import Button from '../components/Button'
 import AccessControl from './AccessControl'
 import EditGatewayForm from './EditGatewayForm'
 import API from '../api'
 import { formatTime } from '../helper/utilities'
 import SelectTable from '../components/SelectTable'
+import Table from '../components/Table'
 import { SET_TABLE_SELECTION } from '../reducer/action'
-
+import { DELETE } from '../config/wordMap'
 class GatewayTable extends React.Component {
 	static contextType = AppContext
 
@@ -22,6 +23,7 @@ class GatewayTable extends React.Component {
 		dataMap: {},
 		showDeleteConfirmation: false,
 		showEdit: false,
+		isMultiSelection : false,
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -75,6 +77,17 @@ class GatewayTable extends React.Component {
 			showEdit: false,
 		})
 	}
+	switchSelectionMode = ()=>{
+		const [, dispatch] = this.context.stateReducer
+		const{isMultiSelection} = this.state
+		this.setState({
+			isMultiSelection: !isMultiSelection
+		})
+		dispatch({
+			type:SET_TABLE_SELECTION,
+			value:[]
+		})
+	}
 
 	handleSubmitForm = async (formOption) => {
 		const res = await API.Gateway.putGateway({
@@ -92,10 +105,22 @@ class GatewayTable extends React.Component {
 		await API.Gateway.deleteGateway({
 			ids,
 		})
-
+		this.switchSelectionMode()
 		this.getData(() => setSuccessMessage('save success'))
 	}
 
+	handleDeleteAction = () =>{
+		const {locale, stateReducer} = this.context
+		const [{tableSelection}] = stateReducer
+
+		if(tableSelection.length > 0){
+			this.setState({
+				action: DELETE,
+				showDeleteConfirmation: true,
+				message: locale.texts.ARE_YOU_SURE_TO_DELETE
+			})
+		}
+	}
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
@@ -104,33 +129,56 @@ class GatewayTable extends React.Component {
 
 		return (
 			<Fragment>
-				<div className="d-flex justify-content-start">
+				<div className="d-flex justify-content-end">
 					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
-							<PrimaryButton
-								className="mb-1 text-capitalize mr-2"
-								onClick={() => {
-									this.setState({
-										showDeleteConfirmation: true,
-									})
-								}}
-								disabled={tableSelection.length === 0}
-							>
-								{locale.texts.DELETE}
-							</PrimaryButton>
+							{this.state.isMultiSelection ? (
+								<>
+									<Button
+										theme={'danger'}
+										disableDebounce={true}
+										pressed={tableSelection.length > 0}
+										name={DELETE}
+										onClick={this.handleDeleteAction}
+										text={locale.texts.DELETE}
+									/>
+									<Button
+										disableDebounce={true}
+										pressed={true}
+										name={DELETE}
+										onClick={this.switchSelectionMode}
+										text={locale.texts.CANCEL}
+									/>
+								</>
+							) : (
+								<Button
+									disableDebounce={true}
+									pressed={true}
+									name={DELETE}
+									text={locale.texts.DELETE}
+									onClick={this.switchSelectionMode}
+								/>
+							)}
 						</ButtonToolbar>
 					</AccessControl>
 				</div>
 				<hr />
-				<SelectTable
-					data={this.state.data}
+				{this.state.isMultiSelection ? (
+					<SelectTable data={this.state.data}
 					columns={gatewayTableColumn}
-					onClickCallback={() => {
-						this.setState({
-							showEdit: true,
-						})
-					}}
-				/>
+					/>
+				) : (
+					<Table
+						data={this.state.data}
+						columns={gatewayTableColumn}
+						onClickCallback={() => {
+							this.setState({
+								showEdit: true,
+							})
+						}}
+					/>
+				)}
+
 				<EditGatewayForm
 					show={this.state.showEdit}
 					title="add comment"
@@ -142,6 +190,7 @@ class GatewayTable extends React.Component {
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
 					handleSubmit={this.deleteRecordGateway}
+					message={this.state.message}
 				/>
 			</Fragment>
 		)
