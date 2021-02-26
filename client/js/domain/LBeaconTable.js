@@ -5,14 +5,15 @@ import EditLbeaconForm from './EditLbeaconForm'
 import { lbeaconTableColumn } from '../config/tables'
 import { AppContext } from '../context/AppContext'
 import DeleteConfirmationForm from './DeleteConfirmationForm'
-import { PrimaryButton } from '../components/StyleComponents'
 import AccessControl from './AccessControl'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import API from '../api'
 import { formatTime } from '../helper/utilities'
 import SelectTable from '../components/SelectTable'
 import { SET_TABLE_SELECTION } from '../reducer/action'
-
+import Button from '../components/Button'
+import { DELETE } from '../config/wordMap'
+import Table from '../components/Table'
 class LbeaconTable extends React.Component {
 	static contextType = AppContext
 
@@ -22,6 +23,7 @@ class LbeaconTable extends React.Component {
 		dataMap: {},
 		showDeleteConfirmation: false,
 		showEdit: false,
+		isMultiSelection: false,
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -76,10 +78,37 @@ class LbeaconTable extends React.Component {
 	}
 
 	handleSubmitForm = async (formOption) => {
+		console.log(formOption)
 		const res = await API.Lbeacon.putLbeacon({ formOption })
 		if (res) {
 			this.getData(() => setSuccessMessage('save success'))
 		}
+	}
+	switchSelectionMode = () => {
+		const [, dispatch] = this.context.stateReducer
+		const { isMultiSelection } = this.state
+
+		this.setState({
+			isMultiSelection: !isMultiSelection,
+		})
+
+		dispatch({
+			type: SET_TABLE_SELECTION,
+			value: [],
+		})
+	}
+	handleDeleteAction = () => {
+		const {locale, stateReducer} = this.context
+		const [{tableSelection}] = stateReducer
+
+		if(tableSelection.length>0){
+			this.setState({
+				action:DELETE,
+				showDeleteConfirmation:true,
+				message:locale.texts.ARE_YOU_SURE_TO_DELETE
+			})
+		}
+
 	}
 
 	deleteRecord = async () => {
@@ -87,45 +116,66 @@ class LbeaconTable extends React.Component {
 
 		const ids = tableSelection.map((id) => id)
 		await API.Lbeacon.deleteLbeacon({ ids })
-
+		this.switchSelectionMode()
 		this.getData(() => setSuccessMessage('save success'))
 	}
 
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
-		const { dataMap } = this.state
+		const { dataMap, isMultiSelection, data } = this.state
 		const selectedData = dataMap[tableSelection[0]]
 
 		return (
 			<Fragment>
-				<div className="d-flex justify-content-start">
+				<div className="d-flex justify-content-end">
 					<AccessControl platform={['browser', 'tablet']}>
 						<ButtonToolbar>
-							<PrimaryButton
-								className="mb-1 text-capitalize mr-2"
-								onClick={() => {
-									this.setState({
-										showDeleteConfirmation: true,
-									})
-								}}
-								disabled={tableSelection.length === 0}
-							>
-								{locale.texts.DELETE}
-							</PrimaryButton>
+							{isMultiSelection ? (
+								<>
+									<Button
+										theme={'danger'}
+										disableDebounce={true}
+										pressed={tableSelection.length > 0}
+										name={DELETE}
+										onClick={this.handleDeleteAction}
+										text={locale.texts.DELETE}
+									/>
+									<Button
+										disableDebounce={true}
+										pressed={true}
+										name={DELETE}
+										onClick={this.switchSelectionMode}
+										text={locale.texts.CANCEL}
+									/>
+								</>
+							) : (
+								<Button
+									disableDebounce={true}
+									pressed={true}
+									name={DELETE}
+									text={locale.texts.DELETE}
+									onClick={this.switchSelectionMode}
+								/>
+							)}
 						</ButtonToolbar>
 					</AccessControl>
 				</div>
 				<hr />
-				<SelectTable
-					data={this.state.data}
-					columns={lbeaconTableColumn}
-					onClickCallback={() => {
-						this.setState({
-							showEdit: true,
-						})
-					}}
-				/>
+				{isMultiSelection ? (
+					<SelectTable data={data} columns={lbeaconTableColumn} />
+				) : (
+					<Table
+						data={data}
+						columns={lbeaconTableColumn}
+						onClickCallback={() => {
+							this.setState({
+								showEdit: true,
+							})
+						}}
+					/>
+				)}
+
 				<EditLbeaconForm
 					show={this.state.showEdit}
 					title={'edit lbeacon'}
@@ -137,6 +187,7 @@ class LbeaconTable extends React.Component {
 					show={this.state.showDeleteConfirmation}
 					handleClose={this.handleClose}
 					handleSubmit={this.deleteRecord}
+					message={this.state.message}
 				/>
 			</Fragment>
 		)
