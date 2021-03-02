@@ -98,17 +98,16 @@ class LbeaconTable extends React.Component {
 		})
 	}
 	handleDeleteAction = () => {
-		const {locale, stateReducer} = this.context
-		const [{tableSelection}] = stateReducer
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection }] = stateReducer
 
-		if(tableSelection.length>0){
+		if (tableSelection.length > 0) {
 			this.setState({
-				action:DELETE,
-				showDeleteConfirmation:true,
-				message:locale.texts.ARE_YOU_SURE_TO_DELETE
+				action: DELETE,
+				showDeleteConfirmation: true,
+				message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 			})
 		}
-
 	}
 
 	deleteRecord = async () => {
@@ -123,8 +122,7 @@ class LbeaconTable extends React.Component {
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
-		const { dataMap, isMultiSelection, data } = this.state
-		const selectedData = dataMap[tableSelection[0]]
+		const { selectedRowData, isMultiSelection, data } = this.state
 
 		return (
 			<Fragment>
@@ -168,10 +166,13 @@ class LbeaconTable extends React.Component {
 					<Table
 						data={data}
 						columns={lbeaconTableColumn}
-						onClickCallback={() => {
-							this.setState({
-								showEdit: true,
-							})
+						onClickCallback={(selectedRowData) => {
+							if (selectedRowData) {
+								this.setState({
+									selectedRowData,
+									showEdit: true,
+								})
+							}
 						}}
 					/>
 				)}
@@ -179,7 +180,7 @@ class LbeaconTable extends React.Component {
 				<EditLbeaconForm
 					show={this.state.showEdit}
 					title={'edit lbeacon'}
-					selectedObjectData={selectedData}
+					selectedObjectData={selectedRowData}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
 				/>

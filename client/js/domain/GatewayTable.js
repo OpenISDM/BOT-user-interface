@@ -23,7 +23,7 @@ class GatewayTable extends React.Component {
 		dataMap: {},
 		showDeleteConfirmation: false,
 		showEdit: false,
-		isMultiSelection : false,
+		isMultiSelection: false,
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -77,15 +77,15 @@ class GatewayTable extends React.Component {
 			showEdit: false,
 		})
 	}
-	switchSelectionMode = ()=>{
+	switchSelectionMode = () => {
 		const [, dispatch] = this.context.stateReducer
-		const{isMultiSelection} = this.state
+		const { isMultiSelection } = this.state
 		this.setState({
-			isMultiSelection: !isMultiSelection
+			isMultiSelection: !isMultiSelection,
 		})
 		dispatch({
-			type:SET_TABLE_SELECTION,
-			value:[]
+			type: SET_TABLE_SELECTION,
+			value: [],
 		})
 	}
 
@@ -109,23 +109,24 @@ class GatewayTable extends React.Component {
 		this.getData(() => setSuccessMessage('save success'))
 	}
 
-	handleDeleteAction = () =>{
-		const {locale, stateReducer} = this.context
-		const [{tableSelection}] = stateReducer
+	handleDeleteAction = () => {
+		const { locale, stateReducer } = this.context
+		const [{ tableSelection }] = stateReducer
 
-		if(tableSelection.length > 0){
+		if (tableSelection.length > 0) {
 			this.setState({
 				action: DELETE,
 				showDeleteConfirmation: true,
-				message: locale.texts.ARE_YOU_SURE_TO_DELETE
+				message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 			})
 		}
 	}
 	render() {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
-		const { dataMap } = this.state
-		const selectedData = dataMap[tableSelection[0]]
+		const { selectedRowData } = this.state
+		//const { dataMap } = this.state
+		//const selectedData = dataMap[tableSelection[0]]
 
 		return (
 			<Fragment>
@@ -164,17 +165,18 @@ class GatewayTable extends React.Component {
 				</div>
 				<hr />
 				{this.state.isMultiSelection ? (
-					<SelectTable data={this.state.data}
-					columns={gatewayTableColumn}
-					/>
+					<SelectTable data={this.state.data} columns={gatewayTableColumn} />
 				) : (
 					<Table
 						data={this.state.data}
 						columns={gatewayTableColumn}
-						onClickCallback={() => {
-							this.setState({
-								showEdit: true,
-							})
+						onClickCallback={(selectedRowData) => {
+							if (selectedRowData) {
+								this.setState({
+									selectedRowData,
+									showEdit: true,
+								})
+							}
 						}}
 					/>
 				)}
@@ -182,7 +184,7 @@ class GatewayTable extends React.Component {
 				<EditGatewayForm
 					show={this.state.showEdit}
 					title="add comment"
-					selectedObjectData={selectedData}
+					selectedObjectData={selectedRowData}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
 				/>

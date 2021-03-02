@@ -103,7 +103,7 @@ class AgentTable extends React.Component {
 			this.setState({
 				action: DELETE,
 				showDeleteConfirmation: true,
-				message: locale.texts.ARE_YOU_SURE_TO_DELETE
+				message: locale.texts.ARE_YOU_SURE_TO_DELETE,
 			})
 		}
 	}
