@@ -86,10 +86,10 @@ class AgentTable extends React.Component {
 			value: [],
 		})
 	}
-	handleSubmitForm = async ({ id, comment }) => {
-		const res = await API.Agent.editAgent({
-			id,
-			comment,
+	handleSubmitForm = async (formOption) => {
+		console.log(formOption)
+		const res = await API.Agent.putAgent({
+			formOption
 		})
 		if (res) {
 			this.getData(() => setSuccessMessage('save success'))

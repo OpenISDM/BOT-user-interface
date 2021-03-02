@@ -24,7 +24,7 @@ export default {
 	},
 
 	editAgent: async (request, response) => {
-		const { id, comment } = request.body
+		const { comment, id } = request.body.formOption
 		try {
 			const res = await AgentTable.update({ comment }, { where: { id } })
 			console.log('edit Agents succeed')
