@@ -164,6 +164,11 @@ class ShiftChangeRecord extends React.Component {
 					)
 				})
 				.forEach((item) => {
+					item.status = {
+						value : 'normal',
+						label : locale.texts.NORMAL
+					}
+
 					if (item.found) {
 						foundPatients.push(item)
 					} else {
@@ -318,8 +323,6 @@ class ShiftChangeRecord extends React.Component {
 							showShiftChange: true,
 						})
 					}}
-					assignedDeviceGroupListids={assignedDeviceGroupListids}
-					assignedPatientGroupListids={assignedPatientGroupListids}
 				/>
 
 				<ShiftChange
