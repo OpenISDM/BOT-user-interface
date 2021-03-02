@@ -24,7 +24,7 @@ const EditSettingForm = ({
 			className="text-capitalize"
 		>
 			<Modal.Header closeButton>
-				{locale.texts[title.toUpperCase().replace(/ /g, '_')]}
+				{title}
 			</Modal.Header>
 			<Modal.Body>
 				<Formik
