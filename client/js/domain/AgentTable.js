@@ -13,7 +13,7 @@ import Table from '../components/Table'
 import Button from '../components/Button'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import { DELETE } from '../config/wordMap'
-import EditSettingForm from './editSettingForm'
+import EditSettingForm from '../components/editSettingForm'
 class AgentTable extends React.Component {
 	static contextType = AppContext
 

@@ -13,7 +13,7 @@ import { SET_TABLE_SELECTION } from '../reducer/action'
 import Button from '../components/Button'
 import { DELETE } from '../config/wordMap'
 import Table from '../components/Table'
-import EditSettingForm from './editSettingForm'
+import EditSettingForm from '../components/editSettingForm'
 class LbeaconTable extends React.Component {
 	static contextType = AppContext
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { AppContext } from '../context/AppContext'
 import { Formik, Form } from 'formik'
-import FormikFormGroup from './FormikFormGroup'
+import FormikFormGroup from '../domain/FormikFormGroup'
 import PropTypes from 'prop-types'
 
 const EditSettingForm = ({

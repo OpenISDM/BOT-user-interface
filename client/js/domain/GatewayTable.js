@@ -13,7 +13,7 @@ import SelectTable from '../components/SelectTable'
 import Table from '../components/Table'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import { DELETE } from '../config/wordMap'
-import EditSettingForm from './editSettingForm'
+import EditSettingForm from '../components/editSettingForm'
 class GatewayTable extends React.Component {
 	static contextType = AppContext
 
