@@ -6,7 +6,6 @@ import { AppContext } from '../context/AppContext'
 import DeleteConfirmationForm from './DeleteConfirmationForm'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import AccessControl from './AccessControl'
-import EditGatewayForm from './EditGatewayForm'
 import API from '../api'
 import { formatTime } from '../helper/utilities'
 import SelectTable from '../components/SelectTable'
@@ -14,6 +13,7 @@ import Table from '../components/Table'
 import Button from '../components/Button'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import { DELETE } from '../config/wordMap'
+import EditSettingForm from './editSettingForm'
 class AgentTable extends React.Component {
 	static contextType = AppContext
 
@@ -156,17 +156,6 @@ class AgentTable extends React.Component {
 									onClick={this.switchSelectionMode}
 								/>
 							)}
-							{/* <PrimaryButton
-								className="mb-1 text-capitalize mr-2"
-								onClick={() => {
-									this.setState({
-										showDeleteConfirmation: true,
-									})
-								}}
-								disabled={tableSelection.length === 0}
-							>
-								{locale.texts.DELETE}
-							</PrimaryButton> */}
 						</ButtonToolbar>
 					</AccessControl>
 				</div>
@@ -188,12 +177,14 @@ class AgentTable extends React.Component {
 					/>
 				)}
 
-				<EditGatewayForm
+				<EditSettingForm
 					show={this.state.showEdit}
 					title="add comment"
 					selectedObjectData={selectedRowData}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
+					isShowUUID={false}
+					isShowDescription={false}
 				/>
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}

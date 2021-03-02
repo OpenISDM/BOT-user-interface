@@ -5,16 +5,17 @@ import { Formik, Form } from 'formik'
 import FormikFormGroup from './FormikFormGroup'
 import PropTypes from 'prop-types'
 
-const EditLbeaconForm = ({
+const EditSettingForm = ({
 	title,
 	selectedObjectData = {},
 	show,
 	handleClose,
 	handleSubmit,
+	isShowDescription = true,
+	isShowUUID = true,
 }) => {
 	const { locale } = React.useContext(AppContext)
 	const { uuid, description, comment } = selectedObjectData
-
 	return (
 		<Modal
 			show={show}
@@ -34,32 +35,36 @@ const EditLbeaconForm = ({
 					}}
 					onSubmit={(values) => {
 						const { description, comment } = values
-						const lbeaconSettingPackage = {
+						const settingPackage = {
 							...selectedObjectData,
 							description,
 							comment,
 						}
-						handleSubmit(lbeaconSettingPackage)
+						handleSubmit(settingPackage)
 					}}
 					render={({ errors, touched, isSubmitting }) => (
 						<Form>
-							<FormikFormGroup
-								type="text"
-								name="uuid"
-								label={locale.texts.UUID}
-								error={errors.uuid}
-								touched={touched.uuid}
-								placeholder=""
-								disabled
-							/>
-							<FormikFormGroup
-								type="text"
-								name="description"
-								label={locale.texts.DESCRIPTION}
-								error={errors.description}
-								touched={touched.description}
-								placeholder=""
-							/>
+							{isShowUUID ? (
+								<FormikFormGroup
+									type="text"
+									name="uuid"
+									label={locale.texts.UUID}
+									error={errors.uuid}
+									touched={touched.uuid}
+									placeholder=""
+									disabled
+								/>
+							) : null}
+							{isShowDescription ? (
+								<FormikFormGroup
+									type="text"
+									name="description"
+									label={locale.texts.DESCRIPTION}
+									error={errors.description}
+									touched={touched.description}
+									placeholder=""
+								/>
+							) : null}
 							<FormikFormGroup
 								type="text"
 								name="comment"
@@ -82,12 +87,14 @@ const EditLbeaconForm = ({
 	)
 }
 
-EditLbeaconForm.propTypes = {
+EditSettingForm.propTypes = {
 	title: PropTypes.string,
 	selectedObjectData: PropTypes.object,
 	show: PropTypes.bool,
 	handleClose: PropTypes.func,
 	handleSubmit: PropTypes.func,
+	isShowUUID: PropTypes.bool,
+	isShowDescription: PropTypes.bool,
 }
 
-export default EditLbeaconForm
+export default EditSettingForm

@@ -7,13 +7,13 @@ import DeleteConfirmationForm from './DeleteConfirmationForm'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import Button from '../components/Button'
 import AccessControl from './AccessControl'
-import EditGatewayForm from './EditGatewayForm'
 import API from '../api'
 import { formatTime } from '../helper/utilities'
 import SelectTable from '../components/SelectTable'
 import Table from '../components/Table'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import { DELETE } from '../config/wordMap'
+import EditSettingForm from './editSettingForm'
 class GatewayTable extends React.Component {
 	static contextType = AppContext
 
@@ -125,8 +125,6 @@ class GatewayTable extends React.Component {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
 		const { selectedRowData } = this.state
-		//const { dataMap } = this.state
-		//const selectedData = dataMap[tableSelection[0]]
 
 		return (
 			<Fragment>
@@ -181,12 +179,14 @@ class GatewayTable extends React.Component {
 					/>
 				)}
 
-				<EditGatewayForm
+				<EditSettingForm
 					show={this.state.showEdit}
 					title="add comment"
 					selectedObjectData={selectedRowData}
 					handleSubmit={this.handleSubmitForm}
 					handleClose={this.handleClose}
+					isShowDescription={false}
+					isShowUUID={false}
 				/>
 				<DeleteConfirmationForm
 					show={this.state.showDeleteConfirmation}

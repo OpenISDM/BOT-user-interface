@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import { ButtonToolbar } from 'react-bootstrap'
 import { keyBy } from 'lodash'
-import EditLbeaconForm from './EditLbeaconForm'
 import { lbeaconTableColumn } from '../config/tables'
 import { AppContext } from '../context/AppContext'
 import DeleteConfirmationForm from './DeleteConfirmationForm'
@@ -14,6 +13,7 @@ import { SET_TABLE_SELECTION } from '../reducer/action'
 import Button from '../components/Button'
 import { DELETE } from '../config/wordMap'
 import Table from '../components/Table'
+import EditSettingForm from './editSettingForm'
 class LbeaconTable extends React.Component {
 	static contextType = AppContext
 
@@ -177,7 +177,7 @@ class LbeaconTable extends React.Component {
 					/>
 				)}
 
-				<EditLbeaconForm
+				<EditSettingForm
 					show={this.state.showEdit}
 					title={'edit lbeacon'}
 					selectedObjectData={selectedRowData}
