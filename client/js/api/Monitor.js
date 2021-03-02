@@ -4,11 +4,10 @@ import config from '../config'
 const monitor = '/data/monitor'
 
 const monitorApis = {
-	async getMonitorConfig(type, areasId, isGetLbeaconPosition = false) {
+	async getMonitorConfig(type, areaIds) {
 		return await post(monitor, {
 			type: config.monitorSettingUrlMap[type],
-			areasId,
-			isGetLbeaconPosition,
+			areaIds,
 		})
 	},
 
