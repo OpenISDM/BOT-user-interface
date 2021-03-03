@@ -1,4 +1,9 @@
-const getMonitorConfig = (type) => {
+const getMonitorConfig = (type, areaIds) => {
+	let whereStatement = ''
+	if (areaIds && areaIds.length > 0) {
+		whereStatement = ` WHERE area_id in (${areaIds})`
+	}
+
 	const text = `
 		SELECT
 			${type}.id,
@@ -31,6 +36,8 @@ const getMonitorConfig = (type) => {
 			GROUP BY lbeacon_area_id
 		) as lbeacon_temp_table
 		ON lbeacon_temp_table.lbeacon_area_id = ${type}.area_id
+
+        ${whereStatement}
 
 		ORDER BY id;
 	`
@@ -84,7 +91,7 @@ const setMonitorConfig = (monitorConfigPackage) => {
 	} = monitorConfigPackage
 
 	const text = `
-		UPDATE ${monitorConfigPackage.type}
+		UPDATE ${type}
 		SET
 			area_id = $5,
 			start_time = $2,
