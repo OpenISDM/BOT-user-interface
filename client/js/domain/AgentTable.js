@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { agentTableColumn } from '../config/tables'
 import { AGENT } from '../config/wordMap'
-import SettingTable from '../components/settingTable'
+import SettingTable from '../components/SettingTable'
 import { AppContext } from '../context/AppContext'
 
 const AgentTable = () => {

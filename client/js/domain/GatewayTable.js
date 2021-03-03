@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { gatewayTableColumn } from '../config/tables'
 import { GATEWAY } from '../config/wordMap'
-import SettingTable from '../components/settingTable'
+import SettingTable from '../components/SettingTable'
 import { AppContext } from '../context/AppContext'
 const GatewayTable = () => {
 	const { locale } = useContext(AppContext)

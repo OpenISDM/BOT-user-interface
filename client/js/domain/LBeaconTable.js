@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { lbeaconTableColumn } from '../config/tables'
-import SettingTable from '../components/settingTable'
+import SettingTable from '../components/SettingTable'
 import { LBEACON } from '../config/wordMap'
 import { AppContext } from '../context/AppContext'
 const LbeaconTable = () => {
