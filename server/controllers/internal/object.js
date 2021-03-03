@@ -275,7 +275,7 @@ export default {
 	},
 
 	getAliases: async (request, response) => {
-		const { objectType, areaId } = request.query
+		const { objectType = null, areaId = null } = request.query
 		try {
 			const queriredData = await ObjectTable.findAll({
 				attributes: [

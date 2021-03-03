@@ -186,8 +186,7 @@ class MainContainer extends React.Component {
 
 		const res = await API.Monitor.getMonitorConfig(
 			NOT_STAY_ROOM_MONITOR,
-			auth.user.area_ids,
-			true
+			auth.user.area_ids
 		)
 
 		if (res) {

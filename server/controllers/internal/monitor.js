@@ -4,9 +4,9 @@ import pool from '../../db/connection'
 
 export default {
 	getMonitorConfig: (request, response) => {
-		const { type } = request.body
+		const { type, areaIds } = request.body
 		pool
-			.query(dbQueries.getMonitorConfig(type))
+			.query(dbQueries.getMonitorConfig(type, areaIds))
 			.then((res) => {
 				console.log(`get ${type} succeed`)
 				const toReturn = res.rows.map((item) => {
