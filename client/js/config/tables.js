@@ -814,7 +814,7 @@ const monitorConfigColumn = [
 const locationHistoryByNameColumns = [
 	{
 		Header: 'area',
-		accessor: 'area',
+		accessor: 'area_name',
 		width: 230,
 	},
 	{
@@ -836,7 +836,7 @@ const locationHistoryByNameColumns = [
 const locationHistoryByNameGroupByUUIDColumns = [
 	{
 		Header: 'area',
-		accessor: 'area',
+		accessor: 'area_name',
 		width: 230,
 	},
 	{
@@ -858,7 +858,7 @@ const locationHistoryByNameGroupByUUIDColumns = [
 const locationHistoryByNameGroupBYUUIDColumns = [
 	{
 		Header: 'area',
-		accessor: 'area',
+		accessor: 'area_name',
 		width: 230,
 	},
 	{

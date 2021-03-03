@@ -22,7 +22,6 @@ import {
 	locationHistoryByAreaColumns,
 	locationHistoryByNameGroupBYUUIDColumns,
 } from '../config/tables'
-import axios from 'axios'
 import API from '../api'
 import { pdfUrl } from '../api/File'
 import { JSONClone } from '../helper/utilities'
@@ -134,6 +133,8 @@ class TraceContainer extends React.Component {
 					description: item.name,
 				}
 			})
+			console.log('get object list')
+			console.log(name)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -157,7 +158,8 @@ class TraceContainer extends React.Component {
 					description: lbeacon.description,
 				}
 			})
-
+			console.log('get Lbeacon Table')
+			console.log(uuid)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -177,6 +179,8 @@ class TraceContainer extends React.Component {
 					description: area.readable_name,
 				}
 			})
+			console.log('getAreaTable')
+			console.log(area)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -186,7 +190,7 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	getLocationHistory = (fields, breadIndex) => {
+	getLocationHistory = async (fields, breadIndex) => {
 		const { locale } = this.context
 
 		const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
@@ -197,114 +201,98 @@ class TraceContainer extends React.Component {
 		const key = fields.key.value
 
 		this.columns = this.navList[fields.mode].columns
-
+		console.log(this.navList)
 		const columns = JSONClone(this.columns).map((field) => {
 			field.name = field.Header
 			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			return field
 		})
 
-		axios
-			.post('/data/trace/locationHistory', {
-				key,
-				startTime: moment(fields.startTime).format(),
-				endTime: moment(fields.endTime).format(),
-				mode: fields.mode,
-			})
-			.then((res) => {
-				let data = []
-				let ajaxStatus
-				let histories = this.state.histories
-
-				/** Condition handler when no result */
-				if (res.data.rowCount === 0) {
-					ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
-					breadIndex--
-				} else {
-					switch (fields.mode) {
-						case 'nameGroupByArea':
-						case 'nameGroupByUUID':
-							data = res.data.rows.map((item) => {
-								item.residenceTime = moment
-									.duration(item.duration)
-									.locale(locale.abbr)
-									.humanize()
-								item.startTime = moment(item.start_time).format(
-									timeValidatedFormat
-								)
-								item.endTime = moment(item.end_time).format(timeValidatedFormat)
-								item.description = locale.texts[item.area_name]
-								item.mode = fields.mode
-								item.area_original = item.area_name
-								item.area = locale.texts[item.area_name]
-								return item
-							})
-							break
-						case 'uuid':
-							data = res.data.rows.map((item, index) => {
-								item.id = index + 1
-								item.mode = fields.mode
-								item.area_original = item.area
-								item.area = locale.texts[item.area]
-								item.description = item.name
-								return item
-							})
-							break
-						case 'area':
-							data = res.data.rows.map((item, index) => {
-								item.id = index + 1
-								item.mode = fields.mode
-								item.area_original = item.area
-								item.area = locale.texts[item.area]
-								item.description = item.name
-								return item
-							})
-							break
-					}
-
-					ajaxStatus = config.AJAX_STATUS_MAP.SUCCESS
-
-					if (breadIndex < this.state.histories.length) {
-						histories = histories.slice(0, breadIndex)
-					}
-					histories.push({
-						key: fields.key,
-						startTime: moment(fields.startTime).format(),
-						endTime: moment(fields.endTime).format(),
-						mode: fields.mode,
-						data,
-						columns,
-						description: fields.description,
-					})
+		const res = await API.Trace.getLocationHistory({
+			key,
+			startTime: moment(fields.startTime).format(),
+			endTime: moment(fields.endTime).format(),
+			mode: fields.mode,
+		})
+		let ajaxStatus
+		let data = []
+		let histories = this.state.histories
+		if (res) {
+			if (res.data.rowCount === 0) {
+				ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
+				breadIndex--
+			} else {
+				console.log(res.data)
+				switch (fields.mode) {
+					case 'nameGroupByArea':
+					case 'nameGroupByUUID':
+						data = res.data.rows.map((item) => {
+							item.residenceTime = moment
+								.duration(item.duration)
+								.locale(locale.abbr)
+								.humanize()
+							item.startTime = moment(item.start_time).format(
+								timeValidatedFormat
+							)
+							item.endTime = moment(item.end_time).format(timeValidatedFormat)
+							item.description = locale.texts[item.area_name]
+							item.mode = fields.mode
+							item.area_original = item.area_name
+							item.area = locale.texts[item.area_name]
+							return item
+						})
+						break
+					case 'uuid':
+						data = res.data.rows.map((item, index) => {
+							item.id = index + 1
+							item.mode = fields.mode
+							item.area_original = item.area
+							item.area = locale.texts[item.area]
+							item.description = item.name
+							return item
+						})
+						break
+					case 'area':
+						data = res.data.rows.map((item, index) => {
+							item.id = index + 1
+							item.mode = fields.mode
+							item.area_original = item.area
+							item.area = locale.texts[item.area]
+							item.description = item.name
+							return item
+						})
+						break
 				}
 
-				this.setState(
-					{
-						data,
-						columns,
-						histories,
-						breadIndex,
-					},
-					this.formikRef.current.setStatus(ajaxStatus)
-				)
-			})
-			.catch((err) => {
-				console.log(`get location history failed ${err}`)
-			})
+				ajaxStatus = config.AJAX_STATUS_MAP.SUCCESS
+
+				if (breadIndex < this.state.histories.length) {
+					histories = histories.slice(0, breadIndex)
+				}
+				histories.push({
+					key: fields.key,
+					startTime: moment(fields.startTime).format(),
+					endTime: moment(fields.endTime).format(),
+					mode: fields.mode,
+					data,
+					columns,
+					description: fields.description,
+				})
+			}
+		}
+
+		this.setState(
+			{
+				data,
+				columns,
+				histories,
+				breadIndex,
+			},
+			this.formikRef.current.setStatus(ajaxStatus)
+		)
 	}
 
 	getInitialValues = () => {
-		// if (this.props.location.state) {
-		//     let { state } = this.props.location;
-		//     let endTime = moment().toDate();
-		//     let startTime = moment().startOf('day').toDate();
-		//     return {
-		//         mode: state.mode,
-		//         key: state.key,
-		//         startTime,
-		//         endTime,
-		//     }
-		// }
 		return {
 			mode: this.defaultActiveKey,
 			key: null,
@@ -312,7 +300,7 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	onRowClick = (state, rowInfo) => {
+	onRowClick = (rowInfo) => {
 		const { setFieldValue } = this.formikRef.current
 		const { locale } = this.context
 		const values = this.formikRef.current.state.values
@@ -321,60 +309,65 @@ class TraceContainer extends React.Component {
 		let key
 		let mode
 		const breadIndex = Number(this.state.breadIndex)
-		return {
-			onClick: () => {
-				startTime = moment(rowInfo.original.startTime).toDate()
-				endTime = moment(rowInfo.original.endTime).toDate()
+		console.log('qqqqqqqqq')
+		console.log(rowInfo)
+		// return {
+		// 	onClick: () => {
+		console.log('aaaa111111')
+		startTime = moment(rowInfo.original.startTime).toDate()
+		endTime = moment(rowInfo.original.endTime).toDate()
 
-				switch (rowInfo.original.mode) {
-					case 'nameGroupByArea':
-						key = {
-							value: rowInfo.original.area_id,
-							label: locale.texts[rowInfo.original.area_original],
-							description: rowInfo.original.description,
-						}
-						mode = 'area'
-						break
-					case 'nameGroupByUUID':
-						key = {
-							value: rowInfo.original.area_id,
-							label: locale.texts[rowInfo.original.area_original],
-							description: rowInfo.original.description,
-						}
-						mode = 'area'
-						break
-
-					case 'uuid':
-					case 'area':
-						key = {
-							value: rowInfo.original.name,
-							label: rowInfo.original.name,
-							description: rowInfo.original.description,
-						}
-						startTime = moment(values.startTime).toDate()
-						endTime = moment(values.endTime).toDate()
-						mode = 'nameGroupByArea'
-						break
+		switch (rowInfo.original.mode) {
+			case 'nameGroupByArea':
+				key = {
+					value: rowInfo.original.area_id,
+					label: locale.texts[rowInfo.original.area_original],
+					description: rowInfo.original.description,
 				}
-				setFieldValue('key', key)
-				setFieldValue('mode', mode)
-				setFieldValue('startTime', startTime)
-				setFieldValue('endTime', endTime)
-				this.getLocationHistory(
-					{
-						...values,
-						...rowInfo.original,
-						key,
-						mode,
-						description: rowInfo.original.description,
-					},
-					breadIndex + 1
-				)
-			},
+				mode = 'area'
+				break
+			case 'nameGroupByUUID':
+				key = {
+					value: rowInfo.original.area_id,
+					label: locale.texts[rowInfo.original.area_original],
+					description: rowInfo.original.description,
+				}
+				mode = 'area'
+				break
+
+			case 'uuid':
+			case 'area':
+				key = {
+					value: rowInfo.original.name,
+					label: rowInfo.original.name,
+					description: rowInfo.original.description,
+				}
+				startTime = moment(values.startTime).toDate()
+				endTime = moment(values.endTime).toDate()
+				mode = 'nameGroupByArea'
+				break
 		}
+		setFieldValue('key', key)
+		setFieldValue('mode', mode)
+		setFieldValue('startTime', startTime)
+		setFieldValue('endTime', endTime)
+		console.log('kkkkkkkkkkkkkkk')
+		this.getLocationHistory(
+			{
+				...values,
+				...rowInfo.original,
+				key,
+				mode,
+				description: rowInfo.original.description,
+			},
+			breadIndex + 1
+		)
+		console.log('yyyyyyyyyyyy')
+		//	},
+		//}
 	}
 
-	exportCSV = () => {
+	exportCSV = async () => {
 		const { locale } = this.context
 		const filePackage = pdfPackageGenerator.pdfFormat.getPath(
 			'trackingRecord',
@@ -389,21 +382,17 @@ class TraceContainer extends React.Component {
 			}
 		})
 
-		axios
-			.post('/data/file/export/csv', {
-				data: this.state.data,
-				fields,
-				filePackage,
-			})
-			.then(() => {
-				const link = document.createElement('a')
-				link.href = `${pdfUrl}${filePackage.path}`
-				link.download = ''
-				link.click()
-			})
-			.catch((err) => {
-				console.log(`export CSV failed ${err}`)
-			})
+		await API.File.postCSV({
+			data: this.state.data,
+			fields,
+			filePackage,
+		})
+
+		const link = document.createElement('a')
+		link.href = `${pdfUrl}${filePackage.path}`
+		link.download = ''
+		link.click()
+		console.log(link)
 	}
 
 	exportPdf = async (values) => {
@@ -434,11 +423,12 @@ class TraceContainer extends React.Component {
 		})
 		if (res) {
 			API.File.getFile({ path: pdfPackage.path })
+			console.log(res)
 		}
+		console.log('<<export PDF')
 	}
 
 	handleClick = async (e, data) => {
-		const { history, index } = JSON.parse(data)
 		const name = e.target.name || e.target.getAttribute('name')
 		const mode = e.target.getAttribute('data-rb-event-key')
 		const values = this.formikRef.current.state.values
@@ -460,6 +450,7 @@ class TraceContainer extends React.Component {
 				break
 
 			case 'nav':
+				console.log(mode)
 				setFieldValue('key', null)
 				setFieldValue('mode', mode)
 				setFieldValue('startTime', null)
@@ -472,7 +463,9 @@ class TraceContainer extends React.Component {
 					columns: [],
 				})
 				break
-			case 'bread':
+			case 'bread': {
+				console.log('aaaaaaa')
+				const { history, index } = JSON.parse(data)
 				setFieldValue('mode', history.mode)
 				setFieldValue('key', history.key)
 				setFieldValue('startTime', moment(history.startTime).toDate())
@@ -482,6 +475,7 @@ class TraceContainer extends React.Component {
 					columns: history.columns,
 					breadIndex: parseInt(index),
 				})
+			}
 		}
 	}
 
