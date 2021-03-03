@@ -24,6 +24,7 @@ import CustomSettings from '../domain/CustomSettings'
 import SearchSettings from '../domain/SearchSettings'
 import GetAssignments from '../domain/GetAssignments'
 import ShiftChangeHistoricalRecord from '../domain/ShiftChangeHistoricalRecord'
+
 // import RolePermissionManagement from '../domain/RolePermissionManagement'
 // import TransferredLocationManagement from '../domain/TransferredLocationManagement';
 
@@ -141,7 +142,7 @@ export const reportContainerModule = {
 		},
 		{
 			name: 'Request Object Trace',
-			component: () => null,
+			component: (props) => <TraceContainer {...props}/>,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
