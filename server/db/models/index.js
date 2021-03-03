@@ -18,7 +18,7 @@ import UserRole from './user-role'
 import AgentTable from './agent-table'
 import LBeaconTable from './lbeacon-table'
 import VitalSignSummaryTable from './vital-sign-summary-table'
-
+import GatewayTable from './gateway-table'
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
 
@@ -99,4 +99,5 @@ export {
 	LBeaconTable,
 	VitalSignSummaryTable,
 	UserAssignmentEnum,
+	GatewayTable,
 }
