@@ -150,7 +150,7 @@ class TraceContainer extends React.Component {
 			locale: locale.abbr,
 		})
 		if (res) {
-			const uuid = res.data.rows.map((lbeacon) => {
+			const uuid = res.data.map((lbeacon) => {
 				return {
 					value: lbeacon.uuid,
 					label: `${lbeacon.description}[${lbeacon.uuid}]`,

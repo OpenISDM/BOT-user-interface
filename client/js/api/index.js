@@ -17,7 +17,7 @@ import Tracking from './Tracking'
 import TransferredLocation from './TransferredLocation'
 import User from './User'
 import UserAssignments from './UserAssignments'
-
+import Setting from './Setting'
 export default {
 	Agent,
 	Area,
@@ -38,4 +38,5 @@ export default {
 	TransferredLocation,
 	User,
 	UserAssignments,
+	Setting,
 }

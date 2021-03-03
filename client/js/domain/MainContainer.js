@@ -153,7 +153,7 @@ class MainContainer extends React.Component {
 		})
 
 		if (res) {
-			const lbeaconPosition = res.data.rows.map((item) => {
+			const lbeaconPosition = res.data.map((item) => {
 				item.coordinate = createLbeaconCoordinate(item.uuid).toString()
 				return item
 			})
