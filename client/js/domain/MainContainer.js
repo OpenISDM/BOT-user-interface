@@ -153,7 +153,7 @@ class MainContainer extends React.Component {
 		})
 
 		if (res) {
-			const lbeaconPosition = res.data.rows.map((item) => {
+			const lbeaconPosition = res.data.map((item) => {
 				item.coordinate = createLbeaconCoordinate(item.uuid).toString()
 				return item
 			})
@@ -186,8 +186,7 @@ class MainContainer extends React.Component {
 
 		const res = await API.Monitor.getMonitorConfig(
 			NOT_STAY_ROOM_MONITOR,
-			auth.user.area_ids,
-			true
+			auth.user.area_ids
 		)
 
 		if (res) {

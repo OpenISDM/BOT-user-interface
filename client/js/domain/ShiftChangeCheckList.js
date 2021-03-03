@@ -69,7 +69,6 @@ class ShiftChangeCheckList extends React.Component {
 }
 
 ShiftChangeCheckList.propTypes = {
-	data: PropTypes.array.isRequired,
 	show: PropTypes.bool.isRequired,
 	handleClose: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
