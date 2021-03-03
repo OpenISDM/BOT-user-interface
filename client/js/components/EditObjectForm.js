@@ -7,14 +7,14 @@
  */
 import React from 'react'
 import { Modal, Button, Row, Col } from 'react-bootstrap'
-import Select from '../components/Select'
+import Select from './Select'
 import Creatable from 'react-select/creatable'
 import config from '../config'
 import { Formik, Form } from 'formik'
 import { object, string } from 'yup'
 import { AppContext } from '../context/AppContext'
 import styleConfig from '../config/styleConfig'
-import FormikFormGroup from './FormikFormGroup'
+import FormikFormGroup from '../domain/FormikFormGroup'
 import { DISASSOCIATE, NORMAL } from '../config/wordMap'
 import { isEmpty, macaddrValidation } from '../helper/validation'
 import { formatToMac, compareString } from '../helper/utilities'
@@ -25,7 +25,7 @@ const monitorTypeMap = {}
 Object.keys(config.monitorType).forEach((key) => {
 	monitorTypeMap[config.monitorType[key]] = key
 })
-class EditForm extends React.Component {
+class EditObjectForm extends React.Component {
 	static contextType = AppContext
 
 	state = {
@@ -352,7 +352,7 @@ class EditForm extends React.Component {
 	}
 }
 
-EditForm.propTypes = {
+EditObjectForm.propTypes = {
 	selectedRowData: PropTypes.object.isRequired,
 	macOptions: PropTypes.object.isRequired,
 	typeOptions: PropTypes.object.isRequired,
@@ -370,4 +370,4 @@ EditForm.propTypes = {
 	typeOption: PropTypes.string,
 }
 
-export default EditForm
+export default EditObjectForm
