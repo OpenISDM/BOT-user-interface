@@ -22,7 +22,7 @@ import {
 import API from '../api'
 import { pdfUrl } from '../api/File'
 import { JSONClone } from '../helper/utilities'
-import {keyBy} from 'lodash'
+import { keyBy } from 'lodash'
 class TraceContainer extends React.Component {
 	static contextType = AppContext
 
@@ -73,24 +73,6 @@ class TraceContainer extends React.Component {
 		this.getObjectList()
 		this.getLbeaconTable()
 		this.getAreaTable()
-		// if (this.props.location.state) {
-		//     let { state } = this.props.location
-		//     let endTime = moment();
-		//     let startTime = moment().startOf('day');
-		//     let field = {
-		//         mode: state.mode,
-		//         key: state.key,
-		//         startTime,
-		//         endTime,
-		//         description: state.key.label
-		//     }
-		//     this.getLocationHistory(field, 0)
-		// }
-	}
-
-	componentWillUnmount = () => {
-		// const targetElement = document.querySelector('body')
-		// disableBodyScroll(targetElement)
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
@@ -99,13 +81,10 @@ class TraceContainer extends React.Component {
 		if (this.context.locale.abbr !== prevState.locale) {
 			const columns = JSONClone(this.columns).map((field) => {
 				field.name = field.Header
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				return field
 			})
 			this.state.data.forEach((item) => {
-				console.log(item)
-				item.area = areaMap[item.area_id].readable_name//locale.texts[item.area_original]
+				item.area = areaMap[item.area_id].readable_name //locale.texts[item.area_original]
 				item.residenceTime = moment(item.startTime)
 					.locale(locale.abbr)
 					.from(moment(item.endTime), true)
@@ -132,8 +111,7 @@ class TraceContainer extends React.Component {
 					description: item.name,
 				}
 			})
-			//console.log('get object list')
-			//console.log(name)
+
 			this.setState({
 				options: {
 					...this.state.options,
@@ -157,8 +135,7 @@ class TraceContainer extends React.Component {
 					description: lbeacon.description,
 				}
 			})
-			//console.log('get Lbeacon Table')
-			//console.log(uuid)
+
 			this.setState({
 				options: {
 					...this.state.options,
@@ -179,7 +156,6 @@ class TraceContainer extends React.Component {
 				}
 			})
 			const areaMap = keyBy(res.data, 'id')
-			console.log(areaMap)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -201,13 +177,10 @@ class TraceContainer extends React.Component {
 		const key = fields.key.value
 
 		this.columns = this.navList[fields.mode].columns
-		//console.log(this.navList)
 		const columns = JSONClone(this.columns).map((field) => {
 			field.name = field.Header
-			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			return field
 		})
-
 		const res = await API.Trace.getLocationHistory({
 			key,
 			startTime: moment(fields.startTime).format(),
@@ -234,10 +207,10 @@ class TraceContainer extends React.Component {
 								timeValidatedFormat
 							)
 							item.endTime = moment(item.end_time).format(timeValidatedFormat)
-							item.description = areaMap[item.area_id].readable_name//item.area_name//locale.texts[item.area_name]
+							item.description = areaMap[item.area_id].readable_name
 							item.mode = fields.mode
 							item.area_original = item.area_name
-							item.area_name = areaMap[item.area_id].readable_name//locale.texts[item.area_name]
+							item.area_name = areaMap[item.area_id].readable_name
 							return item
 						})
 						break
@@ -246,18 +219,17 @@ class TraceContainer extends React.Component {
 							item.id = index + 1
 							item.mode = fields.mode
 							item.area_original = item.area
-							item.area_name = areaMap[item.area_id].readable_name//locale.texts[item.area]
+							item.area_name = areaMap[item.area_id].readable_name
 							item.description = item.name
 							return item
 						})
 						break
 					case 'area':
 						data = res.data.rows.map((item, index) => {
-							//console.log(item)
 							item.id = index + 1
 							item.mode = fields.mode
 							item.area_original = item.area
-							//item.area = areaMap[item.area_id].readable_name//locale.texts[item.area]
+							item.area_name = areaMap[item.area_id].readable_name
 							item.description = item.name
 							return item
 						})
@@ -309,10 +281,9 @@ class TraceContainer extends React.Component {
 		let key
 		let mode
 		const breadIndex = Number(this.state.breadIndex)
-		console.log(rowInfo)
+
 		startTime = moment(rowInfo.startTime).toDate()
 		endTime = moment(rowInfo.endTime).toDate()
-
 		switch (rowInfo.mode) {
 			case 'nameGroupByArea':
 				key = {
@@ -325,7 +296,7 @@ class TraceContainer extends React.Component {
 			case 'nameGroupByUUID':
 				key = {
 					value: rowInfo.area_id,
-					label : areaMap[rowInfo.area_id].readable_name,
+					label: areaMap[rowInfo.area_id].readable_name,
 					description: rowInfo.description,
 				}
 				mode = 'area'
@@ -414,9 +385,7 @@ class TraceContainer extends React.Component {
 		})
 		if (res) {
 			API.File.getFile({ path: pdfPackage.path })
-			console.log(res)
 		}
-		console.log('<<export PDF')
 	}
 
 	handleClick = async (e, data) => {
@@ -441,7 +410,6 @@ class TraceContainer extends React.Component {
 				break
 
 			case 'nav':
-				console.log(mode)
 				setFieldValue('key', null)
 				setFieldValue('mode', mode)
 				setFieldValue('startTime', null)
