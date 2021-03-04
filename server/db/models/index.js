@@ -18,6 +18,7 @@ import UserRole from './user-role'
 import AgentTable from './agent-table'
 import LBeaconTable from './lbeacon-table'
 import VitalSignSummaryTable from './vital-sign-summary-table'
+import VitalSignConfig from './vital-sign-config'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -77,6 +78,16 @@ AreaTable.belongsToMany(UserTable, {
 	foreignKey: 'area_id',
 })
 
+const MonitorTypeEnum = {
+	NORMAL: 0,
+	GEO_FENCE: 1,
+	EMERGENCY: 2,
+	ACTIVITY: 4,
+	LOCATION: 8,
+	BED_CLEARNESS: 16,
+	VITAL_SIGN: 32,
+}
+
 export {
 	DeviceGroupList,
 	GeoFenceAreaConfig,
@@ -98,5 +109,7 @@ export {
 	AgentTable,
 	LBeaconTable,
 	VitalSignSummaryTable,
+	VitalSignConfig,
 	UserAssignmentEnum,
+	MonitorTypeEnum,
 }

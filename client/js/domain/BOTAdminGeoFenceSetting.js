@@ -8,7 +8,11 @@ import Button from '../components/Button'
 import Map from '../components/Map'
 import config from '../config'
 import API from '../api'
-import { getBitValue, findExpectedBitValue, delay } from '../helper/utilities'
+import {
+	caculateAlertTypes,
+	findExpectedBitValue,
+	delay,
+} from '../helper/utilities'
 import NotificationTypeConfig from './NotificationTypeConfig'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import { SAVE_SUCCESS } from '../config/wordMap'
@@ -115,27 +119,6 @@ class BOTAdminGeoFenceSetting extends React.Component {
 				},
 			})
 		}
-	}
-
-	caculateAlertTypes = ({ bell, light, gui, sms }) => {
-		const bellBit = getBitValue({
-			status: bell ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
-			bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.BELL,
-		})
-		const lightBit = getBitValue({
-			status: light ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
-			bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.LIGHT,
-		})
-		const guiBit = getBitValue({
-			status: gui ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
-			bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.GUI,
-		})
-		const smsBit = getBitValue({
-			status: sms ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
-			bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.SMS,
-		})
-
-		return bellBit + lightBit + guiBit + smsBit
 	}
 
 	generateMapView = () => {
@@ -288,7 +271,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 							dayShift: {
 								name: SHIFT_NAME.DAY_SHIFT,
 								alert_last_sec: values[`${defaultShiftList[0]}_alert_last_sec`],
-								active_alert_types: this.caculateAlertTypes({
+								active_alert_types: caculateAlertTypes({
 									bell: values[`${defaultShiftList[0]}_alert_bells`],
 									light: values[`${defaultShiftList[0]}_flash_lights`],
 									gui: values[`${defaultShiftList[0]}_msg_on_gui`],
@@ -301,7 +284,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 							swingShift: {
 								name: SHIFT_NAME.SWING_SHIFT,
 								alert_last_sec: values[`${defaultShiftList[1]}_alert_last_sec`],
-								active_alert_types: this.caculateAlertTypes({
+								active_alert_types: caculateAlertTypes({
 									bell: values[`${defaultShiftList[1]}_alert_bells`],
 									light: values[`${defaultShiftList[1]}_flash_lights`],
 									gui: values[`${defaultShiftList[1]}_msg_on_gui`],
@@ -314,7 +297,7 @@ class BOTAdminGeoFenceSetting extends React.Component {
 							nightShift: {
 								name: SHIFT_NAME.NIGHT_SHIFT,
 								alert_last_sec: values[`${defaultShiftList[2]}_alert_last_sec`],
-								active_alert_types: this.caculateAlertTypes({
+								active_alert_types: caculateAlertTypes({
 									bell: values[`${defaultShiftList[2]}_alert_bells`],
 									light: values[`${defaultShiftList[2]}_flash_lights`],
 									gui: values[`${defaultShiftList[2]}_msg_on_gui`],

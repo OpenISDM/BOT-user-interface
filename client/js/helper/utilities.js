@@ -378,3 +378,24 @@ export const getLbeaconPopupContent = (lbeacon) => {
         </div>
     `
 }
+
+export const caculateAlertTypes = ({ bell, light, gui, sms }) => {
+	const bellBit = getBitValue({
+		status: bell ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.BELL,
+	})
+	const lightBit = getBitValue({
+		status: light ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.LIGHT,
+	})
+	const guiBit = getBitValue({
+		status: gui ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.GUI,
+	})
+	const smsBit = getBitValue({
+		status: sms ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.SMS,
+	})
+
+	return bellBit + lightBit + guiBit + smsBit
+}
