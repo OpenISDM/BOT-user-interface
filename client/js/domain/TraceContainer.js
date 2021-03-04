@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react'
-// import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
-	// BrowserView,
 	TabletView,
 	MobileOnlyView,
 	isBrowser,
@@ -18,14 +16,13 @@ import config from '../config'
 import moment from 'moment'
 import {
 	locationHistoryByNameColumns,
-	// locationHistoryByUUIDColumns,
 	locationHistoryByAreaColumns,
 	locationHistoryByNameGroupBYUUIDColumns,
 } from '../config/tables'
 import API from '../api'
 import { pdfUrl } from '../api/File'
 import { JSONClone } from '../helper/utilities'
-
+import {keyBy} from 'lodash'
 class TraceContainer extends React.Component {
 	static contextType = AppContext
 
@@ -98,6 +95,7 @@ class TraceContainer extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const { locale } = this.context
+		const { areaMap } = this.state
 		if (this.context.locale.abbr !== prevState.locale) {
 			const columns = JSONClone(this.columns).map((field) => {
 				field.name = field.Header
@@ -106,7 +104,8 @@ class TraceContainer extends React.Component {
 				return field
 			})
 			this.state.data.forEach((item) => {
-				item.area = item.area_name//locale.texts[item.area_original]
+				console.log(item)
+				item.area = areaMap[item.area_id].readable_name//locale.texts[item.area_original]
 				item.residenceTime = moment(item.startTime)
 					.locale(locale.abbr)
 					.from(moment(item.endTime), true)
@@ -179,20 +178,21 @@ class TraceContainer extends React.Component {
 					description: area.readable_name,
 				}
 			})
-			//console.log('getAreaTable')
-			//console.log(area)
+			const areaMap = keyBy(res.data, 'id')
+			console.log(areaMap)
 			this.setState({
 				options: {
 					...this.state.options,
 					area,
 				},
+				areaMap,
 			})
 		}
 	}
 
 	getLocationHistory = async (fields, breadIndex) => {
 		const { locale } = this.context
-
+		const { areaMap } = this.state
 		const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
 
 		/** Set formik status as 0. Would render loading page */
@@ -222,7 +222,6 @@ class TraceContainer extends React.Component {
 				ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
 				breadIndex--
 			} else {
-				//console.log(res.data)
 				switch (fields.mode) {
 					case 'nameGroupByArea':
 					case 'nameGroupByUUID':
@@ -235,10 +234,10 @@ class TraceContainer extends React.Component {
 								timeValidatedFormat
 							)
 							item.endTime = moment(item.end_time).format(timeValidatedFormat)
-							item.description = item.area_name//locale.texts[item.area_name]
+							item.description = areaMap[item.area_id].readable_name//item.area_name//locale.texts[item.area_name]
 							item.mode = fields.mode
 							item.area_original = item.area_name
-							item.area = item.area_name//locale.texts[item.area_name]
+							item.area_name = areaMap[item.area_id].readable_name//locale.texts[item.area_name]
 							return item
 						})
 						break
@@ -247,17 +246,18 @@ class TraceContainer extends React.Component {
 							item.id = index + 1
 							item.mode = fields.mode
 							item.area_original = item.area
-							item.area = locale.texts[item.area]
+							item.area_name = areaMap[item.area_id].readable_name//locale.texts[item.area]
 							item.description = item.name
 							return item
 						})
 						break
 					case 'area':
 						data = res.data.rows.map((item, index) => {
+							//console.log(item)
 							item.id = index + 1
 							item.mode = fields.mode
 							item.area_original = item.area
-							item.area = locale.texts[item.area]
+							//item.area = areaMap[item.area_id].readable_name//locale.texts[item.area]
 							item.description = item.name
 							return item
 						})
@@ -302,7 +302,7 @@ class TraceContainer extends React.Component {
 
 	onRowClick = (rowInfo) => {
 		const { setFieldValue } = this.formikRef.current
-		const { locale } = this.context
+		const { areaMap } = this.state
 		const values = this.formikRef.current.state.values
 		let startTime
 		let endTime
@@ -315,21 +315,17 @@ class TraceContainer extends React.Component {
 
 		switch (rowInfo.mode) {
 			case 'nameGroupByArea':
-				console.log('nameGroupByArea')
 				key = {
 					value: rowInfo.area_id,
-					//label: locale.texts[rowInfo.area_original],
-					lable: rowInfo.area_name,
+					label: areaMap[rowInfo.area_id].readable_name,
 					description: rowInfo.description,
 				}
 				mode = 'area'
 				break
 			case 'nameGroupByUUID':
-				console.log('nameGroupByUUID')
 				key = {
 					value: rowInfo.area_id,
-					//label: locale.texts[rowInfo.area_original],
-					label : rowInfo.area_name,
+					label : areaMap[rowInfo.area_id].readable_name,
 					description: rowInfo.description,
 				}
 				mode = 'area'
@@ -337,7 +333,6 @@ class TraceContainer extends React.Component {
 
 			case 'uuid':
 			case 'area':
-				console.log('others')
 				key = {
 					value: rowInfo.name,
 					label: rowInfo.name,
@@ -389,7 +384,6 @@ class TraceContainer extends React.Component {
 		link.href = `${pdfUrl}${filePackage.path}`
 		link.download = ''
 		link.click()
-		//console.log(link)
 	}
 
 	exportPdf = async (values) => {
@@ -461,7 +455,6 @@ class TraceContainer extends React.Component {
 				})
 				break
 			case 'bread': {
-				//console.log('aaaaaaa')
 				const { history, index } = JSON.parse(data)
 				setFieldValue('mode', history.mode)
 				setFieldValue('key', history.key)
