@@ -106,7 +106,7 @@ class TraceContainer extends React.Component {
 				return field
 			})
 			this.state.data.forEach((item) => {
-				item.area = locale.texts[item.area_original]
+				item.area = item.area_name//locale.texts[item.area_original]
 				item.residenceTime = moment(item.startTime)
 					.locale(locale.abbr)
 					.from(moment(item.endTime), true)
@@ -133,8 +133,8 @@ class TraceContainer extends React.Component {
 					description: item.name,
 				}
 			})
-			console.log('get object list')
-			console.log(name)
+			//console.log('get object list')
+			//console.log(name)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -158,8 +158,8 @@ class TraceContainer extends React.Component {
 					description: lbeacon.description,
 				}
 			})
-			console.log('get Lbeacon Table')
-			console.log(uuid)
+			//console.log('get Lbeacon Table')
+			//console.log(uuid)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -179,8 +179,8 @@ class TraceContainer extends React.Component {
 					description: area.readable_name,
 				}
 			})
-			console.log('getAreaTable')
-			console.log(area)
+			//console.log('getAreaTable')
+			//console.log(area)
 			this.setState({
 				options: {
 					...this.state.options,
@@ -201,7 +201,7 @@ class TraceContainer extends React.Component {
 		const key = fields.key.value
 
 		this.columns = this.navList[fields.mode].columns
-		console.log(this.navList)
+		//console.log(this.navList)
 		const columns = JSONClone(this.columns).map((field) => {
 			field.name = field.Header
 			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
@@ -222,7 +222,7 @@ class TraceContainer extends React.Component {
 				ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
 				breadIndex--
 			} else {
-				console.log(res.data)
+				//console.log(res.data)
 				switch (fields.mode) {
 					case 'nameGroupByArea':
 					case 'nameGroupByUUID':
@@ -235,10 +235,10 @@ class TraceContainer extends React.Component {
 								timeValidatedFormat
 							)
 							item.endTime = moment(item.end_time).format(timeValidatedFormat)
-							item.description = locale.texts[item.area_name]
+							item.description = item.area_name//locale.texts[item.area_name]
 							item.mode = fields.mode
 							item.area_original = item.area_name
-							item.area = locale.texts[item.area_name]
+							item.area = item.area_name//locale.texts[item.area_name]
 							return item
 						})
 						break
@@ -309,38 +309,39 @@ class TraceContainer extends React.Component {
 		let key
 		let mode
 		const breadIndex = Number(this.state.breadIndex)
-		console.log('qqqqqqqqq')
 		console.log(rowInfo)
-		// return {
-		// 	onClick: () => {
-		console.log('aaaa111111')
-		startTime = moment(rowInfo.original.startTime).toDate()
-		endTime = moment(rowInfo.original.endTime).toDate()
+		startTime = moment(rowInfo.startTime).toDate()
+		endTime = moment(rowInfo.endTime).toDate()
 
-		switch (rowInfo.original.mode) {
+		switch (rowInfo.mode) {
 			case 'nameGroupByArea':
+				console.log('nameGroupByArea')
 				key = {
-					value: rowInfo.original.area_id,
-					label: locale.texts[rowInfo.original.area_original],
-					description: rowInfo.original.description,
+					value: rowInfo.area_id,
+					//label: locale.texts[rowInfo.area_original],
+					lable: rowInfo.area_name,
+					description: rowInfo.description,
 				}
 				mode = 'area'
 				break
 			case 'nameGroupByUUID':
+				console.log('nameGroupByUUID')
 				key = {
-					value: rowInfo.original.area_id,
-					label: locale.texts[rowInfo.original.area_original],
-					description: rowInfo.original.description,
+					value: rowInfo.area_id,
+					//label: locale.texts[rowInfo.area_original],
+					label : rowInfo.area_name,
+					description: rowInfo.description,
 				}
 				mode = 'area'
 				break
 
 			case 'uuid':
 			case 'area':
+				console.log('others')
 				key = {
-					value: rowInfo.original.name,
-					label: rowInfo.original.name,
-					description: rowInfo.original.description,
+					value: rowInfo.name,
+					label: rowInfo.name,
+					description: rowInfo.description,
 				}
 				startTime = moment(values.startTime).toDate()
 				endTime = moment(values.endTime).toDate()
@@ -351,20 +352,16 @@ class TraceContainer extends React.Component {
 		setFieldValue('mode', mode)
 		setFieldValue('startTime', startTime)
 		setFieldValue('endTime', endTime)
-		console.log('kkkkkkkkkkkkkkk')
 		this.getLocationHistory(
 			{
 				...values,
-				...rowInfo.original,
+				...rowInfo,
 				key,
 				mode,
-				description: rowInfo.original.description,
+				description: rowInfo.description,
 			},
 			breadIndex + 1
 		)
-		console.log('yyyyyyyyyyyy')
-		//	},
-		//}
 	}
 
 	exportCSV = async () => {
@@ -392,7 +389,7 @@ class TraceContainer extends React.Component {
 		link.href = `${pdfUrl}${filePackage.path}`
 		link.download = ''
 		link.click()
-		console.log(link)
+		//console.log(link)
 	}
 
 	exportPdf = async (values) => {
@@ -464,7 +461,7 @@ class TraceContainer extends React.Component {
 				})
 				break
 			case 'bread': {
-				console.log('aaaaaaa')
+				//console.log('aaaaaaa')
 				const { history, index } = JSON.parse(data)
 				setFieldValue('mode', history.mode)
 				setFieldValue('key', history.key)
