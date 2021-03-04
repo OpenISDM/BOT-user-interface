@@ -16,7 +16,20 @@ export const MOMENT_LOCALE_RELATIVE_TIME_FORMAT_EN = {
 }
 
 export const MOMENT_LOCALE_RELATIVE_TIME_FORMAT_TW = {
-	future: '已 %s',
+	future: '經過 %s',
+	past: '%s前',
+	s: '1 分鐘',
+	ss: '1 分鐘',
+	m: '1 分鐘',
+	mm: '%d 分鐘',
+	h: '1 小時',
+	hh: '%d 小時',
+	d: '1 天',
+	dd: '%d 天',
+	M: '1 個月',
+	MM: '%d 月',
+	y: '1 年',
+	yy: '%d 年',
 }
 
 export default {

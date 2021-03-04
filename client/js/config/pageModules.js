@@ -24,6 +24,7 @@ import CustomSettings from '../domain/CustomSettings'
 import SearchSettings from '../domain/SearchSettings'
 import GetAssignments from '../domain/GetAssignments'
 import ShiftChangeHistoricalRecord from '../domain/ShiftChangeHistoricalRecord'
+
 // import RolePermissionManagement from '../domain/RolePermissionManagement'
 // import TransferredLocationManagement from '../domain/TransferredLocationManagement';
 
@@ -86,6 +87,12 @@ export const settingModule = {
 			platform: ['browser', 'tablet', 'mobile'],
 			permission: 'route:agent',
 		},
+		{
+			name :'trace',
+			component:(props)=><TraceContainer {...props}/>,
+			platform: ['browser',],
+			permission: 'route:traceContainer'
+		}
 	],
 }
 
@@ -103,7 +110,7 @@ export const trackingHistoryContainerModule = {
 		{
 			name: 'historical record',
 			permission: 'route:trackingHistory',
-			component: (props) => <TraceContainer {...props} />,
+			component: (props) => null,
 			platform: ['browser', 'tablet'],
 		},
 	],
@@ -141,7 +148,7 @@ export const reportContainerModule = {
 		},
 		{
 			name: 'Request Object Trace',
-			component: () => null,
+			component: (props) => <TraceContainer {...props}/>,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{
