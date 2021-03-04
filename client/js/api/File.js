@@ -11,8 +11,6 @@ export default {
 		})
 	},
 	async getPDF({ userInfo, pdfPackage }) {
-		console.log(userInfo)
-		console.log(pdfPackage)
 		return await post(pdf, {
 			userInfo,
 			pdfPackage,
