@@ -192,7 +192,8 @@ export default {
 					SELECT
 						object_table.name,
 						location_history_table.mac_address,
-						area_table.name AS area
+						area_table.name AS area,
+						area_table.id as area_id
 					FROM location_history_table
 
 					LEFT JOIN object_table
@@ -210,7 +211,8 @@ export default {
 						location_history_table.mac_address,
 						object_table.name,
 						area_table.name,
-						location_history_table.area_id
+						location_history_table.area_id,
+						area_table.id
 
 					ORDER BY object_table.name ASC
 				`

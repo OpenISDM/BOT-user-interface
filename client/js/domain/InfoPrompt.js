@@ -21,7 +21,6 @@ const InfoPrompt = ({ searchKey, searchResult, handleClick }) => {
 	const { locale } = appContext
 
 	const searchResultMap = searchResultToMap(searchResult)
-
 	const handleShowDetail = () => {
 		setShowDetail(!showDetail)
 	}
@@ -79,7 +78,7 @@ const InfoPrompt = ({ searchKey, searchResult, handleClick }) => {
 										&nbsp;
 										<FontBoldDiv>{searchResultMap[item][1]}</FontBoldDiv>
 										&nbsp;
-										{item}
+										{locale.texts[item.toUpperCase().trim()] || item}
 									</JustifyCenterDiv>
 									&nbsp;
 									<JustifyCenterDiv className="mr-1">
@@ -89,7 +88,7 @@ const InfoPrompt = ({ searchKey, searchResult, handleClick }) => {
 											{searchResultMap[item][0] - searchResultMap[item][1]}
 										</FontBoldDiv>
 										&nbsp;
-										{item}
+										{locale.texts[item.toUpperCase().trim()] || item}
 									</JustifyCenterDiv>
 								</Row>
 							)
@@ -122,7 +121,6 @@ const stringBlock = ({ name, value, data, label, locale, onClick }) => {
 	switch (locale.abbr) {
 		// case locale.supportedLocale.ms.abbr:
 		// case locale.supportedLocale.cn.abbr:
-
 		case locale.supportedLocale.en.abbr:
 			return (
 				<div

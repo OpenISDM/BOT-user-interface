@@ -2,7 +2,7 @@ import 'dotenv/config'
 import moment from 'moment-timezone'
 import dbQueries from '../../db/lbeaconQueries'
 import pool from '../../db/connection'
-
+import {LBeaconTable} from '../../db/models'
 const LBEACON_STATUS_NOT_AVAILABLE = 9999
 
 export default {
@@ -16,9 +16,9 @@ export default {
 		)
 
 		try {
-			const res = await pool.query(dbQueries.getLbeaconTable)
+			const res =await LBeaconTable.findAll()
 			console.log('get lbeacon table data succeed')
-			res.rows.forEach((item) => {
+			res.forEach((item) => {
 				item.isInHealthInterval =
 					(parseInt(item.health_status) === isLbeaconHealthStatusCode ||
 						parseInt(item.health_status) === isLbeaconStatusNotAvailable) &&

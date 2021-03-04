@@ -69,3 +69,9 @@ export const ASSET_CONTROL_NUMBER = 'asset control number'
 export const NUMBER = 'number'
 
 export const CLEAR = 'clear'
+
+export const LBEACON = 'lbeacon'
+
+export const AGENT = 'agent'
+
+export const GATEWAY = 'gateway'

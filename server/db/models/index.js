@@ -19,6 +19,7 @@ import AgentTable from './agent-table'
 import LBeaconTable from './lbeacon-table'
 import VitalSignSummaryTable from './vital-sign-summary-table'
 import VitalSignConfig from './vital-sign-config'
+import GatewayTable from './gateway-table'
 
 NamedList.hasMany(ObjectNamedListMappingTable, { as: 'objectIds' })
 ObjectNamedListMappingTable.belongsTo(NamedList)
@@ -110,6 +111,7 @@ export {
 	LBeaconTable,
 	VitalSignSummaryTable,
 	VitalSignConfig,
+	GatewayTable,
 	UserAssignmentEnum,
 	MonitorTypeEnum,
 }

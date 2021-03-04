@@ -11,7 +11,7 @@ export default {
 		return await del(agent, { ids })
 	},
 
-	async editAgent({ id, comment }) {
-		return await put(agent, { id, comment })
+	async putAgent({ formOption }) {
+		return await put(agent, { formOption })
 	},
 }

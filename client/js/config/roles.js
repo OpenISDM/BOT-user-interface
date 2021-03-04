@@ -80,6 +80,7 @@ const rules = {
 			'route:lbeacon',
 			'route:gateway',
 			'route:agent',
+			'route:traceContainer',
 
 			'user:mydevice',
 			'user:mypatient',

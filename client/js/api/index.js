@@ -18,6 +18,8 @@ import TransferredLocation from './TransferredLocation'
 import User from './User'
 import UserAssignments from './UserAssignments'
 import VitalSign from './VitalSign'
+import Setting from './Setting'
+import Trace from './Trace'
 
 export default {
 	Agent,
@@ -40,4 +42,6 @@ export default {
 	User,
 	UserAssignments,
 	VitalSign,
+	Setting,
+	Trace,
 }

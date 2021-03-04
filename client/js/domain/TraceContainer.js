@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react'
-// import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import {
-	// BrowserView,
 	TabletView,
 	MobileOnlyView,
 	isBrowser,
@@ -18,15 +16,13 @@ import config from '../config'
 import moment from 'moment'
 import {
 	locationHistoryByNameColumns,
-	// locationHistoryByUUIDColumns,
 	locationHistoryByAreaColumns,
 	locationHistoryByNameGroupBYUUIDColumns,
 } from '../config/tables'
-import axios from 'axios'
 import API from '../api'
 import { pdfUrl } from '../api/File'
 import { JSONClone } from '../helper/utilities'
-
+import { keyBy } from 'lodash'
 class TraceContainer extends React.Component {
 	static contextType = AppContext
 
@@ -77,37 +73,18 @@ class TraceContainer extends React.Component {
 		this.getObjectList()
 		this.getLbeaconTable()
 		this.getAreaTable()
-		// if (this.props.location.state) {
-		//     let { state } = this.props.location
-		//     let endTime = moment();
-		//     let startTime = moment().startOf('day');
-		//     let field = {
-		//         mode: state.mode,
-		//         key: state.key,
-		//         startTime,
-		//         endTime,
-		//         description: state.key.label
-		//     }
-		//     this.getLocationHistory(field, 0)
-		// }
-	}
-
-	componentWillUnmount = () => {
-		// const targetElement = document.querySelector('body')
-		// disableBodyScroll(targetElement)
 	}
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const { locale } = this.context
+		const { areaMap } = this.state
 		if (this.context.locale.abbr !== prevState.locale) {
 			const columns = JSONClone(this.columns).map((field) => {
 				field.name = field.Header
-				field.Header =
-					locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 				return field
 			})
 			this.state.data.forEach((item) => {
-				item.area = locale.texts[item.area_original]
+				item.area = areaMap[item.area_id].readable_name //locale.texts[item.area_original]
 				item.residenceTime = moment(item.startTime)
 					.locale(locale.abbr)
 					.from(moment(item.endTime), true)
@@ -134,6 +111,7 @@ class TraceContainer extends React.Component {
 					description: item.name,
 				}
 			})
+
 			this.setState({
 				options: {
 					...this.state.options,
@@ -150,7 +128,7 @@ class TraceContainer extends React.Component {
 			locale: locale.abbr,
 		})
 		if (res) {
-			const uuid = res.data.rows.map((lbeacon) => {
+			const uuid = res.data.map((lbeacon) => {
 				return {
 					value: lbeacon.uuid,
 					label: `${lbeacon.description}[${lbeacon.uuid}]`,
@@ -177,18 +155,20 @@ class TraceContainer extends React.Component {
 					description: area.readable_name,
 				}
 			})
+			const areaMap = keyBy(res.data, 'id')
 			this.setState({
 				options: {
 					...this.state.options,
 					area,
 				},
+				areaMap,
 			})
 		}
 	}
 
-	getLocationHistory = (fields, breadIndex) => {
+	getLocationHistory = async (fields, breadIndex) => {
 		const { locale } = this.context
-
+		const { areaMap } = this.state
 		const timeValidatedFormat = 'YYYY/MM/DD HH:mm:ss'
 
 		/** Set formik status as 0. Would render loading page */
@@ -197,114 +177,96 @@ class TraceContainer extends React.Component {
 		const key = fields.key.value
 
 		this.columns = this.navList[fields.mode].columns
-
 		const columns = JSONClone(this.columns).map((field) => {
 			field.name = field.Header
-			field.Header = locale.texts[field.Header.toUpperCase().replace(/ /g, '_')]
 			return field
 		})
-
-		axios
-			.post('/data/trace/locationHistory', {
-				key,
-				startTime: moment(fields.startTime).format(),
-				endTime: moment(fields.endTime).format(),
-				mode: fields.mode,
-			})
-			.then((res) => {
-				let data = []
-				let ajaxStatus
-				let histories = this.state.histories
-
-				/** Condition handler when no result */
-				if (res.data.rowCount === 0) {
-					ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
-					breadIndex--
-				} else {
-					switch (fields.mode) {
-						case 'nameGroupByArea':
-						case 'nameGroupByUUID':
-							data = res.data.rows.map((item) => {
-								item.residenceTime = moment
-									.duration(item.duration)
-									.locale(locale.abbr)
-									.humanize()
-								item.startTime = moment(item.start_time).format(
-									timeValidatedFormat
-								)
-								item.endTime = moment(item.end_time).format(timeValidatedFormat)
-								item.description = locale.texts[item.area_name]
-								item.mode = fields.mode
-								item.area_original = item.area_name
-								item.area = locale.texts[item.area_name]
-								return item
-							})
-							break
-						case 'uuid':
-							data = res.data.rows.map((item, index) => {
-								item.id = index + 1
-								item.mode = fields.mode
-								item.area_original = item.area
-								item.area = locale.texts[item.area]
-								item.description = item.name
-								return item
-							})
-							break
-						case 'area':
-							data = res.data.rows.map((item, index) => {
-								item.id = index + 1
-								item.mode = fields.mode
-								item.area_original = item.area
-								item.area = locale.texts[item.area]
-								item.description = item.name
-								return item
-							})
-							break
-					}
-
-					ajaxStatus = config.AJAX_STATUS_MAP.SUCCESS
-
-					if (breadIndex < this.state.histories.length) {
-						histories = histories.slice(0, breadIndex)
-					}
-					histories.push({
-						key: fields.key,
-						startTime: moment(fields.startTime).format(),
-						endTime: moment(fields.endTime).format(),
-						mode: fields.mode,
-						data,
-						columns,
-						description: fields.description,
-					})
+		const res = await API.Trace.getLocationHistory({
+			key,
+			startTime: moment(fields.startTime).format(),
+			endTime: moment(fields.endTime).format(),
+			mode: fields.mode,
+			locale
+		})
+		let ajaxStatus
+		let data = []
+		let histories = this.state.histories
+		console.log(res.data)
+		if (res) {
+			if (res.data.rowCount === 0) {
+				ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
+				breadIndex--
+			} else {
+				switch (fields.mode) {
+					case 'nameGroupByArea':
+					case 'nameGroupByUUID':
+						data = res.data.rows.map((item) => {
+							// item.residenceTime = moment
+							// 	.duration(item.duration)
+							// 	.locale(locale.abbr)
+							// 	.humanize()
+							item.startTime = moment(item.start_time).format(
+								timeValidatedFormat
+							)
+							item.endTime = moment(item.end_time).format(timeValidatedFormat)
+							item.description = areaMap[item.area_id].readable_name
+							item.mode = fields.mode
+							item.area_original = item.area_name
+							item.area_name = areaMap[item.area_id].readable_name
+							return item
+						})
+						break
+					case 'uuid':
+						data = res.data.rows.map((item, index) => {
+							item.id = index + 1
+							item.mode = fields.mode
+							item.area_original = item.area
+							item.area_name = areaMap[item.area_id].readable_name
+							item.description = item.name
+							return item
+						})
+						break
+					case 'area':
+						data = res.data.rows.map((item, index) => {
+							item.id = index + 1
+							item.mode = fields.mode
+							item.area_original = item.area
+							item.area_name = areaMap[item.area_id].readable_name
+							item.description = item.name
+							return item
+						})
+						break
 				}
 
-				this.setState(
-					{
-						data,
-						columns,
-						histories,
-						breadIndex,
-					},
-					this.formikRef.current.setStatus(ajaxStatus)
-				)
-			})
-			.catch((err) => {
-				console.log(`get location history failed ${err}`)
-			})
+				ajaxStatus = config.AJAX_STATUS_MAP.SUCCESS
+
+				if (breadIndex < this.state.histories.length) {
+					histories = histories.slice(0, breadIndex)
+				}
+				histories.push({
+					key: fields.key,
+					startTime: moment(fields.startTime).format(),
+					endTime: moment(fields.endTime).format(),
+					mode: fields.mode,
+					data,
+					columns,
+					description: fields.description,
+				})
+			}
+		}
+
+		this.setState(
+			{
+				data,
+				columns,
+				histories,
+				breadIndex,
+			},
+			this.formikRef.current.setStatus(ajaxStatus)
+		)
 	}
 
 	getInitialValues = () => {
-		// if (this.props.location.state) {
-		//     let { state } = this.props.location;
-		//     let endTime = moment().toDate();
-		//     let startTime = moment().startOf('day').toDate();
-		//     return {
-		//         mode: state.mode,
-		//         key: state.key,
-		//         startTime,
-		//         endTime,
-		//     }
-		// }
 		return {
 			mode: this.defaultActiveKey,
 			key: null,
@@ -312,69 +274,65 @@ class TraceContainer extends React.Component {
 		}
 	}
 
-	onRowClick = (state, rowInfo) => {
+	onRowClick = (rowInfo) => {
 		const { setFieldValue } = this.formikRef.current
-		const { locale } = this.context
+		const { areaMap } = this.state
 		const values = this.formikRef.current.state.values
 		let startTime
 		let endTime
 		let key
 		let mode
 		const breadIndex = Number(this.state.breadIndex)
-		return {
-			onClick: () => {
-				startTime = moment(rowInfo.original.startTime).toDate()
-				endTime = moment(rowInfo.original.endTime).toDate()
 
-				switch (rowInfo.original.mode) {
-					case 'nameGroupByArea':
-						key = {
-							value: rowInfo.original.area_id,
-							label: locale.texts[rowInfo.original.area_original],
-							description: rowInfo.original.description,
-						}
-						mode = 'area'
-						break
-					case 'nameGroupByUUID':
-						key = {
-							value: rowInfo.original.area_id,
-							label: locale.texts[rowInfo.original.area_original],
-							description: rowInfo.original.description,
-						}
-						mode = 'area'
-						break
-
-					case 'uuid':
-					case 'area':
-						key = {
-							value: rowInfo.original.name,
-							label: rowInfo.original.name,
-							description: rowInfo.original.description,
-						}
-						startTime = moment(values.startTime).toDate()
-						endTime = moment(values.endTime).toDate()
-						mode = 'nameGroupByArea'
-						break
+		startTime = moment(rowInfo.startTime).toDate()
+		endTime = moment(rowInfo.endTime).toDate()
+		switch (rowInfo.mode) {
+			case 'nameGroupByArea':
+				key = {
+					value: rowInfo.area_id,
+					label: areaMap[rowInfo.area_id].readable_name,
+					description: rowInfo.description,
 				}
-				setFieldValue('key', key)
-				setFieldValue('mode', mode)
-				setFieldValue('startTime', startTime)
-				setFieldValue('endTime', endTime)
-				this.getLocationHistory(
-					{
-						...values,
-						...rowInfo.original,
-						key,
-						mode,
-						description: rowInfo.original.description,
-					},
-					breadIndex + 1
-				)
-			},
+				mode = 'area'
+				break
+			case 'nameGroupByUUID':
+				key = {
+					value: rowInfo.area_id,
+					label: areaMap[rowInfo.area_id].readable_name,
+					description: rowInfo.description,
+				}
+				mode = 'area'
+				break
+
+			case 'uuid':
+			case 'area':
+				key = {
+					value: rowInfo.name,
+					label: rowInfo.name,
+					description: rowInfo.description,
+				}
+				startTime = moment(values.startTime).toDate()
+				endTime = moment(values.endTime).toDate()
+				mode = 'nameGroupByArea'
+				break
 		}
+		setFieldValue('key', key)
+		setFieldValue('mode', mode)
+		setFieldValue('startTime', startTime)
+		setFieldValue('endTime', endTime)
+		this.getLocationHistory(
+			{
+				...values,
+				...rowInfo,
+				key,
+				mode,
+				description: rowInfo.description,
+			},
+			breadIndex + 1
+		)
 	}
 
-	exportCSV = () => {
+	exportCSV = async () => {
 		const { locale } = this.context
 		const filePackage = pdfPackageGenerator.pdfFormat.getPath(
 			'trackingRecord',
@@ -389,21 +347,16 @@ class TraceContainer extends React.Component {
 			}
 		})
 
-		axios
-			.post('/data/file/export/csv', {
-				data: this.state.data,
-				fields,
-				filePackage,
-			})
-			.then(() => {
-				const link = document.createElement('a')
-				link.href = `${pdfUrl}${filePackage.path}`
-				link.download = ''
-				link.click()
-			})
-			.catch((err) => {
-				console.log(`export CSV failed ${err}`)
-			})
+		await API.File.postCSV({
+			data: this.state.data,
+			fields,
+			filePackage,
+		})
+
+		const link = document.createElement('a')
+		link.href = `${pdfUrl}${filePackage.path}`
+		link.download = ''
+		link.click()
 	}
 
 	exportPdf = async (values) => {
@@ -438,7 +391,6 @@ class TraceContainer extends React.Component {
 	}
 
 	handleClick = async (e, data) => {
-		const { history, index } = JSON.parse(data)
 		const name = e.target.name || e.target.getAttribute('name')
 		const mode = e.target.getAttribute('data-rb-event-key')
 		const values = this.formikRef.current.state.values
@@ -472,7 +424,8 @@ class TraceContainer extends React.Component {
 					columns: [],
 				})
 				break
-			case 'bread':
+			case 'bread': {
+				const { history, index } = JSON.parse(data)
 				setFieldValue('mode', history.mode)
 				setFieldValue('key', history.key)
 				setFieldValue('startTime', moment(history.startTime).toDate())
@@ -482,6 +435,7 @@ class TraceContainer extends React.Component {
 					columns: history.columns,
 					breadIndex: parseInt(index),
 				})
+			}
 		}
 	}
 

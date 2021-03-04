@@ -15,7 +15,7 @@ import ObjectFilterBar from '../components/ObjectFilterBar'
 import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
-import EditForm from './EditForm'
+import EditObjectForm from '../components/EditObjectForm'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
@@ -515,7 +515,7 @@ class ObjectTable extends React.Component {
 					</Col>
 				)}
 
-				<EditForm
+				<EditObjectForm
 					show={this.state.isShowEdit}
 					title={this.state.formTitle}
 					selectedRowData={this.state.selectedRowData}

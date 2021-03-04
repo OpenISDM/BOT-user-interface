@@ -54,7 +54,7 @@ class BOTAdminMonitorSetting extends React.Component {
 		})
 
 		this.setState({
-			lbeaconsTable: res.data.rows,
+			lbeaconsTable: res.data,
 		})
 	}
 
