@@ -905,7 +905,7 @@ const locationHistoryByUUIDColumns = [
 	},
 	{
 		Header: 'area',
-		accessor: 'area',
+		accessor: 'area_name',
 		width: 250,
 	},
 	{
@@ -933,7 +933,7 @@ const locationHistoryByAreaColumns = [
 	},
 	{
 		Header: 'area',
-		accessor: 'area',
+		accessor: 'area_name',
 		width: 250,
 	},
 ]
