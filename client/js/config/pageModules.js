@@ -87,6 +87,12 @@ export const settingModule = {
 			platform: ['browser', 'tablet', 'mobile'],
 			permission: 'route:agent',
 		},
+		{
+			name :'trace',
+			component:(props)=><TraceContainer {...props}/>,
+			platform: ['browser',],
+			permission: 'route:traceContainer'
+		}
 	],
 }
 
@@ -104,7 +110,7 @@ export const trackingHistoryContainerModule = {
 		{
 			name: 'historical record',
 			permission: 'route:trackingHistory',
-			component: (props) => <TraceContainer {...props} />,
+			component: (props) => null,
 			platform: ['browser', 'tablet'],
 		},
 	],
