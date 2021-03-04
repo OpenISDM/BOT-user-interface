@@ -186,10 +186,12 @@ class TraceContainer extends React.Component {
 			startTime: moment(fields.startTime).format(),
 			endTime: moment(fields.endTime).format(),
 			mode: fields.mode,
+			locale
 		})
 		let ajaxStatus
 		let data = []
 		let histories = this.state.histories
+		console.log(res.data)
 		if (res) {
 			if (res.data.rowCount === 0) {
 				ajaxStatus = config.AJAX_STATUS_MAP.NO_RESULT
@@ -199,10 +201,10 @@ class TraceContainer extends React.Component {
 					case 'nameGroupByArea':
 					case 'nameGroupByUUID':
 						data = res.data.rows.map((item) => {
-							item.residenceTime = moment
-								.duration(item.duration)
-								.locale(locale.abbr)
-								.humanize()
+							// item.residenceTime = moment
+							// 	.duration(item.duration)
+							// 	.locale(locale.abbr)
+							// 	.humanize()
 							item.startTime = moment(item.start_time).format(
 								timeValidatedFormat
 							)

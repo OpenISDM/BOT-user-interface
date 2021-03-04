@@ -1,12 +1,13 @@
 import { post } from './utils/request'
 
 export default {
-	async getLocationHistory({ key, startTime, endTime, mode }) {
+	async getLocationHistory({ key, startTime, endTime, mode, locale }) {
 		return await post('/data/trace/locationHistory', {
 			key,
 			startTime,
 			endTime,
 			mode,
+			locale,
 		})
 	},
 
