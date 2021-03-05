@@ -204,7 +204,7 @@ const config = {
 	},
 
 	MONITOR_TYPE_TEXT: {
-		0: 'GEOFENCE_ALERT',
+		1: 'GEOFENCE_ALERT',
 		2: 'EMERGENCY_ALERT',
 		32: 'VITAL_SIGN_ALERT',
 	},
