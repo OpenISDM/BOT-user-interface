@@ -210,7 +210,7 @@ const config = {
 	},
 
 	/* Set the tracking query inteval time(ms) */
-	trackingIntervalTime: 3000,
+	trackingIntervalTime: 1000,
 
 	/* Set the notification query inteval time(ms) */
 	notificationIntervalTime: 6000,
