@@ -6,7 +6,7 @@ export default {
 	async getAllNotifications({ areaId }) {
 		return await get(notification, { areaId })
 	},
-	async turnOffNotification({ notificationId }) {
-		return await post(notification, { notificationId })
+	async turnOffNotification({ notificationId, macAddress, monitorType }) {
+		return await post(notification, { notificationId, macAddress, monitorType })
 	},
 }

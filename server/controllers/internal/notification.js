@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import _ from 'lodash'
-import { Op } from '../../db/connection'
+import { Op, sequelize } from '../../db/connection'
 import {
 	NotificationTable,
 	ObjectSummaryTable,
@@ -33,6 +33,9 @@ export default {
 			})
 
 			const notificationTablePromise = NotificationTable.findAll({
+				attributes: [sequelize.literal('DISTINCT ON("mac_address") id')].concat(
+					Object.keys(NotificationTable.rawAttributes)
+				),
 				where: {
 					web_processed: {
 						[Op.eq]: null,
@@ -49,7 +52,7 @@ export default {
 						},
 					],
 				},
-				order: [['id', 'DESC']],
+				raw: true,
 			})
 
 			const areaTablePromise = AreaTable.findAll({ raw: true })
@@ -141,7 +144,7 @@ export default {
 	},
 
 	turnOffNotification: async (request, response) => {
-		const { notificationId } = request.body
+		const { notificationId, macAddress, monitorType } = request.body
 		try {
 			const res = await NotificationTable.update(
 				{
@@ -149,7 +152,8 @@ export default {
 				},
 				{
 					where: {
-						id: notificationId,
+						mac_address: macAddress,
+						monitor_type: monitorType,
 					},
 				}
 			)
