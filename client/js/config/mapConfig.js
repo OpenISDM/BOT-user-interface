@@ -250,9 +250,6 @@ const mapConfig = {
 	/* For test. To start object tracking*/
 	startInteval: true,
 
-	/* Set the tracking query inteval time(ms) */
-	intervalTime: 1000,
-
 	/** Radius of circle for collecting object based on the selection pin */
 	PIN_SELECTION_RADIUS: 1000,
 

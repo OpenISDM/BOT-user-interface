@@ -208,6 +208,12 @@ const config = {
 		2: 'EMERGENCY_ALERT',
 		32: 'VITAL_SIGN_ALERT',
 	},
+
+	/* Set the tracking query inteval time(ms) */
+	trackingIntervalTime: 3000,
+
+	/* Set the notification query inteval time(ms) */
+	notificationIntervalTime: 6000,
 }
 
 export default config

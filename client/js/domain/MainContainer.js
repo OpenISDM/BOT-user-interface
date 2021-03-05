@@ -60,7 +60,7 @@ class MainContainer extends React.Component {
 		this.getGroupIdList()
 		this.interval = setInterval(
 			this.getTrackingData,
-			config.mapConfig.intervalTime
+			config.trackingIntervalTime
 		)
 	}
 
@@ -71,7 +71,7 @@ class MainContainer extends React.Component {
 		/** stop getTrackingData when editing object status  */
 		if (shouldUpdateTrackingData !== this.state.shouldUpdateTrackingData) {
 			this.interval = shouldUpdateTrackingData
-				? setInterval(this.getTrackingData, config.mapConfig.intervalTime)
+				? setInterval(this.getTrackingData, config.trackingIntervalTime)
 				: clearInterval(this.interval)
 			this.setState({
 				shouldUpdateTrackingData,

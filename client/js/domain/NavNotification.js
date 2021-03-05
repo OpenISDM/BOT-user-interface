@@ -29,7 +29,7 @@ class NavNotification extends React.Component {
 		this.getAllNotifications()
 		this.interval = setInterval(
 			this.getAllNotifications,
-			config.mapConfig.intervalTime
+			config.notificationIntervalTime
 		)
 	}
 
