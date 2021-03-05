@@ -67,7 +67,7 @@ class BOTAdminMonitorSetting extends React.Component {
 					</>
 				)
 				break
-			case pages.PATIENT_SAFETY_NOTIFICATION:
+			case pages.VITAL_SIGN_ALERT:
 				subPage = <BOTAdminVitalSignSetting />
 				break
 
@@ -115,14 +115,12 @@ class BOTAdminMonitorSetting extends React.Component {
 						text={locale.texts.EMERGENCY_ALERT}
 					/>
 					<Button
-						pressed={this.checkButtonIsPressed(
-							pages.PATIENT_SAFETY_NOTIFICATION
-						)}
+						pressed={this.checkButtonIsPressed(pages.VITAL_SIGN_ALERT)}
 						style={style.pageButtons}
 						onClick={() => {
-							this.setCurrentPage(pages.PATIENT_SAFETY_NOTIFICATION)
+							this.setCurrentPage(pages.VITAL_SIGN_ALERT)
 						}}
-						text={locale.texts.PATIENT_SAFETY_NOTIFICATION}
+						text={locale.texts.VITAL_SIGN_ALERT}
 					/>
 				</Row>
 				<Row>
