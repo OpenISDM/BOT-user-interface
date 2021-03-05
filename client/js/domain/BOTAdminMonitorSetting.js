@@ -17,7 +17,7 @@ class BOTAdminMonitorSetting extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		buttonSelected: pages.GEO_FENCES,
+		buttonSelected: null,
 	}
 
 	checkButtonIsPressed = (identity) => this.state.buttonSelected === identity
