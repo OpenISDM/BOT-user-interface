@@ -264,9 +264,13 @@ export const getIconColor = (item, searchObjectArray) => {
 			color = config.mapConfig.iconColor.deivce.unNormal
 		} else if (pinColorIndex > -1) {
 			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
+		} else if (item.searched) {
+			const lastIndex = config.mapConfig.iconColor.pinColorArray.length - 1
+			color = config.mapConfig.iconColor.pinColorArray[lastIndex]
 		}
 	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
-		color = config.mapConfig.iconColor.person.normal
+		color = config.mapConfig.iconColor.person.normalColor
+		specifiedMarker = config.mapConfig.iconColor.person.normalMarker
 
 		if (pinColorIndex > -1) {
 			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]

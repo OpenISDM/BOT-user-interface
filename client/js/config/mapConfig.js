@@ -232,7 +232,8 @@ const mapConfig = {
 		},
 
 		person: {
-			normal: 'Person',
+			normalMarker: 'Person',
+			normalColor: 'Sienna',
 			alert: 'Alert',
 		},
 
