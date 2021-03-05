@@ -25,11 +25,6 @@ export default {
 			object_summary_table.updated_by_n_lbeacons,
             object_summary_table.clear_bed,
             object_summary_table.updated_by_area,
-			JSON_BUILD_OBJECT(
-				'id', transfer_locations.id,
-				'name', transfer_locations.name,
-				'department', transfer_locations.department
-			) AS transferred_location,
 			edit_object_record.notes,
             edit_object_record.edit_user_id,
             (
@@ -42,6 +37,23 @@ export default {
 				'id', area_table.id,
 				'value', area_table.readable_name
 			) AS lbeacon_area,
+            JSON_BUILD_OBJECT(
+				'id', transfer_locations.id,
+				'name', transfer_locations.name,
+				'department', transfer_locations.department
+			) AS transferred_location,
+            JSON_BUILD_OBJECT(
+				'id', vital_sign_summary_table.id,
+				'mac_address', vital_sign_summary_table.mac_address,
+				'last_reported_timestamp', vital_sign_summary_table.last_reported_timestamp,
+				'temperature', vital_sign_summary_table.temperature,
+				'heart_rate', vital_sign_summary_table.heart_rate,
+				'systolic_blood_pressure', vital_sign_summary_table.systolic_blood_pressure,
+				'diastolic_blood_pressure', vital_sign_summary_table.diastolic_blood_pressure,
+				'blood_oxygen', vital_sign_summary_table.blood_oxygen
+			) AS vital_sign,
+            notification.monitor_type as monitor_type,
+            notification.violation_timestamp as violation_timestamp,
 			COALESCE(patient_record.record, ARRAY[]::JSON[]) as records
 
 		FROM object_table
@@ -79,35 +91,25 @@ export default {
 		) as patient_record
 		ON object_table.id = patient_record.object_id
 
-		LEFT JOIN (
-			SELECT
-				mac_address,
-				json_agg(json_build_object(
-					'type', monitor_type,
-					'time', violation_timestamp
-				))
-			FROM (
-				SELECT
-					mac_address,
-					monitor_type,
-					MIN(violation_timestamp) AS violation_timestamp
-				FROM (
-					SELECT
-						mac_address,
-						monitor_type,
-						violation_timestamp
-					FROM notification_table
-					WHERE
-						web_processed IS NULL
-				)	as tmp_1
-				GROUP BY mac_address, monitor_type
-			) as tmp_2
-			GROUP BY mac_address
+        LEFT JOIN (
+            SELECT
+                mac_address,
+                monitor_type,
+                MIN(violation_timestamp) AS violation_timestamp
+            FROM (
+                SELECT * FROM notification_table
+                WHERE
+                    web_processed IS NULL
+            )	as tmp_notification_table
+            GROUP BY mac_address, monitor_type
 		) as notification
 		ON notification.mac_address = object_summary_table.mac_address
 
 		LEFT JOIN transfer_locations
         ON object_table.transferred_location = transfer_locations.id
+
+        LEFT JOIN vital_sign_summary_table
+		ON object_table.mac_address = vital_sign_summary_table.mac_address
 
 		WHERE object_table.area_id IN (${areaIds.map((areaId) => areaId).join(',')})
 

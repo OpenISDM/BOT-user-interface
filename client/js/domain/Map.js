@@ -419,7 +419,7 @@ class Map extends React.Component {
 					currentPosition: item.currentPosition,
 
 					/** Set the ordered number on location pin */
-					number: item.searched ? item.numberOfSearched : '',
+					number: item.numberOfSearched ? item.numberOfSearched : '',
 
 					/** Set the color of the ordered number */
 					numberColor: this.props.mapConfig.iconColor.number,

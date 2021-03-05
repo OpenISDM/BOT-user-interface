@@ -48,7 +48,7 @@ ObjectSummaryTable.belongsTo(ObjectTable, {
 ObjectTable.hasOne(VitalSignSummaryTable, {
 	foreignKey: 'mac_address',
 	sourceKey: 'mac_address',
-	as: 'vitalSign',
+	as: 'vital_sign',
 })
 VitalSignSummaryTable.belongsTo(ObjectTable, {
 	foreignKey: 'mac_address',

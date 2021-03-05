@@ -229,7 +229,7 @@ class MainContainer extends React.Component {
 	getResultBySearchKey = async (searchKey) => {
 		const { stateReducer } = this.context
 		const [{ openedNotification }] = stateReducer
-		const { object: notifiedObject, notificaiton } = openedNotification
+		const { object: notifiedObject } = openedNotification
 		const { trackingData, pinColorArray, groupIds } = this.state
 
 		let searchResult = []
@@ -341,21 +341,8 @@ class MainContainer extends React.Component {
 				}
 		}
 
-		if (notifiedObject && notificaiton) {
-			const monitorType = notificaiton.monitor_type
-			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
-				notifiedObject.forbidden = true
-			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
-				notifiedObject.emergency = true
-			} else if (isSameValue(monitorType, config.MONITOR_TYPE.VITAL_SIGN)) {
-				notifiedObject.vitalSignAlert = true
-			}
-
-			searchResult = searchResult.filter((object) => {
-				return !isSameValue(object.id, notifiedObject.id)
-			})
-
-			searchResult.push(notifiedObject)
+		if (notifiedObject) {
+			searchResult = [notifiedObject]
 		}
 
 		const showDeivceObject = searchResult.some(
@@ -375,7 +362,14 @@ class MainContainer extends React.Component {
 		const clearSearchResult = searchKey.value === null
 
 		searchResult = searchResult.map((item) => {
-			if (item.searched) {
+			const monitorType = item.monitor_type
+			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
+				item.forbidden = true
+			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
+				item.emergency = true
+			} else if (isSameValue(monitorType, config.MONITOR_TYPE.VITAL_SIGN)) {
+				item.vitalSignAlert = true
+			} else if (item.searched) {
 				item.numberOfSearched = countNumber(searchKey, item, numberSheet)
 			}
 			return item

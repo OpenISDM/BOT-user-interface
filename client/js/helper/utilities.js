@@ -325,11 +325,11 @@ export const getPopupContent = (object, objectList, locale) => {
 				let vitalSignText = ''
 				if (item.vitalSignAlert) {
 					vitalSignText = `
-                    ${locale.texts.TEMPERATURE}: ${item.vitalSign.temperature},
-                    ${locale.texts.HEART_RATE}: ${item.vitalSign.heart_rate},
-                    ${locale.texts.SYSTOLIC_BLOOD_PRESSURE}: ${item.vitalSign.systolic_blood_pressure},
-                    ${locale.texts.DIASTOLIC_BLOOD_PRESSURE}: ${item.vitalSign.diastolic_blood_pressure},
-                    ${locale.texts.BLOOD_OXYGEN}: ${item.vitalSign.blood_oxygen},
+                    ${locale.texts.TEMPERATURE}: ${item.vital_sign.temperature},
+                    ${locale.texts.HEART_RATE}: ${item.vital_sign.heart_rate},
+                    ${locale.texts.SYSTOLIC_BLOOD_PRESSURE}: ${item.vital_sign.systolic_blood_pressure},
+                    ${locale.texts.DIASTOLIC_BLOOD_PRESSURE}: ${item.vital_sign.diastolic_blood_pressure},
+                    ${locale.texts.BLOOD_OXYGEN}: ${item.vital_sign.blood_oxygen},
                     `
 				}
 

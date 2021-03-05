@@ -24,7 +24,7 @@ export default {
 					},
 					{
 						model: VitalSignSummaryTable,
-						as: 'vitalSign',
+						as: 'vital_sign',
 						required: false, // left join
 					},
 				],
