@@ -80,8 +80,9 @@ class EditObjectForm extends React.Component {
 			macOptions,
 			handleClick,
 			typeOption,
+			objectSubTypes,
+			isOptionRequired = true,
 		} = this.props
-
 		const areaOptions = areaTable.map((area) => {
 			return {
 				value: area.name,
@@ -121,7 +122,9 @@ class EditObjectForm extends React.Component {
 
 		const validationSchema = object().shape({
 			name: string().required(locale.texts.NAME_IS_REQUIRED),
-			type: string().required(locale.texts.TYPE_IS_REQUIRED),
+			type: isOptionRequired
+				? string().required(locale.texts.TYPE_IS_REQUIRED)
+				: null,
 			asset_control_number: string()
 				.required(locale.texts.ASSET_CONTROL_NUMBER_IS_REQUIRED)
 				.test(
@@ -195,9 +198,10 @@ class EditObjectForm extends React.Component {
 								mac_address: values.mac_address
 									? values.mac_address.label.trim()
 									: '',
-								type: values.type ? values.type.value.trim() : '',
+								type: values.type
+									? values.type.value.trim()
+									: objectSubTypes[0],
 							}
-							console.log(postOption)
 							handleSubmit(postOption)
 						}}
 						render={({
@@ -368,6 +372,8 @@ EditObjectForm.propTypes = {
 	enableAdditionalOptions: PropTypes.bool,
 	typeOptionsTitle: PropTypes.string,
 	typeOption: PropTypes.string,
+	isOptionRequired: PropTypes.bool,
+	objectSubTypes: PropTypes.array,
 }
 
 export default EditObjectForm

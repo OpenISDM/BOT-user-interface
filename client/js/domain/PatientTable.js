@@ -20,6 +20,7 @@ const PatientTable = () => {
 				idText: 'ID',
 			}}
 			typeOptions={[]}
+			isOptionRequired={false}
 		/>
 	)
 }
