@@ -66,4 +66,14 @@ export default {
 				console.log(`get tracking data failed ${err}`)
 			})
 	},
+	getTrackingTableByMacAddress: async (request, response) => {
+		const { macAddress } = request.body
+		try {
+			const res = await dbQueries.getTrackingTableByMacAddress(macAddress)
+			console.log('get tracking table by mac address succeed')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get tracking table by mac address failed : ${e}`)
+		}
+	},
 }
