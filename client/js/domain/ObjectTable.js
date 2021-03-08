@@ -16,7 +16,6 @@ import { SET_TABLE_SELECTION } from '../reducer/action'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import EditObjectForm from '../components/EditObjectForm'
-import { propTypes } from 'react-widgets/lib/SelectList'
 export const SELECTION = {
 	TYPE: 'type',
 	AREA: 'area',
