@@ -59,14 +59,9 @@ class ObjectTable extends React.Component {
 	loadData = async (callback) => {
 		const { locale, auth } = this.context
 
-		const {
-			objectTypes = [],
-			objectSubTypes = [],
-		} = this.props
+		const { objectTypes = [], objectSubTypes = [] } = this.props
 
-		let{
-			typeOptions = undefined
-		} = this.props
+		let { typeOptions = undefined } = this.props
 		const objectTablePromise = API.Object.getObjectList({
 			areaIds: auth.user.area_ids,
 			objectTypes,
@@ -295,7 +290,6 @@ class ObjectTable extends React.Component {
 	handleClickButton = (e) => {
 		const { name } = e.target
 		const { locale } = this.context
-
 		switch (name) {
 			case ADD:
 				this.setState({
@@ -365,10 +359,11 @@ class ObjectTable extends React.Component {
 			deleteText,
 			addButtonVisible = true,
 			deleteButtonVisible = true,
+			objectSubTypes = [],
+			isOptionRequired = true,
 		} = this.props
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection }] = stateReducer
-
 		const typeOptions = this.state.filterSelection.typeList
 			? Object.values(this.state.filterSelection.typeList)
 			: null
@@ -529,6 +524,8 @@ class ObjectTable extends React.Component {
 					macOptions={this.state.macOptions}
 					typeOptions={this.state.typeOptions}
 					typeOption={this.props.typeOption}
+					objectSubTypes={objectSubTypes}
+					isOptionRequired={isOptionRequired}
 				/>
 
 				<DeleteConfirmationForm
@@ -561,7 +558,8 @@ ObjectTable.propTypes = {
 	typeOption: PropTypes.string,
 	addButtonVisible: PropTypes.bool,
 	deleteButtonVisible: PropTypes.bool,
-	typeOptions: PropTypes.array
+	typeOptions: PropTypes.array,
+	isOptionRequired: propTypes.bool,
 }
 
 export default ObjectTable

@@ -24,7 +24,7 @@ import CustomSettings from '../domain/CustomSettings'
 import SearchSettings from '../domain/SearchSettings'
 import GetAssignments from '../domain/GetAssignments'
 import ShiftChangeHistoricalRecord from '../domain/ShiftChangeHistoricalRecord'
-
+import ContactTree from '../domain/ContactTree'
 // import RolePermissionManagement from '../domain/RolePermissionManagement'
 // import TransferredLocationManagement from '../domain/TransferredLocationManagement';
 
@@ -92,6 +92,12 @@ export const settingModule = {
 			component:(props)=><TraceContainer {...props}/>,
 			platform: ['browser',],
 			permission: 'route:traceContainer'
+		},
+		{
+			name:'contact tree',
+			component:(props)=><ContactTree {...props}/>,
+			platform: ['browser',],
+			permission:'route:contactTree'
 		}
 	],
 }
