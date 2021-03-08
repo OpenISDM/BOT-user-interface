@@ -141,6 +141,7 @@ class BrowserContactTree extends React.Component {
 	}
 
 	filterDuplicated = (data) => {
+		console.log('>>filterDuplicated')
 		const duplicated = []
 		Object.keys(data).forEach((level) => {
 			Object.keys(data[level]).forEach((parent) => {
@@ -158,6 +159,7 @@ class BrowserContactTree extends React.Component {
 	}
 
 	handleClick = async (e) => {
+		console.log('>>handleClick')
 		const name = e.target.name
 		const { auth, locale } = this.context
 		let res = null
@@ -194,7 +196,7 @@ class BrowserContactTree extends React.Component {
 		return (
 			<BOTContainer>
 				<div className="d-flex justify-content-between">
-					<PageTitle>{locale.texts.CONTACT_TREE}</PageTitle>
+					{/* <PageTitle>{locale.texts.CONTACT_TREE}</PageTitle> */}
 					{this.state.collection.length !== 0 && (
 						<div>
 							<IconButton
