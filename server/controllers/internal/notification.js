@@ -33,7 +33,9 @@ export default {
 
 			const notificationTablePromise = NotificationTable.findAll({
 				attributes: [sequelize.literal('DISTINCT ON("mac_address") id')].concat(
-					Object.keys(NotificationTable.rawAttributes)
+					Object.keys(NotificationTable.rawAttributes).filter(
+						(key) => key !== 'id'
+					)
 				),
 				where: {
 					web_processed: {
@@ -98,6 +100,14 @@ export default {
 						notification.objectName = object.name
 						notification.objectId = object.id
 						notification.object_type = object.object_type
+
+						if (
+							object.vital_sign &&
+							object.vital_sign.last_reported_timestamp
+						) {
+							notification.violation_timestamp =
+								object.vital_sign.last_reported_timestamp
+						}
 
 						return notification
 					}
