@@ -32,11 +32,9 @@ export default {
 			})
 
 			const notificationTablePromise = NotificationTable.findAll({
-				attributes: [sequelize.literal('DISTINCT ON("mac_address") id')].concat(
-					Object.keys(NotificationTable.rawAttributes).filter(
-						(key) => key !== 'id'
-					)
-				),
+				attributes: [
+					sequelize.literal('DISTINCT ON("mac_address", "monitor_type") *'),
+				],
 				where: {
 					web_processed: {
 						[Op.eq]: null,

@@ -342,7 +342,9 @@ class MainContainer extends React.Component {
 		}
 
 		if (openedNotification) {
-			searchResult = [trackingDataMap[openedNotification.objectId]]
+			const object = trackingDataMap[openedNotification.objectId]
+			object.monitor_types = [openedNotification.monitor_type]
+			searchResult = [object]
 		}
 
 		const showDeivceObject = searchResult.some(
@@ -362,12 +364,12 @@ class MainContainer extends React.Component {
 		const clearSearchResult = searchKey.value === null
 
 		searchResult = searchResult.map((item) => {
-			const monitorType = item.monitor_type
-			if (isSameValue(monitorType, config.MONITOR_TYPE.GEO_FENCE)) {
-				item.forbidden = true
-			} else if (isSameValue(monitorType, config.MONITOR_TYPE.EMERGENCY)) {
+			const monitorTypes = item.monitor_types || []
+			if (monitorTypes.includes(config.MONITOR_TYPE.EMERGENCY)) {
 				item.emergency = true
-			} else if (isSameValue(monitorType, config.MONITOR_TYPE.VITAL_SIGN)) {
+			} else if (monitorTypes.includes(config.MONITOR_TYPE.GEO_FENCE)) {
+				item.forbidden = true
+			} else if (monitorTypes.includes(config.MONITOR_TYPE.VITAL_SIGN)) {
 				item.vitalSignAlert = true
 			} else if (item.searched) {
 				item.numberOfSearched = countNumber(searchKey, item, numberSheet)

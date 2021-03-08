@@ -12,7 +12,6 @@ export default {
 			object_table.object_type,
 			object_table.type_alias,
             object_table.list_id,
-            object_table.monitor_type,
             object_table.nickname,
             object_summary_table.uuid as lbeacon_uuid,
 			object_summary_table.first_seen_timestamp,
@@ -52,8 +51,7 @@ export default {
 				'diastolic_blood_pressure', vital_sign_summary_table.diastolic_blood_pressure,
 				'blood_oxygen', vital_sign_summary_table.blood_oxygen
 			) AS vital_sign,
-            notification.monitor_type as monitor_type,
-            notification.violation_timestamp as violation_timestamp,
+            notification.monitor_types as monitor_types,
 			COALESCE(patient_record.record, ARRAY[]::JSON[]) as records
 
 		FROM object_table
@@ -94,14 +92,10 @@ export default {
         LEFT JOIN (
             SELECT
                 mac_address,
-                monitor_type,
-                MIN(violation_timestamp) AS violation_timestamp
-            FROM (
-                SELECT * FROM notification_table
-                WHERE
-                    web_processed IS NULL
-            )	as tmp_notification_table
-            GROUP BY mac_address, monitor_type
+                ARRAY_AGG(DISTINCT monitor_type) as monitor_types
+            FROM notification_table
+            WHERE web_processed IS NULL
+            group by mac_address
 		) as notification
 		ON notification.mac_address = object_summary_table.mac_address
 
