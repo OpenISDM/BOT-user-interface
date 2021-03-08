@@ -10,7 +10,6 @@ import {
 	BOTContainer,
 	PrimaryButton,
 	NoDataFoundDiv,
-	PageTitle,
 } from '../../../components/StyleComponents'
 import Loader from '../../Loader'
 import Select from '../../../components/Select'
@@ -19,7 +18,7 @@ import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
 import pdfPackageGenerator from '../../../helper/pdfPackageGenerator'
 import { Row, Col, Card } from 'react-bootstrap'
-import NumberPicker from '../../NumberPicker'
+import NumberPicker from '../../../components/NumberPicker'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import API from '../../../api'
@@ -71,10 +70,6 @@ class BrowserContactTree extends React.Component {
 		const duplicate = []
 		const wait = []
 		const collection = []
-		// let startTime = '2020/05/13 00:00:00';
-		// let endTime = '2020/05/14 00:00:00';
-		// let startTime = moment().startOf('day');
-		// let endTime = moment();
 		const startTime = moment(fields.startTime).format()
 		const endTime = moment(fields.endTime).format()
 
@@ -95,7 +90,7 @@ class BrowserContactTree extends React.Component {
 		while (wait.length !== 0) {
 			const parent = wait.shift()
 			if (parent.level > level - 1) break
-			const res = await API.Utils.getTraceContactTree({
+			const res = await API.Trace.getContactTree({
 				child: parent.name,
 				parents: duplicate,
 				startTime: parent.startTime,
@@ -105,7 +100,7 @@ class BrowserContactTree extends React.Component {
 				this.setState({
 					collection,
 				})
-				return res.data.rows
+				res.data.rows
 					.filter((child) => !duplicate.includes(child.child))
 					.map((child) => {
 						child.name = child.child
@@ -138,24 +133,6 @@ class BrowserContactTree extends React.Component {
 		} else {
 			collection[child.level][child.parent].push(child.child)
 		}
-	}
-
-	filterDuplicated = (data) => {
-		console.log('>>filterDuplicated')
-		const duplicated = []
-		Object.keys(data).forEach((level) => {
-			Object.keys(data[level]).forEach((parent) => {
-				data[level][parent] = data[level][parent]
-					.filter((child) => {
-						return !duplicated.includes(child)
-					})
-					.map((child) => {
-						duplicated.push(child)
-						return child
-					})
-			})
-		})
-		return data
 	}
 
 	handleClick = async (e) => {

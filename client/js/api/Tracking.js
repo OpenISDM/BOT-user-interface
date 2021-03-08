@@ -15,8 +15,4 @@ export default {
 	async getTrackingTableByMacAddress({ object_mac_address }) {
 		return await post(getTrackingTableByMacAddress, { object_mac_address })
 	},
-
-	async getTraceContactTree({ child, parents, startTime, endTime }) {
-		return await post(contactTree, { child, parents, startTime, endTime })
-	},
 }
