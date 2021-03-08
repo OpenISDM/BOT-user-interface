@@ -51,6 +51,11 @@ export default {
 						},
 					],
 				},
+				order: [
+					['mac_address', 'desc'],
+					['monitor_type', 'desc'],
+					['violation_timestamp', 'desc'],
+				],
 				raw: true,
 			})
 
