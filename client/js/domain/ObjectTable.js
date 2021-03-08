@@ -559,7 +559,7 @@ ObjectTable.propTypes = {
 	addButtonVisible: PropTypes.bool,
 	deleteButtonVisible: PropTypes.bool,
 	typeOptions: PropTypes.array,
-	isOptionRequired: propTypes.bool,
+	isOptionRequired: PropTypes.bool,
 }
 
 export default ObjectTable
