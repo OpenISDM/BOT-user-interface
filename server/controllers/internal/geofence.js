@@ -1,19 +1,11 @@
 import 'dotenv/config'
-import { Op } from '../../db/connection'
+import { Op, updateOrCreate } from '../../db/connection'
 import {
 	GeoFenceConfig,
 	GeoFenceAreaConfig,
 	NotificationConfig,
+	MonitorTypeEnum,
 } from '../../db/models'
-
-const MONITOR_TYPE = {
-	NORMAL: 0,
-	GEO_FENCE: 1,
-	EMERGENCY: 2,
-	ACTIVITY: 4,
-	LOCATION: 8,
-	BED_CLEARNESS: 16,
-}
 
 export default {
 	getGeofenceConfig: async (request, response) => {
@@ -146,7 +138,7 @@ export default {
 			const geofenceNotificationConfigs = await NotificationConfig.findAll({
 				where: {
 					area_id: areaId,
-					monitor_type: MONITOR_TYPE.GEO_FENCE,
+					monitor_type: MonitorTypeEnum.GEO_FENCE,
 					name: { [Op.ne]: null },
 				},
 			})
@@ -210,40 +202,23 @@ export default {
 						end_time,
 					} = shift
 
-					const queriedShift = await NotificationConfig.findOne({
+					return await updateOrCreate({
+						model: NotificationConfig,
 						where: {
 							area_id,
 							name,
-							monitor_type: MONITOR_TYPE.GEO_FENCE,
+							monitor_type: MonitorTypeEnum.GEO_FENCE,
 						},
-					})
-					if (queriedShift) {
-						return NotificationConfig.update(
-							{
-								alert_last_sec,
-								active_alert_types,
-								enable,
-								start_time,
-								end_time,
-							},
-							{
-								where: {
-									area_id,
-									name,
-									monitor_type: MONITOR_TYPE.GEO_FENCE,
-								},
-							}
-						)
-					}
-					return NotificationConfig.create({
-						area_id,
-						name,
-						alert_last_sec,
-						active_alert_types,
-						enable,
-						start_time,
-						end_time,
-						monitor_type: MONITOR_TYPE.GEO_FENCE,
+						newItem: {
+							area_id,
+							name,
+							alert_last_sec,
+							active_alert_types,
+							enable,
+							start_time,
+							end_time,
+							monitor_type: MonitorTypeEnum.GEO_FENCE,
+						},
 					})
 				}
 			)

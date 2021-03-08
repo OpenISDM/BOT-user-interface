@@ -57,10 +57,9 @@ export default {
 								.fromNow()
 						: ''
 
-					// I forget why should do this line
-					// return Object.fromEntries(new Map(Object.entries(item)))
 					return item
 				})
+
 				response.status(200).json(toReturn)
 			})
 			.catch((err) => {

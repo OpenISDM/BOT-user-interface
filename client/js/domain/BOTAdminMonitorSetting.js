@@ -3,18 +3,21 @@ import { AppContext } from '../context/AppContext'
 import { Row, Col } from 'react-bootstrap'
 import Button from '../components/Button'
 import BOTAdminGeoFenceSetting from './BOTAdminGeoFenceSetting'
+import BOTAdminVitalSignSetting from './BOTAdminVitalSignSetting'
 
 const pages = {
-	GEO_FENCES: 0,
-	MOVEMENT_MONITORS: 1,
-	EMERGENCY_ALERT: 2,
+	GEO_FENCE: 0,
+	MOVEMENT_MONITOR: 1,
+	PATIENT_SAFETY_NOTIFICATION: 2,
+	VITAL_SIGN_ALERT: 2,
+	EMERGENCY_ALERT: 3,
 }
 
 class BOTAdminMonitorSetting extends React.Component {
 	static contextType = AppContext
 
 	state = {
-		buttonSelected: pages.GEO_FENCES,
+		buttonSelected: null,
 	}
 
 	checkButtonIsPressed = (identity) => this.state.buttonSelected === identity
@@ -29,10 +32,10 @@ class BOTAdminMonitorSetting extends React.Component {
 		let subPage
 
 		switch (this.state.buttonSelected) {
-			case pages.GEO_FENCES:
+			case pages.GEO_FENCE:
 				subPage = <BOTAdminGeoFenceSetting />
 				break
-			case pages.MOVEMENT_MONITORS:
+			case pages.MOVEMENT_MONITOR:
 				subPage = (
 					<>
 						<div className="color-black mb-2 font-size-120-percent">
@@ -64,6 +67,9 @@ class BOTAdminMonitorSetting extends React.Component {
 					</>
 				)
 				break
+			case pages.VITAL_SIGN_ALERT:
+				subPage = <BOTAdminVitalSignSetting />
+				break
 
 			default:
 				break
@@ -82,38 +88,53 @@ class BOTAdminMonitorSetting extends React.Component {
 		}
 
 		return (
-			<>
-				<Col>
-					<Row>
-						<Button
-							pressed={this.checkButtonIsPressed(pages.GEO_FENCES)}
-							style={style.pageButtons}
-							onClick={() => {
-								this.setCurrentPage(pages.GEO_FENCES)
-							}}
-							text={locale.texts.GEOFENCE}
-						/>
-						<Button
-							pressed={this.checkButtonIsPressed(pages.MOVEMENT_MONITORS)}
-							style={style.pageButtons}
-							onClick={() => {
-								this.setCurrentPage(pages.MOVEMENT_MONITORS)
-							}}
-							text={locale.texts.MOVEMENT_MONITOR}
-						/>
-						<Button
-							pressed={this.checkButtonIsPressed(pages.EMERGENCY_ALERT)}
-							style={style.pageButtons}
-							onClick={() => {
-								this.setCurrentPage(pages.EMERGENCY_ALERT)
-							}}
-							text={locale.texts.EMERGENCY_ALERT}
-						/>
-					</Row>
-					<hr />
-					{this.checkToRenderSubPage(locale)}
-				</Col>
-			</>
+			<Col>
+				<Row>
+					<Button
+						pressed={this.checkButtonIsPressed(pages.GEO_FENCE)}
+						style={style.pageButtons}
+						onClick={() => {
+							this.setCurrentPage(pages.GEO_FENCE)
+						}}
+						text={locale.texts.GEOFENCE}
+					/>
+					<Button
+						pressed={this.checkButtonIsPressed(pages.MOVEMENT_MONITOR)}
+						style={style.pageButtons}
+						onClick={() => {
+							this.setCurrentPage(pages.MOVEMENT_MONITOR)
+						}}
+						text={locale.texts.MOVEMENT_MONITOR}
+					/>
+					<Button
+						pressed={this.checkButtonIsPressed(pages.EMERGENCY_ALERT)}
+						style={style.pageButtons}
+						onClick={() => {
+							this.setCurrentPage(pages.EMERGENCY_ALERT)
+						}}
+						text={locale.texts.EMERGENCY_ALERT}
+					/>
+					<Button
+						pressed={this.checkButtonIsPressed(pages.VITAL_SIGN_ALERT)}
+						style={style.pageButtons}
+						onClick={() => {
+							this.setCurrentPage(pages.VITAL_SIGN_ALERT)
+						}}
+						text={locale.texts.VITAL_SIGN_ALERT}
+					/>
+				</Row>
+				<Row>
+					<Col
+						style={{
+							backgroundColor: 'rgb(229,229,229)',
+							height: '1px',
+							marginTop: '10px',
+							marginBottom: '10px',
+						}}
+					></Col>
+				</Row>
+				{this.checkToRenderSubPage(locale)}
+			</Col>
 		)
 	}
 }

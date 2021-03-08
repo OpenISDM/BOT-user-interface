@@ -73,7 +73,7 @@ class SearchSettings extends React.Component {
 
 	state = {
 		changedIndex: [],
-		buttonSelected: pages.VIEW_LIST,
+		buttonSelected: null,
 		objectMap: {},
 		namedListMap: {},
 		allDeviceObjects: [],

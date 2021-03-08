@@ -264,9 +264,13 @@ export const getIconColor = (item, searchObjectArray) => {
 			color = config.mapConfig.iconColor.deivce.unNormal
 		} else if (pinColorIndex > -1) {
 			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
+		} else if (item.searched) {
+			const lastIndex = config.mapConfig.iconColor.pinColorArray.length - 1
+			color = config.mapConfig.iconColor.pinColorArray[lastIndex]
 		}
 	} else if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
-		color = config.mapConfig.iconColor.person.normal
+		color = config.mapConfig.iconColor.person.normalColor
+		specifiedMarker = config.mapConfig.iconColor.person.normalMarker
 
 		if (pinColorIndex > -1) {
 			color = config.mapConfig.iconColor.pinColorArray[pinColorIndex]
@@ -319,13 +323,13 @@ export const getPopupContent = (object, objectList, locale) => {
 			}
 			if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
 				let vitalSignText = ''
-				if (item.vitalSignAlert) {
+				if (item.vital_sign && item.vital_sign.id) {
 					vitalSignText = `
-                    ${locale.texts.TEMPERATURE}: ${item.vitalSign.temperature},
-                    ${locale.texts.HEART_RATE}: ${item.vitalSign.heart_rate},
-                    ${locale.texts.SYSTOLIC_BLOOD_PRESSURE}: ${item.vitalSign.systolic_blood_pressure},
-                    ${locale.texts.DIASTOLIC_BLOOD_PRESSURE}: ${item.vitalSign.diastolic_blood_pressure},
-                    ${locale.texts.BLOOD_OXYGEN}: ${item.vitalSign.blood_oxygen},
+                    ${locale.texts.TEMPERATURE}: ${item.vital_sign.temperature},
+                    ${locale.texts.HEART_RATE}: ${item.vital_sign.heart_rate},
+                    ${locale.texts.SYSTOLIC_BLOOD_PRESSURE}: ${item.vital_sign.systolic_blood_pressure},
+                    ${locale.texts.DIASTOLIC_BLOOD_PRESSURE}: ${item.vital_sign.diastolic_blood_pressure},
+                    ${locale.texts.BLOOD_OXYGEN}: ${item.vital_sign.blood_oxygen},
                     `
 				}
 
@@ -377,4 +381,25 @@ export const getLbeaconPopupContent = (lbeacon) => {
             </div>
         </div>
     `
+}
+
+export const caculateAlertTypes = ({ bell, light, gui, sms }) => {
+	const bellBit = getBitValue({
+		status: bell ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.BELL,
+	})
+	const lightBit = getBitValue({
+		status: light ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.LIGHT,
+	})
+	const guiBit = getBitValue({
+		status: gui ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.GUI,
+	})
+	const smsBit = getBitValue({
+		status: sms ? config.STATUS_ENUM.ENABLED : config.STATUS_ENUM.DISABLED,
+		bitValueEnum: config.NOTIFICATION_ALERT_TYPES_ENUM.SMS,
+	})
+
+	return bellBit + lightBit + guiBit + smsBit
 }

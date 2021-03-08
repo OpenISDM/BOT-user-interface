@@ -23,7 +23,7 @@ class CustomSettings extends React.Component {
 		patientAliasesData: [],
 		patientAliasesColumns: [],
 		changedIndex: [],
-		buttonSelected: pages.DEVICE_ALIASES,
+		buttonSelected: null,
 	}
 
 	componentDidMount = () => {

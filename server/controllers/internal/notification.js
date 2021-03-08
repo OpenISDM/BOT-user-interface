@@ -1,15 +1,14 @@
 import 'dotenv/config'
 import _ from 'lodash'
-import { Op } from '../../db/connection'
+import { Op, sequelize } from '../../db/connection'
 import {
 	NotificationTable,
 	ObjectSummaryTable,
 	ObjectTable,
 	AreaTable,
-	LBeaconTable,
 	VitalSignSummaryTable,
 } from '../../db/models'
-import { common, ipc } from '../../helpers'
+import { ipc } from '../../helpers'
 
 export default {
 	getAllNotifications: async (request, response) => {
@@ -24,7 +23,7 @@ export default {
 					},
 					{
 						model: VitalSignSummaryTable,
-						as: 'vitalSign',
+						as: 'vital_sign',
 						required: false, // left join
 					},
 				],
@@ -33,6 +32,11 @@ export default {
 			})
 
 			const notificationTablePromise = NotificationTable.findAll({
+				attributes: [sequelize.literal('DISTINCT ON("mac_address") id')].concat(
+					Object.keys(NotificationTable.rawAttributes).filter(
+						(key) => key !== 'id'
+					)
+				),
 				where: {
 					web_processed: {
 						[Op.eq]: null,
@@ -49,27 +53,23 @@ export default {
 						},
 					],
 				},
-				order: [['id', 'DESC']],
+				raw: true,
 			})
 
 			const areaTablePromise = AreaTable.findAll({ raw: true })
-			const lbeaconTablePromise = LBeaconTable.findAll({ raw: true })
 
 			const [
 				objectTableQueried,
 				notificationTableQueried,
 				areaTable,
-				lbeaconTable,
 			] = await Promise.all([
 				objectTablePromise,
 				notificationTablePromise,
 				areaTablePromise,
-				lbeaconTablePromise,
 			])
 
 			const objectTableMap = _.keyBy(objectTableQueried, 'mac_address')
 			const areaTableMap = _.keyBy(areaTable, 'id')
-			const lbeaconTableMap = _.keyBy(lbeaconTable, 'uuid')
 
 			const lowBatteryList = objectTableQueried
 				.filter((object) => {
@@ -89,43 +89,27 @@ export default {
 				})
 
 			const notificaitonList = notificationTableQueried
-				.map((notificaiton) => {
-					const macAddress = notificaiton.mac_address
+				.map((notification) => {
+					const macAddress = notification.mac_address
 
 					// filter only registered object
-					if (objectTableMap[macAddress]) {
-						const object = common.deepClone(objectTableMap[macAddress])
-						object.area_id = notificaiton.area_id // triggered area id
-						object.areaName = areaTableMap[object.area_id].readable_name
-						object.found = true
-						object.lbeacon_coordinate = object.extend.uuid
-							? common.parseLbeaconCoordinate(object.extend.uuid)
-							: null
+					const object = objectTableMap[macAddress]
+					if (object) {
+						notification.areaName =
+							areaTableMap[notification.area_id].readable_name // triggered area name
+						notification.objectName = object.name
+						notification.objectId = object.id
+						notification.object_type = object.object_type
 
-						object.currentPosition = object.extend.uuid
-							? common.calculatePosition({
-									lbeaconUuid: object.extend.uuid,
-									baseX: object.extend.base_x,
-									baseY: object.extend.base_y,
-							  })
-							: null
-
-						object.residence_time = common
-							.moment(object.extend.last_seen_timestamp)
-							.locale('tw')
-							.fromNow()
-
-						object.lbeacon_area = { id: object.area_id, value: object.areaName }
-
-						object.location_description =
-							lbeaconTableMap[object.extend.uuid] &&
-							lbeaconTableMap[object.extend.uuid].description
-
-						object.updated_by_area = object.extend.updated_by_area
-						return {
-							object,
-							notificaiton,
+						if (
+							object.vital_sign &&
+							object.vital_sign.last_reported_timestamp
+						) {
+							notification.violation_timestamp =
+								object.vital_sign.last_reported_timestamp
 						}
+
+						return notification
 					}
 					return null
 				})
@@ -141,7 +125,7 @@ export default {
 	},
 
 	turnOffNotification: async (request, response) => {
-		const { notificationId } = request.body
+		const { notificationId, macAddress, monitorType } = request.body
 		try {
 			const res = await NotificationTable.update(
 				{
@@ -149,7 +133,8 @@ export default {
 				},
 				{
 					where: {
-						id: notificationId,
+						mac_address: macAddress,
+						monitor_type: monitorType,
 					},
 				}
 			)

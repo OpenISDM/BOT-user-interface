@@ -16,6 +16,7 @@ import userAssignments from './user-assignments'
 import namedList from './named-list'
 import notification from './notification'
 import agent from './agent'
+import vitalSignConfig from './vital-sign'
 
 export default (app) => {
 	trackingData(app)
@@ -36,4 +37,5 @@ export default (app) => {
 	namedList(app)
 	notification(app)
 	agent(app)
+	vitalSignConfig(app)
 }

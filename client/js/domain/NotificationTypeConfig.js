@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 
 const NotificationTypeConfig = ({
 	prefix = '',
-	name = '',
+	name,
 	values = {},
 	setFieldValue,
 }) => {
@@ -40,30 +40,37 @@ const NotificationTypeConfig = ({
 		},
 	]
 
-	const hasEnable = parseInt(values[`${prefix}_enable`]) === 1
+	if (prefix) {
+		prefix = `${prefix}_`
+	}
+
+	const hasEnable = parseInt(values[`${prefix}enable`]) === 1
 	const [showTimePicker, setShowTimePicker] = useState(hasEnable)
 	useEffect(() => {
 		setShowTimePicker(hasEnable)
 	}, [hasEnable])
 	const onTimeValue = showTimePicker ? onTimeOptions[1] : onTimeOptions[0]
 
-	const hasAlertLastSec = parseInt(values[`${prefix}_alert_last_sec`]) > 0
+	const hasAlertLastSec = parseInt(values[`${prefix}alert_last_sec`]) > 0
 	const [showSlider, setShowSlider] = useState(hasAlertLastSec)
 	useEffect(() => {
 		setShowSlider(hasAlertLastSec)
 	}, [hasAlertLastSec])
+
 	const closeAlertDefaultValue = showSlider
 		? closeAlertOptions[1]
 		: closeAlertOptions[0]
 
 	return (
 		<Col>
-			<div
-				className="font-size-90-percent color-black d-flex justify-content-center"
-				style={{ marginBottom: '5px' }}
-			>
-				{name}
-			</div>
+			{name ? (
+				<div
+					className="font-size-90-percent color-black d-flex justify-content-center"
+					style={{ marginBottom: '5px' }}
+				>
+					{name}
+				</div>
+			) : null}
 			<div style={{ paddingTop: '10px' }}>
 				<FormikFormGroup
 					type="text"
@@ -71,11 +78,11 @@ const NotificationTypeConfig = ({
 					component={() => (
 						<Select
 							placeholder=""
-							name={`${prefix}_enable`}
+							name={`${prefix}enable`}
 							value={onTimeValue}
 							onChange={(value) => {
 								setShowTimePicker(value.id === 2)
-								setFieldValue(`${prefix}_enable`, value.value)
+								setFieldValue(`${prefix}enable`, value.value)
 							}}
 							options={onTimeOptions}
 						/>
@@ -89,11 +96,11 @@ const NotificationTypeConfig = ({
 							{locale.texts.ENABLE_START_TIME}
 						</small>
 						<TimePicker
-							name={`${prefix}_start_time`}
+							name={`${prefix}start_time`}
 							style={{ width: '100%' }}
-							value={values[`${prefix}_start_time`]}
+							value={values[`${prefix}start_time`]}
 							onChange={(value) => {
-								setFieldValue(`${prefix}_start_time`, value)
+								setFieldValue(`${prefix}start_time`, value)
 							}}
 						/>
 					</Col>
@@ -102,11 +109,11 @@ const NotificationTypeConfig = ({
 							{locale.texts.ENABLE_END_TIME}
 						</small>
 						<TimePicker
-							name={`${prefix}_end_time`}
+							name={`${prefix}end_time`}
 							style={{ width: '100%' }}
-							value={values[`${prefix}_end_time`]}
+							value={values[`${prefix}end_time`]}
 							onChange={(value) => {
-								setFieldValue(`${prefix}_end_time`, value)
+								setFieldValue(`${prefix}end_time`, value)
 							}}
 						/>
 					</Col>
@@ -121,41 +128,41 @@ const NotificationTypeConfig = ({
 						<>
 							<Select
 								placeholder=""
-								name={`${prefix}_alert_reset`}
+								name={`${prefix}alert_reset`}
 								value={closeAlertDefaultValue}
 								onChange={(value) => {
 									setShowSlider(value.id === 2)
 									if (value.id === 1) {
-										setFieldValue(`${prefix}_alert_last_sec`, 0)
+										setFieldValue(`${prefix}alert_last_sec`, 0)
 									}
 								}}
 								options={closeAlertOptions}
 							/>
 							{showSlider ? (
 								<Slider
-									defaultValue={parseInt(values[`${prefix}_alert_last_sec`])}
+									defaultValue={parseInt(values[`${prefix}alert_last_sec`])}
 									onChange={(value) => {
-										setFieldValue(`${prefix}_alert_last_sec`, value)
+										setFieldValue(`${prefix}alert_last_sec`, value)
 									}}
 								/>
 							) : null}
 							<div style={{ paddingTop: '5px' }}>
 								<Form.Check
 									type={'switch'}
-									id={`${prefix}_flash_lights`}
-									checked={values[`${prefix}_flash_lights`]}
+									id={`${prefix}flash_lights`}
+									checked={values[`${prefix}flash_lights`]}
 									label={locale.texts.FLASH_LIGHTS}
 									onChange={(e) => {
-										setFieldValue(`${prefix}_flash_lights`, e.target.checked)
+										setFieldValue(`${prefix}flash_lights`, e.target.checked)
 									}}
 								/>
 								<Form.Check
 									type={'switch'}
-									id={`${prefix}_alert_bells`}
-									checked={values[`${prefix}_alert_bells`]}
+									id={`${prefix}alert_bells`}
+									checked={values[`${prefix}alert_bells`]}
 									label={locale.texts.ALERT_BELLS}
 									onChange={(e) => {
-										setFieldValue(`${prefix}_alert_bells`, e.target.checked)
+										setFieldValue(`${prefix}alert_bells`, e.target.checked)
 									}}
 								/>
 							</div>
@@ -172,21 +179,21 @@ const NotificationTypeConfig = ({
 						<>
 							<Form.Check
 								type={'switch'}
-								id={`${prefix}_msg_on_gui`}
-								checked={values[`${prefix}_msg_on_gui`]}
+								id={`${prefix}msg_on_gui`}
+								checked={values[`${prefix}msg_on_gui`]}
 								label={locale.texts.SHOW_MESSAGE_ON_GUI}
 								onChange={(e) => {
-									setFieldValue(`${prefix}_msg_on_gui`, e.target.checked)
+									setFieldValue(`${prefix}msg_on_gui`, e.target.checked)
 								}}
 							/>
 
 							<Form.Check
 								type={'switch'}
-								id={`${prefix}_send_sms`}
-								checked={values[`${prefix}_send_sms`]}
+								id={`${prefix}send_sms`}
+								checked={values[`${prefix}send_sms`]}
 								label={locale.texts.SEND_SMS}
 								onChange={(e) => {
-									setFieldValue(`${prefix}_send_sms`, e.target.checked)
+									setFieldValue(`${prefix}send_sms`, e.target.checked)
 								}}
 							/>
 						</>

@@ -1,21 +1,22 @@
 import React, { useState, useContext } from 'react'
-import { isEmpty } from 'lodash'
-import NotificationBadge, { Effect } from 'react-notification-badge'
 import { Row, Dropdown, Button } from 'react-bootstrap'
+import NotificationBadge, { Effect } from 'react-notification-badge'
+import { withRouter } from 'react-router-dom'
+import { isEmpty } from 'lodash'
+import moment from 'moment'
 import { AppContext } from '../context/AppContext'
 import config from '../config'
-import { getDescription } from '../helper/descriptionGenerator'
 import API from '../api'
+import { getDescription } from '../helper/descriptionGenerator'
 import { setSuccessMessage } from '../helper/messageGenerator'
-import { withRouter } from 'react-router-dom'
 import { SET_OPENED_NOTIFICATION } from '../reducer/action'
-import moment from 'moment'
 import PropTypes from 'prop-types'
 
 class NavNotification extends React.Component {
 	static contextType = AppContext
 
 	state = {
+		notificationMap: {},
 		notificaitonList: [],
 		lowBatteryList: [],
 		locale: this.context.locale.abbr,
@@ -29,7 +30,7 @@ class NavNotification extends React.Component {
 		this.getAllNotifications()
 		this.interval = setInterval(
 			this.getAllNotifications,
-			config.mapConfig.intervalTime
+			config.notificationIntervalTime
 		)
 	}
 
@@ -40,9 +41,18 @@ class NavNotification extends React.Component {
 		})
 
 		if (res) {
+			const notificaitonList = res.data.notificaitonList
+			const lowBatteryList = res.data.lowBatteryList
+			const notificationMap = {}
+
+			notificaitonList.forEach((notificaiton) => {
+				notificationMap[notificaiton.id] = notificaiton
+			})
+
 			this.setState({
-				notificaitonList: res.data.notificaitonList,
-				lowBatteryList: res.data.lowBatteryList,
+				notificationMap,
+				notificaitonList,
+				lowBatteryList,
 				locale: this.context.locale.abbr,
 			})
 
@@ -52,7 +62,7 @@ class NavNotification extends React.Component {
 			) {
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
-					value: {},
+					value: null,
 				})
 			}
 		}
@@ -61,15 +71,20 @@ class NavNotification extends React.Component {
 	handleSubmit = async (e) => {
 		const notificationId = e.target.getAttribute('notificationId')
 		const [, dispatch] = this.context.stateReducer
+		const { notificationMap } = this.state
+
 		const res = await API.Notification.turnOffNotification({
 			notificationId,
+			macAddress: notificationMap[notificationId].mac_address,
+			monitorType: notificationMap[notificationId].monitor_type,
 		})
 
 		if (res) {
 			await setSuccessMessage('save success')
+			await this.getAllNotifications()
 			dispatch({
 				type: SET_OPENED_NOTIFICATION,
-				value: {},
+				value: null,
 			})
 		}
 	}
@@ -135,7 +150,7 @@ class NavNotification extends React.Component {
 							style={style.dropdownList}
 						>
 							{notificaitonList.length !== 0 ? (
-								notificaitonList.map(({ object, notificaiton }, index) => {
+								notificaitonList.map((notificaiton, index) => {
 									const monitorTypeString = this.getMonitorTypeText(
 										notificaiton.monitor_type,
 										locale
@@ -152,7 +167,7 @@ class NavNotification extends React.Component {
 											<Row style={style.list}>
 												<Button variant="light" disabled={true}>
 													&#8729;{monitorTypeString}:{' '}
-													{`${object.areaName}, ${object.name} ${violationTimestamp}`}
+													{`${notificaiton.areaName}, ${notificaiton.objectName} ${violationTimestamp}`}
 												</Button>
 												<Row
 													style={{
@@ -165,11 +180,7 @@ class NavNotification extends React.Component {
 														onClick={() => {
 															dispatch({
 																type: SET_OPENED_NOTIFICATION,
-																value: {
-																	monitorTypeString,
-																	object,
-																	notificaiton,
-																},
+																value: notificaiton,
 															})
 
 															history.push('/')
@@ -278,7 +289,7 @@ const DropdownPersist = (props) => {
 		if (!isOpen) {
 			dispatch({
 				type: SET_OPENED_NOTIFICATION,
-				value: {},
+				value: null,
 			})
 		}
 	}
