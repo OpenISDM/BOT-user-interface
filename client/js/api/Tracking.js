@@ -15,5 +15,4 @@ export default {
 	async getTrackingTableByMacAddress({ object_mac_address }) {
 		return await post(getTrackingTableByMacAddress, { object_mac_address })
 	},
-
 }
