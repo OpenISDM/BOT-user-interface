@@ -323,7 +323,7 @@ export const getPopupContent = (object, objectList, locale) => {
 			}
 			if (isSameValue(item.object_type, config.OBJECT_TYPE.PERSON)) {
 				let vitalSignText = ''
-				if (item.vitalSignAlert) {
+				if (item.vital_sign && item.vital_sign.id) {
 					vitalSignText = `
                     ${locale.texts.TEMPERATURE}: ${item.vital_sign.temperature},
                     ${locale.texts.HEART_RATE}: ${item.vital_sign.heart_rate},
