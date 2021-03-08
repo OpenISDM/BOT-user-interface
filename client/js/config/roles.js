@@ -81,6 +81,7 @@ const rules = {
 			'route:gateway',
 			'route:agent',
 			'route:traceContainer',
+			'roote:contactTree',
 
 			'user:mydevice',
 			'user:mypatient',
