@@ -45,7 +45,7 @@ class NavNotification extends React.Component {
 			const lowBatteryList = res.data.lowBatteryList
 			const notificationMap = {}
 
-			notificaitonList.forEach(({ notificaiton }) => {
+			notificaitonList.forEach((notificaiton) => {
 				notificationMap[notificaiton.id] = notificaiton
 			})
 
@@ -62,7 +62,7 @@ class NavNotification extends React.Component {
 			) {
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
-					value: {},
+					value: null,
 				})
 			}
 		}
@@ -83,7 +83,7 @@ class NavNotification extends React.Component {
 			await setSuccessMessage('save success')
 			dispatch({
 				type: SET_OPENED_NOTIFICATION,
-				value: {},
+				value: null,
 			})
 		}
 	}
@@ -149,7 +149,7 @@ class NavNotification extends React.Component {
 							style={style.dropdownList}
 						>
 							{notificaitonList.length !== 0 ? (
-								notificaitonList.map(({ object, notificaiton }, index) => {
+								notificaitonList.map((notificaiton, index) => {
 									const monitorTypeString = this.getMonitorTypeText(
 										notificaiton.monitor_type,
 										locale
@@ -166,7 +166,7 @@ class NavNotification extends React.Component {
 											<Row style={style.list}>
 												<Button variant="light" disabled={true}>
 													&#8729;{monitorTypeString}:{' '}
-													{`${object.areaName}, ${object.name} ${violationTimestamp}`}
+													{`${notificaiton.areaName}, ${notificaiton.objectName} ${violationTimestamp}`}
 												</Button>
 												<Row
 													style={{
@@ -179,11 +179,7 @@ class NavNotification extends React.Component {
 														onClick={() => {
 															dispatch({
 																type: SET_OPENED_NOTIFICATION,
-																value: {
-																	monitorTypeString,
-																	object,
-																	notificaiton,
-																},
+																value: notificaiton,
 															})
 
 															history.push('/')
@@ -292,7 +288,7 @@ const DropdownPersist = (props) => {
 		if (!isOpen) {
 			dispatch({
 				type: SET_OPENED_NOTIFICATION,
-				value: {},
+				value: null,
 			})
 		}
 	}

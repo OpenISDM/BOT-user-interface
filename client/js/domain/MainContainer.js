@@ -229,12 +229,12 @@ class MainContainer extends React.Component {
 	getResultBySearchKey = async (searchKey) => {
 		const { stateReducer } = this.context
 		const [{ openedNotification }] = stateReducer
-		const { object: notifiedObject } = openedNotification
 		const { trackingData, pinColorArray, groupIds } = this.state
 
 		let searchResult = []
 		let suggestions = []
 		let { searchObjectArray } = this.state
+		const { trackingDataMap } = this.state
 		const numberSheet = {}
 
 		const activeActionButtons = []
@@ -341,8 +341,8 @@ class MainContainer extends React.Component {
 				}
 		}
 
-		if (notifiedObject) {
-			searchResult = [notifiedObject]
+		if (openedNotification) {
+			searchResult = [trackingDataMap[openedNotification.objectId]]
 		}
 
 		const showDeivceObject = searchResult.some(
@@ -456,7 +456,7 @@ class MainContainer extends React.Component {
 				})
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
-					value: {},
+					value: null,
 				})
 				break
 		}

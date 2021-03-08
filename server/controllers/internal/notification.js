@@ -6,10 +6,9 @@ import {
 	ObjectSummaryTable,
 	ObjectTable,
 	AreaTable,
-	LBeaconTable,
 	VitalSignSummaryTable,
 } from '../../db/models'
-import { common, ipc } from '../../helpers'
+import { ipc } from '../../helpers'
 
 export default {
 	getAllNotifications: async (request, response) => {
@@ -56,23 +55,19 @@ export default {
 			})
 
 			const areaTablePromise = AreaTable.findAll({ raw: true })
-			const lbeaconTablePromise = LBeaconTable.findAll({ raw: true })
 
 			const [
 				objectTableQueried,
 				notificationTableQueried,
 				areaTable,
-				lbeaconTable,
 			] = await Promise.all([
 				objectTablePromise,
 				notificationTablePromise,
 				areaTablePromise,
-				lbeaconTablePromise,
 			])
 
 			const objectTableMap = _.keyBy(objectTableQueried, 'mac_address')
 			const areaTableMap = _.keyBy(areaTable, 'id')
-			const lbeaconTableMap = _.keyBy(lbeaconTable, 'uuid')
 
 			const lowBatteryList = objectTableQueried
 				.filter((object) => {
@@ -92,43 +87,19 @@ export default {
 				})
 
 			const notificaitonList = notificationTableQueried
-				.map((notificaiton) => {
-					const macAddress = notificaiton.mac_address
+				.map((notification) => {
+					const macAddress = notification.mac_address
 
 					// filter only registered object
-					if (objectTableMap[macAddress]) {
-						const object = common.deepClone(objectTableMap[macAddress])
-						object.area_id = notificaiton.area_id // triggered area id
-						object.areaName = areaTableMap[object.area_id].readable_name
-						object.found = true
-						object.lbeacon_coordinate = object.extend.uuid
-							? common.parseLbeaconCoordinate(object.extend.uuid)
-							: null
+					const object = objectTableMap[macAddress]
+					if (object) {
+						notification.areaName =
+							areaTableMap[notification.area_id].readable_name // triggered area name
+						notification.objectName = object.name
+						notification.objectId = object.id
+						notification.object_type = object.object_type
 
-						object.currentPosition = object.extend.uuid
-							? common.calculatePosition({
-									lbeaconUuid: object.extend.uuid,
-									baseX: object.extend.base_x,
-									baseY: object.extend.base_y,
-							  })
-							: null
-
-						object.residence_time = common
-							.moment(object.extend.last_seen_timestamp)
-							.locale('tw')
-							.fromNow()
-
-						object.lbeacon_area = { id: object.area_id, value: object.areaName }
-
-						object.location_description =
-							lbeaconTableMap[object.extend.uuid] &&
-							lbeaconTableMap[object.extend.uuid].description
-
-						object.updated_by_area = object.extend.updated_by_area
-						return {
-							object,
-							notificaiton,
-						}
+						return notification
 					}
 					return null
 				})
