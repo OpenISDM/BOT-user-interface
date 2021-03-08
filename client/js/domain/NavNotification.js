@@ -81,6 +81,7 @@ class NavNotification extends React.Component {
 
 		if (res) {
 			await setSuccessMessage('save success')
+			await this.getAllNotifications()
 			dispatch({
 				type: SET_OPENED_NOTIFICATION,
 				value: null,
