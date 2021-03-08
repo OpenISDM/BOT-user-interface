@@ -10,7 +10,6 @@ import {
 	BOTContainer,
 	PrimaryButton,
 	NoDataFoundDiv,
-	PageTitle,
 } from '../../../components/StyleComponents'
 import Loader from '../../Loader'
 import Select from '../../../components/Select'
@@ -19,7 +18,7 @@ import styleSheet from '../../../config/styleSheet'
 import config from '../../../config'
 import pdfPackageGenerator from '../../../helper/pdfPackageGenerator'
 import { Row, Col, Card } from 'react-bootstrap'
-import NumberPicker from '../../NumberPicker'
+import NumberPicker from '../../../components/NumberPicker'
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import momentLocalizer from 'react-widgets-moment'
 import API from '../../../api'
