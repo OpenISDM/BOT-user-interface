@@ -69,7 +69,7 @@ export default {
 	getTrackingTableByMacAddress: async (request, response) => {
 		const { macAddress } = request.body
 		try {
-			const res = await dbQueries.getTrackingTableByMacAddress(macAddress)
+			const res = await pool.query(dbQueries.getTrackingTableByMacAddress(macAddress))
 			console.log('get tracking table by mac address succeed')
 			response.status(200).json(res)
 		} catch (e) {
