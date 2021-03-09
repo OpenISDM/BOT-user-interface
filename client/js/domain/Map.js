@@ -144,6 +144,8 @@ class Map extends React.Component {
 			this.mapLayer.addLayer(this.imageLayerMap[url])
 			this.mapLayer.fitBounds(bounds)
 			this.previousImageLayer = this.imageLayerMap[url]
+			console.log(bounds, url)
+			console.log(this.mapLayer.hasLayer(this.imageLayerMap[url]))
 		}
 	}
 
