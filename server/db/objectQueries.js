@@ -41,27 +41,18 @@ const addPerson = (formOption) => {
 }
 
 const editPerson = (formOption) => {
-	const text = `
-		UPDATE object_table
-		SET name = $2,
-			mac_address = $3,
-			area_id = $4
-		WHERE asset_control_number = $1
+	return `
+		update
+			object_table
+		set
+			name = '${formOption.name}',
+			mac_address = '${formOption.mac_address}',
+			area_id = '${formOption.area_id}',
+			type = '${formOption.type}',
+			asset_control_number = '${formOption.asset_control_number}'
+		where
+			id = '${formOption.id}';
 	`
-
-	const values = [
-		formOption.asset_control_number,
-		formOption.name,
-		formOption.mac_address,
-		formOption.area_id,
-	]
-
-	const query = {
-		text,
-		values,
-	}
-
-	return query
 }
 
 const editDevice = (formOption) => {
