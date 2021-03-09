@@ -275,6 +275,16 @@ class SearchResultList extends React.Component {
 		)
 	}
 
+	handleClick = () => {
+		this.props.highlightSearchPanel(true)
+		this.setState({
+			showEditObjectForm: true,
+			selectedObjectData: this.props.searchResult,
+			selection: this.props.searchResult.map((a) => a.mac_address),
+			showAddDevice: true,
+		})
+	}
+
 	render() {
 		const { locale } = this.context
 		const {
