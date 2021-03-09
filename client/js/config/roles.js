@@ -79,7 +79,7 @@ const rules = {
 			'route:gateway',
 			'route:agent',
 			'route:traceContainer',
-			'roote:contactTree',
+			'route:contactTree',
 
 			'user:mydevice',
 			'user:mypatient',
