@@ -141,6 +141,9 @@ export default {
 								object.vital_sign.last_reported_timestamp
 						}
 
+						notification.currentPositionAreaId =
+							object.currentPosition[2] || object.area_id
+
 						return {
 							object,
 							notification,
