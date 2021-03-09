@@ -17,7 +17,7 @@ class NavNotification extends React.Component {
 
 	state = {
 		notificationMap: {},
-		notificaitonList: [],
+		notificationList: [],
 		lowBatteryList: [],
 		locale: this.context.locale.abbr,
 	}
@@ -41,24 +41,24 @@ class NavNotification extends React.Component {
 		})
 
 		if (res) {
-			const notificaitonList = res.data.notificaitonList
+			const notificationList = res.data.notificationList
 			const lowBatteryList = res.data.lowBatteryList
 			const notificationMap = {}
 
-			notificaitonList.forEach((notificaiton) => {
-				notificationMap[notificaiton.id] = notificaiton
+			notificationList.forEach(({ notification }) => {
+				notificationMap[notification.id] = notification
 			})
 
 			this.setState({
 				notificationMap,
-				notificaitonList,
+				notificationList,
 				lowBatteryList,
 				locale: this.context.locale.abbr,
 			})
 
 			if (
 				!isEmpty(openedNotification) &&
-				res.data.notificaitonList.length === 0
+				res.data.notificationList.length === 0
 			) {
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
@@ -95,7 +95,7 @@ class NavNotification extends React.Component {
 
 	render() {
 		const { history } = this.props
-		const { notificaitonList, lowBatteryList } = this.state
+		const { notificationList, lowBatteryList } = this.state
 		const { locale, stateReducer } = this.context
 		const [, dispatch] = stateReducer
 		const style = {
@@ -125,7 +125,7 @@ class NavNotification extends React.Component {
 					>
 						<i className="fas fa-bell" style={style.icon}>
 							<NotificationBadge
-								count={notificaitonList.length}
+								count={notificationList.length}
 								effect={Effect.SCALE}
 								style={{
 									top: '-28px',
@@ -149,15 +149,15 @@ class NavNotification extends React.Component {
 							className="overflow-hidden-scroll custom-scrollbar"
 							style={style.dropdownList}
 						>
-							{notificaitonList.length !== 0 ? (
-								notificaitonList.map((notificaiton, index) => {
+							{notificationList.length !== 0 ? (
+								notificationList.map(({ notification, object }, index) => {
 									const monitorTypeString = this.getMonitorTypeText(
-										notificaiton.monitor_type,
+										notification.monitor_type,
 										locale
 									)
 
 									const violationTimestamp = moment(
-										notificaiton.violation_timestamp
+										notification.violation_timestamp
 									)
 										.locale(locale.abbr)
 										.format('HH:mm:ss')
@@ -167,7 +167,7 @@ class NavNotification extends React.Component {
 											<Row style={style.list}>
 												<Button variant="light" disabled={true}>
 													&#8729;{monitorTypeString}:{' '}
-													{`${notificaiton.areaName}, ${notificaiton.objectName} ${violationTimestamp}`}
+													{`${object.areaName}, ${object.name} ${violationTimestamp}`}
 												</Button>
 												<Row
 													style={{
@@ -180,7 +180,7 @@ class NavNotification extends React.Component {
 														onClick={() => {
 															dispatch({
 																type: SET_OPENED_NOTIFICATION,
-																value: notificaiton,
+																value: { notification, object },
 															})
 
 															history.push('/')
@@ -190,7 +190,7 @@ class NavNotification extends React.Component {
 														{locale.texts.LOCATE}
 													</Button>
 													<Button
-														notificationId={notificaiton.id}
+														notificationId={notification.id}
 														variant="primary"
 														onClick={this.handleSubmit}
 													>

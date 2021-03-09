@@ -6,9 +6,10 @@ import {
 	ObjectSummaryTable,
 	ObjectTable,
 	AreaTable,
+	LBeaconTable,
 	VitalSignSummaryTable,
 } from '../../db/models'
-import { ipc } from '../../helpers'
+import { common, ipc } from '../../helpers'
 
 export default {
 	getAllNotifications: async (request, response) => {
@@ -32,11 +33,9 @@ export default {
 			})
 
 			const notificationTablePromise = NotificationTable.findAll({
-				attributes: [sequelize.literal('DISTINCT ON("mac_address") id')].concat(
-					Object.keys(NotificationTable.rawAttributes).filter(
-						(key) => key !== 'id'
-					)
-				),
+				attributes: [
+					sequelize.literal('DISTINCT ON("mac_address", "monitor_type") *'),
+				],
 				where: {
 					web_processed: {
 						[Op.eq]: null,
@@ -53,23 +52,32 @@ export default {
 						},
 					],
 				},
+				order: [
+					['mac_address', 'desc'],
+					['monitor_type', 'desc'],
+					['violation_timestamp', 'desc'],
+				],
 				raw: true,
 			})
 
 			const areaTablePromise = AreaTable.findAll({ raw: true })
+			const lbeaconTablePromise = LBeaconTable.findAll({ raw: true })
 
 			const [
 				objectTableQueried,
 				notificationTableQueried,
 				areaTable,
+				lbeaconTable,
 			] = await Promise.all([
 				objectTablePromise,
 				notificationTablePromise,
 				areaTablePromise,
+				lbeaconTablePromise,
 			])
 
 			const objectTableMap = _.keyBy(objectTableQueried, 'mac_address')
 			const areaTableMap = _.keyBy(areaTable, 'id')
+			const lbeaconTableMap = _.keyBy(lbeaconTable, 'uuid')
 
 			const lowBatteryList = objectTableQueried
 				.filter((object) => {
@@ -88,18 +96,42 @@ export default {
 					return object
 				})
 
-			const notificaitonList = notificationTableQueried
+			const notificationList = notificationTableQueried
 				.map((notification) => {
 					const macAddress = notification.mac_address
+					const targetObject = objectTableMap[macAddress]
+					if (targetObject) {
+						const object = common.deepClone(targetObject)
+						object.area_id = notification.area_id // triggered area id
+						object.areaName = areaTableMap[object.area_id].readable_name
+						object.found = true
+						object.lbeacon_coordinate = object.extend.uuid
+							? common.parseLbeaconCoordinate(object.extend.uuid)
+							: null
 
-					// filter only registered object
-					const object = objectTableMap[macAddress]
-					if (object) {
-						notification.areaName =
-							areaTableMap[notification.area_id].readable_name // triggered area name
-						notification.objectName = object.name
-						notification.objectId = object.id
-						notification.object_type = object.object_type
+						object.currentPosition = object.extend.uuid
+							? common.calculatePosition({
+									lbeaconUuid: object.extend.uuid,
+									baseX: object.extend.base_x,
+									baseY: object.extend.base_y,
+							  })
+							: null
+
+						object.residence_time = common
+							.moment(object.extend.last_seen_timestamp)
+							.locale('tw')
+							.fromNow()
+
+						object.lbeacon_area = {
+							id: object.area_id,
+							value: object.areaName,
+						}
+
+						object.location_description =
+							lbeaconTableMap[object.extend.uuid] &&
+							lbeaconTableMap[object.extend.uuid].description
+
+						object.updated_by_area = object.extend.updated_by_area
 
 						if (
 							object.vital_sign &&
@@ -109,14 +141,20 @@ export default {
 								object.vital_sign.last_reported_timestamp
 						}
 
-						return notification
+						notification.currentPositionAreaId =
+							object.currentPosition[2] || object.area_id
+
+						return {
+							object,
+							notification,
+						}
 					}
 					return null
 				})
 				.filter((item) => item)
 
 			response.status(200).json({
-				notificaitonList,
+				notificationList,
 				lowBatteryList,
 			})
 		} catch (e) {

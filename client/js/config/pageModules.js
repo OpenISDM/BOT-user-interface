@@ -154,7 +154,7 @@ export const reportContainerModule = {
 		},
 		{
 			name: 'Request Object Trace',
-			component: (props) => <TraceContainer {...props}/>,
+			component: () => null,
 			platform: ['browser', 'tablet', 'mobile'],
 		},
 		{

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import {  ButtonToolbar } from 'react-bootstrap'
+import { ButtonToolbar } from 'react-bootstrap'
 import { AppContext } from '../context/AppContext'
 import DeleteConfirmationForm from '../domain/DeleteConfirmationForm'
 import AccessControl from '../domain/AccessControl'
@@ -119,7 +119,12 @@ class SettingTable extends React.Component {
 		const { locale, stateReducer } = this.context
 		const [{ tableSelection = [] }] = stateReducer
 		const { selectedRowData, isMultiSelection, data } = this.state
-		const { columns, isShowDescription = true, isShowUUID=true , formTitle = ''} = this.props
+		const {
+			columns,
+			isShowDescription = true,
+			isShowUUID = true,
+			formTitle = '',
+		} = this.props
 
 		return (
 			<>
