@@ -39,7 +39,7 @@ export default {
 						process.env.OBJECT_FOUND_TIME_INTERVAL_IN_SEC
 
 					/** Set the boolean if its rssi is below the specific rssi threshold  */
-					const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD ? 1 : 0
+					const isMatchRssi = item.rssi > process.env.RSSI_THRESHOLD
 
 					/** Flag the object that satisfied the time period and rssi threshold */
 					item.found = isInTheTimePeriod && isMatchRssi
