@@ -196,7 +196,7 @@ class Map extends React.Component {
 		this.pathOfDevice.clearLayers()
 		if (this.props.pathMacAddress !== '') {
 			const route = []
-			const res = await API.Utils.getTrackingTableByMacAddress({
+			const res = await API.Tracking.getTrackingTableByMacAddress({
 				object_mac_address: this.props.pathMacAddress,
 			})
 			if (res) {
