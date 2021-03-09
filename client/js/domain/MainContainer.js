@@ -1,9 +1,8 @@
-import { keyBy } from 'lodash'
 import React, { Fragment } from 'react'
-import 'react-table/react-table.css'
+import { BrowserView, MobileOnlyView, TabletView } from 'react-device-detect'
+import { keyBy } from 'lodash'
 import config from '../config'
 import { AppContext } from '../context/AppContext'
-import { BrowserView, MobileOnlyView, TabletView } from 'react-device-detect'
 import TabletMainContainer from './platform/tablet/TabletMainContainer'
 import MobileMainContainer from './platform/mobile/MobileMainContainer'
 import BrowserMainContainer from './platform/browser/BrowserMainContainer'
@@ -228,13 +227,12 @@ class MainContainer extends React.Component {
 	 */
 	getResultBySearchKey = async (searchKey) => {
 		const { stateReducer } = this.context
-		const [{ openedNotification }] = stateReducer
 		const { trackingData, pinColorArray, groupIds } = this.state
+		const [{ openedNotification }] = stateReducer
 
 		let searchResult = []
 		let suggestions = []
 		let { searchObjectArray } = this.state
-		const { trackingDataMap } = this.state
 		const numberSheet = {}
 
 		const activeActionButtons = []
@@ -342,8 +340,8 @@ class MainContainer extends React.Component {
 		}
 
 		if (openedNotification) {
-			const object = trackingDataMap[openedNotification.objectId]
-			object.monitor_types = [openedNotification.monitor_type]
+			const { object, notification } = openedNotification
+			object.monitor_types = [notification.monitor_type]
 			searchResult = [object]
 		}
 
