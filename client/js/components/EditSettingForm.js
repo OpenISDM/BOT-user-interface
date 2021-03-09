@@ -23,9 +23,7 @@ const EditSettingForm = ({
 			size="md"
 			className="text-capitalize"
 		>
-			<Modal.Header closeButton>
-				{title}
-			</Modal.Header>
+			<Modal.Header closeButton>{title}</Modal.Header>
 			<Modal.Body>
 				<Formik
 					initialValues={{
