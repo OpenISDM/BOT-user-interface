@@ -2,7 +2,6 @@ import { post } from './utils/request'
 
 const trackingData = '/data/trackingData'
 const getTrackingTableByMacAddress = '/data/getTrackingTableByMacAddress'
-const contactTree = '/data/trace/contactTree'
 
 export default {
 	async getTrackingData({ areaIds, locale }) {
