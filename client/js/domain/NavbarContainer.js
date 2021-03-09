@@ -108,8 +108,9 @@ class NavbarContainer extends React.Component {
 	}
 
 	render = () => {
-		const { locale, auth } = this.context
+		const { locale, auth, stateReducer } = this.context
 		const { areaOptionsMap } = this.state
+		const [{ area }] = stateReducer
 		const areaOptions = Object.values(areaOptionsMap)
 		const currentArea = this.getCurrentArea()
 		this.setCurrentArea(currentArea)
@@ -247,7 +248,7 @@ class NavbarContainer extends React.Component {
 								permission="user:batteryNotice"
 								platform={['browser', 'tablet']}
 							>
-								<NavNotification />
+								<NavNotification key={area.id} />
 							</AccessControl>
 							<Dropdown
 								className="mx-1 font-weight-500"
