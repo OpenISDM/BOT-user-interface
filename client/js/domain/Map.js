@@ -1,6 +1,7 @@
 import React from 'react'
 import L from 'leaflet'
 import 'leaflet.markercluster'
+import 'leaflet-polylinedecorator'
 import '../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../context/AppContext'
 import { isMobileOnly, isBrowser, isTablet } from 'react-device-detect'
@@ -121,7 +122,6 @@ class Map extends React.Component {
 				shouldUpdateTrackingData: true,
 			})
 		})
-
 		this.setMap()
 	}
 
@@ -197,7 +197,7 @@ class Map extends React.Component {
 		if (this.props.pathMacAddress !== '') {
 			const route = []
 			const res = await API.Tracking.getTrackingTableByMacAddress({
-				object_mac_address: this.props.pathMacAddress,
+				macAddress: this.props.pathMacAddress,
 			})
 			if (res) {
 				let preUUID = ''
@@ -205,7 +205,6 @@ class Map extends React.Component {
 					if (item.uuid !== preUUID) {
 						preUUID = item.uuid
 						const latLng = [item.base_y, item.base_x]
-
 						/** Calculate the position of the object  */
 						const pos = macAddressToCoordinate(
 							item.mac_address,
@@ -217,12 +216,10 @@ class Map extends React.Component {
 							radius: 3,
 							color: 'lightgrey',
 						})
-
 						this.pathOfDevice.addLayer(marker)
 						route.push(pos)
 					}
 				})
-
 				const polyline = L.polyline(route, {
 					color: 'black',
 					dashArray: '1,1',
