@@ -28,7 +28,8 @@ class Map extends React.Component {
 	}
 
 	mapLayer = null
-	imageLayer = null
+	previousImageLayer = null
+	imageLayerMap = {}
 	pathOfDevice = L.layerGroup()
 	markersLayer = L.layerGroup()
 	errorCircle = L.layerGroup()
@@ -131,31 +132,19 @@ class Map extends React.Component {
 		const { bounds, map_image_path } = area
 		const url = map_image_path ? `${baseURL}/map/${map_image_path}` : null
 
-		const removeImageLayer = !url && this.mapLayer.hasLayer(this.imageLayer)
-		if (removeImageLayer) {
-			this.mapLayer.removeLayer(this.imageLayer)
-			this.imageLayer = null
-			return
+		if (this.previousImageLayer) {
+			this.mapLayer.removeLayer(this.previousImageLayer)
 		}
 
-		if (!bounds || !url) return
+		if (bounds && url) {
+			if (!this.imageLayerMap[url]) {
+				this.imageLayerMap[url] = L.imageOverlay(url, bounds)
+			}
 
-		const hasNoImageLayer = this.imageLayer === null
-		if (hasNoImageLayer) {
-			// add Image layer
-			this.imageLayer = L.imageOverlay(url, bounds)
-			this.mapLayer.addLayer(this.imageLayer)
-		} else {
-			// set new image url
-			this.imageLayer.setUrl(url)
-			this.imageLayer.setBounds(bounds)
+			this.mapLayer.addLayer(this.imageLayerMap[url])
+			this.mapLayer.fitBounds(bounds)
+			this.previousImageLayer = this.imageLayerMap[url]
 		}
-
-		this.mapLayer.fitBounds(bounds)
-
-		// we call it twice to make sure map bounds are correct
-		// TODO: Johnson, this will be refactor, now just a workaround
-		this.mapLayer.fitBounds(bounds)
 	}
 
 	/** Calculate the current scale for creating markers and resizing. */
