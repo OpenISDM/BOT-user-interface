@@ -434,6 +434,7 @@ class Map extends React.Component {
 
 				/** Set the marker's event. */
 				marker.on('mouseover', () => {
+					this.mapLayer.flyTo(item.currentPosition)
 					marker.openPopup()
 					this.setState({
 						shouldUpdateTrackingData: false,
