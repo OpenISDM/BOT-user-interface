@@ -19,4 +19,11 @@ export default {
 			endTime,
 		})
 	},
+	async getTracePathByObjectIds({objectIds, startTime, endTime}){
+		return await post ('/data/trace/path',{
+			objectIds,
+			startTime,
+			endTime,
+		})
+	}
 }

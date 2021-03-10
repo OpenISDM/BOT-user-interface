@@ -14,8 +14,10 @@ export default {
 		if (res) {
 			res.rows.map((item) => {
 				if (item.duration) {
-					item.residenceTime = common.moment(item.end_time)
-						.locale(locale).from(common.moment(item.start_time))
+					item.residenceTime = common
+						.moment(item.end_time)
+						.locale(locale)
+						.from(common.moment(item.start_time))
 				}
 				return item
 			})
@@ -46,5 +48,18 @@ export default {
 			.catch((err) => {
 				console.log(`get contact tree failed ${err}`)
 			})
+	},
+
+	getTracePathByObjectId: async (request, response) => {
+		const { objectIds, startTime, endTime } = request.body
+		try {
+			const res = await pool.query(
+				dbQueries.getTracePathByObjectId(objectIds, startTime, endTime)
+			)
+			console.log('get trace path by object id succeed.')
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get trace path by object id failed : ${e}`)
+		}
 	},
 }

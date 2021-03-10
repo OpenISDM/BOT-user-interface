@@ -218,12 +218,11 @@ export default {
 				`
 				break
 		}
-
 		return query
 	},
 
 	getContactTree: (child, duplicate, startTime, endTime) => {
-		const query = `
+		return `
 			WITH parent AS (
 				WITH ranges AS (
 					SELECT
@@ -331,6 +330,67 @@ export default {
 				start_time ASC
 
 			`
-		return query
+	},
+	getTracePathByObjectId: (objectIds, startTime, endTime) => {
+		return `
+		WITH range_table AS(
+   			SELECT
+				object_id,
+   				area_id,
+   				uuid,
+   				record_timestamp,
+  				CASE
+   					WHEN LAG(uuid) OVER 
+						(PARTITION BY object_id ORDER BY object_id, record_timestamp) = uuid
+        			THEN 
+						NULL
+   					ELSE 1
+   				END AS r
+    		FROM (
+        		SELECT
+   					lht.object_id AS object_id,
+            		lht.area_id AS area_id,
+            		lht.uuid AS uuid,
+            		lht.record_timestamp AS record_timestamp
+        		FROM 
+					location_history_table lht
+				INNER JOIN object_table ot
+        		ON lht.object_id = ot.asset_control_number    
+        	WHERE
+            	record_timestamp > '${endTime}'
+            	AND	record_timestamp < '${startTime}'
+   				AND	lht.object_id in (${objectIds.map((item) => `'${item}'`)})
+   			) AS raw_data
+		), group_table AS (
+    		SELECT
+   				object_id,
+   				area_id,
+   				uuid,
+   				record_timestamp,
+   				r,
+   				SUM(r) OVER (ORDER BY object_id, record_timestamp) grp
+
+    		FROM 
+				range_table
+		)
+		SELECT
+    		object_id,
+    		area_id,
+    		uuid,
+    		EXTRACT(EPOCH FROM (MIN(record_timestamp)))::INTEGER AS start_time,
+    		EXTRACT(EPOCH FROM (MAX(record_timestamp)))::INTEGER AS end_time,
+    		(EXTRACT(EPOCH FROM (MAX(record_timestamp))) - EXTRACT(EPOCH FROM(MIN(record_timestamp))))::INTEGER AS duration
+		From 
+			group_table gps
+		GROUP BY
+			grp,
+			gps.object_id,
+			gps.area_id,
+			gps.uuid
+		ORDER BY
+			grp asc,
+			object_id asc,
+			start_time asc
+		`
 	},
 }

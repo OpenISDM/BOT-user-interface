@@ -115,16 +115,4 @@ export default {
 	`
 		return query
 	},
-	getTrackingTableByMacAddress: (macAddress) =>{
-		return `
-			select *
-			from
-				location_history_table
-			where
-				mac_address = '${macAddress}'
-				and record_timestamp > now() - interval '1 hour' 
-			ORDER BY  
-				record_timestamp ASC;
-		`
-	}
 }

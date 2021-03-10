@@ -8,4 +8,8 @@ export default (app) => {
 	app
 		.route('/data/trace/contactTree')
 		.post(locationHistoryController.getContactTree)
+
+	app
+		.route('/data/trace/path')
+		.post(locationHistoryController.getTracePathByObjectId)
 }
