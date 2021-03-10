@@ -129,18 +129,21 @@ export default {
 			})
 	},
 
-	editSecondaryArea: (request, response) => {
-		const { user } = request.body
-
-		pool
-			.query(dbQueries.editSecondaryArea(user))
-			.then((res) => {
-				console.log('set secondary area succeed')
-				response.status(200).json(res)
-			})
-			.catch((err) => {
-				console.log(`set secondary area failed ${err}`)
-			})
+	setLastLoginArea: async (request, response) => {
+		const { areaId, userId } = request.body
+		try {
+			await UserTable.update(
+				{ last_login_area: areaId },
+				{
+					where: {
+						id: userId,
+					},
+				}
+			)
+			response.status(200).json('OK')
+		} catch (e) {
+			console.log(`setLastLoginArea failed ${e}`)
+		}
 	},
 
 	editPassword: (request, response) => {

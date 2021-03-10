@@ -93,25 +93,6 @@ class Auth extends React.Component {
 		setCookies('user', toBeStored)
 	}
 
-	setArea = async (area_ids, callback) => {
-		const user = {
-			...this.state.user,
-			area_ids,
-		}
-
-		await API.User.setArea({ user })
-
-		this.setUserCookies(user)
-
-		this.setState(
-			{
-				...this.state,
-				user,
-			},
-			callback
-		)
-	}
-
 	handleAuthentication = () => {
 		// handleAuthentication
 	}
@@ -222,7 +203,6 @@ class Auth extends React.Component {
 			setSearchHistory: this.setSearchHistory,
 			setUserInfo: this.setUserInfo,
 			setLocale: this.setLocale,
-			setArea: this.setArea,
 			setKeywordType: this.setKeywordType,
 		}
 

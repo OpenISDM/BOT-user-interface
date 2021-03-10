@@ -22,6 +22,7 @@ class NavbarContainer extends React.Component {
 	state = {
 		showShiftChange: false,
 		areaOptionsMap: {},
+		currentArea: null,
 	}
 
 	navList = navbarNavList
@@ -49,20 +50,27 @@ class NavbarContainer extends React.Component {
 	getAreaTable = async () => {
 		const { auth } = this.context
 		const { user } = auth
-		let res = null
+		let areas = null
+		let lastLoginAreaId = null
+
+		const res = await API.Area.getAreaTableByUserId({
+			userId: user.id,
+		})
+		if (res) {
+			const userProfile = res.data
+			areas = userProfile.areas
+			lastLoginAreaId = userProfile.last_login_area
+		}
 
 		const isBotAdmin = user.roles && user.roles.includes('bot_admin')
 		if (isBotAdmin) {
-			res = await API.Area.getAreaTable()
-		} else {
-			res = await API.Area.getAreaTableByUserId({
-				userId: user.id,
-			})
+			const res = await API.Area.getAreaTable()
+			areas = res && res.data
 		}
 
-		if (res) {
+		if (areas) {
 			const areaOptionsMap = {}
-			res.data.forEach((area) => {
+			areas.forEach((area) => {
 				const bounds = []
 				if (area.left_bottom_corner && area.left_bottom_corner) {
 					bounds.push([area.left_bottom_corner.y, area.left_bottom_corner.x])
@@ -77,43 +85,41 @@ class NavbarContainer extends React.Component {
 				}
 			})
 
+			// If there has no any current area then set first area to default
+			const currentArea = lastLoginAreaId
+				? areaOptionsMap[lastLoginAreaId]
+				: Object.values(areaOptionsMap)[0]
+
 			this.setState({
+				currentArea,
 				areaOptionsMap,
 			})
+
+			this.setCurrentArea(currentArea)
 		}
 	}
 
-	setCurrentArea = (selectedArea) => {
-		const { stateReducer } = this.context
+	setCurrentArea = async (selectedArea) => {
+		const { stateReducer, auth } = this.context
 		const [{ area }, dispatch] = stateReducer
 		if (area && selectedArea && area.value !== selectedArea.value) {
+			await API.User.setLastLoginArea({
+				areaId: selectedArea.id,
+				userId: auth.user.id,
+			})
 			dispatch({
 				type: SET_AREA,
 				value: selectedArea,
 			})
+			this.setState({ currentArea: selectedArea })
 		}
-	}
-
-	getCurrentArea = () => {
-		const [{ area }] = this.context.stateReducer
-		const { areaOptionsMap } = this.state
-		let currentArea = areaOptionsMap[area.id]
-
-		// If there has no any current area then set first area to default
-		if (!currentArea) {
-			currentArea = Object.values(areaOptionsMap)[0]
-		}
-
-		return currentArea
 	}
 
 	render = () => {
 		const { locale, auth, stateReducer } = this.context
-		const { areaOptionsMap } = this.state
+		const { areaOptionsMap, currentArea } = this.state
 		const [{ area }] = stateReducer
 		const areaOptions = Object.values(areaOptionsMap)
-		const currentArea = this.getCurrentArea()
-		this.setCurrentArea(currentArea)
 
 		return (
 			<div>

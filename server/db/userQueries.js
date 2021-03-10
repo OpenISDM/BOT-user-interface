@@ -161,25 +161,6 @@ export default {
 		return query
 	},
 
-	editSecondaryArea: (user) => {
-		return `
-			DELETE FROM user_area
-			WHERE user_id = ${user.id};
-
-			INSERT INTO user_area (
-				area_id,
-				user_id
-			)
-			VALUES
-			${user.area_ids.map(
-				(id) => `(
-				${id},
-				${user.id}
-			)`
-			)};
-		`
-	},
-
 	editPassword: (user_id, password) => {
 		const text = `
 			UPDATE user_table

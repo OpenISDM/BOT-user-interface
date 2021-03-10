@@ -7,6 +7,5 @@ export default (app) => {
 	app.options('/data/area/*', cors())
 
 	app.route('/data/area').post(areaController.getAreaTable)
-
 	app.route('/data/area/user').get(areaController.getAreaTableByUserId)
 }
