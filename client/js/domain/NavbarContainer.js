@@ -15,6 +15,7 @@ import routes from '../config/routes/routes'
 import { SET_AREA } from '../reducer/action'
 import ImageWebp from '../components/ImageWebp'
 import API from '../api'
+import { isEqual } from '../helper/utilities'
 
 class NavbarContainer extends React.Component {
 	static contextType = AppContext
@@ -102,7 +103,8 @@ class NavbarContainer extends React.Component {
 	setCurrentArea = async (selectedArea) => {
 		const { stateReducer, auth } = this.context
 		const [{ area }, dispatch] = stateReducer
-		if (area && selectedArea && area.value !== selectedArea.value) {
+		const isDifferentArea = area && selectedArea && !isEqual(area, selectedArea)
+		if (isDifferentArea) {
 			await API.User.setLastLoginArea({
 				areaId: selectedArea.id,
 				userId: auth.user.id,
