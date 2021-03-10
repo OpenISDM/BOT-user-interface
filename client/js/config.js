@@ -7,7 +7,7 @@ import { NORMAL, BROKEN, TRANSFERRED } from './config/wordMap'
 import { convertConfigValue } from './helper/utilities'
 
 const config = {
-	VERSION: `v${version} b.1990`,
+	VERSION: `v${version} b.1991`,
 
 	TIMESTAMP_FORMAT: 'LLL',
 
