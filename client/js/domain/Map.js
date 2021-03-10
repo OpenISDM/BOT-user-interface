@@ -27,6 +27,7 @@ class Map extends React.Component {
 		currentAreaId: null,
 	}
 
+	mapInitiated = false
 	mapLayer = null
 	previousImageLayer = null
 	imageLayerMap = {}
@@ -47,6 +48,10 @@ class Map extends React.Component {
 
 	componentDidUpdate = (prevProps, prevState) => {
 		const [{ area }] = this.context.stateReducer
+
+		if (!this.mapInitiated) {
+			this.initMap()
+		}
 
 		if (this.state.shouldUpdateTrackingData) {
 			this.handleObjectMarkers()
@@ -123,6 +128,8 @@ class Map extends React.Component {
 			})
 		})
 
+		this.mapInitiated = true
+		console.log('InitMap completed!')
 		this.setMap()
 	}
 
