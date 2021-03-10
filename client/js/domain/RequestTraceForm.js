@@ -8,7 +8,7 @@ import API from '../api'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 
-class RequestTrace extends React.Component {
+class RequestTraceForm extends React.Component {
 	static contextType = AppContext
 
 	state = {}
@@ -76,10 +76,10 @@ class RequestTrace extends React.Component {
 	}
 }
 
-RequestTrace.protoTypes = {
+RequestTraceForm.protoTypes = {
 	show: PropTypes.bool.isRequired,
 	handleClose: PropTypes.func.isRequired,
 	handleSubmit: PropTypes.func.isRequired,
 }
 
-export default RequestTrace
+export default RequestTraceForm
