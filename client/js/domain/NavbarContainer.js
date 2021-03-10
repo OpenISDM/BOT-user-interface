@@ -40,7 +40,7 @@ class NavbarContainer extends React.Component {
 		const { areaOptionsMap } = this.state
 		const [{ openedNotification }] = this.context.stateReducer
 		if (openedNotification) {
-			const { notification } = openedNotification
+			const { notification = {} } = openedNotification
 			const { currentPositionAreaId } = notification // area_id where object be triggered
 			if (currentPositionAreaId) {
 				this.setCurrentArea(areaOptionsMap[currentPositionAreaId])

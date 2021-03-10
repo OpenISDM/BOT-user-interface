@@ -208,7 +208,7 @@ class NavNotification extends React.Component {
 					</Dropdown.Menu>
 				</DropdownPersist>
 
-				<Dropdown style={{ marginLeft: '1px' }}>
+				<DropdownPersist style={{ marginLeft: '1px' }}>
 					<Dropdown.Toggle
 						variant="light"
 						id="battery-notice-btn"
@@ -226,6 +226,7 @@ class NavNotification extends React.Component {
 						</i>
 					</Dropdown.Toggle>
 					<Dropdown.Menu
+						flip={false}
 						alignRight
 						bsPrefix="bot-dropdown-menu-right dropdown-menu"
 					>
@@ -241,25 +242,43 @@ class NavNotification extends React.Component {
 							style={style.dropdownList}
 						>
 							{lowBatteryList.length !== 0 ? (
-								lowBatteryList.map((object) => {
+								lowBatteryList.map((object, index) => {
 									return (
-										<Dropdown.Item
-											disabled
-											key={object.mac_address}
-											style={{ color: 'black' }}
-										>
-											<div style={style.list}>
-												<p className="d-inline-block mx-2">&#8729;</p>
-												{`${object.areaName}, `}
-												{getDescription({
-													item: object,
-													locale,
-													keywordType: config,
-												})}
-												{`, ${locale.texts.BATTERY_VOLTAGE}: ${(
-													object.extend.battery_voltage / 10
-												).toFixed(1)}`}
-											</div>
+										<Dropdown.Item key={index} style={{ color: 'black' }}>
+											<Row style={style.list}>
+												<Button variant="light" disabled={true}>
+													{`${object.areaName}, `}
+													{getDescription({
+														item: object,
+														locale,
+														keywordType: config,
+													})}
+													{`, ${locale.texts.BATTERY_VOLTAGE}: ${(
+														object.extend.battery_voltage / 10
+													).toFixed(1)}`}
+												</Button>
+												<Row
+													style={{
+														paddingLeft: '5px',
+														paddingRight: '20px',
+													}}
+												>
+													<Button
+														variant="primary"
+														onClick={() => {
+															dispatch({
+																type: SET_OPENED_NOTIFICATION,
+																value: { object },
+															})
+
+															history.push('/')
+														}}
+														style={{ marginRight: '5px' }}
+													>
+														{locale.texts.LOCATE}
+													</Button>
+												</Row>
+											</Row>
 										</Dropdown.Item>
 									)
 								})
@@ -270,7 +289,7 @@ class NavNotification extends React.Component {
 							)}
 						</div>
 					</Dropdown.Menu>
-				</Dropdown>
+				</DropdownPersist>
 			</>
 		)
 	}

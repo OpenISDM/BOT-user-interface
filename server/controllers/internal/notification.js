@@ -11,6 +11,51 @@ import {
 } from '../../db/models'
 import { common, ipc } from '../../helpers'
 
+const generateObjectFields = ({
+	targetObject,
+	areaTableMap,
+	lbeaconTableMap,
+	triggeredAreaId,
+}) => {
+	const object = common.deepClone(targetObject)
+
+	object.areaName = areaTableMap[object.area_id].readable_name
+	object.found = true
+	object.lbeacon_coordinate = object.extend.uuid
+		? common.parseLbeaconCoordinate(object.extend.uuid)
+		: null
+
+	object.currentPosition = object.extend.uuid
+		? common.calculatePosition({
+				lbeaconUuid: object.extend.uuid,
+				baseX: object.extend.base_x,
+				baseY: object.extend.base_y,
+		  })
+		: null
+
+	object.residence_time = common
+		.moment(object.extend.last_seen_timestamp)
+		.locale('tw')
+		.fromNow()
+
+	object.lbeacon_area = {
+		id: object.area_id,
+		value: object.areaName,
+	}
+
+	object.location_description =
+		lbeaconTableMap[object.extend.uuid] &&
+		lbeaconTableMap[object.extend.uuid].description
+
+	object.updated_by_area = object.extend.updated_by_area
+
+	if (triggeredAreaId) {
+		object.area_id = triggeredAreaId
+	}
+
+	return object
+}
+
 export default {
 	getAllNotifications: async (request, response) => {
 		const { areaId = [] } = request.query
@@ -87,13 +132,12 @@ export default {
 						batteryVoltage <= parseInt(process.env.BATTERY_VOLTAGE_INDICATOR)
 					)
 				})
-				.map((object) => {
-					object.areaName = areaTableMap[object.area_id].readable_name
-					object.lbeacon_area = {
-						id: object.area_id,
-						value: object.areaName,
-					}
-					return object
+				.map((targetObject) => {
+					return generateObjectFields({
+						targetObject,
+						areaTableMap,
+						lbeaconTableMap,
+					})
 				})
 
 			const notificationList = notificationTableQueried
@@ -101,37 +145,12 @@ export default {
 					const macAddress = notification.mac_address
 					const targetObject = objectTableMap[macAddress]
 					if (targetObject) {
-						const object = common.deepClone(targetObject)
-						object.area_id = notification.area_id // triggered area id
-						object.areaName = areaTableMap[object.area_id].readable_name
-						object.found = true
-						object.lbeacon_coordinate = object.extend.uuid
-							? common.parseLbeaconCoordinate(object.extend.uuid)
-							: null
-
-						object.currentPosition = object.extend.uuid
-							? common.calculatePosition({
-									lbeaconUuid: object.extend.uuid,
-									baseX: object.extend.base_x,
-									baseY: object.extend.base_y,
-							  })
-							: null
-
-						object.residence_time = common
-							.moment(object.extend.last_seen_timestamp)
-							.locale('tw')
-							.fromNow()
-
-						object.lbeacon_area = {
-							id: object.area_id,
-							value: object.areaName,
-						}
-
-						object.location_description =
-							lbeaconTableMap[object.extend.uuid] &&
-							lbeaconTableMap[object.extend.uuid].description
-
-						object.updated_by_area = object.extend.updated_by_area
+						const object = generateObjectFields({
+							targetObject,
+							areaTableMap,
+							lbeaconTableMap,
+							triggeredAreaId: notification.area_id,
+						})
 
 						if (
 							object.vital_sign &&

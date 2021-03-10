@@ -341,7 +341,9 @@ class MainContainer extends React.Component {
 
 		if (openedNotification) {
 			const { object, notification } = openedNotification
-			object.monitor_types = [notification.monitor_type]
+			if (notification) {
+				object.monitor_types = [notification.monitor_type]
+			}
 			searchResult = [object]
 		}
 
