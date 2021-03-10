@@ -83,24 +83,13 @@ class UserProfile extends React.Component {
 	}
 
 	handleSubmit = async (values) => {
-		const formIndex = [this.state.show, this.state.showEditPwd].indexOf(true)
-
-		const callback = () => setSuccessMessage(SAVE_SUCCESS)
 		const { auth } = this.context
-		switch (formIndex) {
-			case 0:
-				auth.setArea(values.area_ids)
+		const callback = () => setSuccessMessage(SAVE_SUCCESS)
 
-				break
-
-			case 1:
-				await API.User.password({
-					user_id: auth.user.id,
-					password: values.check_password,
-				})
-
-				break
-		}
+		await API.User.password({
+			user_id: auth.user.id,
+			password: values.check_password,
+		})
 
 		this.setState(
 			{
@@ -113,7 +102,6 @@ class UserProfile extends React.Component {
 
 	render() {
 		const { locale, auth } = this.context
-
 		const { areaTable } = this.state
 
 		let userKeywordType

@@ -13,13 +13,13 @@ export default {
 	getAreaTableByUserId: async (request, response) => {
 		const { userId } = request.query
 		try {
-			const res = await AreaTable.findAll({
+			const res = await UserTable.findOne({
+				where: { id: userId },
 				include: [
 					{
-						where: { id: userId },
-						model: UserTable,
-						as: 'users',
-						required: true, // true is defalut option meaning inner join
+						model: AreaTable,
+						as: 'areas',
+						required: false, // left join
 					},
 				],
 			})

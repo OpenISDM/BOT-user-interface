@@ -20,7 +20,7 @@ import API from '../api'
 import { setSuccessMessage } from '../helper/messageGenerator'
 import pdfPackageGenerator from '../helper/pdfPackageGenerator'
 import { SET_ENABLE_REQUEST_TRACKING_DATA } from '../reducer/action'
-import { JSONClone } from '../helper/utilities'
+import { JSONClone, isSameValue } from '../helper/utilities'
 import PropTypes from 'prop-types'
 
 class SearchResultList extends React.Component {
@@ -43,16 +43,13 @@ class SearchResultList extends React.Component {
 	onSelect = (eventKey) => {
 		const { stateReducer } = this.context
 		const [, dispatch] = stateReducer
-		const eventItem = eventKey.split(':')
-		const isFound = parseInt(eventItem[0])
-		const number = parseInt(eventItem[1])
-		const selectItem = isFound
-			? this.props.searchResult.filter((item) => item.found)[number]
-			: this.props.searchResult.filter((item) => !item.found)[number]
+		const objectId = parseInt(eventKey)
+		const selectItem = this.props.searchResult.find((item) =>
+			isSameValue(item.id, objectId)
+		)
 
-		if (parseInt(selectItem.object_type) === 0) {
-			/** The reason using array to encapture the selectedObjectData is to have the consisten data form passed into ChangeStatusForm */
-			this.toggleSelection(number, isFound)
+		if (isSameValue(selectItem.object_type, config.OBJECT_TYPE.DEVICE)) {
+			this.toggleSelection(selectItem)
 			this.props.highlightSearchPanel(true)
 			dispatch({
 				type: SET_ENABLE_REQUEST_TRACKING_DATA,
@@ -68,12 +65,9 @@ class SearchResultList extends React.Component {
 		}
 	}
 
-	toggleSelection = (number, isFound) => {
+	toggleSelection = (currentSelectItem) => {
 		let selection = [...this.state.selection]
-		const selectItem = isFound
-			? this.props.searchResult.filter((item) => item.found)[number]
-			: this.props.searchResult.filter((item) => !item.found)[number]
-		const mac = selectItem.mac_address
+		const mac = currentSelectItem.mac_address
 		const index = selection.indexOf(mac)
 
 		let selectedObjectData = [...this.state.selectedObjectData]
@@ -90,12 +84,13 @@ class SearchResultList extends React.Component {
 				]
 			} else {
 				selection.push(mac)
-				selectedObjectData.push(selectItem)
+				selectedObjectData.push(currentSelectItem)
 			}
 		} else {
 			selection = [mac]
-			selectedObjectData = [selectItem]
+			selectedObjectData = [currentSelectItem]
 		}
+
 		this.setState({
 			showEditObjectForm: true,
 			showPatientView: false,

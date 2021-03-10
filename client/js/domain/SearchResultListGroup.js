@@ -96,7 +96,7 @@ const SearchResultListGroup = ({
 				const element = (
 					<ListGroup.Item
 						href={'#' + index}
-						eventKey={item.found + ':' + index}
+						eventKey={item.id}
 						onMouseOver={(e) => onMouseOver(e, item.mac_address)}
 						onMouseOut={onMouseOut}
 						key={index}

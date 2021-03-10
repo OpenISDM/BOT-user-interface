@@ -2,9 +2,7 @@ import { get, post, put, del } from './utils/request'
 
 const userPath = '/data/user'
 const userInfo = {
-	area: {
-		secondary: '/data/user/area/secondary',
-	},
+	area: '/data/user/area',
 	password: '/data/user/password',
 	locale: '/data/user/locale',
 	searchHistory: '/data/user/searchHistory',
@@ -64,9 +62,10 @@ export default {
 		})
 	},
 
-	async setArea({ user }) {
-		return await put(userInfo.area.secondary, {
-			user,
+	async setLastLoginArea({ areaId, userId }) {
+		return await post(userInfo.area, {
+			areaId,
+			userId,
 		})
 	},
 

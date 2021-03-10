@@ -319,6 +319,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div className="d-flex">
 							<Button
+								key={pages.CREATE_DEVICE_LIST}
 								style={{ marginRight: '5px' }}
 								disabled={this.checkSubmitButtonDisabled()}
 								onClick={() => {
@@ -355,6 +356,7 @@ class SearchSettings extends React.Component {
 						</div>
 						<div className="d-flex">
 							<Button
+								key={pages.CREATE_PATIENT_LIST}
 								style={{ marginRight: '5px' }}
 								disabled={this.checkSubmitButtonDisabled()}
 								onClick={() => {

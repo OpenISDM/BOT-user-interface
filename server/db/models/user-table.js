@@ -25,6 +25,9 @@ const UserTable = sequelize.define(
 		locale_id: {
 			type: DataTypes.INTEGER,
 		},
+		last_login_area: {
+			type: DataTypes.INTEGER,
+		},
 		max_search_history_count: {
 			type: DataTypes.INTEGER,
 		},

@@ -3,13 +3,13 @@ import cors from 'cors'
 
 export default (app) => {
 	// enable pre-flight request for DELETE request
-	app.options('/data/user', cors())
+	app.options('/data/user*', cors())
 
-	app.options('/data/user/searchHistory', cors())
+	// app.options('/data/user/searchHistory', cors())
 
-	app.options('/data/user/keywordType', cors())
+	// app.options('/data/user/keywordType', cors())
 
-	app.options('/data/user/sentResetPwdInstruction', cors())
+	// app.options('/data/user/sentResetPwdInstruction', cors())
 
 	app
 		.route('/data/user')
@@ -18,7 +18,7 @@ export default (app) => {
 		.post(userController.addUser)
 		.put(userController.setUserInfo)
 
-	app.route('/data/user/area/secondary').post(userController.editSecondaryArea)
+	app.route('/data/user/area').post(userController.setLastLoginArea)
 
 	app.route('/data/user/password').post(userController.editPassword)
 
