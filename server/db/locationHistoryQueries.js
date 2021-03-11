@@ -338,7 +338,10 @@ export default {
 				object_id,
    				area_id,
    				uuid,
+				mac_address,
    				record_timestamp,
+				base_x,
+   				base_y,
   				CASE
    					WHEN LAG(uuid) OVER 
 						(PARTITION BY object_id ORDER BY object_id, record_timestamp) = uuid
@@ -351,14 +354,17 @@ export default {
    					lht.object_id AS object_id,
             		lht.area_id AS area_id,
             		lht.uuid AS uuid,
-            		lht.record_timestamp AS record_timestamp
+            		lht.record_timestamp AS record_timestamp,
+					lht.mac_address as mac_address,
+        		    lht.base_x as base_x,
+		            lht.base_y as base_y
         		FROM 
 					location_history_table lht
 				INNER JOIN object_table ot
         		ON lht.object_id = ot.asset_control_number    
         	WHERE
-            	record_timestamp > '${endTime}'
-            	AND	record_timestamp < '${startTime}'
+            	record_timestamp > '${startTime}'
+            	AND	record_timestamp < '${endTime}'
    				AND	lht.object_id in (${objectIds.map((item) => `'${item}'`)})
    			) AS raw_data
 		), group_table AS (
@@ -366,6 +372,9 @@ export default {
    				object_id,
    				area_id,
    				uuid,
+				base_x,
+   				base_y,
+				mac_address ,
    				record_timestamp,
    				r,
    				SUM(r) OVER (ORDER BY object_id, record_timestamp) grp
@@ -376,7 +385,10 @@ export default {
 		SELECT
     		object_id,
     		area_id,
-    		uuid,
+    		uuid,	
+			mac_address,
+			MAX(base_x) as base_x,
+			MAX(base_y) as base_y,
     		EXTRACT(EPOCH FROM (MIN(record_timestamp)))::INTEGER AS start_time,
     		EXTRACT(EPOCH FROM (MAX(record_timestamp)))::INTEGER AS end_time,
     		(EXTRACT(EPOCH FROM (MAX(record_timestamp))) - EXTRACT(EPOCH FROM(MIN(record_timestamp))))::INTEGER AS duration
@@ -386,7 +398,8 @@ export default {
 			grp,
 			gps.object_id,
 			gps.area_id,
-			gps.uuid
+			gps.uuid,
+			gps.mac_address
 		ORDER BY
 			grp asc,
 			object_id asc,
