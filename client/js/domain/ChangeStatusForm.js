@@ -4,8 +4,9 @@ import Creatable from 'react-select/creatable'
 import { Formik, Field, Form } from 'formik'
 import { FormFieldName } from '../components/StyleComponents'
 import { object, string } from 'yup'
-import RadioButton from './RadioButton'
-import RadioButtonGroup from './RadioButtonGroup'
+import RadioButton from '../components/RadioButton'
+
+import RadioButtonGroup from '../components/RadioButtonGroup'
 import { AppContext } from '../context/AppContext'
 import styleConfig from '../config/styleConfig'
 import FormikFormGroup from './FormikFormGroup'
@@ -320,12 +321,12 @@ class ChangeStatusForm extends React.Component {
 													id={NORMAL}
 													label={locale.texts.RETURNED}
 												/>
-												<Field
+												{/* <Field
 													component={RadioButton}
 													name="action_options"
 													id={TRACE}
 													label={locale.texts.TRACE}
-												/>
+												/> */}
 											</div>
 										</RadioButtonGroup>
 									)}
@@ -393,6 +394,11 @@ class ChangeStatusForm extends React.Component {
 												active={this.props.showAddDevice}
 											>
 												{locale.texts.ADD_DEVICE}
+											</Button>
+											<Button
+
+											>
+
 											</Button>
 										</ButtonToolbar>
 									</Row>
