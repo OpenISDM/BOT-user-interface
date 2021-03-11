@@ -1,5 +1,6 @@
 import React from 'react'
-import { Modal, Button, ListGroup } from 'react-bootstrap'
+import { Modal, ListGroup } from 'react-bootstrap'
+import Button from '../components/Button'
 import { Formik, Field, Form } from 'formik'
 import { object } from 'yup'
 import moment from 'moment'
@@ -169,19 +170,17 @@ class PatientViewModal extends React.Component {
 								<Modal.Footer>
 									<Button
 										variant="outline-secondary"
+										text={locale.texts.CANCEL}
 										className="text-capitalize"
 										onClick={this.handleClose}
-									>
-										{locale.texts.CANCEL}
-									</Button>
+									/>
 									<Button
 										type="submit"
+										text={locale.texts.SAVE}
 										className="text-capitalize"
 										variant="primary"
 										disabled={isSubmitting}
-									>
-										{locale.texts.SAVE}
-									</Button>
+									/>
 								</Modal.Footer>
 							</Form>
 						)}
@@ -192,25 +191,6 @@ class PatientViewModal extends React.Component {
 	}
 }
 
-// const recordBlockTypeOne = (item, index, locale) => {
-// 	return (
-// 		<ListGroup.Item
-// 			key={index}
-// 			className="d-flex justify-content-start"
-// 			style={style.blockOne}
-// 		>
-// 			<div style={style.index}>&bull;</div>
-// 			&nbsp;
-// 			<div key={index} className="pb-1">
-// 				{moment(item.create_timestamp)
-// 					.locale(locale.abbr)
-// 					.format('YYYY/MM/DD hh:mm')}
-// 				, &nbsp;
-// 				{item.notes}
-// 			</div>
-// 		</ListGroup.Item>
-// 	)
-// }
 
 const recordBlockTypeTwo = (item, index, locale) => {
 	return (

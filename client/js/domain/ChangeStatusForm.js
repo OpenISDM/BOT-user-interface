@@ -1,11 +1,11 @@
 import React from 'react'
-import { Modal, Button, Row, Col, ButtonToolbar } from 'react-bootstrap'
+import { Modal, Row, Col, ButtonToolbar } from 'react-bootstrap'
 import Creatable from 'react-select/creatable'
 import { Formik, Field, Form } from 'formik'
 import { FormFieldName } from '../components/StyleComponents'
 import { object, string } from 'yup'
 import RadioButton from '../components/RadioButton'
-
+import Button from '../components/Button'
 import RadioButtonGroup from '../components/RadioButtonGroup'
 import { AppContext } from '../context/AppContext'
 import styleConfig from '../config/styleConfig'
@@ -76,11 +76,14 @@ class ChangeStatusForm extends React.Component {
 		const item = e.target.name
 		const { selectedObjectData } = this.props
 		const macAddress = selectedObjectData[0].mac_address
+		//const selectedObject
+		console.log(selectedObjectData)
+		//const selectedAcns = selectedObjectData.map((item)=>item.asset_control_number)
 		switch (item) {
 			case 'add device':
 				this.props.handleAdditionalButton(item)
 				break
-			case 'tracking path':
+			case 'request trace':
 				// let {
 				//     selectedObjectData
 				// } = this.props
@@ -89,7 +92,8 @@ class ChangeStatusForm extends React.Component {
 				//     this.props.handleShowPath(item.mac_address);
 				// }) : null;
 				// this.handleClose();
-				this.props.handleShowPath(macAddress, this.handleClose)
+				console.log('tracking path')
+				this.props.handleShowPath(selectedObjectData.map((item)=>item.asset_control_number), this.handleClose)
 				break
 		}
 	}
@@ -388,18 +392,19 @@ class ChangeStatusForm extends React.Component {
 										<ButtonToolbar>
 											<Button
 												name="add device"
+												text={locale.texts.ADD_DEVICE}
 												variant="outline-secondary"
 												className="mr-2"
 												onClick={this.handleClick}
 												active={this.props.showAddDevice}
-											>
-												{locale.texts.ADD_DEVICE}
-											</Button>
+											/>
 											<Button
-
-											>
-
-											</Button>
+												name="request trace"
+												text={locale.texts.ADD_DEVICE}
+												variant="outline-secondary"
+												className="mr-2"
+												onClick={this.handleClick}
+											/>
 										</ButtonToolbar>
 									</Row>
 								</AccessControl>
@@ -407,16 +412,14 @@ class ChangeStatusForm extends React.Component {
 									<Button
 										variant="outline-secondary"
 										onClick={this.handleClose}
-									>
-										{locale.texts.CANCEL}
-									</Button>
+										text={locale.texts.CANCEL}
+									/>
 									<Button
 										type="submit"
 										variant="primary"
 										disabled={isSubmitting}
-									>
-										{locale.texts.SAVE}
-									</Button>
+										text={locale.texts.SAVE}
+									/>
 								</Modal.Footer>
 							</Form>
 						)}
