@@ -5,9 +5,9 @@ import 'leaflet.markercluster'
 import '../../../config/leafletAwesomeNumberMarkers'
 import { AppContext } from '../../../context/AppContext'
 import pinImage from './pinImage'
-import siteConfig from '../../../../../site_module/siteConfig'
 import { macAddressToCoordinate } from '../../../helper/dataTransfer'
-
+import mapConfig from '../../../config/mapConfig'
+import PropTypes from 'prop-types'
 class Map extends React.Component {
 	static contextType = AppContext
 
@@ -34,28 +34,24 @@ class Map extends React.Component {
 
 	/** Set the search map configuration establishing in config.js  */
 	initMap = () => {
-		let [{ areaId }] = this.context.stateReducer
+		const [{ areaId, area }] = this.context.stateReducer
 
-		let { areaModules } = siteConfig
-
-		this.iconOptions = this.props.mapConfig.iconOptionsInBigScreen
-		let areaOption = this.props.mapConfig.areaOptions[areaId]
+		this.iconOptions = mapConfig.iconOptionsInBigScreen
+		const areaOption = mapConfig.areaOptions[areaId]
 
 		/** set the map's config */
-		let { url, bounds, hasMap } = areaModules[areaOption]
+		const { url, bounds, hasMap } = areaModules[areaOption]
 
-		let map = L.map('mapid', this.props.mapConfig.bigScreenMapOptions)
+		const map = L.map('mapid', mapConfig.bigScreenMapOptions)
 
 		if (hasMap) {
-			let image = L.imageOverlay(url, bounds)
-			map.addLayer(image)
+			this.image = L.imageOverlay(url, bounds)
+			map.addLayer(this.image)
 			map.fitBounds(bounds)
-			this.image = image
 			this.map = map
 		} else {
-			let image = L.imageOverlay(null, null)
-			this.image = image
-			map.addLayer(image)
+			this.image = L.imageOverlay(null, null)
+			map.addLayer(this.image)
 			this.map = map
 		}
 
@@ -66,13 +62,13 @@ class Map extends React.Component {
 
 	/** Set the overlay image */
 	setMap = () => {
-		let [{ areaId }] = this.context.stateReducer
-		let { areaModules } = siteConfig
+		const [{ areaId, area }] = this.context.stateReducer
 
-		let areaOption = this.props.mapConfig.areaOptions[areaId]
+
+		const areaOption = mapConfig.areaOptions[areaId]
 
 		/** set the map's config */
-		let { url, bounds, hasMap } = areaModules[areaOption]
+		const { url, bounds, hasMap } = areaModules[areaOption]
 
 		if (hasMap) {
 			this.image.setUrl(url)
@@ -87,14 +83,14 @@ class Map extends React.Component {
 		if (LegendJSX) {
 			try {
 				this.map.removeControl(this.legend)
-			} catch {
-				null
+			} catch(e) {
+				console.log(`create legend failed : ${e}`)
 			}
 
 			this.legend = L.control({ position: 'bottomleft' })
 
-			this.legend.onAdd = function (map) {
-				var div = L.DomUtil.create('div', 'info legend')
+			this.legend.onAdd = function () {
+				const div = L.DomUtil.create('div', 'info legend')
 				ReactDOM.render(LegendJSX, div)
 				return div
 			}.bind(this)
@@ -103,24 +99,20 @@ class Map extends React.Component {
 		}
 	}
 
-	createLegendJSX = (
-		imageSize = '25px',
-		fontSize = '15px',
-		legendWidth = '250px'
-	) => {
+	createLegendJSX = (imageSize = '25px', legendWidth = '250px') => {
 		// pinImage is imported
-		var { legendDescriptor } = this.props
-		let { locale } = this.context
-		var pins
+		const { legendDescriptor } = this.props
+		const { locale } = this.context
+		let pins = null
 		try {
 			pins = legendDescriptor.map((description) => {
 				return pinImage[description.pinColor]
 			})
-		} catch {
-			null
+		} catch (e) {
+			console.log(`get pins failed : ${e}`)
 		}
 
-		var jsx = legendDescriptor ? (
+		const jsx = legendDescriptor ? (
 			<div className="bg-light" style={{ width: legendWidth }}>
 				{legendDescriptor.map((description, index) => {
 					return (
@@ -160,8 +152,6 @@ class Map extends React.Component {
 	 * Create the error circle of markers, and add into this.markersLayer.
 	 */
 	handleObjectMarkers = () => {
-		let { locale } = this.context
-
 		/** Clear the old markerslayers. */
 		this.markersLayer.clearLayers()
 
@@ -171,14 +161,14 @@ class Map extends React.Component {
 
 		this.props.proccessedTrackingData
 			.filter((item) => {
-				return item.searched != -1
+				return item.searched !== -1
 			})
 			.map((item) => {
 				/** Calculate the position of the object  */
-				let position = macAddressToCoordinate(
+				const position = macAddressToCoordinate(
 					item.mac_address,
 					item.currentPosition,
-					this.props.mapConfig.iconOptions.markerDispersity
+					mapConfig.iconOptions.markerDispersity
 				)
 
 				/** Set the icon option*/
@@ -187,10 +177,7 @@ class Map extends React.Component {
 					...this.iconOptions,
 
 					/** Set the pin color */
-					markerColor: this.props.mapConfig.getIconColorInBigScreen(
-						item,
-						this.props.colorPanel
-					),
+					markerColor: mapConfig.getIconColorInBigScreen(item),
 
 					/** Set the pin size */
 					// iconSize,
@@ -201,24 +188,26 @@ class Map extends React.Component {
 
 					/** Show the ordered on location pin */
 					number:
-						this.props.mapConfig.iconOptionsInBigScreen.showNumber &&
+						mapConfig.iconOptionsInBigScreen.showNumber &&
 						// this.props.mapConfig.isObjectShowNumber.includes(item.searchedObjectType) &&
 						item.searched
 							? ++counter
 							: '',
 
 					/** Set the color of ordered number */
-					numberColor: this.props.mapConfig.iconColor.number,
+					numberColor: mapConfig.iconColor.number,
 				}
 
 				const option = new L.AwesomeNumberMarkers(item.iconOption)
-				let marker = L.marker(position, { icon: option }).addTo(
+				const marker = L.marker(position, { icon: option }).addTo(
 					this.markersLayer
 				)
 
 				/** Set the z-index offset of the searhed object so that
 				 * the searched object icon will be on top of all others */
 				if (item.searched) marker.setZIndexOffset(1000)
+
+				return item
 			})
 
 		/** Add the new markerslayers to the map */
@@ -229,6 +218,12 @@ class Map extends React.Component {
 	render() {
 		return <div id="mapid" style={{ height: '90vh' }} />
 	}
+}
+
+Map.propTypes = {
+	areaId: PropTypes.string.isRequired,
+	legendDescriptor: PropTypes.array.isRequired,
+	proccessedTrackingData: PropTypes.array.isRequired,
 }
 
 export default Map

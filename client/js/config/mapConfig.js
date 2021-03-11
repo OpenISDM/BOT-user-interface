@@ -217,7 +217,16 @@ const mapConfig = {
 			radius: 10,
 		},
 	},
+	iconOptionsInBigScreen: {
+		iconSize: [50, 50] || 1,
 
+		iconAnchor: [25, 50],
+
+		showNumber: false,
+
+		/* Set the Marker dispersity that can be any positive number */
+		markerDispersity: 60,
+	},
 	iconColor: {
 		number: 'White',
 		sos: 'SOS',
@@ -246,7 +255,12 @@ const mapConfig = {
 			'SteelBlue',
 		],
 	},
-
+	getIconColorInBigScreen: (item) => {
+		if (item.pinColor === -1) {
+			return mapConfig.iconColor.normal
+		}
+		return mapConfig.iconColor.pinColorArray[item.pinColor]
+	},
 	/* For test. To start object tracking*/
 	startInteval: true,
 
