@@ -56,6 +56,11 @@ const About = Loadable({
 	loading: Loader,
 })
 
+const BigScreenContainer = Loadable({
+	loader: () => import('../../domain/platform/bigScreen/BigScreenContainer'),
+	loading: Loader,
+})
+
 const privateRoutesConfig = [
 	{
 		path: routes.HOME,
@@ -95,6 +100,11 @@ const privateRoutesConfig = [
 	{
 		path: routes.BOT_ADMIN,
 		component: BOTAdminContainer,
+		exact: true,
+	},
+	{
+		path: routes.BIG_SCREEN,
+		component: BigScreenContainer,
 		exact: true,
 	},
 ]

@@ -26,6 +26,8 @@ const routes = {
 	RESET_PASSWORD_RESULT: '/resetpassword/success',
 
 	RESET_PASSWORD_INSTRUCTION: '/resetpassword/instruction',
+
+	BIG_SCREEN: '/page/bigScreen',
 }
 
 export default routes
