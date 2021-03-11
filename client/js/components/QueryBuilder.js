@@ -1,6 +1,11 @@
 import React from 'react'
 import throttle from 'lodash/throttle'
-import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
+import {
+	Query,
+	Builder,
+	Utils as QbUtils,
+	BasicConfig as basicConfig,
+} from 'react-awesome-query-builder'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import PropTypes from 'prop-types'
 
@@ -11,6 +16,8 @@ const queryValue = {
 	id: QbUtils.uuid(),
 	type: 'group',
 }
+
+export const BasicConfig = basicConfig
 
 class QueryBuilder extends React.Component {
 	immutableTree = null
@@ -25,7 +32,7 @@ class QueryBuilder extends React.Component {
 	}
 
 	componentDidMount = () => {
-		const { fields, jsonLogic, onChangeCallback } = this.props
+		const { fields, operators, jsonLogic, onChangeCallback } = this.props
 		const config = { ...MaterialConfig, ...fields }
 
 		config.settings = {
@@ -33,6 +40,8 @@ class QueryBuilder extends React.Component {
 			showNot: false,
 			// maxNesting: 1, // disable group function
 		}
+
+		config.operators = operators
 
 		let tree = {}
 		if (jsonLogic) {
@@ -97,6 +106,7 @@ class QueryBuilder extends React.Component {
 
 QueryBuilder.propTypes = {
 	fields: PropTypes.object.isRequired,
+	operators: PropTypes.object.isRequired,
 	jsonLogic: PropTypes.object.isRequired,
 	onChangeCallback: PropTypes.func,
 }
