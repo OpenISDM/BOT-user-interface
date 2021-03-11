@@ -10,11 +10,11 @@ export default {
 	getConfig: async (request, response) => {
 		const { areaId } = request.query
 		try {
-			const vitalSignPromise = await VitalSignConfig.findOne({
+			const vitalSignPromise = VitalSignConfig.findOne({
 				where: { area_id: areaId },
 			})
 
-			const notificationPromise = await NotificationConfig.findOne({
+			const notificationPromise = NotificationConfig.findOne({
 				where: {
 					area_id: areaId,
 					monitor_type: MonitorTypeEnum.VITAL_SIGN,
@@ -27,10 +27,11 @@ export default {
 				notificationPromise,
 			])
 
+			const { condition_json = null, condition = '' } = vitalSignConfig || {}
 			const res = {
 				areaId,
-				jsonLogic: vitalSignConfig.condition_json,
-				statement: vitalSignConfig.condition,
+				jsonLogic: condition_json,
+				statement: condition,
 				notificationConfig,
 			}
 
@@ -44,10 +45,15 @@ export default {
 	setConfig: async (request, response) => {
 		const { jsonLogic, statement, areaId, config } = request.body
 		try {
-			const vitalSignPromise = VitalSignConfig.update(
-				{ condition: statement, condition_json: jsonLogic },
-				{ where: { area_id: areaId } }
-			)
+			const vitalSignPromise = updateOrCreate({
+				model: VitalSignConfig,
+				where: { area_id: areaId },
+				newItem: {
+					condition: statement,
+					condition_json: jsonLogic,
+					area_id: areaId,
+				},
+			})
 
 			const notificationPromise = updateOrCreate({
 				model: NotificationConfig,

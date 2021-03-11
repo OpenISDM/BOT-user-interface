@@ -30,10 +30,7 @@ class UserProfile extends React.Component {
 			userId: user.id,
 		})
 		if (res) {
-			const areaTable = res.data.reduce((table, area) => {
-				table[area.id] = area
-				return table
-			}, {})
+			const areaTable = res.data.areas
 			this.setState({
 				areaTable,
 			})
@@ -62,11 +59,6 @@ class UserProfile extends React.Component {
 	handleClick = (e) => {
 		const name = e.target.name
 		switch (name) {
-			case 'secondaryArea':
-				this.setState({
-					show: true,
-				})
-				break
 			case 'password':
 				this.setState({
 					showEditPwd: true,

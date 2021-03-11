@@ -3,7 +3,7 @@ import { Row, Col } from 'react-bootstrap'
 import { Formik, Form } from 'formik'
 import { AppContext } from '../context/AppContext'
 import Button from '../components/Button'
-import QueryBuilder from '../components/QueryBuilder'
+import QueryBuilder, { BasicConfig } from '../components/QueryBuilder'
 import API from '../api'
 import {
 	delay,
@@ -23,8 +23,9 @@ const VITAL_SIGN_FIELDS = (locale) => {
 				type: 'number',
 				valueSources: ['value'],
 				fieldSettings: {
+					step: 0.01,
 					min: 0,
-					max: 45,
+					max: 45.0,
 				},
 				preferWidgets: ['slider', 'rangeslider'],
 			},
@@ -70,6 +71,12 @@ const VITAL_SIGN_FIELDS = (locale) => {
 			},
 		},
 	}
+}
+
+const VITAL_SIGN_OPERATORS = {
+	not_between: BasicConfig.operators.not_between,
+	greater: BasicConfig.operators.greater,
+	less: BasicConfig.operators.less,
 }
 
 const VITAL_SIGN_NAME = 'VITAL_SIGN'
@@ -209,6 +216,7 @@ class BOTAdminVitalSignSetting extends React.Component {
 										<QueryBuilder
 											key={`${jsonLogic}`.length} // Must have a key to force update component
 											fields={VITAL_SIGN_FIELDS(locale)}
+											operators={VITAL_SIGN_OPERATORS}
 											jsonLogic={jsonLogic}
 											onChangeCallback={({ jsonLogic, statement }) => {
 												this.setState({ jsonLogic, statement })

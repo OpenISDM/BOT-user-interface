@@ -25,9 +25,10 @@ class Map extends React.Component {
 	state = {
 		shouldUpdateTrackingData: true,
 		objectInfo: [],
-		currentAreaId: null,
+		currentArea: null,
 	}
 
+	mapInitiated = false
 	mapLayer = null
 	previousImageLayer = null
 	imageLayerMap = {}
@@ -49,26 +50,30 @@ class Map extends React.Component {
 	componentDidUpdate = (prevProps, prevState) => {
 		const [{ area }] = this.context.stateReducer
 
+		if (!this.mapInitiated) {
+			this.initMap()
+		}
+
+		if (!isEqual(prevState.currentArea, area)) {
+			this.setMap()
+			this.setState({
+				currentArea: area,
+			})
+		}
+
 		if (this.state.shouldUpdateTrackingData) {
 			this.handleObjectMarkers()
 		}
 
 		if (
 			!isEqual(prevProps.lbeaconPosition, this.props.lbeaconPosition) ||
-			!isEqual(prevState.currentAreaId, area.id) ||
+			!isEqual(prevState.currentArea, area) ||
 			!isEqual(prevProps.authenticated, this.props.authenticated)
 		) {
 			this.createLbeaconMarkers(
 				this.props.lbeaconPosition,
 				this.lbeaconsPosition
 			)
-		}
-
-		if (!isEqual(prevState.currentAreaId, area.id)) {
-			this.setState({
-				currentAreaId: area.id,
-			})
-			this.setMap()
 		}
 
 		if (
@@ -123,6 +128,9 @@ class Map extends React.Component {
 				shouldUpdateTrackingData: true,
 			})
 		})
+
+		this.mapInitiated = true
+		console.log('initMap completed!')
 		this.setMap()
 	}
 
@@ -150,6 +158,8 @@ class Map extends React.Component {
 			console.log(bounds, url)
 			console.log(this.mapLayer.hasLayer(this.imageLayerMap[url]))
 		}
+
+		console.log('setMap completed!')
 	}
 
 	/** Calculate the current scale for creating markers and resizing. */
