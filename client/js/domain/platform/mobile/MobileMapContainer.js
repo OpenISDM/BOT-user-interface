@@ -11,7 +11,7 @@ class TabletMapContainer extends React.Component {
 		const {
 			locationMonitorConfig,
 			proccessedTrackingData,
-			pathMacAddress,
+			pathObjectAcns,
 			colorPanel,
 			handleClosePath,
 			lbeaconPosition,
@@ -38,7 +38,7 @@ class TabletMapContainer extends React.Component {
 		return (
 			<div style={style.mapForMobile}>
 				<Map
-					pathMacAddress={pathMacAddress}
+					pathObjectAcns={pathObjectAcns}
 					colorPanel={colorPanel}
 					proccessedTrackingData={proccessedTrackingData}
 					lbeaconPosition={lbeaconPosition}
@@ -60,7 +60,7 @@ class TabletMapContainer extends React.Component {
 TabletMapContainer.propTypes = {
 	locationMonitorConfig: PropTypes.object,
 	proccessedTrackingData: PropTypes.array,
-	pathMacAddress: PropTypes.array,
+	pathObjectAcns: PropTypes.array,
 	colorPanel: PropTypes.object,
 	handleClosePath: PropTypes.func,
 	lbeaconPosition: PropTypes.array,

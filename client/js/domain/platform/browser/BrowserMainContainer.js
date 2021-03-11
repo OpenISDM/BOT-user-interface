@@ -17,7 +17,7 @@ const BrowserMainContainer = ({
 	searchKey,
 	searchResult,
 	proccessedTrackingData,
-	pathMacAddress,
+	pathObjectAcns,
 	isHighlightSearchPanel,
 	locationMonitorConfig,
 	searchObjectArray,
@@ -27,6 +27,7 @@ const BrowserMainContainer = ({
 	keywords,
 	activeActionButtons,
 	handleSearchTypeClick,
+	handleShowPath,
 }) => {
 	const auth = useContext(AuthenticationContext)
 
@@ -60,7 +61,7 @@ const BrowserMainContainer = ({
 			>
 				<Col xs={12} sm={12} md={8} lg={8} xl={8}>
 					<MapContainer
-						pathMacAddress={pathMacAddress}
+						pathObjectAcns={pathObjectAcns}
 						proccessedTrackingData={proccessedTrackingData}
 						searchKey={searchKey}
 						searchResult={searchResult}
@@ -108,6 +109,7 @@ const BrowserMainContainer = ({
 							pinColorArray={pinColorArray}
 							showFoundResult={showFoundResult}
 							ref={searchResultListRef}
+							handleShowPath={handleShowPath}
 						/>
 					</div>
 				</Col>
@@ -126,7 +128,7 @@ BrowserMainContainer.propTypes = {
 	searchKey: PropTypes.object.isRequired,
 	searchResult: PropTypes.array.isRequired,
 	proccessedTrackingData: PropTypes.array.isRequired,
-	pathMacAddress: PropTypes.string.isRequired,
+	pathObjectAcns: PropTypes.string.isRequired,
 	isHighlightSearchPanel: PropTypes.bool.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
 	searchObjectArray: PropTypes.array.isRequired,
@@ -136,6 +138,7 @@ BrowserMainContainer.propTypes = {
 	keywords: PropTypes.array.isRequired,
 	activeActionButtons: PropTypes.array.isRequired,
 	handleSearchTypeClick: PropTypes.func.isRequired,
+	handleShowPath: PropTypes.func.isRequired,
 }
 
 export default BrowserMainContainer

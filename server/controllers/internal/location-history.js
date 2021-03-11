@@ -51,10 +51,11 @@ export default {
 	},
 
 	getTracePathByObjectId: async (request, response) => {
-		const { objectIds, startTime, endTime } = request.body
+		const { pathObjectAcns, startTime, endTime } = request.body
 		try {
+			console.log(pathObjectAcns)
 			const res = await pool.query(
-				dbQueries.getTracePathByObjectId(objectIds, startTime, endTime)
+				dbQueries.getTracePathByObjectId(pathObjectAcns, startTime, endTime)
 			)
 			console.log('get trace path by object id succeed.')
 			response.status(200).json(res)

@@ -12,7 +12,7 @@ const MobileMainContainer = ({
 	searchKey,
 	searchResult,
 	proccessedTrackingData,
-	pathMacAddress,
+	pathObjectAcns,
 	locationMonitorConfig,
 	searchObjectArray = [],
 	pinColorArray,
@@ -61,7 +61,7 @@ const MobileMainContainer = ({
 				</div>
 				<div style={style.mapForMobile} className="m-1">
 					<MapContainer
-						pathMacAddress={pathMacAddress}
+						pathObjectAcns={pathObjectAcns}
 						proccessedTrackingData={proccessedTrackingData}
 						searchKey={searchKey}
 						searchResult={searchResult}
@@ -87,7 +87,7 @@ MobileMainContainer.propTypes = {
 	searchKey: PropTypes.array,
 	searchResult: PropTypes.array,
 	proccessedTrackingData: PropTypes.array,
-	pathMacAddress: PropTypes.array,
+	pathObjectAcns: PropTypes.array,
 	locationMonitorConfig: PropTypes.object,
 	searchObjectArray: PropTypes.array,
 	pinColorArray: PropTypes.array,

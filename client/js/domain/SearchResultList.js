@@ -117,6 +117,7 @@ class SearchResultList extends React.Component {
 	}
 
 	handleChangeObjectStatusFormSubmit = (values) => {
+		console.log('>>handleChangeObjectStatusFormSubmit')
 		const editedObjectPackage = JSONClone(this.state.selectedObjectData).map(
 			(item) => {
 				item.status = values.action_options.toLowerCase()
@@ -127,15 +128,28 @@ class SearchResultList extends React.Component {
 				return item
 			}
 		)
+		console.log(editedObjectPackage)
 
-		this.setState(
-			{
-				showEditObjectForm: false,
-				showConfirmForm: true,
-				editedObjectPackage,
-			},
-			this.props.highlightSearchPanel(false)
-		)
+		if (editedObjectPackage[0].status === 'trace') {
+			console.log('trace now!')
+
+			this.props.handleShowPath(editedObjectPackage.map((item)=>item.asset_control_number))
+			this.setState(
+				{
+					showEditObjectForm: false,
+					editedObjectPackage,
+				},
+			)
+		} else {
+			this.setState(
+				{
+					showEditObjectForm: false,
+					showConfirmForm: true,
+					editedObjectPackage,
+				},
+			)
+		}
+		console.log('<<handleChangeObjectStatusFormSubmit')
 	}
 
 	handleSignatureSubmit = (values) => {

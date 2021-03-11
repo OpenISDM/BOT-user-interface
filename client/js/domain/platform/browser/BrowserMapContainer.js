@@ -19,7 +19,7 @@ class BrowserMapContainer extends React.Component {
 		const { locale, stateReducer } = this.context
 		const { mapConfig, ACTION_BUTTONS } = config
 		const {
-			pathMacAddress,
+			pathObjectAcns,
 			colorPanel,
 			lbeaconPosition,
 			locationMonitorConfig,
@@ -71,7 +71,7 @@ class BrowserMapContainer extends React.Component {
 			>
 				<div className="p-1 border-grey">
 					<Map
-						pathMacAddress={pathMacAddress}
+						pathObjectAcns={pathObjectAcns}
 						colorPanel={colorPanel}
 						proccessedTrackingData={proccessedTrackingData}
 						lbeaconPosition={lbeaconPosition}
@@ -209,7 +209,7 @@ BrowserMapContainer.propTypes = {
 	searchKey: PropTypes.object.isRequired,
 	searchResult: PropTypes.array.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
-	pathMacAddress: PropTypes.object.isRequired,
+	pathObjectAcns: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	activeActionButtons: PropTypes.array.isRequired,
 	showPdfDownloadForm: PropTypes.bool.isRequired,

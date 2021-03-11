@@ -21,7 +21,7 @@ class TabletMapContainer extends React.Component {
 		const {
 			proccessedTrackingData,
 			showPdfDownloadForm,
-			pathMacAddress,
+			pathObjectAcns,
 			colorPanel,
 			handleClickButton,
 			lbeaconPosition,
@@ -91,7 +91,7 @@ class TabletMapContainer extends React.Component {
 						</div>
 						<div style={style.mapBlockForTablet}>
 							<Map
-								pathMacAddress={pathMacAddress}
+								pathObjectAcns={pathObjectAcns}
 								colorPanel={colorPanel}
 								proccessedTrackingData={proccessedTrackingData}
 								lbeaconPosition={lbeaconPosition}
@@ -197,7 +197,7 @@ class TabletMapContainer extends React.Component {
 											className="mr-1 ml-2 text-capitalize"
 											onClick={handleClickButton}
 											name="cleanPath"
-											disabled={pathMacAddress === ''}
+											disabled={pathObjectAcns === ''}
 										>
 											{locale.texts.CLEAN_PATH}
 										</Button>
@@ -214,7 +214,7 @@ class TabletMapContainer extends React.Component {
 
 TabletMapContainer.propTypes = {
 	proccessedTrackingData: PropTypes.array,
-	pathMacAddress: PropTypes.array,
+	pathObjectAcns: PropTypes.array,
 	colorPanel: PropTypes.object,
 	handleClosePath: PropTypes.func,
 	lbeaconPosition: PropTypes.array,

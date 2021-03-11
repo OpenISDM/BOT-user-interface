@@ -44,7 +44,7 @@ class MainContainer extends React.Component {
 		isHighlightSearchPanel: false,
 		shouldUpdateTrackingData: true,
 		showPath: false,
-		pathMacAddress: '',
+		pathObjectAcns: '',
 		searchObjectArray: [],
 		pinColorArray: config.mapConfig.iconColor.pinColorArray,
 		groupIds: [],
@@ -462,6 +462,16 @@ class MainContainer extends React.Component {
 		}
 	}
 
+	handleShowPath = (selectedObjectIds, pathTimeLength = 10) =>{
+		console.log(selectedObjectIds)
+
+		this.setState({
+			pathObjectAcns:selectedObjectIds,
+			showPath: true,
+			pathTimeLength,
+		})
+	}
+
 	render() {
 		const {
 			proccessedTrackingData,
@@ -470,7 +480,8 @@ class MainContainer extends React.Component {
 			lbeaconPosition,
 			clearSearchResult,
 			showPath,
-			pathMacAddress,
+			pathObjectAcns,
+			pathTimeLength,
 			isHighlightSearchPanel,
 			locationMonitorConfig,
 			searchObjectArray,
@@ -484,6 +495,7 @@ class MainContainer extends React.Component {
 			getSearchKey,
 			highlightSearchPanel,
 			handleClick,
+			handleShowPath,
 			handleSearchTypeClick,
 		} = this
 
@@ -496,7 +508,9 @@ class MainContainer extends React.Component {
 			searchResult,
 			proccessedTrackingData,
 			showPath,
-			pathMacAddress,
+			pathObjectAcns,
+			pathTimeLength,
+			handleShowPath,
 			isHighlightSearchPanel,
 			locationMonitorConfig,
 			searchObjectArray,

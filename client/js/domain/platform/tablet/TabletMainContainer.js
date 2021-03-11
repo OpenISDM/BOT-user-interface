@@ -18,7 +18,7 @@ const TabletMainContainer = ({
 	searchKey,
 	searchResult,
 	proccessedTrackingData,
-	pathMacAddress,
+	pathObjectAcns,
 }) => {
 	const auth = React.useContext(AuthenticationContext)
 
@@ -42,7 +42,7 @@ const TabletMainContainer = ({
 				<div className="d-flex flex-column" style={style.MapAndResult}>
 					<div className="d-flex" style={style.MapAndQrcode}>
 						<MapContainer
-							pathMacAddress={pathMacAddress}
+							pathObjectAcns={pathObjectAcns}
 							proccessedTrackingData={proccessedTrackingData}
 							searchResult={searchResult}
 							handleClearButton={handleClearButton}
@@ -98,7 +98,7 @@ TabletMainContainer.propTypes = {
 	searchKey: PropTypes.array,
 	searchResult: PropTypes.array,
 	proccessedTrackingData: PropTypes.array,
-	pathMacAddress: PropTypes.array,
+	pathObjectAcns: PropTypes.array,
 }
 
 export default TabletMainContainer

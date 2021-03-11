@@ -18,7 +18,7 @@ import PropTypes from 'prop-types'
 import API from '../api'
 import config from '../config'
 import { baseURL } from '../api/utils/request'
-
+import moment from 'moment-timezone'
 class Map extends React.Component {
 	static contextType = AppContext
 
@@ -80,7 +80,7 @@ class Map extends React.Component {
 			this.createLocationMonitorMarkers()
 		}
 
-		if (!isEqual(prevProps.pathMacAddress, this.props.pathMacAddress)) {
+		if (!isEqual(prevProps.pathObjectAcns, this.props.pathObjectAcns)) {
 			this.drawPolyline()
 		}
 	}
@@ -130,6 +130,9 @@ class Map extends React.Component {
 	setMap = () => {
 		const [{ area }] = this.context.stateReducer
 		const { bounds, map_image_path } = area
+		// console.log(bounds)
+		// console.log(area)
+		// console.log(this.context.stateReducer)
 		const url = map_image_path ? `${baseURL}/map/${map_image_path}` : null
 
 		if (this.previousImageLayer) {
@@ -184,12 +187,21 @@ class Map extends React.Component {
 
 	/** init path */
 	drawPolyline = async () => {
+		const {pathTimeLength = 10 , pathObjectAcns = ['202101061720'], } = this.props
+
+		console.log('>>drawPolyline')
+		console.log('pathObjectAcns = ' + this.props.pathObjectAcns)
 		this.pathOfDevice.clearLayers()
-		if (this.props.pathMacAddress !== '') {
+		if (this.props.pathObjectAcns !== '') {
 			const route = []
-			const res = await API.Tracking.getTrackingTableByMacAddress({
-				macAddress: this.props.pathMacAddress,
+			console.log(pathTimeLength)
+			console.log(moment().subtract(-2, 'minutes').format())
+			const res = await API.Trace.getTracePathByObjectIds({
+				pathObjectAcns,
+				startTime : moment().subtract(pathTimeLength, 'minutes').format(),
+				endTime: moment().format()
 			})
+			console.log(res)
 			if (res) {
 				let preUUID = ''
 				res.data.rows.forEach((item) => {
@@ -211,6 +223,7 @@ class Map extends React.Component {
 						route.push(pos)
 					}
 				})
+				console.log(route)
 				const polyline = L.polyline(route, {
 					color: 'black',
 					dashArray: '1,1',
@@ -523,9 +536,10 @@ Map.propTypes = {
 	isObjectListShownProp: PropTypes.func.isRequired,
 	selectObjectListProp: PropTypes.func.isRequired,
 	locationMonitorConfig: PropTypes.object.isRequired,
-	pathMacAddress: PropTypes.object.isRequired,
+	pathObjectAcns: PropTypes.object.isRequired,
 	lbeaconPosition: PropTypes.array.isRequired,
 	authenticated: PropTypes.bool.isRequired,
+	pathTimeLength: PropTypes.number,
 }
 
 export default Map
