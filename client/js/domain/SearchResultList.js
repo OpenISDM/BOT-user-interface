@@ -128,28 +128,12 @@ class SearchResultList extends React.Component {
 				return item
 			}
 		)
-		console.log(editedObjectPackage)
 
-		if (editedObjectPackage[0].status === 'trace') {
-			console.log('trace now!')
-
-			this.props.handleShowPath(editedObjectPackage.map((item)=>item.asset_control_number))
-			this.setState(
-				{
-					showEditObjectForm: false,
-					editedObjectPackage,
-				},
-			)
-		} else {
-			this.setState(
-				{
-					showEditObjectForm: false,
-					showConfirmForm: true,
-					editedObjectPackage,
-				},
-			)
-		}
-		console.log('<<handleChangeObjectStatusFormSubmit')
+		this.setState({
+			showEditObjectForm: false,
+			showConfirmForm: true,
+			editedObjectPackage,
+		})
 	}
 
 	handleSignatureSubmit = (values) => {
@@ -298,7 +282,6 @@ class SearchResultList extends React.Component {
 			showAddDevice: true,
 		})
 	}
-
 	render() {
 		const { locale } = this.context
 		const {
@@ -372,6 +355,7 @@ class SearchResultList extends React.Component {
 				<PatientViewModal
 					show={this.state.showPatientView}
 					title="patient record"
+					handleShowPath={this.props.handleShowPath}
 					handleClose={this.handleClose}
 					handleSubmit={this.handlePatientView}
 					data={this.state.selectedObjectData}
