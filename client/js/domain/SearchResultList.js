@@ -282,6 +282,11 @@ class SearchResultList extends React.Component {
 			showAddDevice: true,
 		})
 	}
+
+	handleSelectedPath = () =>{
+		this.props.handleShowPath()
+	}
+
 	render() {
 		const { locale } = this.context
 		const {

@@ -75,25 +75,16 @@ class ChangeStatusForm extends React.Component {
 	handleClick = (e) => {
 		const item = e.target.name
 		const { selectedObjectData } = this.props
-		const macAddress = selectedObjectData[0].mac_address
-		//const selectedObject
-		console.log(selectedObjectData)
-		//const selectedAcns = selectedObjectData.map((item)=>item.asset_control_number)
 		switch (item) {
 			case 'add device':
 				this.props.handleAdditionalButton(item)
 				break
-			case 'request trace':
-				// let {
-				//     selectedObjectData
-				// } = this.props
-
-				// selectedObjectData ? selectedObjectData.map((item,index)=>{
-				//     this.props.handleShowPath(item.mac_address);
-				// }) : null;
-				// this.handleClose();
+			case 'request object trace':
 				console.log('tracking path')
-				this.props.handleShowPath(selectedObjectData.map((item)=>item.asset_control_number), this.handleClose)
+				this.props.handleShowPath(
+					selectedObjectData.map((item) => item.asset_control_number),
+				)
+				this.props.handleChangeObjectStatusFormClose()
 				break
 		}
 	}
@@ -125,6 +116,7 @@ class ChangeStatusForm extends React.Component {
 			notes: selectedObjectData.length !== 0 ? selectedObjectData[0].notes : '',
 			nickname:
 				selectedObjectData.length !== 0 ? selectedObjectData[0].nickname : '',
+			request_length: 10
 		}
 
 		return initValues
@@ -325,16 +317,36 @@ class ChangeStatusForm extends React.Component {
 													id={NORMAL}
 													label={locale.texts.RETURNED}
 												/>
-												{/* <Field
-													component={RadioButton}
-													name="action_options"
-													id={TRACE}
-													label={locale.texts.TRACE}
-												/> */}
 											</div>
 										</RadioButtonGroup>
 									)}
 								/>
+								<hr />
+								<FormikFormGroup
+									type="text"
+									name="request_trace"
+									label={locale.texts.REQUEST_OBJECT_TRACE}
+									error={errors.request_trace}
+									touched={touched.request_trace}
+									placeholder=""
+									component={() => (
+										<>
+											<FormikFormGroup
+												type="text"
+												name="request_length"
+											/>
+											<ButtonToolbar className="d-flex justify-content-end">
+												<Button
+													name="request object trace"
+													text={locale.texts.REQUEST_OBJECT_TRACE}
+													variant="primary"
+													onClick={this.handleClick}
+												/>
+											</ButtonToolbar>
+										</>
+									)}
+								/>
+								<hr />
 								<FormikFormGroup
 									type="text"
 									name="transferred_location"
@@ -397,13 +409,6 @@ class ChangeStatusForm extends React.Component {
 												className="mr-2"
 												onClick={this.handleClick}
 												active={this.props.showAddDevice}
-											/>
-											<Button
-												name="request trace"
-												text={locale.texts.ADD_DEVICE}
-												variant="outline-secondary"
-												className="mr-2"
-												onClick={this.handleClick}
 											/>
 										</ButtonToolbar>
 									</Row>
