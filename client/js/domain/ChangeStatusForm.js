@@ -3,7 +3,7 @@ import { Modal, Row, Col, ButtonToolbar } from 'react-bootstrap'
 import Creatable from 'react-select/creatable'
 import { Formik, Field, Form } from 'formik'
 import { FormFieldName } from '../components/StyleComponents'
-import { object, string } from 'yup'
+import { object, string, number } from 'yup'
 import RadioButton from '../components/RadioButton'
 import Button from '../components/Button'
 import RadioButtonGroup from '../components/RadioButtonGroup'
@@ -168,13 +168,41 @@ class ChangeStatusForm extends React.Component {
 		}
 	}
 
+	getValidationSchema = () => {
+		const { locale } = this.context
+		return this.state.isChangeStatusForm
+			? object().shape({
+					action_options: string().required(locale.texts.STATUS_IS_REQUIRED),
+					transferred_location: object()
+						.when('action_options', {
+							is: TRANSFERRED,
+							then: object().required(locale.texts.LOCATION_IS_REQUIRED),
+						})
+						.test(
+							'transferred_location',
+							locale.texts.INCORRECT_TRANSFERRED_LOCATION_FORMAT,
+							(obj) => {
+								if (!obj || isEmpty(obj)) {
+									return true
+								}
+								const [name, department] = obj.label.split('-')
+								if (name && department) {
+									return true
+								}
+								return false
+							}
+						),
+			  })
+			: object().shape({
+					pathTimeLength: number().required('qqqqq'),
+			  })
+	}
+
 	render() {
 		const { locale } = this.context
 		const { title } = this.props
-		const { switchButtonText, isChangeStatusForm, titleText, } = this.state
+		const { switchButtonText, isChangeStatusForm, titleText } = this.state
 		let { selectedObjectData } = this.props
-		// console.log('render')
-		// console.log(isChangeStatusForm)
 		selectedObjectData = selectedObjectData.length ? selectedObjectData : []
 
 		return (
@@ -190,30 +218,7 @@ class ChangeStatusForm extends React.Component {
 					<Formik
 						enableReinitialize={true}
 						initialValues={this.initValues()}
-						validationSchema={object().shape({
-							action_options: string().required(
-								locale.texts.STATUS_IS_REQUIRED
-							),
-							transferred_location: object()
-								.when('action_options', {
-									is: TRANSFERRED,
-									then: object().required(locale.texts.LOCATION_IS_REQUIRED),
-								})
-								.test(
-									'transferred_location',
-									locale.texts.INCORRECT_TRANSFERRED_LOCATION_FORMAT,
-									(obj) => {
-										if (!obj || isEmpty(obj)) {
-											return true
-										}
-										const [name, department] = obj.label.split('-')
-										if (name && department) {
-											return true
-										}
-										return false
-									}
-								),
-						})}
+						validationSchema={this.getValidationSchema()}
 						onSubmit={(values) => {
 							this.props.handleChangeObjectStatusFormSubmit(values)
 						}}
@@ -356,11 +361,11 @@ class ChangeStatusForm extends React.Component {
 								/>
 								<FormikFormGroup
 									type="text"
-									name="request_trace"
+									name="pathTimeLength"
 									display={!isChangeStatusForm}
 									label={locale.texts.REQUEST_OBJECT_TRACE}
-									error={errors.request_trace}
-									touched={touched.request_trace}
+									error={errors.pathTimeLength}
+									touched={touched.pathTimeLength}
 									placeholder=""
 								/>
 								<FormikFormGroup
@@ -402,18 +407,21 @@ class ChangeStatusForm extends React.Component {
 										</>
 									)}
 								/>
-								<div className="mb-2 text-capitalize">
-									<FormFieldName>{locale.texts.NOTES}</FormFieldName>
-									<Field
-										component="textarea"
-										name="notes"
-										className={
-											'form-control' +
-											(errors.notes && touched.notes ? ' is-invalid' : '')
-										}
-										rows={3}
-									/>
-								</div>
+								{isChangeStatusForm ? (
+									<div className="mb-2 text-capitalize">
+										<FormFieldName>{locale.texts.NOTES}</FormFieldName>
+										<Field
+											component="textarea"
+											name="notes"
+											className={
+												'form-control' +
+												(errors.notes && touched.notes ? ' is-invalid' : '')
+											}
+											rows={3}
+										/>
+									</div>
+								) : null}
+
 								<AccessControl platform={['browser', 'tablet']}>
 									<Row className="d-flex justify-content-center pb-2">
 										<ButtonToolbar>
