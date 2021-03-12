@@ -61,19 +61,18 @@ class BigScreenContainer extends React.Component {
 	getTrackingData = async () => {
 		const {  locale, stateReducer } = this.context
 		const [{ areaId }] = stateReducer
-		try {
-			const trackingDataPromise = API.Tracking.getTrackingData({
+		//try {
+			console.log('aaa')
+			const trackingDataPromise = await API.Tracking.getTrackingData({
 				locale,
 				areaIds: areaId,
 			})
-
-			const searchResultQueuePromise = API.Tracking.getSearchQueue()
-
-			const [trackingDataRes, searchResultQueueRes] = Promise.all([
+			const searchResultQueuePromise = await API.Tracking.getSearchQueue({})
+			const [trackingDataRes, searchResultQueueRes] = await Promise.all([
 				trackingDataPromise,
 				searchResultQueuePromise,
 			])
-
+			console.log('bbb')
 			const trackingData = this.addSearchedIndex(
 				trackingDataRes.data,
 				searchResultQueueRes.data.rows
@@ -89,14 +88,14 @@ class BigScreenContainer extends React.Component {
 					}
 				}
 			)
-
+			console.log(trackingData)
 			this.setState({
 				trackingData,
 				legendDescriptor,
 			})
-		} catch (e) {
-			console.log(`get Tracking data failed : ${e}`)
-		}
+		// } catch (e) {
+		// 	console.log(`get Tracking data failed : ${e}`)
+		// }
 	}
 
 	render() {

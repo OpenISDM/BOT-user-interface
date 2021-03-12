@@ -20,10 +20,10 @@ class BrowserMapContainer extends React.Component {
 		const { mapConfig, ACTION_BUTTONS } = config
 		const {
 			pathMacAddress,
-			colorPanel,
+			//colorPanel,
 			lbeaconPosition,
 			locationMonitorConfig,
-			proccessedTrackingData,
+			//proccessedTrackingData,
 			showPdfDownloadForm,
 			handleClickButton,
 			searchObjectArray,
@@ -72,17 +72,17 @@ class BrowserMapContainer extends React.Component {
 				<div className="p-1 border-grey">
 					<Map
 						pathMacAddress={pathMacAddress}
-						colorPanel={colorPanel}
-						proccessedTrackingData={proccessedTrackingData}
+						// colorPanel={colorPanel}
+						// proccessedTrackingData={proccessedTrackingData}
 						lbeaconPosition={lbeaconPosition}
 						locationMonitorConfig={locationMonitorConfig}
 						getSearchKey={getSearchKey}
 						mapConfig={mapConfig}
-						handleClosePath={handleClosePath}
+						//handleClosePath={handleClosePath}
 						handleShowPath={handleShowPath}
 						showPath={showPath}
 						searchObjectArray={searchObjectArray}
-						pinColorArray={pinColorArray}
+						//pinColorArray={pinColorArray}
 						searchKey={searchKey}
 						searchResultListRef={searchResultListRef}
 						searchResult={searchResult}

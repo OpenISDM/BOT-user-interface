@@ -2,7 +2,7 @@ import { post } from './utils/request'
 
 const trackingData = '/data/trackingData'
 const getTrackingTableByMacAddress = '/data/getTrackingTableByMacAddress'
-const contactTree = '/data/trace/contactTree'
+const searchQueue = '/data/searchQueue'
 
 export default {
 	async getTrackingData({ areaIds, locale }) {
@@ -15,4 +15,8 @@ export default {
 	async getTrackingTableByMacAddress({ object_mac_address }) {
 		return await post(getTrackingTableByMacAddress, { object_mac_address })
 	},
+
+	async getSearchQueue(){
+		return await post(searchQueue,{})
+	}
 }

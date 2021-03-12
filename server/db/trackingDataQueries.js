@@ -115,4 +115,15 @@ export default {
 	`
 		return query
 	},
+	getSearchQueueData: () =>{
+		return `
+		SELECT *
+		FROM
+			search_result_queue
+		ORDER BY
+			query_time DESC
+		LIMIT 
+			5
+		`
+	}
 }

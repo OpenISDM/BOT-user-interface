@@ -66,4 +66,12 @@ export default {
 				console.log(`get tracking data failed ${err}`)
 			})
 	},
+	getSearchQueue: async (request, response) => {
+		try {
+			const res = await pool.query(dbQueries.getSearchQueueData())
+			response.status(200).json(res)
+		} catch (e) {
+			console.log(`get SearchQueue failed: ${e}`)
+		}
+	},
 }
