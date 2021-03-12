@@ -24,9 +24,23 @@ class ChangeStatusForm extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.setFormMode()
 		this.getTransferredLocation()
 	}
 
+	componentDidUpdate = () => {
+		//console.log(this.props.formMode)
+	}
+
+	setFormMode = () => {
+		const { isChangeStatusForm = true } = this.props
+
+		this.setState({
+			isChangeStatusForm,
+			switchButtonText: isChangeStatusForm ? '要求追蹤' : '回報狀態',
+			titleText: !isChangeStatusForm ? '回報狀態' : '要求追蹤',
+		})
+	}
 	getTransferredLocation = async () => {
 		try {
 			const res = await API.TransferredLocation.getAll()
@@ -82,7 +96,7 @@ class ChangeStatusForm extends React.Component {
 			case 'request object trace':
 				console.log('tracking path')
 				this.props.handleShowPath(
-					selectedObjectData.map((item) => item.asset_control_number),
+					selectedObjectData.map((item) => item.asset_control_number)
 				)
 				this.props.handleChangeObjectStatusFormClose()
 				break
@@ -116,12 +130,29 @@ class ChangeStatusForm extends React.Component {
 			notes: selectedObjectData.length !== 0 ? selectedObjectData[0].notes : '',
 			nickname:
 				selectedObjectData.length !== 0 ? selectedObjectData[0].nickname : '',
-			request_length: 10
+			request_length: 10,
 		}
 
 		return initValues
 	}
 
+	switchFormMode = () => {
+		//const [, dispatch] = this.context.stateReducer
+		const { isChangeStatusForm } = this.state
+		console.log('>>switchFormMode')
+
+		this.setState({
+			isChangeStatusForm: !isChangeStatusForm,
+			switchButtonText: !isChangeStatusForm ? '要求物件追蹤' : '回報儀器狀態',
+			titleText: !isChangeStatusForm ? '回報狀態' : '要求追蹤',
+		})
+
+		// i don't know why need it?
+		// dispatch({
+		// 	type: SET_FORM_MODE,
+		// 	value: [],
+		// })
+	}
 	generateCurrentStatus = (locale, status) => {
 		switch (status) {
 			case NORMAL:
@@ -140,8 +171,10 @@ class ChangeStatusForm extends React.Component {
 	render() {
 		const { locale } = this.context
 		const { title } = this.props
+		const { switchButtonText, isChangeStatusForm, titleText, } = this.state
 		let { selectedObjectData } = this.props
-
+		// console.log('render')
+		// console.log(isChangeStatusForm)
 		selectedObjectData = selectedObjectData.length ? selectedObjectData : []
 
 		return (
@@ -152,7 +185,7 @@ class ChangeStatusForm extends React.Component {
 				size="md"
 				enforceFocus={false}
 			>
-				<Modal.Header closeButton>{title}</Modal.Header>
+				<Modal.Header closeButton>{titleText}</Modal.Header>
 				<Modal.Body>
 					<Formik
 						enableReinitialize={true}
@@ -276,25 +309,25 @@ class ChangeStatusForm extends React.Component {
 											</div>
 										)
 									})}
-									<hr />
 								</div>
 								<FormikFormGroup
 									type="text"
 									name="current_status"
 									label={locale.texts.CURRENT_STATUS}
+									display={isChangeStatusForm}
 									error={errors.current_status}
 									touched={touched.current_status}
 									value={this.generateCurrentStatus(locale, values.status)}
 									placeholder=""
 									disabled
 								/>
-								<hr />
 								<FormikFormGroup
 									type="text"
 									name="action_options"
 									label={locale.texts.ACTION}
 									error={errors.action_options}
 									touched={touched.action_options}
+									display={isChangeStatusForm}
 									placeholder=""
 									component={() => (
 										<RadioButtonGroup>
@@ -321,32 +354,15 @@ class ChangeStatusForm extends React.Component {
 										</RadioButtonGroup>
 									)}
 								/>
-								<hr />
 								<FormikFormGroup
 									type="text"
 									name="request_trace"
+									display={!isChangeStatusForm}
 									label={locale.texts.REQUEST_OBJECT_TRACE}
 									error={errors.request_trace}
 									touched={touched.request_trace}
 									placeholder=""
-									component={() => (
-										<>
-											<FormikFormGroup
-												type="text"
-												name="request_length"
-											/>
-											<ButtonToolbar className="d-flex justify-content-end">
-												<Button
-													name="request object trace"
-													text={locale.texts.REQUEST_OBJECT_TRACE}
-													variant="primary"
-													onClick={this.handleClick}
-												/>
-											</ButtonToolbar>
-										</>
-									)}
 								/>
-								<hr />
 								<FormikFormGroup
 									type="text"
 									name="transferred_location"
@@ -386,7 +402,6 @@ class ChangeStatusForm extends React.Component {
 										</>
 									)}
 								/>
-								<hr />
 								<div className="mb-2 text-capitalize">
 									<FormFieldName>{locale.texts.NOTES}</FormFieldName>
 									<Field
@@ -414,17 +429,27 @@ class ChangeStatusForm extends React.Component {
 									</Row>
 								</AccessControl>
 								<Modal.Footer>
-									<Button
-										variant="outline-secondary"
-										onClick={this.handleClose}
-										text={locale.texts.CANCEL}
-									/>
-									<Button
-										type="submit"
-										variant="primary"
-										disabled={isSubmitting}
-										text={locale.texts.SAVE}
-									/>
+									<div className="mr-auto">
+										<Button
+											onClick={this.switchFormMode}
+											variant="link"
+											name={'switch form mode'}
+											text={switchButtonText}
+										/>
+									</div>
+									<div>
+										<Button
+											variant="outline-secondary"
+											onClick={this.handleClose}
+											text={locale.texts.CANCEL}
+										/>
+										<Button
+											type="submit"
+											variant="primary"
+											disabled={isSubmitting}
+											text={locale.texts.SAVE}
+										/>
+									</div>
 								</Modal.Footer>
 							</Form>
 						)}
@@ -445,6 +470,7 @@ ChangeStatusForm.propTypes = {
 	handleShowPath: PropTypes.func.isRequired,
 	handleAdditionalButton: PropTypes.func.isRequired,
 	handleChangeObjectStatusFormClose: PropTypes.func.isRequired,
+	isChangeStatusForm: PropTypes.bool.isRequired,
 }
 
 export default ChangeStatusForm
