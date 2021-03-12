@@ -1,7 +1,9 @@
 import React from 'react'
-import Map from './Map'
+//import Map from './Map'
 import { AppContext } from '../../../context/AppContext'
 import PropTypes from 'prop-types'
+import Map from '../../Map'
+import mapConfig from '../../../config/mapConfig'
 class MapContainer extends React.Component {
 	static contextType = AppContext
 
@@ -25,8 +27,16 @@ class MapContainer extends React.Component {
 			>
 				<div style={style.mapBlock}>
 					<Map
-						areaId={areaId}
-						legendDescriptor={this.props.legendDescriptor}
+						mapConfig={mapConfig}
+						searchResultListRef={null}
+						getSearchKey={null}
+						searchObjectArray={null}
+						searchResult={null}
+						isObjectListShownProp={null}
+						selectObjectListProp={null}
+						locationMonitorConfig={null}
+						pathMacAddress={null}
+						lbeaconPosition={null}
                         proccessedTrackingData={this.props.proccessedTrackingData}
 					/>
 				</div>

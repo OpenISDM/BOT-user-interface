@@ -80,6 +80,7 @@ const rules = {
 			'route:agent',
 			'route:traceContainer',
 			'route:contactTree',
+			'route:bigScreen',
 
 			'user:mydevice',
 			'user:mypatient',

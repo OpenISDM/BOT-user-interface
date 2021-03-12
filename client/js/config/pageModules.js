@@ -25,6 +25,7 @@ import SearchSettings from '../domain/SearchSettings'
 import GetAssignments from '../domain/GetAssignments'
 import ShiftChangeHistoricalRecord from '../domain/ShiftChangeHistoricalRecord'
 import ContactTree from '../domain/ContactTree'
+import BigScreenContainer from '../domain/platform/bigScreen/BigScreenContainer'
 // import RolePermissionManagement from '../domain/RolePermissionManagement'
 // import TransferredLocationManagement from '../domain/TransferredLocationManagement';
 
@@ -98,6 +99,11 @@ export const settingModule = {
 			component:(props)=><ContactTree {...props}/>,
 			platform: ['browser',],
 			permission:'route:contactTree'
+		},{
+			name: 'big screen',
+			component:(props)=><BigScreenContainer {...props}/>,
+			platform:['browser', 'tablet'],
+			permission:'route:bigScreen',
 		}
 	],
 }
@@ -116,7 +122,7 @@ export const trackingHistoryContainerModule = {
 		{
 			name: 'historical record',
 			permission: 'route:trackingHistory',
-			component: (props) => null,
+			component: () => null,
 			platform: ['browser', 'tablet'],
 		},
 	],
