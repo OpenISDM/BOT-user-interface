@@ -24,6 +24,7 @@ import {
 	NAMED_LIST,
 } from '../config/wordMap'
 import { SET_OPENED_NOTIFICATION } from '../reducer/action'
+import { number } from 'prop-types'
 
 class MainContainer extends React.Component {
 	static contextType = AppContext
@@ -455,6 +456,7 @@ class MainContainer extends React.Component {
 					proccessedTrackingData: [],
 					searchObjectArray: [],
 					activeActionButtons: [],
+					pathObjectAcns: [],
 				})
 				dispatch({
 					type: SET_OPENED_NOTIFICATION,
@@ -463,10 +465,14 @@ class MainContainer extends React.Component {
 				break
 		}
 	}
-
-	handleShowPath = (selectedObjectIds, pathTimeLength = 10) =>{
+	handleHidePath = () =>{
+		this.setState({
+			pathObjectAcns: undefined,
+			pathTimeLength: 0,
+		})
+	}
+	handleShowPath = (selectedObjectIds, pathTimeLength = 60) =>{
 		console.log(selectedObjectIds)
-
 		this.setState({
 			pathObjectAcns:selectedObjectIds,
 			showPath: true,
@@ -498,6 +504,7 @@ class MainContainer extends React.Component {
 			highlightSearchPanel,
 			handleClick,
 			handleShowPath,
+			handleHidePath,
 			handleSearchTypeClick,
 		} = this
 
@@ -513,6 +520,7 @@ class MainContainer extends React.Component {
 			pathObjectAcns,
 			pathTimeLength,
 			handleShowPath,
+			handleHidePath,
 			isHighlightSearchPanel,
 			locationMonitorConfig,
 			searchObjectArray,

@@ -28,6 +28,7 @@ const BrowserMainContainer = ({
 	activeActionButtons,
 	handleSearchTypeClick,
 	handleShowPath,
+	handleHidePath,
 }) => {
 	const auth = useContext(AuthenticationContext)
 
@@ -110,6 +111,7 @@ const BrowserMainContainer = ({
 							showFoundResult={showFoundResult}
 							ref={searchResultListRef}
 							handleShowPath={handleShowPath}
+							handleHidePath={handleHidePath}
 						/>
 					</div>
 				</Col>
@@ -139,6 +141,7 @@ BrowserMainContainer.propTypes = {
 	activeActionButtons: PropTypes.array.isRequired,
 	handleSearchTypeClick: PropTypes.func.isRequired,
 	handleShowPath: PropTypes.func.isRequired,
+	handleHidePath: PropTypes.func.isRequired,
 }
 
 export default BrowserMainContainer

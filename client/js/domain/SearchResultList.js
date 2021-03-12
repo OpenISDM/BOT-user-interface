@@ -66,6 +66,7 @@ class SearchResultList extends React.Component {
 	}
 
 	toggleSelection = (currentSelectItem) => {
+		console.log('toggleSelection')
 		let selection = [...this.state.selection]
 		const mac = currentSelectItem.mac_address
 		const index = selection.indexOf(mac)
@@ -90,6 +91,7 @@ class SearchResultList extends React.Component {
 			selection = [mac]
 			selectedObjectData = [currentSelectItem]
 		}
+		this.props.handleHidePath()
 
 		this.setState({
 			showEditObjectForm: true,
@@ -273,20 +275,6 @@ class SearchResultList extends React.Component {
 		)
 	}
 
-	handleClick = () => {
-		this.props.highlightSearchPanel(true)
-		this.setState({
-			showEditObjectForm: true,
-			selectedObjectData: this.props.searchResult,
-			selection: this.props.searchResult.map((a) => a.mac_address),
-			showAddDevice: true,
-		})
-	}
-
-	handleSelectedPath = () =>{
-		this.props.handleShowPath()
-	}
-
 	render() {
 		const { locale } = this.context
 		const {
@@ -296,6 +284,7 @@ class SearchResultList extends React.Component {
 			pinColorArray,
 			showFoundResult,
 			searchResult,
+			handleHidePath,
 		} = this.props
 
 		const { onSelect } = this
@@ -327,6 +316,7 @@ class SearchResultList extends React.Component {
 			searchObjectArray,
 			pinColorArray,
 			searchKey,
+			handleHidePath
 		}
 		return (
 			<Fragment>
@@ -342,6 +332,7 @@ class SearchResultList extends React.Component {
 
 				<ChangeStatusForm
 					handleShowPath={this.props.handleShowPath}
+					handleHidePath={this.props.handleHidePath}
 					show={this.state.showEditObjectForm}
 					title={locale.texts.DEVICE_STATUS}
 					selectedObjectData={this.state.selectedObjectData}
@@ -361,6 +352,7 @@ class SearchResultList extends React.Component {
 					show={this.state.showPatientView}
 					title="patient record"
 					handleShowPath={this.props.handleShowPath}
+					handleHidePath={this.props.handleHidePath}
 					handleClose={this.handleClose}
 					handleSubmit={this.handlePatientView}
 					data={this.state.selectedObjectData}
@@ -389,6 +381,7 @@ class SearchResultList extends React.Component {
 
 SearchResultList.propTypes = {
 	handleShowPath: PropTypes.func.isRequired,
+	handleHidePath: PropTypes.func.isRequired,
 	searchResult: PropTypes.object.isRequired,
 	showFoundResult: PropTypes.bool.isRequired,
 	searchKey: PropTypes.string.isRequired,

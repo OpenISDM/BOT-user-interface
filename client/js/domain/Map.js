@@ -197,12 +197,12 @@ class Map extends React.Component {
 
 	/** init path */
 	drawPolyline = async () => {
-		const {pathTimeLength = 10 , pathObjectAcns = ['202101061720'], } = this.props
+		const {pathTimeLength = 60 , pathObjectAcns = ['202101061720'], } = this.props
 
 		console.log('>>drawPolyline')
 		console.log('pathObjectAcns = ' + this.props.pathObjectAcns)
 		this.pathOfDevice.clearLayers()
-		if (this.props.pathObjectAcns !== '') {
+		if (this.props.pathObjectAcns) {
 			const route = []
 			console.log(pathTimeLength)
 			console.log(moment().subtract(-2, 'minutes').format())
